@@ -2,7 +2,8 @@
 # scope:culture = the culture we're evaluating the probability to spawn a new cultural community for.
 
 # Each (state, culture) combination is evaluated once per month.
-# Note: only cultures present in the same market as <state> are evaluated.
+# Note: normally only cultures present in the same market as <state> are evaluated,
+# however if a treaty port exists, then cultures present in either of the involved markets will be evaluated.
 
 cultural_community_creation_weight = {
 
@@ -11,8 +12,8 @@ cultural_community_creation_weight = {
 	if = {
 		limit = {
 			OR = {
-				devastation >= 50
-				turmoil >= 60
+				devastation >= 0.5
+				turmoil >= 0.6
 				is_isolated_from_market = yes
 			}
 		}
@@ -127,14 +128,14 @@ cultural_community_creation_weight = {
 		
 		if = {
 			limit = {
-				devastation >= 20
+				devastation >= 0.2
 			}
 			multiply = 0.5
 		}
 	
 		if = {
 			limit = {
-				turmoil >= 30
+				turmoil >= 0.3
 			}
 			multiply = 0.5
 		}
@@ -175,7 +176,7 @@ cultural_community_creation_weight = {
 			limit = {
 				is_slave_state = yes
 				scope:culture = {
-					NOT = { shares_heritage_trait_with_any_primary_culture = root.owner }
+					NOT = { shares_heritage_trait_group_with_any_primary_culture = root.owner }
 				}
 			}
 			multiply = 0.1
@@ -207,11 +208,35 @@ cultural_community_creation_weight = {
 
 		if = {
 			limit = {
-				scope:culture = {
-					culture_is_discriminated_in = root.owner
+				root.owner = {
+					cultural_acceptance_base = { target = scope:culture value < acceptance_status_2 }
+				}
+			}
+			multiply = 0.1
+		}
+		else_if = {
+			limit = {
+				root.owner = {
+					cultural_acceptance_base = { target = scope:culture value < acceptance_status_3 }
 				}
 			}
 			multiply = 0.3
+		}
+		else_if = {
+			limit = {
+				root.owner = {
+					cultural_acceptance_base = { target = scope:culture value < acceptance_status_4 }
+				}
+			}
+			multiply = 0.5
+		}
+		else_if = {
+			limit = {
+				root.owner = {
+					cultural_acceptance_base = { target = scope:culture value < acceptance_status_5 }
+				}
+			}
+			multiply = 0.7
 		}
 
 		if = {
@@ -234,9 +259,9 @@ cultural_community_creation_weight = {
 			}
 			multiply = 0.1
 		}
-		max = define:NPops|CULTURAL_COMMUNITY_MAX_PER_MONTH_CHANCE
 	}
 
 	# Bounds:
+	max = define:NPops|CULTURAL_COMMUNITY_MAX_PER_MONTH_CHANCE
 	min = 0
 }

@@ -9,7 +9,7 @@
 
     is_shown_when_inactive = {
         exists = c:RUS
-        THIS = c:RUS
+        c:RUS ?= THIS
         is_subject = no
     }
     possible = {
@@ -290,6 +290,27 @@ je_caucasian_war = {
             caucasuswar_end.1
             caucasuswar_end.3
         }
+    }
+
+    invalid = {
+        OR = {
+            c:CIR ?= {
+                is_subject = yes
+                NOT = {
+                    is_subject_of = ROOT
+                }
+            }
+            c:CHC ?= {
+                is_subject = yes
+                NOT = {
+                    is_subject_of = ROOT
+                }
+            }
+        }
+    }
+
+    on_invalid = {
+        set_global_variable = caucasus_failure_var
     }
 
     on_yearly_pulse = {
@@ -757,7 +778,7 @@ je_pacify_the_steppes = {
                 country_has_primary_culture = cu:kazak
             }
             is_subject_type = subject_type_puppet
-            liberty_desire <= 25
+            liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
             percent = 1
         }
     }
@@ -1001,7 +1022,7 @@ je_conquest_of_central_asia = {
     is_shown_when_inactive = {
         has_dlc_feature = ep1_content
         exists = c:RUS
-        THIS = c:RUS
+        c:RUS ?= THIS
         is_subject = no
         any_scope_state = {
             state_region = s:STATE_URALSK

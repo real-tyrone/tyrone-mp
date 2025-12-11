@@ -2,9 +2,6 @@
 	kind = directed
 	cost = 25
 
-	# relations_progress_per_day = 0.5
-	# relations_improvement_max = 20
-
 	icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/bankroll_treaties.dds"
 
 	flags = {
@@ -33,6 +30,16 @@
 	possible = {
 		in_default = no
 					   
+	requirement_to_maintain = {
+		trigger = {
+			custom_tooltip = {
+				text = "MONEY_TRANSFER_INPUT_QUANTITY_INVALID"
+				scope:article ?= {
+					exists = input_quantity
+					input_quantity > 0
+				}
+			}
+		}
 	}
 
     non_fulfillment = {
@@ -86,7 +93,7 @@
 
 	quantity_min_value = {
         value = 100
-		max = income
+		max = fixed_income
 		min = 0
     }
 
@@ -459,7 +466,7 @@
 					add = scope:quantity
 					value = {
 						desc = "INFAMY_TARGET_QUANTITY_DEDUCTION_FACTOR"
-						add = scope:target_country.income
+						add = scope:target_country.fixed_income
 						multiply = 0.1
 					}
 					divide = 1000
