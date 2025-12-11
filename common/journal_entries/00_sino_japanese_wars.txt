@@ -1,0 +1,105 @@
+je_sino_japanese_wars = {
+	icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+	group = je_group_historical_content
+	
+
+	is_shown_when_inactive = {
+		exists = c:JAP
+		c:JAP = ROOT
+		has_variable = meiji_restoration_complete
+	}
+
+	possible = {
+		c:JAP = ROOT
+		custom_tooltip = has_meiji_TT
+		NOT = { is_country_type = unrecognized }
+	}
+
+	immediate = {
+		c:CHI = {
+			save_scope_as = chi_scope
+		}
+		c:RUS = {
+			save_scope_as = rus_scope
+		}
+		c:JAP = {
+			save_scope_as = jap_scope
+		}
+		c:KOR = {
+			save_scope_as = kor_scope
+		}
+		s:STATE_FORMOSA.region_state:CHI = {
+			save_scope_as = taiwan_scope
+		}		
+		
+		ig:ig_armed_forces = {
+			save_scope_as = military_scope
+		}
+		ig:ig_intelligentsia = {
+			save_scope_as = intellectual_scope
+		}
+	}
+
+	on_monthly_pulse = {
+
+	}
+	
+	complete = {
+		custom_tooltip = {
+			text = has_completed_meiji_main_je_tt
+			has_variable = meiji_reforms_complete_var
+		}
+		country_or_subject_owns_entire_state_region = STATE_YANGHO
+		country_or_subject_owns_entire_state_region = STATE_BUSAN
+		country_or_subject_owns_entire_state_region = STATE_SEOUL
+		country_or_subject_owns_entire_state_region = STATE_PYONGYANG
+		country_or_subject_owns_entire_state_region = STATE_SARIWON
+		country_or_subject_owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+		country_or_subject_owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+		country_or_subject_owns_entire_state_region = STATE_SHENGJING
+		country_or_subject_owns_entire_state_region = STATE_FORMOSA
+		any_scope_state = {
+			state_region = {
+				OR = { 
+					is_homeland = cu:korean
+					is_homeland = cu:manchu
+				}
+			}
+			count >= 8
+			is_incorporated = yes
+		}
+		any_scope_state = {
+			state_region = s:STATE_FORMOSA
+			is_incorporated = yes
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = sino_japan_events.8
+			days = 0
+		}
+	}
+	fail = {
+		country_rank <= rank_value:minor_power
+	}
+	invalid = {
+		NOR = {
+			exists = c:CHI
+			exists = c:TPG
+		}
+	}
+
+	weight = 1000
+	should_be_pinned_by_default = yes
+	
+	scripted_button = korean_question_button
+	scripted_button = korean_influence_button
+	scripted_button = manchurian_question_button
+	scripted_button = japan_korea_annexation_button
+	scripted_button = integrate_korea_button
+	scripted_button = integrate_manchu_button
+	scripted_button = taiwan_question_button
+	scripted_button = integrate_taiwan_button
+	scripted_button = korean_protection_button
+}

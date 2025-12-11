@@ -1,0 +1,389 @@
+﻿aus_organise_trialism = {
+	is_shown = {
+		has_dlc_feature = ip3_content
+		c:AUS ?= this
+		any_subject_or_below = {
+			NOT = {
+				country_has_primary_culture = cu:croat
+			}
+			any_scope_state = {
+				state_region = s:STATE_CROATIA
+			}
+		}
+		has_law_or_variant = law_type:law_monarchy
+		NOT = {
+			has_variable = aus_organised_trialism
+		}
+	}
+	possible = {
+		has_technology_researched = nationalism
+		has_government_type = gov_dual_monarchy
+		any_subject_or_below = {
+			NOT = {
+				country_has_primary_culture = cu:croat
+			}
+			any_scope_state = {
+				state_region = s:STATE_CROATIA
+			}
+			OR = {
+				relations:root <= 0
+				liberty_desire >= 50
+				has_attitude = {
+					who = ROOT
+					attitude = rebellious
+				}
+			}
+		}
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+	when_taken = {
+		set_variable = aus_organised_trialism
+		random_subject_or_below = {
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:croat
+				}
+				any_scope_state = {
+					state_region = s:STATE_CROATIA
+				}
+			}
+			custom_tooltip = {
+				text = austria_trialism.1.t_display_tt
+				trigger_event = { id = austria_trialism.1 }
+			}
+		}
+	}
+	ai_chance = {
+		value = -100
+		if = {
+			limit = {
+				any_subject_or_below = {
+					NOT = {
+						country_has_primary_culture = cu:croat
+					}
+					any_scope_state = {
+						state_region = s:STATE_CROATIA
+					}
+					save_temporary_scope_as = hungary_scope
+				}
+			}
+			every_subject_or_below = {
+				limit = {
+					NOT = {
+						country_has_primary_culture = cu:croat
+					}
+					any_scope_state = {
+						state_region = s:STATE_CROATIA
+					}
+				}
+				add = scope:hungary_scope.liberty_desire
+			}
+			if = {
+				limit = {
+					scope:hungary_scope = {
+						has_attitude = {
+							who = ROOT
+							attitude = rebellious
+						}
+					}
+				}
+				add = 25
+			}
+			subtract = { # -50 at 100 relations, +50 at -100
+				value = "relations(scope:hungary_scope)"
+				multiply = 0.5
+			}
+		}
+	}
+}
+
+start_great_game_rus = {
+
+	is_shown = {
+        has_dlc_feature = ep1_content #Spheres of Influence
+		exists = c:RUS
+		exists = c:GBR
+
+		NOT = { has_global_variable = great_game_started }
+		root = c:RUS
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_persia
+		has_interest_marker_in_region = region_central_asia
+		has_interest_marker_in_region = region_caucasus
+		has_technology_researched = nationalism
+	}
+	
+	when_taken = {
+		if = {
+			every_country = {
+				limit = {
+					OR = {
+						c:RUS ?= this
+						c:GBR ?= this
+						c:PER ?= this
+						has_journal_entry = je_unify_afghanistan
+					}
+					NOT = {
+						has_journal_entry = je_great_game_control
+					}
+				}
+				add_journal_entry = { type = je_great_game_control }
+			}
+		}
+		if = {
+			c:RUS ? = this
+			end_truce = c:PER
+		}
+        set_global_variable = great_game_started
+    }
+	
+	ai_chance = {
+		value = 0
+	}
+
+}	
+
+start_great_game_gbr = {
+
+	is_shown = {
+        has_dlc_feature = ep1_content #Spheres of Influence
+		exists = c:RUS
+		exists = c:GBR
+
+		NOT = { has_global_variable = great_game_started }
+		root = c:GBR
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_persia
+		has_interest_marker_in_region = region_central_asia
+		has_interest_marker_in_region = region_caucasus
+		has_technology_researched = nationalism
+		game_date >= 1846.1.1
+	}
+	
+	when_taken = {
+		if = {
+			every_country = {
+				limit = {
+					OR = {
+						c:RUS ?= this
+						c:GBR ?= this
+						c:PER ?= this
+						has_journal_entry = je_unify_afghanistan
+					}
+					NOT = {
+						has_journal_entry = je_great_game_control
+					}
+				}
+				add_journal_entry = { type = je_great_game_control }
+			}
+		}
+        set_global_variable = great_game_started
+    }
+	
+	ai_chance = {
+		value = 0
+	}
+
+}	
+
+claims_on_algeria = {
+
+	is_shown = {
+        has_dlc_feature = voice_of_the_people_content
+		exists = c:FRA
+		root = c:FRA
+		NOT = { has_variable = claims_on_algeria }
+        OR = {
+            NOT = { owns_entire_state_region = STATE_ORAN }
+            NOT = { owns_entire_state_region = STATE_ALGIERS }
+            NOT = { owns_entire_state_region = STATE_CONSTANTINE }
+        }
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_north_africa
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				has_dlc_feature = voice_of_the_people_content
+			}
+		    add_journal_entry = {
+			    type = je_conquest_of_algeria
+		    }
+        }
+        if = {
+			limit = {
+				exists = c:MAS
+			}
+			create_incident = {
+				country = c:MAS
+				value = 5
+			}
+		}
+        if = {
+			limit = {
+				exists = c:AIT
+			}
+			create_incident = {
+				country = c:AIT
+				value = 5
+			}
+		}
+        if = {
+			limit = {
+				exists = c:CON
+			}
+			create_incident = {
+				country = c:CON
+				value = 5
+			}
+		}
+		# Add Claims
+		s:STATE_ORAN = {
+			if = {
+				limit = {
+					any_scope_state = {
+						 NOT = {
+							owner = ROOT
+						}
+					}
+				}
+				add_claim = ROOT
+			}
+		}
+		s:STATE_ALGIERS = {
+			if = {
+				limit = {
+					any_scope_state = {
+						NOT = {
+							owner = ROOT
+						}
+					}
+				}
+				add_claim = ROOT
+			}
+		}
+		s:STATE_CONSTANTINE = {
+			if = {
+				limit = {
+					any_scope_state = {
+						NOT = {
+							owner = ROOT
+						}
+					}
+				}
+				add_claim = ROOT
+			}
+		}
+        set_variable = claims_on_algeria
+    }
+	ai_chance = {
+		value = 100
+	}
+}
+
+british_hbc = {
+
+	is_shown = {
+		exists = c:HBC
+		root = c:GBR
+		NOT = { has_variable = annex_hbc }
+		any_subject_or_below = {
+			OR = {
+				country_has_primary_culture = cu:anglo_canadian
+				country_has_primary_culture = cu:franco_canadian
+			}
+		}
+		c:ONT = {
+			is_subject_of = ROOT
+		}
+		c:QUE = {
+			is_subject_of = ROOT
+		}
+	}
+	
+	possible = {
+		OR = {
+			c:ONT = {
+				relations:root >= relations_threshold:cordial
+				hidden_trigger = {
+					is_subject_of = ROOT
+				}
+			}
+			c:QUE = {
+				relations:root >= relations_threshold:cordial
+				hidden_trigger = {
+					is_subject_of = ROOT
+				}
+			}
+		}
+		c:HBC ?= {
+			is_at_war = no
+			hidden_trigger = {
+				is_ai = yes
+				is_subject_of = ROOT
+			}
+			relations:root <= relations_threshold:poor
+		}
+		is_at_war = no
+	}
+		
+	when_taken = {
+		trigger_event = { id = HBC_disband.1 }
+	}
+}
+
+
+allow_monopoly_subject = {
+	is_shown = {
+		NOT = {
+			has_law_or_variant = law_laissez_faire_subject 
+		}
+		is_subject = yes
+	}
+	
+	possible = {
+		NOT = {
+			has_law_or_variant = law_laissez_faire_subject 
+		}
+		is_subject = yes
+		has_law_or_variant = law_type:law_laissez_faire
+	}
+	
+	when_taken = {
+        activate_law = law_type:law_laissez_faire_subject 
+	}
+
+	ai_chance = {
+		value = 0
+	}
+}
+
+allow_monopoly_subject_remove = {
+	is_shown = {
+        has_law = law_type:law_laissez_faire_subject
+	}
+	
+	possible = {
+		NOT = {
+			has_law_or_variant = law_laissez_faire
+		}
+		is_subject = yes
+		has_law_or_variant = law_type:law_laissez_faire_subject
+	}	
+	
+	when_taken = {        	
+        activate_law = law_type:law_laissez_faire	
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}

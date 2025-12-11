@@ -1,0 +1,588 @@
+
+namespace = sino_japan_events
+
+sino_japan_events.1 = {
+    type = country_event
+    placement = scope:seoul_scope
+
+    title = sino_japan_events.1.t
+    desc = sino_japan_events.1.d
+    flavor = sino_japan_events.1.f
+
+    event_image = {
+        video = "ep1_donghak_rebellion"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by button in je
+    }
+
+    immediate = {
+		s:STATE_SEOUL.region_state:KOR = {
+			save_scope_as = seoul_scope
+		}
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+    option = {
+        name = sino_japan_events.1.a
+        default_option = yes
+		scope:china_scope = {
+			trigger_event = { id = sino_japan_events.2 days = 7 popup = yes }
+        set_variable = demanded_transfer_korea
+		}
+    }
+}
+
+#chinese response
+
+sino_japan_events.2 = {
+    type = country_event
+    placement = scope:seoul_scope
+
+    title = sino_japan_events.2.t
+    desc = sino_japan_events.2.d
+    flavor = sino_japan_events.2.f
+
+    event_image = {
+        video = "ep1_donghak_rebellion"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/qing_patriot_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by button in je
+    }
+
+    immediate = {
+		s:STATE_SEOUL.region_state:KOR = {
+			save_scope_as = seoul_scope
+		}
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+
+
+    #demand transfer reject
+    
+    option = {
+        name = sino_japan_events.2.a
+        default_option = yes
+        trigger = {
+            has_variable = demanded_transfer_korea
+			c:KOR = {
+				is_subject_of = ROOT
+			}
+        }
+        scope:japan_scope = {
+			trigger_event = { id = sino_japan_events.5 days = 7 popup = yes }
+			set_variable = china_refused_to_transfer
+		}
+    }
+    option = {
+        name = sino_japan_events.2.b
+        default_option = yes
+        trigger = {
+            has_variable = demanded_transfer_korea
+			NOT = {
+				c:KOR = {
+					is_subject_of = ROOT
+					is_player = no
+				}
+			}
+        }
+        scope:japan_scope = {
+			trigger_event = { id = sino_japan_events.7 days = 7 popup = yes }
+			set_variable = china_lost_korea
+		}
+    }
+}
+
+sino_japan_events.3 = {
+    type = country_event
+    placement = scope:beijing_scope
+
+    title = sino_japan_events.3.t
+    desc = sino_japan_events.3.d
+    flavor = sino_japan_events.3.f
+
+    event_image = {
+        video = "ep1_redcoats"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by button in je
+    }
+
+    immediate = {
+		s:STATE_BEIJING.region_state:CHI = {
+			save_scope_as = beijing_scope
+		}
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+    option = {
+        name = sino_japan_events.3.a
+        default_option = yes
+        set_variable = demanded_transfer_manchuria
+        hidden_effect = {
+            trigger_event = {
+                id = sino_japan_events.4
+                days = 30
+            }
+        }
+    }
+}
+
+#chinese response 2 electric boogaloo
+
+sino_japan_events.4 = {
+    type = country_event
+    placement = scope:beijing_scope
+
+    title = sino_japan_events.4.t
+    desc = sino_japan_events.4.d
+    flavor = sino_japan_events.4.f
+
+    event_image = {
+        video = "ep1_redcoats"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by button in je
+    }
+
+    immediate = {
+		s:STATE_BEIJING.region_state:CHI = {
+			save_scope_as = beijing_scope
+		}
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+    #demand transfer reject
+    
+    option = {
+        name = sino_japan_events.4.b
+        default_option = yes
+        change_relations = {
+            country = c:CHI
+            value = -20
+        }
+        create_incident = {
+            country = c:CHI
+            value = 30
+        }
+        s:STATE_NORTHERN_MANCHURIA = {
+            add_claim = ROOT
+        }
+        s:STATE_SOUTHERN_MANCHURIA = {
+            add_claim = ROOT
+        }
+        s:STATE_SHENGJING = {
+            add_claim = ROOT
+        }
+    }
+}
+
+#japanese response to rejection of korea_scope
+
+sino_japan_events.5 = {
+    type = country_event
+    placement = scope:seoul_scope
+
+    title = sino_japan_events.5.t
+    desc = sino_japan_events.5.d
+    flavor = sino_japan_events.5.f
+
+    event_image = {
+        video = "ep1_donghak_rebellion"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by china's refusal
+    }
+
+    immediate = {
+		s:STATE_SEOUL.region_state:KOR = {
+			save_scope_as = seoul_scope
+		}
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+		capital = {
+			save_scope_as = capital_scope
+		}
+    }
+    
+    option = {
+        name = sino_japan_events.5.a
+        default_option = yes
+        trigger = {
+            has_variable = china_refused_to_transfer
+        }
+        scope:japan_scope = {
+			create_diplomatic_play = {
+				name = transfer_subject
+				type = dp_transfer_subject
+				target_country = c:KOR
+			}
+		}
+    }
+	
+    option = {
+        name = sino_japan_events.5.b
+        default_option = yes
+        trigger = {
+            has_variable = china_refused_to_transfer
+        }
+        scope:japan_scope = {
+			create_diplomatic_play = {
+				name = liberate_subject
+				type = dp_liberate_subject
+				target_country = c:KOR
+			}
+		}
+        change_relations = {
+            country = c:CHI
+            value = -20
+        }
+        change_relations = {
+            country = c:KOR
+            value = 20
+        }
+		set_variable = korean_liberation_attempted
+    }
+	
+   option = {
+        name = sino_japan_events.5.c
+        default_option = no
+        trigger = {
+            has_variable = china_refused_to_transfer
+        }
+        change_relations = {
+            country = c:CHI
+            value = -20
+        }
+        create_incident = {
+            country = c:CHI
+            value = 25
+        }
+        s:STATE_SEOUL = {
+            add_claim = ROOT
+        }
+        s:STATE_PYONGYANG = {
+            add_claim = ROOT
+        }
+        s:STATE_SARIWON = {
+            add_claim = ROOT
+        }
+        s:STATE_BUSAN = {
+            add_claim = ROOT
+        }
+        s:STATE_YANGHO = {
+            add_claim = ROOT
+        }
+		add_modifier = {
+			name = backed_down_from_china
+			days = normal_modifier_time 	
+			is_decaying = yes
+		}
+	}
+}
+
+#japanese response to a free korea_scope
+
+sino_japan_events.7 = {
+    type = country_event
+    placement = scope:seoul_scope
+
+    title = sino_japan_events.7.t
+    desc = sino_japan_events.7.d
+    flavor = sino_japan_events.7.f
+
+    event_image = {
+        video = "ep1_donghak_rebellion"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by china no longer having kora
+    }
+
+    immediate = {
+		s:STATE_SEOUL.region_state:KOR = {
+			save_scope_as = seoul_scope
+		}
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+		capital = {
+			save_scope_as = capital_scope
+		}
+    }
+   option = {
+        name = sino_japan_events.7.a
+        default_option = no
+        trigger = {
+			OR = {	
+				has_variable = china_lost_korea
+				has_variable = korean_liberation_attempted
+			}
+        }
+        scope:japan_scope = {
+			create_diplomatic_play = {
+				name = make_protectorate
+				type = dp_make_protectorate
+				escalation = 80
+				target_country = c:KOR
+			}
+		}
+	}
+
+   option = {
+        name = sino_japan_events.7.b
+        default_option = no
+        trigger = {
+			OR = {	
+				has_variable = china_lost_korea
+				has_variable = korean_liberation_attempted
+			}
+        }
+        create_incident = {
+            country = c:KOR
+            value = 25
+        }
+        s:STATE_SEOUL = {
+            add_claim = ROOT
+        }
+        s:STATE_PYONGYANG = {
+            add_claim = ROOT
+        }
+        s:STATE_SARIWON = {
+            add_claim = ROOT
+        }
+        s:STATE_BUSAN = {
+            add_claim = ROOT
+        }
+        s:STATE_YANGHO = {
+            add_claim = ROOT
+        }
+	}
+	
+   option = {
+        name = sino_japan_events.7.c
+        default_option = no
+        trigger = {
+			OR = {	
+				has_variable = china_lost_korea
+				has_variable = korean_liberation_attempted
+			}
+	        is_in_power_bloc = yes
+	        is_power_bloc_leader = yes
+			c:KOR ?= {
+				relations:root <= relations_threshold:cordial
+			}
+        }
+		root.power_bloc = {
+			add_leverage = { target = c:KOR value = 600 }
+		}
+		set_variable = friendly_to_korea
+	}
+}
+
+#Taiwan Question Event
+
+sino_japan_events.6 = {
+    type = country_event
+    placement = scope:taiwan_scope
+
+    title = sino_japan_events.6.t
+    desc = sino_japan_events.6.d
+    flavor = sino_japan_events.6.f
+
+    event_image = {
+        video = "votp_conspiring"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by button in je
+    }
+
+    immediate = {
+		s:STATE_SEOUL.region_state:KOR = {
+			save_scope_as = seoul_scope
+		}
+		s:STATE_FORMOSA.region_state:CHI = {
+			save_scope_as = taiwan_scope
+		}
+		s:STATE_KANTO.region_state:JAP = {
+            save_scope_as = tokyo_scope
+        }
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+    option = {
+        name = sino_japan_events.6.a
+        default_option = yes
+        change_relations = {
+            country = c:CHI
+            value = -10
+        }
+        create_incident = {
+            country = c:CHI
+            value = 10
+        }
+        s:STATE_FORMOSA = {
+            add_claim = ROOT
+        }
+		s:STATE_FORMOSA.region_state:CHI = {
+			save_scope_as = taiwan_scope
+		}
+    }
+}
+
+sino_japan_events.8 = { #Reward Event
+    type = country_event
+    placement = scope:tokyo_scope
+
+    title = sino_japan_events.8.t
+    desc = sino_japan_events.8.d
+    flavor = sino_japan_events.8.f
+
+    event_image = {
+        video = "asia_confucianism_shinto"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+
+    duration = 3
+
+    trigger = {
+        #by completion of je
+    }
+
+    immediate = {
+		s:STATE_KANTO.region_state:JAP = {
+            save_scope_as = tokyo_scope
+        }
+        c:KOR = {
+            save_scope_as = korea_scope
+        }
+        c:JAP = {
+            save_scope_as = japan_scope
+        }
+        c:CHI = {
+            save_scope_as = china_scope
+        }
+    }
+
+    option = {
+        name = sino_japan_events.8.a
+        default_option = yes
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = modifier_greater_japan
+			days = long_modifier_time
+			is_decaying = yes
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_monarchy
+				}
+			ruler = {
+				add_modifier = {
+					name = modifier_japan_rises_character
+				}
+			}
+		}
+    }
+}

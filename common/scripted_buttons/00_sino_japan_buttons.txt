@@ -1,0 +1,426 @@
+korean_question_button = {
+	name = "korean_question_button_name"
+	desc = "korean_question_button_desc"
+
+	visible = {
+		NOT = { has_variable = korean_question_var }
+		NOT = {
+			c:JAP ?= {
+				is_diplomatic_play_enemy_of = c:CHI
+			}
+		}
+		NOT = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_YANGHO
+				country_or_subject_owns_entire_state_region = STATE_BUSAN
+				country_or_subject_owns_entire_state_region = STATE_SEOUL
+				country_or_subject_owns_entire_state_region = STATE_PYONGYANG
+				country_or_subject_owns_entire_state_region = STATE_SARIWON
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_manchuria
+		has_technology_researched = napoleonic_warfare
+		c:CHI ?= {
+			relations:root <= relations_threshold:poor
+		}
+		is_at_war = no
+		
+	}
+
+	effect = {
+		trigger_event = {
+			id = sino_japan_events.1
+			days = 0
+		}
+		set_variable = korean_question_var
+	}
+}
+
+korean_influence_button = {
+	name = "korean_influence_button_name"
+	desc = "korean_influence_button_desc"
+
+	visible = {
+		has_variable = korean_liberation_attempted
+		NOT = { has_variable = korean_influence_var }
+		NOT = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_YANGHO
+				country_or_subject_owns_entire_state_region = STATE_BUSAN
+				country_or_subject_owns_entire_state_region = STATE_SEOUL
+				country_or_subject_owns_entire_state_region = STATE_PYONGYANG
+				country_or_subject_owns_entire_state_region = STATE_SARIWON
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_manchuria
+		NOT = {
+			c:KOR = {
+				is_subject_of = c:CHI
+			}
+		}
+		c:CHI ?= {
+			has_truce_with = ROOT
+		}
+		is_at_war = no
+	}
+
+	effect = {
+		trigger_event = {
+			id = sino_japan_events.7
+			days = 0
+		}
+		set_variable = korean_influence_var
+	}
+}
+
+korean_protection_button = {
+	name = "korean_protection_button_name"
+	desc = "korean_protection_button_desc"
+	visible = {
+		has_variable = friendly_to_korea
+		NOT = { has_variable = korean_protection_var }
+		NOT = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_YANGHO
+				country_or_subject_owns_entire_state_region = STATE_BUSAN
+				country_or_subject_owns_entire_state_region = STATE_SEOUL
+				country_or_subject_owns_entire_state_region = STATE_PYONGYANG
+				country_or_subject_owns_entire_state_region = STATE_SARIWON
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_manchuria
+		NOT = {
+			c:KOR = {
+				is_subject_of = c:CHI
+			}
+		}
+		NOT = {
+			c:KOR = {
+				is_subject_of = root
+			}
+		}
+		c:KOR ?= {
+			relations:root >= relations_threshold:amicable
+		}
+		ROOT = {
+			AND = {
+				is_power_bloc_leader = yes
+				is_in_same_power_bloc = c:KOR
+			}
+		}
+		is_at_war = no
+	}
+
+	effect = {
+		create_diplomatic_pact = {
+			country = c:KOR
+			type = protectorate
+		}
+		set_variable = korean_protection_var
+	}
+}
+
+manchurian_question_button = {
+	name = "manchurian_question_button_name"
+	desc = "manchurian_question_button_desc"
+
+	visible = {
+		NOT = { has_variable = manchuria_question_var }
+		NOT = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+				country_or_subject_owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+				country_or_subject_owns_entire_state_region = STATE_SHENGJING
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_manchuria
+		c:JAP= {
+			country_rank >= 7
+		}
+		AND = {
+			country_or_subject_owns_entire_state_region = STATE_YANGHO
+			country_or_subject_owns_entire_state_region = STATE_BUSAN
+			country_or_subject_owns_entire_state_region = STATE_SEOUL
+			country_or_subject_owns_entire_state_region = STATE_PYONGYANG
+			country_or_subject_owns_entire_state_region = STATE_SARIWON
+		}
+
+		c:CHI ?= {
+			relations:root <= relations_threshold:poor
+		}
+		OR = {
+			has_technology_researched = civilizing_mission
+			any_interest_group = {
+				is_in_government = yes
+				leader = {
+					OR = {
+						has_ideology = ideology:ideology_jingoist_leader
+						has_ideology = ideology:ideology_ethno_nationalist
+						has_ideology = ideology:ideology_fascist
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		trigger_event = {
+			id = sino_japan_events.3
+			days = 0
+		}
+		set_variable = manchuria_question_var
+	}
+}
+
+taiwan_question_button = {
+	name = "taiwan_question_button_name"
+	desc = "taiwan_question_button_desc"
+
+	visible = {
+		NOT = { has_variable = taiwan_question_var }
+		NOT = {
+			c:JAP ?= {
+				is_diplomatic_play_enemy_of = c:CHI
+			}
+		}
+		NOT = {
+			country_or_subject_owns_entire_state_region = STATE_FORMOSA
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_south_china
+		c:CHI ?= {
+			relations:root <= relations_threshold:poor
+		}
+		has_technology_researched = nationalism
+
+	}
+
+	effect = {
+		trigger_event = {
+			id = sino_japan_events.6
+		}
+		set_variable = taiwan_question_var
+		ROOT = s:STATE_WEST_GALICIA.region_state:AUS
+
+	}
+}
+
+integrate_korea_button = {
+	name = "integrate_korea_button_name"
+	desc = "integrate_korea_button_desc"
+
+	visible = {
+		exists = c:JAP
+		c:JAP = THIS
+		NOT = { has_variable = korea_integration }
+		NOT = { exists = c:KOR }
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		has_technology_researched = central_archives
+		owns_entire_state_region = STATE_BUSAN
+		owns_entire_state_region = STATE_SEOUL
+		owns_entire_state_region = STATE_SARIWON
+		owns_entire_state_region = STATE_PYONGYANG
+		owns_entire_state_region = STATE_YANGHO
+	}
+
+	effect = {
+		every_scope_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_BUSAN
+					state_region = s:STATE_SEOUL
+					state_region = s:STATE_SARIWON
+					state_region = s:STATE_PYONGYANG
+					state_region = s:STATE_YANGHO
+				}
+			}
+        	add_modifier = {
+        		name = integrating_korea
+        		days = long_modifier_time
+			}
+		}
+		set_variable = korea_integration
+	}
+}
+
+integrate_manchu_button = {
+	name = "integrate_manchu_button_name"
+	desc = "integrate_manchu_button_desc"
+
+	visible = {
+		has_variable = manchuria_question_var
+		exists = c:JAP
+		c:JAP = THIS
+		NOT = { has_variable = manchuria_integration }
+		NAND = { 
+			any_scope_state = {
+				owner = ROOT
+				state_region = s:STATE_NORTHERN_MANCHURIA
+				is_incorporated = yes
+			}
+			any_scope_state = {
+				owner = ROOT
+				state_region = s:STATE_SOUTHERN_MANCHURIA
+				is_incorporated = yes
+			}
+			any_scope_state = {
+				owner = ROOT
+				state_region = s:STATE_SHENGJING
+				is_incorporated = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		AND = {
+			owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+			owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+			owns_entire_state_region = STATE_SHENGJING
+		}
+		has_technology_researched = pan-nationalism
+        has_company = company_type:company_mantetsu
+	}
+
+	effect = {
+		every_scope_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_NORTHERN_MANCHURIA
+					state_region = s:STATE_SOUTHERN_MANCHURIA
+					state_region = s:STATE_SHENGJING
+				}
+			}
+        	add_modifier = {
+        		name = integrating_manchuria
+        		days = long_modifier_time
+			}
+		}
+		set_variable = manchuria_integration
+	}
+}
+
+japan_korea_annexation_button = {
+	name = "japan_korea_annexation_button_name"
+	desc = "japan_korea_annexation_button_desc"
+
+	visible = {
+		exists = c:JAP
+		c:JAP = THIS
+		NOT = { has_variable = korea_annexation }
+		c:KOR = { is_subject_of = c:JAP }
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		country_rank = rank_value:great_power
+		any_subject_or_below ?= {
+			country_has_primary_culture = cu:korean		
+			is_subject_type = subject_type_puppet
+		}
+	}
+
+	effect = {
+		ROOT = {
+			annex = c:KOR
+		}
+		if = {
+			limit = {
+				exists = c:KOR
+			}
+			create_incident = {
+				country = c:KOR
+				value = 20
+			}
+		}
+		set_variable = korea_annexation
+	}
+}
+
+integrate_taiwan_button = {
+	name = "integrate_taiwan_button_name"
+	desc = "integrate_taiwan_button_desc"
+
+	visible = {
+		exists = c:JAP
+		c:JAP = THIS
+		NOT = { has_variable = taiwan_integration }
+		NOT = { 
+			any_scope_state = {
+				state_region = s:STATE_FORMOSA
+				is_incorporated = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_FORMOSA
+		has_technology_researched = central_archives
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = begins_integrating_taiwan_tt
+		}
+		every_scope_state = {
+			limit = {
+				state_region = s:STATE_FORMOSA
+			}
+        	add_modifier = {
+        		name = integrating_taiwan
+        		days = long_modifier_time
+			}
+		}
+		set_variable = taiwan_integration
+	}
+}

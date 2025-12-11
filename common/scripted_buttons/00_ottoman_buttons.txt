@@ -1,0 +1,72 @@
+﻿finish_tanzimats_button = {
+	name = finish_tanzimats_button
+	desc = finish_tanzimats_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = finished_tanzimats_var
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = finish_tanzimats_button_possible_tt
+			var:sick_man_var >= 4
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = tanzimats_finished_effect_tt
+			set_variable = finished_tanzimats_var
+		}
+	}
+
+	ai_chance = {
+		value = 0
+	}
+}
+
+
+ottoman_egypt_annexation_button = {
+	name = "ottoman_egypt_annexation_button_name"
+	desc = "ottoman_egypt_annexation_button_desc"
+
+	visible = {
+		exists = c:TUR
+		c:TUR = this
+		NOT = { has_variable = egypt_annexation }
+		c:EGY = { is_subject_of = c:TUR }
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		country_rank = rank_value:great_power
+		any_subject_or_below ?= {
+			country_has_primary_culture = cu:misri	
+			is_subject_type = subject_type_puppet
+		}
+	}
+
+	effect = {
+		ROOT = {
+			annex = c:EGY
+		}
+		if = {
+			limit = {
+				exists = c:EGY
+			}
+			create_incident = {
+				country = c:EGY
+				value = 20
+			}
+		}
+		set_variable = egypt_annexation
+	}
+}
