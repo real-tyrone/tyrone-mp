@@ -29,7 +29,7 @@ HBC_disband.1 = {
             save_scope_as = HBC_country
         }
         c:GBR = {
-            save_scope_as = EMPIRE_country
+            save_scope_as = company_country
         }
         c:QUE = {
             save_scope_as = LOWER_CANADA_country
@@ -56,10 +56,23 @@ HBC_disband.1 = {
         }
 		custom_tooltip = {
 			text = HBC_company_disbanded_TT
-			scope:EMPIRE_country ?= {
-            remove_company = scope:HBC_company
+		}
+		hidden_effect = {
+			# Remove the Hudson Bay Company's ownership of the HBC country and then disband the company
+			scope:HBC_country = {
+				owning_company ?= {
+					if = {
+						limit = {
+							is_company_type = company_type:company_hbc
+						}
+						remove_owned_country = scope:company_country
+						owner ?= {
+							remove_company = prev.type
+						}
+					}
+				}
 			}
-        }
+		}
     }
     option = {
         name = HBC_disband.2.a
@@ -75,10 +88,23 @@ HBC_disband.1 = {
         }
 		custom_tooltip = {
 			text = HBC_company_disbanded_TT
-			scope:EMPIRE_country ?= {
-            remove_company = scope:HBC_company
+		}
+		hidden_effect = {
+			# Remove the Hudson Bay Company's ownership of the HBC country and then disband the company
+			scope:HBC_country = {
+				owning_company ?= {
+					if = {
+						limit = {
+							is_company_type = company_type:company_hbc
+						}
+						remove_owned_country = scope:company_country
+						owner ?= {
+							remove_company = prev.type
+						}
+					}
+				}
 			}
-        }
+		}
     }
 }
 
@@ -116,8 +142,54 @@ austria_guide.1 = {
 
 	option = {
 		name = austria_guide.1.a
+        default_option = yes
 	}
 	option = {
 		name = austria_guide.1.b
+	}
+}
+
+namespace = spain_guide
+
+# Carlist Wars, initiation event
+
+spain_guide.1 = {
+	type = country_event
+	placement = root
+	
+	duration = 3	
+	
+	title = spain_guide.1.t
+	desc = spain_guide.1.d
+	flavor = spain_guide.1.f
+	
+	
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+	
+	cooldown = { days = normal_modifier_time }	
+	
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+	}
+
+	immediate = {
+		save_scope_as = spain_scope
+		c:SPC ?= {
+			save_scope_as = carlist_scope
+		}
+	}
+
+	option = {
+		name = spain_guide.1.a
+        default_option = yes
+	}
+	option = {
+		name = spain_guide.1.b
+		play_as = scope:carlist_scope
 	}
 }
