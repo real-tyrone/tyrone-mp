@@ -1,0 +1,75 @@
+﻿REPLACE_OR_CREATE:liberate_country_as_subject = {
+	icon = "gfx/interface/icons/war_goals/liberate_country.dds"
+
+	kind = liberate_country
+
+	settings = {
+		require_target_be_part_of_war
+		country_creation
+		requires_interest
+
+		# Validation
+		conflicts_with_country_creation
+		conflicts_with_annex_state
+		conflicts_with_annex_country
+		conflicts_with_existing_subject
+	}
+
+	execution_priority = 95
+
+	contestion_type = control_any_releasable_state
+
+	target_type = country
+
+	possible = {
+		# trigger to determine if a goal with its target data is listed when selecting a war goal in the diplo play panel
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+	}
+
+	valid = {
+		# trigger in addition to some basic validation code-side
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+	}
+
+	maneuvers = {
+		value = 0
+
+		add = {
+			desc = "MANEUVERS_BASE_VALUE"
+			value = 45
+			multiply = scope:target_state.state_population
+			divide = scope:target_country.capital.state_population
+			divide = 2
+		}
+		min = 30
+		max = 60
+		
+	}
+
+	infamy = {
+		value = 0
+		add = {
+			scope:target_state = {
+				add = state_population 
+				divide = define:NDiplomacy|WAR_GOAL_INFAMY_POPULATION_SCALING_FACTOR
+				multiply = define:NDiplomacy|WAR_GOAL_INFAMY_POPULATION_SCALING_MULTIPLIER
+				min = 0
+			}
+			desc = "WADDLE_INFAMY_PLACEHOLDER"
+		}
+		multiply = define:NDiplomacy|WAR_GOAL_INFAMY_MAKE_PROTECTORATE
+	}
+
+	on_enforced = {
+		scope:target_country = {
+			set_variable = waddle_female
+		}
+		scope:creator_country = {
+			set_variable = waddle_male
+		}
+	}
+
+	ai = {
+		is_significant_demand = no
+	}
+}
