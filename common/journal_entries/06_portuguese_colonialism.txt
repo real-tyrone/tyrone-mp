@@ -1,0 +1,381 @@
+﻿je_portuguese_colonialism = {
+
+	group = je_group_historical_content
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	should_be_pinned_by_default = yes
+	transferable = no
+	weight = 10000
+
+	immediate = {
+		sr:region_congo = {
+			save_scope_as = congo_scope
+		}
+		sr:region_zanj = {
+			save_scope_as = zanj_scope
+		}
+		trigger_event = portuguese_colonialism.1
+	}
+
+	is_shown_when_inactive = {
+        has_dlc_feature = ip4_content
+		NOT = {
+			has_law_or_variant = law_type:law_no_colonial_affairs
+		}
+		OR = { # If has any state in Angola or Mozambique at all
+			any_state_in_angola = {
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			any_state_in_mozambique = {
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		NOT = {
+			has_law_or_variant = law_type:law_no_colonial_affairs
+		}
+		OR = {
+			any_state_in_angola = {
+				is_split_state = no
+				custom_tooltip = {
+					text = owned_by_root_or_a_colonial_subject_tt
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+			}
+			any_state_in_mozambique = {
+				is_split_state = no
+				custom_tooltip = {
+					text = owned_by_root_or_a_colonial_subject_tt
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	complete = {
+		any_state_in_angola = {
+			is_split_state = no
+			custom_tooltip = {
+				text = owned_by_root_or_a_colonial_subject_tt
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			count >= 3
+		}
+		any_state_in_mozambique = {
+			is_split_state = no
+			custom_tooltip = {
+				text = owned_by_root_or_a_colonial_subject_tt
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			count >= 3
+		}
+	}
+
+	on_complete = {
+		trigger_event = portuguese_colonialism.2
+		set_variable = portuguese_colonialism_je_completed
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = does_not_own_any_state_in_angola_or_mozambique_tt
+			NAND = {
+				any_state_in_angola = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+				any_state_in_mozambique = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		trigger_event = portuguese_colonialism.3
+	}
+
+	invalid = {
+		OR = {
+			hidden_trigger = {
+				has_variable = rejected_colonialism_ambitions_var
+			}
+			is_subject = yes
+		}
+	}
+
+	on_invalid = {
+
+	}
+}
+
+je_the_pink_map = {
+	group = je_group_historical_content
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	should_be_pinned_by_default = yes
+	transferable = no
+	weight = 10000
+
+    is_shown_in_lobby = {
+        c:POR ?= this
+        has_dlc_feature = ip4_content
+    }
+
+	immediate = {
+
+	}
+
+	on_monthly_pulse = {
+
+	}
+
+	complete = {
+		any_state_in_angola = {
+			is_split_state = no
+			custom_tooltip = {
+				text = owned_by_root_or_a_colonial_subject_tt
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			count >= 3
+		}
+		any_state_in_mozambique = {
+			is_split_state = no
+			custom_tooltip = {
+				text = owned_by_root_or_a_colonial_subject_tt
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			count >= 3
+		}
+		any_state_in_zambezi_basin = {
+			is_split_state = no
+			custom_tooltip = {
+				text = owned_by_root_or_a_colonial_subject_tt
+				owner = {
+					OR = {
+						this = ROOT
+						AND = {
+							country_is_colonial_or_company = yes
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			count >= 3
+		}
+	}
+
+	on_complete = {
+		trigger_event = portuguese_colonialism.8
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = does_not_own_any_state_in_angola_mozambique_or_zambezi_basin_tt
+			NAND = {
+				any_state_in_angola = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+				any_state_in_mozambique = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+				any_state_in_zambezi_basin = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								country_is_colonial_or_company = yes
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		trigger_event = portuguese_colonialism.9
+	}
+
+	invalid = {
+		is_subject = yes
+	}
+
+	on_invalid = {
+
+	}
+}
+
+je_portuguese_reconquista = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_historical_content
+
+	is_shown_when_inactive = {
+        has_dlc_feature = ip4_content
+		c:POR ?= this
+		exists = c:BRZ
+	}
+
+
+	scripted_button = invade_brazil_button
+
+	immediate = {
+		c:BRZ ?= {
+			save_scope_as = brazil_scope
+		}
+	}
+
+
+	complete = {
+		c:BRZ ?= {
+			has_diplomatic_pact = {
+				who = ROOT
+				type = personal_union
+				is_initiator = no
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = lusofonia.3
+			popup = yes
+		}
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_brazil
+		"relations(c:BRZ)" < -50
+		OR = { 	
+			AND = {
+				is_powerful = yes
+				is_in_government = yes
+				leader = {
+					OR = {
+						has_ideology = ideology:ideology_jingoist_leader
+						has_ideology = ideology:ideology_fascist
+						has_ideology = ideology:ideology_integralist
+					}
+				}
+			}
+			has_technology_researched = pan-nationalism
+			ruler = {
+				has_ideology = ideology:ideology_miguelist
+			}
+			custom_tooltip = {
+				text = je_portugal_regeneration_tt
+				has_variable = regeneration_complete
+			}
+		}
+	}
+
+    fail = {
+		always = no
+    }
+
+	on_fail = {
+	}
+
+	weight = 6000
+
+    should_be_pinned_by_default = yes
+}	

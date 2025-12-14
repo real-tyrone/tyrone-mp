@@ -1,3 +1,119 @@
+REPLACE:ITA = {
+	geographic_region = geographic_region_italy
+
+	is_major_formation = yes
+
+	unification_play = dp_unify_italy
+	leadership_play = dp_leadership_italy
+
+	required_states_fraction = 0.7
+
+	ai_will_do = { has_technology_researched = nationalism }
+
+	potential = {
+        NOR = {
+            c:AUS ?= this
+            c:KUK ?= this
+            c:HRE ?= this
+        }
+	}
+
+	possible = {
+		OR = {
+			country_has_primary_culture = cu:north_italian
+			country_has_primary_culture = cu:south_italian
+		}
+		is_country_type = recognized
+        NOR = {
+            c:AUS ?= this
+            c:KUK ?= this
+            c:HRE ?= this
+        }
+	}
+
+	max_num_formation_candidates = 3
+	can_be_formation_candidate = {
+		country_rank >= rank_value:major_power
+        NOR = {
+            c:AUS ?= this
+            c:KUK ?= this
+            c:HRE ?= this
+        }
+		is_country_type = recognized
+		any_country = {
+			filter = {
+				OR = {
+					country_has_primary_culture = cu:north_italian
+					country_has_primary_culture = cu:south_italian
+				}
+			}
+			has_technology_researched = nationalism
+			percent = 1
+		}
+	}
+
+	can_be_unification_target = {
+		NAND = { # United States of Greater Austria
+			country_has_primary_culture = cu:north_italian
+			OR = {
+				has_journal_entry = je_danubian_federation
+				c:KUK ?= this
+          	  	c:HRE ?= this
+			}
+		}
+	}
+}
+
+REPLACE:FND = {
+	geographic_region = geographic_region_andean_federation
+
+	is_major_formation = yes
+
+	unification_play = dp_unify_andes
+	leadership_play = dp_leadership_andes
+
+	required_states_fraction = 0.6
+
+	ai_will_do = { always = yes }
+
+	potential = {
+		has_dlc_feature = rp1_content
+	}
+
+	possible = {
+		has_journal_entry = je_andean_federation
+		OR = {
+			country_has_primary_culture = cu:north_andean
+			country_has_primary_culture = cu:south_andean
+			AND = {
+				exists = cu:venezuelan
+				country_has_primary_culture = cu:venezuelan
+			}
+			AND = {
+				exists = cu:ecuadorian
+				country_has_primary_culture = cu:ecuadorian
+			}
+			AND = {
+				exists = cu:bolivian
+				country_has_primary_culture = cu:bolivian
+			}
+			AND = {
+				exists = cu:peruvian
+				country_has_primary_culture = cu:peruvian
+			}
+			AND = {
+				exists = cu:chilean
+				country_has_primary_culture = cu:chilean
+			}
+		}
+	}
+
+	max_num_formation_candidates = 3
+	can_be_formation_candidate = {
+		country_rank >= rank_value:major_power
+	}
+}
+
 REPLACE:IBE = {
 	use_culture_states = yes
 
@@ -6,7 +122,7 @@ REPLACE:IBE = {
 	ai_will_do = { always = yes }
 
 	possible = {
-		has_technology_researched = nationalism #pan-nationalism
+		has_journal_entry = je_iberia
 		trigger_if = {
 			limit = {
 				capital = {
@@ -30,7 +146,7 @@ REPLACE:IBE = {
 	}
 }
 
-ATL = {
+REPLACE:ATL = {
 	states = {
 		STATE_CENTRAL_CUBA
 		STATE_WESTERN_CUBA
@@ -44,6 +160,6 @@ ATL = {
 	ai_will_do = { always = yes }
 
 	possible = {
-		has_technology_researched = nationalism
+		has_technology_researched = nationalism #pan-nationalism
 	}
 }

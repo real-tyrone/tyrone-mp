@@ -1,0 +1,127 @@
+﻿je_spread_iberianism_button = {
+	name = je_spread_iberianism_button
+	desc = je_spread_iberianism_button_desc
+
+	visible = {
+		NOT = {
+			c:POR = {
+				is_player = yes
+			}
+		}
+		is_involved_in_journal_entry = je_iberia
+		NOT = {
+			c:POR = THIS
+		}
+		NOT = { 
+			has_variable = spread_iberianism
+		}
+		exists = c:POR		
+        has_variable = pursued_iberian_unification
+		c:POR ?= {
+			has_variable = against_iberian_unification
+		}		
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = je_active_for_more_than_two_years_tt
+			scope:journal_entry.journal_entry_age > 730
+		}
+		c:POR ?= {
+			relations:root >= relations_threshold:friendly
+		}
+		ROOT = {
+			is_in_same_power_bloc = c:POR
+		}
+		is_at_war = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		set_variable = spread_iberianism
+		je:je_iberia ?= {
+			add_involved_country = c:POR
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+je_regime_change_portugal_button = {
+	name = je_regime_change_portugal_button
+	desc = je_regime_change_portugal_button_desc
+
+	visible = {
+		NOT = {
+			custom_tooltip = {
+				text = iberia_shared_governance_principles_laws_tt
+				any_country_in_iberia = {
+					is_involved_in_journal_entry = je_iberia
+					active_law:lawgroup_governance_principles ?= {
+						any_country_in_iberia = {
+							filter = {
+								is_involved_in_journal_entry = je_iberia
+							}
+							has_law = prev.type
+							count = all
+						}
+					}
+				}
+			}
+		}
+		exists = c:POR
+		NOT = {
+			c:POR = THIS
+		}
+		NOT = {
+			has_variable = regime_changed_por_var
+		}
+	}
+
+	possible = {
+		AND = {
+			custom_tooltip = {
+				text = spa_power_greater_or_equal_tt
+				root.prestige >= c:POR.prestige
+				root.naval_power_projection > c:POR.naval_power_projection
+				root.army_power_projection > c:POR.army_power_projection
+			}
+		}
+		NOT = {
+			custom_tooltip = {
+				text = iberia_shared_governance_principles_laws_tt
+				any_country_in_iberia = {
+					is_involved_in_journal_entry = je_iberia
+					active_law:lawgroup_governance_principles ?= {
+						any_country_in_iberia = {
+							filter = {
+								is_involved_in_journal_entry = je_iberia
+							}
+							has_law = prev.type
+							count = all
+						}
+					}
+				}
+			}
+		}
+	}
+	selected = {
+	}
+
+	effect = {
+		set_variable = regime_changed_por_var
+		create_diplomatic_play = {
+	        target_country = c:POR
+			type = dp_regime_change
+			escalation = 80
+		}
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}

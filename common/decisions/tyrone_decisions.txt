@@ -1,4 +1,262 @@
-﻿REPLACE:aus_organise_trialism = {
+﻿REPLACE:goa_decision = {
+	is_shown = {
+		has_dlc_feature = ip4_content
+		c:POR ?= ROOT
+		any_primary_culture = {
+			cu:portuguese = this
+		}
+		country_has_state_religion = rel:catholic
+		any_scope_state = {
+			this = p:x51F0A0.state
+		}
+		is_subject = no
+		NOT = {
+			has_variable = goa_decision_initiated
+		}
+	}
+
+	possible = {
+		p:x51F0A0.state = {
+			culture_percent_state = {
+				target = cu:portuguese
+				value > 0.05
+			}
+			religion_percent_state = {
+				target = rel:catholic
+				value > 0.85
+			}
+		}
+	}
+
+	when_taken = {
+		c:POR ?= {
+			trigger_event = {
+				id = portuguese_colonialism.15
+			}
+		}
+		set_variable = goa_decision_initiated
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}
+
+integrate_brazil_por = {
+	is_shown = {
+		c:POR ?= this
+		NOT = {
+			exists = c:BRZ
+		}
+		NOT = {
+		has_variable = integrating_brazil_var
+		}
+	}
+
+	possible = {
+		OR = {
+			has_technology_researched = pan-nationalism
+			AND = {
+				ruler = {
+					has_ideology = ideology:ideology_miguelist
+				}
+				has_technology_researched = nationalism				
+			}
+		}
+		owns_entire_state_region = STATE_RIO_DE_JANEIRO
+		owns_entire_state_region = STATE_SAO_PAULO
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+
+	when_taken = {
+		every_scope_state = {
+			limit = { 
+				region = sr:region_brazil
+				any_scope_state = {
+					owner = {
+						country_has_primary_culture = cu:portuguese
+					}
+				}
+			}
+			add_modifier = {
+				name = integrating_brazil
+				days = long_modifier_time
+			}
+		}
+		set_variable = integrating_brazil_var
+	}
+}
+
+annex_brazil_por = {
+	is_shown = {
+		c:POR ?= this
+		any_subject_or_below = {
+			country_has_primary_culture = cu:brazilian
+		}
+		has_law_or_variant = law_type:law_monarchy
+		NOT = {
+			has_variable = annexing_brazil
+		}
+	}
+
+	possible = {
+		OR = {
+			has_technology_researched = pan-nationalism
+			AND = {
+				ruler = {
+					has_ideology = ideology:ideology_miguelist
+				}
+				has_technology_researched = nationalism				
+			}
+		}
+		has_government_type = gov_united_kingdom_braz_por
+		any_subject_or_below = {
+			country_has_primary_culture = cu:brazilian
+			is_subject_type = subject_type_crown_land
+			liberty_desire <= 25
+		}
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			target_country = c:BRZ
+			type = dp_annex_war
+			add_war_goal = { holder = c:BRZ target_country = c:POR type = independence }
+		}
+		hidden_effect = { #Why? Because annexing subjects is currently bugged for libert
+			change_infamy = -100
+		}
+		set_variable = annexing_brazil
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+REPLACE:decision_depose_ruling_dynasty = {
+	is_shown = {
+		OR = {
+			has_dlc_feature = voice_of_the_people_content
+			has_dlc_feature = ip4_content
+		}
+		OR = {
+			country_has_primary_culture = cu:french
+			country_has_primary_culture = cu:spanish
+			country_has_primary_culture = cu:portuguese
+			country_has_primary_culture = cu:iberian
+		}
+		has_law = law_type:law_monarchy
+		is_revolutionary = no
+		is_secessionist = no
+	}
+
+	possible = {
+		NOR = {
+			hidden_trigger = { has_variable = coup_event_active }
+			has_journal_entry = je_ip4_coup
+			is_involved_in_journal_entry = je_the_first_carlist_war
+		}
+		any_scope_character = {
+			OR = {
+				has_role = general
+				has_role = admiral
+			}
+			character_has_ideology_conflicting_with_ruling_dynasty = yes
+			NOT = { # You cannot hire a communist to install the Orleanists on the throne
+				law_stance = {
+					law = law_type:law_monarchy
+					value <= disapprove
+				}
+			}
+			custom_tooltip = {
+				text = ig_sufficiently_upset_tt
+				interest_group = {
+					ig_approval < 0
+				}
+				has_variable = monthly_cached_commander_coup_strength
+			}
+			trigger_if = {
+				limit = {
+					has_variable = monthly_cached_commander_coup_strength
+				}
+				custom_tooltip = {
+					text = coup_strength_greater_than_coup_resistance_tt
+					var:monthly_cached_commander_coup_strength >= root.country_coup_resistance
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		ordered_scope_character = {
+			limit = {
+				OR = {
+					has_role = general
+					has_role = admiral
+				}
+				has_variable = monthly_cached_commander_coup_strength
+				character_has_ideology_conflicting_with_ruling_dynasty = yes
+				NOT = { # You cannot hire a communist to install the Orleanists on the throne
+					law_stance = {
+						law = law_type:law_monarchy
+						value <= disapprove
+					}
+				}
+				var:monthly_cached_commander_coup_strength >= root.country_coup_resistance
+				interest_group = {
+					ig_approval < 0
+				}
+			}
+			order_by = popularity
+			position = 0
+			save_scope_as = temp_golpista
+		}
+		if = {		
+			limit = {
+				exists = scope:temp_golpista
+			}
+			custom_tooltip = {
+				text = begin_dynastic_coup_tt
+			}
+			scope:temp_golpista ?= {
+				set_variable = commander_doing_coup_on_player_behalf
+				add_modifier = {
+					name = modifier_dynastic_coup
+					days = short_modifier_time
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:temp_golpista
+				}
+				create_coup_from_character = {
+					CHARACTER = scope:temp_golpista
+				}
+			}
+			if = {
+				limit = {
+					scope:temp_golpista = {
+						has_ideology = ideology:ideology_miguelist
+					}
+				}
+				set_variable = miguelist_coup
+			}
+		}
+		else = {
+			custom_tooltip = begin_dynastic_coup_scopeless_tt
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+REPLACE:aus_organise_trialism = {
 	is_shown = {
 		has_dlc_feature = ip3_content
 		c:AUS ?= this
