@@ -36,10 +36,30 @@
 	effect = {
 		save_scope_as = portugal_scope
 		set_variable = invaded_brazil_var
-		c:POR ?= {
-			create_diplomatic_play = {
-				target_state = s:STATE_RIO_DE_JANEIRO.region_state:BRZ
-				type = dp_enforce_pu
+		if = {
+			limit = {
+				c:BRZ = {
+					has_law = law_type:law_monarchy
+				}
+			}
+			c:POR ?= {
+				create_diplomatic_play = {
+					target_state = s:STATE_RIO_DE_JANEIRO.region_state:BRZ
+					type = dp_enforce_pu
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				c:BRZ = {
+					NOT = { has_law = law_type:law_monarchy }
+				}
+			}
+			c:POR ?= {
+				create_diplomatic_play = {
+					target_state = s:STATE_RIO_DE_JANEIRO.region_state:BRZ
+					type = dp_make_protectorate
+				}
 			}
 		}
 	}
