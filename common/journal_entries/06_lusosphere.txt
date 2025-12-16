@@ -68,6 +68,7 @@
 	}
 
 	possible = {
+		is_subject = no
 		has_interest_marker_in_region = region_brazil
 		"relations(c:BRZ)" > 10
 	}
@@ -188,6 +189,90 @@ je_portugal_united_kingdom = {
 	invalid = {
 		NOT = {
 			exists = c:BRZ
+		}
+	}
+
+	on_fail = {
+		set_variable = { name = failed_uk_var days = short_modifier_time }
+	}
+
+	weight = 5000
+
+    should_be_pinned_by_default = yes
+}
+
+je_portugal_brazil_reversal = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	scripted_button = reclaim_portugal_button
+
+	group = je_group_historical_content
+
+	is_shown_when_inactive = {
+        has_dlc_feature = ip4_content
+		c:BRZ ?= this
+		exists = c:POR
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_iberia
+		"relations(c:POR)" < -50
+		OR = { 	
+			any_interest_group_in_government = {
+				is_in_government = yes
+				is_powerful = yes
+				leader = {
+					OR = {
+						has_ideology = ideology:ideology_jingoist_leader
+						has_ideology = ideology:ideology_fascist
+						has_ideology = ideology:ideology_integralist
+					}
+				}
+			}
+			has_technology_researched = pan-nationalism
+		}
+	}
+
+	immediate = {
+		c:POR ?= {
+			save_scope_as = portugal_scope
+		}
+	}
+
+	on_monthly_pulse = {
+
+	}
+
+	modifiers_while_active = {
+
+	}
+
+	complete = {
+		c:POR ?= {
+			has_diplomatic_pact = {
+				who = ROOT
+				type = personal_union
+				is_initiator = no
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = lusofonia.3
+		}
+	}
+
+    fail = {
+		OR = {
+			NOT = { has_law = law_type:law_monarchy }
+			c:POR ?= { NOT = { has_law = law_type:law_monarchy } }
+		}
+    }
+
+	invalid = {
+		NOT = {
+			exists = c:POR
 		}
 	}
 

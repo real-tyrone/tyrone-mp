@@ -195,14 +195,23 @@ lusofonia.3 = {
 			desc = lusofonia.3.d
 			trigger = {
 				NOT = {
-					has_variable = invaded_brazil_var					
+					OR = {
+						has_variable = invaded_brazil_var		
+						has_variable = invaded_portugal_var
+					}
 				}
 			}
 		}
 		triggered_desc = {
 			desc = lusofonia.3.d_2
 			trigger = {
-				has_variable = invaded_brazil_var
+				has_variable = invaded_brazil_var		
+			}
+		}
+		triggered_desc = {
+			desc = lusofonia.3.d_3
+			trigger = {	
+				has_variable = invaded_portugal_var
 			}
 		}
 	}
@@ -254,20 +263,48 @@ lusofonia.3 = {
 		cu:portuguese = {
 			add_tradition_trait = tradition_lusitanian
 		}
-		change_relations = {
-			country = scope:brazil_scope
-			value = 80
+		if = {
+			limit = {
+				c:POR ?= this
+			}
+			change_relations = {
+				country = scope:brazil_scope
+				value = 80
+			}
+			c:BRZ ?= {
+				add_modifier = {
+					name = modifier_brazil_transoceanic_empire
+					days = long_modifier_time
+				}
+			}
 		}
-		c:BRZ ?= {
-			add_modifier = {
-				name = modifier_brazil_transoceanic_empire
-				days = long_modifier_time
+		else_if = {
+			limit = {
+				c:BRZ ?= this
+			}
+			c:BRZ ?= {
+				add_primary_culture = cu:portuguese
+			}
+			c:POR ?= {
+				add_modifier = {
+					name = modifier_portugal_brz_transoceanic_empire
+					days = long_modifier_time
+				}
+			}
+			change_relations = {
+				country = scope:portugal_scope
+				value = 80
 			}
 		}
 	}
 
 	option = {
 		name = lusofonia.3.b
+		trigger = {
+			NOT = {
+				c:BRZ ?= this
+			}
+		}
 		set_variable = quinto_imperio_var
 		add_modifier = {
 			name = modifier_portugal_fifth_empire
@@ -317,9 +354,28 @@ lusofonia.3 = {
 		c:BRZ ?= {
 			add_primary_culture = cu:portuguese
 		}
-		c:BRZ ?= {
+		c:POR ?= {
 			add_modifier = {
-				name = modifier_brazil_transoceanic_empire
+				name = modifier_portugal_brz_transoceanic_empire
+				days = long_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = lusofonia.3.c
+		trigger = {
+			NOT = {
+				c:POR ?= this
+			}
+		}
+		add_modifier = {
+			name = brz_new_metropole
+			days = long_modifier_time
+		}
+		c:POR ?= {
+			add_modifier = {
+				name = modifier_portugal_brz_transoceanic_empire
 				days = long_modifier_time
 			}
 		}

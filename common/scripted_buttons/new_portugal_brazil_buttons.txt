@@ -15,9 +15,9 @@
 		AND = {
 			custom_tooltip = {
 				text = por_power_greater_or_equal_brz_tt
-				c:POR.prestige > c:BRZ.prestige
-				:POR.naval_power_projection > c:BRZ.naval_power_projection
-				:POR.army_power_projection > c:BRZ.army_power_projection
+				c:POR.prestige >= c:BRZ.prestige
+				#c:POR.naval_power_projection > c:BRZ.naval_power_projection
+				#c:POR.army_power_projection > c:BRZ.army_power_projection
 			}
 		}
 		OR = {
@@ -58,69 +58,6 @@
 			c:POR ?= {
 				create_diplomatic_play = {
 					target_state = s:STATE_RIO_DE_JANEIRO.region_state:BRZ
-					type = dp_make_protectorate
-				}
-			}
-		}
-	}
-
-	ai_chance = {
-		value = 1
-	}
-}
-
-reclaim_portugal_button = {
-	name = reclaim_portugal_button
-	desc = reclaim_portugal_button_desc
-
-	visible = {
-		has_dlc_feature = rp1_content
-		exists = c:POR
-		NOT = {
-			has_variable = invaded_portugal_var
-		}
-	}
-
-	possible = {
-		"c:POR.relations(root)" <= relations_threshold:hostile
-		AND = {
-			custom_tooltip = {
-				text = brz_power_greater_por_tt
-				c:BRZ.prestige > c:POR.prestige
-				c:BRZ.naval_power_projection > c:POR.naval_power_projection
-				c:BRZ.army_power_projection > c:POR.army_power_projection
-			}
-		}
-		has_technology_researched = pan-nationalism
-	}
-	selected = {
-	}
-
-	effect = {
-		save_scope_as = brazil_scope
-		set_variable = invaded_portugal_var
-		if = {
-			limit = {
-				c:BRZ = {
-					has_law = law_type:law_monarchy
-				}
-			}
-			c:BRZ ?= {
-				create_diplomatic_play = {
-					target_state = s:STATE_ESTREMADURA.region_state:POR
-					type = dp_enforce_pu
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				c:POR = {
-					NOT = { has_law = law_type:law_monarchy }
-				}
-			}
-			c:BRZ ?= {
-				create_diplomatic_play = {
-					target_state = s:STATE_ESTREMADURA.region_state:POR
 					type = dp_make_protectorate
 				}
 			}

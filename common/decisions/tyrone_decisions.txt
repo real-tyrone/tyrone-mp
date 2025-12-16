@@ -42,6 +42,47 @@
 	}
 }
 
+annex_por_brz = {
+	is_shown = {
+		c:BRZ ?= this
+		any_subject_or_below = {
+			country_has_primary_culture = cu:portuguese
+		}
+		exists = c:POR
+		has_law_or_variant = law_type:law_monarchy
+		NOT = {
+			has_variable = annexing_portugal
+		}
+	}
+
+	possible = {
+		has_technology_researched = pan-nationalism
+		any_subject_or_below = {
+			country_has_primary_culture = cu:portuguese
+			is_subject_type = subject_type_crown_land
+			liberty_desire <= 25
+		}
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			target_country = c:POR
+			type = dp_annex_war
+			add_war_goal = { holder = c:POR target_country = c:BRZ type = independence }
+		}
+		hidden_effect = { #Why? Because annexing subjects is currently bugged for liberty desire
+			change_infamy = -50
+		}
+		set_variable = annexing_portugal
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
 annex_brazil_por = {
 	is_shown = {
 		c:POR ?= this
@@ -80,7 +121,7 @@ annex_brazil_por = {
 			type = dp_annex_war
 			add_war_goal = { holder = c:BRZ target_country = c:POR type = independence }
 		}
-		hidden_effect = { #Why? Because annexing subjects is currently bugged for libert
+		hidden_effect = { #Why? Because annexing subjects is currently bugged for liberty desire
 			change_infamy = -100
 		}
 		set_variable = annexing_brazil
