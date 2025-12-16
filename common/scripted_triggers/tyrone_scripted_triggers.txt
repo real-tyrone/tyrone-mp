@@ -1,0 +1,61 @@
+﻿french_fail_trigger = {
+	AND = {
+		any_political_movement = {
+			OR = {
+				movement_is_liberal = yes
+				movement_is_socialist = yes
+			}
+			is_insurrectionary = yes
+		}
+		OR = {
+			any_civil_war = {
+				is_civil_war_type = revolution
+				civil_war_progress >= 0.75
+			}
+			capital = {
+				is_in_revolt = yes
+			}
+		}
+	}
+}
+japan_monarchist_rising_trigger = {
+    coa_def_monarchy_flag_trigger = yes
+    OR = {
+        has_law_or_variant = law_type:law_oligarchy
+        coa_autocracy_trigger = yes
+    }
+    any_interest_group = {
+        leader = {
+            OR = {
+                has_ideology = ideology:ideology_fascist
+                has_ideology = ideology:ideology_ethno_nationalist
+            }
+        }
+        is_in_government = yes
+    }
+}
+
+japan_monarchist_rising_flag_trigger = {
+	exists = scope:actor
+	scope:actor ?= { japan_monarchist_rising_trigger = yes }
+}
+
+REPLACE:country_can_form_power_bloc = {
+	AND = {
+		trigger_if = {
+			limit = {
+				is_country_type = decentralized
+			}
+			NOT = { is_country_type = decentralized }
+		}
+		trigger_if = {
+			limit = {
+				is_revolutionary = yes
+			}
+			is_revolutionary = no
+		}
+		country_rank >= rank_value:unrecognized_major_power
+		# NOT = { has_law = law_type:law_isolationism } # Japan can form one now
+	}
+}
+
