@@ -265,7 +265,7 @@ carlist_war.2 = {
 # The Basque Fueros
 carlist_war.3 = {
     type = country_event
-    placement = ROOT
+    placement = scope:basque_country_scope
 
 	cooldown = { days = never_fire_again_modifier_time }
 
@@ -545,16 +545,16 @@ carlist_war.5 = {
 		name = carlist_war.5.a
 		default_option = yes
 
-		add_modifier = {
-			name = spc_secure_port
-			days = long_modifier_time
-		}
 		random_scope_state = {
 			limit = {
 				state_region = s:STATE_BASQUE_COUNTRY
 			}
+		add_modifier = {
+			name = spc_secure_port
+			days = long_modifier_time
+		}
 			kill_population_percent_in_state = {
-				percent = 0.02
+				percent = 0.02	# 0.01
 			}
 			add_radicals_in_state = {
 				value = 0.05
@@ -581,7 +581,7 @@ carlist_war.5 = {
 # Taking the fight to Andalusia
 carlist_war.6 = {
     type = country_event
-    placement = ROOT
+    placement = scope:upper_andalusia_scope
 
 	cooldown = { days = never_fire_again_modifier_time }
 
@@ -594,7 +594,7 @@ carlist_war.6 = {
 	dlc = dlc016
 
     event_image = {
-		video = "europenorthamerica_before_the_battle"
+		video = "unspecific_vandalized_storefront"
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
@@ -604,9 +604,34 @@ carlist_war.6 = {
     trigger = {
 		has_dlc_feature = ip4_content
 		c:SPC ?= this
+		c:SPA ?= {
+			any_scope_state = {
+				OR = {
+					state_region = s:STATE_UPPER_ANDALUSIA
+					state_region = s:STATE_LOWER_ANDALUSIA
+				}
+			}
+		}
 	}
 
-	immediate = {}
+	immediate = {
+		s:STATE_UPPER_ANDALUSIA = {
+			random_scope_state = {
+				limit = {
+					owner = c:SPA
+				}
+				save_scope_as = upper_andalusia_scope
+			}
+		}
+		s:STATE_LOWER_ANDALUSIA = {
+			random_scope_state = {
+				limit = {
+					owner = c:SPA
+				}
+				save_scope_as = lower_andalusia_scope
+			}
+		}
+	}
 
 	option = { # More bandits
 		name = carlist_war.6.a
@@ -615,7 +640,7 @@ carlist_war.6 = {
 		add_modifier = {
 			name = spa_carlist_terror_expenses
 			days = short_modifier_time
-			multiplier = money_amount_multiplier_small
+			multiplier = money_amount_multiplier_small	# money_amount_multiplier_medium 
 		}
 		s:STATE_UPPER_ANDALUSIA.region_state:SPA ?= {
 			add_modifier = {

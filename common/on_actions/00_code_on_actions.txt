@@ -100,25 +100,10 @@ on_game_started_after_lobby = {
 
 # No root scope set
 on_monthly_pulse = {
+	on_actions = {
+		exile_pool_culling_on_action
+	}
 	effect = {
-		every_character_in_exile_pool = {
-			limit = {
-				popularity <= -25
-			}
-			if = {
-				limit = {
-					is_historical = no
-				}
-				kill_character = yes
-			}
-			else_if = {
-				limit = {
-					popularity <= -100
-				}
-				kill_character = yes
-			}
-		}
-
 		every_character_in_jail = { # Music too loud? Right to jail. Right away. Driving too fast? Jail. Slow? Jail. You undercook fish? Believe it or not, jail.
 			save_scope_as = prisoner_scope
 			change_variable = { name = prison_time_var subtract = 1 }
@@ -1363,6 +1348,21 @@ on_monthly_pulse_country = {
 				}
 			}
 			remove_modifier = modifier_not_recognized_by_spain
+		}
+
+		if = {
+			limit = {
+				has_government_type = gov_colonial_administration_spa
+				NOT = { has_modifier = modifier_reformed_captaincy_general }
+			}
+			add_modifier = modifier_reformed_captaincy_general
+		}
+		else_if = {
+			limit = {
+				NOT = { has_government_type = gov_colonial_administration_spa }
+				has_modifier = modifier_reformed_captaincy_general
+			}
+			remove_modifier = modifier_reformed_captaincy_general
 		}
 	}
 	on_actions = { # delay ensures events won't fire simultaneously
@@ -2800,7 +2800,7 @@ on_new_ruler = {
 					if = {
 						limit = {
 							is_character_alive = yes
-							NOT = { c:POR ?= THIS.ruler }
+							NOT = { c:POR.ruler ?= this  }
 						}
 						kill_character = { hidden = yes }
 					}
@@ -3721,6 +3721,26 @@ on_country_formed = {
 				has_journal_entry = je_reunify_china
 			}
 			set_global_variable = { name = chinese_central_government value = ROOT }
+		}
+
+		if = {
+			limit = {
+				c:IBE ?= this
+				has_variable_list = spain_accepted_cultures
+			}
+			every_in_list = {
+				variable = spain_accepted_cultures
+				if = {
+					limit = {
+						NOT = {
+							is_primary_culture_of = ROOT
+						}
+					}
+					ROOT = {
+						add_primary_culture = prev
+					}
+				}
+			}
 		}
 	}
 }
@@ -4700,6 +4720,17 @@ on_law_activated = {
 		}
 		second_amendment_add_obsessions_effect = yes # Relevant if owner is Yankee or Dixie
 		upgrade_moderniser_movement_effect = yes # Relevant if owner has a moderniser movement
+		owner = {
+			if = { # If a currently enacting law is invalidated by an activated law, stop enacting it
+				limit = {
+					exists = currently_enacting_law
+					currently_enacting_law ?= {
+						law_is_available = no
+					}
+				}
+				cancel_enactment = yes
+			}
+		}
 	}
 }
 
@@ -6813,7 +6844,7 @@ on_election_campaign_start = {
 		if = {
 			limit = {
 				active_law:lawgroup_distribution_of_power ?= {
-					has_amendment = amendment_tradition_of_free_elections
+					has_amendment = amendment_type:amendment_tradition_of_free_elections
 				}
 			}
 			add_electoral_confidence = {
