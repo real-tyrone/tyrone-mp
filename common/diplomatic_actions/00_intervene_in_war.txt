@@ -141,7 +141,7 @@
 	ai = {
 	
 		evaluation_chance = {
-			value = 0.25		
+			value = 0.0		
 		}
 	
 		propose_score = {
@@ -149,68 +149,7 @@
 		}
 		
 		will_propose = {
-			
-			#THIS wants to help TARGET
-			OR = {
-			
-				#THIS wants to help TARGET against a pariah
-				any_country = { 
-					has_war_with = scope:target_country 
-					infamy >= infamy_threshold:pariah
-				}
-				
-				#THIS wants to help TARGET who is an ally or subject who is losing
-				scope:target_country = { 
-					OR = {
-						any_scope_treaty = { binds = scope:actor any_scope_article = { has_type = alliance } }
-						any_scope_treaty = { binds = scope:actor any_scope_article = { has_type = defensive_pact } } 
-						is_subject_of = scope:actor
-					}
-					any_scope_war = {
-						has_war_support = {
-							target = scope:target_country
-							value < 25
-						}
-					}
-				}
-				
-				#THIS wants to help its colony or puppet
-				scope:target_country = { 
-					is_subject_of = scope:actor 
-				}
-				
-			}
-			
-			#THIS wants to avoid helping TARGET at all costs
-			NOR = {
-				
-				#Enemy of TARGET has a stronger military than THIS
-				any_country = { 
-					has_war_with = scope:target_country 
-					OR = { 
-						navy_size > scope:actor.navy_size
-						army_size > scope:actor.army_size
-					}
-				}
-				
-				#Enemy of TARGET has good relations with THIS
-				any_country = { 
-					has_war_with = scope:target_country 
-					OR = {
-						any_scope_treaty = { binds = scope:actor any_scope_article = { has_type = alliance } }
-						any_scope_treaty = { binds = scope:actor any_scope_article = { has_type = defensive_pact } } 
-						is_subject_of = scope:actor
-					}
-				}
-				
-			}
-			
-			#THIS has a strong economy
-			in_default = no
-			has_healthy_economy = yes
-			
+			always = no		
 		}
-		
 	}
-	
 }
