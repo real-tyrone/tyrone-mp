@@ -16,8 +16,8 @@
 			custom_tooltip = {
 				text = por_power_greater_or_equal_brz_tt
 				c:POR.prestige >= c:BRZ.prestige
-				#c:POR.naval_power_projection > c:BRZ.naval_power_projection
-				#c:POR.army_power_projection > c:BRZ.army_power_projection
+				c:POR.naval_power_projection > c:BRZ.naval_power_projection
+				c:POR.army_power_projection > c:BRZ.army_power_projection
 			}
 		}
 		OR = {
@@ -113,6 +113,57 @@ je_portugal_and_brazil_abdicate_pedro_button = {
 		c:BRZ ?= {
 			trigger_event = { id = lusofonia.4 }
 		}
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}
+
+reclaim_portugal_button = {
+	name = reclaim_portugal_button
+	desc = reclaim_portugal_button_desc
+
+	visible = {
+		exists = c:POR
+		NOT = {
+			has_variable = invaded_portugal_var
+		}
+	}
+
+	possible = {
+		"relations(c:POR)" < -50
+		AND = {
+			custom_tooltip = {
+				text = brz_power_greater_por_tt
+				c:BRZ.prestige >= c:POR.prestige
+				c:BRZ.naval_power_projection > c:POR.naval_power_projection
+				c:BRZ.army_power_projection > c:POR.army_power_projection
+			}
+		}
+		has_technology_researched = pan-nationalism
+	}
+
+	selected = {
+	}
+
+	effect = {
+		save_scope_as = brazil_scope
+		set_variable = invaded_portugal_var
+		if = {
+			limit = {
+				c:POR = {
+					has_law = law_type:law_monarchy
+				}
+			}
+			c:BRZ ?= {
+				create_diplomatic_play = {
+					target_state = s:STATE_ESTREMADURA.region_state:POR
+					type = dp_enforce_pu
+				}
+			}
+		}
+	}
 
 	ai_chance = {
 		value = 1

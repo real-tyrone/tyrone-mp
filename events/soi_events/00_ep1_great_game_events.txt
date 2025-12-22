@@ -1,0 +1,305 @@
+﻿namespace = gg_core
+
+gg_core.1 = { # Great Game victory
+	type = country_event
+	placement = ROOT
+
+	title = gg_core.1.t
+	desc = gg_core.1.d
+	flavor = gg_core.1.f
+
+	dlc = dlc010
+
+	event_image = {
+		video = "ep1_power_blocs"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 3
+
+	cooldown = { days = short_modifier_time }
+
+	immediate = {
+		if = {
+			limit = {
+				c:GBR ?= this
+			}
+			c:RUS ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+		if = {
+			limit = {
+				c:RUS ?= this
+			}
+			c:GBR ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+	}
+	option = {
+		name = gg_core.1.a
+		default_option = yes
+		add_loyalists = {
+			value = large_radicals
+		}
+		if = {
+			limit = {
+				c:RUS ?= THIS
+			}
+			add_journal_entry = { type = je_conquest_of_central_asia }
+		}
+		add_modifier = {
+			name = modifier_great_game_victor
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		show_as_tooltip = {
+			custom_tooltip = {
+				text = great_game_power_bloc_tt
+			}
+			add_modifier = {
+				name = great_game_victor_power_bloc_modifier
+				days = long_modifier_time
+			}
+		}
+		show_as_tooltip = {
+			custom_tooltip = {
+				text = every_subject_tt
+			}
+			ordered_subject_or_below = {
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				add_modifier = {
+					name = subject_great_game_victor
+					days = long_modifier_time
+				}
+			}
+		}
+		hidden_effect = {
+			every_subject_or_below = {
+				add_modifier = {
+					name = subject_great_game_victor
+					days = long_modifier_time
+				}
+			}
+			root.power_bloc ?= {
+				add_modifier = {
+					name = great_game_victor_power_bloc_modifier
+					days = long_modifier_time
+				}
+			}
+		}				
+	}
+}
+
+gg_core.2 = { # Great Game defeat
+	type = country_event
+	placement = ROOT
+
+	title = gg_core.2.t
+	desc = gg_core.2.d
+	flavor = gg_core.2.f
+
+	dlc = dlc010
+
+	event_image = {
+		video = "ep1_transfer_of_authority"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 3
+
+	cooldown = { days = short_modifier_time }
+
+	immediate = {
+		if = {
+			limit = {
+				c:GBR ?= this
+			}
+			c:RUS ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+		if = {
+			limit = {
+				c:RUS ?= this
+			}
+			c:GBR ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+	}
+
+	option = {
+		name = gg_core.2.a
+		default_option = yes
+		add_radicals = {
+			value = medium_radicals
+		}
+		add_modifier = {
+			name = modifier_great_game_defeated
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		show_as_tooltip = {
+			custom_tooltip = {
+				text = great_game_power_bloc_tt
+			}
+			add_modifier = {
+				name = great_game_defeated_power_bloc_modifier
+				days = long_modifier_time
+			}
+		}
+		show_as_tooltip = {
+			custom_tooltip = {
+				text = every_subject_tt
+			}
+			ordered_subject_or_below = {
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				add_modifier = {
+					name = subject_great_game_defeated
+					days = long_modifier_time
+				}
+			}
+		}
+		hidden_effect = {
+			every_subject_or_below = {
+				add_modifier = {
+					name = subject_great_game_defeated
+					days = long_modifier_time
+				}
+			}
+			root.power_bloc ?= {
+				add_modifier = {
+					name = great_game_defeated_power_bloc_modifier
+					days = long_modifier_time
+				}
+			}
+		}				
+	}
+}
+
+gg_core.3 = { # Great Game stalemate
+	type = country_event
+	placement = ROOT
+
+	title = gg_core.3.t
+	desc = gg_core.3.d
+	flavor = gg_core.3.f
+
+	dlc = dlc010
+
+	event_image = {
+		video = "ep1_central_asian_city"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 3
+
+	cooldown = { days = short_modifier_time }
+
+	immediate = {
+		if = {
+			limit = {
+				c:GBR ?= this
+			}
+			c:RUS ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+		if = {
+			limit = {
+				c:RUS ?= this
+			}
+			c:GBR ?= {
+				save_scope_as = opponent_scope
+			}
+		}
+	}
+
+	option = {
+		name = gg_core.3.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_great_game_stalemate
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		if = {
+			limit = {
+				is_player = yes
+			}
+			clear_great_game_variables = yes
+		}
+		scope:opponent_scope ?= {
+			create_diplomatic_catalyst = {
+				type = catalyst_event_positive
+				target = root
+			}
+		}
+	}
+}
+
+gg_core.4 = { # Great Game victory as Persia or Afghanistan
+	type = country_event
+	placement = ROOT
+
+	title = gg_core.4.t
+	desc = gg_core.4.d
+	flavor = gg_core.4.f
+
+	dlc = dlc010
+
+	event_image = {
+		video = "ep1_central_asian_city"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 3
+
+	cooldown = { days = short_modifier_time }
+
+	immediate = {
+		ROOT = {
+			save_scope_as = gg_winner_scope
+		}
+		c:RUS ?= {
+			save_scope_as = russia_scope
+		}
+		c:GBR ?= {
+			save_scope_as = britain_scope
+		}
+	}
+
+	option = {
+		name = gg_core.4.a
+		default_option = yes
+		add_modifier = {
+			name = modifier_great_game_victor
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		if = {
+			limit = {
+				is_player = yes
+			}
+			clear_great_game_variables = yes
+		}
+	}
+}

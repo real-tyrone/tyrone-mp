@@ -314,29 +314,64 @@ start_great_game_rus = {
 		has_interest_marker_in_region = region_persia
 		has_interest_marker_in_region = region_central_asia
 		has_interest_marker_in_region = region_caucasus
-		has_technology_researched = nationalism
+		custom_tooltip = {
+            text = je_pacify_kazakh_steppes_success_tt
+            has_global_variable = kazakhstan_victory_var
+		}
 	}
 	
 	when_taken = {
-		if = {
-			every_country = {
-				limit = {
-					OR = {
-						c:RUS ?= this
-						c:GBR ?= this
-						c:PER ?= this
-						has_journal_entry = je_unify_afghanistan
+		hidden = {
+			if = {
+				every_country = {
+					limit = {
+						OR = {
+							c:RUS ?= this
+							c:GBR ?= this
+							c:PER ?= this
+							has_journal_entry = je_unify_afghanistan
+						}
+						NOT = {
+							has_journal_entry = je_great_game_control
+						}
 					}
-					NOT = {
-						has_journal_entry = je_great_game_control
-					}
+					add_journal_entry = { type = je_great_game_control }
 				}
-				add_journal_entry = { type = je_great_game_control }
 			}
 		}
-		if = {
-			c:RUS ? = this
+		add_journal_entry = { type = je_great_game_control }
+		add_journal_entry = {
+			type = je_maintain_afghan_protectorate
+		}
+		add_journal_entry = {
+			type = 	je_secure_persian_border
+		}
+		add_journal_entry = {
+			type = 	je_secure_influence_over_persia
+		}
+		end_truce = c:PER
+		c:GBR ={
 			end_truce = c:PER
+			add_journal_entry = {
+				type = je_maintain_afghan_protectorate
+			}			
+			add_journal_entry = {
+				type = 	je_secure_influence_over_persia
+			}
+			add_journal_entry = {
+				type = 	je_disrupt_russian_caucasus
+			}
+			add_journal_entry = {
+				type = 	je_consolidate_british_india
+			}
+		}
+		c:PER = {
+			add_journal_entry = {
+				type = 	je_achieve_sovereignty
+			}	
+			add_journal_entry = {
+				type =	je_consolidate_persia
+			}	
 		}
         set_global_variable = great_game_started
     }
@@ -344,7 +379,6 @@ start_great_game_rus = {
 	ai_chance = {
 		value = 0
 	}
-
 }	
 
 start_great_game_gbr = {
@@ -360,29 +394,64 @@ start_great_game_gbr = {
 
 	possible = {
 		has_interest_marker_in_region = region_persia
-		has_interest_marker_in_region = region_central_asia
 		has_interest_marker_in_region = region_caucasus
 		has_technology_researched = nationalism
-		game_date >= 1846.1.1
 	}
 	
 	when_taken = {
-		if = {
-			every_country = {
-				limit = {
-					OR = {
-						c:RUS ?= this
-						c:GBR ?= this
-						c:PER ?= this
-						has_journal_entry = je_unify_afghanistan
+		hidden = {
+			if = {
+				every_country = {
+					limit = {
+						OR = {
+							c:RUS ?= this
+							c:GBR ?= this
+							c:PER ?= this
+							has_journal_entry = je_unify_afghanistan
+						}
+						NOT = {
+							has_journal_entry = je_great_game_control
+						}
 					}
-					NOT = {
-						has_journal_entry = je_great_game_control
-					}
+					add_journal_entry = { type = je_great_game_control }
 				}
-				add_journal_entry = { type = je_great_game_control }
 			}
 		}
+		add_journal_entry = { type = je_great_game_control }
+		add_journal_entry = {
+			type = je_maintain_afghan_protectorate
+		}
+		add_journal_entry = {
+			type = 	je_disrupt_russian_caucasus
+		}
+		add_journal_entry = {
+			type = 	je_secure_influence_over_persia
+		}
+		add_journal_entry = {
+			type = 	je_consolidate_british_india
+		}
+
+		c:RUS ={
+			end_truce = c:PER
+			add_journal_entry = {
+				type = je_maintain_afghan_protectorate
+			}			
+			add_journal_entry = {
+				type = 	je_secure_influence_over_persia
+			}
+			add_journal_entry = {
+				type = 	je_secure_persian_border
+			}
+		}
+		c:PER = {
+			add_journal_entry = {
+				type = 	je_achieve_sovereignty
+			}	
+			add_journal_entry = {
+				type =	je_consolidate_persia
+			}	
+		}
+		end_truce = c:PER
         set_global_variable = great_game_started
     }
 	

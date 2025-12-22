@@ -87,6 +87,20 @@ je_great_game_control = {
 				}
 			}
 			OR = {
+				OR = {
+					custom_tooltip = {
+						text = british_great_game_victory_values_tt
+						scope:journal_entry = {
+							"scripted_bar_progress(great_game_core_progress_bar)" = 0
+						}
+					}
+					custom_tooltip = {
+						text = russian_great_game_victory_values_tt
+						scope:journal_entry = {
+							"scripted_bar_progress(great_game_core_progress_bar)" = 200
+						}
+					}
+				}
 				custom_tooltip = {
 					text = great_game_complete_tt
 					sr:region_caucasus = {
@@ -197,7 +211,7 @@ je_great_game_control = {
 				NOT = {
 					power_bloc ?= {
 						power_bloc_leader = {
-							OR = {
+							AND = {
 								is_in_geographic_region = geographic_region_europe
 								any_primary_culture = {
 									has_discrimination_trait_group = heritage_group_european
@@ -208,47 +222,25 @@ je_great_game_control = {
 				}
 			}
 			custom_tooltip = {
-				text = europeans_expelled_from_casia_tt
-				NOT = {
-					c:GBR ?= {
-						OR = {
-							any_subject_or_below = {
-								any_scope_state = {
-									OR = {
-										region = sr:region_persia
-										region = sr:region_central_asia
-									}
-								}
-							}
-							any_scope_state = {
-								OR = {
-									region = sr:region_persia
-									region = sr:region_central_asia
-								}
-							}
-						}
-					}
-				}
-				NOT = {
-					c:RUS ?= {
-						OR = {
-							any_subject_or_below = {
-								any_scope_state = {
-									OR = {
-										region = sr:region_persia
-										region = sr:region_central_asia
-									}
-								}
-							}
-							any_scope_state = {
-								OR = {
-									region = sr:region_persia
-									region = sr:region_central_asia
-								}
-							}
-						}
-					}
-				}
+				text = je_eastern_frontier_tt_1
+				country_or_subject_owns_entire_state_region = STATE_HERAT
+				country_or_subject_owns_entire_state_region = STATE_KABUL
+				country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+				country_or_subject_owns_entire_state_region = STATE_BALKH
+				country_or_subject_owns_entire_state_region = STATE_CENTRAL_HIGHLANDS
+				country_or_subject_owns_entire_state_region = STATE_MERZ
+				country_or_subject_owns_entire_state_region = STATE_NORTHERN_BALUCHISTAN
+			}
+			custom_tooltip = {
+				text = je_eastern_frontier_tt_2
+				country_or_subject_owns_entire_state_region = STATE_TURKMENIA
+				country_or_subject_owns_entire_state_region = STATE_KHIVA
+			}
+			custom_tooltip = {
+				text = je_eastern_frontier_tt_3
+				country_or_subject_owns_entire_state_region = STATE_FERGANA
+				country_or_subject_owns_entire_state_region = STATE_TAJIKISTAN
+				country_or_subject_owns_entire_state_region = STATE_UZBEKIA
 			}
 		}
 	}
@@ -737,6 +729,17 @@ je_codify_chinese_border = {
 
 	group = je_group_objectives
 
+	is_shown_when_inactive = {
+        has_dlc_feature = ep1_content #Spheres of Influence
+        c:RUS ?= THIS
+		has_journal_entry = je_great_game_control
+	}
+
+	trigger = {
+		has_journal_entry = je_the_eastern_border
+		has_technology_researched = nationalism
+	}
+
     immediate = {
         s:STATE_AMUR = {
             save_scope_as = amur_scope
@@ -795,6 +798,27 @@ je_consolidate_central_asia = {
 	icon = "gfx/interface/icons/objectives/great_game.dds"
 
 	group = je_group_objectives
+
+    is_shown_when_inactive = {
+        has_dlc_feature = ep1_content
+        exists = c:RUS
+        c:RUS ?= THIS
+		has_journal_entry = je_great_game_control
+        is_subject = no
+        any_scope_state = {
+            state_region = s:STATE_URALSK
+        }
+        any_scope_state = {
+            state_region = s:STATE_SYRDARYA
+        }
+        owns_entire_state_region = STATE_AKTOBE
+        owns_entire_state_region = STATE_AKMOLINSK
+        owns_entire_state_region = STATE_SEMIRECHE
+    }
+    possible = {
+        has_technology_researched = civilizing_mission
+		has_journal_entry = je_conquest_of_central_asia
+    }
 
 	complete = {
         any_state = {
@@ -1108,6 +1132,9 @@ je_consolidate_british_india = {
 						owner = {
 							is_subject_of = ROOT
 						}
+						owner = {
+							is_country_type = decentralized
+						}
 					}
 				}
 			}
@@ -1115,9 +1142,13 @@ je_consolidate_british_india = {
 				any_state = {
 					state_region = s:STATE_PEGU
 					NOR = {
+						owner = c:DEN
 						owner = ROOT
 						owner = {
 							is_subject_of = ROOT
+						}
+						owner = {
+							is_country_type = decentralized
 						}
 					}
 				}
@@ -1129,6 +1160,9 @@ je_consolidate_british_india = {
 						owner = ROOT
 						owner = {
 							is_subject_of = ROOT
+						}
+						owner = {
+							is_country_type = decentralized
 						}
 					}
 				}
@@ -1156,7 +1190,33 @@ je_pamir_expedition_objective = {
 
 	group = je_group_objectives
 
-	scripted_button = je_pamir_expedition_dismiss_button
+	is_shown_when_inactive = {
+        has_dlc_feature = ep1_content #Spheres of Influence
+        c:GBR ?= THIS
+        has_global_variable = kazakhstan_victory_var
+	}
+
+	possible = {
+		c:GBR?= THIS
+		c:RUS ?= {
+			OR = {
+				any_scope_state = {
+					state_region = s:STATE_TAJIKISTAN
+				}
+				any_subject_or_below = {
+					any_scope_state = {
+						state_region = s:STATE_TAJIKISTAN
+					}
+				}
+			}
+		}
+		has_journal_entry = je_great_game_control
+		hidden = {
+			NOT = {
+				has_variable = dismissed_pamir_expedition
+			}
+		}
+	}
 
 	complete = {
 		c:RUS ?= {
@@ -1423,7 +1483,7 @@ je_maintain_afghan_protectorate = {
 	}
 
 	goal_add_value = {
-		add = 120
+		add = 60
 	}
 
 	progressbar = yes
@@ -1538,52 +1598,51 @@ je_secure_influence_over_persia = {
 	}
 
 	complete = {
-		trigger_if = {
-			limit = {
-				exists = c:PER
-			}
-			custom_tooltip = {
-				text = persia_puppeted_tt
-				c:PER ?= {
-					is_subject_of = ROOT
-				}
-			}
-		}
-		trigger_else = {
-			any_state = {
-				filter = {
-					region = sr:region_persia
-					state_region = {
-						is_homeland = cu:persian
-					}
-				}
-				custom_tooltip = {
-					text = owned_by_this_country_or_subjects_tt
-					OR = {
-						owner = ROOT
-						owner = {
-							is_subject_of = ROOT
-						}
-					}
-				}
-				percent >= 0.6
-			}
-		}
-		country_or_subject_owns_entire_state_region = STATE_IRAKAJEMI
-		country_or_subject_owns_entire_state_region = STATE_TABRIZ
-		country_or_subject_owns_entire_state_region = STATE_LARISTAN
-		OR = {
-			any_scope_state = {
-				state_region = s:STATE_KHUZESTAN
-			}
-			any_subject_or_below = {
-				any_scope_state = {
-					state_region = s:STATE_KHUZESTAN
-				}
-			}
-		}
 		scope:journal_entry = {
 			is_goal_complete = yes
+		}
+		OR = {
+			trigger_if = {
+				limit = {
+					exists = c:PER
+				}
+				custom_tooltip = {
+					text = persia_puppeted_tt
+					c:PER ?= {
+						is_subject_of = ROOT
+					}
+				}
+			}
+			trigger_else = {
+				any_state = {
+					filter = {
+						region = sr:region_persia
+						state_region = {
+							is_homeland = cu:persian
+						}
+					}
+					custom_tooltip = {
+						text = owned_by_this_country_or_subjects_tt
+						OR = {
+							owner = ROOT
+							owner = {
+								is_subject_of = ROOT
+							}
+						}
+					}
+					percent >= 0.6
+				}
+			}
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_IRAKAJEMI
+				country_or_subject_owns_entire_state_region = STATE_TABRIZ
+				country_or_subject_owns_entire_state_region = STATE_MAZANDARAN
+			}
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_LARISTAN
+				country_or_subject_owns_entire_state_region = STATE_FARS
+				country_or_subject_owns_entire_state_region = STATE_KHUZESTAN
+			}						
 		}
 	}
 
@@ -1592,7 +1651,7 @@ je_secure_influence_over_persia = {
 	}
 
 	goal_add_value = {
-		add = 120
+		add = 60
 	}
 
 	progressbar = yes
@@ -1764,7 +1823,10 @@ je_consolidate_persia = {
 	}
 
 	on_complete = {
-
+		add_modifier = {
+			name = persia_consolidated
+			days = long_modifier_time
+		}
 	}
 
 	invalid = {
@@ -1792,6 +1854,11 @@ je_achieve_sovereignty = {
 
 	on_complete = {
 		custom_tooltip = je_achieve_sovereignty_tt_2
+		add_modifier = {
+			name = sovereignty_established
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
 	}
 
 	immediate = {
@@ -1804,7 +1871,7 @@ je_achieve_sovereignty = {
 	fail = {
 		custom_tooltip = {
 			text = je_achieve_sovereignty_tt
-			var:achieve_sovereignty_var >= 120
+			var:achieve_sovereignty_var >= 1
 		}
 	}
 
