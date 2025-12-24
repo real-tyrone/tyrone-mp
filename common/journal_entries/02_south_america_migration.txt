@@ -157,6 +157,7 @@ je_central_america_migration = {
 			OR = {
 				region = sr:region_mexico
 				region = sr:region_central_america
+				region = sr:region_caribbean
 			}
 		}
 		any_primary_culture = {
@@ -200,6 +201,7 @@ je_central_america_migration = {
 				OR = {
 					region = sr:region_mexico
 					region = sr:region_central_america
+					region = sr:region_caribbean
 				}
 			}
 			ROOT = {
@@ -236,6 +238,7 @@ je_central_america_migration = {
 					OR = {
 						region = sr:region_mexico
 						region = sr:region_central_america
+						region = sr:region_caribbean
 					}
 				}
 				ROOT = {
@@ -255,6 +258,7 @@ je_central_america_migration = {
 					OR = {
 						region = sr:region_mexico
 						region = sr:region_central_america
+						region = sr:region_caribbean
 					}
 				}
 				ROOT = {
@@ -470,6 +474,150 @@ je_american_west_migration = {
 				}
 			}
 		}
+	}
+
+	scripted_button = southamerica_migration_button
+
+	weight = 100
+
+	should_be_pinned_by_default = yes
+}
+
+je_australian_migration = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	group = je_group_foreign_affairs
+
+	is_shown_when_inactive = {
+		capital = {
+			region = sr:region_oceania
+		}
+		any_primary_culture = {
+			has_discrimination_trait_group = heritage_group_european
+		}
+	}
+
+	possible = {
+		# has_technology_researched = civilizing_mission
+		has_technology_researched = nationalism
+		country_rank >= rank_value:minor_power
+		average_sol >= 10
+		is_at_war = no
+		# is_subject = no
+		OR = {
+			has_law_or_variant = law_type:law_racial_segregation
+			has_law_or_variant = law_type:law_cultural_exclusion
+			has_law_or_variant = law_type:law_multicultural
+		}
+		NOR = {
+			has_law_or_variant = law_type:law_closed_borders
+			has_law_or_variant = law_type:law_isolationism
+		}
+	}
+	modifiers_while_active = {
+		modifier_australian_migration
+	}
+	immediate = {
+		set_variable = {
+			name = australian_incorporated_population
+			value = 0
+		}
+		set_variable = {
+			name = australian_incorporated_states
+			value = 0
+		}
+		every_scope_state = {
+			limit = {
+				is_incorporated = yes
+				region = sr:region_oceania
+			}
+			ROOT = {
+				change_variable = {
+					name = australian_incorporated_population
+					add = PREV.state_population
+				}
+				change_variable = {
+					name = australian_incorporated_states
+					add = 1
+				}
+			}
+		}
+		set_variable = {
+			name = australian_migration_goal
+			value = var:australian_incorporated_states
+		}
+		change_variable = {
+			name = australian_migration_goal
+			multiply = 1500000
+		}
+		trigger_event = { id = sa_migration.2 popup = yes }
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			set_variable = {
+				name = australian_incorporated_population
+				value = 0
+			}
+			every_scope_state = {
+				limit = {
+					is_incorporated = yes
+					region = sr:region_oceania
+				}
+				ROOT = {
+					change_variable = {
+						name = australian_incorporated_population
+						add = PREV.state_population
+					}
+				}
+			}
+			set_variable = {
+				name = australian_incorporated_states
+				value = 0
+			}
+			every_scope_state = {
+				limit = {
+					is_incorporated = yes
+					region = sr:region_oceania
+				}
+				ROOT = {
+					change_variable = {
+						name = australian_incorporated_states
+						add = 1
+					}
+				}
+			}
+			set_variable = {
+				name = australian_migration_goal
+				value = var:australian_incorporated_states
+			}
+			change_variable = {
+				name = australian_migration_goal
+				multiply = 1000000
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = au_migration_completion_tt
+			var:australian_incorporated_population >= var:australian_migration_goal
+			var:australian_incorporated_population > 0
+			var:australian_migration_goal > 0
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = sa_migration.3 popup = yes }
+		show_as_tooltip = {
+			add_modifier = {
+				name = populated_southamerica
+			}
+		}
+	}
+
+	invalid = {
+		has_variable = cancel_sa_migration_var
 	}
 
 	scripted_button = southamerica_migration_button
