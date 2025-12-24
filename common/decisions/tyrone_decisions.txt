@@ -1,4 +1,210 @@
-﻿canada_australia_rejoin_decision = {
+﻿REPLACE:british_raj_decision = {
+	is_shown = {
+		exists = c:GBR
+		exists = c:BIC
+		c:GBR = ROOT
+		c:BIC ?= {
+			is_subject_of = ROOT
+			is_player = no
+		}
+		NOT = { has_variable = british_raj_var }
+	}
+
+	possible = {
+		is_at_war = no
+		has_technology_researched = civilizing_mission
+		institution_investment_level = {
+			institution = institution_colonial_affairs
+			value >= 4
+		}
+	}
+
+	when_taken = {
+		trigger_event = { id = raj.1 days = 0 popup = yes }
+	}
+
+	ai_chance = {
+		value = 5
+	}
+}
+
+
+integrate_south_sudan_decision = {
+
+	is_shown = {
+		NOT = { has_variable = incorporate_south_sudan }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        	owns_entire_state_region = STATE_DARFUR
+        }
+		NOT = {
+			any_scope_state = {
+				state_region = s:STATE_EQUATORIA
+				is_incorporated = yes
+				is_split_state = no
+			}
+		}
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DARFUR
+			is_incorporated = yes
+			is_split_state = no
+		}
+		owns_entire_state_region = STATE_EQUATORIA
+	}
+		
+	when_taken = {
+		random_state = {
+			limit = {
+				state_region = s:STATE_EQUATORIA
+			}
+			add_modifier = {
+				name = integrating_south_sudan
+				days = long_modifier_time
+			}
+		}
+	
+		set_variable = incorporate_south_sudan
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+annex_south_sudan_decision = {
+
+	is_shown = {
+		NOT = { has_variable = annexing_south_sudan }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        }
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DARFUR
+			is_incorporated = yes
+			is_split_state = no
+		}
+		has_technology_researched = quinine
+	}
+		
+	when_taken = {
+		every_state = {
+			limit = {
+				state_region = s:STATE_EQUATORIA
+			}
+			save_scope_as = south_sudan_state_scope
+		}
+		scope:south_sudan_state_scope.state_region = {
+			remove_state_trait = state_trait_malaria
+		}		
+		if = {
+			limit = {
+                has_law = law_type:law_no_colonial_affairs
+            }
+			activate_law = law_type:law_colonial_resettlement
+		}			
+		set_variable = annexing_south_sudan
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+egypt_darfur_decision = {
+
+	is_shown = {
+		NOT = { has_variable = incorporate_darfur }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        }
+		NOT = {
+			any_scope_state = {
+				state_region = s:STATE_DARFUR
+				is_incorporated = yes
+				is_split_state = no
+			}
+		}
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		has_technology_researched = nationalism
+		owns_entire_state_region = STATE_DARFUR
+	}
+		
+	when_taken = {
+		random_state = {
+			limit = {
+				state_region = s:STATE_DARFUR
+			}
+			add_modifier = {
+				name = integrating_darfur
+				days = long_modifier_time
+			}
+		}
+	
+		set_variable = incorporate_darfur
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+canada_australia_rejoin_decision = {
 
 	is_shown = {
 		exists = c:GBR

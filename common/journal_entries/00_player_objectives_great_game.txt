@@ -1327,7 +1327,13 @@ je_maintain_afghan_protectorate = {
 									country_has_primary_culture = cu:pashtun
 								}
 							}
+							OR = {
+							AND = {
+								is_in_power_bloc = yes
+								is_power_bloc_leader = no
+							}
 							is_subject_of = root
+						}
 							count = all
 						}
 					}
@@ -1357,7 +1363,13 @@ je_maintain_afghan_protectorate = {
 						OR = {
 							owner = ROOT
 							owner = {
-								is_subject_of = ROOT
+								OR = {
+									AND = {
+										is_in_power_bloc = yes
+										is_power_bloc_leader = no
+									}
+									is_subject_of = root
+								}
 							}
 						}
 						percent >= 0.6
@@ -1397,34 +1409,49 @@ je_maintain_afghan_protectorate = {
 							country_has_primary_culture = cu:pashtun
 						}
 					}
-					is_subject_of = root
+					OR = {
+						AND = {
+							is_in_power_bloc = yes
+							is_power_bloc_leader = no
+						}
+						is_subject_of = root
+					}
 					percent = 1
 				}
 			}
 		}
 		trigger_else = {
-			any_state = {
-				filter = {
-					region = sr:region_persia
-					state_region = {
-						is_homeland = cu:pashtun
-					}
-				}
-				custom_tooltip = {
-					text = owned_by_this_country_or_subjects_tt
-					OR = {
-						owner = ROOT
-						owner = {
-							is_subject_of = ROOT
+			OR = {
+				country_or_subject_owns_entire_state_region = STATE_KABUL
+				country_or_subject_owns_entire_state_region = STATE_HERAT
+				country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+				any_state = {
+					filter = {
+						region = sr:region_persia
+						state_region = {
+							is_homeland = cu:pashtun
 						}
 					}
+					custom_tooltip = {
+						text = owned_by_this_country_or_subjects_tt
+						OR = {
+							owner = ROOT
+							owner = {
+								OR = {
+									AND = {
+										is_in_power_bloc = yes
+										is_power_bloc_leader = no
+									}
+									is_subject_of = root
+								}
+							}
+						}
+					}
+					percent >= 0.6
 				}
-				percent >= 0.6
 			}
 		}
-		country_or_subject_owns_entire_state_region = STATE_KABUL
-		country_or_subject_owns_entire_state_region = STATE_HERAT
-		country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+
 		scope:journal_entry = {
 			is_goal_complete = yes
 		}
@@ -1511,7 +1538,13 @@ je_maintain_afghan_protectorate = {
 						country_has_primary_culture = cu:pashtun
 					}
 				}
-				is_subject_of = root
+				OR = {
+					AND = {
+						is_in_power_bloc = yes
+						is_power_bloc_leader = no
+					}
+					is_subject_of = root
+				}
 				count = all
 			}
 		}
@@ -1526,7 +1559,13 @@ je_maintain_afghan_protectorate = {
 				OR = {
 					owner = ROOT
 					owner = {
-						is_subject_of = ROOT
+						OR = {
+							AND = {
+								is_in_power_bloc = yes
+								is_power_bloc_leader = no
+							}
+							is_subject_of = root
+						}
 					}
 				}
 				percent >= 0.6
@@ -1609,7 +1648,13 @@ je_secure_influence_over_persia = {
 				custom_tooltip = {
 					text = persia_puppeted_tt
 					c:PER ?= {
-						is_subject_of = ROOT
+						OR = {
+							AND = {
+								is_in_power_bloc = yes
+								is_power_bloc_leader = no
+							}
+							is_subject_of = root
+						}
 					}
 				}
 			}
@@ -1662,7 +1707,13 @@ je_secure_influence_over_persia = {
 				exists = c:PER
 			}
 			c:PER ?= {
-				is_subject_of = root
+				OR = {
+					AND = {
+						is_in_power_bloc = yes
+						is_power_bloc_leader = no
+					}
+					is_subject_of = root
+				}
 			}
 		}
 		trigger_else = {
@@ -1677,8 +1728,12 @@ je_secure_influence_over_persia = {
 					text = owned_by_this_country_or_subjects_tt
 					OR = {
 						owner = ROOT
-						owner = {
-							is_subject_of = ROOT
+						OR = {
+							AND = {
+								is_in_power_bloc = yes
+								is_power_bloc_leader = no
+							}
+							is_subject_of = root
 						}
 					}
 				}
@@ -1693,7 +1748,13 @@ je_secure_influence_over_persia = {
 				limit = {
 					exists = c:PER
 					c:PER ?= {
-						is_subject_of = root
+						OR = {
+							AND = {
+	       						is_in_power_bloc = yes
+	        					is_power_bloc_leader = no
+							}
+							is_subject_of = root
+						}
 					}
 				}
 				change_variable = { name = persia_variable add = 1 }

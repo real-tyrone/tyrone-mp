@@ -408,7 +408,7 @@ types timekeeper
 				position = { 25 -2 }
 				parentanchor = vcenter
 				datacontext = "[AccessMetaPlayer.AccessPlayedOrObservedCountry]"
-				spacing = 10
+				spacing = 8
 
 				# Hidden buttons to toggle pause/unpause
 				button = {
@@ -430,7 +430,7 @@ types timekeeper
 				button = {
 					parentanchor = vcenter
 					size = { 100 58 }
-					using = default_button
+					using = default_button_primary
 					onclick = "[InformationPanelBar.OpenConstructionPanel( GetPlayer.Self )]"
 					enabled = "[Country.IsValid]"
 					widget = {
@@ -484,12 +484,53 @@ types timekeeper
 					}
 				}
 
+				button = {
+					parentanchor = vcenter
+					size = { 100 58 }
+					using = default_button_primary
+					onclick = "[InformationPanelBar.OpenConstructionPanel( GetPlayer.Self )]"
+					enabled = "[Country.IsValid]"
+					widget = {
+						visible = "[Country.IsValid]"
+						tooltip = "INVESTMENT_POOL_SOURCES_BREAKDOWN"
+						size = { 100% 100% }
+					}
+
+					flowcontainer = {
+						direction = vertical
+
+						widget = {
+							parentanchor = hcenter
+							size = { 32 32 }
+
+							icon = {
+								parentanchor = hcenter
+								size = { 32 32 }
+								position = { 0 -3 }
+								#onclick = "[Execute( Country.PauseConstruction )]"
+								#enabled = "[And(IsValid( Country.PauseConstruction ), Country.HasConstructionQueued)]"
+								texture = "gfx/interface/icons/invention_icons/investment_banks.dds"
+							}
+						}
+
+						textbox = {
+							parentanchor = hcenter
+							align = hcenter|nobaseline
+							text = "([GetPlayer.GetInvestmentPoolChange|=+D])"
+							autoresize = yes
+							maximumsize = { 100 -1 }
+							minimumsize = { 100 -1 }
+						}
+					}
+				}
+
 
 				flowcontainer = {
 					direction = vertical
 					parentanchor = vcenter
+
+					
 					mini_construction_queue = {
-						visible = "[Country.HasConstructionQueued]"
 
 						blockoverride "alpha" {
 							#alpha = "[TransparentIfZero_int32(Country.GetNumInactiveAndNonShownGovernmentConstructionQueueElements)]"
@@ -522,7 +563,6 @@ types timekeeper
 					}
 
 					mini_construction_queue = {
-						visible = "[Country.HasConstructionQueued]"
 
 						blockoverride "alpha" {
 							#alpha = "[TransparentIfZero_int32(Country.GetNumInactiveAndNonShownPrivateConstructionQueueElements)]"
@@ -553,17 +593,6 @@ types timekeeper
 							color = "[GetDefine('NGUI','BUILDING_OWNERSHIP_COLOR_PLAYER_POPS')]"
 						}
 					}
-				}
-
-
-				textbox = {
-					autoresize = yes
-					visible = "[Not(GetPlayer.HasConstructionQueued)]"
-					parentanchor = vcenter
-					align = left|nobaseline
-					text = "NOTHING_CONSTRUCTING"
-					minimumsize = { 215 -1 }
-					maximumsize = { 215 -1 }
 				}
 			}
 		}
