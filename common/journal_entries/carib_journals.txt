@@ -1,0 +1,110 @@
+﻿je_carib_constitution = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	
+	complete = {
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+		
+	}
+	immediate = {
+		set_variable = {
+			name = carib_con_timer
+			value = 0
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			change_variable = {
+				name = carib_con_timer
+				add = 1
+			}	
+				# Culture
+			if = {
+                    limit = {
+                        root.var:carib_con_timer = 1
+					}
+					trigger_event = { id = carib_event.2 popup = yes }	
+					}	
+				# Religion	
+			if = {
+                    limit = {
+                        root.var:carib_con_timer = 2
+                    }
+					trigger_event = { id = carib_event.4 popup = yes }	
+					}
+				# Capital
+			if = {
+                    limit = {
+                        root.var:carib_con_timer = 3
+                    }
+					trigger_event = { id = carib_event.3 popup = yes }	
+					}
+		}
+	}
+	current_value = {
+		value = root.var:carib_con_timer
+	}	
+	goal_add_value = {
+		value = 4
+	}
+
+	on_complete = {	
+		trigger_event = { id = carib_event.1 }	
+	}
+
+	invalid = {
+		NOT = {
+			this = c:CRB
+		}
+	}
+	
+	
+	weight = 500
+	inheritable = no
+	progressbar = yes
+	should_be_pinned_by_default = yes
+}
+
+je_carib_possible = {
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	is_shown_when_inactive = {
+	OR = {
+		country_has_primary_culture = cu:afro_caribbean
+		country_has_primary_culture = cu:afro_antillean
+		country_has_primary_culture = cu:afro_caribeno
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		is_subject = no
+	}
+	
+	complete = {
+		has_technology_researched = pan-nationalism
+		calc_true_if = {
+			amount >= 5
+			owns_entire_state_region = STATE_CUBA
+			owns_entire_state_region = STATE_BAHAMAS
+			owns_entire_state_region = STATE_JAMAICA
+			owns_entire_state_region = STATE_HAITI
+			owns_entire_state_region = STATE_SANTO_DOMINGO
+			owns_entire_state_region = STATE_PUERTO_RICO
+			owns_entire_state_region = STATE_WEST_INDIES
+			owns_entire_state_region = STATE_GUAYANA
+		}
+        exists = c:CRB
+        ROOT = c:CRB  
+	}
+
+	immediate = { }
+
+	on_complete = {	
+		trigger_event = { id = carib_event.5 popup = yes }	
+	}
+
+	weight = 10
+	inheritable = yes
+	should_be_pinned_by_default = no
+}
