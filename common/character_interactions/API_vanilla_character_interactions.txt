@@ -722,7 +722,7 @@ REPLACE:invite_exile = {
 			limit = {
 				NOT = { is_interest_group_type = ig_devout }
 				scope:actor ?= {
-					has_law = law_type:law_state_religion
+					has_law = law_type:law_state_religion # Millet System should just rely on average acceptance
 				}
 			}
 			custom_tooltip = {
@@ -734,7 +734,7 @@ REPLACE:invite_exile = {
 		character_acceptance = { target = scope:actor value >= acceptance_status_3 }
 		# Cannot invite exiles if you have Closed Borders
 		scope:actor ?= {
-			NOT = { has_law = law_type:law_closed_borders }
+			NOT = { has_law_or_variant = law_type:law_closed_borders }
 		}
 		# Agitator must be able to start or join a movement
 		can_agitate = scope:actor
@@ -804,6 +804,14 @@ REPLACE:invite_exile = {
 				}
 				scope:actor ?= {
 					trigger_event = { id = historical_agitators.7 days = 3 }
+				}
+			}
+			if = {
+				limit = {
+					has_variable = nightingale_var
+				}
+				scope:actor ?= {
+					trigger_event = { id = historical_agitators.23 days = 3 }
 				}
 			}
 			if = {
