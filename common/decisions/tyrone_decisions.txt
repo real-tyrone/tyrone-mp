@@ -1,4 +1,119 @@
-﻿REPLACE:british_raj_decision = {
+﻿REPLACE:sell_savoy = {
+	is_shown = {
+		exists = c:FRA
+		NOT = { has_global_variable = fra_annexed_savoy }
+		any_scope_state = {
+			state_region = s:STATE_SAVOY
+			is_split_state = no
+			is_capital = no
+		}
+		is_subject = no
+	}
+
+		possible = {
+		c:FRA = {
+			save_temporary_scope_as = france_scope
+		}
+		has_technology_researched = nationalism
+		is_at_war = no
+		c:FRA ?= {
+			is_at_war = no
+			owns_entire_state_region = STATE_RHONE
+			is_subject = no
+			NOT = { owes_obligation_to = ROOT }
+			relations:root >= relations_threshold:cordial
+		}
+		custom_tooltip = {
+			text = no_alliance_savoy_tt
+			can_create_treaty = {
+				first_country = ROOT
+				second_country = c:FRA
+				is_draft = no
+				binding_period = { years = 2 }
+				articles_to_create = {
+					article = alliance
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		create_treaty = {
+			first_country = ROOT
+			second_country = c:FRA
+			is_draft = no
+			binding_period = { years = 2 }
+			articles_to_create = {
+				article = alliance
+			}
+		}
+		change_infamy = -5
+		change_relations = { country = c:FRA value = 30 }
+		set_global_variable = fra_annexed_savoy
+		set_global_variable = fra_savoy_sardinia
+		c:FRA ?= {
+			set_owes_obligation_to = {
+				country = ROOT
+				setting = yes
+			}
+		}
+		show_as_tooltip = {
+			random_scope_state = {
+				limit = {
+					state_region = s:STATE_SAVOY
+				}
+				set_state_owner = c:FRA
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						state_region = s:STATE_PROVENCE
+					}
+				}
+				random_scope_state = {
+					limit = {
+						state_region = s:STATE_PROVENCE
+					}
+					set_state_owner = c:FRA
+				}
+			}
+		}
+		c:FRA ?= { trigger_event = { id = natural_borders.3 popup = yes } }
+		show_as_tooltip = {
+			s:STATE_SAVOY = {
+				remove_homeland = cu:north_italian
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				c:FRA ?= {
+					relations:root >= relations_threshold:amicable
+				}
+				OR = {
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = defensive_pact
+						}
+					}
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = alliance
+						}
+					}
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+REPLACE:british_raj_decision = {
 	is_shown = {
 		exists = c:GBR
 		exists = c:BIC
