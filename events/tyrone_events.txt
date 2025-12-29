@@ -1,4 +1,88 @@
-﻿namespace = company_events
+﻿namespace = fascist_technocracy
+
+fascist_technocracy.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = fascist_technocracy.1.t
+	desc = fascist_technocracy.1.d
+	flavor = fascist_technocracy.1.f
+
+	event_image = {
+		video = "unspecific_military_parade"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+    trigger = {
+        is_subject = no
+		has_law = law_type:law_corporate_state
+		has_law = law_type:law_technocracy
+		NOT = {
+			has_variable = fascist_technocracy_event
+		}
+    }
+
+    option = {
+        name = fascist_technocracy.a
+		set_variable = fascist_technocracy_event
+		set_variable = technocratic_oligarchy
+	}
+
+    option = {
+        name = fascist_technocracy.b
+		set_variable = fascist_technocracy_event
+	}
+}
+
+namespace = laissez_faire_subject
+
+laissez_faire_subject.1 = {
+	type = country_event
+    hidden = yes
+
+    trigger = {
+        is_subject = no
+		has_law = law_type:law_laissez_faire_subject
+		NOT = {
+			has_variable = lf_subject
+		}
+    }
+	immediate = {
+        activate_law = law_type:law_laissez_faire
+		set_variable = lf_subject
+    }
+}
+
+namespace = portugaliza
+
+portugaliza.1 = {
+	type = country_event
+    hidden = yes
+
+    trigger = {
+        c:POR ?= this
+  		exists = c:POR
+		owns_entire_state_region = STATE_GALICIA   
+		NOT = {
+			has_variable = galicia_added
+		}
+    }
+	immediate = {
+        add_primary_culture = cu:galician
+		set_variable = galicia_added
+    }
+}
+
+namespace = company_events
 
 company_events.1 = {
 	type = country_event
