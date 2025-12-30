@@ -456,23 +456,7 @@ decree_promote_national_values = {
 				primary_cultures_percent_state <= 0.9
 			}
 
-			if = { # Colonies
-				limit = {
-					scope:country = {
-						country_is_in_europe = no
-						any_primary_culture = {
-							has_discrimination_trait_group = heritage_group_european
-						}
-						NOR = {
-							has_government_type = gov_chartered_company
-							c:BIC ?= this
-							c:DEI ?= this
-						}
-					}
-				}
-				add = 300
-			}
-			else_if = {
+			if = {
 				limit = {
 					scope:country = {
 						OR = {
@@ -522,19 +506,6 @@ decree_promote_national_values = {
 		}
 
 		if = {
-			limit = {
-				OR = {
-					NOT = { scope:country = { has_law_or_variant = law_type:law_total_separation } }
-					AND = {
-						scope:country = { country_is_in_africa = no }
-						state_is_in_africa = yes
-					}
-				}
-				religion_percent_state = {
-					target = scope:country.religion
-					value <= 0.9
-				}
-			}
 
 			if = {
 				limit = {
@@ -848,7 +819,7 @@ decree_encourage_resource_industry = {
 		building_group_bg_logging_throughput_add = 0.2
 		building_group_bg_fishing_throughput_add = 0.2
 		building_group_bg_whaling_throughput_add = 0.2
-		building_group_building_oil_rig_throughput_add = 0.2
+		building_group_bg_oil_extraction_throughput_add = 0.2
 		building_group_bg_rubber_throughput_add = 0.2
 	}
 	cost = 75
@@ -863,7 +834,7 @@ decree_encourage_resource_industry = {
 						is_building_group = bg_logging
 						is_building_group = bg_fishing
 						is_building_group = bg_whaling
-						is_building_group = building_oil_rig
+						is_building_group = bg_oil_extraction
 					}				
 				}
 			}
@@ -877,7 +848,7 @@ decree_encourage_resource_industry = {
 						is_building_group = bg_logging
 						is_building_group = bg_fishing
 						is_building_group = bg_whaling
-						is_building_group = building_oil_rig
+						is_building_group = bg_oil_extraction
 					}	
 					count >= 3
 				}			
@@ -892,7 +863,7 @@ decree_encourage_resource_industry = {
 						is_building_group = bg_logging
 						is_building_group = bg_fishing
 						is_building_group = bg_whaling
-						is_building_group = building_oil_rig
+						is_building_group = bg_oil_extraction
 					}	
 					count >= 5
 				}			
@@ -1084,7 +1055,7 @@ decree_enlistment_efforts = {
 					OR = {
 						has_strategy = ai_strategy_unify_germany
 						has_strategy = ai_strategy_unify_italy
-						has_journal_entry = je_war_of_the_confederation							 
+						# has_journal_entry = je_war_of_the_confederation							 
 					}
 				}
 			}
@@ -1182,31 +1153,6 @@ decree_conservation = {
 	ai_weight = 0
 }
 
-decree_disenfranchise = {
-	texture = "gfx/interface/icons/decree/civic_suppression_decree.dds"
-	unlocking_technologies = {
-	}		
-
-	country_trigger = {
-		NOT = {
-			has_law = law_type:law_protected_speech 
-		} 
-	}
-
-
-	modifier = {
-		state_pop_pol_str_mult = -0.125
-		state_pop_qualifications_mult = -0.1
-		state_radicalism_increases_violent_hostility_mult = 0.075
-		state_radicalism_increases_cultural_erasure_mult = 0.05
-		state_radicalism_increases_open_prejudice_mult = 0.025
-		state_radicals_from_sol_change_mult = 0.05 
-	}
-	cost = 100
-	
-	ai_weight = 0
-}
-
 #decree_red_tape = {  
 #	texture = "gfx/interface/icons/decree/efficient_admin.dds"
 #	modifier = {
@@ -1280,61 +1226,33 @@ decree_violent_hostility = {
 	}
 	cost = 125
 }
-decree_bd_grant_autonomy = {
-	texture = "gfx/interface/icons/decree/decree_grant_autonomy.dds"
+
+decree_colonial_migration = {
+	texture = "gfx/interface/icons/decree/decree_colonial_migration.dds"
+
+	unlocking_technologies = { 
+		colonization
+	}
+
 
 	country_trigger = {
+		NOT = { has_law_or_variant = law_type:law_no_colonial_affairs }
 		is_player = yes
-		NOR = {
-			has_law_or_variant = law_type:law_ethnostate
-			has_law_or_variant = law_type:law_outlawed_dissent
-		}
 	}
 
 	state_trigger = {
 		NOT = { 
-	#		has_decree = decree_emergency_relief
+			has_decree = decree_greener_grass_campaign
 		}
-	#	custom_tooltip = {
-	#		text =
-	#		any_scope_culture = {
-	#			not = {
-	#				is_primary_culture_of = root.owner 
-	#			}
-	#			has_homeland = root
-	#		}
-	#	}
-		#is_split_state = no
-		is_incorporated = yes
-		is_capital = no
+		is_incorporated = no
 	}
 
 	modifier = {
-	#	country_bureaucracy_add = -10 #doesnt work
-
-		state_institution_impact_add = -0.5
-		state_bureaucracy_population_base_cost_factor_mult = -0.5
-		state_tax_collection_mult = -0.5
-		state_assimilation_mult = -0.5
-		state_conversion_mult = -0.5
-
-#		state_infrastructure_mult = -0.125
-		state_conscription_rate_mult = -0.75
-		state_expected_sol_mult = -0.165
-		state_pop_pol_str_mult = -0.33
-#		building_group_bg_manufacturing_throughput_add = -0.05
-		building_group_bg_government_throughput_add = -0.05
-		building_group_bg_military_throughput_add = -0.1
-	#	state_market_access_price_impact = -0.05 
-		building_group_bg_infrastructure_construction_efficiency_add = -0.1
-		building_group_bg_extraction_construction_efficiency_add = -0.1
-		building_group_bg_heavy_industry_construction_efficiency_add = -0.25
-		building_group_bg_light_industry_construction_efficiency_add = -0.15
-		building_group_bg_government_construction_efficiency_add = -0.15
-
-		state_radicalism_increases_violent_hostility_mult = -0.25
-		state_radicalism_increases_cultural_erasure_mult = -0.2
-		state_radicalism_increases_open_prejudice_mult = -0.15
+		state_colony_growth_creation_factor = 0.5
+		state_colony_growth_speed_mult = 0.25
+		state_migration_pull_mult = 5
+		state_migration_pull_add = 20
+		state_migration_quota_mult = 0.2
 	}
-	cost = 0 #hmm
-}							
+	cost = 25
+}

@@ -1,4 +1,373 @@
-﻿canada_australia_rejoin_decision = {
+﻿germany_rejoin_decision = {
+
+	is_shown = {
+		exists = c:PRU
+		c:PRU ?= this
+		NOT = { has_variable = rejoin_germany_var }
+		is_in_power_bloc = yes
+	}
+	
+	possible = {
+		is_at_war = no
+		NOT = {
+			c:PRU.power_bloc ?= {
+				has_identity = identity:identity_trade_league
+			}
+		}
+	}
+		
+	when_taken = {
+		every_country = {
+			limit = {
+				capital = {
+					OR = {
+						region = sr:region_north_germany
+						region = sr:region_south_germany
+					}
+				}
+				NOT = {
+					c:AUS?= this
+				}
+				is_player = no
+			}
+			c:PRU.power_bloc ?= {
+				add_leverage = { target = prev value = 1000 }
+			}
+		}
+		set_variable = rejoin_germany_var
+	}
+	ai_chance = {
+		value = 0
+	}
+}
+
+REPLACE:sell_savoy = {
+	is_shown = {
+		exists = c:FRA
+		NOT = { has_global_variable = fra_annexed_savoy }
+		any_scope_state = {
+			state_region = s:STATE_SAVOY
+			is_split_state = no
+			is_capital = no
+		}
+		is_subject = no
+	}
+
+		possible = {
+		c:FRA = {
+			save_temporary_scope_as = france_scope
+		}
+		has_technology_researched = nationalism
+		is_at_war = no
+		c:FRA ?= {
+			is_at_war = no
+			owns_entire_state_region = STATE_RHONE
+			is_subject = no
+			NOT = { owes_obligation_to = ROOT }
+			relations:root >= relations_threshold:cordial
+		}
+		custom_tooltip = {
+			text = no_alliance_savoy_tt
+			can_create_treaty = {
+				first_country = ROOT
+				second_country = c:FRA
+				is_draft = no
+				binding_period = { years = 2 }
+				articles_to_create = {
+					{
+						article = alliance
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		create_treaty = {
+			first_country = ROOT
+			second_country = c:FRA
+			is_draft = no
+			binding_period = { years = 2 }
+			articles_to_create = {
+				{
+					article = alliance
+				}
+			}
+		}
+		change_infamy = -5
+		change_relations = { country = c:FRA value = 30 }
+		set_global_variable = fra_annexed_savoy
+		set_global_variable = fra_savoy_sardinia
+		c:FRA ?= {
+			set_owes_obligation_to = {
+				country = ROOT
+				setting = yes
+			}
+		}
+		show_as_tooltip = {
+			random_scope_state = {
+				limit = {
+					state_region = s:STATE_SAVOY
+				}
+				set_state_owner = c:FRA
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						state_region = s:STATE_PROVENCE
+					}
+				}
+				random_scope_state = {
+					limit = {
+						state_region = s:STATE_PROVENCE
+					}
+					set_state_owner = c:FRA
+				}
+			}
+		}
+		c:FRA ?= { trigger_event = { id = natural_borders.3 popup = yes } }
+		show_as_tooltip = {
+			s:STATE_SAVOY = {
+				remove_homeland = cu:north_italian
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				c:FRA ?= {
+					relations:root >= relations_threshold:amicable
+				}
+				OR = {
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = defensive_pact
+						}
+					}
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = alliance
+						}
+					}
+				}
+			}
+			add = 1
+		}
+	}
+}
+
+REPLACE:british_raj_decision = {
+	is_shown = {
+		exists = c:GBR
+		exists = c:BIC
+		c:GBR = ROOT
+		c:BIC ?= {
+			is_subject_of = ROOT
+			is_player = no
+		}
+		NOT = { has_variable = british_raj_var }
+	}
+
+	possible = {
+		is_at_war = no
+		has_technology_researched = civilizing_mission
+		institution_investment_level = {
+			institution = institution_colonial_affairs
+			value >= 4
+		}
+	}
+
+	when_taken = {
+		trigger_event = { id = raj.1 days = 0 popup = yes }
+	}
+
+	ai_chance = {
+		value = 5
+	}
+}
+
+
+integrate_south_sudan_decision = {
+
+	is_shown = {
+		NOT = { has_variable = incorporate_south_sudan }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        	owns_entire_state_region = STATE_DARFUR
+        }
+		NOT = {
+			any_scope_state = {
+				state_region = s:STATE_EQUATORIA
+				is_incorporated = yes
+				is_split_state = no
+			}
+		}
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DARFUR
+			is_incorporated = yes
+			is_split_state = no
+		}
+		owns_entire_state_region = STATE_EQUATORIA
+	}
+		
+	when_taken = {
+		random_state = {
+			limit = {
+				state_region = s:STATE_EQUATORIA
+			}
+			add_modifier = {
+				name = integrating_south_sudan
+				days = long_modifier_time
+			}
+		}
+	
+		set_variable = incorporate_south_sudan
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+annex_south_sudan_decision = {
+
+	is_shown = {
+		NOT = { has_variable = annexing_south_sudan }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        }
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DARFUR
+			is_incorporated = yes
+			is_split_state = no
+		}
+		has_technology_researched = quinine
+	}
+		
+	when_taken = {
+		every_state = {
+			limit = {
+				state_region = s:STATE_EQUATORIA
+			}
+			save_scope_as = south_sudan_state_scope
+		}
+		scope:south_sudan_state_scope.state_region = {
+			remove_state_trait = state_trait_malaria
+			add_claim = ROOT
+		}		
+		if = {
+			limit = {
+                has_law = law_type:law_no_colonial_affairs
+            }
+			activate_law = law_type:law_frontier_colonization
+		}			
+		set_variable = annexing_south_sudan
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+egypt_darfur_decision = {
+
+	is_shown = {
+		NOT = { has_variable = incorporate_darfur }
+        AND = {
+        	owns_entire_state_region = STATE_KORDOFAN 
+       		owns_entire_state_region = STATE_BLUE_NILE 
+        	owns_entire_state_region = STATE_DONGOLA 
+        }
+		NOT = {
+			any_scope_state = {
+				state_region = s:STATE_DARFUR
+				is_incorporated = yes
+				is_split_state = no
+			}
+		}
+	}
+	
+	possible = {
+		any_scope_state = {
+			state_region = s:STATE_KORDOFAN
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_BLUE_NILE
+			is_incorporated = yes
+			is_split_state = no
+		}
+		any_scope_state = {
+			state_region = s:STATE_DONGOLA
+			is_incorporated = yes
+			is_split_state = no
+		}
+		has_technology_researched = nationalism
+		owns_entire_state_region = STATE_DARFUR
+	}
+		
+	when_taken = {
+		random_state = {
+			limit = {
+				state_region = s:STATE_DARFUR
+			}
+			add_modifier = {
+				name = integrating_darfur
+				days = long_modifier_time
+			}
+		}
+	
+		set_variable = incorporate_darfur
+	}
+	ai_chance = {
+		value = 1
+	}
+}
+
+canada_australia_rejoin_decision = {
 
 	is_shown = {
 		exists = c:GBR
@@ -314,29 +683,64 @@ start_great_game_rus = {
 		has_interest_marker_in_region = region_persia
 		has_interest_marker_in_region = region_central_asia
 		has_interest_marker_in_region = region_caucasus
-		has_technology_researched = nationalism
+		custom_tooltip = {
+            text = je_pacify_kazakh_steppes_success_tt
+            has_global_variable = kazakhstan_victory_var
+		}
 	}
 	
 	when_taken = {
-		if = {
-			every_country = {
-				limit = {
-					OR = {
-						c:RUS ?= this
-						c:GBR ?= this
-						c:PER ?= this
-						has_journal_entry = je_unify_afghanistan
+		hidden_effect = {
+			if = {
+				every_country = {
+					limit = {
+						OR = {
+							c:RUS ?= this
+							c:GBR ?= this
+							c:PER ?= this
+							has_journal_entry = je_unify_afghanistan
+						}
+						NOT = {
+							has_journal_entry = je_great_game_control
+						}
 					}
-					NOT = {
-						has_journal_entry = je_great_game_control
-					}
+					add_journal_entry = { type = je_great_game_control }
 				}
-				add_journal_entry = { type = je_great_game_control }
 			}
 		}
-		if = {
-			c:RUS ? = this
+		add_journal_entry = { type = je_great_game_control }
+		add_journal_entry = {
+			type = je_maintain_afghan_protectorate
+		}
+		add_journal_entry = {
+			type = 	je_secure_persian_border
+		}
+		add_journal_entry = {
+			type = 	je_secure_influence_over_persia
+		}
+		end_truce = c:PER
+		c:GBR ={
 			end_truce = c:PER
+			add_journal_entry = {
+				type = je_maintain_afghan_protectorate
+			}			
+			add_journal_entry = {
+				type = 	je_secure_influence_over_persia
+			}
+			add_journal_entry = {
+				type = 	je_disrupt_russian_caucasus
+			}
+			add_journal_entry = {
+				type = 	je_consolidate_british_india
+			}
+		}
+		c:PER = {
+			add_journal_entry = {
+				type = 	je_achieve_sovereignty
+			}	
+			add_journal_entry = {
+				type =	je_consolidate_persia
+			}	
 		}
         set_global_variable = great_game_started
     }
@@ -344,7 +748,6 @@ start_great_game_rus = {
 	ai_chance = {
 		value = 0
 	}
-
 }	
 
 start_great_game_gbr = {
@@ -360,29 +763,64 @@ start_great_game_gbr = {
 
 	possible = {
 		has_interest_marker_in_region = region_persia
-		has_interest_marker_in_region = region_central_asia
 		has_interest_marker_in_region = region_caucasus
 		has_technology_researched = nationalism
-		game_date >= 1846.1.1
 	}
 	
 	when_taken = {
-		if = {
-			every_country = {
-				limit = {
-					OR = {
-						c:RUS ?= this
-						c:GBR ?= this
-						c:PER ?= this
-						has_journal_entry = je_unify_afghanistan
+		hidden_effect = {
+			if = {
+				every_country = {
+					limit = {
+						OR = {
+							c:RUS ?= this
+							c:GBR ?= this
+							c:PER ?= this
+							has_journal_entry = je_unify_afghanistan
+						}
+						NOT = {
+							has_journal_entry = je_great_game_control
+						}
 					}
-					NOT = {
-						has_journal_entry = je_great_game_control
-					}
+					add_journal_entry = { type = je_great_game_control }
 				}
-				add_journal_entry = { type = je_great_game_control }
 			}
 		}
+		add_journal_entry = { type = je_great_game_control }
+		add_journal_entry = {
+			type = je_maintain_afghan_protectorate
+		}
+		add_journal_entry = {
+			type = 	je_disrupt_russian_caucasus
+		}
+		add_journal_entry = {
+			type = 	je_secure_influence_over_persia
+		}
+		add_journal_entry = {
+			type = 	je_consolidate_british_india
+		}
+
+		c:RUS ={
+			end_truce = c:PER
+			add_journal_entry = {
+				type = je_maintain_afghan_protectorate
+			}			
+			add_journal_entry = {
+				type = 	je_secure_influence_over_persia
+			}
+			add_journal_entry = {
+				type = 	je_secure_persian_border
+			}
+		}
+		c:PER = {
+			add_journal_entry = {
+				type = 	je_achieve_sovereignty
+			}	
+			add_journal_entry = {
+				type =	je_consolidate_persia
+			}	
+		}
+		end_truce = c:PER
         set_global_variable = great_game_started
     }
 	
@@ -545,17 +983,17 @@ british_hbc = {
 allow_monopoly_subject = {
 	is_shown = {
 		NOT = {
-			has_law_or_variant = law_laissez_faire_subject 
+			has_law = law_type:law_laissez_faire_subject 
 		}
 		is_subject = yes
 	}
 	
 	possible = {
 		NOT = {
-			has_law_or_variant = law_laissez_faire_subject 
+			has_law = law_type:law_laissez_faire_subject 
 		}
 		is_subject = yes
-		has_law_or_variant = law_type:law_laissez_faire
+		has_law = law_type:law_laissez_faire
 	}
 	
 	when_taken = {
@@ -574,7 +1012,7 @@ allow_monopoly_subject_remove = {
 	
 	possible = {
 		NOT = {
-			has_law_or_variant = law_laissez_faire
+			has_law = law_type:law_laissez_faire
 		}
 		is_subject = yes
 		has_law_or_variant = law_type:law_laissez_faire_subject

@@ -1,4 +1,303 @@
-﻿namespace = kill_japanese_monarch
+﻿namespace = austria_integrate
+
+austria_integrate.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = austria_integrate.1.t
+	desc = austria_integrate.1.d
+	flavor = austria_integrate.1.f
+
+	event_image = {
+		video = "unspecific_military_parade"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+    trigger = {
+        c:AUS ?= this
+  		exists = c:AUS
+		has_variable = empire_of_austria_variable
+		any_scope_state = {
+			state_region = {
+				is_homeland = cu:serb
+			}
+			count = 10
+		}
+		NOT = {
+			has_variable = serb_integrated
+		}
+    }
+
+    option = {
+        name = austria_integrate.1.a
+		every_scope_state = {
+			limit = {
+				state_region = {
+					is_homeland = cu:serb
+				}
+				is_incorporated = no
+			}
+        	add_modifier = {
+        		name = integrating_serbia
+        		days = long_modifier_time
+			}
+		}
+		set_variable = serb_integrated
+	}
+}
+
+austria_integrate.2 = {
+	type = country_event
+	placement = ROOT
+
+	title = austria_integrate.2.t
+	desc = austria_integrate.2.d
+	flavor = austria_integrate.2.f
+
+	event_image = {
+		video = "unspecific_military_parade"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+    trigger = {
+        c:AUS ?= this
+  		exists = c:AUS
+		has_variable = empire_of_austria_variable
+		owns_entire_state_region = STATE_WALLACHIA
+		owns_entire_state_region = STATE_MOLDAVIA
+		NOT = {
+			has_variable = romania_integrated
+		}
+    }
+
+    option = {
+        name = austria_integrate.2.a
+		every_scope_state = {
+			limit = {
+				state_region = {
+					is_homeland = cu:romanian
+				}
+				is_incorporated = no
+			}
+        	add_modifier = {
+        		name = integrating_romania
+        		days = long_modifier_time
+			}
+		}
+		set_variable = romania_integrated
+	}
+}
+
+namespace = fascist_technocracy
+
+fascist_technocracy.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = fascist_technocracy.1.t
+	desc = fascist_technocracy.1.d
+	flavor = fascist_technocracy.1.f
+
+	event_image = {
+		video = "unspecific_military_parade"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+    trigger = {
+        is_subject = no
+		has_law = law_type:law_corporate_state
+		has_law = law_type:law_technocracy
+		NOT = {
+			has_variable = fascist_technocracy_event
+		}
+    }
+
+    option = {
+        name = fascist_technocracy.a
+		set_variable = fascist_technocracy_event
+		set_variable = technocratic_oligarchy
+	}
+
+    option = {
+        name = fascist_technocracy.b
+		set_variable = fascist_technocracy_event
+	}
+}
+
+namespace = laissez_faire_subject
+
+laissez_faire_subject.1 = {
+	type = country_event
+    hidden = yes
+
+    trigger = {
+        is_subject = no
+		has_law = law_type:law_laissez_faire_subject
+		NOT = {
+			has_variable = lf_subject
+		}
+    }
+	immediate = {
+        activate_law = law_type:law_laissez_faire
+		set_variable = lf_subject
+    }
+}
+
+namespace = portugaliza
+
+portugaliza.1 = {
+	type = country_event
+    hidden = yes
+
+    trigger = {
+        c:POR ?= this
+  		exists = c:POR
+		owns_entire_state_region = STATE_GALICIA   
+		NOT = {
+			has_variable = galicia_added
+		}
+    }
+	immediate = {
+        add_primary_culture = cu:galician
+		set_variable = galicia_added
+    }
+}
+
+namespace = company_events
+
+company_events.1 = {
+	type = country_event
+    hidden = yes
+
+	trigger = {
+		any_company = {
+			is_company_type = company_type:company_maison_worth
+            company_is_prosperous = yes
+		}
+	    is_in_power_bloc = yes
+	    is_power_bloc_leader = yes
+		NOT = {
+			has_variable = company_mandate_on
+		}
+	}
+
+	immediate = {
+		root.power_bloc ?= {
+			add_modifier = {
+				name = company_maison_worth_power_bloc_modifier
+			}
+		}
+		set_variable = company_mandate_on
+	}
+}
+
+company_events.2 = {
+	type = country_event
+    hidden = yes
+
+	trigger = {
+		any_company = {
+			is_company_type = company_type:company_ludwig_moser_and_sons
+            company_is_prosperous = yes
+		}
+	    is_in_power_bloc = yes
+	    is_power_bloc_leader = yes
+		NOT = {
+			has_variable = company_mandate_on
+		}
+	}
+
+	immediate = {
+		root.power_bloc ?= {
+			add_modifier = {
+				name = company_ludwig_moser_and_sons_power_bloc_modifier
+			}
+		}
+		set_variable = company_mandate_on
+	}
+}
+
+company_events.3 = {
+	type = country_event
+    hidden = yes
+
+	trigger = {
+		any_company = {
+			is_company_type = company_type:company_kinkozan_sobei
+            company_is_prosperous = yes
+		}
+	    is_in_power_bloc = yes
+	    is_power_bloc_leader = yes
+		NOT = {
+			has_variable = company_mandate_on
+		}
+	}
+
+	immediate = {
+		root.power_bloc ?= {
+			add_modifier = {
+				name = company_kinkozan_sobei_power_bloc_modifier
+			}
+		}
+		set_variable = company_mandate_on
+	}
+}
+
+company_events.4 = {
+	type = country_event
+    hidden = yes
+
+	trigger = {
+		any_company = {
+			is_company_type = company_type:company_pedro_domecq
+            company_is_prosperous = yes
+		}
+	    is_in_power_bloc = yes
+	    is_power_bloc_leader = yes
+		NOT = {
+			has_variable = company_mandate_on
+		}
+	}
+
+	immediate = {
+		root.power_bloc ?= {
+			add_modifier = {
+				name = company_pedro_domecq_power_bloc_modifier
+			}
+		}
+		set_variable = company_mandate_on
+	}
+}
+
+
+namespace = kill_japanese_monarch
 
 kill_japanese_monarch.1 = {
 	type = country_event

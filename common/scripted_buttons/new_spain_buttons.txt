@@ -125,3 +125,277 @@ je_regime_change_portugal_button = {
 		value = 1
 	}
 }
+
+je_two_spains_coup_button = {
+	name = je_two_spains_coup_button
+	desc = je_two_spains_coup_button_desc
+
+	visible = {
+		var:two_spains_tension_current_var >= 50
+		NOT = {
+			has_variable = two_spains_coup_var
+		}
+		has_law = law_type:law_monarchy
+		is_revolutionary = no
+		is_secessionist = no
+	}
+
+	possible = {
+		NOR = {
+			hidden_trigger = { has_variable = coup_event_active }
+			has_journal_entry = je_ip4_coup
+			hidden_trigger = { has_variable = glorious_revolution_var }
+		}
+		any_scope_character = {
+			OR = {
+				has_role = general
+				has_role = admiral
+			}
+			custom_tooltip = {
+				text = ig_sufficiently_upset_tt
+				interest_group = {
+					ig_approval < 0
+				}
+				has_variable = monthly_cached_commander_coup_strength
+			}
+			trigger_if = {
+				limit = {
+					has_variable = monthly_cached_commander_coup_strength
+				}
+				custom_tooltip = {
+					text = coup_strength_greater_than_coup_resistance_tt
+					var:monthly_cached_commander_coup_strength >= root.country_coup_resistance
+				}
+			}
+		}
+	}
+	selected = {
+	}
+
+	effect = {
+		ordered_scope_character = {
+			limit = {
+				OR = {
+					has_role = general
+					has_role = admiral
+				}
+				has_variable = monthly_cached_commander_coup_strength
+				character_has_ideology_conflicting_with_ruling_dynasty = yes
+				var:monthly_cached_commander_coup_strength >= root.country_coup_resistance
+				interest_group = {
+					ig_approval < 0
+				}
+			}
+			order_by = popularity
+			position = 0
+			save_scope_as = temp_golpista
+		}
+		if = {
+			limit = {
+				exists = scope:temp_golpista
+			}
+			scope:temp_golpista ?= {
+				set_variable = commander_doing_coup_on_player_behalf
+			}
+			if = {
+				limit = {
+					exists = scope:temp_golpista
+				}
+				create_coup_from_character = {
+					CHARACTER = scope:temp_golpista
+				}
+			}
+		}
+		set_variable = two_spains_coup_var
+	}
+
+	ai_chance = {
+		value = 0
+	}	
+}
+
+REPLACE:je_spain_provisional_government_hohenzollern_button = {
+	name = je_spain_provisional_government_hohenzollern_button
+	desc = je_spain_provisional_government_hohenzollern_button_desc
+
+	visible = {
+		OR = {
+			AND = {
+				exists = c:PRU
+				c:PRU ?= {
+					has_law = law_type:law_monarchy
+					any_subject_or_below = {
+						any_scope_state = {
+							this = p:x908060.state
+						}
+					}
+				}
+			}
+			AND = {
+				exists = c:GER
+			}
+			AND = {
+				exists = c:HOH
+				c:HOH ?= {
+					has_law = law_type:law_monarchy
+					any_scope_state = {
+						this = p:x908060.state
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		trigger_if = {
+			limit = {
+				exists = c:PRU
+				c:PRU ?= {
+					any_subject_or_below = {
+						any_scope_state = {
+							this = p:x908060.state
+						}
+					}
+				}
+			}
+			"c:PRU.relations(ROOT)" >= relations_threshold:cordial
+		}
+		trigger_else_if = {
+			limit = {
+				exists = c:GER
+				c:GER ?= {
+					any_subject_or_below = {
+						any_scope_state = {
+							this = p:x908060.state
+						}
+					}
+				}
+			}
+			"c:GER.relations(ROOT)" >= relations_threshold:cordial
+		}
+		trigger_else_if = {
+			limit = {
+				exists = c:HOH
+				c:HOH ?= {
+					any_scope_state = {
+						this = p:x908060.state
+					}
+				}
+			}
+			"c:HOH.relations(ROOT)" >= relations_threshold:cordial
+		}
+		custom_tooltip = {
+			text = not_already_used_this_interaction_tt
+			NOT = {
+				has_variable = hohenzollern_king_search_var
+			}
+		}
+		custom_tooltip = {
+			text = not_using_other_interaction_tt
+			NOT = {
+				has_variable = king_searching_var
+			}
+		}
+		custom_tooltip = {
+			text = already_couped_dynasty_tt
+			NOT = {
+				var:spa_couped_dynasty ?= 2
+			}
+		}
+	}
+
+	selected = {
+		has_variable = hohenzollern_king_search_var
+	}
+
+	effect = {
+		set_variable = king_searching_var
+		ROOT = {
+			save_scope_as = spain_scope
+		}
+		set_variable = { name = hohenzollern_king_search_var days = very_long_modifier_time }
+		if = {
+			limit = {
+				exists = c:FRA
+			}
+			c:FRA ?= {
+				save_scope_as = france_scope
+			}
+		}
+		if = {
+			limit = {
+				exists = c:PRU
+				c:PRU ?= {
+					any_subject_or_below = {
+						any_scope_state = {
+							this = p:x908060.state
+						}
+					}
+				}
+			}
+			c:PRU ?= {
+				trigger_event = { id = spain_provisional_government.3 days = 7 }
+			}
+		}
+		else_if = {
+			limit = {
+				exists = c:GER
+			}
+			c:GER ?= {
+				trigger_event = { id = spain_provisional_government.3 days = 7 }
+			}
+		}
+		else_if = {
+			limit = {
+				exists = c:HOH
+				c:HOH ?= {
+					any_scope_state = {
+						this = p:x908060.state
+					}
+				}
+			}
+			c:HOH ?= {
+				trigger_event = { id = spain_provisional_government.3 days = 7 }
+			}
+		}
+		show_as_tooltip = {
+			custom_tooltip = TREATY_PROPOSAL_TOOLTIP_IF_ACCEPTED_TITLE
+			custom_tooltip = will_cause_diplomatic_issues_with_france_tt
+			if = {
+				limit = {
+					OR = {
+						c:HOH ?= {
+							any_scope_character = {
+								has_template = HOH_leopold_von_hohenzollern
+							}
+						}
+						c:PRU ?= {
+							any_scope_character = {
+								has_template = HOH_leopold_von_hohenzollern
+							}
+						}
+						c:GER ?= {
+							any_scope_character = {
+								has_template = HOH_leopold_von_hohenzollern
+							}
+						}
+					}
+				}
+				custom_tooltip = leopold_von_hohenzollern_tt
+			}
+			else = {
+				custom_tooltip = guillermo_von_hohenzollern_tt
+			}
+			ig:ig_armed_forces ?= {
+				add_modifier = {
+					name = modifier_enthroned_preferred_candidate
+					days = normal_modifier_time
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}
