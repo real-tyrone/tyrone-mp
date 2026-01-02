@@ -1,4 +1,38 @@
-﻿germany_rejoin_decision = {
+﻿reinvite_napoleon_decision = {
+	is_shown = {
+		exists = c:FRA
+		c:FRA ?= this
+		NOT = { has_variable = reinvited_napoleon_var }
+	}
+	
+	possible = {
+		is_at_war = no
+		has_technology_researched = nationalism
+		empty_agitator_slots >= 1
+		hidden_trigger = { game_date < 1870.1.1 }
+		NOT = {
+			has_journal_entry = je_divided_monarchists
+		}
+		hidden_trigger = { NOT = { has_global_variable = napoleon_iii_spawn } }
+		any_interest_group = {
+			is_in_government = yes
+			leader = {
+				has_ideology = ideology:ideology_bonapartist
+			}
+		}
+		government_legitimacy >= 50
+	}
+		
+	when_taken = {
+		trigger_event = historical_agitators.8 
+		set_variable = reinvited_napoleon_var
+	}
+	ai_chance = {
+		value = 0
+	}
+}
+
+germany_rejoin_decision = {
 
 	is_shown = {
 		exists = c:PRU

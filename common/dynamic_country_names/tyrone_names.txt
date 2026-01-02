@@ -58,6 +58,7 @@ REPLACE:AUS = {
 	}
 }
 
+#brazil
 BRZ = {
 	dynamic_country_name = {
 		name = dyn_c_united_kingdom_brz
@@ -77,6 +78,7 @@ BRZ = {
 	}
 }
 
+#portugal
 REPLACE:POR = {
 	dynamic_country_name = {
 		name = dyn_c_united_kingdom_por
@@ -110,7 +112,8 @@ REPLACE:POR = {
 	}
 }
 
-REPLACE:JAP = { # Japan
+#japan
+REPLACE:JAP = { 
 	dynamic_country_name = {
 		name = dyn_c_japan_shogunate
 		adjective = dyn_c_japan_shogunate_adj
@@ -154,6 +157,7 @@ REPLACE:JAP = { # Japan
 	}
 }
 
+#china
 INJECT:CHI = {
 	dynamic_country_name = {
 		name = dyn_c_japanese_china
@@ -179,4 +183,60 @@ INJECT:CHI = {
 			}
 		}
 	}
+}
+
+#spain
+
+REPLACE:SPA = {
+	dynamic_country_name = {
+		name = dyn_c_spanish_republic
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				OR = {
+					has_law_or_variant = law_type:law_parliamentary_republic
+					has_law_or_variant = law_type:law_presidential_republic
+				}
+			}
+		}
+	}
+
+	dynamic_country_name = {
+		name = dyn_c_spanish_kingdom
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+			}
+		}
+	}
+	
+	dynamic_country_name = {
+		name = dyn_c_spanish_empire
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 150
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+				OR = {
+					has_journal_entry = je_reconquista
+					has_variable = reconquista_achievement
+				}
+			}
+		}
+	}	
 }
