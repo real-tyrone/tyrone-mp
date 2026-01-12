@@ -1,0 +1,137 @@
+﻿je_veiled_protectorate = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_foreign_affairs
+
+	is_shown_when_inactive = {
+		has_variable = suez_survey_complete
+		country_rank >= rank_value:major_power
+		any_scope_state = {
+			state_region = s:STATE_SINAI
+		}
+		any_neighbouring_state = {
+			OR = {
+				state_region = s:STATE_LOWER_EGYPT
+				state_region = s:STATE_UPPER_EGYPT
+				state_region = s:STATE_MIDDLE_EGYPT
+				state_region = s:STATE_SINAI
+			}
+		}
+		NOT = { c:TUR ?= THIS }
+		NOT = { c:EGY ?= THIS }
+	}
+
+	possible = {
+		s:STATE_SINAI = {
+			any_scope_state = {
+				owner = root
+				any_scope_building = {
+					is_building_type = building_suez_canal
+				}
+			}
+		}
+		custom_tooltip = {
+			text = berlin_conference_ended_tt
+			has_global_variable = berlin_conference_ended
+		}
+	}
+
+	immediate = {
+		custom_tooltip = {
+			text = egypt_claims_tt
+			s:STATE_SINAI = {
+				add_claim = ROOT
+			}
+			s:STATE_LOWER_EGYPT = {
+				add_claim = ROOT
+			}
+			s:STATE_MIDDLE_EGYPT = {
+				add_claim = ROOT
+			}
+			s:STATE_UPPER_EGYPT = {
+				add_claim = ROOT
+			}
+			s:STATE_MATRUH = {
+				add_claim = ROOT
+			}
+			s:STATE_EGYPTIAN_DESERT = {
+				add_claim = ROOT
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = control_egypt_tt
+			AND = {
+				OR = {
+					owns_entire_state_region = STATE_SINAI
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_SINAI
+					}
+					AND = {
+						any_scope_state = {
+							state_region = s:STATE_SINAI
+						}
+						any_subject_or_below = {
+							any_scope_state = {
+								state_region = s:STATE_SINAI
+							}
+						}
+					}
+				}
+				OR = {
+					owns_entire_state_region = STATE_LOWER_EGYPT
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_LOWER_EGYPT
+					}
+				}
+				OR = {
+					owns_entire_state_region = STATE_MIDDLE_EGYPT
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_MIDDLE_EGYPT
+					}
+				}
+				OR = {
+					owns_entire_state_region = STATE_UPPER_EGYPT
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_UPPER_EGYPT
+					}
+				}
+				OR = {
+					owns_entire_state_region = STATE_MATRUH
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_MATRUH
+					}
+				}
+				OR = {
+					owns_entire_state_region = STATE_EGYPTIAN_DESERT
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_EGYPTIAN_DESERT
+					}
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = veiled_protectorate.1
+		}
+	}
+
+	fail = {
+		NOT = {
+			s:STATE_SINAI = {
+				any_scope_state = {
+					owner = root
+				}
+			}
+		}
+	}
+
+	timeout = 3650
+
+	weight = 10000
+	should_be_pinned_by_default = yes
+}

@@ -1,0 +1,340 @@
+﻿namespace = berlin_conference
+
+berlin_conference.1 = {
+	type = country_event
+
+	title = berlin_conference.1.t
+	desc = berlin_conference.1.d
+	flavor = berlin_conference.1.f
+	gui_window = event_window_widescreen_classic
+
+	cooldown = { days = never_fire_again_modifier_time }
+
+	event_image = {
+		video = "ep1_power_blocs"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				NOT = {
+					is_involved_in_journal_entry = je_berlin_conference
+				}
+				is_in_geographic_region = geographic_region_europe
+				OR = {
+					has_technology_researched = civilizing_mission
+					country_rank = rank_value:great_power
+					AND = {
+						OR = {
+							has_law = law_type:law_colonial_resettlement
+							has_law = law_type:law_colonial_exploitation
+						}
+						country_rank = rank_value:major_power
+					}
+				}
+			}
+			je:je_berlin_conference = {
+				add_involved_country = ROOT
+			}
+		}
+	}
+
+	option = {
+		name = berlin_conference.1.a
+	}
+
+
+}
+
+berlin_conference.2 = {
+	type = country_event
+	placement = ROOT
+
+	title = berlin_conference.2.t
+	desc = berlin_conference.2.d
+	flavor = berlin_conference.2.f
+
+	event_image = {
+		video = "africa_construction_colony"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+	immediate = {
+		set_variable = staking_a_claim
+	}
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_ethiopia
+			NOT = {
+				has_variable = claimed_ethiopia_var
+			}
+        }
+        name = berlin_conference.2.a
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_ethiopia_var
+		add_to_global_variable_list = {
+			name = ethiopia_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_senegal
+			NOT = {
+				has_variable = claimed_senegal_var
+			}
+        }
+        name = berlin_conference.2.b
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_senegal_var
+		add_to_global_variable_list = {
+			name = senegal_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_congo
+			NOT = {
+				has_variable = claimed_congo_var
+			}
+        }
+        name = berlin_conference.2.c
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_congo_var
+		add_to_global_variable_list = {
+			name = congo_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}	
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_zanj
+			NOT = {
+				has_variable = claimed_zanj_var
+			}
+        }
+        name = berlin_conference.2.g
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_zanj_var
+		add_to_global_variable_list = {
+			name = zanj_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_niger
+			NOT = {
+				has_variable = claimed_niger_var
+			}
+        }
+        name = berlin_conference.2.h
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_niger_var
+		add_to_global_variable_list = {
+			name = niger_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}
+
+    option = {
+        trigger = {
+			has_interest_marker_in_region = region_southern_africa
+			NOT = {
+				has_variable = claimed_saf_var
+			}
+        }
+        name = berlin_conference.2.i
+        change_variable = { name = african_claims_var subtract = 1 }
+		set_variable = claimed_saf_var
+		add_to_global_variable_list = {
+			name = saf_claimed_countries_list
+			target = ROOT
+		}
+		remove_variable = staking_a_claim
+	}		
+
+    option = {
+        name = berlin_conference.2.z
+		remove_variable = staking_a_claim
+	}
+}
+
+berlin_conference.3 = {
+	type = country_event
+	placement = ROOT
+
+	title = berlin_conference.3.t
+	desc = berlin_conference.3.d
+	flavor = berlin_conference.3.f
+
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by on_action
+	}
+
+	immediate = {
+		sr:region_congo = {
+			save_scope_as = congo_region
+		}
+		sr:region_southern_africa = {
+			save_scope_as = saf_region
+		}
+		sr:region_niger = {
+			save_scope_as = niger_region
+		}
+		sr:region_zanj = {
+			save_scope_as = zanj_region
+		}
+		sr:region_senegal = {
+			save_scope_as = senegal_region
+		}
+		sr:region_ethiopia = {
+			save_scope_as = ethiopia_region
+		}
+	}
+
+	immediate = {
+		set_global_variable = berlin_conference_ended
+	}
+
+    option = {
+        name = berlin_conference.3.a
+		if = {
+			limit = {
+				has_variable = claimed_congo_var
+			}
+			custom_tooltip = {
+				text = congo_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_congo
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = claimed_saf_var
+			}
+			custom_tooltip = {
+				text = saf_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_southern_africa
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = claimed_niger_var
+			}
+			custom_tooltip = {
+				text = niger_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_niger
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = claimed_zanj_var
+			}
+			custom_tooltip = {
+				text = zanj_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_zanj
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = claimed_senegal_var
+			}
+			custom_tooltip = {
+				text = senegal_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_senegal
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_variable = claimed_ethiopia_var
+			}
+			custom_tooltip = {
+				text = ethiopia_claims_tt
+				every_state = {
+					limit = {
+						region = sr:region_ethiopia
+					}
+					state_region = { 
+						add_claim = ROOT
+					}
+				}
+			}
+		}
+	}
+}
