@@ -1,4 +1,274 @@
-﻿namespace = eiffel_tower
+﻿namespace = sakhalin
+
+sakhalin.1 = {
+	type = country_event
+	placement = scope:sakhalin_state
+
+	title = sakhalin.1.t
+	desc = sakhalin.1.d
+	flavor = sakhalin.1.f
+
+	event_image = {
+		video = "asia_westerners_arriving"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by decision
+	}
+
+    immediate = {
+		random_scope_state = {
+			limit = {
+				state_region = s:STATE_SAKHALIN
+			}
+			save_scope_as = sakhalin_state
+		}
+    }
+
+    option = {
+        name = sakhalin.1.a
+		if = {
+			limit = {
+        		c:RUS ?= this
+			}
+			c:JAP = {
+				trigger_event = { id = sakhalin.2 }
+			}
+		}
+		if = {
+			limit = {
+        		c:JAP ?= this
+			}
+			c:RUS = {
+				trigger_event = { id = sakhalin.2 }
+			}
+		}
+		change_infamy = -5
+		default_option = yes
+		ai_chance = {
+			value = 9
+		}
+	}
+
+    option = {
+        name = sakhalin.1.b
+		set_global_variable = sakhalin_status_quo
+		change_infamy = 5
+		if = {
+			limit = {
+        		c:RUS ?= this
+			}
+			c:JAP = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		if = {
+			limit = {
+        		c:JAP ?= this
+			}
+			c:RUS = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		trigger_event = { id = sakhalin.3 }
+		ai_chance = {
+			value = 1
+		}
+	}
+}
+
+sakhalin.2 = {
+	type = country_event
+	placement = scope:sakhalin_state
+
+	title = sakhalin.2.t
+	desc = sakhalin.2.d
+	flavor = sakhalin.2.f
+
+	event_image = {
+		video = "asia_westerners_arriving"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by decision
+	}
+
+    immediate = {	
+		random_scope_state = {
+			limit = {
+				state_region = s:STATE_SAKHALIN
+			}
+			save_scope_as = sakhalin_state
+		}
+    }
+
+    option = {
+        name = sakhalin.2.a
+		set_global_variable = sakhalin_divided
+		if = {
+			limit = {
+        		c:RUS ?= this
+			}
+			c:JAP = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		if = {
+			limit = {
+        		c:JAP ?= this
+			}
+			c:RUS = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		trigger_event = { id = sakhalin.3 }
+		change_infamy = -5
+		default_option = yes
+		ai_chance = {
+			value = 9
+		}
+	}
+
+    option = {
+        name = sakhalin.2.b
+		set_global_variable = sakhalin_status_quo
+		change_infamy = 5
+		if = {
+			limit = {
+        		c:RUS ?= this
+			}
+			c:JAP = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		if = {
+			limit = {
+        		c:JAP ?= this
+			}
+			c:RUS = {
+				trigger_event = { id = sakhalin.3 }
+			}
+		}
+		trigger_event = { id = sakhalin.3 }
+		ai_chance = {
+			value = 1
+		}
+	}
+}
+
+sakhalin.3 = {
+	type = country_event
+	placement = scope:sakhalin_state
+
+	title = sakhalin.3.t
+	desc = {
+		triggered_desc = {
+			desc = sakhalin.3.d
+			trigger = {
+				has_global_variable = sakhalin_divided
+			}
+		}
+		triggered_desc = {
+			desc = sakhalin.3.d_2
+			trigger = {
+				has_global_variable = sakhalin_status_quo
+			}
+		}
+	}
+
+	flavor = sakhalin.3.f
+
+	event_image = {
+		video = "asia_westerners_arriving"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
+
+	duration = 3
+
+	trigger = {
+		# triggered by decision
+	}
+
+    immediate = {		
+		random_scope_state = {
+			limit = {
+				state_region = s:STATE_SAKHALIN
+			}
+			save_scope_as = sakhalin_state
+		}
+    }
+
+    option = {
+        name = sakhalin.3.a
+        trigger = {
+            has_global_variable = sakhalin_divided
+        }
+		c:RUS = {
+			change_relations = {
+				country = c:JAP
+				value = 10
+			}
+		}
+		s:STATE_SAKHALIN = {
+			set_owner_of_provinces = {
+				country = c:RUS
+				provinces = { x1CA52F xC3C06E xF1B27F xB8277E x22C190 x503660 x4ED0E9 x1B4E8D x041FF2 x768145 x9628A0 x02BAB7 xEAFA0A xDFA060 x7608FE x1CAAE0 }
+			}
+			set_owner_of_provinces = {
+				country = c:JAP
+				provinces = { x2010C0 x2492AA x3405B2 x47B65C  x9E3A0A xA5E421 xBE16C2 xD0294D xE99CEA xF15B61 }
+			}
+		}
+        s:STATE_SAKHALIN = {
+            add_homeland = cu:japanese
+			add_homeland = cu:russian
+			remove_claim = c:RUS
+			remove_claim = c:JAP
+        }
+		default_option = yes
+		ai_chance = {
+			value = 9
+		}
+	}
+
+    option = {
+        name = sakhalin.3.b
+        trigger = {
+            has_global_variable = sakhalin_status_quo
+        }
+		c:RUS = {
+			change_relations = {
+				country = c:JAP
+				value = -10
+			}
+		}
+        s:STATE_SAKHALIN = {
+            add_homeland = cu:japanese
+			add_homeland = cu:russian
+        }
+		ai_chance = {
+			value = 1
+		}
+	}
+}
+
+
+namespace = eiffel_tower
 
 eiffel_tower.1 = {
 	type = country_event
@@ -47,10 +317,6 @@ austria_integrate.1 = {
 	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
 
 	duration = 3
-
-	trigger = {
-		# triggered by on_action
-	}
 
     trigger = {
         c:AUS ?= this
