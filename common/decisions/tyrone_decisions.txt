@@ -1,4 +1,79 @@
-﻿claim_africa = {
+﻿REPLACE:aus_integrate_crown_lands_decision = {
+	is_shown = {
+		c:AUS ?= this
+		NOT = {
+			has_journal_entry = je_matter_of_hungary
+		}
+		NOT = {
+			has_variable = crownlands_annexed_var
+		}
+		any_subject_or_below = {
+			is_subject_type = subject_type_crown_land
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = matter_of_hungary_integrate_crown_lands_tt
+			NOT = {
+				any_subject_or_below = {
+					is_subject_type = subject_type_crown_land
+					liberty_desire > 25
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		set_variable = crownlands_annexed_var
+		every_subject_or_below = {
+			limit = {
+				is_subject_type = subject_type_crown_land
+			}
+			if = {
+				limit = {
+					is_player = yes
+				}
+				play_as = prev
+			}
+			root = {
+				annex_with_incorporation = prev
+			}
+		}
+		add_modifier = {
+			name = modifier_streamline_crown_lands
+			days = normal_modifier_time
+		}
+		add_radicals = {
+			culture = cu:hungarian
+			value = medium_radicals
+		}
+		add_radicals = {
+			culture = cu:polish
+			value = medium_radicals
+		}
+		add_radicals = {
+			culture = cu:croat
+			value = medium_radicals
+		}
+	}
+
+	ai_chance = {
+		value = 10
+		if = {
+			limit = { # Will not annex players until their liberty desire is below 5.
+				any_subject_or_below = {
+					is_subject_type = subject_type_crown_land
+					is_player = yes
+					liberty_desire > 5
+				}
+			}
+			add = -100
+		}
+	}
+}
+
+claim_africa = {
 	is_shown = {
 		has_global_variable = berlin_conference_ended
 		NOT = {
@@ -667,106 +742,6 @@ REPLACE:decision_depose_ruling_dynasty = {
 
 	ai_chance = {
 		value = 10
-	}
-}
-
-REPLACE:aus_organise_trialism = {
-	is_shown = {
-		has_dlc_feature = ip3_content
-		c:AUS ?= this
-		any_subject_or_below = {
-			NOT = {
-				country_has_primary_culture = cu:croat
-			}
-			any_scope_state = {
-				state_region = s:STATE_CROATIA
-			}
-		}
-		has_law_or_variant = law_type:law_monarchy
-		NOT = {
-			has_variable = aus_organised_trialism
-		}
-	}
-	possible = {
-		has_technology_researched = nationalism
-		has_government_type = gov_dual_monarchy
-		any_subject_or_below = {
-			NOT = {
-				country_has_primary_culture = cu:croat
-			}
-			any_scope_state = {
-				state_region = s:STATE_CROATIA
-			}
-			OR = {
-				relations:root <= 0
-				liberty_desire >= 50
-				has_attitude = {
-					who = ROOT
-					attitude = rebellious
-				}
-			}
-		}
-		is_at_war = no
-		is_diplomatic_play_committed_participant = no
-	}
-	when_taken = {
-		set_variable = aus_organised_trialism
-		random_subject_or_below = {
-			limit = {
-				NOT = {
-					country_has_primary_culture = cu:croat
-				}
-				any_scope_state = {
-					state_region = s:STATE_CROATIA
-				}
-			}
-			custom_tooltip = {
-				text = austria_trialism.1.t_display_tt
-				trigger_event = { id = austria_trialism.1 }
-			}
-		}
-	}
-	ai_chance = {
-		value = -100
-		if = {
-			limit = {
-				any_subject_or_below = {
-					NOT = {
-						country_has_primary_culture = cu:croat
-					}
-					any_scope_state = {
-						state_region = s:STATE_CROATIA
-					}
-					save_temporary_scope_as = hungary_scope
-				}
-			}
-			every_subject_or_below = {
-				limit = {
-					NOT = {
-						country_has_primary_culture = cu:croat
-					}
-					any_scope_state = {
-						state_region = s:STATE_CROATIA
-					}
-				}
-				add = scope:hungary_scope.liberty_desire
-			}
-			if = {
-				limit = {
-					scope:hungary_scope = {
-						has_attitude = {
-							who = ROOT
-							attitude = rebellious
-						}
-					}
-				}
-				add = 25
-			}
-			subtract = { # -50 at 100 relations, +50 at -100
-				value = "relations(scope:hungary_scope)"
-				multiply = 0.5
-			}
-		}
 	}
 }
 

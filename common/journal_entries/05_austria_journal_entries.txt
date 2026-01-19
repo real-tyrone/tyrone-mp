@@ -6,6 +6,9 @@
 	scripted_button = matter_of_hungary_dual_monarchy_button
 	scripted_button = matter_of_hungary_integrate_crown_lands_button
 	scripted_button = matter_of_hungary_preempt_hungarians
+	scripted_button = matter_of_hungary_federate_hungary
+	scripted_button = aus_organise_trialism_button
+	scripted_button = matter_of_hungary_federate_three_crowns
 
 	is_shown_in_lobby = {
 		c:AUS ?= this
@@ -16,6 +19,7 @@
 			save_scope_as = hungarian_scope
 		}
 		c:HUN ?= { save_scope_as = hungary_scope }
+		c:CRO ?= { save_scope_as = croatia_scope }
 		set_variable = { name = hungarian_acceptance_var value = 0 }
 	}
 
@@ -47,7 +51,7 @@
 					state_region = {
 						is_homeland = cu:hungarian
 					}
-					count >= 8
+					count >= 7
 				}
 				has_technology_researched = nationalism
 			}
@@ -76,7 +80,25 @@
 		scope:journal_entry = {
 			remove_modifier = modifier_young_hungary_movement
 		}
-		add_primary_culture = cu:hungarian
+		if = {
+			limit = {
+				NOT = { country_has_primary_culture = cu:hungarian }
+			}
+			every_scope_state = {
+				limit = { 
+					region = sr:region_danubia
+					NOT = {
+						owner = {
+							country_has_primary_culture = cu:hungarian
+						}
+					}
+				}
+				add_modifier = {
+					name = integrating_hungary
+					days = long_modifier_time
+				}
+			}
+		}
 	}
 
 	fail = {

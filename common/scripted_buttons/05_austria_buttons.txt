@@ -194,6 +194,209 @@ matter_of_hungary_integrate_crown_lands_button = {
 	}
 }
 
+matter_of_hungary_federate_hungary = {
+	name = matter_of_hungary_federate_hungary_button
+	desc = matter_of_hungary_federate_hungary_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = federated_hungarians_var
+		}
+		c:HUN ?= {
+			is_subject_of = root
+		}
+		NOT = {
+			has_government_type = gov_triple_monarchy
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = matter_of_hungary_federate_hungarians_button_tt
+			any_subject_or_below = {
+				c:HUN ?= this
+				OR = {
+					liberty_desire < 25
+					relations:root >= relations_threshold:amicable	
+				}
+			
+			}
+		}
+		has_technology_researched = nationalism
+		has_government_type = gov_dual_monarchy
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		set_variable = federated_hungarians_var
+		every_subject_or_below = {
+			limit = {
+				OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					is_subject_type = subject_type_puppet
+				}
+				capital = {
+					region = sr:region_danubia
+				}
+			}
+			c:AUS ?= {
+				annex_with_incorporation = prev
+			}
+		}
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_monarchy
+			}
+			custom_tooltip = {
+				text = change_tag_to_KUK_dual_monarchy_tt
+			}
+		}
+		danubian_federation_integrate_culture = {
+			CULTURE = cu:hungarian
+		}
+		add_loyalists = {
+			culture = cu:hungarian
+			value = large_radicals
+		}
+		add_radicals = {
+			culture = cu:romanian
+			value = medium_radicals
+		}
+		add_radicals = {
+			culture = cu:croat
+			value = medium_radicals
+		}
+	}
+
+	ai_chance = {
+		value = 10
+		if = {
+			limit = { # Will not annex players until their liberty desire is below 5.
+				any_subject_or_below = {
+					is_subject_type = subject_type_crown_land
+					is_player = yes
+					liberty_desire > 5
+				}
+			}
+			add = -100
+		}
+	}
+}
+
+matter_of_hungary_federate_three_crowns = {
+	name = matter_of_hungary_three_crowns_button
+	desc = matter_of_hungary_three_crowns_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = federated_three_crowns_var
+		}
+		c:HUN ?= {
+			is_subject_of = root
+		}
+		c:CRO ?= {
+			is_subject_of = root
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = matter_of_hungary_three_crowns_button_tt
+			AND = {
+				any_subject_or_below = {
+					c:HUN ?= this
+					OR = {
+						liberty_desire < 25
+						relations:root >= relations_threshold:amicable	
+					}
+				}
+				any_subject_or_below = {
+					c:CRO ?= this
+					OR = {
+						liberty_desire < 25
+						relations:root >= relations_threshold:amicable	
+					}
+				
+				}
+			}
+		}
+		has_technology_researched = nationalism
+		has_government_type = gov_triple_monarchy
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		set_variable = federated_three_crowns_var
+		every_subject_or_below = {
+			limit = {
+				OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					is_subject_type = subject_type_puppet
+				}
+				capital = {
+					OR = {
+						region = sr:region_danubia
+						region = sr:region_balkans
+					}
+				}
+			}
+			c:AUS ?= {
+				annex_with_incorporation = prev
+			}
+		}
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_monarchy
+			}
+			custom_tooltip = {
+				text = change_tag_to_KUK_triple_monarchy_tt
+			}
+		}
+		danubian_federation_integrate_culture = {
+			CULTURE = cu:hungarian
+		}
+		danubian_federation_integrate_culture = {
+			CULTURE = cu:croat
+		}
+		add_loyalists = {
+			culture = cu:croat
+			value = medium_radicals
+		}
+		add_loyalists = {
+			culture = cu:hungarian
+			value = medium_radicals
+		}
+		add_radicals = {
+			culture = cu:romanian
+			value = medium_radicals
+		}
+	}
+
+	ai_chance = {
+		value = 10
+		if = {
+			limit = { # Will not annex players until their liberty desire is below 5.
+				any_subject_or_below = {
+					is_subject_type = subject_type_crown_land
+					is_player = yes
+					liberty_desire > 5
+				}
+			}
+			add = -100
+		}
+	}
+}
+
 matter_of_hungary_preempt_hungarians = {
 	name = matter_of_hungary_preempt_hungarians_button
 	desc = matter_of_hungary_preempt_hungarians_button_desc
@@ -244,6 +447,100 @@ matter_of_hungary_preempt_hungarians = {
 				}
 			}
 			add = -100
+		}
+	}
+}
+
+aus_organise_trialism_button = {
+	name = aus_organise_trialism
+	desc = aus_organise_trialism_desc
+
+	visible = {
+		has_dlc_feature = ip3_content
+		c:AUS ?= this
+		any_subject_or_below = {
+			NOT = {
+				country_has_primary_culture = cu:croat
+			}
+			any_scope_state = {
+				state_region = s:STATE_CROATIA
+			}
+		}
+		has_law_or_variant = law_type:law_monarchy
+		NOT = {
+			has_variable = aus_organised_trialism
+		}
+	}
+	possible = {
+		has_government_type = gov_dual_monarchy
+		any_subject_or_below = {
+			NOT = {
+				country_has_primary_culture = cu:croat
+			}
+			any_scope_state = {
+				state_region = s:STATE_CROATIA
+			}
+		}
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+	effect = {
+		set_variable = aus_organised_trialism
+		random_subject_or_below = {
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:croat
+				}
+				any_scope_state = {
+					state_region = s:STATE_CROATIA
+				}
+			}
+			custom_tooltip = {
+				text = austria_trialism.1.t_display_tt
+				trigger_event = { id = austria_trialism.1 }
+			}
+		}
+	}
+	ai_chance = {
+		value = -100
+		if = {
+			limit = {
+				any_subject_or_below = {
+					NOT = {
+						country_has_primary_culture = cu:croat
+					}
+					any_scope_state = {
+						state_region = s:STATE_CROATIA
+					}
+					save_temporary_scope_as = hungary_scope
+				}
+			}
+			every_subject_or_below = {
+				limit = {
+					NOT = {
+						country_has_primary_culture = cu:croat
+					}
+					any_scope_state = {
+						state_region = s:STATE_CROATIA
+					}
+				}
+				add = scope:hungary_scope.liberty_desire
+			}
+			if = {
+				limit = {
+					scope:hungary_scope = {
+						has_attitude = {
+							who = ROOT
+							attitude = rebellious
+						}
+					}
+				}
+				add = 25
+			}
+			subtract = { # -50 at 100 relations, +50 at -100
+				value = "relations(scope:hungary_scope)"
+				multiply = 0.5
+			}
 		}
 	}
 }
