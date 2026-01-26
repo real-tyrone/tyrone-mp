@@ -1,4 +1,4 @@
-enact_law_enforce_napoleon = {
+﻿enact_law_enforce_napoleon = {
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 
 	potential = {
@@ -190,6 +190,16 @@ begin_reconquer_empire_napoleon = {
 				}
 			}
 		}
+		if = {
+			limit = {
+				exists ?= c:NGF
+			}
+			c:NGF = {
+				trigger_event ={
+					id = germany_rework.5
+				}
+			}
+		}
         c:FRA = {
             add_journal_entry = {
                 type = je_king_of_italy
@@ -225,14 +235,31 @@ reconquer_spain_napoleon = {
 	}
 
 	possible = {
-		hidden_trigger = {exists ?= c:SPA}
+		OR = {
+			exists ?= c:SPA
+			exists ?= c:IBE
+		}
 	}
 
 	effect = {
 		c:FRA = { save_scope_as = france_scope }
-		c:SPA ?= {
-			save_scope_as = spain_scope
+		if = {
+			limit = {
+				exists ?= c:SPA
+			}
+			c:SPA ?= {
+				save_scope_as = spain_scope
+			}
 		}
+		if = {
+			limit = {
+				exists ?= c:IBE
+			}
+			c:IBE ?= {
+				save_scope_as = spain_scope
+			}
+		}
+		
 		trigger_event ={
 			id = empire_of_france.2
 		}

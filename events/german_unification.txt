@@ -93,6 +93,16 @@ german_unification.1 = {
 		}
 		if = {
 			limit = {
+				c:AUS ?= THIS
+			}
+		custom_tooltip = {
+			text = get_claims_germany_tt
+			give_claims_on_germany = yes
+		}
+		annex = c:HOH
+		}
+		if = {
+			limit = {
 				country_has_primary_culture = cu:north_german
 				NOT = { exists = c:NGF }
 				OR = {
@@ -129,7 +139,6 @@ german_unification.1 = {
 				}
 				annex = c:HOH
 			}		
-				
 			change_tag = NGF
 		}
 		else_if = {
@@ -149,6 +158,16 @@ german_unification.1 = {
 		add_modifier = {
 			name = partial_german_unification_influence_prestige
 			days = normal_modifier_time
+		}
+		if = {
+			limit = {
+				c:AUS ?= THIS
+			}
+		custom_tooltip = {
+			text = get_claims_germany_tt
+			give_claims_on_germany = yes
+		}
+			annex = c:HOH
 		}
 		if = {
 			limit = {
@@ -370,21 +389,33 @@ german_unification.4 = {
 
 	duration = 3
 
-immediate = {
-	if = {
-		limit = {
-			has_global_variable = bismarck_variable
+	cooldown = { days = never_fire_again_modifier_time }
+
+
+	immediate = {
+		if = {
+			limit = {
+				has_global_variable = bismarck_variable
+			}
+			s:STATE_NORTH_DAKOTA = {
+				random_scope_state = {
+					set_hub_name = {
+						type = city
+						name = HUB_NAME_STATE_NORTH_DAKOTA_city_bismarck
+					}
+				}
+			}
 		}
-		s:STATE_NORTH_DAKOTA = {
-			random_scope_state = {
-		        set_hub_name = {
-		            type = city
-		            name = HUB_NAME_STATE_NORTH_DAKOTA_city_bismarck
-		        }
-	        }
+		if = {
+			limit = {
+				NOT = {
+					c:GER ?= this
+				}
+			}
+			change_tag = GER
+        	add_primary_culture = cu:south_german
 		}
 	}
-}
 
 	trigger = {
 	}
@@ -392,14 +423,24 @@ immediate = {
 	option = {
 		name = german_unification.4.a
 		default_option = yes
-		give_claims_on_germany = yes
+		if = {
+			limit = {
+				NOT = { has_variable = je_unification_fail }
+			}
+			give_claims_on_germany = yes
+		}
 		ruler = {
 			add_trait = special_character_german_unifier_ruler
 		}
 	}
 	option = {
 		name = german_unification.4.b
-		give_claims_on_germany = yes
+		if = {
+			limit = {
+				NOT = { has_variable = je_unification_fail }
+			}
+			give_claims_on_germany = yes
+		}
 		add_loyalists = {
 			value = 0.1
 			culture = cu:north_german

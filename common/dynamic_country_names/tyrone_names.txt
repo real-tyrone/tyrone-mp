@@ -1,11 +1,145 @@
-﻿#germany
+﻿REPLACE:POL = { # Poland
+	dynamic_country_name = {
+		name = dyn_c_congress_poland
+		adjective = dyn_c_congress_poland_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			exists = c:RUS
+			OR = {
+				c:RUS ?= {
+					has_diplomatic_pact = {
+						who = c:POL
+						type = personal_union
+						is_initiator = yes
+					}
+				}
+				c:RUS ?= {
+					has_diplomatic_pact = {
+						who = c:POL
+						type = crown_land
+						is_initiator = yes
+					}
+				}				
+			}
+
+		}
+	}
+}
+
+REPLACE:ITA = { # Italy
+	dynamic_country_name = { # Papal Italy
+		name = dyn_c_papal_italy
+		adjective = dyn_c_papal_italy_adj
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_theocracy
+				was_formed_from = PAP
+			}
+		}
+	}
+	dynamic_country_name = { # Kingdom of Italy
+		name = dyn_c_kingdom_italy
+		adjective = ITA_ADJ
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+			}
+		}
+	}
+}
+
+#danubian federation
+REPLACE:KUK = {
+	dynamic_country_name = {
+		name = dyn_c_usga
+		adjective = AUS_ADJ
+
+		is_main_tag_only = yes
+		priority = 15
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				was_formed_from = AUS
+				OR = {
+					has_law_or_variant = law_type:law_oligarchy
+					coa_autocracy_trigger = yes
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_danubian_federation
+		adjective = KUK_ADJ
+
+		is_main_tag_only = yes
+		priority = 1
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				was_formed_from = AUS
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kuk_communist
+		adjective = KUK_ADJ
+
+		is_main_tag_only = yes
+		priority = 1
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_council_republic
+			}
+		}
+	}
+}
+
+#prussia
+REPLACE_OR_CREATE:PRU = {
+
+    dynamic_country_name = {
+        name = dyn_c_prussia_monarchy
+        adjective = PRU_ADJ
+        is_main_tag_only = yes
+        priority = 10
+
+        trigger = {
+            exists = scope:actor
+            scope:actor = {
+                has_law_or_variant = law_type:law_monarchy
+            }
+        }
+    }
+
+}
+
+#germany
 REPLACE:GER = { # Germany
 	dynamic_country_name = {
 		name = dyn_c_german_empire
 		adjective = GER_ADJ
 
 		is_main_tag_only = yes
-		priority = 0
+		priority = 20
 
 		trigger = {
 			coa_def_monarchy_flag_trigger = yes
@@ -14,13 +148,28 @@ REPLACE:GER = { # Germany
 			}
 		}
 	}
+    dynamic_country_name = {
+        name = dyn_c_german_republic
+        adjective = GER_ADJ
+        is_main_tag_only = yes
+        priority = 10
 
+        trigger = {
+            exists = scope:actor
+            scope:actor ?= {
+                OR = {
+                	has_law_or_variant = law_type:law_presidential_republic
+                    has_law_or_variant = law_type:law_parliamentary_republic
+                }
+            }
+        }
+    }
 	dynamic_country_name = {
 		name = nihilist_germany_name
 		adjective = nihilist_germany_name_adj
 
 		is_main_tag_only = yes
-		priority = 10
+		priority = 50
 
 		trigger = {
 			coa_def_nihilist_flag_trigger = yes

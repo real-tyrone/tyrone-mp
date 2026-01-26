@@ -1,4 +1,4 @@
-je_post_bonapartists = {
+﻿je_post_bonapartists = {
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 	group = je_group_historical_content
 
@@ -6,7 +6,10 @@ je_post_bonapartists = {
 		exists = c:FRA
 		c:FRA = ROOT
 		has_variable = bonapartist_restoration_var
-		has_journal_entry = je_cement_the_rightful_dynasty
+		OR = {
+			has_journal_entry = je_cement_the_rightful_dynasty
+			has_variable = one_true_french_dynasty
+		}
 	}
 
 	possible = {
@@ -16,9 +19,15 @@ je_post_bonapartists = {
 		country_or_subject_owns_entire_state_region = STATE_ALSACE_LORRAINE
 		}
 		government_legitimacy >= 50
-		custom_tooltip = {
-			text = progress_cement_half_tt
-			var:french_dynastic_primary_progress_var >= 60
+		OR = {
+			custom_tooltip = {
+				text = progress_cement_half_tt
+				var:french_dynastic_primary_progress_var >= 60
+			}
+			custom_tooltip = {
+				text = has_cemented_dynasty_TT
+				has_variable = one_true_french_dynasty
+			}			
 		}
 	}
 
@@ -106,9 +115,7 @@ je_post_bonapartists = {
 
 	weight = 1000
 	should_be_pinned_by_default = yes
-	
-	scripted_button = add_je_rebuild_paris
-	
+		
 }
 
 je_the_city_of_light_rebuild = {
@@ -201,9 +208,6 @@ je_rebuilt_railways_napoleon = {
 			percent >= 0.80
 		}
 	}
-
-    fail = {
-    }
 
 	on_complete = {
 		set_variable = {

@@ -153,17 +153,16 @@ je_sick_man_syria = {
         		days = long_modifier_time
 			}
 		}
-		s:STATE_SINAI = {
-			add_claim = ROOT
-		}
-		s:STATE_UPPER_EGYPT = {
-			add_claim = ROOT
-		}
-		s:STATE_MIDDLE_EGYPT = {
-			add_claim = ROOT
-		}
-		s:STATE_LOWER_EGYPT = {
-			add_claim = ROOT
+		custom_tooltip = {
+			text = egypt_claims_tt
+			every_state = {
+				limit = {
+					is_in_geographic_region = geographic_region_egypt
+				}
+				state_region = {
+					add_claim = root
+				}
+			}
 		}
 		if = {
 			limit = {
@@ -234,18 +233,46 @@ je_sick_man_egypt = {
         c:TUR = {
             save_scope_as = ottoman_scope
         }
+		set_variable = {
+			name = egypt_var
+			value = 0
+		}
+	}
+	
+	is_progressing = {
+		egypt_completion_trigger = yes
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					egypt_completion_trigger = yes
+				}
+				change_variable = {
+					name = egypt_var
+					add = 1
+				}
+			}
+		}
 	}
 
 	complete = {
-		AND = {
-			# owns_entire_state_region = STATE_SINAI
-			owns_entire_state_region = STATE_UPPER_EGYPT
-			owns_entire_state_region = STATE_MIDDLE_EGYPT
-			owns_entire_state_region = STATE_LOWER_EGYPT
+		scope:journal_entry = {
+			is_goal_complete = yes
 		}
 	}
 
 	on_complete = {
+		if = {
+			limit = {
+				any_subject_or_below ?= {
+					this ?= c:EGY
+					is_subject_type = subject_type_puppet
+				}
+			}
+			annex = c:EGY
+		}
 		every_scope_state = {
 			limit = { 
 				region = sr:region_nile_basin
@@ -258,6 +285,20 @@ je_sick_man_egypt = {
 			add_modifier = {
 				name = integrating_egypt
 				days = long_modifier_time
+			}
+		}
+		if = {
+			limit = {
+				any_subject_or_below ?= {
+					this ?= c:HDJ
+					is_subject_type = subject_type_protectorate
+				}
+			}
+			ROOT = {
+				create_diplomatic_pact = {
+					country = c:HDJ
+					type = puppet
+				}
 			}
 		}
 		custom_tooltip = je_sick_man_advance
@@ -278,6 +319,17 @@ je_sick_man_egypt = {
 			has_variable = sick_man_complete
 		}
 	}
+
+	current_value = {
+		value = root.var:egypt_var
+	}
+
+	goal_add_value = {
+		value = 12
+	}
+
+	progressbar = yes
+
 
 	transferable = no
 

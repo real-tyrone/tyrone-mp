@@ -70,11 +70,11 @@ matter_of_hungary_dual_monarchy_button = {
 					}
 				}
 			}
-			has_technology_researched = philosophical_pragmatism
-			c:HUN ?= {
-				is_subject_of = root
-				is_subject_type = subject_type_personal_union
+			custom_tooltip = {
+				text = germany_exists_tt
+				exists = c:GER
 			}
+			has_technology_researched = philosophical_pragmatism
 		}
 		is_diplomatic_play_committed_participant = no
 		is_at_war = no
@@ -85,6 +85,7 @@ matter_of_hungary_dual_monarchy_button = {
 
 	effect = {
 		save_scope_as = austria_scope
+		remove_claims_on_germany = yes
 		s:STATE_CENTRAL_HUNGARY = {
 			random_scope_state = {
 				save_scope_as = budapest_state_scope
@@ -114,6 +115,61 @@ matter_of_hungary_dual_monarchy_button = {
 
 	ai_chance = {
 		value = 25
+	}
+}
+
+matter_of_hungary_preempt_hungarians = {
+	name = matter_of_hungary_preempt_hungarians_button
+	desc = matter_of_hungary_preempt_hungarians_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = preempt_hungarians_var
+		}
+		any_subject_or_below = {
+			country_has_primary_culture = cu:hungarian
+			liberty_desire > 25
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		custom_tooltip = {
+			text = matter_of_hungary_preempt_hungarians_button_tt
+			any_subject_or_below = {
+				c:HUN ?= this
+				liberty_desire > 75
+				relations:root <= relations_threshold:poor				
+			}
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		set_variable = preempt_hungarians_var
+		trigger_event = {
+			id = austria_events.6
+		}
+		add_radicals = {
+			culture = cu:hungarian
+			value = medium_radicals
+		}
+	}
+
+	ai_chance = {
+		value = 10
+		if = {
+			limit = { # Will not annex players until their liberty desire is below 5.
+				any_subject_or_below = {
+					is_subject_type = subject_type_crown_land
+					is_player = yes
+					liberty_desire > 5
+				}
+			}
+			add = -100
+		}
 	}
 }
 
@@ -222,7 +278,6 @@ matter_of_hungary_federate_hungary = {
 			
 			}
 		}
-		has_technology_researched = nationalism
 		has_government_type = gov_dual_monarchy
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -325,7 +380,6 @@ matter_of_hungary_federate_three_crowns = {
 				}
 			}
 		}
-		has_technology_researched = nationalism
 		has_government_type = gov_triple_monarchy
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -378,60 +432,6 @@ matter_of_hungary_federate_three_crowns = {
 		}
 		add_radicals = {
 			culture = cu:romanian
-			value = medium_radicals
-		}
-	}
-
-	ai_chance = {
-		value = 10
-		if = {
-			limit = { # Will not annex players until their liberty desire is below 5.
-				any_subject_or_below = {
-					is_subject_type = subject_type_crown_land
-					is_player = yes
-					liberty_desire > 5
-				}
-			}
-			add = -100
-		}
-	}
-}
-
-matter_of_hungary_preempt_hungarians = {
-	name = matter_of_hungary_preempt_hungarians_button
-	desc = matter_of_hungary_preempt_hungarians_button_desc
-
-	visible = {
-		NOT = {
-			has_variable = preempt_hungarians_var
-		}
-		any_subject_or_below = {
-			country_has_primary_culture = cu:hungarian
-			liberty_desire > 25
-		}
-	}
-
-	possible = {
-		custom_tooltip = {
-			text = matter_of_hungary_preempt_hungarians_button_tt
-			any_subject_or_below = {
-				c:HUN ?= this
-				liberty_desire > 75
-				relations:root <= relations_threshold:poor				
-			}
-		}
-	}
-
-	selected = {
-	}
-
-	effect = {
-		set_variable = preempt_hungarians_var
-		trigger_event = {
-			id = austria_events.6
-		}
-		add_radicals = {
-			culture = cu:hungarian
 			value = medium_radicals
 		}
 	}
