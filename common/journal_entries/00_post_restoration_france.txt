@@ -1,4 +1,6 @@
-﻿je_post_bonapartists = {
+﻿#BONAPARTE
+
+je_post_bonapartists = {
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 	group = je_group_historical_content
 
@@ -380,4 +382,177 @@ je_king_spain = {
     should_be_pinned_by_default = yes
 
     weight = 100
+}
+
+
+
+
+#ORLEANIST
+
+je_orleanist_france_industry_revolution = {
+icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
+	group = je_group_historical_content
+
+	is_shown_when_inactive = {
+		exists = c:FRA
+		c:FRA = ROOT
+	}
+
+	possible = {
+		exists = c:FRA
+		c:FRA = ROOT
+		government_legitimacy >= 50
+	}
+
+	immediate = {
+		set_global_variable = orleanist_eco_ongoing_global_var
+		if = {
+			limit = {
+				NOT = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+				}
+			}
+			set_global_variable = { 
+				name = orleanist_eco_ongoing_global_var_baseline
+				value = 0
+			}
+			c:FRA = {
+				change_global_variable = { 
+					name = orleanist_eco_ongoing_global_var_baseline
+					add = this.gdp
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					exists = global_var:orleanist_eco_ongoing_global_var_actual
+				}
+			}
+			set_global_variable = {
+				name = orleanist_eco_ongoing_global_var_actual
+				value = 0
+			}
+			c:FRA = {
+				change_global_variable = { 
+					name = orleanist_eco_ongoing_global_var_actual
+					add = this.gdp
+				}
+			}
+		}
+		# Initial  GDP goal
+		set_global_variable = { 
+			name = orleanist_eco_ongoing_global_var_goal
+			value = {
+				value = global_var:orleanist_eco_ongoing_global_var_baseline
+				multiply = 1.08 # 
+			}
+		}
+		c:FRA = {
+			save_scope_as = france_scope
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+		g:coal = {
+			save_scope_as = coal_scope
+		}
+		g:iron = {
+			save_scope_as = iron_scope
+		}
+		g:steel = {
+			save_scope_as = steel_scope
+		}
+
+
+		
+		set_variable = orleanist_france_variable
+
+		scope:journal_entry = {
+			add_modifier = orleanist_industry_modifier
+		}
+
+		c:FRA = {
+			set_variable = {
+				name = french_industry_var_progressbar
+				value = 0
+			}
+		}
+		c:FRA = { 
+			set_variable = {
+				name = french_industry_var_ministry_budget
+				value = 150000
+			}
+		}
+	}
+	
+	current_value = {
+		value = var:french_industry_var_progressbar
+	}
+
+	goal_add_value = {
+		add = 500
+	}
+
+	complete = {	
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+	}
+
+	on_complete = {
+		trigger_event ={
+			id = orleanist_france.1
+		}
+		set_variable = orleanist_victory	
+	}
+	
+	timeout = 9125
+	
+
+	fail = {
+		
+	}
+
+	on_yearly_pulse = {
+        effect = {
+			c:FRA = {
+				change_variable = {
+					name = french_industry_var_ministry_budget
+					add = 50000
+				}
+			}
+
+            if = {
+                limit = {
+                    orleanist_actual_gdp_script_value >= global_var:orleanist_eco_ongoing_global_var_goal
+                }
+                if = {
+                    limit = {
+                        c:FRA = {
+                            var:french_industry_var_progressbar < 500
+                        }
+                    }
+                    c:FRA = {
+                        change_variable = {
+                            name = french_industry_var_progressbar
+                            add = 25
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+	invalid = {
+	}
+
+	scripted_button = promote_investment_button
+	scripted_button = advocate_mining_button
+	scripted_button = encourage_production_innovation_button
+	scripted_button = promote_construction_button
+
+	weight = 1000
+	should_be_pinned_by_default = yes
+
 }
