@@ -393,16 +393,28 @@ je_orleanist_france_industry_revolution = {
 icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
 	group = je_group_historical_content
 
-	is_shown_when_inactive = {
-		exists = c:FRA
-		c:FRA = ROOT
-	}
+    is_shown_when_inactive = {
+        exists = c:FRA
+        c:FRA = ROOT
+        has_variable = orleanist_restoration_var
+        has_journal_entry = je_cement_the_rightful_dynasty
+    }
 
-	possible = {
-		exists = c:FRA
-		c:FRA = ROOT
-		government_legitimacy >= 50
-	}
+    possible = {
+        exists = c:FRA
+        c:FRA = ROOT
+        government_legitimacy >= 50
+        OR = {
+            custom_tooltip = {
+                text = progress_cement_half_tt
+                var:french_dynastic_primary_progress_var >= 60
+            }
+            custom_tooltip = {
+                text = has_cemented_dynasty_TT
+                has_variable = one_true_french_dynasty
+            }            
+        }
+    }
 
 	immediate = {
 		set_global_variable = orleanist_eco_ongoing_global_var
@@ -507,7 +519,7 @@ icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
 		set_variable = orleanist_victory	
 	}
 	
-	timeout = 9125
+	timeout = 10950
 	
 
 	fail = {
@@ -541,6 +553,29 @@ icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
                     }
                 }
             }
+			if = {
+				limit = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+				}
+				set_global_variable = { # Redefines the baseline based on actual GDP
+					name = orleanist_eco_ongoing_global_var_baseline
+					value = orleanist_actual_gdp_script_value
+				}
+			}
+			if = {
+				limit = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+					exists = global_var:orleanist_eco_ongoing_global_var_goal
+				}
+				# French GDP aim (updated quarterly)
+				set_global_variable = { # Redefines goal based on baseline GDP
+					name = orleanist_eco_ongoing_global_var_goal
+					value = {
+						value = global_var:orleanist_eco_ongoing_global_var_baseline
+						multiply = 1.08 
+					}
+				}
+			}			
         }
     }
 
