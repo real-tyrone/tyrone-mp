@@ -1,0 +1,105 @@
+je_unification_of_three_crowns_progress_bar = {
+	name = je_three_crowns_bar
+	desc = je_three_crowns_bar_desc
+
+	default_green = yes
+	monthly_progress = {
+			if = {
+				limit = {
+					any_interest_group = {
+					law_stance = {
+						law = law_type:law_monarchy
+						value > neutral
+					}
+				}
+				}
+				add = {
+					desc = scandinavia_monarchist_clout
+						every_interest_group = {
+							limit = {
+							law_stance = {
+							law = law_type:law_monarchy
+							value > neutral
+							}
+							}
+							add = this.ig_clout
+						}
+					}
+			}
+			if = {
+				limit = {
+					any_interest_group = {
+					law_stance = {
+						law = law_type:law_monarchy
+						value < neutral
+					}
+				}
+				}
+				add = {
+					desc = scandinavia_anti_monarchist_clout
+						every_interest_group = {
+							limit = {
+							law_stance = {
+							law = law_type:law_monarchy
+							value < neutral
+							}
+							}
+							add = this.ig_clout
+							multiply = -1
+						}
+					}
+			}
+			if = {	
+				limit = {
+					legitimacy >= 50
+				}
+				add = {
+					desc = scandinavia_legitimate_ruler
+					add = this.legitimacy
+					divide = 100
+				}
+			}
+			if = {	
+				limit = {
+					legitimacy <= 50
+				}
+				add = {
+					desc = scandinavia_legitimate_ruler
+					add = this.legitimacy
+					divide = 100
+					multiply = -1
+				}
+			}
+			if = {
+				limit = {
+					any_subject_or_below = {
+						OR = {
+						is_subject_type = subject_type_personal_union
+						is_subject_type = subject_type_crown_land
+						liberty_desire >= 50
+					}
+					}
+				}
+				add = {
+					desc = scandinavia_crown_liberty_high
+					every_subject_or_below = {
+						limit = {
+						is_subject_of = c:SWE
+						OR = {
+						is_subject_type = subject_type_personal_union
+						is_subject_type = subject_type_crown_land
+						}
+						liberty_desire >= 50
+					}
+					add = this.liberty_desire
+					divide = 100
+					multiply = -1
+				}
+			}
+			}
+	}
+	start_value = 16
+	min_value = 0
+	max_value = 32
+	}
+
