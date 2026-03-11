@@ -1,0 +1,389 @@
+﻿### =====================================================
+### Company Equity Dispute – Scripted Buttons
+### =====================================================
+
+# ======================================================
+# BRITAIN BUTTONS
+# ======================================================
+
+treasury_buy_shares = {
+	name = treasury_buy_shares
+	desc = treasury_buy_shares_desc
+
+	visible = {
+		exists = c:GBR
+		c:GBR = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = neither_britain_nor_company_bought_or_sold_TT
+			c:GBR = {
+				NOR = {
+					has_variable = britain_recently_sold_shares
+					has_variable = britain_recently_bought_shares
+				}
+			}
+
+			c:BIC = {
+				NOR = {
+					has_variable = company_recently_sold_shares
+					has_variable = company_recently_bought_shares
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = neither_britain_nor_company_have_max_ownership_TT
+			NOR = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= -100
+				}
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				}
+			}
+		}
+	}
+
+	effect = {
+		c:GBR = { set_variable = { name = britain_recently_bought_shares months = 28 }}
+
+		c:GBR = { 
+			add_modifier = {
+				name = britain_buying_shares
+				years = 1
+			}
+	 	}
+		c:BIC = { 
+			add_modifier = {
+				name = britain_buying_shares_back
+				years = 1
+			}
+	 	}	
+	}
+
+	ai_chance = { 
+		base = 10 
+		if = {
+			limit = {
+				net_total_income >= 0
+			}
+			add = 20
+		}
+		if = {
+			limit = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				} 
+			}
+			add = 75
+		}
+	}
+}
+
+sell_shares_to_private_investors = {
+	name = sell_shares_to_private_investors
+	desc = sell_shares_to_private_investors_desc
+
+	visible = {
+		exists = c:GBR
+		c:GBR = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = neither_britain_nor_company_bought_or_sold_TT
+			c:GBR = {
+				NOR = {
+					has_variable = britain_recently_sold_shares
+					has_variable = britain_recently_bought_shares
+				}
+			}
+
+			c:BIC = {
+				NOR = {
+					has_variable = company_recently_sold_shares
+					has_variable = company_recently_bought_shares
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = neither_britain_nor_company_have_max_ownership_TT
+			NOR = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= -100
+				}
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				}
+			}
+		}
+	}
+
+
+	effect = {
+		c:GBR = { set_variable = { name = britain_recently_sold_shares months = 28 }}
+
+		c:GBR = { 
+			add_modifier = {
+				name = britain_selling_shares
+				years = 1
+			}
+	 	}
+		c:BIC = { 
+			add_modifier = {
+				name = britain_selling_shares_back
+				years = 1
+			}
+	 	}
+	}
+
+	ai_chance = { 
+		base = 10
+		if = {
+			limit = {
+				net_total_income < 0
+			}
+			add = 20
+		}
+		if = {
+			limit = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= 100
+				}
+			}
+			add = 75
+		}
+	}
+}
+
+enact_government_of_india_act = {
+	name = enact_government_of_india_act
+	desc = enact_government_of_india_act_desc
+
+	visible = {
+		exists = c:GBR
+		c:GBR = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = britain_owns_all_shares_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(company_equity_progress_bar)" <= -200
+			}	
+		}
+	}
+
+
+	effect = {
+		c:GBR = {
+			trigger_event = {
+				id = bic_content.2
+			}
+		}
+		c:BIC = {
+			trigger_event = {
+				id = bic_content.2
+			}
+		}
+	}
+
+	ai_chance = { base = 100 }
+}
+
+# ======================================================
+# EAST INDIA COMPANY BUTTONS
+# ======================================================
+
+share_buyback_button = {
+	name = share_buyback_button
+	desc = share_buyback_button_desc
+
+	visible = {
+		exists = c:BIC
+		c:BIC = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = neither_britain_nor_company_bought_or_sold_TT
+			c:GBR = {
+				NOR = {
+					has_variable = britain_recently_sold_shares
+					has_variable = britain_recently_bought_shares
+				}
+			}
+
+			c:BIC = {
+				NOR = {
+					has_variable = company_recently_sold_shares
+					has_variable = company_recently_bought_shares
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = neither_britain_nor_company_have_max_ownership_TT
+			NOR = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= -100
+				}
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				}
+			}
+		}
+	}
+
+	selected = { }
+
+	effect = {
+		c:BIC = { set_variable = { name = company_recently_bought_shares months = 28 }}
+
+		c:GBR = { 
+			add_modifier = {
+				name = company_buying_shares
+				years = 1
+			}
+	 	}
+		c:BIC = { 
+			add_modifier = {
+				name = company_buying_shares_back
+				years = 1
+			}
+	 	}
+	}
+
+	ai_chance = { 
+		base = 10 
+		if = {
+			limit = {
+				net_total_income > 10000
+			}
+			add = 25
+		}
+		if = {
+			limit = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= -100
+				}
+			}
+			add = 75
+		}
+	}
+}
+
+sell_shares_to_britain = {
+	name = sell_shares_to_britain
+	desc = sell_shares_to_britain_desc
+
+	visible = {
+		exists = c:BIC
+		c:BIC = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = neither_britain_nor_company_bought_or_sold_TT
+			c:GBR = {
+				NOR = {
+					has_variable = britain_recently_sold_shares
+					has_variable = britain_recently_bought_shares
+				}
+			}
+
+			c:BIC = {
+				NOR = {
+					has_variable = company_recently_sold_shares
+					has_variable = company_recently_bought_shares
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = neither_britain_nor_company_have_max_ownership_TT
+			NOR = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" <= -100
+				}
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				}
+			}
+		}
+	}
+
+	selected = { }
+
+	effect = {
+		c:BIC = { set_variable = { name = company_recently_sold_shares months = 28 }}
+
+		c:GBR = { 
+			add_modifier = {
+				name = company_selling_shares
+				years = 1
+			}
+	 	}
+		c:BIC = { 
+			add_modifier = {
+				name = company_selling_shares_back
+				years = 1
+			}
+	 	}
+	}
+
+	ai_chance = { 
+		base = 10 
+		if = {
+			limit = {
+				net_total_income < 0
+			}
+			add = 25
+		}
+		if = {
+			limit = {
+				scope:journal_entry = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 100
+				}
+			}
+			add = 75
+		}
+	}
+}
+
+propose_repealment_charter_act = {
+	name = propose_repealment_charter_act
+	desc = propose_repealment_charter_act_desc
+
+	visible = {
+		exists = c:BIC
+		c:BIC = this
+	}
+
+	possible = { 
+		custom_tooltip = {
+			text = company_owns_all_shares_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(company_equity_progress_bar)" >= 200
+			}
+		}	
+	}
+
+	effect = {
+		c:GBR = {
+			trigger_event = {
+				id = bic_content.3
+			}
+		}
+		c:BIC = {
+			trigger_event = {
+				id = bic_content.3
+			}
+		}
+	}
+
+	ai_chance = { base = 100 }
+}
