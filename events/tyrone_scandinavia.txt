@@ -61,7 +61,7 @@ scandinavian_unification.1 = { #Monarchist Unification
 	flavor = scandinavian_unification.1.f
 
 	event_image = {
-		video = "game/dlc/dlc004_voice_of_the_people/gfx/event_pictures/votp_monarch_holding_court.bk2"
+		video = "votp_monarch_holding_court"
 	}
 
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
@@ -73,7 +73,7 @@ scandinavian_unification.1 = { #Monarchist Unification
 		default_option = yes
 		ROOT = {change_tag = SCA}
 		add_modifier = {
-			name = modifier_legacy_of_bjorn_ironside
+			name = modifier_scandinavian_royal_military
 			months = 120
 			}
 		}
@@ -85,6 +85,10 @@ scandinavian_unification.1 = { #Monarchist Unification
 		 }
 		}
 	after = {
+		add_modifier = {
+			name = modifier_scandinavian_royal_authority
+			months = 120
+		}
 		hidden_effect = {
 			set_global_variable = scandinavia_unified
 		}
@@ -97,8 +101,24 @@ scandinavian_unification.1 = { #Monarchist Unification
 			}
 			add_journal_entry = { type = je_scandinavia_missing_crown }
 		}
+		if = {
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:danish
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown_b }
+		}
+		if = { #edge case if norway is somehow not unified
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:norwegian
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown_c }
+		}
 	}
-}
+}	
 
 namespace = shattered_crown
 
@@ -107,8 +127,11 @@ shattered_crown.1 = {
 	title = shattered_crown.1.t
 	desc = shattered_crown.1.d
 	flavor = shattered_crown.1.f
+	
+	duration = 1
+
 	event_image = {
-		video = "game/dlc/dlc004_voice_of_the_people/gfx/event_pictures/votp_monarch_holding_court.bk2"
+		video = "votp_monarch_holding_court"
 	}
 	immediate = {
 		every_subject_or_below = {
@@ -121,6 +144,16 @@ shattered_crown.1 = {
 			remove_subject_diplomatic_pact = yes
 		}
 	}
+	option = {
+		name = shattered_crown.1.a
+	}
+	after = {
+		add_modifier = {
+			name = modifier_royal_authority_collapsed
+			months = 120
+			is_decaying = yes
+		}
+		
+	}
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
-
 }

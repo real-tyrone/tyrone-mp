@@ -258,6 +258,12 @@ je_securing_scandinavia = {
 	icon = "gfx\interface\icons\event_icons\hegemon.dds"
 	group = je_group_scandinavian_unification
 	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:finnish
+		}
+	}
 	complete = {
 		custom_tooltip = {
 			text = scandinavia_finland_reclaimed
@@ -282,9 +288,68 @@ je_securing_scandinavia = {
 		custom_tooltip = {
 			text = je_scandinavia_missing_crown_completion_context
 		}
-		hidden_effect = {
-			set_global_variable = scandinavia_finland_unified
-		}
 	}
   }
+je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification path is taken (Sweden, Norway, Finland) 
+  	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:danish
+		}
+	}
 
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_JUTLAND
+		country_or_subject_owns_entire_state_region = STATE_ZEALAND
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				c:DEN = {
+					is_subject_of = ROOT
+				}
+			}
+			annex_with_incorporation = c:DEN
+		}
+		add_primary_culture = cu:danish
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_b_completion_context
+		}
+	}
+}
+
+je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge case
+	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:norwegian
+		}
+	}
+
+	complete = {
+		country_or_subject_owns_entire_state_region = 
+		country_or_subject_owns_entire_state_region = 
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				c:NOR = {
+					is_subject_of = ROOT
+				}
+			}
+			annex_with_incorporation = c:NOR
+		}
+		add_primary_culture = cu:norwegian
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_c_completion_context
+		}
+	}
+}
