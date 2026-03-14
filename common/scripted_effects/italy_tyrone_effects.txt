@@ -1,0 +1,496 @@
+# Scripted effects for Italian diplomatic stance – French column buttons
+# Invoked by scripted_buttons (effect = { ita_french_*_effect = yes }) or from GUI Execute(GetPlayer.ita_french_*_effect).
+
+ita_french_military_effect = {
+	add_journal_entry = ITA_French_militaryJE
+}
+
+ita_french_economy_effect = {
+	add_journal_entry = ITA_French_economyJE
+}
+
+ita_french_laws_effect = {
+	add_journal_entry = ITA_French_lawsJE
+}
+
+# Austria path – stance bar moves toward Austria (Vienna)
+ita_austria_military_effect = {
+	add_journal_entry = ITA_Austria_militaryJE
+}
+
+ita_austria_economy_effect = {
+	add_journal_entry = ITA_Austria_economyJE
+}
+
+ita_austria_laws_effect = {
+	add_journal_entry = ITA_Austria_lawsJE
+}
+
+# Scripted effects to shift the Italy diplomatic stance bar by 10 toward France or Austria.
+# Bar: 0 = France (left), 100 = Austria (right). Use from events, decisions, or GUI Execute(GetPlayer.effect_name).
+# Each effect has a custom_tooltip describing the change.
+
+ita_stance_increase_toward_austria_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		custom_tooltip = {
+			text = ita_stance_toward_austria_tt
+			je:italy_diplo_stance = {
+				set_bar_progress = {
+					value = {
+						value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+						add = 10
+						max = 100
+					}
+					name = italy_aus_fra_stance_bar
+				}
+			}
+		}
+	}
+}
+
+ita_stance_increase_toward_france_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		custom_tooltip = {
+			text = ita_stance_toward_france_tt
+			je:italy_diplo_stance = {
+				set_bar_progress = {
+					value = {
+						value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+						subtract = 10
+						min = 0
+					}
+					name = italy_aus_fra_stance_bar
+				}
+			}
+		}
+	}
+}
+
+# Used by 07_italyEntries.txt (French military JE + French economy JE on_complete). +20 toward France.
+ita_stance_france_20_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		je:italy_diplo_stance = {
+			set_bar_progress = {
+				value = {
+					value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+					subtract = 20
+					min = 0
+				}
+				name = italy_aus_fra_stance_bar
+			}
+		}
+	}
+}
+
+# Used by 07_italyEntries.txt (French military JE + French economy JE on_complete). +5 toward France.
+ita_stance_france_5_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		je:italy_diplo_stance = {
+			set_bar_progress = {
+				value = {
+					value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+					subtract = 5
+					min = 0
+				}
+				name = italy_aus_fra_stance_bar
+			}
+		}
+	}
+}
+
+# Used by 07_italyEntries.txt (Austria military JE on_complete). +20 toward Austria (easy/button path).
+ita_stance_austria_20_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		je:italy_diplo_stance = {
+			set_bar_progress = {
+				value = {
+					value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+					add = 20
+					max = 100
+				}
+				name = italy_aus_fra_stance_bar
+			}
+		}
+	}
+}
+
+# Used by 07_italyEntries.txt (Austria military JE on_complete). +5 toward Austria (hard path).
+ita_stance_austria_5_effect = {
+	if = {
+		limit = { has_journal_entry = italy_diplo_stance }
+		je:italy_diplo_stance = {
+			set_bar_progress = {
+				value = {
+					value = "scripted_bar_progress(italy_aus_fra_stance_bar)"
+					add = 5
+					max = 100
+				}
+				name = italy_aus_fra_stance_bar
+			}
+		}
+	}
+}
+
+ita_industry_calculate_sluggish_effect = {
+	change_variable = {
+			name = investment_in_padana_ita_var
+			add = var:agri_padana_ita_var
+		}
+	if = {
+		limit = { 
+			var:investment_in_north_ita_var = var:investment_in_south_ita_var 
+			var:investment_in_north_ita_var > 0
+			var:investment_in_south_ita_var > 0
+		}
+		change_variable = {
+			name = industrious_north_ita_var
+			add = 1
+			}
+		change_variable = {
+			name = sluggish_south_ita_var
+			add = 1
+			}
+	}
+	else = {
+		change_variable = {
+			name = industrious_north_ita_var
+			add = var:investment_in_north_ita_var
+			}
+		change_variable = {
+			name = industrious_north_ita_var
+			subtract = var:investment_in_south_ita_var
+			}
+
+		change_variable = {
+			name = sluggish_south_ita_var
+			add = var:investment_in_south_ita_var
+			}
+		change_variable = {
+			name = sluggish_south_ita_var
+			subtract = var:investment_in_north_ita_var
+			}
+		}
+		
+	
+
+	clamp_variable = { name = sluggish_south_ita_var max = 20 min = -20 }
+	clamp_variable = { name = industrious_north_ita_var max = 20 min = -20 }
+	clamp_variable = { name = agri_padana_ita_var max = 50 min = 0 }
+
+	set_variable = {
+		name = investment_in_north_ita_var
+		value = 0
+	}
+	set_variable = {
+		name = investment_in_padana_ita_var
+		value = 0
+	}
+	set_variable = {
+		name = investment_in_south_ita_var
+		value = 0
+	}
+
+}
+
+ita_industry_modifier_update_effect = {
+	every_state = {
+			limit = {
+				OR = {
+					#Triangolo Industriale
+					state_region = s:STATE_PIEDMONT
+					state_region = s:STATE_LOMBARDY #both Padana and North
+					#Pianure Padana
+					state_region = s:STATE_VENETIA
+					state_region = s:STATE_ROMAGNA
+					#Mezzogiorno
+					state_region = s:STATE_SARDINIA
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+				}
+			}
+			remove_modifier = ita_industrial_dev_modifier
+			remove_modifier = industrial_dev_padana_modifier
+			remove_modifier = ita_industrial_investment_modifier
+			remove_modifier = industrial_investment_padana_modifier
+
+		}
+	every_state = { #add triangolo dev
+			limit = {
+				OR = {
+					#Triangolo Industriale
+					state_region = s:STATE_PIEDMONT
+					state_region = s:STATE_LOMBARDY
+				}
+			}
+			add_modifier = {
+				name = ita_industrial_dev_modifier
+				months = 15
+				multiplier = {
+					value = var:industrious_north_ita_var
+				}
+			}
+		}
+	every_state = { #add mezzogiorno dev
+			limit = {
+				OR = {
+					#Mezzogiorno
+					state_region = s:STATE_SARDINIA
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+				}
+			}
+			add_modifier = {
+				name = ita_industrial_dev_modifier
+				months = 15
+				multiplier = {
+					value = var:sluggish_south_ita_var
+				}
+			}
+		}
+	every_state = { #add padana dev
+			limit = {
+				NOT = { has_variable = padana_done_var }
+				OR = {
+					#Pianura Padana
+					state_region = s:STATE_LOMBARDY
+					state_region = s:STATE_ROMAGNA
+					state_region = s:STATE_VENETIA
+				}
+			}
+			add_modifier = {
+				name = industrial_dev_padana_modifier
+				months = 15
+				multiplier = {
+					value = var:agri_padana_ita_var
+				}
+			}
+		}
+}
+
+ita_industryNorth_modifier_refresh_effect = {
+	every_state = { #add triangolo investments
+			limit = {
+				OR = {
+					#Triangolo Industriale
+					state_region = s:STATE_PIEDMONT
+					state_region = s:STATE_LOMBARDY
+				}
+			}
+			remove_modifier = ita_industrial_investment_modifier
+			add_modifier = {
+				name = ita_industrial_investment_modifier
+				months = 13
+				multiplier = {
+					value = var:investment_in_north_ita_var
+				}
+			}
+		}
+}
+
+ita_industrySouth_modifier_refresh_effect = {
+	every_state = { #add mezzogiorno investments
+			limit = {
+				OR = {
+					#Mezzogiorno
+					state_region = s:STATE_SARDINIA
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+				}
+			}
+			remove_modifier = ita_industrial_investment_modifier
+			add_modifier = {
+				name = ita_industrial_investment_modifier
+				months = 13
+				multiplier = {
+					value = var:investment_in_south_ita_var
+				}
+			}
+		}
+}
+
+ita_industryPadana_modifier_refresh_effect = {
+	every_state = { #add padana investments
+			limit = {
+				OR = {
+					#Pianura Padana
+					state_region = s:STATE_LOMBARDY
+					state_region = s:STATE_ROMAGNA
+					state_region = s:STATE_VENETIA
+				}
+			}
+			remove_modifier = industrial_investment_padana_modifier
+			add_modifier = {
+				name = industrial_investment_padana_modifier
+				months = 13
+				multiplier = {
+					value = var:investment_in_padana_ita_var
+				}
+			}
+		}
+}
+
+ita_last_industry_proc_effect = {
+	every_state = {
+			limit = {
+				OR = {
+					#Triangolo Industriale
+					state_region = s:STATE_PIEDMONT
+					state_region = s:STATE_LOMBARDY #both Padana and North
+					#Pianure Padana
+					state_region = s:STATE_VENETIA
+					state_region = s:STATE_ROMAGNA
+					#Mezzogiorno
+					state_region = s:STATE_SARDINIA
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+				}
+			}
+			remove_modifier = ita_industrial_dev_modifier
+			remove_modifier = industrial_dev_padana_modifier
+			remove_modifier = ita_industrial_investment_modifier
+			remove_modifier = industrial_investment_padana_modifier
+
+		}
+	every_state = { #add triangolo dev
+			limit = {
+				OR = {
+					#Triangolo Industriale
+					state_region = s:STATE_PIEDMONT
+					state_region = s:STATE_LOMBARDY
+				}
+			}
+			add_modifier = {
+				name = ita_industrial_dev_modifier
+				multiplier = {
+					value = var:industrious_north_ita_var
+				}
+			}
+		}
+	every_state = { #add mezzogiorno dev
+			limit = {
+				OR = {
+					#Mezzogiorno
+					state_region = s:STATE_SARDINIA
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+				}
+			}
+			add_modifier = {
+				name = ita_industrial_dev_modifier
+				multiplier = {
+					value = var:sluggish_south_ita_var
+				}
+			}
+		}
+	every_state = { #add padana dev
+			limit = {
+				NOT = { has_variable = padana_done_var }
+				OR = {
+					#Pianura Padana
+					state_region = s:STATE_LOMBARDY
+					state_region = s:STATE_ROMAGNA
+					state_region = s:STATE_VENETIA
+				}
+			}
+			add_modifier = {
+				name = industrial_dev_padana_modifier
+				multiplier = {
+					value = var:agri_padana_ita_var
+				}
+			}
+		}
+	if = {
+		limit = {
+			var:sluggish_south_ita_var >= 10
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_SICILY
+					state_region = s:STATE_CALABRIA
+					state_region = s:STATE_CAMPANIA
+					state_region = s:STATE_APULIA
+					state_region = s:STATE_ABRUZZO
+					}
+				}
+				state_region = { remove_state_trait = state_trait_sluggish_south }
+			}
+	}
+}
+
+# ItalyStatutoAlbertino: 4 scripted effects for constitutional tension / Italian sentiment.
+# Call from country scope (event option). JE = ITA_French_lawsJE.
+
+# 1) +1 constitutional tension (first option only; not event 6) – green tooltip when bar moves
+italy_statuto_momentum_plus_effect = {
+	if = {
+		limit = {
+			OR = {
+				has_journal_entry = ITA_French_lawsJE
+				has_journal_entry = ITA_Austria_lawsJE
+			}
+			NOT = { has_variable = ita_french_laws_done }
+		}
+		custom_tooltip = ItalyStatutoAlbertino_momentum_plus_tt
+		set_variable = {
+			name = constitutional_ita_tension_var
+			value = {
+				value = var:constitutional_ita_tension_var
+				add = 1
+				max = 5
+			}
+		}
+	}
+}
+
+# 2) Second option: no bar change, no tooltip (do not tooltip nothing moving)
+italy_statuto_autocratic_point_effect = {
+}
+
+# 3) Italian sentiment increase – red tooltip (10 / 15 / 20 by event intensity)
+italy_statuto_sentiment_10_effect = {
+	custom_tooltip = ItalyStatutoAlbertino_sentiment_tt
+	change_variable = {
+		name = italian_sentiment_var
+		add = 10
+	}
+}
+
+italy_statuto_sentiment_15_effect = {
+	custom_tooltip = ItalyStatutoAlbertino_sentiment_tt
+	change_variable = {
+		name = italian_sentiment_var
+		add = 15
+	}
+}
+
+italy_statuto_sentiment_20_effect = {
+	custom_tooltip = ItalyStatutoAlbertino_sentiment_tt
+	change_variable = {
+		name = italian_sentiment_var
+		add = 20
+	}
+}
+
+
+

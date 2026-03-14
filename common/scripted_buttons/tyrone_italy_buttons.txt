@@ -1,0 +1,1216 @@
+# Italy Tyrone – all scripted buttons
+# Join bloc, treaty (Turin / Lombardy), French path (military/economy/laws), French path complete buttons
+
+# ========== Join France's bloc / Join Austria's bloc ==========
+# Require 25-point stance difference: bar <= 25 for France, bar >= 75 for Austria
+ita_join_france_bloc_button = {
+	name = ita_join_france_bloc_button
+	desc = ita_join_france_bloc_button_desc
+
+	visible = {
+		NOT = { has_variable = ita_nif_stand_alone }
+	}
+
+	possible = {
+		is_subject = no
+		NOT = { is_in_same_power_bloc = c:FRA }
+		c:FRA ?= {
+			is_power_bloc_leader = yes
+		}
+		custom_tooltip = {
+			text = enough_sway_France_tt
+			je:italy_diplo_stance = {
+				"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 25
+			}
+		}
+	}
+
+	effect = {
+		join_power_bloc = c:FRA
+	}
+}
+
+ita_join_austria_bloc_button = {
+	name = ita_join_austria_bloc_button
+	desc = ita_join_austria_bloc_button_desc
+
+	visible = {
+		NOT = { has_variable = ita_nif_stand_alone }
+	}
+
+	possible = {
+		is_subject = no
+		NOT = { is_in_same_power_bloc = c:AUS }
+		c:AUS ?= {
+			is_power_bloc_leader = yes
+		}
+		custom_tooltip = {
+			text = enough_sway_Austria_tt
+			je:italy_diplo_stance = {
+				"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 75
+			}
+		}
+	}
+
+	effect = {
+		join_power_bloc = c:AUS
+	}
+}
+
+# ========== Treaty of Turin (Savoy & Provence) / Lombardy cession ==========
+ita_treaty_turin_button = {
+	name = ita_treaty_turin_button
+	desc = ita_treaty_turin_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+	}
+
+	possible = {
+		OR = {
+			is_in_same_power_bloc = c:FRA
+			is_power_bloc_leader = yes
+			custom_tooltip = {
+				text = ita_treaty_sway_france_10_tt
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 40
+				}
+			}
+		}
+		c:FRA ?= { exists = yes }
+		any_scope_state = {
+			state_region = s:STATE_SAVOY
+		}
+	}
+
+	effect = {
+		c:FRA ?= {
+			trigger_event = { id = italyEventsTyrone.3 popup = yes }
+		}
+	}
+}
+
+ita_lombardy_cession_button = {
+	name = ita_lombardy_cession_button
+	desc = ita_lombardy_cession_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+	}
+
+	possible = {
+		OR = {
+			is_in_same_power_bloc = c:AUS
+			is_power_bloc_leader = yes
+			custom_tooltip = {
+				text = ita_treaty_sway_austria_10_tt
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 60
+				}
+			}
+		}
+		c:AUS ?= { exists = yes }
+		c:AUS ?= { country_or_subject_owns_entire_state_region = STATE_LOMBARDY }
+	}
+
+	effect = {
+		set_variable = { name = italy_treaty_lombardy_proposer days = 1 }
+		c:AUS ?= {
+			trigger_event = { id = italyEventsTyrone.4 popup = yes }
+		}
+	}
+}
+
+# ========== Annex Romagna only (unincorporated) – bar 40–60, not in bloc, bad relations with Pope ==========
+# Event: Transfer Romagna from PAP to root, leave unincorporated, add 20% radicals in state.
+ita_annex_romagna_only_button = {
+	name = ita_annex_romagna_only_button
+	desc = ita_annex_romagna_only_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		NOT = { has_variable = NIF_formed }
+		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
+	}
+
+	possible = {
+		custom_tooltip = {
+				text = ita_talks_with_the_pope_sentiment_tt
+				var:italian_sentiment_var >= 30
+			}
+		custom_tooltip = {
+			text = ita_annex_romagna_stance_tt
+			je:italy_diplo_stance = {
+				"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 40
+				"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 60
+			}
+		}
+		AND = { 
+			NOT = { is_in_same_power_bloc = c:FRA }
+			NOT = { is_in_same_power_bloc = c:AUS }
+		}
+		AND = {
+			c:PAP ?= { exists = yes }
+			c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_occupy_romagna_umbria_sentiment_penalty_tt
+		}
+		change_variable = {
+			name = italian_sentiment_var
+			subtract = 15
+		}
+		trigger_event = { id = italyEventsTyrone.11 popup = yes }
+	}
+}
+
+# ========== Occupy Umbria ==========
+# Own Romagna, relations with Pope < -20, Pope owns Umbria. Effect: annex Umbria (transfer from PAP).
+ita_occupy_abruzzi_button = {
+	name = ita_occupy_abruzzi_button
+	desc = ita_occupy_abruzzi_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		c:PAP ?= { exists = yes }
+		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_ROMAGNA
+		c:PAP ?= { exists = yes }
+		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_occupy_romagna_umbria_sentiment_penalty_tt
+		}
+		change_variable = {
+			name = italian_sentiment_var
+			subtract = 15
+		}
+		transfer_state = {
+			STATE = s:STATE_UMBRIA
+			GIVER = c:PAP
+			TAKER = root
+		}
+		s:STATE_UMBRIA = {
+			set_state_type = unincorporated
+		}
+	}
+}
+
+# ========== Talks with the Pope – in French or Austrian bloc, sentiment >= 40 ==========
+# Event: Italy gets Umbria and Romagna (claims + incorporate if PAP cedes) and passes Religious school, Charity hospitals, State religion.
+ita_talks_with_the_pope_button = {
+	name = ita_talks_with_the_pope_button
+	desc = ita_talks_with_the_pope_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		NOT = { has_variable = NIF_formed }
+	}
+
+	possible = {
+		c:PAP = {
+			relations:root >= 30
+		}
+		OR = {
+			is_in_same_power_bloc = c:FRA
+			is_in_same_power_bloc = c:AUS
+		}
+		custom_tooltip = {
+			text = ita_talks_with_the_pope_sentiment_tt
+			var:italian_sentiment_var >= 30
+		}
+		c:PAP ?= { exists = yes }
+	}
+
+	effect = {
+		trigger_event = { id = italyEventsTyrone.9 popup = yes }
+	}
+}
+
+# ========== Italian Concordat – sentiment >= 60, Pope has Umbria and Romagna ==========
+# Event: Pass Theocracy + Religious school, Charity hospitals, State religion; annex Papal State with incorporation; ruler and Devout leader become Theocrat.
+ita_italian_concordat_button = {
+	name = ita_italian_concordat_button
+	desc = ita_italian_concordat_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		NOT = { has_variable = NIF_formed }
+	}
+
+	possible = {
+		c:PAP = {
+			relations:root >= 50
+		}
+		custom_tooltip = {
+			text = ita_italian_concordat_sentiment_tt
+			var:italian_sentiment_var >= 60
+		}
+		c:PAP ?= { exists = yes }
+		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
+		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = minus30sentiment_ita_tt
+			change_variable = {
+				name = italian_sentiment_var
+				subtract = 30
+			}
+		}
+		trigger_event = { id = italyEventsTyrone.10 popup = yes }
+	}
+}
+
+# ========== Invite the Pope to the Italian sphere ==========
+# Visible when NIF formed. Possible: relations with Pope > 50, root is bloc leader, defensive pact with Pope. Effect: Pope becomes protectorate of root.
+ita_invite_pope_sphere_button = {
+	name = ita_invite_pope_sphere_button
+	desc = ita_invite_pope_sphere_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		has_variable = NIF_formed
+		c:PAP ?= { exists = yes }
+		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
+	}
+
+	possible = {
+		c:PAP ?= { exists = yes }
+		c:PAP = {
+			relations:root > 50
+		}
+		is_power_bloc_leader = yes
+		any_scope_treaty = {
+			binds = c:PAP
+			any_scope_article = {
+				has_type = defensive_pact
+			}
+		}
+	}
+
+	effect = {
+		c:SAR ?= {
+			create_diplomatic_pact = {
+				country = c:PAP
+				type = protectorate
+			}
+		}
+	}
+}
+
+
+
+# ========== Request Italian Recognition ==========
+# Pope exists, own Abruzzi and Rome (Lazio). Activates journal entry Pap_recognition_for_italy (3 concessions from 4).
+ita_request_italian_recognition_button = {
+	name = ita_request_italian_recognition_button
+	desc = ita_request_italian_recognition_button_desc
+
+	cooldown = { years = 99 }
+
+	visible = {
+		has_variable = NIF_formed
+		c:PAP ?= { exists = yes }
+		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
+	}
+
+	possible = {
+		c:PAP ?= { exists = yes }
+		owns_entire_state_region = STATE_UMBRIA
+		owns_entire_state_region = STATE_ROMAGNA
+		NOT = { has_journal_entry = Pap_recognition_for_italy }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = Pap_recognition_for_italy
+		}
+	}
+}
+
+# ========== Papal Recognition concessions (select 3 of 4; JE Pap_recognition_for_italy) ==========
+# Concession 1: Clergy voting power + Devout political strength (distribution-of-power style)
+ita_pap_rec_concession_1_button = {
+	name = ita_pap_rec_concession_1_button
+	desc = ita_pap_rec_concession_1_button_desc
+
+	cooldown = { years = 99 }
+
+	possible = {
+		has_journal_entry = Pap_recognition_for_italy
+	}
+
+	effect = {
+		set_variable = { name = pap_rec_concession_1_chosen value = 1 }
+		change_variable = { name = concession_to_pope_var add = 1 }
+		add_modifier = {
+			name = papal_recognition_concession_clergy_power
+			years = 10
+		}
+	}
+}
+
+# Concession 2: Tax cuts from clergymen (-25% clergymen investment pool contribution, 10 yrs)
+ita_pap_rec_concession_2_button = {
+	name = ita_pap_rec_concession_2_button
+	desc = ita_pap_rec_concession_2_button_desc
+
+	cooldown = { years = 99 }
+
+	possible = {
+		has_journal_entry = Pap_recognition_for_italy
+	}
+
+	effect = {
+		set_variable = { name = pap_rec_concession_2_chosen value = 1 }
+		change_variable = { name = concession_to_pope_var add = 1 }
+		add_modifier = {
+			name = papal_recognition_concession_clergy_tax_cuts
+			years = 10
+		}
+	}
+}
+
+# Concession 3: Papal subsidies (7500 expenses, 10 yrs)
+ita_pap_rec_concession_3_button = {
+	name = ita_pap_rec_concession_3_button
+	desc = ita_pap_rec_concession_3_button_desc
+
+	cooldown = { years = 99 }
+	
+	possible = {
+		has_journal_entry = Pap_recognition_for_italy
+	}
+
+	effect = {
+		set_variable = { name = pap_rec_concession_3_chosen value = 1 }
+		change_variable = { name = concession_to_pope_var add = 1 }
+		add_modifier = {
+			name = papal_recognition_concession_papal_subsidies
+			years = 10
+		}
+	}
+}
+
+# Concession 4: State religion (if missing) + -10% authority (church-law style, 10 yrs)
+ita_pap_rec_concession_4_button = {
+	name = ita_pap_rec_concession_4_button
+	desc = ita_pap_rec_concession_4_button_desc
+
+	cooldown = { years = 99 }
+
+	possible = {
+		has_journal_entry = Pap_recognition_for_italy
+	}
+
+	effect = {
+		set_variable = { name = pap_rec_concession_4_chosen value = 1 }
+		change_variable = { name = concession_to_pope_var add = 1 }
+		if = {
+			limit = { NOT = { has_law = law_type:law_state_religion } }
+			activate_law = law_type:law_state_religion
+		}
+		# Add amendment to current church-and-state law (State Religion or variant).
+		active_law:lawgroup_church_and_state ?= {
+			add_amendment = {
+				type = amendment_papal_recognition_church_authority
+				sponsor = PREV.ig:ig_devout
+				cooldown = 240
+			}
+		}
+	}
+}
+
+# ========== Annex the Pope (diplomatic play + No Papal Recognition debuff) ==========
+# Creates annex war goal against PAP and triggers event that applies permanent "No Papal Recognition" modifier.
+ita_annex_pope_war_goal_button = {
+	name = ita_annex_pope_war_goal_button
+	desc = ita_annex_pope_war_goal_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		has_variable = NIF_formed
+		c:PAP ?= { exists = yes }
+	}
+
+	possible = {
+		c:PAP ?= { exists = yes }
+		NOT = { is_at_war_with = c:PAP }
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			name = ita_annex_pope_war
+			target_country = c:PAP
+			type = dp_annex_war
+			add_war_goal = {
+				holder = root
+				target_country = c:PAP
+				type = annex_country
+			}
+		}
+		trigger_event = { id = italyEventsTyrone.15 popup = yes }
+	}
+}
+
+# ========== Form Italy ==========
+# At least 12 states in Italy (owned or by subject), must own Romagna, Naples (Campania), Piedmont; have either Lombardy or Rome (Lazio). Changes tag to Italy and fires "Italian Formation" event.
+ita_form_italy_button = {
+	name = ita_form_italy_button
+	desc = ita_form_italy_button_desc
+
+	cooldown = { years = 99 }
+
+	visible = {
+	}
+
+	possible = {
+		custom_tooltip = {
+				text = is_nif_tt
+				has_variable = NIF_formed
+			}
+		# At least 12 Italian state regions (north/south Italian homeland) entirely owned by us or a subject
+		any_state = {
+				OR = {
+					state_region = { is_homeland = cu:north_italian }
+					state_region = { is_homeland = cu:south_italian }
+				}
+				OR = {
+					owner = root
+					owner = { is_subject_of = root }
+				}
+			count >= 12
+		}
+		country_or_subject_owns_entire_state_region = STATE_ABRUZZO
+		country_or_subject_owns_entire_state_region = STATE_CAMPANIA
+		country_or_subject_owns_entire_state_region = STATE_PIEDMONT
+		OR = {
+			country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		}
+	}
+
+	effect = {
+		change_tag = ITA
+		trigger_event = { id = italyEventsTyrone.16 popup = yes }
+	}
+}
+
+# Form Italy (Garibaldi path): visible when the leader of the Garibaldi republic has garibaldi_char_var and the special trait. Effect: kill Southern Garibaldi (hidden), kill true Garibaldi in Sardinia (hidden), enact Presidential Republic in SAR, fire formation event, then follow-up event 17 makes Garibaldi ruler.
+ita_form_italy_garibaldi_button = {
+	name = ita_form_italy_garibaldi_button
+	desc = ita_form_italy_garibaldi_button_desc
+
+	cooldown = { years = 99 }
+
+	visible = {
+		has_global_variable = garibaldi_republic_established
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = is_nif_tt
+			has_variable = NIF_formed
+		}
+		any_state = {
+				OR = {
+					state_region = { is_homeland = cu:north_italian }
+					state_region = { is_homeland = cu:south_italian }
+				}
+				OR = {
+					owner = root
+					owner = { is_subject_of = root }
+				}
+			count >= 12
+		}
+		country_or_subject_owns_entire_state_region = STATE_ABRUZZO
+		country_or_subject_owns_entire_state_region = STATE_CAMPANIA
+		country_or_subject_owns_entire_state_region = STATE_PIEDMONT
+		OR = {
+			country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		}
+		custom_tooltip = {
+			text = ita_form_garibaldi_tension_tt
+			var:italian_sentiment_var >= 90
+		}
+
+	}
+
+	effect = {
+		random_country = {
+			limit = {
+				has_variable = garibaldi_exp_country
+				ruler = {
+					has_variable = garibaldi_char_var
+					has_trait = character_trait_garibaldi_republican
+				}
+			}
+			save_scope_as = garibaldi_republic
+		}
+		scope:garibaldi_republic = {
+			ruler = {
+				kill_character = { hidden = yes }
+			}
+		}
+		# Kill the true Garibaldi (the general in Sardinia from the expedition)
+		random_character = {
+			limit = { has_variable = garibaldi_char_var }
+			kill_character = { hidden = yes }
+		}
+		c:SAR = {
+			change_tag = ITA
+			activate_law = law_type:law_presidential_republic
+			trigger_event = { id = italyEventsTyrone.16 popup = yes }
+			trigger_event = { id = italyEventsTyrone.17 days = 1 popup = yes }
+		}
+	}
+}
+
+# ========== Declare the North Italian Federation ==========
+# Triggers: (Pope relations > 50 OR own Romagna), own Emilia and Tuscany, Italian tension >= 60. Event skeleton for now.
+ita_declare_north_italian_federation_button = {
+	name = ita_declare_north_italian_federation_button
+	desc = ita_declare_north_italian_federation_button_desc
+
+	cooldown = { years = 99 }
+
+	visible = {
+		NOT = { has_variable = NIF_formed }
+	}
+
+	possible = {
+		OR = {
+			c:PAP = {
+				relations:root > 30
+			}
+			owns_entire_state_region = STATE_ROMAGNA
+		}
+		owns_entire_state_region = STATE_EMILIA
+		owns_entire_state_region = STATE_TUSCANY
+		custom_tooltip = {
+			text = ita_declare_north_italian_federation_tension_tt
+			var:italian_sentiment_var >= 60
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+				text = minus30sentiment_ita_tt
+				change_variable = {
+					name = italian_sentiment_var
+					subtract = 30
+				}
+			}
+		trigger_event = { id = italyEventsTyrone.12 popup = yes }
+
+	}
+}
+
+# ========== Garibaldi's Thousand Expedition – Prepare the Expedition ==========
+# Button on ita_garibaldi_thousand_expedition_JE. Requires naval and army projection >= 3× Sicily (c:SIC). Fires garibaldi_expedition.1.
+ita_garibaldi_prepare_expedition_button = {
+	name = ita_garibaldi_prepare_expedition_button
+	desc = ita_garibaldi_prepare_expedition_button_desc
+
+	cooldown = { years = 100 }
+
+	visible = {
+		has_journal_entry = ita_garibaldi_thousand_expedition_JE
+	}
+
+	possible = {
+		is_player = yes
+		exists ?= c:SIC
+		c:SIC = { country_or_subject_owns_entire_state_region = STATE_SICILY }
+		custom_tooltip = {
+			text = ita_garibaldi_prepare_expedition_navy_tt
+			navy_power_projection >= ita_garibaldi_three_times_sicily_navy
+		}
+		OR = {
+			custom_tooltip = {
+				text = ita_garibaldi_prepare_expedition_army_tt
+				army_power_projection >= ita_garibaldi_three_times_sicily_army
+			}
+			custom_tooltip = {
+				text = ita_form_garibaldi_tension_tt
+				var:italian_sentiment_var >= 90
+			}
+		}
+		
+		
+	}
+
+	effect = {
+		trigger_event = { id = garibaldi_expedition.1 popup = yes }
+	}
+}
+
+# ========== North Italian Manifesto – annex PAR, MOD, LUC, TUS with incorporation ==========
+# Button on italy_risorgimento_stage. Requires Italian sentiment >= 30.
+ita_north_italian_manifesto_button = {
+	name = ita_north_italian_manifesto_button
+	desc = ita_north_italian_manifesto_button_desc
+
+	cooldown = { years = 100 }
+
+	visible = {
+		NOT = { has_variable = NIF_formed }
+		OR = {
+			c:PAR ?= { exists = yes }
+			c:MOD ?= { exists = yes }
+			c:LUC ?= { exists = yes }
+			c:TUS ?= { exists = yes }
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_north_italian_manifesto_sentiment_tt
+			var:italian_sentiment_var >= 30
+		}
+		OR = {
+			c:PAR ?= { exists = yes }
+			c:MOD ?= { exists = yes }
+			c:LUC ?= { exists = yes }
+			c:TUS ?= { exists = yes }
+		}
+	}
+
+	effect = {
+		trigger_event = { id = italyEventsTyrone.6 popup = yes }
+
+	}
+}
+
+# ========== French path – start (military, economy, laws) ==========
+ita_french_military_button = {
+	name = ita_french_military_button
+	desc = ita_french_military_button_desc
+
+	cooldown = { years = 99 }
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		has_technology_researched = logistics
+		has_technology_researched = field_works
+		NOT = { has_journal_entry = ITA_French_militaryJE }
+		NOT = { has_variable = ita_french_military_done }
+	}
+
+	effect = {
+		ita_french_military_effect = yes
+	}
+}
+
+ita_austria_military_button = {
+	name = ita_austria_military_button
+	desc = ita_austria_military_button_desc
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_journal_entry = ITA_Austria_militaryJE }
+		NOT = { has_variable = ita_austria_military_done }
+	}
+
+	effect = {
+		ita_austria_military_effect = yes
+	}
+}
+
+ita_austria_economy_button = {
+	name = ita_austria_economy_button
+	desc = ita_austria_economy_button_desc
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_journal_entry = ITA_Austria_economyJE }
+		NOT = { has_variable = ita_austria_economy_done }
+	}
+
+	effect = {
+		ita_austria_economy_effect = yes
+	}
+}
+
+ita_french_economy_button = {
+	name = ita_french_economy_button
+	desc = ita_french_economy_button_desc
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_journal_entry = ITA_French_economyJE }
+		NOT = { has_variable = ita_french_economy_done }
+	}
+
+	effect = {
+		ita_french_economy_effect = yes
+	}
+}
+
+ita_french_laws_button = {
+	name = ita_french_laws_button
+	desc = ita_french_laws_button_desc
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_journal_entry = ITA_French_lawsJE }
+		NOT = { has_variable = ita_french_laws_done }
+	}
+
+	effect = {
+		ita_french_laws_effect = yes
+	}
+}
+
+# Austria path – add Austrian laws JE (constitutional tension + Statuto events; complete via census/wealth or Grant the Statuto button).
+ita_austria_laws_button = {
+	name = ita_austria_laws_button
+	desc = ita_austria_laws_button_desc
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		NOT = { has_journal_entry = ITA_Austria_lawsJE }
+		NOT = { has_variable = ita_austria_laws_done }
+	}
+
+	effect = {
+		ita_austria_laws_effect = yes
+	}
+}
+
+# ========== French path – complete (in JE panel). Easy way: 30 units + all barracks fully employed, no shortages ==========
+ita_french_military_complete_button = {
+	name = ita_french_military_complete_button
+	desc = ita_french_military_complete_button_desc
+
+	visible = {
+		has_journal_entry = ITA_French_militaryJE
+	}
+
+	possible = {
+		has_technology_researched = rifling
+		has_technology_researched = shell_gun
+
+	}
+
+	effect = {
+		set_variable = ita_french_military_complete_clicked
+		custom_tooltip = {
+			text = worse_rewards_itainv_tt
+		}
+	}
+}
+
+# ========== Austria path – complete (in JE panel). Easy: button + 30 + barracks. Hard: National Guard + Home Affairs lvl 2 ==========
+ita_austria_military_complete_button = {
+	name = ita_austria_military_complete_button
+	desc = ita_austria_military_complete_button_desc
+
+	visible = {
+		has_journal_entry = ITA_Austria_militaryJE
+	}
+
+	possible = {
+		has_technology_researched = logistics
+		has_technology_researched = field_works
+	}
+
+	effect = {
+		set_variable = ita_austria_military_complete_clicked
+		custom_tooltip = {
+			text = worse_rewards_itainv_tt
+		}
+	}
+}
+
+ita_french_economy_complete_button = {
+	name = ita_french_economy_complete_button
+	desc = ita_french_economy_complete_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		has_journal_entry = ITA_French_economyJE
+	}
+
+	possible = {
+		gdp > 5000000
+		any_scope_treaty = {
+			any_scope_article = {
+				has_type = foreign_investment_rights
+				source_country = root
+				target_country = c:FRA
+			}
+		}
+	}
+
+	effect = {
+		set_variable = ita_french_economy_complete_clicked
+		custom_tooltip = {
+			text = worse_rewards_itainv_tt
+		}
+	}
+}
+
+ita_austria_economy_complete_button = {
+	name = ita_austria_economy_complete_button
+	desc = ita_austria_economy_complete_button_desc
+
+	cooldown = { months = 24 }
+
+	visible = {
+		has_journal_entry = ITA_Austria_economyJE
+	}
+
+	possible = {
+		gdp > 5000000
+		any_scope_treaty = {
+			any_scope_article = {
+				has_type = foreign_investment_rights
+				source_country = root
+				target_country = c:AUS
+			}
+		}
+	}
+
+	effect = {
+		set_variable = ita_austria_economy_complete_clicked
+		custom_tooltip = {
+			text = worse_rewards_itainv_tt
+		}
+	}
+}
+
+ita_french_laws_complete_button = {
+	name = ita_french_laws_complete_button
+	desc = ita_french_laws_complete_button_desc
+
+	cooldown = { months = 24 }
+	visible = {
+		has_journal_entry = ITA_French_lawsJE
+	}
+
+	possible = {
+		NOT = { has_law = law_type:law_census_voting }
+		OR = {
+			AND = {
+				legitimacy >= 50
+				any_interest_group = {
+					is_in_government = yes
+					OR = {
+						custom_tooltip = {
+							text = has_ideology_liberal_tt
+							OR = {
+								has_ideology = ideology:ideology_liberal
+								has_ideology = ideology:ideology_liberal_modern
+							}
+						}
+						leader = { has_ideology = ideology:ideology_radical }
+						leader = { has_ideology = ideology:ideology_market_liberal }
+					}
+				}
+			}
+			custom_tooltip = {
+				text = ita_french_laws_constitutional_pressure_3_tt
+				var:constitutional_ita_tension_var >= 3
+			}
+			radical_fraction = {
+				value >= 0.25
+			}
+		}
+			
+	}
+
+	effect = {
+		set_variable = ita_french_laws_complete_clicked
+		activate_law = law_type:law_wealth_voting
+	}
+}
+
+# ========== Austria path – laws JE: button grants Oligarchy + Concessione Albertina amendment ==========
+ita_austria_laws_complete_button = {
+	name = ita_austria_laws_complete_button
+	desc = ita_austria_laws_complete_button_desc
+
+	cooldown = { months = 24 }
+	visible = {
+		has_journal_entry = ITA_Austria_lawsJE
+	}
+
+	possible = {
+		NOT = { has_law = law_type:law_census_voting }
+		OR = {
+			radical_fraction = {
+				value >= 0.25
+			}
+			custom_tooltip = {
+				text = ita_french_laws_constitutional_pressure_3_tt
+				var:constitutional_ita_tension_var >= 3
+			}
+		}
+	}
+
+	effect = {
+		set_variable = ita_austria_laws_complete_clicked
+		activate_law = law_type:law_oligarchy
+		# Current law of the same type (distribution of power) gets the amendment.
+		active_law:lawgroup_distribution_of_power ?= {
+			add_amendment = {
+				type = amendment_concessione_albertina
+				sponsor = PREV.ig:ig_landowners
+				cooldown = 240
+			}
+		}
+	}
+}
+
+# ========== Italian Irredentism – Jewel Colony (only one choice; var hides all after use) ==========
+ita_jewel_colony_morocco_button = {
+	name = ita_jewel_colony_morocco_button
+	desc = ita_jewel_colony_morocco_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_FEZ
+		country_or_subject_owns_entire_state_region = STATE_MARRAKECH
+		country_or_subject_owns_entire_state_region = STATE_INNER_MOROCCO
+		country_or_subject_owns_entire_state_region = STATE_AL_RIF
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_FEZ
+					state_region = s:STATE_MARRAKECH
+					state_region = s:STATE_INNER_MOROCCO
+					state_region = s:STATE_AL_RIF
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+			set_state_type = incorporated
+		}
+	}
+}
+
+ita_jewel_colony_madagascar_button = {
+	name = ita_jewel_colony_madagascar_button
+	desc = ita_jewel_colony_madagascar_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_NORTH_MADAGASCAR
+		country_or_subject_owns_entire_state_region = STATE_SOUTH_MADAGASCAR
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_NORTH_MADAGASCAR
+					state_region = s:STATE_SOUTH_MADAGASCAR
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+			set_state_type = incorporated
+		}
+	}
+}
+
+ita_jewel_colony_ethiopia_button = {
+	name = ita_jewel_colony_ethiopia_button
+	desc = ita_jewel_colony_ethiopia_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_AMHARA
+		country_or_subject_owns_entire_state_region = STATE_GONDER
+		country_or_subject_owns_entire_state_region = STATE_OROMIA
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_AMHARA
+					state_region = s:STATE_GONDER
+					state_region = s:STATE_OROMIA
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+			set_state_type = incorporated
+		}
+	}
+}
+
+ita_jewel_colony_zanzibar_button = {
+	name = ita_jewel_colony_zanzibar_button
+	desc = ita_jewel_colony_zanzibar_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_ZANZIBAR
+		country_or_subject_owns_entire_state_region = STATE_TANGANYIKA
+		country_or_subject_owns_entire_state_region = STATE_LINDI
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_ZANZIBAR
+					state_region = s:STATE_TANGANYIKA
+					state_region = s:STATE_LINDI
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+			set_state_type = incorporated
+		}
+	}
+}
+
+ita_jewel_colony_yemen_button = {
+	name = ita_jewel_colony_yemen_button
+	desc = ita_jewel_colony_yemen_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_YEMEN
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_YEMEN
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+			set_state_type = incorporated
+		}
+	}
+}
+
+ita_jewel_colony_lybia_button = {
+	name = ita_jewel_colony_lybia_button
+	desc = ita_jewel_colony_lybia_button_desc
+	visible = {
+		NOT = { has_variable = italy_jewel_colony_var }
+	}
+	possible = {
+		country_or_subject_owns_entire_state_region = STATE_TRIPOLI
+		country_or_subject_owns_entire_state_region = STATE_LIBYA
+		country_or_subject_owns_entire_state_region = STATE_LIBYAN_DESERT
+	}
+	effect = {
+		set_variable = {
+			name = italy_jewel_colony_var
+			value = 1
+		}
+		every_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_TRIPOLI
+					state_region = s:STATE_LIBYA
+					state_region = s:STATE_LIBYAN_DESERT
+				}
+			}
+			add_modifier = {
+				name = italian_jewel_colony_modifier
+			}
+		}
+	}
+}
+
+# ========== Italian Irredentism – Proclaim the Italian Empire ==========
+# Clickable when at least 6 irredentism objectives are met. Uses script value (evaluated when checked, no monthly pulse).
+ita_proclaim_italian_empire_button = {
+	name = ita_proclaim_italian_empire_button
+	desc = ita_proclaim_italian_empire_button_desc
+
+	visible = {
+	}
+	cooldown = { years = 100 }
+
+	possible = {
+		custom_tooltip = {
+			text = ita_proclaim_empire_objectives_tt
+			irredentism_objectives_met_value >= 8
+		}
+	}
+
+	effect = {
+		set_variable = italian_empire_has_formed
+		add_modifier = {
+			name = italian_empire_modifier
+			multiplier = irredentism_objectives_met_value
+		}
+	}
+}
