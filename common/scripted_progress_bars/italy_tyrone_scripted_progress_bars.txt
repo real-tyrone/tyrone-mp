@@ -1,0 +1,330 @@
+# Italy Tyrone – all scripted progress bars (single file).
+# Austria–France stance, Patti lateranensi, constitutional tension, Garibaldi, sentiment, economy JEs.
+
+################################################################################
+# Austria–France diplomatic stance (same style as Great Game)
+# Left = France, Right = Austria. subtract = toward France, add = toward Austria.
+################################################################################
+italy_aus_fra_stance_bar = {
+	name = "italy_aus_fra_stance_bar_name"
+	desc = "italy_aus_fra_stance_bar_france_desc"
+	second_desc = "italy_aus_fra_stance_bar_austria_desc"
+	double_sided_gold = yes
+	start_value = 50
+	min_value = 0
+	max_value = 100
+	monthly_progress = {
+		# Defensive pact with France → +1 towards France (left)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = defensive_pact
+						}
+					}
+				}
+			}
+			subtract = {
+				desc = "italy_stance_defensive_pact_france_tt"
+				value = 1
+			}
+		}
+		# Defensive pact with Austria → +1 towards Austria (right)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:AUS
+						any_scope_article = {
+							has_type = defensive_pact
+						}
+					}
+				}
+			}
+			add = {
+				desc = "italy_stance_defensive_pact_austria_tt"
+				value = 1
+			}
+		}
+		# Alliance with France → +1 towards France (left)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = alliance
+						}
+					}
+				}
+			}
+			subtract = {
+				desc = "italy_stance_alliance_france_tt"
+				value = 1
+			}
+		}
+		# Alliance with Austria → +1 towards Austria (right)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:AUS
+						any_scope_article = {
+							has_type = alliance
+						}
+					}
+				}
+			}
+			add = {
+				desc = "italy_stance_alliance_austria_tt"
+				value = 1
+			}
+		}
+		# Military assistance with France → +1 towards France (left)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:FRA
+						any_scope_article = {
+							has_type = military_assistance
+						}
+					}
+				}
+			}
+			subtract = {
+				desc = "italy_stance_military_assistance_france_tt"
+				value = 1
+			}
+		}
+		# Military assistance with Austria → +1 towards Austria (right)
+		if = {
+			limit = {
+				owner = {
+					any_scope_treaty = {
+						binds = c:AUS
+						any_scope_article = {
+							has_type = military_assistance
+						}
+					}
+				}
+			}
+			add = {
+				desc = "italy_stance_military_assistance_austria_tt"
+				value = 1
+			}
+		}
+		# Sardinia does not own Savoy → +1 towards France (left)
+		if = {
+			limit = {
+				c:SAR ?= {
+					NOT = { owns_entire_state_region = STATE_SAVOY }
+				}
+			}
+			subtract = {
+				desc = "italy_stance_savoy_lost_france_tt"
+				value = 1
+			}
+		}
+		# Sardinia owns Lombardy → +1 towards Austria (right)
+		if = {
+			limit = {
+				c:SAR ?= {
+					owns_entire_state_region = STATE_LOMBARDY
+				}
+			}
+			add = {
+				desc = "italy_stance_lombardy_austria_tt"
+				value = 1
+			}
+		}
+		# NIF: pull bar toward middle (50) by 1 — bar > 50 → move left
+		if = {
+			limit = {
+				owner = { has_variable = NIF_formed }
+				je:je_italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" > 50
+				}
+			}
+			subtract = {
+				desc = "italy_stance_nif_toward_center_tt"
+				value = 1
+			}
+		}
+		# NIF: pull bar toward middle (50) by 1 — bar < 50 → move right
+		if = {
+			limit = {
+				owner = { has_variable = NIF_formed }
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" < 50
+				}
+			}
+			add = {
+				desc = "italy_stance_nif_toward_center_tt"
+				value = 1
+			}
+		}
+		# Bloc leader: pull bar toward middle (50) by 2 — bar > 50 → move left
+		if = {
+			limit = {
+				owner = { is_power_bloc_leader = yes }
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" > 50
+				}
+			}
+			subtract = {
+				desc = "italy_stance_bloc_leader_toward_center_tt"
+				value = 1
+			}
+		}
+		# Bloc leader: pull bar toward middle (50) by 2 — bar < 50 → move right
+		if = {
+			limit = {
+				owner = { is_power_bloc_leader = yes }
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" < 50
+				}
+			}
+			add = {
+				desc = "italy_stance_bloc_leader_toward_center_tt"
+				value = 1
+			}
+		}
+	}
+}
+
+################################################################################
+# Patti lateranensi: fills over 3 years (36 months), then JE on_complete annexes Papal State.
+################################################################################
+patti_lateranensi_bar = {
+	name = "patti_lateranensi_bar_name"
+	desc = "patti_lateranensi_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 36
+
+	monthly_progress = {
+		add = {
+			desc = "patti_lateranensi_bar_monthly_tt"
+			value = 1
+		}
+	}
+}
+
+################################################################################
+# Constitutional tension (Statuto Albertino): 0 = autocratic, 3 = Constitution by the king, 5 = by the people.
+# Bar tracks country variable constitutional_ita_tension_var (0–5). Sync var updated in JE on_monthly_pulse.
+################################################################################
+constitutional_ita_tension_bar = {
+	name = "constitutional_ita_tension_bar_name"
+	desc = "constitutional_ita_tension_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 5
+
+	monthly_progress = {
+		add = {
+			desc = "constitutional_ita_tension_bar_from_var_tt"
+			value = owner.var:constitutional_ita_tension_var
+		}
+		subtract = {
+			desc = "constitutional_ita_tension_bar_from_var_tt"
+			value = owner.var:constitutional_ita_tension_bar_sync
+		}
+	}
+}
+
+################################################################################
+# Garibaldi's Thousand Expedition: bar displays garibaldi_taking_sic_var (0–5). Variable-driven; sync updated in JE on_weekly_pulse.
+################################################################################
+garibaldi_expedition_progress_bar = {
+	name = "garibaldi_expedition_progress_bar_name"
+	desc = "garibaldi_expedition_progress_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 5
+
+	monthly_progress = {
+		add = {
+			desc = "garibaldi_expedition_progress_bar_var_tt"
+			value = owner.var:garibaldi_taking_sic_var
+		}
+		subtract = {
+			desc = "garibaldi_expedition_progress_bar_var_tt"
+			value = owner.var:garibaldi_expedition_bar_sync
+		}
+	}
+}
+
+################################################################################
+# Italian unification sentiment: bar tracks country variable italian_sentiment_var (0–100).
+# Sync var italian_sentiment_bar_sync is set each month after this runs so bar = variable.
+################################################################################
+italy_sentiment_bar = {
+	name = "italy_sentiment_bar_name"
+	desc = "italy_sentiment_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		add = {
+			desc = "italy_sentiment_bar_from_var_tt"
+			value = owner.var:italian_sentiment_var
+		}
+		subtract = {
+			desc = "italy_sentiment_bar_from_var_tt"
+			value = owner.var:italian_sentiment_bar_sync
+		}
+	}
+}
+
+################################################################################
+# Progress bar for ITA_French_economyJE: 5 periods of 6-month 5% GDP growth (Gründerzeit-style).
+# Progress only from the journal entry add_progress; no monthly_progress.
+################################################################################
+ita_french_economy_progress_bar = {
+	name = "ita_french_economy_progress_bar_name"
+	desc = "ita_french_economy_progress_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 5
+
+	monthly_progress = {
+	}
+}
+
+################################################################################
+# Progress bar for ITA_Austria_economyJE: 5 periods of 6-month 5% GDP growth (Austria path).
+# Progress only from the journal entry add_progress; no monthly_progress.
+################################################################################
+ita_austria_economy_progress_bar = {
+	name = "ita_austria_economy_progress_bar_name"
+	desc = "ita_austria_economy_progress_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 5
+
+	monthly_progress = {
+	}
+}
