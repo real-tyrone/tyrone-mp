@@ -1,0 +1,985 @@
+@panel_width_minus_30 = 510
+@panel_width_minus_20 = 520
+@panel_width_minus_10 = 530
+@panel_width = 540
+@panel_width_half = 270
+@panel_width_plus_10 = 550
+@panel_width_plus_14 = 554
+@panel_width_plus_14_half = 277
+@panel_width_plus_20 = 560
+@panel_width_plus_30 = 570
+@panel_width_plus_70 = 610
+
+types journal_entry_panel_types {
+	type journal_entry_panel = default_block_window_two_lines {
+		name = "journal_entry_panel"
+		datacontext = "[JournalEntryPanel.AccessJournalEntry]"
+
+		blockoverride "animation_state_block" {
+			state = {
+				name = _show
+				start_sound = {
+					soundeffect = "event:/SFX/UI/Global/panel_show"
+				}
+			}
+		}
+
+		blockoverride "window_header_name"
+		{
+			text = "[LabelingHelper.CapitalizeOnlyFirst(JournalEntry.GetName)]"
+		}
+
+		blockoverride "window_header_name_line_two" {
+			text = "JOURNAL_ENTRY_HEADING"
+		}
+
+		blockoverride "scrollarea_content" {
+			flowcontainer = {
+				datacontext = "[JournalEntryPanel.AccessJournalEntry]"
+				direction = vertical
+				using = default_list_position
+				spacing = 10
+
+				textbox = {
+					size = { 100 20 }
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+					background = {
+						using = fade_right_simple
+						margin_left = 10
+					}
+					margin = { 10 10 }
+					text = "number_of_claims_left"
+					parentanchor = left
+					position = { 0 -7 }
+					autoresize = yes
+					max_width = 256
+				}
+
+				container = {
+					parentanchor = hcenter
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists'))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.5
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists'))]"
+						parentanchor = hcenter
+						empire_of_france = {}
+					}
+				}
+
+				widget  = {
+					size = { @panel_width_plus_20 120 }
+					visible = "[Not(EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists')))]"
+					parentanchor = hcenter
+
+					background = {
+						texture =  "gfx/interface/illustrations/journal/top_illu_journal_entries.dds"
+						using = top_illu_properties
+					}
+
+					widget = {
+						size = { 250 120 }
+						parentanchor = hcenter
+
+						icon = {
+							parentanchor = hcenter
+							size = { 120 120 }
+							texture = "gfx/interface/backgrounds/round_frame_dec.dds"
+
+							icon = {
+								parentanchor = center
+								texture = "[JournalEntry.GetIcon]"
+								size = { 100 100 }
+							}
+						}
+
+						icon = {
+							visible = "[JournalEntry.IsProgressing]"
+							parentanchor = right|vcenter
+							size = { 50 50 }
+							texture = "gfx/interface/icons/generic_icons/green_checkmark.dds"
+							tooltip = "JOURNAL_ENTRY_IN_PROGRESS"
+							using = shimmer
+
+							icon = {
+								parentanchor = center
+								using = rotate_glow_animation_02
+								size = { 300% 300% }
+								alpha = 0.5
+							}
+						}
+					}
+
+					### TIMED MODIFIERS
+					flowcontainer = {
+						background = {
+							using = fade_left_simple
+							margin_right = 10
+						}
+
+						datamodel = "[JournalEntry.GetTimedModifiers]"
+						spacing = 5
+						visible = "[Not(IsDataModelEmpty(JournalEntry.GetTimedModifiers))]"
+						parentanchor = vcenter|right
+						datamodel_wrap = 2
+						margin = { 10 10 }
+						margin_right = 30
+
+						item = {
+							icon = {
+								tooltip = "[TimedModifier.GetTooltip]"
+								texture = "[TimedModifier.GetIcon]"
+								size = { 35 35 }
+							}
+						}
+
+					}
+				}
+
+				container = {
+					parentanchor = hcenter
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.4
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+						parentanchor = hcenter
+						claimed_countries_gui = {}
+					}
+				}
+
+				container = {
+					parentanchor = hcenter
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_crown_in_the_gutter'))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.4
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_crown_in_the_gutter'))]"
+						parentanchor = hcenter
+						candidate_for_prussian_throne = {}
+					}
+				}
+
+				widget = {
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists'))]"
+					flowcontainer = {
+						background = {
+							using = fade_left_simple
+							margin_right = 10
+						}
+						datamodel = "[JournalEntry.GetTimedModifiers]"
+						spacing = 5
+						visible = "[Not(IsDataModelEmpty(JournalEntry.GetTimedModifiers))]"
+						parentanchor = vcenter|right
+						datamodel_wrap = 2
+						margin = { 10 10 }
+						margin_right = 30
+						item = {
+							icon = {
+								tooltip = "[TimedModifier.GetTooltip]"
+								texture = "[TimedModifier.GetIcon]"
+								size = { 35 35 }
+							}
+						}
+					}
+					size = { @panel_width_plus_20 290 }
+					parentanchor = hcenter
+					datacontext = "[GetPlayer.GetRuler]"
+					character_portrait_large_torso = {
+						position = { 0 0 }
+						parentanchor = hcenter
+						blockoverride "show_hat" {}
+						blockoverride "tooltip" {}
+						blockoverride "portrait_icons" {}
+						blockoverride "portrait_button" {}
+					}
+					default_header_clean_faded = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists'))]"
+						size = { 250 40 }
+						position = { 0 258 }
+						blockoverride "text" {}
+						parentanchor = hcenter
+						margin = { 10 10 }
+						textbox = {
+							text = "mr_emperor"
+							parentanchor = vcenter|hcenter
+							position = { 0 -3 }
+							autoresize = yes
+							max_width = 256
+							using = fontsize_large
+						}
+					}
+				}
+
+				container = {
+					parentanchor = hcenter
+					visible = "[Or(EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists')), EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution')))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.4
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution'))]"
+						parentanchor = hcenter
+						finance_ministry = {}
+					}
+				}
+
+				container = {
+					parentanchor = hcenter
+					visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_britain_industrialize'))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.4
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_britain_industrialize'))]"
+						parentanchor = hcenter
+						claimed_countries_gui = {}
+					}
+				}
+
+				expand = {}
+				expand = {}
+
+				### Journal Entry Characters ###
+				italy_je_characters = {}
+
+				### Italy: Risorgimento Stage – quote + Mazzini portrait ###
+				italy_risorgimento_quote = {}
+
+				### Italy: Irredentism – centered framed illustration ###
+				italy_irredentism_illustration = {}
+
+				### Italy: Jewel Colony – centered framed illustration ###
+				italy_jewelcolony_illustration = {}
+
+				### Italy: Developing Industry – three investment bars (North, Padana, South) ###
+				italy_developing_industry_bars = {}
+
+				# time out info
+				flowcontainer = {
+					visible = "[JournalEntry.CanTimeOut]"
+					spacing = 5
+					parentanchor = hcenter
+					tooltip = "JOURNAL_ENTRY_ON_TIMEOUT_LONG"
+
+					icon = {
+						size = { 30 30 }
+						texture = "gfx/interface/icons/generic_icons/clock.dds"
+					}
+					textbox = {
+						text = "[JournalEntry.GetTimeoutTooltip]"
+						autoresize = yes
+						align = nobaseline
+						using = fontsize_large
+						parentanchor = vcenter
+					}
+				}
+
+				textbox = {
+					visible = "[Not(StringIsEmpty(JournalEntry.GetStatusDesc))]"
+					text = "[JournalEntry.GetStatusDesc]"
+					autoresize = yes
+					multiline = yes
+					minimumsize = { @panel_width_minus_20 -1 }
+					maximumsize = { @panel_width_minus_20 -1 }
+					using = default_list_position
+					align = hcenter|nobaseline
+					using = fontsize_large
+
+					margin = { 20 20 }
+
+					background = {
+						alpha = 0.5
+						using = entry_bg_fancy_dark
+					}
+				}
+
+				dynamicgridbox = {
+					parentanchor = hcenter
+					visible = "[Not( IsDataModelEmpty( JournalEntry.GetScriptedButtons ) )]"
+					datamodel = "[JournalEntry.GetScriptedButtons]"
+					datamodel_wrap = 2
+					flipdirection = yes
+
+					item = {
+						widget = {
+							size = { 260 60 }
+
+							scripted_journal_entry_button = {
+								parentanchor = center
+							}
+						}
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = vertical
+
+					visible = "[Not( IsDataModelEmpty( JournalEntry.GetScriptedProgressBars ) )]"
+					datamodel = "[JournalEntry.GetScriptedProgressBars]"
+
+					spacing = 15
+
+					item = {
+						container = {
+
+							# Default
+							default_progressbar_horizontal = {
+								visible = "[ScriptedProgressBar.IsDefault]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+								tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+								blockoverride "values" {
+									value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+									min = 0
+									max = 1
+								}
+								textbox = {
+									text = "[ScriptedProgressBar.GetDesc]"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
+								}
+							}
+
+							# Default Bad
+							bad_progressbar_horizontal = {
+								visible = "[ScriptedProgressBar.IsDefaultBad]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+								tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+								blockoverride "values" {
+									value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+									min = 0
+									max = 1
+								}
+								textbox = {
+									text = "[ScriptedProgressBar.GetDesc]"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
+								}
+							}
+
+							# Default Green
+							green_progressbar_horizontal = {
+								visible = "[ScriptedProgressBar.IsDefaultGreen]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+
+								tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+								blockoverride "values" {
+									value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+									min = 0
+									max = 1
+								}
+								textbox = {
+									text = "[ScriptedProgressBar.GetDesc]"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
+								}
+								textbox = {
+									text = "[ScriptedProgressBar.GetSecondDesc]"
+									autoresize = yes
+									align = right|nobaseline
+									margin_right = 10
+									parentanchor = right|vcenter
+								}
+							}
+
+							# double sided bad
+							widget = {
+								size = { 520 45 }
+								parentanchor = center
+								visible = "[ScriptedProgressBar.IsDoubleSidedBad]"
+
+								default_progressbar_horizontal  = {
+									parentanchor = center
+									block "progressbar_size" {
+										size = { 504 30 }
+									}
+
+									blockoverride "noprogresstexture" {
+										noprogresstexture = "gfx/interface/progressbar/progressbar_bad.dds"
+									}
+
+									tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+									blockoverride "values" {
+										value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+										min = 0
+										max = 1
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetDesc]"
+										autoresize = yes
+										align = nobaseline
+										margin_left = 10
+										parentanchor = vcenter
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetSecondDesc]"
+										autoresize = yes
+										align = right|nobaseline
+										margin_right = 10
+										parentanchor = right|vcenter
+									}
+
+									blockoverride "on_top_of_the_progressbar" {
+										progressbar = {
+											noprogresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											progresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											size = { 100% 100% }
+											spriteType = Corneredtiled
+											spriteborder = { 4 4 }
+											texture_density = 2
+											skip_initial_animation = yes
+
+											block "values" {}
+											block "direction" {
+												direction = horizontal
+											}
+											block "progress_changed_animation" {
+												using = progressbar_changed_animation
+											}
+											block "animate_negative_change" {
+												animate_negative_changes = yes
+											}
+											marker = {
+
+												icon = {
+													size = { 65 33 }
+													parentanchor = vcenter
+													widgetanchor = center
+													texture = "gfx/interface/progressbar/progressbar_marker.dds"
+													using = shimmer
+												}
+											}
+										}
+									}
+								}
+							}
+
+							# double sided spain
+							widget = {
+								size = { 520 45 }
+								parentanchor = center
+								visible = "[ScriptedProgressBar.IsDoubleSidedSpain]"
+
+								gold_progressbar_horizontal = {
+									parentanchor = center
+									block "progressbar_size" {
+										size = { 430 30 }
+									}
+
+									blockoverride "noprogresstexture" {
+										noprogresstexture = "gfx/interface/progressbar/progressbar_default.dds"
+									}
+
+									tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+									blockoverride "values" {
+										value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+										min = 0
+										max = 1
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetDesc]"
+										autoresize = yes
+										align = nobaseline
+										margin_left = 10
+										parentanchor = vcenter
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetSecondDesc]"
+										autoresize = yes
+										align = right|nobaseline
+										margin_right = 10
+										parentanchor = right|vcenter
+									}
+
+									blockoverride "on_top_of_the_progressbar" {
+										progressbar = {
+											noprogresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											progresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											size = { 100% 100% }
+											spriteType = Corneredtiled
+											spriteborder = { 4 4 }
+											texture_density = 2
+											skip_initial_animation = yes
+
+											block "values" {}
+											block "direction" {
+												direction = horizontal
+											}
+											block "progress_changed_animation" {
+												using = progressbar_changed_animation
+											}
+											block "animate_negative_change" {
+												animate_negative_changes = yes
+											}
+											marker = {
+
+												icon = {
+													size = { 65 33 }
+													parentanchor = vcenter
+													widgetanchor = center
+													texture = "gfx/interface/progressbar/progressbar_marker.dds"
+													using = shimmer
+												}
+											}
+										}
+									}
+								}
+
+								icon = {
+									size = { 40 40 }
+									parentanchor = left|vcenter
+									block "progressbar_left_icon" {
+										texture = "gfx/interface/progressbar/twospains_radicalism_marker.dds"
+									}
+								}
+
+								icon = {
+									size = { 40 40 }
+									parentanchor = right|vcenter
+									block "progressbar_right_icon" {
+										texture = "gfx/interface/progressbar/twospains_conservatism_marker.dds"
+									}
+								}
+							}
+
+							# Double sided gold
+							widget = {
+								size = { 520 45 }
+								parentanchor = center
+								visible = "[ScriptedProgressBar.IsDoubleSidedGold]"
+
+								default_progressbar_horizontal  = {
+									parentanchor = center
+									block "progressbar_size" {
+										size = { 430 30 }
+									}
+
+									blockoverride "noprogresstexture" {
+										noprogresstexture = "gfx/interface/progressbar/progressbar_gold.dds"
+									}
+
+									tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+									blockoverride "values" {
+										value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
+										min = 0
+										max = 1
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetDesc]"
+										autoresize = yes
+										align = nobaseline
+										margin_left = 10
+										parentanchor = vcenter
+									}
+									textbox = {
+										text = "[ScriptedProgressBar.GetSecondDesc]"
+										autoresize = yes
+										align = right|nobaseline
+										margin_right = 10
+										parentanchor = right|vcenter
+									}
+
+									blockoverride "on_top_of_the_progressbar" {
+										progressbar = {
+											noprogresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											progresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+											size = { 100% 100% }
+											spriteType = Corneredtiled
+											spriteborder = { 4 4 }
+											texture_density = 2
+											skip_initial_animation = yes
+
+											block "values" {}
+											block "direction" {
+												direction = horizontal
+											}
+											block "progress_changed_animation" {
+												using = progressbar_changed_animation
+											}
+											block "animate_negative_change" {
+												animate_negative_changes = yes
+											}
+											marker = {
+
+												icon = {
+													size = { 65 33 }
+													parentanchor = vcenter
+													widgetanchor = center
+													texture = "gfx/interface/progressbar/progressbar_marker.dds"
+													using = shimmer
+												}
+											}
+										}
+									}
+								}
+
+								icon = {
+									size = { 45 45 }
+									parentanchor = left|vcenter
+									block "progressbar_left_icon" {
+										texture = "gfx/interface/progressbar/greatgame_bear_marker.dds"
+									}
+								}
+
+								icon = {
+									size = { 45 45 }
+									parentanchor = right|vcenter
+									block "progressbar_right_icon" {
+										texture = "gfx/interface/progressbar/greatgame_lion_marker.dds"
+									}
+								}
+							}
+						}
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					visible = "[And(JournalEntry.HasProgressBar, JournalEntry.IsActive)]"
+					margin = { 0 5 }
+
+					default_progressbar_horizontal = {
+						block "progressbar_size" {
+							size = { 504 30 }
+						}
+						blockoverride "values" {
+							value = "[FixedPointToFloat(JournalEntry.GetGoalProgressPercent)]"
+							min = 0
+							max = 1
+						}
+
+						container = {
+							visible = "[Not(JournalEntry.ShowProgressbarAsTime)]"
+
+							textbox = {
+								visible = "[EqualTo_CFixedPoint(JournalEntry.GetBaselineValue, '(CFixedPoint)0')]"
+								text = "JOURNAL_ENTRY_PROGRESSBAR_FROM_ZERO"
+								size = { 504 30 }
+								align = nobaseline
+								margin_left = 10
+								parentanchor = vcenter
+							}
+							textbox = {
+								visible = "[Not(EqualTo_CFixedPoint(JournalEntry.GetBaselineValue, '(CFixedPoint)0'))]"
+								text = "JOURNAL_ENTRY_PROGRESSBAR_FROM_BASE"
+								size = { 504 30 }
+								align = nobaseline
+								margin_left = 10
+								parentanchor = vcenter
+							}
+						}
+
+						container = {
+							visible = "[JournalEntry.ShowProgressbarAsTime]"
+
+							textbox = {
+								visible = "[JournalEntry.ShowProgressbarAsMonths]"
+								text = "JOURNAL_ENTRY_PROGRESSBAR_MONTHS"
+								size = { 504 30 }
+								align = nobaseline
+								margin_left = 10
+								parentanchor = vcenter
+							}
+							textbox = {
+								visible = "[JournalEntry.ShowProgressbarAsWeeks]"
+								text = "JOURNAL_ENTRY_PROGRESSBAR_WEEKS"
+								size = { 504 30 }
+								align = nobaseline
+								margin_left = 10
+								parentanchor = vcenter
+							}
+						}
+					}
+				}
+
+				flowcontainer = {
+					direction = vertical
+					using = default_list_position
+
+					spacing = 20
+
+					textbox = {
+						autoresize = yes
+						text = "[JournalEntry.GetReason]"
+						min_width = @panel_width_minus_30
+						max_width = @panel_width_minus_30
+						multiline = yes
+						using = default_list_position
+						align = nobaseline
+						margin = { 15 15 }
+
+						background = {
+							using = entry_bg
+						}
+					}
+
+					flowcontainer = {
+						visible = "[Not( IsDataModelEmpty( JournalEntry.GetInvolvedCountries ) )]"
+						direction = vertical
+						using = default_list_position
+						min_width = @panel_width_minus_30
+						max_width = @panel_width_minus_30
+
+						textbox = {
+							autoresize = yes
+							text = "INVOLVED_COUNTRIES"
+							using = fontsize_large
+							parentanchor = hcenter
+							align = nobaseline
+							margin = { 15 15 }
+						}
+
+						dynamicgridbox = {
+							parentanchor = hcenter
+							datamodel = "[JournalEntry.GetInvolvedCountries]"
+							datamodel_wrap = 8
+							flipdirection = yes
+
+							item = {
+								widget = {
+									size = { 60 60 }
+
+									small_flag = {}
+								}
+							}
+						}
+
+						background = {
+							using = entry_bg
+						}
+					}
+
+					flowcontainer = {
+						direction = vertical
+						using = default_list_position
+						name = "complete_text"
+
+						spacing = 5
+
+						textbox = {
+							visible = "[Not(StringIsEmpty(JournalEntry.GetProgressDesc))]"
+							text = "[JournalEntry.GetProgressDesc]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin = { 15 0 }
+
+							background = {
+								using = entry_bg
+							}
+						}
+
+						textbox = {
+							visible = "[JournalEntry.CanComplete]"
+							text = "[JournalEntry.GetCompletionTooltip]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin = { 15 5 }
+
+							background = {
+								texture = "gfx/interface/tooltip/tooltip_title_bg.dds"
+								using = color_gold_positive
+								alpha = 0.4
+
+								modify_texture = {
+									using = texture_velvet
+								}
+							}
+						}
+
+						textbox = {
+							text = "[JournalEntry.GetOnCompleteTooltip]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin_left = 35
+							margin_right = 15
+						}
+					}
+
+					flowcontainer = {
+						name = "fail_text"
+						direction = vertical
+						using = default_list_position
+
+						spacing = 5
+
+						textbox = {
+							visible = "[Not(StringIsEmpty(JournalEntry.GetFailureTooltip))]"
+							text = "[JournalEntry.GetFailureTooltip]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin = { 15 5 }
+
+							background = {
+								texture = "gfx/interface/tooltip/tooltip_title_bg.dds"
+								using = color_blue_negative
+								alpha = 0.5
+
+								modify_texture = {
+									using = texture_velvet
+								}
+							}
+						}
+
+						textbox = {
+							text = "[JournalEntry.GetOnFailTooltip]"
+							visible = "[Not(StringIsEmpty(JournalEntry.GetOnFailTooltip))]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin_left = 35
+							margin_right = 15
+						}
+
+						textbox = {
+							text = "[JournalEntry.GetOnTimeoutTooltip]"
+							visible = "[Not(StringIsEmpty(JournalEntry.GetOnTimeoutTooltip))]"
+							autoresize = yes
+							multiline = yes
+							minimumsize = { @panel_width_minus_30 -1 }
+							maximumsize = { @panel_width_minus_30 -1 }
+							using = default_list_position
+							align = nobaseline
+
+							margin_left = 35
+							margin_right = 15
+						}
+					}
+				}
+
+				### TUTORIAL
+
+				divider_clean = {
+					visible = "[Or(JournalEntry.HasHowTutorialLesson, JournalEntry.HasWhyTutorialLesson)]"
+				}
+
+				flowcontainer = {
+					direction = vertical
+					parentanchor = hcenter
+					spacing = 10
+
+					button = {
+						using = default_button
+						parentanchor = hcenter
+						size = { @panel_width_minus_30 60 }
+						text = "TELL_ME_HOW"
+						using = fontsize_large
+						tooltip = "[JournalEntry.CanStartTutorialLessonDesc]"
+						visible = "[JournalEntry.HasHowTutorialLesson]"
+						enabled = "[JournalEntry.CanStartTutorialLesson]"
+						onclick = "[JournalEntry.StartHowTutorialLesson]"
+						onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+					}
+					button = {
+						using = default_button
+						parentanchor = hcenter
+						size = { @panel_width_minus_30 60 }
+						text = "TELL_ME_WHY"
+						using = fontsize_large
+						tooltip = "[JournalEntry.CanStartTutorialLessonDesc]"
+						visible = "[JournalEntry.HasWhyTutorialLesson]"
+						enabled = "[JournalEntry.CanStartTutorialLesson]"
+						onclick = "[JournalEntry.StartWhyTutorialLesson]"
+						onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+					}
+				}
+			}
+		}
+
+		blockoverride "pin_visibility" {}
+
+		blockoverride "pin_properties" {
+			visible = "[JournalEntry.IsPinnedInOutliner]"
+			onclick = "[JournalEntry.TogglePinInOutliner]"
+			tooltip = "UNPIN_JOURNAL_ENTRY"
+		}
+
+		blockoverride "unpin_properties" {
+			visible = "[Not(JournalEntry.IsPinnedInOutliner)]"
+			onclick = "[JournalEntry.TogglePinInOutliner]"
+			tooltip = "PIN_JOURNAL_ENTRY"
+		}
+	}
+
+	type scripted_journal_entry_button = button {
+		using = default_button_action
+		tooltip = "SCRIPTED_ACTION_TOOLTIP"
+		enabled = "[IsValid( ScriptedButton.ExecuteEffect )]"
+		onclick = "[Execute( ScriptedButton.ExecuteEffect )]"
+		size = { 250 50 }
+		margin = { 20 20 }
+
+		widget = {
+			visible = "[ScriptedButton.IsSelected]"
+			size = { 100% 100% }
+
+			background = {
+				using = paper_bg
+			}
+		}
+
+		textbox = {
+			parentanchor = center
+			align = nobaseline
+			autoresize = yes
+			max_width = 230
+			elide = right
+			fontsize_min = 14
+			text = "[ScriptedButton.GetName]"
+		}
+
+		icon = {
+			visible = "[ScriptedButton.IsSelected]"
+			using = highlighted_square_selection
+		}
+	}
+}
