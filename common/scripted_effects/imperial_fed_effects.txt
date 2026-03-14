@@ -1,0 +1,28 @@
+imperial_federation_calculate_shared_laws = {
+	set_global_variable = { name = imperial_federation_shared_laws_var value = 0 }
+	every_country = {
+		limit = {
+			is_involved_in_journal_entry = je_imperial_federation
+		}
+		every_active_law = {
+			limit = {
+				save_temporary_scope_as = imperial_federation_first_country_active_law
+				any_country = {
+					filter = {
+						AND = {
+							NOT = {
+								c:GBR ?= this
+							}
+							is_involved_in_journal_entry = je_imperial_federation
+						}
+					}
+					any_active_law = {
+						this.type = scope:imperial_federation_first_country_active_law.type
+					}
+					count = all
+				}
+			}
+			change_global_variable = { name = imperial_federation_shared_laws_var add = 1 }
+		}
+	}
+}
