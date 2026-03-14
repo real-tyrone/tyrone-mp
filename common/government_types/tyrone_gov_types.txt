@@ -1,0 +1,229 @@
+﻿REPLACE:gov_contechne = {
+	transfer_of_power = dictatorial
+
+	male_ruler = "RULER_TITLE_ARCHMAGOS"
+	female_ruler = "RULER_TITLE_ARCHMAGOS"
+
+	male_heir = "RULER_TITLE_MAGOS"
+	female_heir = "RULER_TITLE_MAGOS"
+
+	possible = {
+		has_law_or_variant = law_type:law_theocracy
+		has_law_or_variant = law_type:law_technocracy
+		NOT = {
+			OR = {
+              c:PER ?= THIS
+              c:ki_ANS ?= THIS
+			}
+		}
+	}
+
+	on_government_type_change = {
+		change_to_dictatorial = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_dictatorial = yes
+	}
+}
+
+REPLACE:gov_danubian_federation = {
+	transfer_of_power = hereditary
+
+	male_ruler = "RULER_TITLE_EMPEROR"
+	female_ruler = "RULER_TITLE_EMPRESS"
+
+	male_heir = "RULER_TITLE_ARCHDUKE"
+	female_heir = "RULER_TITLE_ARCHDESS"
+
+	possible = {
+		c:KUK ?= this
+		has_law = law_type:law_monarchy
+		country_has_voting_franchise = yes
+		NOT = { is_subject_type = subject_type_crown_land }
+		NOT = {
+			has_variable = federated_hungarians_var
+		}
+		has_gov_regency = no
+	}
+
+	on_government_type_change = {
+		change_to_hereditary = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_hereditary = yes
+	}
+}
+
+REPLACE:gov_danubian_federation_technocratic = {
+	transfer_of_power = hereditary
+
+	male_ruler = "RULER_TITLE_EMPEROR"
+	female_ruler = "RULER_TITLE_EMPRESS"
+
+	male_heir = "RULER_TITLE_ARCHDUKE"
+	female_heir = "RULER_TITLE_ARCHDESS"
+
+	possible = {
+		c:KUK ?= this
+		has_law = law_type:law_monarchy
+		has_law_or_variant = law_type:law_technocracy
+		NOT = { is_subject_type = subject_type_crown_land }
+		NOT = {
+			has_variable = federated_hungarians_var
+		}
+		has_gov_regency = no
+	}
+
+	on_government_type_change = {
+		change_to_hereditary = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_hereditary = yes
+	}
+}
+
+REPLACE:gov_danubian_federation_absolutist = {
+	transfer_of_power = hereditary
+
+	male_ruler = "RULER_TITLE_EMPEROR"
+	female_ruler = "RULER_TITLE_EMPRESS"
+
+	male_heir = "RULER_TITLE_ARCHDUKE"
+	female_heir = "RULER_TITLE_ARCHDESS"
+
+	possible = {
+		c:KUK ?= this
+		has_law = law_type:law_monarchy
+		NOT = {
+			has_law_or_variant = law_type:law_technocracy
+		}
+		country_has_voting_franchise = no
+		NOT = { is_subject_type = subject_type_crown_land }
+		NOT = {
+			has_variable = federated_hungarians_var
+		}
+		has_gov_regency = no
+	}
+
+	on_government_type_change = {
+		change_to_hereditary = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_hereditary = yes
+	}
+}
+
+REPLACE:gov_dual_monarchy = {
+	transfer_of_power = hereditary
+
+	male_ruler = "RULER_TITLE_EMPEROR_KING"
+	female_ruler = "RULER_TITLE_EMPRESS_QUEEN"
+
+	male_heir = "RULER_TITLE_ARCHDUKE"
+	female_heir = "RULER_TITLE_ARCHDESS"
+
+	possible = {
+		has_law = law_type:law_monarchy
+		OR = {
+			AND = {
+				has_variable = cisleithania_var
+				any_subject_or_below = {
+					is_subject_type = subject_type_personal_union
+					OR = {
+						has_variable = transleithania_var
+						has_variable = triune_kingdom_var
+					}
+					count = 1
+				}
+			}
+			AND = {
+				is_subject_type = subject_type_personal_union
+				has_variable = transleithania_var
+				any_overlord_or_above = {
+					has_variable = cisleithania_var
+					NOT = {
+						any_subject_or_below = {
+							has_variable = triune_kingdom_var
+						}
+					}
+				}
+			}
+			AND = {
+				is_subject_type = subject_type_personal_union
+				has_variable = triune_kingdom_var
+				any_overlord_or_above = {
+					has_variable = cisleithania_var
+					NOT = {
+						any_subject_or_below = {
+							has_variable = transleithania_var
+						}
+					}
+				}
+			}
+			has_variable = federated_hungarians_var
+		}
+		has_gov_regency = no
+		NOT = {
+			has_variable = empire_of_austria_variable
+		}
+	}
+
+	on_government_type_change = {
+		change_to_hereditary = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_hereditary = yes
+	}
+}
+
+REPLACE:gov_triple_monarchy = {
+	transfer_of_power = hereditary
+
+	male_ruler = "RULER_TITLE_EMPEROR_KING"
+	female_ruler = "RULER_TITLE_EMPRESS_QUEEN"
+
+	male_heir = "RULER_TITLE_ARCHDUKE"
+	female_heir = "RULER_TITLE_ARCHDESS"
+
+	possible = {
+		has_law = law_type:law_monarchy
+		OR = {
+			AND = {
+				has_variable = cisleithania_var
+				any_subject_or_below = {
+					is_subject_type = subject_type_personal_union
+					OR = {
+						has_variable = transleithania_var
+						has_variable = triune_kingdom_var
+					}
+					count = 2
+				}
+			}
+			AND = {
+				is_subject_type = subject_type_personal_union
+				any_overlord_or_above = {
+					has_variable = cisleithania_var
+					any_subject_or_below = {
+						OR = {
+							has_variable = transleithania_var
+							has_variable = triune_kingdom_var
+						}
+						count = 2
+					}
+				}
+			}
+			has_variable = federated_three_crowns_var
+		}
+		NOT = {
+			has_variable = empire_of_austria_variable
+		}
+		has_gov_regency = no
+	}
+
+	on_government_type_change = {
+		change_to_hereditary = yes
+	}
+	on_post_government_type_change = {
+		post_change_to_hereditary = yes
+	}
+}

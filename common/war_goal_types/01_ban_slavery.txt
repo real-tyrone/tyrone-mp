@@ -1,0 +1,62 @@
+﻿ban_slavery = {
+	icon = "gfx/interface/icons/war_goals/ban_slavery.dds"
+
+	kind = ban_slavery
+
+	settings = {
+		require_target_be_part_of_war
+		skip_build_list
+
+		# Validation
+		validate_conflicts_war_goals_all
+	}
+
+	target_type = treaty_article
+
+	possible = {
+		# trigger to determine if a goal with its target data is listed when selecting a war goal in the diplo play panel
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+	}
+
+	valid = {
+		# trigger in addition to some basic validation code-side
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+		scope:target_country = {
+			NOT = { has_law_or_variant = law_type:law_slavery_banned }
+		}
+		has_law_or_variant = law_type:law_slavery_banned
+	}
+
+	# Uses the same maneuvers and infamy values as law_commitment
+	maneuvers = {
+		value = 0
+
+		add = {
+			desc = "MANEUVERS_BASE_VALUE"
+			value = 2.5
+		}
+
+		scope:target_country = {
+			multiply = {
+				desc = "MANEUVERS_TARGET_COUNTRY_POPULATION_FACTOR"
+				value = total_population
+				divide = define:NDiplomacy|SWAY_OFFER_WARGOAL_MANEUVERS_COST_POPULATION_SCALING_FACTOR
+				multiply = define:NDiplomacy|SWAY_OFFER_WARGOAL_MANEUVERS_COST_POPULATION_SCALING_MULTIPLIER
+				max = define:NDiplomacy|SWAY_OFFER_WARGOAL_MANEUVERS_COST_POPULATION_SCALING_MULTIPLIER_MAX_TOTAL
+			}
+		}
+	}
+
+	infamy = {
+		value = 0
+
+	}
+
+	on_enforced = {
+		# script effect on top of the predefined code effect
+	}
+
+	ai = {
+		is_significant_demand = no
+	}
+}

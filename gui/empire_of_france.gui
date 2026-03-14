@@ -1,0 +1,153 @@
+# COPY-PASTED FOR NOW
+@panel_width_minus_40 = 500
+@panel_width_minus_30 = 510
+@panel_width_minus_20 = 520	
+@panel_width_minus_10 = 530			# used to be 450
+@panel_width = 540  				# used to be 460
+@panel_width_half = 270				# used to be 230
+@panel_width_plus_10 = 550  		# used to be 470
+@panel_width_plus_14 = 554			# used to be 474
+@panel_width_plus_14_half = 277		# used to be 237
+@panel_width_plus_20 = 560			# used to be 480
+@panel_width_plus_30 = 570			# used to be 490
+@panel_width_plus_70 = 610			# used to be 530
+
+types empire_of_france_types {
+	type empire_of_france = container {
+		
+		using = sidepanel_plus_sidebar_size
+		layoutpolicy_vertical = expanding
+		alwaystransparent = no
+		using = clickthrough_blocker
+		layer = layer_ingame_menu
+
+		flowcontainer = {
+			using = default_list_position
+			direction = vertical
+			minimumsize = { @panel_width_minus_20 -1 }
+			maximumsize = { @panel_width_minus_20 -1 }
+			margin = { 0 16 }
+			spacing = 10
+
+			container = { # tairo
+				flowcontainer = {
+					margin = { 0 0 }
+					parentanchor = vcenter
+					spacing = 5
+					direction = vertical
+					section_header_button = {
+						blockoverride "layout" {
+							parentanchor = hcenter
+							size = { @panel_width_minus_40 38 }
+						}
+		
+						blockoverride "left_text" {
+							text = "emperor_palace_text"
+						}
+		
+						blockoverride "onclick" {
+							onclick = "[GetVariableSystem.Toggle( 'tie_tairo' )]"
+						}
+	
+						blockoverride "onclick_showmore" {
+							visible = "[Not(GetVariableSystem.Exists( 'tie_tairo' ))]"
+						}
+		
+						blockoverride "onclick_showless" {
+							visible = "[GetVariableSystem.Exists( 'tie_tairo' )]"
+						}
+					}
+
+					container = {
+						visible = "[GetVariableSystem.Exists( 'tie_tairo' )]"
+						parentanchor = hcenter
+						container = {
+							visible = "[GetVariableSystem.Exists( 'tie_tairo' )]"
+							widget = {
+								using = entry_bg
+								size = { 500 215 }
+								emperors_palace = {
+									parentanchor = center
+									datacontext = "[GetPlayer.GetRuler]"
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}
+	}
+
+	type emperors_palace = container { #tairo
+		hbox = {
+			margin = { 0 0 }
+			flowcontainer = {
+				direction = vertical
+				container = {
+					character_portrait_medium_torso = {
+						position = { 28 -20  }
+						parentanchor = hcenter
+						blockoverride "show_hat" {}
+						blockoverride "highlight" {}
+					}
+				}
+				default_header_clean_faded = {
+					parentanchor = hcenter
+					margin = { 10 0 }
+					size = { 200 30 }
+					blockoverride "text" {
+						text = "[Character.GetFullName]"
+					}
+					blockoverride "text_size" {
+						using = fontsize_medium
+					}
+				}
+			}
+	
+			flowcontainer = {
+				direction = vertical
+				spacing = 1
+				minimumsize = { 180 -100 }
+				margin = { -2 14 }
+				
+				background =  {
+					using = entry_bg_fancy_dark
+					alpha = 0.6
+				}
+
+				container = {
+					textbox = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists'))]"
+						multiline = yes
+						position = { 25 0 }
+						parentanchor = hcenter
+						size = { 280 100 }
+						text = "THIS_is_emperor_text"
+						fontsize = 17
+					}	
+				}
+
+				character_stats_entry = {
+					datacontext = "[Character.GetIdeology]"
+					position = { 40 0 }
+
+					tooltipwidget = {
+						FancyTooltip_Ideology = {}
+					}
+
+					blockoverride "icon_texture" {
+						texture = "[Ideology.GetTexture]"
+					}
+					blockoverride "double_entry_label" {
+						text = "IDEOLOGY_CONCEPT"
+					} 
+					blockoverride "double_entry_value" {
+						text = "CHARACTER_IDEOLOGY"
+					}
+					blockoverride "single_text_entry" {}
+				}
+			}
+		}
+	}
+}

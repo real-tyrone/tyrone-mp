@@ -1,0 +1,341 @@
+﻿enact_law_enforce_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+	potential = {
+		is_ruler = yes
+		owner ?= scope:actor
+		owner ?= c:FRA
+		age >= define:NCharacters|ADULT_AGE
+		owner ?= { has_journal_entry = je_post_bonapartists }
+	}
+
+	possible = {
+		owner ?= {
+			enacting_any_law = yes
+			authority >= 200
+		}
+		custom_tooltip = {
+			text = last_five_years_not_ENFORCED
+			NOT = {
+				has_variable = last_five_years_ENFORCED
+			}
+		}
+		trigger_if = {
+			limit = {
+				owner ?= {
+					enacting_any_law = yes
+				}
+			}
+			owner ?= {
+				enactment_phase >= 1
+			}
+			OR = {
+				law_enactment_stance = {
+					law = owner.currently_enacting_law.type
+					value >= neutral
+				}
+				owner ?= {
+					any_political_movement = {
+						movement_supports_enaction = yes
+						is_revolutionary = yes
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		owner = {
+			activate_law = owner.currently_enacting_law.type
+		}
+		add_modifier = {
+			name = napoleon_decree_law
+			years = 5
+			is_decaying = yes
+		}
+		set_variable = {
+			name = last_five_years_ENFORCED
+			years = 5
+		}
+	}
+}
+
+rebuild_paris_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+    potential = {
+        is_ruler = yes
+        owner ?= scope:actor
+        owner ?= c:FRA
+        age >= define:NCharacters|ADULT_AGE
+        NOT = { c:FRA = { has_variable = rebuilt_paris_BEGIN } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+    }
+
+    possible = {
+        owner ?= {
+            government_legitimacy >= 50
+        }
+    }
+
+    effect = {
+        c:FRA = { set_variable = rebuilt_paris_BEGIN }
+        
+        c:FRA = {
+            add_journal_entry = {
+                type = je_the_city_of_light_rebuild
+            }
+        }
+    }
+}
+
+railway_rebuild_napoleon = {
+    icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+    potential = {
+        is_ruler = yes
+        owner ?= scope:actor
+        owner ?= c:FRA
+        age >= define:NCharacters|ADULT_AGE
+        NOT = { c:FRA = { has_variable = rebuilt_railways_BEGIN } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+    }
+
+    possible = {
+        owner ?= {
+            government_legitimacy >= 50
+        }
+    }
+
+    effect = {
+        c:FRA = { set_variable = rebuilt_railways_BEGIN }
+        
+        c:FRA = {
+            add_journal_entry = {
+                type = je_rebuilt_railways_napoleon
+            }
+        }
+    }
+}
+
+
+public_health_napoleon = {
+    icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+    potential = {
+        is_ruler = yes
+        owner ?= scope:actor
+        owner ?= c:FRA
+        age >= define:NCharacters|ADULT_AGE
+        NOT = { c:FRA = { has_variable = public_health_BEGIN } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+    }
+
+    possible = {
+        owner ?= {
+            government_legitimacy >= 50
+        }
+    }
+
+    effect = {
+        c:FRA = { set_variable = public_health_BEGIN }
+        
+        c:FRA = {
+            add_journal_entry = {
+                type = je_improved_living_napoleon
+            }
+        }
+    }
+}
+
+begin_reconquer_empire_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+	potential = {
+		is_ruler = yes
+		owner ?= scope:actor
+		owner ?= c:FRA
+		age >= define:NCharacters|ADULT_AGE
+		NOT = { c:FRA = { has_variable = can_reconquer_empire_variable } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+	}
+
+	possible = {
+        custom_tooltip = {
+            text = has_completed_rebuilt_paris_je_tt
+            c:FRA ?= {
+                has_variable = rebuilt_paris_NAPOLEON
+            }
+        }
+        custom_tooltip = {
+            text = has_rebuilt_railways_je_tt
+            c:FRA = {
+                has_variable = rebuilt_railroads_NAPOLEON
+            }
+        }
+        custom_tooltip = {
+            text = has_improved_living_NAPOLEON_TT
+            c:FRA = { 
+                has_variable = public_health_NAPOLEON
+            }
+        }
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = allow_reconquer_former_lands_NAPOLEON_TT
+			c:FRA = {
+				set_variable = {
+					name = can_reconquer_empire_variable
+				}
+			}
+		}
+		if = {
+			limit = {
+				exists = c:NGF
+			}
+			c:NGF = {
+				trigger_event ={
+					id = germany_rework.5
+				}
+			}
+		}
+        c:FRA = {
+            add_journal_entry = {
+                type = je_king_of_italy
+            }
+            add_journal_entry = {
+                type = je_king_spain
+            }
+			add_modifier = {
+			name = imperial_reconquests
+			days = long_modifier_time
+			}
+			add_modifier = {
+			name = grande_armee_return_modifier
+			days = long_modifier_time
+			}
+        }
+	}
+}
+
+
+
+reconquer_spain_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+	potential = {
+		is_ruler = yes
+		owner ?= scope:actor
+		owner ?= c:FRA
+		age >= define:NCharacters|ADULT_AGE
+		NOT = { c:FRA = { has_variable = invaded_spain_var } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+		owner ?= { has_journal_entry = je_king_spain }
+	}
+
+	possible = {
+		OR = {
+			exists = c:SPA
+			exists = c:IBE
+		}
+	}
+
+	effect = {
+		c:FRA = { save_scope_as = france_scope }
+		if = {
+			limit = {
+				exists = c:SPA
+			}
+			c:SPA ?= {
+				save_scope_as = spain_scope
+			}
+		}
+		if = {
+			limit = {
+				exists = c:IBE
+			}
+			c:IBE ?= {
+				save_scope_as = spain_scope
+			}
+		}
+		
+		trigger_event ={
+			id = empire_of_france.2
+		}
+		set_variable = {
+			name = invaded_spain_var
+		}
+	}
+}
+
+reconquer_italy_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+	potential = {
+		is_ruler = yes
+		owner ?= scope:actor
+		owner ?= c:FRA
+		age >= define:NCharacters|ADULT_AGE
+		NOT = { c:FRA = { has_variable = invaded_italy_var } }
+		owner ?= { has_journal_entry = je_post_bonapartists }
+		owner ?= { has_journal_entry = je_king_of_italy }
+	}
+
+	possible = {
+	}
+
+	effect = {
+		c:FRA = { 
+			save_scope_as = france_scope
+			set_variable = {
+				name = invaded_italy_var
+			}
+			trigger_event ={
+				id = empire_of_france.3
+			}
+		}
+	}
+}
+
+coup_republic_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+	potential = {
+		owner ?= scope:actor
+		owner ?= c:FRA
+		age >= define:NCharacters|ADULT_AGE
+		has_template = fra_napoleon_iii_character_template
+		c:FRA = { 
+			OR = {
+				has_law_or_variant = law_type:law_presidential_republic
+				has_law_or_variant = law_type:law_parliamentary_republic
+			}
+			NOT = {
+				has_variable = napoleon_coup_var
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+  			text = bonapartist_support_or_legitimacy_tt
+			owner ?= {
+				OR = {
+					any_political_movement = {
+						is_political_movement_type = movement_bonapartist
+						political_movement_support >= 0.20
+					}
+					government_legitimacy >= 50
+				}
+			}
+		}
+	}
+
+	effect = {
+		c:FRA = { 
+			trigger_event = empire_of_france.9 
+			set_variable = napoleon_coup_var
+		}
+	}
+}

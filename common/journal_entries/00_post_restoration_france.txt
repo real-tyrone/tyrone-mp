@@ -1,0 +1,593 @@
+﻿#BONAPARTE
+
+je_post_bonapartists = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+	group = je_group_historical_content
+
+	is_shown_when_inactive = {
+		exists = c:FRA
+		c:FRA = ROOT
+		has_variable = bonapartist_restoration_var
+		OR = {
+			has_journal_entry = je_cement_the_rightful_dynasty
+			has_variable = one_true_french_dynasty
+		}
+	}
+
+	possible = {
+		exists = c:FRA
+		c:FRA = ROOT
+		c:FRA = {
+		country_or_subject_owns_entire_state_region = STATE_ALSACE_LORRAINE
+		}
+		government_legitimacy >= 50
+		OR = {
+			custom_tooltip = {
+				text = progress_cement_half_tt
+				var:french_dynastic_primary_progress_var >= 60
+			}
+			custom_tooltip = {
+				text = has_cemented_dynasty_TT
+				has_variable = one_true_french_dynasty
+			}			
+		}
+	}
+
+	immediate = {
+		c:FRA = {
+			save_scope_as = france_scope
+		}
+		trigger_event ={
+			id = empire_of_france.1
+		}
+		
+		set_variable = napoleon_empire_variable
+
+		every_scope_character = {
+			limit = {
+				is_ruler = yes
+			}
+			set_variable = napoleonic_emperor_variable
+		}
+
+		scope:journal_entry = {
+			add_modifier = power_of_the_marshals_modifier
+		}
+	}
+
+	on_monthly_pulse = {
+		every_scope_character = {
+			limit = {
+				is_ruler = yes
+				NOT = {
+					has_variable = napoleonic_emperor_variable
+				}
+			}
+			set_variable = napoleonic_emperor_variable
+		}
+	}
+	
+	complete = {	
+		custom_tooltip = {
+			text = has_cemented_dynasty_TT
+			has_variable = one_true_french_dynasty
+		}
+		custom_tooltip = {
+			text = has_completed_rebuilt_paris_je_tt
+			has_variable = rebuilt_paris_NAPOLEON
+		}
+		custom_tooltip = {
+			text = has_rebuilt_railways_je_tt
+			has_variable = rebuilt_railroads_NAPOLEON
+		}
+		custom_tooltip = {
+			text = has_improved_living_NAPOLEON_TT
+			has_variable = public_health_NAPOLEON
+		}
+		custom_tooltip = {
+			text = has_completed_natural_borders_je_tt
+			has_variable = completed_natural_borders_je
+		}
+		custom_tooltip = {
+			text = has_conquered_italy_TT
+			has_variable = conquered_italy_NAPOLEON
+		}
+		custom_tooltip = {
+			text = has_conquered_spain_TT
+			has_variable = conquered_spain_NAPOLEON
+		}
+	}
+
+	on_complete = {
+		trigger_event ={
+			id = empire_of_france.8
+		}
+		set_variable = napoleonic_victory	
+	}
+	
+	fail = {
+		
+	}
+	
+	invalid = {
+		NOT = {
+			has_law_or_variant = law_type:law_monarchy
+		}
+	}
+
+	weight = 1000
+	should_be_pinned_by_default = yes
+		
+}
+
+je_the_city_of_light_rebuild = {
+
+	icon = "gfx/interface/icons/event_icons/rebuild_paris.dds"
+
+	group = je_group_historical_content
+
+    immediate = {
+    }
+
+	complete = {
+		NOT = { has_modifier = rebuilding_paris_modifier }
+		any_scope_state = {
+			state_region = s:STATE_ILE_DE_FRANCE
+			is_incorporated = yes
+			owner = ROOT
+			has_building =building_eiffel_tower
+		}
+		custom_tooltip = {
+			text = begun_reconstructing_paris_TT
+			has_variable = clicked_paris_button
+		}
+	}
+
+    fail = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+
+	on_complete = {
+		set_variable = {
+			name = rebuilt_paris_NAPOLEON
+		}
+		add_modifier = {
+			name = paris_rebuilt_fully
+			days = very_long_modifier_time
+		}
+	}
+
+	scripted_button = rebuild_paris_button
+
+
+    weight = 50
+    should_be_pinned_by_default = yes
+}
+
+je_rebuilt_railways_napoleon = {
+	icon = "gfx/interface/icons/event_icons/napoleon_railway_icon.dds"
+
+	group = je_group_historical_content
+
+	immediate = {
+    }
+    fail = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+	complete = {
+		any_scope_state = {
+			filter = {
+				OR = {
+					state_region = s:STATE_FRENCH_LOW_COUNTRIES
+        			state_region = s:STATE_PICARDY
+					state_region = s:STATE_NORMANDY
+					state_region = s:STATE_BRITTANY
+					state_region = s:STATE_MAINE_ANJOU
+					state_region = s:STATE_ORLEANS
+					state_region = s:STATE_ILE_DE_FRANCE
+					state_region = s:STATE_CHAMPAGNE
+					state_region = s:STATE_LORRAINE
+					state_region = s:STATE_ALSACE_LORRAINE
+					state_region = s:STATE_FRANCHE_COMTE
+					state_region = s:STATE_BURGUNDY
+					state_region = s:STATE_RHONE
+					state_region = s:STATE_PROVENCE
+					state_region = s:STATE_LANGUEDOC
+					state_region = s:STATE_AUVERGNE_LIMOUSIN
+					state_region = s:STATE_GUYENNE
+					state_region = s:STATE_POITOU
+					state_region = s:STATE_AQUITAINE
+					state_region = s:STATE_SAVOY
+				}
+			}
+            is_incorporated = yes
+			owner = ROOT
+			has_building = building_railway
+			percent >= 0.80
+		}
+	}
+
+	on_complete = {
+		set_variable = {
+			name = rebuilt_railroads_NAPOLEON
+		}
+		add_modifier = {
+			name = imperial_infrastructure
+			days = very_long_modifier_time
+		}
+	}
+
+	weight = 50
+    should_be_pinned_by_default = yes
+}
+je_improved_living_napoleon = {
+    icon = "gfx/interface/icons/event_icons/napoleon_public_health.dds"
+
+	group = je_group_historical_content
+
+    immediate = {
+    }
+
+    complete = {
+        has_law_or_variant = law_type:law_public_health_insurance
+		institution_investment_level = {
+			institution = institution_health_system
+			value >= 3
+		}
+        any_scope_state = {
+            filter = {
+                is_incorporated = yes
+            }
+        has_decree = decree_promote_health
+        percent >= 0.50
+        }
+    }
+
+    fail = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+
+	on_complete = {
+		set_variable = {
+			name = public_health_NAPOLEON
+		}
+		add_modifier = {
+			name = french_healthcare
+			days = very_long_modifier_time
+		}
+	}
+
+    weight = 50
+    should_be_pinned_by_default = yes
+}
+
+je_king_of_italy = {
+    icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+    is_shown_when_inactive = {
+        exists = c:FRA
+        c:FRA ?= THIS
+    }
+
+    group = je_group_historical_content
+
+
+    possible = {
+		custom_tooltip = {
+			text = allow_reconquer_former_lands_req_NAPOLEON_TT
+			has_variable = can_reconquer_empire_variable
+		}
+    }
+
+    complete = {
+        any_state = {
+            filter = {
+                OR = {
+                    state_region = s:STATE_PIEDMONT
+                    state_region = s:STATE_LAZIO
+                    state_region = s:STATE_ROMAGNA
+                    state_region = s:STATE_TUSCANY
+                    state_region = s:STATE_EMILIA
+                    state_region = s:STATE_SAVOY
+                    state_region = s:STATE_APULIA
+                    state_region = s:STATE_ABRUZZO
+                    state_region = s:STATE_CALABRIA
+                    state_region = s:STATE_CAMPANIA
+                    state_region = s:STATE_UMBRIA
+                    state_region = s:STATE_LOMBARDY
+                    state_region = s:STATE_VENETIA
+					state_region = s:STATE_SOUTH_TYROL
+                }
+            }
+            OR = {
+                owner = ROOT
+                owner = {
+                    is_subject_of = ROOT
+                }
+            }
+            percent >= 0.75
+        }
+    }
+
+	on_complete = {
+		trigger_event ={
+			id = empire_of_france.4
+		}
+		set_variable = conquered_italy_NAPOLEON
+	}
+
+    should_be_pinned_by_default = yes
+
+    weight = 100
+}
+
+je_king_spain = {
+    icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+
+    is_shown_when_inactive = {
+        exists = c:FRA
+        c:FRA ?= THIS
+    }
+
+    group = je_group_historical_content
+
+    possible = {
+		custom_tooltip = {
+			text = allow_reconquer_former_lands_req_NAPOLEON_TT
+			has_variable = can_reconquer_empire_variable
+		}
+    }
+
+    complete = {
+        any_state = {
+            filter = {
+                OR = {
+                    state_region = s:STATE_NEW_CASTILE
+                    state_region = s:STATE_GALICIA
+                    state_region = s:STATE_ASTURIAS
+                    state_region = s:STATE_OLD_CASTILE
+                    state_region = s:STATE_BASQUE_COUNTRY
+                    state_region = s:STATE_ARAGON
+                    state_region = s:STATE_LEON
+                    state_region = s:STATE_CATALONIA
+                    state_region = s:STATE_BALEARIC_ISLANDS
+                    state_region = s:STATE_LOWER_ANDALUSIA
+                    state_region = s:STATE_UPPER_ANDALUSIA
+                    state_region = s:STATE_EXTREMADURA
+                    state_region = s:STATE_MURCIA
+                    state_region = s:STATE_VALENCIA
+                }
+            }
+            OR = {
+                owner = ROOT
+                owner = {
+                    is_subject_of = ROOT
+                }
+            }
+            percent >= 0.80
+        }
+    }
+	on_complete = {
+		trigger_event ={
+			id = empire_of_france.7
+		}
+		set_variable = conquered_spain_NAPOLEON
+	}
+    should_be_pinned_by_default = yes
+
+    weight = 100
+}
+
+
+
+
+#ORLEANIST
+
+je_orleanist_france_industry_revolution = {
+icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
+	group = je_group_historical_content
+
+    is_shown_when_inactive = {
+        exists = c:FRA
+        c:FRA = ROOT
+        has_variable = orleanist_restoration_var
+        has_journal_entry = je_cement_the_rightful_dynasty
+    }
+
+    possible = {
+        exists = c:FRA
+        c:FRA = ROOT
+        government_legitimacy >= 50
+        OR = {
+            custom_tooltip = {
+                text = progress_cement_half_tt
+                var:french_dynastic_primary_progress_var >= 60
+            }
+            custom_tooltip = {
+                text = has_cemented_dynasty_TT
+                has_variable = one_true_french_dynasty
+            }            
+        }
+    }
+
+	immediate = {
+		set_global_variable = orleanist_eco_ongoing_global_var
+		if = {
+			limit = {
+				NOT = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+				}
+			}
+			set_global_variable = { 
+				name = orleanist_eco_ongoing_global_var_baseline
+				value = 0
+			}
+			c:FRA = {
+				change_global_variable = { 
+					name = orleanist_eco_ongoing_global_var_baseline
+					add = this.gdp
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					exists = global_var:orleanist_eco_ongoing_global_var_actual
+				}
+			}
+			set_global_variable = {
+				name = orleanist_eco_ongoing_global_var_actual
+				value = 0
+			}
+			c:FRA = {
+				change_global_variable = { 
+					name = orleanist_eco_ongoing_global_var_actual
+					add = this.gdp
+				}
+			}
+		}
+		# Initial  GDP goal
+		set_global_variable = { 
+			name = orleanist_eco_ongoing_global_var_goal
+			value = {
+				value = global_var:orleanist_eco_ongoing_global_var_baseline
+				multiply = 1.08 # 
+			}
+		}
+		c:FRA = {
+			save_scope_as = france_scope
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+		g:coal = {
+			save_scope_as = coal_scope
+		}
+		g:iron = {
+			save_scope_as = iron_scope
+		}
+		g:steel = {
+			save_scope_as = steel_scope
+		}
+
+
+		
+		set_variable = orleanist_france_variable
+
+		scope:journal_entry = {
+			add_modifier = orleanist_industry_modifier
+		}
+
+		c:FRA = {
+			set_variable = {
+				name = french_industry_var_progressbar
+				value = 0
+			}
+		}
+		c:FRA = { 
+			set_variable = {
+				name = french_industry_var_ministry_budget
+				value = 150000
+			}
+		}
+	}
+	
+	current_value = {
+		value = var:french_industry_var_progressbar
+	}
+
+	goal_add_value = {
+		add = 500
+	}
+
+	complete = {	
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+	}
+
+	on_complete = {
+		trigger_event ={
+			id = orleanist_france.1
+		}
+		set_variable = orleanist_victory	
+	}
+	
+	timeout = 10950
+	
+
+	fail = {
+		
+	}
+
+	on_yearly_pulse = {
+        effect = {
+			c:FRA = {
+				change_variable = {
+					name = french_industry_var_ministry_budget
+					add = 50000
+				}
+			}
+
+            if = {
+                limit = {
+                    orleanist_actual_gdp_script_value >= global_var:orleanist_eco_ongoing_global_var_goal
+                }
+                if = {
+                    limit = {
+                        c:FRA = {
+                            var:french_industry_var_progressbar < 500
+                        }
+                    }
+                    c:FRA = {
+                        change_variable = {
+                            name = french_industry_var_progressbar
+                            add = 25
+                        }
+                    }
+                }
+            }
+			if = {
+				limit = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+				}
+				set_global_variable = { # Redefines the baseline based on actual GDP
+					name = orleanist_eco_ongoing_global_var_baseline
+					value = orleanist_actual_gdp_script_value
+				}
+			}
+			if = {
+				limit = {
+					exists = global_var:orleanist_eco_ongoing_global_var_baseline
+					exists = global_var:orleanist_eco_ongoing_global_var_goal
+				}
+				# French GDP aim (updated quarterly)
+				set_global_variable = { # Redefines goal based on baseline GDP
+					name = orleanist_eco_ongoing_global_var_goal
+					value = {
+						value = global_var:orleanist_eco_ongoing_global_var_baseline
+						multiply = 1.08 
+					}
+				}
+			}			
+        }
+    }
+
+	invalid = {
+	}
+
+	scripted_button = promote_investment_button
+	scripted_button = advocate_mining_button
+	scripted_button = encourage_production_innovation_button
+	scripted_button = promote_construction_button
+
+	weight = 1000
+	should_be_pinned_by_default = yes
+
+}

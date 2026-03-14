@@ -1,0 +1,136 @@
+﻿namespace = veiled_protectorate
+
+# For Great Power
+veiled_protectorate.1 = {
+	type = country_event
+	placement = root
+	title = veiled_protectorate.1.t
+	desc = veiled_protectorate.1.d
+	flavor = veiled_protectorate.1.f
+
+	duration = 3
+
+	event_image = {
+		video = "middleeast_middleclass_cafe"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	trigger = {
+	}
+
+	immediate = {
+		save_scope_as = egypt_overlord_country
+		c:EGY ?= {
+			save_scope_as = egypt_country
+			ruler = {
+				save_scope_as = egypt_ruler
+			}
+		}
+		c:TUR ?= {
+			save_scope_as = ottoman_country
+			ruler = {
+				save_scope_as = ottoman_ruler
+			}
+		}
+	}
+
+	option = {
+		name = veiled_protectorate.1.a
+		default_option = yes
+		add_modifier = {
+			name = veiled_influence
+			days = normal_modifier_time
+		}
+		change_relations = {
+			country = c:TUR
+			value = -20
+		}
+		if = {
+			limit = {
+				c:EGY ?= {
+					is_subject_of = ROOT
+				}
+			}
+			create_diplomatic_pact = {
+				country = c:EGY
+				type = puppet
+			}
+			every_state = {
+				limit = {
+					is_in_geographic_region = geographic_region_sudan
+					c:EGY ?= owner
+				}
+				set_state_owner = scope:egypt_overlord_country
+			}
+		}
+		custom_tooltip = {
+			text = sudan_claims_tt
+			every_state = {
+				limit = {
+					is_in_geographic_region = geographic_region_sudan
+				}
+				state_region = {
+					add_claim = scope:egypt_overlord_country
+				}
+			}
+		}
+	}
+
+	option = {
+		name = veiled_protectorate.1.b
+		scope:egypt_ruler = {
+			kill_character = yes
+		}
+		change_relations = {
+			country = c:EGY
+			value = 50
+		}
+		change_relations = {
+			country = c:TUR
+			value = -20
+		}
+		if = {
+			limit = {
+				c:EGY ?= {
+					is_subject_of = ROOT
+				}
+			}
+			create_diplomatic_pact = {
+				country = c:EGY
+				type = puppet
+			}
+			c:EGY ?= {
+				every_state = {
+					limit = {
+						state_region = s:STATE_EQUATORIA
+					}
+					save_scope_as = south_sudan_state_scope
+				}
+				scope:south_sudan_state_scope.state_region = {
+					remove_state_trait = state_trait_malaria
+					add_claim = c:EGY
+				}		
+				if = {
+					limit = {
+						has_law = law_type:law_no_colonial_affairs
+					}
+					activate_law = law_type:law_frontier_colonization
+				}
+			}
+		}
+		custom_tooltip = {
+			text = sudan_claims_tt
+			every_state = {
+				limit = {
+					is_in_geographic_region = geographic_region_sudan
+				}
+				state_region = {
+					add_claim = scope:egypt_overlord_country
+				}
+			}
+		}
+	}
+}

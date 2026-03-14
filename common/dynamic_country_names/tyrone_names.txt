@@ -1,0 +1,604 @@
+﻿REPLACE:POL = { # Poland
+	dynamic_country_name = {
+		name = dyn_c_congress_poland
+		adjective = dyn_c_congress_poland_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			exists = c:RUS
+			OR = {
+				c:RUS ?= {
+					has_diplomatic_pact = {
+						who = c:POL
+						type = personal_union
+						is_initiator = yes
+					}
+				}
+				c:RUS ?= {
+					has_diplomatic_pact = {
+						who = c:POL
+						type = crown_land
+						is_initiator = yes
+					}
+				}				
+			}
+
+		}
+	}
+}
+
+REPLACE:GBR = { # uk
+	dynamic_country_name = {
+		name = dyn_c_gbr_monarchy
+		adjective = GBR_ADJ
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = { 
+				OR = {
+					has_law_or_variant = law_type:law_monarchy
+				}
+			}
+		}
+	}
+}
+
+
+REPLACE:ITA = { # Italy
+	dynamic_country_name = { # Papal Italy
+		name = dyn_c_papal_italy
+		adjective = dyn_c_papal_italy_adj
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_theocracy
+				was_formed_from = PAP
+			}
+		}
+	}
+	dynamic_country_name = { # Kingdom of Italy
+		name = dyn_c_kingdom_italy
+		adjective = ITA_ADJ
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+			}
+		}
+	}
+}
+
+#danubian federation
+REPLACE:KUK = {
+	dynamic_country_name = {
+		name = dyn_c_usga
+		adjective = AUS_ADJ
+
+		is_main_tag_only = yes
+		priority = 15
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				was_formed_from = AUS
+				OR = {
+					has_law_or_variant = law_type:law_oligarchy
+					coa_autocracy_trigger = yes
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_danubian_federation
+		adjective = KUK_ADJ
+
+		is_main_tag_only = yes
+		priority = 1
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				was_formed_from = AUS
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kuk_communist
+		adjective = KUK_ADJ
+
+		is_main_tag_only = yes
+		priority = 1
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_council_republic
+			}
+		}
+	}
+}
+
+#prussia
+REPLACE_OR_CREATE:PRU = {
+
+    dynamic_country_name = {
+        name = dyn_c_prussia_monarchy
+        adjective = PRU_ADJ
+        is_main_tag_only = yes
+        priority = 10
+
+        trigger = {
+            exists = scope:actor
+            scope:actor = {
+                has_law_or_variant = law_type:law_monarchy
+            }
+        }
+    }
+
+}
+
+#germany
+REPLACE:GER = { # Germany
+	dynamic_country_name = {
+		name = dyn_c_german_empire
+		adjective = GER_ADJ
+
+		is_main_tag_only = yes
+		priority = 20
+
+		trigger = {
+			coa_def_monarchy_flag_trigger = yes
+			scope:actor ?= {
+				country_rank >= rank_value:major_power
+			}
+		}
+	}
+    dynamic_country_name = {
+        name = dyn_c_german_republic
+        adjective = GER_ADJ
+        is_main_tag_only = yes
+        priority = 10
+
+        trigger = {
+            exists = scope:actor
+            scope:actor ?= {
+                OR = {
+                	has_law_or_variant = law_type:law_presidential_republic
+                    has_law_or_variant = law_type:law_parliamentary_republic
+                }
+            }
+        }
+    }
+	dynamic_country_name = {
+		name = nihilist_germany_name
+		adjective = nihilist_germany_name_adj
+
+		is_main_tag_only = yes
+		priority = 50
+
+		trigger = {
+			coa_def_nihilist_flag_trigger = yes
+		}
+	}
+
+	dynamic_country_name = {
+		name = dyn_c_german_reich
+		adjective = GER_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			coa_def_fascist_flag_trigger = yes
+		}
+	}	
+}
+
+#austrian empire
+REPLACE:AUS = {
+	dynamic_country_name = {
+		name = dyn_c_federal_state_of_austria
+		adjective = AUS_ADJ
+
+		is_main_tag_only = yes
+		priority = 1
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_corporate_state
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_austrian_empire
+		adjective = AUS_ADJ
+		is_main_tag_only = yes
+		priority = 1000
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = { 
+				has_law = law_type:law_monarchy
+				has_variable = empire_of_austria_variable
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_dual_monarchy
+		adjective = dual_monarchy_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				has_variable = federated_hungarians_var
+				has_government_type = gov_dual_monarchy
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_triple_monarchy
+		adjective = triple_monarchy_ADJ
+
+		is_main_tag_only = yes
+		priority = 150
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_law = law_type:law_monarchy
+				has_variable = federated_three_crowns_var
+				has_government_type = gov_triple_monarchy
+			}
+		}
+	}
+}
+
+#brazil
+BRZ = {
+	dynamic_country_name = {
+		name = dyn_c_united_kingdom_brz
+		adjective = dyn_c_united_kingdom_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			coa_def_monarchy_flag_trigger = yes
+			scope:actor ?= {
+				owns_entire_state_region = STATE_ESTREMADURA
+				owns_entire_state_region = STATE_BEIRA
+			}
+			NOT = { exists = c:POR }
+		}
+	}
+}
+
+#portugal
+REPLACE:POR = {
+	dynamic_country_name = {
+		name = dyn_c_united_kingdom_por
+		adjective = dyn_c_united_kingdom_adj
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			coa_def_monarchy_flag_trigger = yes
+			scope:actor ?= {
+				owns_entire_state_region = STATE_RIO_DE_JANEIRO
+				owns_entire_state_region = STATE_SAO_PAULO
+			}
+			NOT = { exists = c:BRZ }
+		}
+	}
+	dynamic_country_name = { 
+		name = dyn_c_portugal_galicia
+		adjective = dyn_c_portugal_galicia_adj
+		
+		is_main_tag_only = yes
+		priority = 0
+		
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				owns_entire_state_region = STATE_GALICIA
+			}
+		}
+	}
+}
+
+#japan
+REPLACE:JAP = { 
+	dynamic_country_name = {
+		name = dyn_c_japan_shogunate
+		adjective = dyn_c_japan_shogunate_adj
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law = law_type:law_monarchy
+				NOT = { has_variable = meiji_var }
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_empire_of_japan
+		adjective = dyn_c_empire_of_japan_adj
+
+		is_main_tag_only = yes
+		priority = 20
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law = law_type:law_monarchy
+				has_variable = meiji_var
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_imperial_japan
+		adjective = JAP_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			coa_def_fascist_flag_trigger = yes
+		}
+	}
+}
+
+#france
+INJECT:FRA = {
+	dynamic_country_name = {
+		name = dyn_c_fascist_france
+		adjective = FRA_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			coa_def_fascist_flag_trigger = yes
+		}
+	}
+}
+
+#china
+INJECT:CHI = {
+	dynamic_country_name = {
+		name = dyn_c_japanese_china
+		adjective = CHI_ADJ
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			OR = {
+				AND = {
+					exists = c:CHI
+					scope:actor ?= {
+						is_subject_of = c:JAP
+					}
+				}
+				AND = {
+					exists = c:JAP
+					scope:actor ?= {
+						is_subject_of = c:JAP
+					}
+				}
+			}
+		}
+	}
+}
+
+#spain
+
+REPLACE:SPA = {
+	dynamic_country_name = {
+		name = dyn_c_spanish_republic
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				OR = {
+					has_law_or_variant = law_type:law_parliamentary_republic
+					has_law_or_variant = law_type:law_presidential_republic
+				}
+			}
+		}
+	}
+
+	dynamic_country_name = {
+		name = dyn_c_spanish_kingdom
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+			}
+		}
+	}
+	
+	dynamic_country_name = {
+		name = dyn_c_spanish_empire
+		adjective = SPA_ADJ
+
+		is_main_tag_only = yes
+		priority = 150
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_monarchy
+				has_variable = reconquista_achievement
+			}
+		}
+	}	
+}
+
+#russia
+REPLACE:RUS = { # Russia
+	dynamic_country_name = {
+		name = dyn_c_russian_republic
+		adjective = dyn_c_russian_republic_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			coa_def_republic_flag_trigger = yes
+			NOT = {
+				coa_def_anarchy_flag_trigger = yes
+			}
+		}
+	}
+
+    dynamic_country_name = {
+        name = dyn_c_russian_empire
+        adjective = RUS_ADJ
+        is_main_tag_only = yes
+        priority = 1000
+
+        trigger = {
+            exists = scope:actor
+            scope:actor = { 
+                has_law = law_type:law_monarchy
+            }
+        }
+    }
+
+	dynamic_country_name = {
+		name = dyn_c_rsfsr
+		adjective = dyn_c_rsfsr_adj
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			coa_def_communist_flag_trigger = yes
+			NOT = {
+				coa_def_anarchy_flag_trigger = yes
+			}
+		}
+	}
+
+	dynamic_country_name = {
+		name = dyn_c_union_of_new_people
+		adjective = dyn_c_union_of_new_people_adj
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = c:RUS
+			coa_def_nihilist_flag_trigger = yes
+		}
+	}
+
+	dynamic_country_name = {
+		name = dyn_c_soviet_union
+		adjective = dyn_c_soviet_union_adj
+
+		is_main_tag_only = yes
+		priority = 25
+
+		trigger = {
+			coa_def_communist_flag_trigger = yes
+			scope:actor ?= {
+				OR = {
+					any_scope_state = {
+						state_region = {
+							NOT = {
+								is_homeland = cu:russian
+							}
+						}
+						count >= 15
+					}
+				}
+				NOT = {
+					has_law_or_variant = law_type:law_anarchy			
+				}
+			}
+		}
+	}
+}
+
+#slavia
+REPLACE_OR_CREATE:ki_PSV = { # Slavia
+	dynamic_country_name = {
+		name = dyn_c_slavic_republic
+		adjective = ki_PSV_ADJ
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			coa_def_republic_flag_trigger = yes
+			NOT = {
+				coa_def_anarchy_flag_trigger = yes
+			}
+		}
+	}
+
+    dynamic_country_name = {
+        name = dyn_c_slavic_empire
+        adjective = ki_PSV_ADJ
+        is_main_tag_only = yes
+        priority = 1000
+
+        trigger = {
+            exists = scope:actor
+            scope:actor = { 
+                has_law = law_type:law_monarchy
+            }
+        }
+    }
+
+	dynamic_country_name = {
+		name = dyn_c_slavia_communist
+		adjective = ki_PSV_ADJ
+
+		is_main_tag_only = yes
+		priority = 5
+
+		trigger = {
+			coa_def_communist_flag_trigger = yes
+			NOT = {
+				coa_def_anarchy_flag_trigger = yes
+			}
+		}
+	}
+
+}

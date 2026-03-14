@@ -1,0 +1,27 @@
+﻿REPLACE:je_two_spains_progress_bar = { # Drift factors are defined in ip4_je_values.txt
+	name = "je_two_spains_progress_bar"
+	desc = "je_two_spains_progress_bar_left_desc"
+ 	second_desc = "je_two_spains_progress_bar_right_desc"
+
+	double_sided_two_spains = yes
+
+	monthly_progress = { # 1 = 1%
+		if = {
+			limit = {
+				owner = {
+					has_variable = two_spains_pivot_var
+					has_variable = two_spains_current_var
+				}
+			}
+			add = {
+				desc = "two_spains_progress_bar_moderating_factor_tt"
+				value = owner.var:two_spains_pivot_var
+				subtract = owner.var:two_spains_current_var
+				multiply = 0.1 # How aggressively this will chase the pivot value. Higher = more aggressive.
+			}
+		}
+	}
+	start_value = 50
+	min_value = 0
+	max_value = 100
+}
