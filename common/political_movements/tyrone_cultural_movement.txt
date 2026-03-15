@@ -695,6 +695,18 @@
 				desc = "DISCRIMINATION_LEVEL_subjecthood"
 			}
 		}
+
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_multiculturalism
+				}
+			}
+			subtract = {
+				value = 25
+			}
+		}
+
 		else = {
 			if = {
 				limit = {
@@ -1310,21 +1322,6 @@ REPLACE:movement_fascist = {
 	}
 
 	additional_radicalism_factors = {
-		owner = {
-			if = {
-				limit = {
-					owner.number_of_claims > 0
-				}
-
-				add = {
-					value = 5 # Add a base value for having claims at all
-					add = owner.number_of_claims
-					multiply = 0.025
-					max = 0.3
-					desc = "NUMBER_OF_CLAIMS"
-				}
-			}
-		}
 
 		if = {
 			limit = {
@@ -1343,24 +1340,6 @@ REPLACE:movement_fascist = {
 			add = {
 				desc = "NEIGHBOURING_COUNTRY_WITH_REVOLUTION"
 				value = 0.15
-			}
-		}
-
-		if = { # Support translates 1:1 to Activism
-			limit = {
-				owner = {
-					NAND = {
-						has_law = law_type:law_single_party_state
-						ruler.interest_group.party ?= {
-							is_party_type = fascist_party
-						}
-					}
-				}
-			}
-			add = {
-				desc = "FASCIST_MOVEMENT_WILL_TO_POWER"
-				add = this.political_movement_support
-				max = 0.5
 			}
 		}
 	}
