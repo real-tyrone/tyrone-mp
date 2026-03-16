@@ -1,4 +1,4 @@
-﻿je_berlin_conference = {
+je_berlin_conference = {
 	icon = "gfx/interface/icons/event_icons/berlin_conference.dds"
 
 	group = je_group_global_international_situations
@@ -9,6 +9,9 @@
 		}
 		is_in_geographic_region = geographic_region_europe
 		OR = {
+			global_country_ranking = 1
+			global_country_ranking = 2
+			global_country_ranking = 3
 			has_technology_researched = civilizing_mission
 			country_rank = rank_value:great_power
 			AND = {
@@ -84,8 +87,40 @@
 
 
 	on_complete = {
+		trigger_event = { id = berlin_conference.3 popup = yes }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+			}
+			hidden_effect = {
+				trigger_event = { id = berlin_conference.3 popup = yes }
+			}
+		}
 	}
 
+	complete = {
+		OR = {
+		any_country = {
+			custom_tooltip = {
+				text = 7accept_berlin_conf_tt
+				has_variable = accepted_conf_var
+			}
+			count >= 7
+		}
+		any_country = {
+			custom_tooltip = {
+				text = 3GPaccept_berlin_conf_tt
+				has_variable = accepted_conf_var
+				OR = {
+					global_country_ranking = 1
+					global_country_ranking = 2
+					global_country_ranking = 3
+				}
+			}
+			count >= 3
+			} 
+		}
+	}
 
 	fail = {
 	}
@@ -97,16 +132,6 @@
 	}
 
 	on_timeout = {
-		trigger_event = { id = berlin_conference.3 popup = yes }
-
-		every_country = {
-			limit = {
-				is_involved_in_journal_entry = je_berlin_conference
-			}
-			hidden_effect = {
-				trigger_event = { id = berlin_conference.3 popup = yes }
-			}
-		}
 	}
 
 	event_outcome_timeout_desc = {
@@ -121,9 +146,6 @@
 	invalid = {
 	}
 
-    current_value = {
-		value = var:african_claims_var
-	}
 
 	weight = 10000
 	should_be_pinned_by_default = yes
@@ -131,9 +153,5 @@
 	transferable = no
 	can_revolution_inherit = no
 
-	scripted_button = je_berlin_conference_claim_button
-
-
-	timeout = 365
 }
 

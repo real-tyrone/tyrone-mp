@@ -1,286 +1,858 @@
-# COPY-PASTED FOR NOW
 @panel_width_minus_30 = 510
-@panel_width_minus_20 = 520			
-@panel_width_minus_10 = 530			# used to be 450
-@panel_width = 540  				# used to be 460
-@panel_width_half = 270				# used to be 230
-@panel_width_plus_10 = 550  		# used to be 470
-@panel_width_plus_14 = 554			# used to be 474
-@panel_width_plus_14_half = 277		# used to be 237
-@panel_width_plus_20 = 560			# used to be 480
-@panel_width_plus_30 = 570			# used to be 490
-@panel_width_plus_70 = 610			# used to be 530
+@panel_width_minus_20 = 520
+@panel_width_minus_10 = 530
+@panel_width = 540
+@panel_width_half = 270
+@panel_width_plus_10 = 550
+@panel_width_plus_14 = 554
+@panel_width_plus_14_half = 277
+@panel_width_plus_20 = 560
+@panel_width_plus_30 = 570
+@panel_width_plus_70 = 610
 
 types berlin_conference_types {
-	type claimed_countries_gui = flowcontainer {
-        block "context" {}
-		direction = vertical
-        using = default_list_position
-        spacing = 10
-        margin_bottom = 28
+	type claimed_countries_gui = container {
+        visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+        minimumsize = { 540 400 }
+        maximumsize = { 540 -1 }
+        parentanchor = hcenter
 
-		default_header_clean = {
-            using = default_list_position
-            # At least one side needs to have factions for them to show up
-            blockoverride "text" {
-                raw_text = "The Claims of the Great Powers"
-            }
-            blockoverride "size" {
-                size = { @panel_width_plus_14 44 }
-            }
-        }
+
         flowcontainer = {
-            spacing = 8
-
-            left_side_claims = {}
-
-            right_side_claims = {}
-        }
-	}
-
-	type left_side_claims = flowcontainer {
-        direction = vertical
-        spacing = 20
-        margin_left = 12
-		
-		#congo
-        flowcontainer = {
-            margin_top = -2
-            background = {
-                using = simple_frame
-            }
-
-            default_header_clean_faded = {
-                blockoverride "text" {
-                    text = "Congo"
-                }
-            }
-
-            blockoverride "size" {
-                size = { @[panel_width_half - 20] 45 }
-            }
-            
-            direction = vertical
-
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('congo_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
-
-                item = {
-                    flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
-                        }
-                    }
-                }
-            }
-        }
-        
-
-		#senegal
-        flowcontainer = {
-            margin_top = -2
-            background = {
-                using = simple_frame
-            }
-
-            default_header_clean_faded = {
-                blockoverride "text" {
-                    text = "senegal_text"
-                }
-            }
-
-            blockoverride "size" {
-                size = { @[panel_width_half - 20] 45 }
-            }
-            
-            direction = vertical
-
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('senegal_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
-
-                item = {
-                    flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
-                        }
-                    }
-                }
-            }
-        }
-        
-
-		#niger
-        flowcontainer = {
-                margin_top = -2
-                background = {
-                    using = simple_frame
-                }
-
-                default_header_clean_faded = {
-					blockoverride "text" {
-						text = "niger_text"
-					}
-				}
-
-                blockoverride "size" {
-                    size = { @[panel_width_half - 20] 45 }
-                }
-                
                 direction = vertical
+                margin_left = 20
+                parentanchor = top|center
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" {
+                        raw_text = "Claims of the Great Powers"
+                    }
+                    blockoverride "size" {
+                        size = { @panel_width_plus_70 60 }
+                    }
+                }
+            }
+        flowcontainer = {
+            name = "start_scramble_decision_content"
+            minimumsize = { 500 400 }
+            maximumsize = { 500 -1 }
+            parentanchor = center
+            margin = { 20 20 }
+            direction = vertical
+            spacing = 0
 
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('niger_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
+            widget = { size = { 30 30 } }
 
-                item = {
+            flowcontainer = {
+                name = "Sub-Saharan"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "Sub-Saharan" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+
+                flowcontainer = {
+                    direction = horizontal
+                    spacing = 10
+                    margin_top = 10
+
                     flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_west_africa"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "West Africa"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_west_africa')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('west_africa_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_chad"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Chad"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_equatorial_africa')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('equatorial_africa_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_liberia"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Liberia"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_liberia')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('liberia_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_morocco"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Morocco"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_morocco')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('morocco_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                widget = { size = { 0 50 } }
+            }
+
+            flowcontainer = {
+                name = "Nigeria"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "Nigeria" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+
+                flowcontainer = {
+                    direction = horizontal
+                    spacing = 10
+                    margin_top = 10
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_togo"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Togo"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_togo')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('togo_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_niger"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Niger"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_niger')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('niger_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_gold_coast"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Gold Coast"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_gold_coast')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('gold_coast_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                widget = { size = { 0 50 } }
+            }
+
+            flowcontainer = {
+                name = "Congo"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "Congo" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+
+                flowcontainer = {
+                    direction = horizontal
+                    spacing = 10
+                    margin_top = 10
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_congo"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Main Congo"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_congo')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('congo_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_cameroon"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Cameroon"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_cameroon')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('cameroon_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_gabon"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Gabon"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_gabon')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('gabon_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                widget = { size = { 0 50 } }
+            }
+
+            flowcontainer = {
+                name = "South Africa"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "South Africa" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+
+                flowcontainer = {
+                    direction = horizontal
+                    spacing = 10
+                    margin_top = 10
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_south_africa"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Cape"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_south_africa')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('south_africa_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_angola"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Angola"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_angola')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('angola_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_namibia"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Namibia"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_namibia')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('namibia_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_zambia"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Zambia"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_zambia')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('zambia_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                widget = { size = { 0 50 } }
+            }
+
+            flowcontainer = {
+                name = "Zanj"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "West African Coast" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+
+                flowcontainer = {
+                    direction = horizontal
+                    spacing = 10
+                    margin_top = 10
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_east_africa"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "East Africa"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_east_africa')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('east_africa_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_kenya"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Kenya"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_kenya')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('kenya_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    flowcontainer = {
+                        direction = vertical
+                        spacing = 20
+                        minimumsize = { @[panel_width_half - 10] -1 }
+
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_madagascar"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Madagascar"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_madagascar')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('madagascar_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_ethiopia"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Ethiopia"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_ethiopia')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('ethiopia_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                        flowcontainer = {
+                            margin_top = -2
+                            parentanchor = hcenter
+                            background = { using = simple_frame }
+                            button = {
+                                name = "berlin_claim_btn_mozambique"
+                                using = default_button_action
+                                size = { @[panel_width_half - 25] 45 }
+                                text = "Mozambique"
+                                datacontext = "[GetScriptedGui('berlin_conf_claim_mozambique')]"
+                                visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                                enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                                onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                            }
+                            direction = vertical
+                            dynamicgridbox = {
+                                parentanchor = hcenter
+                                datamodel = "[GetGlobalList('mozambique_claimed_countries_list')]"
+                                datamodel_wrap = 3
+                                flipdirection = yes
+                                item = {
+                                    flowcontainer = {
+                                        visible = "[Scope.GetCountry.IsValid]"
+                                        margin = { 5 10 }
+                                        minimumsize = { 27 18 }
+                                        small_flag = { datacontext = "[Scope.GetCountry]" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                widget = { size = { 0 50 } }
+            }
+            flowcontainer = {
+                name = "Firmatari"
+                margin_top = 20
+                direction = vertical
+                spacing = 20
+                using = default_list_position
+    
+                default_header_clean = {
+                    using = default_list_position
+                    blockoverride "text" { raw_text = "Great Power Backing" }
+                    blockoverride "size" { size = { @[panel_width - 10] 44 } }
+                }
+                flowcontainer = {
+                    margin_top = -2
+                    parentanchor = hcenter
+                    background = { using = simple_frame }
+                    button = {
+                        name = "berlin_btn_accept_conf"
+                        using = default_button_action
+                        size = { @[panel_width_half - 25] 45 }
+                        text = "Current Powers approval"
+                        datacontext = "[GetScriptedGui('berlin_conf_accept_conf')]"
+                        visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_berlin_conference'))]"
+                        enabled = "[ScriptedGui.IsValid( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                        tooltip = "[ScriptedGui.BuildTooltip( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                        onclick = "[ScriptedGui.Execute( GuiScope.SetRoot( GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope ).End )]"
+                    }
+                    direction = vertical
+                    dynamicgridbox = {
+                        parentanchor = hcenter
+                        datamodel = "[GetGlobalList('berlin_accept_conf_list')]"
+                        datamodel_wrap = 3
+                        flipdirection = yes
+                        item = {
+                            flowcontainer = {
+                                visible = "[Scope.GetCountry.IsValid]"
+                                margin = { 5 10 }
+                                minimumsize = { 27 18 }
+                                small_flag = { datacontext = "[Scope.GetCountry]" }
+                            }
                         }
                     }
                 }
             }
         }
+
         
     }
-
-	type right_side_claims = flowcontainer {
-        direction = vertical
-        spacing = 20
-        margin_left = 12
-
-		#ethiopia	
-        flowcontainer = {
-            margin_top = -2
-            background = {
-                using = simple_frame
-            }
-
-            default_header_clean_faded = {
-                blockoverride "text" {
-                    text = "ethiopia_text"
-                }
-            }
-
-            blockoverride "size" {
-                size = { @[panel_width_half - 20] 45 }
-            }
-            
-            direction = vertical
-
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('ethiopia_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
-
-                item = {
-                    flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
-                        }
-                    }
-                }
-            }
-        }
-        
-
-		#zanj
-        flowcontainer = {
-            margin_top = -2
-            background = {
-                using = simple_frame
-            }
-
-            default_header_clean_faded = {
-                blockoverride "text" {
-                    text = "zanj_text"
-                }
-            }
-
-            blockoverride "size" {
-                size = { @[panel_width_half - 20] 45 }
-            }
-            
-            direction = vertical
-
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('zanj_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
-
-                item = {
-                    flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
-                        }
-                    }
-                }
-            }
-        }
-        
-
-		#south africa
-        flowcontainer = {
-            margin_top = -2
-            background = {
-                using = simple_frame
-            }
-
-            default_header_clean_faded = {
-                blockoverride "text" {
-                    text = "saf_text"
-                }
-            }
-
-            blockoverride "size" {
-                size = { @[panel_width_half - 20] 45 }
-            }
-            
-            direction = vertical
-
-            dynamicgridbox = {
-                parentanchor = hcenter
-                datamodel = "[GetGlobalList('saf_claimed_countries_list')]"
-                datamodel_wrap = 3
-                flipdirection = yes
-
-                item = {
-                    flowcontainer = {
-                        visible = "[Scope.GetCountry.IsValid]"
-                        margin = { 5 10 }
-                        minimumsize = { 27 18 }
-                        small_flag = {
-                            datacontext = "[Scope.GetCountry]"
-                        }
-                    }
-                }
-            }
-        }
-        
-    }
+    
 }
