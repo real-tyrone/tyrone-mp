@@ -1,0 +1,139 @@
+# Italy Tyrone – all script values (single file).
+# Irredentism, Garibaldi expedition, sentiment bar, French economy JE.
+
+################################################################################
+# Italian Irredentism (JE reason display + Proclaim Empire button)
+# Used as GetPlayer.MakeScope.ScriptValue('...') in Italian_Irredentism_main_reason.
+################################################################################
+
+# Count of irredentism objectives met (0–11). Evaluated when used; no monthly pulse.
+irredentism_objectives_met_value = {
+	value = 0
+	if = { limit = { owns_entire_state_region = STATE_SAVOY } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_MONTENEGRO owns_entire_state_region = STATE_ALBANIA } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_ISTRIA owns_entire_state_region = STATE_DALMATIA } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_TRIPOLI } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_CRETE owns_entire_state_region = STATE_CYPRUS owns_entire_state_region = STATE_WEST_AEGEAN_ISLANDS owns_entire_state_region = STATE_EAST_AEGEAN_ISLANDS } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_LOWER_EGYPT owns_entire_state_region = STATE_MIDDLE_EGYPT owns_entire_state_region = STATE_UPPER_EGYPT owns_entire_state_region = STATE_MATRUH owns_entire_state_region = STATE_EGYPTIAN_DESERT } add = 1 }
+	if = { limit = { owns_entire_state_region = STATE_PALESTINE } add = 1 }
+	if = { limit = { is_power_bloc_leader = yes } add = 1 }
+	if = { limit = { global_country_ranking <= 3 } add = 1 }
+	if = { limit = { army_size >= 500 } add = 1 }
+	if = { limit = { techs_researched >= 68 } add = 1 }
+}
+
+irredentism_tech_target = 68
+irredentism_units_target = 500
+irredentism_rank_target = 3
+
+irredentism_tech_current_script = {
+	value = ROOT.techs_researched
+}
+irredentism_units_current_script = {
+	value = ROOT.army_power_projection
+}
+irredentism_rank_current_script = {
+	value = ROOT.global_country_ranking
+}
+
+################################################################################
+# Garibaldi Thousand Expedition (Prepare the Expedition button)
+# Requires our projection >= 3× Sicily's navy, 2× Sicily's army.
+################################################################################
+
+ita_garibaldi_three_times_sicily_navy = {
+	value = 0
+	c:SIC ?= {
+		value = this.navy_power_projection
+		multiply = 3
+	}
+}
+
+ita_garibaldi_three_times_sicily_army = {
+	value = 0
+	c:SIC ?= {
+		value = this.army_power_projection
+		multiply = 2
+	}
+}
+
+################################################################################
+# Italian unification sentiment bar (GUI, scope = country)
+################################################################################
+
+italian_sentiment_bar_value = {
+	value = owner.var:italian_sentiment_var
+}
+
+################################################################################
+# ITA_French_economy JE: Sardinia GDP growth by 5% every 6 months
+################################################################################
+
+ita_sar_gdp = {
+	value = 0
+	c:SAR ?= {
+		value = this.gdp
+	}
+}
+
+################################################################################
+# italy_developing_industry JE: GDP of North (Industrial triangle/Padana) vs South
+# North: Piedmont, Romagna, Lombardy, Venetia. South: Sardinia, Sicily, Calabria,
+# Campania, Apulia, Abruzzo. Call from country scope (e.g. JournalEntry.GetCountry.ScriptValue(...)).
+################################################################################
+
+ita_north_states_gdp = {
+	value = 0
+	every_scope_state = {
+		limit = {
+			state_region = {
+				is_homeland = cu:north_italian	
+			}
+		}
+		add = gdp
+	}
+}
+
+ita_south_states_gdp = {
+	value = 0
+	every_scope_state = {
+		limit = {
+			state_region = {
+				is_homeland = cu:south_italian	
+			}
+		}
+		add = gdp
+	}
+}
+
+
+# GDP per capita (gdp / population); divisor at least 1 to avoid divide by zero
+ita_north_states_population_safe = {
+	value = ita_north_states_population
+	max = 1
+}
+ita_south_states_population_safe = {
+	value = ita_south_states_population
+	max = 1
+}
+ita_north_states_gdp_per_capita = {
+	value = ita_north_states_gdp
+	divide = ita_north_states_population_safe
+}
+ita_south_states_gdp_per_capita = {
+	value = ita_south_states_gdp
+	divide = ita_south_states_population_safe
+}
+
+################################################################################
+# italy_developing_industry JE: yearly 8% GDP growth check (North vs South)
+# Target = last year's baseline * 1.08. Used in on_yearly_pulse to compare current GDP.
+################################################################################
+ita_north_gdp_8pct_target = {
+	value = var:north_gdp_ita_var
+	multiply = 1.08
+}
+ita_south_gdp_8pct_target = {
+	value = var:south_gdp_ita_var
+	multiply = 1.08
+}

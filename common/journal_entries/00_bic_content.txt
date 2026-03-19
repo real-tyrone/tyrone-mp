@@ -1,0 +1,169 @@
+﻿je_company_equity = {
+	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
+
+	group = je_group_british_india_global 
+
+	should_be_involved = {
+		OR = {
+			c:BIC = this
+			c:GBR = this
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			is_in_geographic_region = geographic_region_india
+			any_subject_or_below = {
+				is_in_geographic_region = geographic_region_india
+			}
+		}
+	}
+
+	immediate = {
+		scope:journal_entry = {
+			
+			set_variable = {
+            	name = com_style_two_characters
+			}
+        	
+			set_variable = {
+            	name = com_character_country_right_title
+           		value = flag:british_government_text
+        	}
+		
+			set_variable = {
+            	name = com_character_country_left_title
+           		value = flag:company_shareholder_text
+        	}
+		
+			set_variable = {
+            	name = com_character_country_right
+           		value = c:GBR
+        	}
+		
+			set_variable = {
+            	name = com_character_country_left
+           		value = c:BIC
+        	}
+		}
+
+		c:BIC = {
+			save_scope_as = company_scope
+			save_scope_as = raj_scope
+			ig:ig_industrialists ?= {
+				save_scope_as = eic_ig
+			}
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+	}
+
+	on_monthly_pulse = {
+		
+	}
+
+	invalid = {
+		OR = {
+			c:BIC = {
+				has_journal_entry = je_sepoy_mutiny
+			}
+			c:BIC = {
+				has_modifier = modifier_india_crown_rule
+			}
+		}
+	}
+
+	custom_completion_header = je_company_equity_completion_header
+
+	complete = {
+		custom_tooltip = {
+			text = has_repealed_charter_act
+			c:BIC = {
+				has_variable = repealed_charter_act
+			}
+		}
+	}
+
+	custom_failure_header = je_company_equity_failure_header
+
+	fail = {
+		custom_tooltip = {
+			text = has_passed_gov_of_india_act
+			c:GBR = {
+				has_variable = enacted_government_of_india_act
+			}
+		}
+	}
+
+	on_complete = {
+		c:BIC = { trigger_event = { id = sepoy_mutiny_events.11 } }
+		set_global_variable = invalidate_uneasy_raj
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = event_effects_sepoy_mutiny_events.11_tt
+			}
+		}
+	}
+
+	on_fail = {
+		c:GBR = { trigger_event = { id = raj.1 } }
+		set_global_variable = invalidate_uneasy_raj
+	}
+
+	event_outcome_failed_desc = {
+		first_valid = {
+            triggered_desc = {
+                desc = event_effects_raj_tyrone.1_tt
+            }
+        }
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = COMPANY_OWNS_MORE
+				trigger = {
+					scope:journal_entry = {
+						"scripted_bar_progress(company_equity_progress_bar)" > 0
+					}
+				}
+			}
+			triggered_desc = {
+				desc = BRITAIN_OWNS_MORE
+				trigger = {
+					scope:journal_entry = {
+						"scripted_bar_progress(company_equity_progress_bar)" < 0
+					}
+				}
+			}
+			triggered_desc = {
+				desc = BALANCE_OF_OWNERSHIP
+				trigger = {
+					scope:journal_entry = {
+						"scripted_bar_progress(company_equity_progress_bar)" = 0
+					}
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = company_equity_progress_bar
+	#british options
+
+	scripted_button = treasury_buy_shares
+	scripted_button = sell_shares_to_private_investors
+	scripted_button = enact_government_of_india_act
+
+	#eic options
+	scripted_button = share_buyback_button
+	scripted_button = sell_shares_to_britain
+	scripted_button = propose_repealment_charter_act
+
+	weight = 1000
+
+	should_be_pinned_by_default = yes
+}

@@ -1,0 +1,288 @@
+# Scripted GUIs for Italian diplomatic stance – French and Austrian column buttons (military, economy, laws)
+# Buttons in italy_journal_entry.gui call these via GetScriptedGui('...').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)
+
+################################################################################
+# French column
+################################################################################
+ita_french_military_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		NOT = { has_journal_entry = ITA_French_militaryJE }
+		NOT = { has_variable = ita_french_military_done }
+		NOT = { has_journal_entry = ITA_Austria_militaryJE }
+		NOT = { has_variable = ita_austria_military_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_French_militaryJE
+		}
+	}
+}
+
+ita_french_economy_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		NOT = { has_journal_entry = ITA_French_economyJE }
+		NOT = { has_variable = ita_french_economy_done }
+		NOT = { has_journal_entry = ITA_Austria_economyJE }
+		NOT = { has_variable = ita_austria_economy_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_French_economyJE
+		}
+	}
+}
+
+ita_french_laws_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		has_technology_researched = nationalism
+		NOT = { has_journal_entry = ITA_French_lawsJE }
+		NOT = { has_variable = ita_french_laws_done }
+		NOT = { has_journal_entry = ITA_Austria_lawsJE }
+		NOT = { has_variable = ita_austria_laws_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_French_lawsJE
+		}
+	}
+}
+
+################################################################################
+# Austrian column
+################################################################################
+ita_austrian_military_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		NOT = { has_journal_entry = ITA_Austria_militaryJE }
+		NOT = { has_variable = ita_austria_military_done }
+		NOT = { has_journal_entry = ITA_French_militaryJE }
+		NOT = { has_variable = ita_french_military_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_Austria_militaryJE
+		}
+	}
+}
+
+ita_austrian_economy_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		NOT = { has_journal_entry = ITA_Austria_economyJE }
+		NOT = { has_variable = ita_austria_economy_done }
+		NOT = { has_journal_entry = ITA_French_economyJE }
+		NOT = { has_variable = ita_french_economy_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_Austria_economyJE
+		}
+	}
+}
+
+ita_austrian_laws_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		has_technology_researched = nationalism
+		NOT = { has_journal_entry = ITA_Austria_lawsJE }
+		NOT = { has_variable = ita_austria_laws_done }
+		NOT = { has_journal_entry = ITA_French_lawsJE }
+		NOT = { has_variable = ita_french_laws_done }
+	}
+
+	effect = {
+		add_journal_entry = {
+			type = ITA_Austria_lawsJE
+		}
+	}
+}
+
+################################################################################
+# Industrial Development
+################################################################################
+
+ita_increase_dev_north_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = dev1to5_ita_dev_tt
+			var:investment_in_north_ita_var < 5 
+		}
+		custom_tooltip = {
+			text = enoughPoints_ita_dev_tt
+			var:ita_investment_power_var > 0 
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = dev1toNorth_ita_tt
+			change_variable = {
+				name = investment_in_north_ita_var
+				add = 1
+			}
+			change_variable = {
+				name = ita_investment_power_var
+				subtract = 1
+			}
+
+			ita_industryNorth_modifier_refresh_effect = yes
+		}
+	}
+}
+
+ita_increase_dev_south_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = dev1to5_ita_dev_tt
+			var:investment_in_south_ita_var < 5 
+		}
+		custom_tooltip = {
+			text = enoughPoints_ita_dev_tt
+			var:ita_investment_power_var > 0 
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = dev1toSouth_ita_tt
+			change_variable = {
+				name = investment_in_south_ita_var
+				add = 1
+			}
+			change_variable = {
+				name = ita_investment_power_var
+				subtract = 1
+				}
+			ita_industrySouth_modifier_refresh_effect = yes
+		}
+	}
+}
+
+ita_increase_dev_padana_scriptedgui = {
+	scope = country
+	saved_scopes = {}
+
+	is_shown = {
+		always = yes
+	}
+
+	ai_is_valid = {
+		always = no
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = dev1to5_ita_dev_tt
+			var:investment_in_padana_ita_var < 5 
+		}
+		custom_tooltip = {
+			text = enoughPoints_ita_dev_tt
+			var:ita_investment_power_var > 0 
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = dev1toPadana_ita_tt
+			change_variable = {
+				name = investment_in_padana_ita_var
+				add = 1
+			}
+			change_variable = {
+				name = ita_investment_power_var
+				subtract = 1
+			}
+			ita_industryPadana_modifier_refresh_effect = yes
+		}
+	}
+}

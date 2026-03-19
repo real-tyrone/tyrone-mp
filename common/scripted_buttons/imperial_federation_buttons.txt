@@ -1,0 +1,58 @@
+enact_imperial_federation = {
+	name = enact_imperial_federation
+	desc = enact_imperial_federation_desc
+
+	visible = {
+		this = c:GBR
+	}
+
+	possible = {
+		NOR = {
+			is_at_war = yes
+			is_diplomatic_play_committed_participant = yes
+		}
+		custom_tooltip = {
+			text = imperial_federation_sufficient_shared_laws_tt
+			global_var:imperial_federation_shared_laws_var >= imperial_federation_shared_laws_requirement
+		}
+		custom_tooltip = {
+			text = not_already_used_this_interaction_tt
+			NOT = { has_global_variable = imperial_federation_var }
+		}
+		c:CAN = {
+			OR = {
+				liberty_desire <= 25
+				relations:root >= relations_threshold:friendly
+			}
+		}
+		c:AST = {
+			OR = {
+				liberty_desire <= 25
+				relations:root >= relations_threshold:friendly
+			}
+		}
+		c:SAF = {
+			OR = {
+				liberty_desire <= 25
+				relations:root >= relations_threshold:friendly
+			}
+		}
+	}
+
+	effect = {
+		set_global_variable = imperial_federation_var
+		root = {
+			annex_with_incorporation = c:CAN
+		}
+		root = {
+			annex_with_incorporation = c:SAF
+		}
+		root = {
+			annex_with_incorporation = c:AST
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}

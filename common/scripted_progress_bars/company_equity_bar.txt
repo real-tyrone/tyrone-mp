@@ -1,0 +1,182 @@
+﻿company_equity_progress_bar = {
+	name = "company_equity_progress_bar_name"
+	desc = "company_equity_progress_bar_text_1"
+	second_desc = "company_equity_progress_bar_text_2"
+
+	double_sided_bad = yes
+
+
+	monthly_progress = {
+		#company taking loans
+		c:BIC = {
+			if = {
+				limit = {
+					taking_loans = yes
+				}
+				subtract = {
+					desc = "company_taking_loans_progress"
+					value = 2
+				}
+			}
+		}
+
+		#company has negative bureaucracy
+		c:BIC = {
+			if = {
+				limit = {
+					relative_bureaucracy < 0
+				}
+				subtract = {
+					desc = "company_negative_bureaucracy_progress"
+					value = 0.5
+				}
+			}
+		}
+
+		#company has negative balance
+
+		c:BIC = {
+			if = {
+				limit = {
+					net_total_income < 0
+				}
+				subtract = {
+					desc = "company_negative_balance_progress"
+					value = 1
+				}
+			}
+		}
+
+		#eic has more gdp tham gb but not that much more
+
+		c:BIC = {
+			if = {
+				limit = {
+					company_equity_gdp_ratio > 1
+					company_equity_gdp_ratio < 1.5
+				}
+				add = {
+					value = 0.25
+					desc = "company_more_gdp_than_britain_progress"
+				}
+			}
+		}
+
+		c:BIC = {
+			if = {
+				limit = {
+					company_equity_gdp_ratio > 1.5
+				}
+				add = {
+					value = 1
+					desc = "company_way_more_gdp_than_britain_progress"
+				}
+			}
+		}
+
+		#britain more gdp but not that much more
+		c:BIC = {
+			if = {
+				limit = {
+					company_equity_gdp_ratio < 1
+					company_equity_gdp_ratio > 0.5
+				}
+				subtract = {
+					value = 0.25
+					desc = "company_less_gdp_than_britain_progress"
+				}
+			}
+		}
+
+		c:BIC = {
+			if = {
+				limit = {
+					company_equity_gdp_ratio < 0.5
+				}
+				subtract = {
+					value = 1
+					desc = "company_way_less_gdp_than_britain_progress"
+				}
+			}
+		}
+
+		#britain buying shares from company
+		c:GBR = {
+			if = {
+				limit = {
+					c:GBR = { has_modifier = britain_buying_shares }
+				}
+				subtract = {
+					desc = "britain_buying_shares_progress"
+					value = 5
+				}
+			}
+		}
+
+		c:GBR = {
+			if = {
+				limit = {
+					c:GBR = { has_modifier = britain_selling_shares }
+				}
+				add = {
+					desc = "britain_selling_shares_progress"
+					value = 5
+				}
+			}
+		}
+
+		#company buying shares from britain
+		c:BIC = {
+			if = {
+				limit = {
+					has_modifier = company_buying_shares_back
+				}
+				add = {
+					desc = "company_buying_shares_progress"
+					value = 5
+				}
+			}
+		}
+
+		c:BIC = {
+			if = {
+				limit = {
+					has_modifier = company_selling_shares_back
+				}
+				subtract = {
+					desc = "company_selling_shares_progress"
+					value = 5
+				}
+			}
+		}
+
+		#britain taking loans
+		c:GBR = {
+			if = {
+				limit = {
+					taking_loans = yes
+				}
+				add = {
+					value = 0.5
+					desc = "britain_taking_loans_progress"
+				}
+			}
+		}
+
+		c:GBR = {
+			if = {
+				limit = {
+					net_total_income < 0
+				}
+				add = {
+					value = 0.5
+					desc = "britain_negative_balance_progress"
+				}
+			}
+		}
+	}
+
+	start_value = 0
+	min_value = -200 #government dominance
+	max_value = 200 #company shareholder dominance
+}

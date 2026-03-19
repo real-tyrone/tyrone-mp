@@ -1,0 +1,197 @@
+﻿namespace = bic_content
+
+#equity dispute introduced
+
+bic_content.1 = {
+	type = country_event
+
+	title = bic_content.1.t
+	desc = bic_content.1.d
+	flavor = bic_content.1.f
+
+	cooldown = { days = never_fire_again_modifier_time }
+
+	event_image = {
+		video = "ip2_india_urban_scene"
+	}
+
+	minor_left_icon = c:GBR
+	minor_right_icon = c:BIC
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+		c:BIC = {
+			save_scope_as = company_scope
+		}
+		c:BIC = {
+			every_scope_character = {
+				limit = {
+					exists = this
+					is_character_alive = yes
+					is_ruler = yes
+				}
+				save_scope_as = bic_ruler
+			}
+
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+		c:GBR = {
+			every_scope_character = {
+				limit = {
+					exists = this
+					is_character_alive = yes
+					is_ruler = yes
+				}
+				save_scope_as = gbr_ruler
+			}
+
+		}
+		set_variable = company_dispute_started
+	}
+
+	option = {
+		name = bic_content.1.a
+		add_journal_entry = {
+			type = je_company_equity
+		}
+	}
+}
+
+#gov of india act
+
+bic_content.2 = {
+	type = country_event
+
+	title = bic_content.2.t
+	desc = bic_content.2.d
+	flavor = bic_content.2.f
+
+	cooldown = { days = never_fire_again_modifier_time }
+
+	minor_left_icon = c:GBR
+	minor_right_icon = c:BIC
+
+	event_image = {
+		video = "ip2_telegraph_dictate"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
+
+	duration = 3
+
+	placement = scope:west_bengal_scope
+
+	immediate = {
+		s:STATE_WEST_BENGAL.region_state:BIC = {
+			save_scope_as = west_bengal_scope
+		}
+		c:BIC = {
+			save_scope_as = company_scope
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+	}
+
+	option = {
+		name = bic_content.2.a
+		custom_tooltip = activate_british_raj
+		trigger = {
+			this = c:GBR
+		}
+		c:GBR = {
+			add_modifier = {
+				name = gov_of_india_act_MODIFIER
+				years = 25
+				is_decaying = yes
+			}
+		}
+		c:GBR = {
+			set_variable = enacted_government_of_india_act
+		}
+	}
+	option = {
+		name = bic_content.2.a
+		custom_tooltip = activate_british_raj
+		trigger = {
+			this = c:BIC
+		}
+	}
+}
+
+#repeal of charter act of 1833
+
+bic_content.3 = {
+	type = country_event
+
+	title = bic_content.3.t
+	desc = bic_content.3.d
+	flavor = bic_content.3.f
+
+	cooldown = { days = never_fire_again_modifier_time }
+
+	minor_left_icon = c:GBR
+	minor_right_icon = c:BIC
+
+
+
+	event_image = {
+		video = "ip2_india_countryside"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
+
+	duration = 3
+
+	placement = scope:west_bengal_scope
+
+	immediate = {
+		s:STATE_WEST_BENGAL.region_state:BIC = {
+			save_scope_as = west_bengal_scope
+		}
+		c:BIC = {
+			save_scope_as = company_scope
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+	}
+
+	option = {
+		name = bic_content.3.a
+		trigger = {
+			this = c:BIC
+		}
+		c:BIC = {
+			add_modifier = economic_privileges_returned
+			set_variable = repealed_charter_act
+		}
+	}
+
+	option = {
+		name = bic_content.3.a
+		trigger = {
+			this = c:GBR
+		}
+		c:GBR = {
+			add_modifier = charter_act_repealed
+		}
+		c:BIC = {
+			set_variable = repealed_charter_act
+		}
+	}
+}

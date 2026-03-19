@@ -1,0 +1,155 @@
+﻿namespace = imperial_events
+
+#matter of empire
+imperial_events.1 = {
+	type = country_event
+
+	title = imperial_events.1.t
+	desc = imperial_events.1.d
+	flavor = imperial_events.1.f
+
+
+	duration = 3
+
+	event_image = {
+		video = "ip4_university_lecture"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
+
+	trigger = {
+		this = c:GBR
+		has_technology_researched = pan-nationalism
+		has_technology_researched = civilizing_mission
+		c:CAN ?= {
+			exists = yes
+			is_subject_of = c:GBR
+			OR = {
+				is_subject_type = subject_type_colony
+				is_subject_type = subject_type_dominion
+			}
+		}
+		c:AST ?= {
+			exists = yes
+			is_subject_of = c:GBR
+			OR = {
+				is_subject_type = subject_type_colony
+				is_subject_type = subject_type_dominion
+			}
+		}
+		c:SAF ?= {
+			exists = yes
+			is_subject_of = c:GBR
+			OR = {
+				is_subject_type = subject_type_colony
+				is_subject_type = subject_type_dominion
+			}
+		}
+		c:BIC ?= {
+			exists = yes
+			is_subject_of = c:GBR
+			OR = {
+				is_subject_type = subject_type_colony
+				is_subject_type = subject_type_dominion
+			}
+		}
+	}
+
+
+	immediate = {
+		c:CAN = {
+			save_scope_as = can_scope
+		}
+		c:BIC = {
+			save_scope_as = raj_scope
+		}
+		c:AST = {
+			save_scope_as = aus_scope
+		}
+	}
+
+	option = {
+		name = imperial_events.1.a #imperial federation path
+		add_contextless_journal_entry = je_imperial_federation
+	}
+
+	option = {
+		name = imperial_events.1.b #commonwealth
+	}
+}
+
+#imperial fed formed
+imperial_events.2 = {
+	type = country_event
+
+	title = imperial_events.2.t
+	desc = imperial_events.2.d
+	flavor = imperial_events.2.f
+
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
+
+
+	immediate = {
+		set_global_variable = imperial_federation_formed
+	}
+
+	option = {
+		name = imperial_events.2.a
+		add_modifier = {
+			name = imperial_federation_modifier
+			years = 25
+		}
+		if = {
+			limit = {
+				exists = c:BIC
+			}
+			c:BIC = {
+				add_modifier = exclusion_from_federation
+			}
+		}
+	}
+}
+
+#imperial fed failed
+imperial_events.3 = {
+	type = country_event
+
+	title = imperial_events.3.t
+	desc = imperial_events.3.d
+	flavor = imperial_events.3.f
+
+
+	duration = 3
+
+	event_image = {
+		video = "ip4_abdication"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
+
+
+	immediate = {
+		set_global_variable = imperial_federation_failed
+	}
+
+	option = {
+		name = imperial_events.3.a
+		add_modifier = {
+			name = imperial_federation_failure
+			years = 25
+		}
+	}
+}
