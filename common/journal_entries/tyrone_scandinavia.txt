@@ -216,6 +216,14 @@ je_unification_of_three_crowns = {
 			}
 			annex_with_incorporation = c:FIN
 			hidden_effect = { add_primary_culture = cu:finnish }
+			hidden_effect = {
+				s:STATE_KOLA = {
+					add_claim = ROOT
+				}
+				s:STATE_EAST_KARELIA = {
+					add_claim = ROOT
+				}
+			}
 		}
 		if = {
 			limit = {
@@ -291,6 +299,14 @@ je_securing_scandinavia = {
 			annex_with_incorporation = c:FIN
 		}
 		add_primary_culture = cu:finnish
+		hidden_effect = {
+				s:STATE_KOLA = {
+					add_claim = ROOT
+				}
+				s:STATE_EAST_KARELIA = {
+					add_claim = ROOT
+				}
+		}
 		custom_tooltip = {
 			text = je_scandinavia_missing_crown_completion_context
 		}
@@ -358,4 +374,86 @@ je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge cas
 			text = je_scandinavia_missing_crown_c_completion_context
 		}
 	}
+}
+
+je_scandinavian_baltic_claims = {
+	icon = "gfx\interface\icons\event_icons\bicorne_hat.dds"
+	group = je_group_foreign_affairs
+	should_be_pinned_by_default = yes
+	modifiers_while_active = {
+		modifier_avenging_great_northern_war
+	}
+
+	scripted_button = scandinavian_baltic_claims_forfeit
+	immediate = {
+		s:STATE_TALINN = {
+			add_claim = ROOT
+		}
+		s:STATE_TARTU = {
+			add_claim = ROOT
+		}
+		s:STATE_RIGA = {
+			add_claim = ROOT
+		}
+		s:STATE_INGRIA = {
+			add_claim = ROOT
+		}
+	}
+	possible = {
+		hidden_trigger = {
+		c:SCA = THIS
+		}
+		country_rank = rank_value:great_power
+		country_has_primary_culture = cu:finnish
+	}
+
+	is_shown_when_inactive = {
+		c:SCA = THIS
+	}
+
+	fail = {
+		custom_tooltip = {
+		text = scandinavia_baltic_claims_forfeited
+		has_global_variable = scandinavian_baltics_forfeited
+		}
+	}
+	on_fail = {
+		add_modifier = {
+			name = modifier_sisu_b
+		}
+		custom_tooltip = {
+			text = scandinavia_baltic_claims_give_up
+		}
+	}
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_TALINN
+		country_or_subject_owns_entire_state_region = STATE_TARTU 
+		country_or_subject_owns_entire_state_region = STATE_RIGA
+		country_or_subject_owns_entire_state_region = STATE_INGRIA
+	}
+
+	on_complete = {
+		add_modifier = {
+			name = modifier_sisu_a
+		}
+		custom_tooltip = {
+		text = scandinavia_baltic_claims_governates
+		if = {
+			limit = {
+				c:UBD = {
+				is_subject_of = ROOT
+				}
+			}
+			annex = c:UBD
+		}
+		}
+	}
+}
+
+je_scandinavian_public_works = {
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	group = je_group_internal_affairs
+	should_be_pinned_by_default = yes
+	scripted_button = scandinavian_public_works.1
+	scripted_button = scandinavian_public_works.2
 }
