@@ -1,0 +1,250 @@
+je_bismarck_reform = {
+	icon = "gfx/interface/icons/ideology_icons/ideology_leader/ideology_leader_junker_paternalistic.dds" #TODO SOME GOOD ICON
+
+	group = je_group_germany_tyrone
+
+	scripted_progress_bar = reform_balance_bismarck_bar
+	scripted_progress_bar = socialist_tension_bismarck_bar
+
+	is_shown_when_inactive = {
+		#THIS ?= c:GER
+		hidden_trigger = {
+			was_formed_from = PRU
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = bismarck_je_status_desc1
+				trigger = {
+					NOT = { has_journal_entry = je_bismarck_reform }
+				}
+			}
+			triggered_desc = {
+				desc = bismarck_je_status_desc2
+				trigger = {
+					has_journal_entry = je_bismarck_reform
+					je:je_bismarck_reform ?= {
+						"scripted_bar_progress(socialist_tension_bismarck_bar)" >= 50
+					}
+				}
+			}
+			triggered_desc = {
+				desc = bismarck_je_status_desc3
+				trigger = {
+					has_journal_entry = je_bismarck_reform
+					je:je_bismarck_reform ?= {
+						"scripted_bar_progress(socialist_tension_bismarck_bar)" < 50
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = bismarck_character_exists
+			any_scope_character = {
+				OR = { # Bismarck
+					has_role = agitator
+					has_role = politician
+				}
+				has_ideology = ideology:ideology_bismarck_paternalistic
+			}
+		}
+		OR = { 
+			has_technology_researched = socialism
+			any_political_movement = {
+				OR = {
+					is_political_movement_type = movement_socialist
+					is_political_movement_type = movement_anarchist
+					is_political_movement_type = movement_communist
+				}
+				OR = { 
+					political_movement_radicalism >= 0.25
+					political_movement_support >= 0.05
+				}
+				
+			}
+		}
+	}
+
+	immediate = {
+		trigger_event = { id = bismarckevents.6 popup = yes } 
+		set_variable = {
+				name = bismarck_concessions_var
+				value = 0
+			}
+		root ?= {
+			save_scope_as = GER_scope
+		}
+		ig:ig_landowners ?= {
+			save_scope_as = landowners_ig
+		}
+		ig:ig_industrialists ?= {
+			save_scope_as = industrialists_ig
+		}
+		ig:ig_intelligentsia ?= {
+			save_scope_as = intelligentsia_ig
+		}
+		ig:ig_trade_unions ?= {
+			save_scope_as = trade_unions_ig
+		}
+		random_scope_character = {
+				limit = {
+					has_variable = bismarck_variable_char
+				}
+				save_scope_as = bismarck_loc_character_scope
+				save_scope_as = bismarck_scope
+			}
+			random_scope_character = {
+				limit = {
+					has_variable = bismarck_variable_char
+				}
+				save_scope_as = bismarck_gui_character_scope
+			}
+			clear_variable_list = bismarck_scope_gui
+			add_to_variable_list = {
+				name = bismarck_scope_gui
+				target = scope:bismarck_gui_character_scope
+			}
+		
+		if = {
+			limit = {
+				any_political_movement = {
+					OR = {
+						is_political_movement_type = movement_socialist
+						is_political_movement_type = movement_anarchist
+						is_political_movement_type = movement_communist
+						}
+				}
+			}
+			create_political_movement = { type = movement_socialist }
+		}
+	}
+
+	complete = {
+		root.average_sol >= 12
+		has_law_or_variant = law_type:law_public_health_insurance #Variant Exists
+		has_law_or_variant = law_type:law_old_age_pension #Variant Exists
+		has_law_or_variant = law_type:law_protectionism
+		OR = {
+			has_law_or_variant = law_type:law_compulsory_primary_school
+			has_law_or_variant = law_type:law_restricted_child_labor
+		}
+		OR = {
+			has_law_or_variant = law_type:law_worker_protections
+			has_law_or_variant = law_type:law_regulatory_bodies #Variant Exists
+		}
+
+	}
+
+	fail = {
+		OR = { #Bismark Exiled by player/events or Killed by socialist
+			custom_tooltip = {
+				text = bismarck_character_trigger
+				NOT = { 
+					any_scope_character = {
+						OR = { # Bismark
+							has_role = agitator
+							has_role = politician
+						}
+						has_ideology = ideology:ideology_bismarck_paternalistic
+					} 
+				}
+			}
+		}
+		custom_tooltip = { #Major Skill Issue
+			text = bis_soc_tens_fail_tt
+			je:je_bismarck_reform ?= {
+				"scripted_bar_progress(socialist_tension_bismarck_bar)" >= 100
+			}
+		}
+	}
+
+	invalid = {
+	}
+	on_complete = { # 2 outcomes based on the second bar
+		if = {
+                limit = {
+                	je:je_bismarck_reform = {
+						"scripted_bar_progress(reform_balance_bismarck_bar)" >= 50
+					}
+                }
+                trigger_event = { id = bismarckevents.2 popup = yes } #paternalistic win
+            }
+            if = {
+                limit = {
+                    je:je_bismarck_reform = {
+						"scripted_bar_progress(reform_balance_bismarck_bar)" < 50
+					}
+                }
+                trigger_event = { id = bismarckevents.3 popup = yes } #socialist win
+            }
+
+		set_variable = bismarck_reforms_done
+	}
+
+    event_outcome_completed_desc = {
+        first_valid = {
+            triggered_desc = {
+                desc = event_bismarck_preview.3_tt
+            }
+        }
+    }
+
+	on_fail = {
+		#Maybe add general strikes?
+		trigger_event = { id = bismarckevents.4 popup = yes } #rise of the internationalist
+		set_variable = bismarck_reforms_failed
+		add_radicals = {
+			pop_type = laborers
+			value = 0.25
+		}
+	}
+
+    event_outcome_failed_desc = {
+        first_valid = {
+            triggered_desc = {
+                desc = event_bismarck_preview.4_tt
+            }
+        }
+    }
+
+	on_timeout = {
+		#Maybe add general strikes?
+		trigger_event = { id = bismarckevents.5 popup = yes } #softer version of the failing event
+		set_variable = bismarck_reforms_failed
+		add_radicals = {
+			pop_type = laborers
+			value = 0.15
+		}
+	}
+
+    event_outcome_timeout_desc = {
+        first_valid = {
+            triggered_desc = {
+                desc = event_bismarck_preview.5_tt
+            }
+        }
+    }
+
+	on_monthly_pulse = {
+		random_events = { #above 50% tension
+			100 = 0
+			10 = bismarckevents.7 #Rhine Strikes
+			10 = bismarckevents.8 #Silesian Strikes
+			10 = bismarckevents.9 #Commies ask for right to associate
+			10 = bismarckevents.10 #Socialists oppose Bismarck reforms 
+			10 = bismarckevents.11 #Bismarck gets slimed (requires event .10)
+		}
+	}
+
+	timeout = 5475 #15 yrs
+
+	weight = 100
+
+	should_be_pinned_by_default = yes
+
+}

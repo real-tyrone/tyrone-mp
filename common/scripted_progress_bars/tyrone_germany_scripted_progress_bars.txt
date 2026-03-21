@@ -1,0 +1,245 @@
+# Bismarck reforms / Bismarck reforms were not liked by the commies btw cuz they limited their voting rights 
+
+socialist_tension_bismarck_bar = {
+	name = "socialist_tension_bismarck_bar"
+	desc = "socialist_tension_bismarck_bar_desc"
+
+	default_bad = yes
+
+	monthly_progress = {
+		if = {
+			limit = {
+				relative_authority < 0
+			}
+			add = {
+				desc = "socialist_tension_bismarck_bar_authority_tt"
+				subtract = {
+					root = {
+						value = this.relative_authority
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				any_political_movement = {
+					movement_is_socialist = yes
+				}
+			}
+			add = {
+				desc = "socialist_tension_bismarck_bar_movements_tt"
+				every_political_movement = {
+					limit = {
+						movement_is_socialist = yes
+					}
+					add = {
+						value = this.political_movement_radicalism
+						multiply = 1.5
+					}
+				}
+			}
+		}
+		
+		if = {
+			limit = {
+				any_political_movement = {
+					movement_is_conservative = yes
+				}
+			}
+			subtract = {
+				desc = "socialist_tension_bismarck_bar_movement2_tt"
+				every_political_movement = {
+					limit = {
+						movement_is_conservative = yes
+					}
+					add = {
+						value = this.political_movement_support
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				any_scope_character = {
+					has_role = agitator
+					has_socialist_ideology = yes
+				} 
+			}
+			add = {
+				desc = "socialist_tension_bismarck_bar_character2_tt"
+				value = 0.25
+			}
+		}
+
+		if = {
+			limit = {
+				any_interest_group = {
+					is_in_government = yes
+					leader = {
+						has_ideology = ideology:ideology_bismarck_paternalistic
+					}
+				}
+			}
+			subtract = {
+				desc = "socialist_tension_bismarck_bar_character1_tt"
+				value = 0.25
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					is_enacting_law = law_type:law_old_age_pension
+					is_enacting_law = law_type:law_wage_subsidies
+					is_enacting_law = law_type:law_worker_protections
+					is_enacting_law = law_type:law_regulatory_bodies
+					is_enacting_law = law_type:law_right_to_associate
+					is_enacting_law = law_type:law_public_health_insurance
+				}
+			}
+			subtract = {
+				desc = "socialist_tension_bismarck_bar_laws_tt"
+				value = 0.25
+			}
+		}
+
+		if = {
+			limit = {
+				NOT = { has_modifier = germany_bismarck_concessions_char }
+				OR = {
+					is_enacting_law = law_type:law_old_age_bismarck
+					is_enacting_law = law_type:law_regulatory_bodies_bismarck
+					is_enacting_law = law_type:law_public_health_insurance_bismarck
+				}
+			}
+			add = {
+				desc = "socialist_tension_bismarck_bar_laws2_tt"
+				value = 0.25
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					has_law = law_type:law_old_age_pension
+					has_law = law_type:law_wage_subsidies
+					has_law = law_type:law_worker_protections
+					has_law = law_type:law_regulatory_bodies
+					has_law = law_type:law_right_to_associate
+					has_law = law_type:law_public_health_insurance
+				}
+			}
+			subtract = {
+				desc = "reform_balance_bismarck_bar_laws_tt"
+				value = 0
+				if = {
+					limit = { has_law = law_type:law_old_age_pension }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_wage_subsidies }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_worker_protections }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_regulatory_bodies }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_right_to_associate }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_public_health_insurance }
+					add = 0.2
+				}
+
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					has_law = law_type:law_old_age_bismarck
+					has_law = law_type:law_regulatory_bodies_bismarck
+					has_law = law_type:law_public_health_insurance_bismarck
+				}
+			}
+			add = {
+				desc = "reform_balance_bismarck_bar_laws2_tt"
+				value = 0
+				if = {
+					limit = { has_law = law_type:law_old_age_bismarck }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_regulatory_bodies_bismarck }
+					add = 0.2
+				}
+				if = {
+					limit = { has_law = law_type:law_public_health_insurance_bismarck }
+					add = 0.2
+				}
+			}
+		}
+	}
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+}
+
+reform_balance_bismarck_bar = {
+	name = "reform_balance_bismarck_bar"
+	desc = "reform_balance_bismarck_bar_desc"
+	second_desc = "reform_balance_bismarck_bar_right_desc"
+
+	double_sided_bad = yes
+
+	monthly_progress = {
+		subtract = {
+			desc = "reform_balance_bismarck_bar_concessions_tt"
+			value = owner.var:bismarck_concessions_var
+		}
+
+		if = {
+			limit = {
+				OR = {
+					has_law = law_type:law_old_age_pension
+					has_law = law_type:law_wage_subsidies
+					has_law = law_type:law_worker_protections
+					has_law = law_type:law_regulatory_bodies
+					has_law = law_type:law_right_to_associate
+					has_law = law_type:law_public_health_insurance
+				}
+			}
+			subtract = {
+				desc = "reform_balance_bismarck_bar_laws_tt"
+				value = 1
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					has_law = law_type:law_old_age_bismarck
+					has_law = law_type:law_regulatory_bodies_bismarck
+					has_law = law_type:law_public_health_insurance_bismarck
+				}
+			}
+			add = {
+				desc = "reform_balance_bismarck_bar_laws2_tt"
+				value = 1
+			}
+		}
+	}
+
+	start_value = 80
+	min_value = 0
+	max_value = 100
+}
