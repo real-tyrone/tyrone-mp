@@ -1,4 +1,4 @@
-﻿namespace = berlin_conference
+namespace = berlin_conference
 
 berlin_conference.1 = {
 	type = country_event
@@ -61,141 +61,6 @@ berlin_conference.1 = {
 
 }
 
-berlin_conference.2 = {
-	type = country_event
-	placement = ROOT
-
-	title = berlin_conference.2.t
-	desc = berlin_conference.2.d
-	flavor = berlin_conference.2.f
-
-	event_image = {
-		video = "africa_construction_colony"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
-
-	duration = 3
-
-	trigger = {
-		# triggered by on_action
-	}
-
-	immediate = {
-		set_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_ethiopia
-			NOT = {
-				has_variable = claimed_ethiopia_var
-			}
-        }
-        name = berlin_conference.2.a
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_ethiopia_var
-		add_to_global_variable_list = {
-			name = ethiopia_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_senegal
-			NOT = {
-				has_variable = claimed_senegal_var
-			}
-        }
-        name = berlin_conference.2.b
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_senegal_var
-		add_to_global_variable_list = {
-			name = senegal_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_congo
-			NOT = {
-				has_variable = claimed_congo_var
-			}
-        }
-        name = berlin_conference.2.c
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_congo_var
-		add_to_global_variable_list = {
-			name = congo_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}	
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_zanj
-			NOT = {
-				has_variable = claimed_zanj_var
-			}
-        }
-        name = berlin_conference.2.g
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_zanj_var
-		add_to_global_variable_list = {
-			name = zanj_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_niger
-			NOT = {
-				has_variable = claimed_niger_var
-			}
-        }
-        name = berlin_conference.2.h
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_niger_var
-		add_to_global_variable_list = {
-			name = niger_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_southern_africa
-			NOT = {
-				has_variable = claimed_saf_var
-			}
-        }
-        name = berlin_conference.2.i
-        change_variable = { name = african_claims_var subtract = 1 }
-		set_variable = claimed_saf_var
-		add_to_global_variable_list = {
-			name = saf_claimed_countries_list
-			target = ROOT
-		}
-		remove_variable = staking_a_claim
-	}		
-
-    option = {
-        name = berlin_conference.2.z
-		remove_variable = staking_a_claim
-		default_option = yes
-	}
-}
-
 berlin_conference.3 = {
 	type = country_event
 	placement = ROOT
@@ -212,7 +77,7 @@ berlin_conference.3 = {
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 
-	icon = "gfx/interface/icons/event_icons/event_default.dds"
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
 
 	duration = 3
 
@@ -221,313 +86,313 @@ berlin_conference.3 = {
 	}
 
 	immediate = {
-		sr:region_congo = {
-			save_scope_as = congo_region
-		}
-		sr:region_southern_africa = {
-			save_scope_as = saf_region
-		}
-		sr:region_niger = {
-			save_scope_as = niger_region
-		}
-		sr:region_zanj = {
-			save_scope_as = zanj_region
-		}
-		sr:region_senegal = {
-			save_scope_as = senegal_region
-		}
-		sr:region_ethiopia = {
-			save_scope_as = ethiopia_region
-		}
 		set_global_variable = berlin_conference_ended
+		if = {
+			limit = { root = { has_variable = claimed_west_africa_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_GUINEA
+						state_region = s:STATE_WINDWARD_COAST
+						state_region = s:STATE_IVORY_COAST
+						state_region = s:STATE_DAHOMEY
+						state_region = s:STATE_MAURITANIA
+						state_region = s:STATE_INNER_MAURITANIA
+						state_region = s:STATE_TIMBUKTU
+						state_region = s:STATE_WESTERN_MALI
+						state_region = s:STATE_EASTERN_MALI
+						state_region = s:STATE_VOLTA
+						state_region = s:STATE_SENEGAL
+						state_region = s:STATE_OUTER_HAUSALAND
+						state_region = s:STATE_NIGER
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_equatorial_africa_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_CHAD
+						state_region = s:STATE_WADDAI
+						state_region = s:STATE_UBANGI_SHARI
+						state_region = s:STATE_CONGO
+						state_region = s:STATE_GABON
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_liberia_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_LIBERIA
+						state_region = s:STATE_SIERRA_LEONE
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_morocco_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_INNER_MOROCCO
+						state_region = s:STATE_MARRAKECH
+						state_region = s:STATE_FEZ
+						state_region = s:STATE_AL_RIF
+						state_region = s:STATE_WEST_SAHARA
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_togo_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_TOGO
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_niger_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_NIGER_DELTA
+						state_region = s:STATE_BENIN
+						state_region = s:STATE_YORUBA_STATES
+						state_region = s:STATE_HAUSALAND
+						state_region = s:STATE_EAST_HAUSALAND
+						state_region = s:STATE_NIGERIA
+						state_region = s:STATE_BORNU
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_gold_coast_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_GOLD_COAST
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_congo_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_BAS_CONGO
+						state_region = s:STATE_EQUATEUR
+						state_region = s:STATE_KASAI
+						state_region = s:STATE_KATANGA
+						state_region = s:STATE_CONGO_ORIENTALE
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_cameroon_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_NORTH_CAMEROON
+						state_region = s:STATE_SOUTH_CAMEROON
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_gabon_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_GABON
+						state_region = s:STATE_CONGO
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_south_africa_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_CAPE_COLONY
+						state_region = s:STATE_NORTHERN_CAPE
+						state_region = s:STATE_EASTERN_CAPE
+						state_region = s:STATE_ZULULAND
+						state_region = s:STATE_VRYSTAAT
+						state_region = s:STATE_TRANSVAAL
+						state_region = s:STATE_BOTSWANA
+						state_region = s:STATE_ZAMBEZI
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_angola_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_NORTH_ANGOLA
+						state_region = s:STATE_SOUTH_ANGOLA
+						state_region = s:STATE_EAST_ANGOLA
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_namibia_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_HEREROLAND
+						state_region = s:STATE_NAMAQUALAND
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_zambia_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_ZAMBIA
+						state_region = s:STATE_KAZEMBE
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_east_africa_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_ZANZIBAR
+						state_region = s:STATE_LINDI
+						state_region = s:STATE_TANGANYIKA
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_kenya_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_KENYA
+						state_region = s:STATE_RIFT_VALLEY
+						state_region = s:STATE_UGANDA
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_madagascar_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_NORTH_MADAGASCAR
+						state_region = s:STATE_SOUTH_MADAGASCAR
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_ethiopia_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_SOMALILAND
+						state_region = s:STATE_OROMIA
+						state_region = s:STATE_AMHARA
+						state_region = s:STATE_GONDER
+						state_region = s:STATE_ERITREA
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
+		if = {
+			limit = { root = { has_variable = claimed_mozambique_var } }
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_MOCAMBIQUE
+						state_region = s:STATE_ZAMBEZIA
+						state_region = s:STATE_LOURENCO_MARQUES
+					}
+				}
+				state_region = { 
+						add_claim = ROOT
+					}
+			}
+		}
 	}
 
     option = {
         name = berlin_conference.3.a
-		if = {
-			limit = {
-				has_variable = claimed_congo_var
-			}
-			custom_tooltip = {
-				text = congo_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_congo
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				has_variable = claimed_saf_var
-			}
-			custom_tooltip = {
-				text = saf_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_southern_africa
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				has_variable = claimed_niger_var
-			}
-			custom_tooltip = {
-				text = niger_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_niger
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				has_variable = claimed_zanj_var
-			}
-			custom_tooltip = {
-				text = zanj_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_zanj
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				has_variable = claimed_senegal_var
-			}
-			custom_tooltip = {
-				text = senegal_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_senegal
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				has_variable = claimed_ethiopia_var
-			}
-			custom_tooltip = {
-				text = ethiopia_claims_tt
-				every_state = {
-					limit = {
-						region = sr:region_ethiopia
-					}
-					state_region = { 
-						add_claim = ROOT
-					}
-				}
-			}
-		}
-	}
-}
 
-berlin_conference.4 = {
-	type = country_event
-	placement = ROOT
-
-	title = berlin_conference.4.t
-	desc = berlin_conference.4.d
-	flavor = berlin_conference.4.f
-
-	event_image = {
-		video = "africa_construction_colony"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/ig_icons/armed_forces.dds"
-
-	duration = 3
-
-	trigger = {
-		# triggered by on_action
-	}
-
-	immediate = {
-		set_variable = staking_a_claim
-		sr:region_congo = {
-			save_scope_as = congo_region
-		}
-		sr:region_southern_africa = {
-			save_scope_as = saf_region
-		}
-		sr:region_niger = {
-			save_scope_as = niger_region
-		}
-		sr:region_zanj = {
-			save_scope_as = zanj_region
-		}
-		sr:region_senegal = {
-			save_scope_as = senegal_region
-		}
-		sr:region_ethiopia = {
-			save_scope_as = ethiopia_region
-		}
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_ethiopia
-			NOT = {
-				has_variable = claimed_ethiopia_var
-			}
-        }
-        name = berlin_conference.4.a
-		custom_tooltip = {
-			text = ethiopia_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_ethiopia
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		change_infamy = 25
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_senegal
-			NOT = {
-				has_variable = claimed_senegal_var
-			}
-        }
-        name = berlin_conference.4.b
-		custom_tooltip = {
-			text = senegal_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_senegal
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		change_infamy = 25
-		remove_variable = staking_a_claim
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_congo
-			NOT = {
-				has_variable = claimed_congo_var
-			}
-        }
-        name = berlin_conference.4.c
-		custom_tooltip = {
-			text = congo_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_congo
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		remove_variable = staking_a_claim
-		change_infamy = 25
-	}	
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_zanj
-			NOT = {
-				has_variable = claimed_zanj_var
-			}
-        }
-        name = berlin_conference.4.g
-		custom_tooltip = {
-			text = zanj_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_zanj
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		remove_variable = staking_a_claim
-		change_infamy = 25
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_niger
-			NOT = {
-				has_variable = claimed_niger_var
-			}
-        }
-        name = berlin_conference.4.h
-		custom_tooltip = {
-			text = niger_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_niger
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		remove_variable = staking_a_claim
-		change_infamy = 25
-	}
-
-    option = {
-        trigger = {
-			has_interest_marker_in_region = region_southern_africa
-			NOT = {
-				has_variable = claimed_saf_var
-			}
-        }
-        name = berlin_conference.4.i
-		custom_tooltip = {
-			text = saf_claims_tt
-			every_state = {
-				limit = {
-					region = sr:region_southern_africa
-				}
-				state_region = { 
-					add_claim = ROOT
-				}
-			}
-		}
-		remove_variable = staking_a_claim
-		change_infamy = 25
-	}		
-
-    option = {
-        name = berlin_conference.4.z
-		remove_variable = staking_a_claim
-		default_option = yes
 	}
 }
