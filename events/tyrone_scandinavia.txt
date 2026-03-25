@@ -1,0 +1,169 @@
+namespace = of_two_crowns
+
+of_two_crowns.1 = {
+	type = country_event
+	title = two_crowns_unite.1.t
+	desc = two_crowns_unite.1.d
+	flavor = two_crowns_unite.1.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+	
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	
+	duration = 1
+	option = {
+		name = two_crowns_unite.1.a
+		default_option = yes
+		create_diplomatic_pact = {
+			country = c:DEN
+			type = personal_union
+		}
+	}
+}
+
+of_two_crowns.2 = {
+	type = country_event
+	title = two_crowns_shatter.1.t
+	desc = two_crowns_shatter.1.d
+	flavor = two_crowns_shatter.1.f
+
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 1
+
+	option = {
+		name = two_crowns_shatter.1.a
+		default_option = yes
+		s:STATE_ZEALAND = {
+			add_claim = ROOT
+		}
+		s:STATE_JUTLAND = {
+			add_claim = ROOT
+		}
+		change_infamy = 7.5
+		add_journal_entry = {
+			type = je_securing_scandinavia
+		}
+	}
+}
+namespace = scandinavian_unification
+
+scandinavian_unification.1 = { #Monarchist Unification
+	type = country_event
+	title = scandinavian_unification.1.t
+	desc = scandinavian_unification.1.d
+	flavor = scandinavian_unification.1.f
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 1
+
+	option = {
+		name = scandinavian_unification.1.a
+		ROOT = {change_tag = SCA}
+		add_modifier = {
+			name = modifier_scandinavian_royal_military
+			months = 120
+			}
+		}
+	option = {
+		name = scandinavian_unification.1.b
+		add_modifier = {
+			name = modifier_scandinavian_academia
+			months = 120
+		 }
+		}
+	option = {
+		default_option = yes
+		name = scandinavian_unification.1.c
+		add_modifier = {
+			name = modifier_scandinavian_industrialists
+			months = 120
+		}
+	}
+	after = {
+		add_modifier = {
+			name = modifier_scandinavian_royal_authority
+			months = 120
+		}
+		hidden_effect = {
+			set_global_variable = scandinavia_unified
+		}
+		ROOT = {change_tag = SCA}
+		if = {
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:finnish
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown }
+		}
+		if = {
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:danish
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown_b }
+		}
+		if = { #edge case if norway is somehow not unified
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:norwegian
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown_c }
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+	}
+}	
+
+namespace = shattered_crown
+
+shattered_crown.1 = {
+	type = country_event
+	title = shattered_crown.1.t
+	desc = shattered_crown.1.d
+	flavor = shattered_crown.1.f
+
+	duration = 1
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+	immediate = {
+		every_subject_or_below = {
+			limit = {
+				OR = {
+				is_subject_type = subject_type_personal_union
+				is_subject_type = subject_type_crown_land
+				}
+			}
+			remove_subject_diplomatic_pact = yes
+		}
+	}
+	option = {
+		name = shattered_crown.1.a
+	}
+	after = {
+		add_modifier = {
+			name = modifier_royal_authority_collapsed
+			months = 120
+			is_decaying = yes
+		}
+		
+	}
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+}

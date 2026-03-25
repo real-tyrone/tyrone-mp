@@ -1,0 +1,451 @@
+je_of_two_crowns = {
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	group = je_group_scandinavian_unification
+
+	is_shown_in_lobby = {
+		c:SWE = THIS
+	}
+
+	is_shown_when_inactive= {
+		AND = {
+		hidden_trigger = { NOT = { has_global_variable = two_crowns_plus_one}}
+		c:SWE = THIS
+		}
+	}
+
+	possible = {
+		AND = {
+		hidden_trigger = { NOT = { has_global_variable = two_crowns_plus_one}}
+		c:SWE = THIS
+		has_law = law_type:law_monarchy
+		}
+		
+	}
+
+	complete = {
+		OR = {
+		c:DEN = {
+			is_subject_of = c:SWE
+		}
+		c:DEN = {
+			AND = {
+				has_law = law_type:law_monarchy
+				relations:root >= relations_threshold:amicable
+				is_subject = no
+				is_player = no
+			}
+		}
+		}
+	}
+
+	on_complete = {
+		hidden_effect = {set_global_variable = two_crowns_plus_one}
+		hidden_effect = { set_global_variable = secured_scandinavia }
+		trigger_event = { id = of_two_crowns.1 popup = yes}
+	}
+
+	fail = {
+		OR = {
+		c:DEN = {
+			NOT = {
+				owns_entire_state_region = STATE_JUTLAND
+				owns_entire_state_region = STATE_ZEALAND
+			}
+		
+		}
+		c:DEN = {
+			is_subject = yes
+		}
+		custom_tooltip = {
+			text = denmark_is_destroyed
+			NOT = {
+                    exists = c:DEN
+                }
+		}
+		}
+	}
+
+	on_fail = {
+		trigger_event = { id = of_two_crowns.2 popup = yes }
+		hidden_effect = {set_global_variable = two_crowns_plus_one}
+
+	}
+	
+	invalid = {
+		NOT = { has_law = law_type:law_monarchy }
+	}
+
+	should_be_pinned_by_default = yes
+
+}
+
+je_unification_of_three_crowns = {
+	
+	modifiers_while_active = {
+		modifier_exerting_royal_authority
+	}
+	
+	icon = "gfx/interface/icons/event_icons/hegemon.dds"
+
+	group = je_group_scandinavian_unification
+	
+	possible = {
+		OR = {
+		AND = {
+		custom_tooltip = {
+			text = scandinavia_partially_united
+			hidden_trigger = { has_global_variable = secured_scandinavia }
+		}
+		has_law = law_type:law_monarchy
+		has_technology_researched = nationalism
+		}
+		AND = {
+			custom_tooltip = {
+				text = scandinavia_partially_united_alt
+				OR = {
+					c:FIN = {
+						is_subject_of = c:SWE 
+					}
+					ROOT = {
+						country_or_subject_owns_entire_state_region = STATE_UUSIMAA
+					}
+				}
+			}
+			has_law = law_type:law_monarchy
+			has_technology_researched = nationalism	
+		}
+	}
+	}
+	is_shown_when_inactive = {
+		AND = {
+			c:SWE = THIS
+			has_law = law_type:law_monarchy
+		}
+	}
+	is_shown_in_lobby = {
+		c:SWE = THIS
+	}
+
+	scripted_progress_bar = je_unification_of_three_crowns_progress_bar
+
+	should_be_pinned_by_default = yes
+	
+	fail = {
+		OR = {
+			NOT = { has_law = law_type:law_monarchy }
+			custom_tooltip = {
+				text = scandinavian_crowns_rebel
+				
+				scope:journal_entry = {
+				"scripted_bar_progress(je_unification_of_three_crowns_progress_bar)" = 0
+				}
+				has_journal_entry = je_unification_of_three_crowns # Prevents fail being seen as "true" in JE window prior to activation. Probably a better way to do this.
+			}
+			custom_tooltip = {
+				text = scandinavia_no_crowns
+						
+				NOT = {
+						c:NOR = {
+							is_subject_of = c:SWE
+						}
+						c:FIN = {
+							is_subject_of = c:SWE
+						}
+						c:DEN  = {
+							is_subject_of = c:SWE
+						}
+					}			
+			}
+		}	
+	}
+
+	on_fail = {
+		trigger_event = { id = shattered_crown.1 popup = yes}
+	}
+	
+	complete = {
+		custom_tooltip = {
+			text = scandinavia_three_crowns_unification_progress
+			scope:journal_entry = {
+				"scripted_bar_progress(je_unification_of_three_crowns_progress_bar)" = 32
+			}
+		}
+	}
+	
+	on_complete = {
+		custom_tooltip = {
+			text = je_scandinavia_unification_context
+		}
+		if = {
+			limit = {
+				any_subject_or_below = {
+					c:DEN = THIS
+					OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			annex_with_incorporation = c:DEN
+			hidden_effect = { add_primary_culture = cu:danish }
+		}
+		if = {
+			limit = {
+				any_subject_or_below = {
+					c:NOR = THIS
+					OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			annex_with_incorporation = c:NOR
+			hidden_effect = { add_primary_culture = cu:norwegian }
+		}
+		if = {
+			limit = {
+				any_subject_or_below = {
+					c:FIN = THIS
+					OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			annex_with_incorporation = c:FIN
+			hidden_effect = { add_primary_culture = cu:finnish }
+			hidden_effect = {
+				s:STATE_KOLA = {
+					add_claim = ROOT
+				}
+				s:STATE_EAST_KARELIA = {
+					add_claim = ROOT
+				}
+			}
+		}
+		if = {
+			limit = {
+				country_or_subject_owns_entire_state_region = STATE_ICELAND
+			}
+			hidden_effect = { add_primary_culture = cu:icelandic }
+		}
+		trigger_event = {id = scandinavian_unification.1 popup = yes}
+	}
+}
+
+je_securing_scandinavia = {
+	icon = "gfx\interface\icons\event_icons\bicorne_hat.dds"
+	modifiers_while_active = {
+		modifier_securing_scandinavia_viking_spirit
+	}
+	
+	group = je_group_scandinavian_unification
+	
+	should_be_pinned_by_default = yes
+
+
+	complete = {
+	custom_tooltip = {
+		text = scandinavia_secured
+		country_or_subject_owns_entire_state_region = STATE_JUTLAND
+		country_or_subject_owns_entire_state_region = STATE_ZEALAND
+		country_or_subject_owns_entire_state_region = STATE_SCANIA
+		country_or_subject_owns_entire_state_region = STATE_GOTALAND
+		country_or_subject_owns_entire_state_region = STATE_SVEALAND
+		country_or_subject_owns_entire_state_region = STATE_NORRLAND
+		country_or_subject_owns_entire_state_region = STATE_WESTERN_NORWAY
+		country_or_subject_owns_entire_state_region = STATE_EASTERN_NORWAY
+		country_or_subject_owns_entire_state_region = STATE_NORTHERN_NORWAY
+		}
+	}
+	on_complete = {
+		hidden_effect = {set_global_variable = secured_scandinavia}
+		custom_description = {
+			text = secured_scandinavia_desc
+		}
+	}
+  }
+
+  je_scandinavia_missing_crown = {
+	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:finnish
+		}
+	}
+	complete = {
+		custom_tooltip = {
+			text = scandinavia_finland_reclaimed
+			country_or_subject_owns_entire_state_region = STATE_OULU
+			country_or_subject_owns_entire_state_region = STATE_OSTROBOTHNIA
+			country_or_subject_owns_entire_state_region = STATE_UUSIMAA
+			country_or_subject_owns_entire_state_region = STATE_ALAND
+			country_or_subject_owns_entire_state_region = STATE_KUOPIO
+			country_or_subject_owns_entire_state_region = STATE_WEST_KARELIA
+		}
+	}
+	on_complete = {
+		if = {
+			limit = {
+				c:FIN = {
+				is_subject_of = c:SCA
+				}
+			}
+			annex_with_incorporation = c:FIN
+		}
+		add_primary_culture = cu:finnish
+		hidden_effect = {
+				s:STATE_KOLA = {
+					add_claim = ROOT
+				}
+				s:STATE_EAST_KARELIA = {
+					add_claim = ROOT
+				}
+		}
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_completion_context
+		}
+	}
+  }
+je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification path is taken (Sweden, Norway, Finland) 
+  	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:danish
+		}
+	}
+
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_JUTLAND
+		country_or_subject_owns_entire_state_region = STATE_ZEALAND
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				c:DEN = {
+					is_subject_of = ROOT
+				}
+			}
+			annex_with_incorporation = c:DEN
+		}
+		add_primary_culture = cu:danish
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_b_completion_context
+		}
+	}
+}
+
+je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge case
+	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:norwegian
+		}
+	}
+
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_EASTERN_NORWAY
+		country_or_subject_owns_entire_state_region = STATE_WESTERN_NORWAY
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				c:NOR = {
+					is_subject_of = ROOT
+				}
+			}
+			annex_with_incorporation = c:NOR
+		}
+		add_primary_culture = cu:norwegian
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_c_completion_context
+		}
+	}
+}
+
+je_scandinavian_baltic_claims = {
+	icon = "gfx\interface\icons\event_icons\bicorne_hat.dds"
+	group = je_group_foreign_affairs
+	should_be_pinned_by_default = yes
+	modifiers_while_active = {
+		modifier_avenging_great_northern_war
+	}
+
+	scripted_button = scandinavian_baltic_claims_forfeit
+	immediate = {
+		s:STATE_TALINN = {
+			add_claim = ROOT
+		}
+		s:STATE_TARTU = {
+			add_claim = ROOT
+		}
+		s:STATE_RIGA = {
+			add_claim = ROOT
+		}
+		s:STATE_INGRIA = {
+			add_claim = ROOT
+		}
+	}
+	possible = {
+		hidden_trigger = {
+		c:SCA = THIS
+		}
+		country_rank = rank_value:great_power
+		country_has_primary_culture = cu:finnish
+	}
+
+	is_shown_when_inactive = {
+		c:SCA = THIS
+	}
+
+	fail = {
+		custom_tooltip = {
+		text = scandinavia_baltic_claims_forfeited
+		has_global_variable = scandinavian_baltics_forfeited
+		}
+	}
+	on_fail = {
+		add_modifier = {
+			name = modifier_sisu_b
+		}
+		custom_tooltip = {
+			text = scandinavia_baltic_claims_give_up
+		}
+	}
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_TALINN
+		country_or_subject_owns_entire_state_region = STATE_TARTU 
+		country_or_subject_owns_entire_state_region = STATE_RIGA
+		country_or_subject_owns_entire_state_region = STATE_INGRIA
+	}
+
+	on_complete = {
+		add_modifier = {
+			name = modifier_sisu_a
+		}
+		custom_tooltip = {
+		text = scandinavia_baltic_claims_governates
+		if = {
+			limit = {
+				c:UBD = {
+				is_subject_of = ROOT
+				}
+			}
+			annex = c:UBD
+		}
+		}
+	}
+}
