@@ -1,0 +1,120 @@
+je_manifest_destiny_mexico_button = {
+	name = "je_manifest_destiny_mexico_button"
+	desc = "je_manifest_destiny_mexico_button_desc"
+
+	visible = {
+		NOT = { has_variable = je_manifest_destiny_mexico_started }
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = je_manifest_destiny_mexico_started }
+		}
+		custom_tooltip = {
+			text = manifest_destiny_button_cooldown_tt
+			NOT = { has_variable = manifest_destiny_button_cooldown }
+		}
+	}
+
+	effect = {
+		set_variable = je_manifest_destiny_mexico_started
+		set_variable = {
+			name = manifest_destiny_button_cooldown
+			days = 365
+		}
+		add_journal_entry = {
+			type = je_manifest_destiny_mexico
+		}
+		if = {
+			limit = { exists = c:MEX }
+			create_incident = {
+				country = c:MEX
+				value = 15
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+je_mexican_cession_button = {
+	name = "je_mexican_cession_button"
+	desc = "je_mexican_cession_button_desc"
+
+	visible = {
+		has_journal_entry = je_manifest_destiny_mexico
+		NOT = { has_variable = je_mexican_cession_started }
+		exists = c:MEX
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = je_mexican_cession_started }
+		}
+		NOT = { is_at_war_with = c:MEX }
+		if = {
+			limit = { is_at_war_with = c:MEX }
+			custom_tooltip = {
+				text = je_mexican_cession_no_war_tt
+				always = no
+			}
+		}
+		NOT = { has_truce_with = c:MEX }
+		if = {
+			limit = { has_truce_with = c:MEX }
+			custom_tooltip = {
+				text = je_mexican_cession_truce_tt
+				always = no
+			}
+		}
+	}
+
+	effect = {
+		set_variable = je_mexican_cession_started
+		create_diplomatic_play = {
+			name = mexican_cession_war
+			type = dp_mexican_cession
+			target_country = c:MEX
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+je_manifest_destiny_frontier_wars_button = {
+	name = "je_manifest_destiny_frontier_wars_button"
+	desc = "je_manifest_destiny_frontier_wars_button_desc"
+
+	visible = {
+		NOT = { has_variable = je_manifest_destiny_frontier_wars_started }
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = je_manifest_destiny_frontier_wars_started }
+		}
+		custom_tooltip = {
+			text = manifest_destiny_button_cooldown_tt
+			NOT = { has_variable = manifest_destiny_button_cooldown }
+		}
+	}
+
+	effect = {
+		set_variable = je_manifest_destiny_frontier_wars_started
+		set_variable = {
+			name = manifest_destiny_button_cooldown
+			days = 365
+		}
+		add_journal_entry = {
+			type = je_manifest_destiny_frontier_wars
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
