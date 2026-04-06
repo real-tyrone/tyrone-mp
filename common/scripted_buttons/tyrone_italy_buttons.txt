@@ -8,6 +8,7 @@ ita_join_france_bloc_button = {
 	desc = ita_join_france_bloc_button_desc
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = ita_nif_stand_alone }
 	}
 
@@ -35,6 +36,7 @@ ita_join_austria_bloc_button = {
 	desc = ita_join_austria_bloc_button_desc
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = ita_nif_stand_alone }
 	}
 
@@ -65,6 +67,7 @@ ita_treaty_turin_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		NOT = {
 			has_variable = turin_done
 		}
@@ -102,6 +105,7 @@ ita_lombardy_cession_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		NOT = {
 			has_variable = lombardy_done
 		}
@@ -140,6 +144,7 @@ ita_annex_romagna_only_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = NIF_formed }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
 	}
@@ -187,6 +192,7 @@ ita_occupy_abruzzi_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		c:PAP ?= { exists = yes }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
 	}
@@ -225,6 +231,7 @@ ita_talks_with_the_pope_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
 
@@ -257,6 +264,7 @@ ita_italian_concordat_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
 
@@ -294,6 +302,7 @@ ita_invite_pope_sphere_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
@@ -340,6 +349,7 @@ ita_request_italian_recognition_button = {
 	cooldown = { years = 99 }
 
 	visible = {
+		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
@@ -461,6 +471,7 @@ ita_annex_pope_war_goal_button = {
 	cooldown = { months = 24 }
 
 	visible = {
+		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 	}
@@ -494,6 +505,8 @@ ita_form_italy_button = {
 	cooldown = { years = 99 }
 
 	visible = {
+		NOT = { c:ITA ?= root }
+		is_player = yes
 	}
 
 	possible = {
@@ -536,6 +549,8 @@ ita_form_italy_garibaldi_button = {
 	cooldown = { years = 99 }
 
 	visible = {
+		NOT = { c:ITA ?= root }
+		is_player = yes
 		has_global_variable = garibaldi_republic_established
 	}
 
@@ -608,6 +623,7 @@ ita_declare_north_italian_federation_button = {
 	cooldown = { years = 99 }
 
 	visible = {
+		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
 
@@ -1225,6 +1241,824 @@ ita_proclaim_italian_empire_button = {
 		add_modifier = {
 			name = italian_empire_modifier
 			multiplier = irredentism_objectives_met_value
+		}
+	}
+}
+
+# ========== Lombardo Venezia  ==========
+
+LV_fix_economy_button = {
+	name = LV_fix_economy_button
+	desc = LV_fix_economy_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_fixed_economy }
+	}
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_serfdom }
+		NOT = { has_law_or_variant = law_type:law_traditionalism }
+		NOT = { has_law_or_variant = law_type:law_guild_system }
+		NOT = { has_modifier = ita_LV_fixing_smt }
+		OR = {
+			country_has_building_group_levels = {
+                type = bg_mining
+                value  >= 20
+            }
+            country_has_building_group_levels = {
+                type = bg_light_industry
+                value  >= 30
+            }
+		}
+	}
+
+	effect = {
+		set_variable = LV_fixed_economy
+		je:italy_LV_startingout = {
+			remove_modifier = LV_weak_economy
+		}
+		add_modifier = {
+			name = ita_LV_fixing_smt
+			months = 13
+			is_decaying = yes
+		}
+	}
+}
+
+LV_fix_burocrazia_button = {
+	name = LV_fix_burocrazia_button
+	desc = LV_fix_burocrazia_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_fixed_burocrazia }
+	}
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+		bureaucracy >= 0
+		approaching_bureaucracy_shortage = no
+		NOT = { has_modifier = ita_LV_fixing_smt }
+	}
+
+	effect = {
+		set_variable = LV_fixed_burocrazia
+		je:italy_LV_startingout = {
+			remove_modifier = LV_weak_burocrazia
+		}
+		add_modifier = {
+			name = ita_LV_fixing_smt
+			months = 13
+			is_decaying = yes
+		}
+	}
+}
+
+LV_fix_railways_button = {
+	name = LV_fix_railways_button
+	desc = LV_fix_railways_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_fixed_railways }
+	}
+
+	possible = {
+		NOT = { has_modifier = ita_LV_fixing_smt }
+		any_scope_state = {
+			filter = {
+				is_incorporated = yes
+			}
+			percent >= 0.75
+			any_scope_building = {
+				is_building_type = building_urban_center
+				level >= 10
+			}
+			any_scope_building = {
+				is_building_type = building_railway
+				level >= 3
+			}
+		}
+	}
+
+	effect = {
+		set_variable = LV_fixed_railways
+		je:italy_LV_startingout = {
+			remove_modifier = LV_weak_railways
+		}
+		add_modifier = {
+			name = ita_LV_fixing_smt
+			months = 13
+			is_decaying = yes
+		}
+	}
+}
+
+LV_fix_legittimacy_button = {
+	name = LV_fix_legittimacy_button
+	desc = LV_fix_legittimacy_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_fixed_legittimacy }
+	}
+
+	possible = {
+		OR = { 
+			AND = {
+				OR = {
+					has_law_or_variant = law_type:law_national_guard
+					has_law_or_variant = law_type:law_secret_police
+				}
+				has_law_or_variant = law_type:law_oligarchy
+				institution:institution_police.investment >= 2
+				institution:institution_home_affairs.investment >= 2
+			}
+
+			AND = {
+				OR = {
+					has_law_or_variant = law_type:law_wealth_voting
+					has_law_or_variant = law_type:law_census_voting
+					has_law_or_variant = law_type:law_universal_suffrage
+				}
+			}
+		}
+		
+		
+		NOT = { has_modifier = ita_LV_fixing_smt }
+	}
+
+	effect = {
+		set_variable = LV_fixed_legittimacy
+		je:italy_LV_startingout = {
+			remove_modifier = LV_weak_legittimacy
+		}
+
+		if = {
+			limit = { 
+				OR = {
+					has_law_or_variant = law_type:law_wealth_voting
+					has_law_or_variant = law_type:law_census_voting
+					has_law_or_variant = law_type:law_universal_suffrage
+				}
+				 
+			}
+			add_journal_entry = {
+				type = italy_LV_ageofliberty
+			}
+		}
+		else = {
+			add_journal_entry = {
+				type = italy_LV_neoautocracy
+			}
+		}
+
+		add_modifier = {
+			name = ita_LV_fixing_smt
+			months = 13
+			is_decaying = yes
+		}
+	}
+}
+
+italy_LV_federationPo_monarchy_button = {
+	name = italy_LV_federationPo_monarchy_button
+	desc = italy_LV_federationPo_monarchy_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_accepted_republic }
+		NOT = { has_variable = LV_accepted_monarchy }
+	}
+
+	possible = {
+
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = LV_under_monarchy_tt
+			set_variable = LV_accepted_monarchy
+		}
+		
+	}
+}
+
+italy_LV_federationPo_republic_button = {
+	name = italy_LV_federationPo_republic_button
+	desc = italy_LV_federationPo_republic_button_desc
+
+	visible = {
+		NOT = { has_variable = LV_accepted_republic }
+		NOT = { has_variable = LV_accepted_monarchy }
+	}
+
+	possible = {
+
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = LV_under_republic_tt
+			set_variable = LV_accepted_republic
+		}
+	}
+}
+
+italy_LV_federationPo_PAPenvoy_button = {
+	name = italy_LV_federationPo_PAPenvoy_button
+	desc = italy_LV_federationPo_PAPenvoy_button_desc
+
+	visible = {
+		exists ?= c:PAP
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_envoy }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_envoy
+			months = 13
+		}
+		change_relations = {
+			country = c:PAP
+			value = 20
+		}
+		custom_tooltip = {
+			text = LV_papal_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_papal }
+			}
+		}
+	}
+}
+
+italy_LV_federationPo_SARenvoy_button = {
+	name = italy_LV_federationPo_SARenvoy_button
+	desc = italy_LV_federationPo_SARenvoy_button_desc
+
+	visible = {
+		exists ?= c:SAR
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_envoy }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_envoy
+			months = 13
+		}
+		change_relations = {
+			country = c:SAR
+			value = 20
+		}
+		custom_tooltip = {
+			text = LV_sar_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_sardinia }
+			}
+		}
+	}
+}
+
+italy_LV_federationPo_SARinvestment_button = {
+	name = italy_LV_federationPo_SARinvestment_button
+	desc = italy_LV_federationPo_SARinvestment_button_desc
+
+	visible = {
+		exists ?= c:SAR
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_investment }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_investment
+			months = 13
+		}
+		c:SAR = {
+			add_modifier = {
+				name = LV_get_investment
+				months = 13
+			}
+		}
+		change_relations = {
+			country = c:SAR
+			value = 20
+		}
+		custom_tooltip = {
+			text = LV_sar_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_sardinia }
+			}
+		}
+	}
+}
+
+italy_LV_federationPo_PAPinvestment_button = {
+	name = italy_LV_federationPo_PAPinvestment_button
+	desc = italy_LV_federationPo_PAPinvestment_button_desc
+
+	visible = {
+		exists ?= c:PAP
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_investment }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_investment
+			months = 13
+		}
+		c:SAR = {
+			add_modifier = {
+				name = LV_get_investment
+				months = 13
+			}
+		}
+		change_relations = {
+			country = c:PAP
+			value = 20
+		}
+		custom_tooltip = {
+			text = LV_pap_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_papal }
+			}
+		}
+	}
+}
+
+italy_LV_federationPo_AUSenvoy_button = {
+	name = italy_LV_federationPo_AUSenvoy_button
+	desc = italy_LV_federationPo_AUSenvoy_button_desc
+
+	visible = {
+		exists ?= c:AUS
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_envoy }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_envoy
+			months = 13
+		}
+		change_relations = {
+			country = c:AUS
+			value = 20
+		}
+		add_liberty_desire = -15
+		custom_tooltip = {
+			text = LV_aus_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_main }
+			}
+		}
+	}
+}
+
+italy_LV_federationPo_AUSinvestment_button = {
+	name = italy_LV_federationPo_AUSinvestment_button
+	desc = italy_LV_federationPo_AUSinvestment_button_desc
+
+	visible = {
+		exists ?= c:AUS
+	}
+
+	possible = {
+		NOT = { has_modifier = LV_send_investment }
+	}
+
+	effect = {
+		add_modifier = {
+			name = LV_send_investment
+			months = 13
+		}
+		c:AUS = {
+			add_modifier = {
+				name = LV_get_investment
+				months = 13
+			}
+		}
+		change_relations = {
+			country = c:AUS
+			value = 20
+		}
+		custom_tooltip = {
+			text = LV_aus_envoy_tt
+			je:italy_LV_federationPo = {
+				add_progress = { value = 15 name = ita_LV_confPO_main }
+			}
+		}
+	}
+}
+
+italy_LV_itafed_piedmont_button = {
+	name = italy_LV_itafed_piedmont_button
+	desc = italy_LV_itafed_piedmont_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		NOT = { exists ?= c:SAR }
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_PIEDMONT
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = LV_create_piedmont_tt
+			create_country = {
+				tag = SAR
+				origin = root
+				state = s:STATE_PIEDMONT.region_state:LMV
+				state = s:STATE_SAVOY.region_state:LMV
+				state = s:STATE_PROVENCE.region_state:LMV
+				on_created = {
+					c:LMV = {
+						create_diplomatic_pact = {
+							country = root
+							type = puppet
+						}
+					}
+					change_relations = {
+						country = c:LMV
+						value = 100
+					}
+				}
+			}
+		}
+	}
+}
+
+italy_LV_itafed_sardinia_button = {
+	name = italy_LV_itafed_sardinia_button
+	desc = italy_LV_itafed_sardinia_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		NOT = { exists ?= c:ki_SRD }
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_SARDINIA
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = LV_create_sardinia_tt
+			create_country = {
+				tag = ki_SRD
+				origin = root
+				state = s:STATE_SARDINIA.region_state:LMV
+				on_created = {
+					c:LMV = {
+						create_diplomatic_pact = {
+							country = root
+							type = puppet
+						}
+					}
+					change_relations = {
+						country = c:LMV
+						value = 100
+					}
+				}
+			}
+		}
+	}
+}
+
+italy_LV_itafed_rome_button = {
+	name = italy_LV_itafed_rome_button
+	desc = italy_LV_itafed_rome_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		NOT = { exists ?= c:PAP }
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_LAZIO
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = LV_create_rome_tt
+			create_country = {
+				tag = PAP
+				origin = root
+				state = s:STATE_LAZIO.region_state:LMV
+				on_created = {
+					c:LMV = {
+						create_diplomatic_pact = {
+							country = root
+							type = puppet
+						}
+					}
+					change_relations = {
+						country = c:LMV
+						value = 100
+					}
+				}
+			}
+		}
+	}
+}
+
+italy_LV_itafed_tuscany_button = {
+	name = italy_LV_itafed_tuscany_button
+	desc = italy_LV_itafed_tuscany_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		NOT = { exists ?= c:TUS }
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_TUSCANY
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = LV_create_tuscany_tt
+			create_country = {
+				tag = TUS
+				origin = root
+				state = s:STATE_TUSCANY.region_state:LMV
+				on_created = {
+					c:LMV = {
+						create_diplomatic_pact = {
+							country = root
+							type = puppet
+						}
+					}
+					change_relations = {
+						country = c:LMV
+						value = 100
+					}
+				}
+			}
+		}
+	}
+}
+
+italy_LV_itafed_sicily_button = {
+	name = italy_LV_itafed_sicily_button
+	desc = italy_LV_itafed_sicily_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		exists ?= c:SIC
+		NOT = { c:SIC = { is_subject_of = c:LMV } }
+	}
+
+	possible = {
+		c:SIC = { owns_entire_state_region = STATE_SICILY }
+		c:SIC = { owns_entire_state_region = STATE_CAMPANIA }
+		c:SIC = { is_subject = no }
+		OR = {
+			c:SIC = {
+				relations:root >= 50
+			}
+			is_in_same_power_bloc = c:LMV
+		}
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+		c:LMV = {
+			create_diplomatic_pact = {
+				country = c:SIC
+				type = puppet
+			}
+		}
+		change_relations = {
+				country = c:SIC
+				value = 100
+			}
+	}
+}
+
+italy_LV_itafed_naples_button = {
+	name = italy_LV_itafed_naples_button
+	desc = italy_LV_itafed_naples_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		exists ?= c:SIC
+		NOT = { exists ?= c:XNP }
+		c:SIC = { is_subject_of = c:LMV }
+	}
+
+	possible = {
+		c:SIC = { owns_entire_state_region = STATE_SICILY }
+	}
+
+	effect = {
+		hidden_effect = {
+			change_variable = {
+				name = italian_fed_var
+				add = 1
+			}
+			je:italy_LV_federationItaly = {
+				remove_modifier = LV_italian_federation_political
+				remove_modifier = LV_italian_federation_investment
+				add_modifier = {
+					name = LV_italian_federation_political
+					multiplier = var:italian_fed_var
+				}
+				add_modifier = {
+					name = LV_italian_federation_investment
+					multiplier = var:italian_fed_var
+				}
+			}
+		}
+		custom_tooltip = {
+			text = LV_create_sicily_tt
+			create_country = {
+				tag = XNP
+				origin = c:SIC
+				state = s:STATE_CAMPANIA.region_state:SIC
+				state = s:STATE_ABRUZZO.region_state:SIC
+				state = s:STATE_APULIA.region_state:SIC
+				state = s:STATE_CALABRIA.region_state:SIC
+				on_created = {
+					c:LMV = {
+						create_diplomatic_pact = {
+							country = root
+							type = puppet
+						}
+					}
+					change_relations = {
+						country = c:LMV
+						value = 100
+					}
+				}
+			}
+		}
+		change_relations = {
+				country = c:SIC
+				value = -20
+			}
+	}
+}
+
+italy_LV_itacentr_sicily_button = {
+	name = italy_LV_itacentr_sicily_button
+	desc = italy_LV_itacentr_sicily_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		exists ?= c:SIC
+		NOT = { c:SIC = { is_subject_of = c:LMV } }
+	}
+
+	possible = {
+		c:SIC = { owns_entire_state_region = STATE_SICILY }
+		c:SIC = { owns_entire_state_region = STATE_CAMPANIA }
+		c:SIC = { is_subject = no }
+		OR = {
+			c:SIC = {
+				relations:root >= 50
+			}
+			is_in_same_power_bloc = c:LMV
+		}
+	}
+
+	effect = {
+		c:LMV = {
+			create_diplomatic_pact = {
+				country = c:SIC
+				type = puppet
+			}
+		}
+		change_relations = {
+				country = c:SIC
+				value = 100
+			}
+	}
+}
+
+italy_LV_itacentr_sway_sicily_button = {
+	name = italy_LV_itacentr_sway_sicily_button
+	desc = italy_LV_itacentr_sway_sicily_button_desc
+
+	visible = {
+		NOT = { c:ITA ?= root }
+		exists ?= c:SIC
+	}
+
+	cooldown = { months = 12 }
+
+	possible = {
+		c:SIC = { is_subject = no }
+	}
+
+	effect = {
+		change_relations = {
+			country = c:SIC
+			value = 20
 		}
 	}
 }

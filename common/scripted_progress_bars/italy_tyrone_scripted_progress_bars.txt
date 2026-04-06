@@ -328,3 +328,258 @@ ita_austria_economy_progress_bar = {
 	monthly_progress = {
 	}
 }
+
+
+################################################################################
+# Lombardo Venezia bars
+################################################################################
+
+ita_LV_confPO_main = {
+	name = "ita_LV_confPO_main_name"
+	desc = "ita_LV_confPO_main_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# Radicals
+			subtract = {
+				desc = "ita_LV_confPO_main_radical_fraction_tt"
+				value = radical_fraction
+			multiply = 10
+			}
+
+			# Loyalists
+			add = {
+				desc = "ita_LV_confPO_main_loyalist_fraction_tt"
+				value = loyalist_fraction
+			multiply = 10
+			}
+		if = {
+			limit = {
+				is_subject = yes
+				top_overlord.relations:root > 0
+			}
+			add = {
+				desc = "ita_LV_confPO_main_overlord_relations_tt"
+				value = "top_overlord.relations(root)"
+				divide = 50
+			}
+		}
+		if = {
+			limit = {
+				liberty_desire > 75
+			}
+			subtract = {
+				desc = "ita_LV_confPO_main_from_high_liberty_desire"
+				value = ROOT.liberty_desire
+				divide = 50
+			}
+		}
+		if = {
+			limit = {
+				liberty_desire <= 75
+			}
+			add = {
+				desc = "ita_LV_confPO_main_from_low_liberty_desire"
+				value = 100
+				subtract = ROOT.liberty_desire
+				divide = 50
+			}
+		}
+		if = {
+			limit = {
+				is_subject = no
+			}
+			add = {
+				desc = "ita_LV_confPO_main_no_overlord_tt"
+				value = 5
+			}
+		}
+		if = {
+			limit = {
+				has_variable = LV_accepted_monarchy
+			}
+			add = {
+				desc = "ita_LV_confPO_main_monarchyDEC_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				has_variable = LV_accepted_republic
+			}
+			add = {
+				desc = "ita_LV_confPO_main_republicDEC_tt"
+				value = 1
+			}
+		}
+	}
+}
+
+ita_LV_confPO_sardinia = {
+	name = "ita_LV_confPO_sardinia_name"
+	desc = "ita_LV_confPO_sardinia_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# Radicals
+			subtract = {
+				desc = "ita_LV_confPO_sardinia_radical_fraction_tt"
+				value = radical_fraction
+			}
+
+			# Loyalists
+			add = {
+				desc = "ita_LV_confPO_sardinia_loyalist_fraction_tt"
+				value = loyalist_fraction
+			}
+		if = {
+			limit = {
+				exists ?= c:SAR
+				owner = { c:SAR.relations:root > 0 }
+			}
+			add = {
+				desc = "ita_LV_confPO_sardinia_relations_tt"
+				value = "c:SAR.relations(root)"
+				divide = 20
+			}
+		}
+		if = {
+			limit = {
+				is_subject = no
+			}
+			add = {
+				desc = "ita_LV_confPO_sardinia_no_overlord_tt"
+				value = 5
+			}
+		}
+		if = {
+			limit = {
+				owner = { has_variable = LV_accepted_monarchy }
+			}
+			add = {
+				desc = "ita_LV_confPO_sardinia_monarchyDEC_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = { has_variable = LV_accepted_republic }
+			}
+			add = {
+				desc = "ita_LV_confPO_sardinia_republicDEC_tt"
+				value = 1
+			}
+		}
+		owner = {
+			if = { 
+				limit = {
+					ig:ig_landowners = {
+						ig_approval > 0
+					}
+				}
+				add = {
+					desc = "ita_LV_confPO_sardinia_IGhappy_tt"
+					ig:ig_landowners = {
+						limit = {
+							ig_approval > 0
+						}
+						value = ig_approval
+						divide = 10
+					}
+				}
+			}
+		}
+	}
+}
+
+ita_LV_confPO_papal = {
+	name = "ita_LV_confPO_papal_name"
+	desc = "ita_LV_confPO_papal_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# Radicals
+			subtract = {
+				desc = "ita_LV_confPO_papal_radical_fraction_tt"
+				value = radical_fraction
+			}
+
+			# Loyalists
+			add = {
+				desc = "ita_LV_confPO_papal_loyalist_fraction_tt"
+				value = loyalist_fraction
+			}
+		if = {
+			limit = {
+				exists ?= c:PAP
+				owner = { c:PAP.relations:root > 0 }
+			}
+			add = {
+				desc = "ita_LV_confPO_papal_relations_tt"
+				value = "c:PAP.relations(root)"
+				divide = 50
+			}
+		}
+		if = {
+			limit = {
+				is_subject = no
+			}
+			add = {
+				desc = "ita_LV_confPO_papal_no_overlord_tt"
+				value = 5
+			}
+		}
+		if = {
+			limit = {
+				owner = { has_variable = LV_accepted_monarchy }
+			}
+			add = {
+				desc = "ita_LV_confPO_papal_monarchyDEC_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = { has_variable = LV_accepted_republic }
+			}
+			add = {
+				desc = "ita_LV_confPO_papal_republicDEC_tt"
+				value = 1
+			}
+		}
+		owner = {
+			if = { 
+				limit = {
+					ig:ig_landowners = {
+						ig_approval > 0
+					}
+				}
+				add = {
+					desc = "ita_LV_confPO_papal_IGhappy_tt"
+					ig:ig_devout = {
+						limit = {
+							ig_approval > 0
+						}
+						value = ig_approval
+						divide = 10
+					}
+				}
+			}
+		}
+	}
+}
