@@ -1,5 +1,67 @@
-namespace = ostend_manifesto
+namespace = spanish_american_war
 
+
+### Spanish-American War Events
+
+# Sinking of the USS Maine
+spanish_american_war.1 = {
+	type = country_event
+	placement = s:STATE_WESTERN_CUBA.region_state:CUB
+
+	event_image = {
+		video = "unspecific_naval_battle"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	title = spanish_american_war.1.t
+	desc = spanish_american_war.1.d
+	flavor = spanish_american_war.1.f
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_global_variable = uss_maine_fired }
+	}
+
+	immediate = {
+		set_global_variable = uss_maine_fired
+	}
+
+	after = {
+		add_radicals = {
+			value = 0.025
+			culture = cu:yankee
+		}
+		add_radicals = {
+			value = 0.025
+			culture = cu:dixie
+		}
+	}
+
+	option = {
+		name = spanish_american_war.1.a
+		custom_tooltip = saw_maine_tension_a_tt
+		add_progress = {
+			value = 10
+			name = je_spanish_american_war_tension_bar
+		}
+	}
+
+	option = {
+		name = spanish_american_war.1.b
+		custom_tooltip = saw_maine_tension_b_tt
+		add_progress = {
+			value = 5
+			name = je_spanish_american_war_tension_bar
+		}
+	}
+}
+
+### Ostend Manifesto Events
+namespace = ostend_manifesto
 # Spain receives the American offer to purchase Cuba
 ostend_manifesto.1 = {
 	type = country_event
@@ -26,7 +88,7 @@ ostend_manifesto.1 = {
 
 	option = {
 		name = ostend_manifesto.1.a
-		# Accept: receive 5M over 12 months
+		# Accept: receive 5M over 5 years
 		add_modifier = {
 			name = ostend_cuba_offer_income
 			months = 60
@@ -56,7 +118,7 @@ ostend_manifesto.1 = {
 	}
 }
 
-# USA receives Spain's counteroffer of 7.5M
+# USA receives Spain's counteroffer of 7.5M for Cuba
 ostend_manifesto.2 = {
 	type = country_event
 	placement = root
@@ -82,7 +144,7 @@ ostend_manifesto.2 = {
 
 	option = {
 		name = ostend_manifesto.2.a
-		# Accept the counteroffer: pay 7.5M over 12 months
+		# Accept the counteroffer: pay 7.5M over 5 years
 		add_modifier = {
 			name = ostend_cuba_counteroffer_payment
 			months = 60
@@ -141,7 +203,7 @@ ostend_manifesto.3 = {
 
 	option = {
 		name = ostend_manifesto.3.b
-		# Establish American sovereignty (protectorate)
+		# Establish American protectorate
 		c:SPA = {
 			remove_diplomatic_pact = { country = c:CUB type = colony }
 		}
