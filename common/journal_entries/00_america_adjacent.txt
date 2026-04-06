@@ -136,6 +136,7 @@ je_ostend_manifesto = {
 			c:USA ?= THIS
 			c:SPA ?= THIS
 			c:CUB ?= THIS
+			c:PCO ?= THIS
 		}
 	}
 
@@ -144,15 +145,20 @@ je_ostend_manifesto = {
 			c:USA ?= THIS
 			c:SPA ?= THIS
 			c:CUB ?= THIS
+			c:PCO ?= THIS
 		}
 	}
 
 	scripted_button = je_ostend_offer_cuba_button
 	scripted_button = je_ostend_offer_pco_button
+	scripted_button = je_ostend_conclude_negotiations_button
+	scripted_button = je_ostend_spa_conclude_negotiations_button
 	scripted_button = je_ostend_usa_rejects_button
 	scripted_button = je_ostend_spain_rejects_button
 	scripted_button = je_ostend_cuba_liberation_button
 	scripted_button = je_ostend_cuba_spain_button
+	scripted_button = je_ostend_pco_liberation_button
+	scripted_button = je_ostend_pco_spain_button
 
 	possible = {
 		exists = c:USA
@@ -177,15 +183,35 @@ je_ostend_manifesto = {
 	}
 
 	on_complete = {
+		c:USA = {
+			add_loyalists = {
+				value = 0.10
+				culture = cu:yankee
+			}
+			add_loyalists = {
+				value = 0.10
+				culture = cu:dixie
+			}
+		}
 		hidden_effect = {
 			c:CUB ?= {
 				if = {
-					limit = { has_modifier = ostend_cuba_liberation_alignment }
-					remove_modifier = ostend_cuba_liberation_alignment
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
 				}
 				if = {
-					limit = { has_modifier = ostend_cuba_spain_alignment }
-					remove_modifier = ostend_cuba_spain_alignment
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
 				}
 			}
 		}
@@ -195,12 +221,22 @@ je_ostend_manifesto = {
 		hidden_effect = {
 			c:CUB ?= {
 				if = {
-					limit = { has_modifier = ostend_cuba_liberation_alignment }
-					remove_modifier = ostend_cuba_liberation_alignment
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
 				}
 				if = {
-					limit = { has_modifier = ostend_cuba_spain_alignment }
-					remove_modifier = ostend_cuba_spain_alignment
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
 				}
 			}
 		}
@@ -218,29 +254,44 @@ je_ostend_manifesto = {
 				exists = c:USA
 				c:USA = { has_variable = ostend_usa_rejected }
 			}
-		}
-	}
-
-	event_outcome_completed_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = je_ostend_manifesto_completed_tt
+			custom_tooltip = {
+				text = je_ostend_manifesto_fail_war_tt
+				exists = c:USA
+				exists = c:SPA
+				c:USA = { has_war_with = c:SPA }
 			}
 		}
 	}
-
-	custom_completion_header = je_ostend_manifesto_completion_header
 
 	complete = {
 		c:USA = { exists = yes }
 		OR = {
 			custom_tooltip = {
-				text = je_ostend_manifesto_complete_cuba_tt
-				c:CUB = { is_subject_of = c:USA }
+				text = je_ostend_manifesto_complete_concluded_tt
+				OR = {
+					has_variable = ostend_usa_negotiations_concluded
+					c:SPA = { has_variable = ostend_spa_negotiations_concluded }
+				}
 			}
-			custom_tooltip = {
-				text = je_ostend_manifesto_complete_pco_tt
-				c:PCO = { is_subject_of = c:USA }
+			AND = {
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_cuba_tt
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_pco_tt
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
 			}
 		}
 	}

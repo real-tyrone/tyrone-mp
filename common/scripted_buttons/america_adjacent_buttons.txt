@@ -56,10 +56,45 @@ je_ostend_usa_rejects_button = {
 	possible = {
 		hidden_trigger = {
 			NOT = { has_variable = ostend_usa_rejected }
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
 		}
 		custom_tooltip = {
 			text = ostend_rejection_cooldown_tt
 			NOT = { has_variable = ostend_rejection_cooldown }
+		}
+		custom_tooltip = {
+			text = ostend_conclude_blocks_rejection_tt
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -92,10 +127,45 @@ je_ostend_spain_rejects_button = {
 	possible = {
 		hidden_trigger = {
 			NOT = { has_variable = ostend_spain_rejected }
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
 		}
 		custom_tooltip = {
 			text = ostend_rejection_cooldown_tt
 			NOT = { has_variable = ostend_rejection_cooldown }
+		}
+		custom_tooltip = {
+			text = ostend_conclude_blocks_rejection_tt
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -207,6 +277,9 @@ je_ostend_cuba_liberation_button = {
 	}
 
 	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
 		custom_tooltip = {
 			text = ostend_cuba_already_chose_tt
 			NOT = { has_variable = ostend_cuba_alignment_chosen }
@@ -217,13 +290,18 @@ je_ostend_cuba_liberation_button = {
 		set_variable = ostend_cuba_alignment_chosen
 		set_variable = ostend_cuba_supports_liberation
 		c:USA = { set_variable = ostend_cuba_supports_liberation }
-		add_modifier = {
-			name = ostend_cuba_liberation_alignment
-		}
+		add_modifier = { name = ostend_liberation_alignment }
+		add_radicals = { value = 0.05 }
 	}
 
 	ai_chance = {
-		value = 50
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+			add = 100
+		}
 	}
 }
 
@@ -237,6 +315,9 @@ je_ostend_cuba_spain_button = {
 	}
 
 	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
 		custom_tooltip = {
 			text = ostend_cuba_already_chose_tt
 			NOT = { has_variable = ostend_cuba_alignment_chosen }
@@ -247,12 +328,169 @@ je_ostend_cuba_spain_button = {
 		set_variable = ostend_cuba_alignment_chosen
 		set_variable = ostend_cuba_supports_spain
 		c:USA = { set_variable = ostend_cuba_supports_spain }
-		add_modifier = {
-			name = ostend_cuba_spain_alignment
-		}
+		add_modifier = { name = ostend_spain_alignment }
+		add_loyalists = { value = 0.05 }
 	}
 
 	ai_chance = {
-		value = 50
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" >= relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_pco_liberation_button = {
+	name = "je_ostend_pco_liberation_button"
+	desc = "je_ostend_pco_liberation_button_desc"
+
+	visible = {
+		c:PCO ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_pco_already_chose_tt
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_pco_alignment_chosen
+		set_variable = ostend_pco_supports_liberation
+		c:USA = { set_variable = ostend_pco_supports_liberation }
+		add_modifier = { name = ostend_liberation_alignment }
+		add_radicals = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_pco_spain_button = {
+	name = "je_ostend_pco_spain_button"
+	desc = "je_ostend_pco_spain_button_desc"
+
+	visible = {
+		c:PCO ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_pco_already_chose_tt
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_pco_alignment_chosen
+		set_variable = ostend_pco_supports_spain
+		c:USA = { set_variable = ostend_pco_supports_spain }
+		add_modifier = { name = ostend_spain_alignment }
+		add_loyalists = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" >= relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_conclude_negotiations_button = {
+	name = "je_ostend_conclude_negotiations_button"
+	desc = "je_ostend_conclude_negotiations_button_desc"
+
+	visible = {
+		c:USA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ostend_conclude_eligible_tt
+			OR = {
+				c:CUB = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+				c:PCO = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		set_variable = ostend_usa_negotiations_concluded
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}
+
+je_ostend_spa_conclude_negotiations_button = {
+	name = "je_ostend_spa_conclude_negotiations_button"
+	desc = "je_ostend_spa_conclude_negotiations_button_desc"
+
+	visible = {
+		c:SPA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ostend_conclude_eligible_tt
+			OR = {
+				c:CUB = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+				c:PCO = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		set_variable = ostend_spa_negotiations_concluded
+	}
+
+	ai_chance = {
+		value = 1
 	}
 }
