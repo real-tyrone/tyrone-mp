@@ -63,7 +63,10 @@ ae_power_bloc_checkbox = {
 		trigger = {
 			NOT = {
 				power_bloc ?= {
-					num_power_bloc_members >= 5
+					any_power_bloc_member = {
+						capital = { is_in_geographic_region = geographic_region_americas }
+						count >= 5
+					}
 				}
 			}
 		}
@@ -72,7 +75,10 @@ ae_power_bloc_checkbox = {
 	text = {
 		trigger = {
 			power_bloc ?= {
-				num_power_bloc_members >= 5
+				any_power_bloc_member = {
+					capital = { is_in_geographic_region = geographic_region_americas }
+					count >= 5
+				}
 			}
 		}
 		localization_key = metternich_ticked
@@ -83,13 +89,13 @@ ae_bloc_rank1_checkbox = {
 	type = country
 	text = {
 		trigger = {
-			NOT = { power_bloc ?= { power_bloc_rank = 1 } }
+			NOT = { power_bloc ?= { power_bloc_rank <= 3 } }
 		}
 		localization_key = metternich_unticked
 	}
 	text = {
 		trigger = {
-			power_bloc ?= { power_bloc_rank = 1 }
+			power_bloc ?= { power_bloc_rank <= 3 }
 		}
 		localization_key = metternich_ticked
 	}
@@ -137,6 +143,62 @@ ae_flotilla_checkbox = {
 	}
 }
 
+ae_trench_infantry_checkbox = {
+	type = country
+	text = {
+		trigger = {
+			NOT = {
+				has_technology_researched = trench_works
+				army_size >= 100
+				country_army_unit_type_fraction = {
+					target = unit_type:combat_unit_type_trench_infantry
+					value >= 0.5
+				}
+			}
+		}
+		localization_key = metternich_unticked
+	}
+	text = {
+		trigger = {
+			has_technology_researched = trench_works
+			army_size >= 100
+			country_army_unit_type_fraction = {
+				target = unit_type:combat_unit_type_trench_infantry
+				value >= 0.5
+			}
+		}
+		localization_key = metternich_ticked
+	}
+}
+
+ae_arms_producer_checkbox = {
+	type = country
+	text = {
+		trigger = {
+			NOT = {
+				OR = {
+					"goods_production_rank(g:small_arms)" <= 3
+					"goods_production_rank(g:artillery)" <= 3
+					"goods_production_rank(g:ammunition)" <= 3
+					"goods_production_rank(g:ironclads)" <= 3
+				}
+			}
+		}
+		localization_key = metternich_unticked
+	}
+	text = {
+		trigger = {
+			OR = {
+				"goods_production_rank(g:small_arms)" <= 3
+				"goods_production_rank(g:artillery)" <= 3
+				"goods_production_rank(g:ammunition)" <= 3
+				"goods_production_rank(g:ironclads)" <= 3
+			}
+		}
+		localization_key = metternich_ticked
+	}
+}
+
 # --- Domestic ---
 
 ae_slavery_checkbox = {
@@ -171,17 +233,17 @@ ae_multiculturalism_checkbox = {
 	}
 }
 
-ae_protected_speech_checkbox = {
+ae_guaranteed_liberties_checkbox = {
 	type = country
 	text = {
 		trigger = {
-			NOT = { has_law_or_variant = law_type:law_protected_speech }
+			NOT = { has_law_or_variant = law_type:law_guaranteed_liberties }
 		}
 		localization_key = metternich_unticked
 	}
 	text = {
 		trigger = {
-			has_law_or_variant = law_type:law_protected_speech
+			has_law_or_variant = law_type:law_guaranteed_liberties
 		}
 		localization_key = metternich_ticked
 	}
@@ -198,6 +260,42 @@ ae_gdp_checkbox = {
 	text = {
 		trigger = {
 			gdp_ranking <= 3
+		}
+		localization_key = metternich_ticked
+	}
+}
+
+ae_steel_frame_checkbox = {
+	type = country
+	text = {
+		trigger = {
+			NOT = {
+				has_technology_researched = steel_frame_buildings
+				any_scope_state = {
+					any_scope_building = {
+						filter = {
+							is_building_type = building_construction_sector
+						}
+						percent = 1
+						has_active_production_method = pm_steel_frame_buildings
+					}
+				}
+			}
+		}
+		localization_key = metternich_unticked
+	}
+	text = {
+		trigger = {
+			has_technology_researched = steel_frame_buildings
+			any_scope_state = {
+				any_scope_building = {
+					filter = {
+						is_building_type = building_construction_sector
+					}
+					percent = 1
+					has_active_production_method = pm_steel_frame_buildings
+				}
+			}
 		}
 		localization_key = metternich_ticked
 	}

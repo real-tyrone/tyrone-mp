@@ -1,0 +1,133 @@
+je_ostend_manifesto = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	group = je_group_global_international_situations
+
+	is_shown_when_inactive = {
+		exists = c:USA
+		exists = c:SPA
+		exists = c:CUB
+		c:USA = { has_technology_researched = nationalism }
+	}
+
+	is_shown_in_lobby = {
+		c:USA ?= THIS
+	}
+
+	should_be_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+			c:CUB ?= THIS
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+			c:CUB ?= THIS
+		}
+	}
+
+	scripted_button = je_ostend_offer_cuba_button
+	scripted_button = je_ostend_offer_pco_button
+	scripted_button = je_ostend_usa_rejects_button
+	scripted_button = je_ostend_spain_rejects_button
+	scripted_button = je_ostend_cuba_liberation_button
+	scripted_button = je_ostend_cuba_spain_button
+
+	possible = {
+		exists = c:USA
+		exists = c:SPA
+		exists = c:CUB
+		c:USA = { has_technology_researched = nationalism }
+	}
+
+	immediate = {
+		c:USA = {
+			set_variable = {
+				name = ostend_rejection_cooldown
+				days = 365
+			}
+		}
+		c:SPA = {
+			set_variable = {
+				name = ostend_rejection_cooldown
+				days = 365
+			}
+		}
+	}
+
+	on_complete = {
+		hidden_effect = {
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_cuba_liberation_alignment }
+					remove_modifier = ostend_cuba_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_cuba_spain_alignment }
+					remove_modifier = ostend_cuba_spain_alignment
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		hidden_effect = {
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_cuba_liberation_alignment }
+					remove_modifier = ostend_cuba_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_cuba_spain_alignment }
+					remove_modifier = ostend_cuba_spain_alignment
+				}
+			}
+		}
+	}
+
+	fail = {
+		OR = {
+			custom_tooltip = {
+				text = je_ostend_manifesto_fail_spa_tt
+				exists = c:SPA
+				c:SPA = { has_variable = ostend_spain_rejected }
+			}
+			custom_tooltip = {
+				text = je_ostend_manifesto_fail_usa_tt
+				exists = c:USA
+				c:USA = { has_variable = ostend_usa_rejected }
+			}
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_ostend_manifesto_completed_tt
+			}
+		}
+	}
+
+	custom_completion_header = je_ostend_manifesto_completion_header
+
+	complete = {
+		c:USA = { exists = yes }
+		OR = {
+			custom_tooltip = {
+				text = je_ostend_manifesto_complete_cuba_tt
+				c:CUB = { is_subject_of = c:USA }
+			}
+			custom_tooltip = {
+				text = je_ostend_manifesto_complete_pco_tt
+				c:PCO = { is_subject_of = c:USA }
+			}
+		}
+	}
+
+	weight = 100
+	should_be_pinned_by_default = yes
+}

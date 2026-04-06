@@ -1,0 +1,65 @@
+je_spanish_american_war = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_global_international_situations
+
+	is_shown_when_inactive = {
+		exists = c:USA
+		exists = c:SPA
+		c:USA = { has_technology_researched = civilizing_mission }
+	}
+
+	is_shown_in_lobby = {
+		c:USA ?= THIS
+	}
+
+	should_be_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+		}
+	}
+
+	possible = {
+		exists = c:USA
+		exists = c:SPA
+		c:USA = {
+			has_technology_researched = civilizing_mission
+			has_variable = ostend_negotiations_failed
+			custom_tooltip = {
+				text = je_spanish_american_war_relations_tt
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+		}
+	}
+
+	scripted_progress_bar = je_spanish_american_war_tension_bar
+
+	immediate = {
+		set_variable = { name = saw_tension_current_var value = 0 }
+		trigger_event = { id = spanish_american_war.1 }
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			set_variable = {
+				name = saw_tension_current_var
+				value = "scope:journal_entry.scripted_bar_progress(je_spanish_american_war_tension_bar)"
+			}
+		}
+	}
+
+	complete = {
+		always = no
+	}
+
+	weight = 100
+	should_be_pinned_by_default = yes
+}

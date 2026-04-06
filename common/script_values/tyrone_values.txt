@@ -41,19 +41,22 @@ american_exceptionalism_agenda_value = {
 		add = 1
 	}
 	# --- Diplomacy ---
-	# Lead a Power Bloc of 5+ nations
+	# Lead a Power Bloc with 5+ Americas members
 	if = {
 		limit = {
 			power_bloc ?= {
-				num_power_bloc_members >= 5
+				any_power_bloc_member = {
+					capital = { is_in_geographic_region = geographic_region_americas }
+					count >= 5
+				}
 			}
 		}
 		add = 1
 	}
-	# Lead the 1st-ranked Power Bloc
+	# Lead a top 3-ranked Power Bloc
 	if = {
 		limit = {
-			power_bloc ?= { power_bloc_rank = 1 }
+			power_bloc ?= { power_bloc_rank <= 3 }
 		}
 		add = 1
 	}
@@ -77,6 +80,30 @@ american_exceptionalism_agenda_value = {
 		}
 		add = 1
 	}
+	# 100+ battalions with trench_works researched and 50+ trench infantry
+	if = {
+		limit = {
+			has_technology_researched = trench_works
+			army_size >= 100
+			country_army_unit_type_fraction = {
+				target = unit_type:combat_unit_type_trench_infantry
+				value >= 0.5
+			}
+		}
+		add = 1
+	}
+	# Top 3 producer of Small Arms, Artillery, Ammunition, or Ironclads
+	if = {
+		limit = {
+			OR = {
+				"goods_production_rank(g:small_arms)" <= 3
+				"goods_production_rank(g:artillery)" <= 3
+				"goods_production_rank(g:ammunition)" <= 3
+				"goods_production_rank(g:ironclads)" <= 3
+			}
+		}
+		add = 1
+	}
 	# --- Domestic ---
 	# Abolish Slavery
 	if = {
@@ -88,9 +115,9 @@ american_exceptionalism_agenda_value = {
 		limit = { has_law_or_variant = law_type:law_multicultural }
 		add = 1
 	}
-	# Enact Protected Speech
+	# Enact Guaranteed Liberties
 	if = {
-		limit = { has_law_or_variant = law_type:law_protected_speech }
+		limit = { has_law_or_variant = law_type:law_guaranteed_liberties }
 		add = 1
 	}
 	# --- Economy ---
@@ -107,6 +134,22 @@ american_exceptionalism_agenda_value = {
 	# Top 3 GDP
 	if = {
 		limit = { gdp_ranking <= 3 }
+		add = 1
+	}
+	# Steel-Frame Buildings researched and active in 100% of construction sectors
+	if = {
+		limit = {
+			has_technology_researched = steel_frame_buildings
+			any_scope_state = {
+				any_scope_building = {
+					filter = {
+						is_building_type = building_construction_sector
+					}
+					percent = 1
+					has_active_production_method = pm_steel_frame_buildings
+				}
+			}
+		}
 		add = 1
 	}
 }
