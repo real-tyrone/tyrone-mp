@@ -219,6 +219,7 @@ je_ostend_manifesto = {
 
 	on_fail = {
 		hidden_effect = {
+			c:USA ?= { set_variable = ostend_negotiations_failed }
 			c:CUB ?= {
 				if = {
 					limit = { has_modifier = ostend_liberation_alignment }
@@ -245,14 +246,11 @@ je_ostend_manifesto = {
 	fail = {
 		OR = {
 			custom_tooltip = {
-				text = je_ostend_manifesto_fail_spa_tt
-				exists = c:SPA
-				c:SPA = { has_variable = ostend_spain_rejected }
-			}
-			custom_tooltip = {
-				text = je_ostend_manifesto_fail_usa_tt
-				exists = c:USA
-				c:USA = { has_variable = ostend_usa_rejected }
+				text = je_ostend_manifesto_fail_negotiations_tt
+				OR = {
+					c:SPA = { has_variable = ostend_spain_rejected }
+					c:USA = { has_variable = ostend_usa_rejected }
+				}
 			}
 			custom_tooltip = {
 				text = je_ostend_manifesto_fail_war_tt
@@ -269,7 +267,7 @@ je_ostend_manifesto = {
 			custom_tooltip = {
 				text = je_ostend_manifesto_complete_concluded_tt
 				OR = {
-					has_variable = ostend_usa_negotiations_concluded
+					c:USA = { has_variable = ostend_usa_negotiations_concluded }
 					c:SPA = { has_variable = ostend_spa_negotiations_concluded }
 				}
 			}
