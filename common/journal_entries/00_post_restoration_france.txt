@@ -224,6 +224,7 @@ je_rebuilt_railways_napoleon = {
 	weight = 50
     should_be_pinned_by_default = yes
 }
+
 je_improved_living_napoleon = {
     icon = "gfx/interface/icons/event_icons/napoleon_public_health.dds"
 
@@ -384,13 +385,10 @@ je_king_spain = {
     weight = 100
 }
 
-
-
-
 #ORLEANIST
 
 je_orleanist_france_industry_revolution = {
-icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
+	icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
 	group = je_group_historical_content
 
     is_shown_when_inactive = {
@@ -590,4 +588,103 @@ icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
 	weight = 1000
 	should_be_pinned_by_default = yes
 
+}
+
+
+#LEGITIMIST
+
+je_house_of_bourbon = {
+	icon = "gfx/interface/icons/event_icons/house_of_bourbon.dds"
+	group = je_group_historical_content
+
+	scripted_button = return_of_ancien_regime
+	scripted_button = enact_royal_censorship
+	scripted_button = catholic_church_revival
+	scripted_button = restore_noble_priviledges
+
+
+	is_shown_when_inactive = {
+		exists = c:FRA
+		c:FRA = ROOT
+		has_variable = legitimist_restoration_var
+		OR = {
+			has_journal_entry = je_cement_the_rightful_dynasty
+			has_variable = one_true_french_dynasty
+		}
+	}
+
+	possible = {
+		OR = {
+			custom_tooltip = {
+				text = progress_cement_half_tt
+				var:french_dynastic_primary_progress_var >= 60
+			}
+			custom_tooltip = {
+				text = has_cemented_dynasty_TT
+				has_variable = one_true_french_dynasty
+			}			
+		}
+	}
+
+	immediate = {
+		trigger_event = {
+			id = legitimist_events.1
+		}
+		set_variable = {
+			name = legitimist_consolidation_var
+			value = 0
+		}
+	}
+
+	on_weekly_pulse = {
+		clamp_variable = {
+			name = legitimist_consolidation_var
+			max = 120
+			min = 0
+		}
+	}
+
+	on_monthly_pulse = {
+		change_variable = {
+			name = legitimist_consolidation_var
+			add = 1
+		}	
+	}
+	
+	complete = {	
+		custom_tooltip = {
+			text = completed_legitimist_agenda_tt
+			has_modifier = restore_noble_priviledges
+			has_modifier = catholic_church_revived
+			has_modifier = ancien_regime_restored
+			has_law = law_type:law_outlawed_dissent
+		}
+	}
+
+	on_complete = {
+		activate_law = law_type:law_ancien_regime
+		trigger_event = {
+			id = legitimist_events.5
+		}
+	}
+
+	fail = {
+		NOT = {
+			has_law = law_type:law_monarchy
+		}
+	}
+	
+	invalid = {
+		country_rank < rank_value:great_power
+	}
+
+	current_value = root.var:legitimist_consolidation_var
+
+	progressbar = yes
+
+	goal_add_value = 120
+
+	weight = 1000
+	should_be_pinned_by_default = yes
+		
 }
