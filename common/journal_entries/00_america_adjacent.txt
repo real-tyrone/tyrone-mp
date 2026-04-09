@@ -86,27 +86,127 @@ je_spanish_american_war = {
 				text = je_spanish_american_war_relations_tt
 				"relations(c:SPA)" <= relations_threshold:cold
 			}
-		}
-	}
-
-	scripted_progress_bar = je_spanish_american_war_tension_bar
-
-	immediate = {
-		set_variable = { name = saw_tension_current_var value = 0 }
-		trigger_event = { id = spanish_american_war.1 }
-	}
-
-	on_monthly_pulse = {
-		effect = {
-			set_variable = {
-				name = saw_tension_current_var
-				value = "scope:journal_entry.scripted_bar_progress(je_spanish_american_war_tension_bar)"
+			custom_tooltip = {
+				text = je_spanish_american_war_no_truce_tt
+				NOT = { has_truce_with = c:SPA }
 			}
 		}
 	}
 
+	timeout = 5475
+
+	immediate = {
+		c:SPA = {
+			set_variable = { name = saw_spain_americas_subjects value = 0 }
+			every_subject_or_below = {
+				limit = {
+					capital_state = {
+						OR = {
+							region = sr:region_carribean
+							region = sr:region_central_america
+							region = sr:region_north_america
+							region = sr:region_south_america
+							region = sr:region_great_plains
+							region = sr:region_dixie
+							region = sr:region_pacific_coast
+							region = sr:region_the_midwest
+						}
+					}
+				}
+				c:SPA = {
+					change_variable = { name = saw_spain_americas_subjects add = 1 }
+				}
+			}
+			set_variable = {
+				name = saw_spain_americas_subjects_threshold
+				value = var:saw_spain_americas_subjects
+				multiply = 0.5
+			}
+		}
+	}
+
+	custom_completion_header = je_spanish_american_war_american_victory_header
+
 	complete = {
-		always = no
+		custom_tooltip = {
+			text = je_saw_american_victory_humiliation_tt
+			c:USA = { has_variable = saw_usa_humiliated_spain }
+		}
+		custom_tooltip = {
+			text = je_saw_american_victory_subjects_tt
+			OR = {
+				NOT = {
+					c:SPA = {
+						any_subject_or_below = {
+							capital_state = {
+								OR = {
+									region = sr:region_carribean
+									region = sr:region_central_america
+									region = sr:region_north_america
+									region = sr:region_south_america
+									region = sr:region_great_plains
+									region = sr:region_dixie
+									region = sr:region_pacific_coast
+									region = sr:region_the_midwest
+								}
+							}
+						}
+					}
+				}
+				NOT = {
+					c:SPA = {
+						any_subject_or_below = {
+							count >= c:SPA.var:saw_spain_americas_subjects_threshold
+							capital_state = {
+								OR = {
+									region = sr:region_carribean
+									region = sr:region_central_america
+									region = sr:region_north_america
+									region = sr:region_south_america
+									region = sr:region_great_plains
+									region = sr:region_dixie
+									region = sr:region_pacific_coast
+									region = sr:region_the_midwest
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		c:USA ?= {
+			add_modifier = { name = saw_american_victory years = 10 }
+		}
+		c:SPA ?= {
+			add_modifier = { name = saw_spanish_defeat years = 10 }
+		}
+	}
+
+	custom_failure_header = je_spanish_american_war_spanish_victory_header
+
+	fail = {
+		custom_tooltip = {
+			text = je_saw_spanish_victory_humiliation_tt
+			c:USA = { has_variable = saw_spa_humiliated_usa }
+		}
+	}
+
+	on_fail = {
+		c:SPA ?= {
+			add_modifier = { name = saw_spanish_victory years = 10 }
+		}
+		c:USA ?= {
+			add_modifier = { name = saw_american_defeat years = 10 }
+		}
+	}
+
+	invalid = {
+		c:USA = {
+			"relations(c:SPA)" > relations_threshold:cordial
+		}
 	}
 
 	weight = 100

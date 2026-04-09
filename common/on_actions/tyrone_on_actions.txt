@@ -176,3 +176,28 @@ on_yearly_pulse_country = {
         regency.99
     }
 }
+
+on_wargoal_enforced = {
+    effect = {
+        # Track USA humiliating Spain for Spanish-American War JE
+        if = {
+            limit = {
+                scope:type = wargoal_type:humiliation
+                c:USA ?= root
+                scope:target ?= c:SPA
+                c:USA = { has_journal_entry = je_spanish_american_war }
+            }
+            c:USA = { set_variable = saw_usa_humiliated_spain }
+        }
+        # Track Spain humiliating USA for Spanish-American War JE
+        if = {
+            limit = {
+                scope:type = wargoal_type:humiliation
+                c:SPA ?= root
+                scope:target ?= c:USA
+                c:SPA = { has_journal_entry = je_spanish_american_war }
+            }
+            c:USA = { set_variable = saw_spa_humiliated_usa }
+        }
+    }
+}
