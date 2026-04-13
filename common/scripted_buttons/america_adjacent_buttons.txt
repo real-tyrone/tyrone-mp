@@ -1,0 +1,500 @@
+### American Exceptionalism
+
+je_american_exceptionalism_button = {
+	name = "je_american_exceptionalism_button"
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					american_exceptionalism_agenda_value >= 1
+				}
+				desc = je_american_exceptionalism_button_desc_agendas
+			}
+			triggered_desc = {
+				desc = je_american_exceptionalism_button_desc
+			}
+		}
+	}
+
+	visible = {
+		NOT = { has_variable = je_american_exceptionalism_declared }
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = je_american_exceptionalism_agendas_tt
+			american_exceptionalism_agenda_value >= 5
+		}
+	}
+
+	effect = {
+		set_variable = je_american_exceptionalism_declared
+		add_modifier = {
+			name = land_of_the_free_home_of_the_brave
+			years = 10
+			multiplier = american_exceptionalism_agenda_value
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+### Ostend Manifesto
+
+je_ostend_usa_rejects_button = {
+	name = "je_ostend_usa_rejects_button"
+	desc = "je_ostend_usa_rejects_button_desc"
+
+	visible = {
+		c:USA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+		NOT = { has_variable = ostend_usa_rejected }
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_usa_rejected }
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = ostend_rejection_cooldown_tt
+			NOT = { has_variable = ostend_rejection_cooldown }
+		}
+		custom_tooltip = {
+			text = ostend_conclude_blocks_rejection_tt
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ostend_break_negotiations_fail_tt
+		set_variable = ostend_usa_rejected
+		set_variable = ostend_negotiations_failed
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" < relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_spain_rejects_button = {
+	name = "je_ostend_spain_rejects_button"
+	desc = "je_ostend_spain_rejects_button_desc"
+
+	visible = {
+		c:SPA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+		NOT = { has_variable = ostend_spain_rejected }
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_spain_rejected }
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = ostend_rejection_cooldown_tt
+			NOT = { has_variable = ostend_rejection_cooldown }
+		}
+		custom_tooltip = {
+			text = ostend_conclude_blocks_rejection_tt
+			NOT = {
+				OR = {
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ostend_break_negotiations_fail_tt
+		set_variable = ostend_spain_rejected
+		c:USA = { set_variable = ostend_negotiations_failed }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:USA)" < relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_offer_cuba_button = {
+	name = "je_ostend_offer_cuba_button"
+	desc = "je_ostend_offer_cuba_button_desc"
+
+	visible = {
+		c:USA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ostend_offer_already_made_tt
+			NOT = { has_variable = ostend_cuba_offer_made }
+		}
+		custom_tooltip = {
+			text = ostend_offer_taking_loans_tt
+			taking_loans = no
+		}
+		custom_tooltip = {
+			text = ostend_cuba_already_subject_tt
+			NOT = { c:CUB = { is_subject_of = c:USA } }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_cuba_offer_made
+		c:SPA = { trigger_event = { id = ostend_manifesto.1 days = 7} }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				taking_loans = no
+				net_fixed_income > 28846
+			}
+			add = 50
+		}
+	}
+}
+
+je_ostend_offer_pco_button = {
+	name = "je_ostend_offer_pco_button"
+	desc = "je_ostend_offer_pco_button_desc"
+
+	visible = {
+		c:USA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ostend_pco_offer_already_made_tt
+			NOT = { has_variable = ostend_pco_offer_made }
+		}
+		custom_tooltip = {
+			text = ostend_offer_taking_loans_tt
+			taking_loans = no
+		}
+		custom_tooltip = {
+			text = ostend_pco_already_subject_tt
+			NOT = { c:PCO = { is_subject_of = c:USA } }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_pco_offer_made
+		c:SPA = { trigger_event = { id = ostend_manifesto.4 } }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				taking_loans = no
+				net_fixed_income > 4808
+			}
+			add = 50
+		}
+	}
+}
+
+je_ostend_cuba_liberation_button = {
+	name = "je_ostend_cuba_liberation_button"
+	desc = "je_ostend_cuba_liberation_button_desc"
+
+	visible = {
+		c:CUB ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_cuba_already_chose_tt
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_cuba_alignment_chosen
+		set_variable = ostend_cuba_supports_liberation
+		c:USA = { set_variable = ostend_cuba_supports_liberation }
+		add_modifier = { name = ostend_liberation_alignment }
+		add_radicals = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_cuba_spain_button = {
+	name = "je_ostend_cuba_spain_button"
+	desc = "je_ostend_cuba_spain_button_desc"
+
+	visible = {
+		c:CUB ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_cuba_already_chose_tt
+			NOT = { has_variable = ostend_cuba_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_cuba_alignment_chosen
+		set_variable = ostend_cuba_supports_spain
+		c:USA = { set_variable = ostend_cuba_supports_spain }
+		add_modifier = { name = ostend_spain_alignment }
+		add_loyalists = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" >= relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_pco_liberation_button = {
+	name = "je_ostend_pco_liberation_button"
+	desc = "je_ostend_pco_liberation_button_desc"
+
+	visible = {
+		c:PCO ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_pco_already_chose_tt
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_pco_alignment_chosen
+		set_variable = ostend_pco_supports_liberation
+		c:USA = { set_variable = ostend_pco_supports_liberation }
+		add_modifier = { name = ostend_liberation_alignment }
+		add_radicals = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_pco_spain_button = {
+	name = "je_ostend_pco_spain_button"
+	desc = "je_ostend_pco_spain_button_desc"
+
+	visible = {
+		c:PCO ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+		custom_tooltip = {
+			text = ostend_pco_already_chose_tt
+			NOT = { has_variable = ostend_pco_alignment_chosen }
+		}
+	}
+
+	effect = {
+		set_variable = ostend_pco_alignment_chosen
+		set_variable = ostend_pco_supports_spain
+		c:USA = { set_variable = ostend_pco_supports_spain }
+		add_modifier = { name = ostend_spain_alignment }
+		add_loyalists = { value = 0.05 }
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				"relations(c:SPA)" >= relations_threshold:cordial
+			}
+			add = 100
+		}
+	}
+}
+
+je_ostend_conclude_negotiations_button = {
+	name = "je_ostend_conclude_negotiations_button"
+	desc = "je_ostend_conclude_negotiations_button_desc"
+
+	visible = {
+		c:USA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_usa_negotiations_concluded }
+			OR = {
+				c:CUB = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+				c:PCO = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ostend_conclude_negotiations_complete_tt
+		set_variable = ostend_usa_negotiations_concluded
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}
+
+je_ostend_spa_conclude_negotiations_button = {
+	name = "je_ostend_spa_conclude_negotiations_button"
+	desc = "je_ostend_spa_conclude_negotiations_button_desc"
+
+	visible = {
+		c:SPA ?= THIS
+		is_involved_in_journal_entry = je_ostend_manifesto
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = ostend_spa_negotiations_concluded }
+			OR = {
+				c:CUB = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+				c:PCO = {
+					OR = {
+						is_subject_of = c:USA
+						NOT = { is_subject_of = c:SPA }
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ostend_conclude_negotiations_complete_tt
+		set_variable = ostend_spa_negotiations_concluded
+	}
+
+	ai_chance = {
+		value = 1
+	}
+}

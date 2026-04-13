@@ -1,0 +1,48 @@
+je_mexican_cession_button = {
+	name = "je_mexican_cession_button"
+	desc = "je_mexican_cession_button_desc"
+
+	visible = {
+		has_journal_entry = je_manifest_destiny_mexico
+		exists = c:MEX
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = { has_variable = je_mexican_cession_started }
+		}
+		NOT = { is_at_war_with = c:MEX }
+		if = {
+			limit = { is_at_war_with = c:MEX }
+			custom_tooltip = {
+				text = je_mexican_cession_no_war_tt
+				always = no
+			}
+		}
+		NOT = { has_truce_with = c:MEX }
+		if = {
+			limit = { has_truce_with = c:MEX }
+			custom_tooltip = {
+				text = je_mexican_cession_truce_tt
+				always = no
+			}
+		}
+	}
+
+	effect = {
+		set_variable = je_mexican_cession_started
+		create_incident = {
+			country = c:MEX
+			value = 15
+		}
+		create_diplomatic_play = {
+			name = mexican_cession_war
+			type = dp_mexican_cession
+			target_country = c:MEX
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
