@@ -1,0 +1,106 @@
+je_manifest_destiny_mexico = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_usa_manifest_destiny
+
+	is_shown_when_inactive = {
+		c:USA = THIS
+	}
+
+	possible = {
+		c:USA = THIS
+		has_technology_researched = nationalism
+	}
+
+	scripted_button = je_mexican_cession_button
+
+	immediate = {
+		s:STATE_CALIFORNIA = { add_claim = ROOT }
+		s:STATE_NEVADA = { add_claim = ROOT }
+		s:STATE_UTAH = { add_claim = ROOT }
+		s:STATE_ARIZONA = { add_claim = ROOT }
+		s:STATE_NEW_MEXICO = { add_claim = ROOT }
+		s:STATE_TEXAS = { add_claim = ROOT }
+		if = {
+			limit = {
+				NOT = {
+					any_political_movement = {
+						is_political_movement_type = movement_cultural_majority
+					}
+				}
+			}
+			create_political_movement = { type = movement_cultural_majority }
+		}
+	}
+
+	# note that if you change this, also update the decision
+	complete = {
+		owns_entire_state_region = STATE_CALIFORNIA
+		owns_entire_state_region = STATE_NEVADA
+		owns_entire_state_region = STATE_UTAH
+		owns_entire_state_region = STATE_ARIZONA
+		owns_entire_state_region = STATE_NEW_MEXICO
+		owns_entire_state_region = STATE_TEXAS
+	}
+
+	on_complete = {
+		set_variable = je_manifest_destiny_mexico_complete
+		trigger_event = { id = manifest_destiny.1 }
+	}
+
+	weight = 100
+	should_be_pinned_by_default = yes
+}
+
+je_manifest_destiny_frontier_wars = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	group = je_group_usa_manifest_destiny
+
+	is_shown_when_inactive = {
+		c:USA = THIS
+	}
+
+	possible = {
+		c:USA = THIS
+		has_technology_researched = nationalism
+	}
+
+	immediate = {
+		s:STATE_MONTANA = { add_claim = ROOT }
+		s:STATE_WYOMING = { add_claim = ROOT }
+		s:STATE_COLORADO = { add_claim = ROOT }
+		s:STATE_NORTH_DAKOTA = { add_claim = ROOT }
+		s:STATE_SOUTH_DAKOTA = { add_claim = ROOT }
+		s:STATE_NEBRASKA = { add_claim = ROOT }
+		s:STATE_KANSAS = { add_claim = ROOT }
+	}
+
+	# note that if you change this, also update the decision
+	complete = {
+		owns_entire_state_region = STATE_MONTANA
+		owns_entire_state_region = STATE_WYOMING
+		owns_entire_state_region = STATE_COLORADO
+		owns_entire_state_region = STATE_NORTH_DAKOTA
+		owns_entire_state_region = STATE_SOUTH_DAKOTA
+		owns_entire_state_region = STATE_NEBRASKA
+		owns_entire_state_region = STATE_KANSAS
+	}
+
+	on_complete = {
+		set_variable = je_manifest_destiny_frontier_wars_complete
+		trigger_event = { id = manifest_destiny.2 }
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			10 = 0
+			1 = manifest_destiny.3
+		}
+	}
+
+	weight = 100
+
+	transferable = no
+	should_be_pinned_by_default = yes
+}

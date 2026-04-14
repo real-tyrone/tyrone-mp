@@ -16,6 +16,164 @@ company_equity_gdp_ratio = {
 }
 REPLACE:legitimacy_to_repeal_amendment = 0
 
+american_exceptionalism_agenda_value = {
+	value = 0
+	# --- Expansion ---
+	# Complete Manifest Destiny
+	if = {
+		limit = {
+			has_variable = je_manifest_destiny_mexico_complete
+			has_variable = je_manifest_destiny_frontier_wars_complete
+		}
+		add = 1
+	}
+	# Acquire Alaska
+	if = {
+		limit = { owns_entire_state_region = STATE_ALASKA }
+		add = 1
+	}
+	# Acquire Hawaii
+	if = {
+		limit = { owns_entire_state_region = STATE_HAWAIIAN_ISLANDS }
+		add = 1
+	}
+	# --- Diplomacy ---
+	# Lead a Power Bloc with 5+ Americas members
+	if = {
+		limit = {
+			power_bloc ?= {
+				any_power_bloc_member = {
+					capital = { is_in_geographic_region = geographic_region_americas }
+					count >= 5
+				}
+			}
+		}
+		add = 1
+	}
+	# Lead a top 3-ranked Power Bloc
+	if = {
+		limit = {
+			power_bloc ?= { power_bloc_rank <= 3 }
+		}
+		add = 1
+	}
+	# Enforce the Monroe Doctrine: 80% of Americas nations in your power bloc
+	if = {
+		limit = {
+			ae_monroe_doctrine_ratio >= 0.8
+		}
+		add = 1
+	}
+	# --- Military ---
+	# Top 3 navy by flotilla count
+	if = {
+		limit = {
+			NOT = {
+				any_country = {
+					navy_size > root.navy_size
+					count >= 3
+				}
+			}
+		}
+		add = 1
+	}
+	# 100+ battalions with trench_works researched and 50+ trench infantry
+	if = {
+		limit = {
+			has_technology_researched = trench_works
+			army_size >= 100
+			country_army_unit_type_fraction = {
+				target = unit_type:combat_unit_type_trench_infantry
+				value >= 0.5
+			}
+		}
+		add = 1
+	}
+	# Top 3 producer of Small Arms, Artillery, Ammunition, or Ironclads
+	if = {
+		limit = {
+			OR = {
+				"goods_production_rank(g:small_arms)" <= 3
+				"goods_production_rank(g:artillery)" <= 3
+				"goods_production_rank(g:ammunition)" <= 3
+				"goods_production_rank(g:ironclads)" <= 3
+			}
+		}
+		add = 1
+	}
+	# --- Domestic ---
+	# Abolish Slavery
+	if = {
+		limit = { has_law_or_variant = law_type:law_slavery_banned }
+		add = 1
+	}
+	# Enact Multiculturalism
+	if = {
+		limit = { has_law_or_variant = law_type:law_multicultural }
+		add = 1
+	}
+	# Enact Guaranteed Liberties
+	if = {
+		limit = { has_law_or_variant = law_type:law_guaranteed_liberties }
+		add = 1
+	}
+	# --- Economy ---
+	# Top 3 producer of Tools or Steel
+	if = {
+		limit = {
+			OR = {
+				"goods_production_rank(g:tools)" <= 3
+				"goods_production_rank(g:steel)" <= 3
+			}
+		}
+		add = 1
+	}
+	# Top 3 GDP
+	if = {
+		limit = { gdp_ranking <= 3 }
+		add = 1
+	}
+	# Steel-Frame Buildings researched and active in 100% of construction sectors
+	if = {
+		limit = {
+			has_technology_researched = steel_frame_buildings
+			any_scope_state = {
+				any_scope_building = {
+					filter = {
+						is_building_type = building_construction_sector
+					}
+					percent = 1
+					has_active_production_method = pm_steel_frame_buildings
+				}
+			}
+		}
+		add = 1
+	}
+}
+
+ae_monroe_americas_total_countries = {
+	value = 0
+	every_country = {
+		limit = {
+			capital = { is_in_geographic_region = geographic_region_americas }
+		}
+		add = 1
+	}
+	min = 1
+}
+
+ae_monroe_doctrine_ratio = {
+	value = 0
+	every_country = {
+		limit = {
+			capital = { is_in_geographic_region = geographic_region_americas }
+			is_in_same_power_bloc = root
+		}
+		add = 1
+	}
+	divide = ae_monroe_americas_total_countries
+}
+
 orleanist_actual_gdp_script_value = {
 	value = 0
 	if = {

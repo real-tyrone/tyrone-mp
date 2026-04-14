@@ -45,6 +45,21 @@ REPLACE:ITA = { # Italy
 			}
 		}
 	}
+	dynamic_country_name = { # Holy Italy
+		name = dyn_c_holy_italy
+		adjective = ITA_ADJ
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_law_or_variant = law_type:law_theocracy
+				NOT = { was_formed_from = PAP }
+			}
+		}
+	}
 	dynamic_country_name = { # Kingdom of Italy
 		name = dyn_c_kingdom_italy
 		adjective = ITA_ADJ
@@ -60,6 +75,41 @@ REPLACE:ITA = { # Italy
 		}
 	}
 }
+
+XNP = { # Naples
+	dynamic_country_name = {
+		name = dyn_c_sicily
+		adjective = dyn_c_sicily_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				owns_entire_state_region = STATE_SICILY
+				NOT = { owns_entire_state_region = STATE_CAMPANIA }
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_naples
+		adjective = dyn_c_naples_adj
+
+		is_main_tag_only = yes
+		priority = 0
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				NOT = { owns_entire_state_region = STATE_SICILY }
+				owns_entire_state_region = STATE_CAMPANIA
+			}
+		}
+	}
+}
+
+
 
 #danubian federation
 REPLACE:KUK = {
@@ -363,6 +413,21 @@ INJECT:FRA = {
 
 		trigger = {
 			coa_def_fascist_flag_trigger = yes
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kingdom_of_france
+		adjective = FRA_ADJ
+
+		is_main_tag_only = yes
+		priority = 1000
+
+		trigger = {
+			exists = scope:actor
+			scope:actor = {
+				has_variable = legitimist_restoration_var
+				has_law_or_variant = law_type:law_monarchy
+			}
 		}
 	}
 }

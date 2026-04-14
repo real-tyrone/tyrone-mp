@@ -1,0 +1,339 @@
+namespace = ostend_manifesto
+### Ostend Manifesto Events
+# Spain receives the American offer to purchase Cuba
+ostend_manifesto.1 = {
+	type = country_event
+	placement = root
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.1.t
+	desc = ostend_manifesto.1.d
+	flavor = ostend_manifesto.1.f
+
+	duration = 3
+
+	trigger = {
+		exists = c:USA
+		exists = c:CUB
+	}
+
+	option = {
+		name = ostend_manifesto.1.a
+		# Accept: receive 5M over 5 years
+		add_modifier = {
+			name = ostend_cuba_offer_income
+			months = 60
+		}
+		c:USA = {
+			add_modifier = {
+				name = ostend_cuba_offer_payment
+				months = 60
+			}
+			trigger_event = { id = ostend_manifesto.3 days = 7 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				trigger = { "relations(c:USA)" > relations_threshold:cordial }
+				add = 100
+			}
+		}
+	}
+
+	option = {
+		name = ostend_manifesto.1.b
+		# Counteroffer: 7.5M
+		c:USA = {
+			trigger_event = { id = ostend_manifesto.2 days = 7 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+
+	option = {
+		name = ostend_manifesto.1.c
+		# Refuse
+		change_relations = { country = c:USA value = -25 }
+		c:USA = { set_variable = ostend_cuba_offer_refused }
+		ai_chance = {
+			base = 0
+			modifier = {
+				trigger = { "relations(c:USA)" <= relations_threshold:cordial }
+				add = 100
+			}
+		}
+	}
+}
+
+# USA receives Spain's counteroffer of 7.5M for Cuba
+ostend_manifesto.2 = {
+	type = country_event
+	placement = root
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.2.t
+	desc = ostend_manifesto.2.d
+	flavor = ostend_manifesto.2.f
+
+	duration = 3
+
+	trigger = {
+		exists = c:SPA
+		exists = c:CUB
+	}
+
+	option = {
+		name = ostend_manifesto.2.a
+		# Accept the counteroffer: pay 7.5M over 5 years
+		add_modifier = {
+			name = ostend_cuba_counteroffer_payment
+			months = 60
+		}
+		c:SPA = {
+			add_modifier = {
+				name = ostend_cuba_counteroffer_income
+				months = 60
+			}
+		}
+		trigger_event = { id = ostend_manifesto.3 days = 7 }
+	}
+
+	option = {
+		name = ostend_manifesto.2.b
+		# Decline the counteroffer
+		change_relations = { country = c:SPA value = -15 }
+		set_variable = ostend_cuba_offer_refused
+	}
+}
+
+# Treaty of Havana — USA decides Cuba's political status
+ostend_manifesto.3 = {
+	type = country_event
+	placement = s:STATE_WESTERN_CUBA.region_state:CUB
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.3.t
+	desc = ostend_manifesto.3.d
+	flavor = ostend_manifesto.3.f
+
+	duration = 3
+
+	option = {
+		name = ostend_manifesto.3.a
+		# Grant Cuba full sovereignty
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:CUB type = colony }
+		}
+		change_relations = { country = c:CUB value = 50 }
+	}
+
+	option = {
+		name = ostend_manifesto.3.b
+		# Establish American protectorate
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:CUB type = colony }
+		}
+		create_diplomatic_pact = { country = c:CUB type = protectorate }
+	}
+
+	option = {
+		name = ostend_manifesto.3.c
+		# Annex Cuba as a colony
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:CUB type = colony }
+		}
+		create_diplomatic_pact = { country = c:CUB type = colony }
+		create_incident = { country = c:CUB value = 10 }
+	}
+}
+
+# Spain receives the American offer to purchase Puerto Rico
+ostend_manifesto.4 = {
+	type = country_event
+	placement = root
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.4.t
+	desc = ostend_manifesto.4.d
+	flavor = ostend_manifesto.4.f
+
+	duration = 3
+
+	trigger = {
+		exists = c:USA
+		exists = c:PCO
+	}
+
+	option = {
+		name = ostend_manifesto.4.a
+		# Accept: receive 750k over 5 years
+		add_modifier = {
+			name = ostend_pco_offer_income
+			months = 60
+		}
+		c:USA = {
+			add_modifier = {
+				name = ostend_pco_offer_payment
+				months = 60
+			}
+			trigger_event = { id = ostend_manifesto.6 days = 7 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				trigger = { "relations(c:USA)" > relations_threshold:cordial }
+				add = 100
+			}
+		}
+	}
+
+	option = {
+		name = ostend_manifesto.4.b
+		# Counteroffer: 1.25M
+		c:USA = {
+			trigger_event = { id = ostend_manifesto.5 days = 7 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+
+	option = {
+		name = ostend_manifesto.4.c
+		# Refuse
+		change_relations = { country = c:USA value = -25 }
+		c:USA = { set_variable = ostend_pco_offer_refused }
+		ai_chance = {
+			base = 0
+			modifier = {
+				trigger = { "relations(c:USA)" <= relations_threshold:cordial }
+				add = 100
+			}
+		}
+	}
+}
+
+# USA receives Spain's counteroffer of 1.25M for Puerto Rico
+ostend_manifesto.5 = {
+	type = country_event
+	placement = root
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.5.t
+	desc = ostend_manifesto.5.d
+	flavor = ostend_manifesto.5.f
+
+	duration = 3
+
+	trigger = {
+		exists = c:SPA
+		exists = c:PCO
+	}
+
+	option = {
+		name = ostend_manifesto.5.a
+		# Accept the counteroffer: pay 1.25M over 5 years
+		add_modifier = {
+			name = ostend_pco_counteroffer_payment
+			months = 60
+		}
+		c:SPA = {
+			add_modifier = {
+				name = ostend_pco_counteroffer_income
+				months = 60
+			}
+		}
+		trigger_event = { id = ostend_manifesto.6 days = 7 }
+	}
+
+	option = {
+		name = ostend_manifesto.5.b
+		# Decline the counteroffer
+		change_relations = { country = c:SPA value = -15 }
+		set_variable = ostend_pco_offer_refused
+	}
+}
+
+# Treaty of San Juan — USA decides Puerto Rico's political status
+ostend_manifesto.6 = {
+	type = country_event
+	placement = s:STATE_PUERTO_RICO.region_state:PCO
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	title = ostend_manifesto.6.t
+	desc = ostend_manifesto.6.d
+	flavor = ostend_manifesto.6.f
+
+	duration = 3
+
+	option = {
+		name = ostend_manifesto.6.a
+		# Grant Puerto Rico full sovereignty
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:PCO type = colony }
+		}
+		change_relations = { country = c:PCO value = 50 }
+	}
+
+	option = {
+		name = ostend_manifesto.6.b
+		# Establish American protectorate
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:PCO type = colony }
+		}
+		create_diplomatic_pact = { country = c:PCO type = protectorate }
+	}
+
+	option = {
+		name = ostend_manifesto.6.c
+		# Annex Puerto Rico as a colony
+		c:SPA = {
+			remove_diplomatic_pact = { country = c:PCO type = colony }
+		}
+		create_diplomatic_pact = { country = c:PCO type = colony }
+		create_incident = { country = c:PCO value = 10 }
+	}
+}

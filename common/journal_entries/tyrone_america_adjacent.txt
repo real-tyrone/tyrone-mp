@@ -1,0 +1,402 @@
+### American Exceptionalism
+
+je_american_exceptionalism = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	group = je_group_usa_manifest_destiny
+
+	is_shown_when_inactive = {
+		c:USA = THIS
+	}
+
+	is_shown_in_lobby = {
+		c:USA = THIS
+	}
+
+	possible = {
+		c:USA = THIS
+		country_rank >= rank_value:great_power
+		is_power_bloc_leader = yes
+		has_technology_researched = nationalism
+	}
+
+	scripted_button = je_american_exceptionalism_button
+
+	complete = {
+		custom_tooltip = {
+			text = je_american_exceptionalism_complete_tt
+			has_variable = je_american_exceptionalism_declared
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_american_exceptionalism_completed_tt
+			}
+		}
+	}
+
+	fail = {
+		NOT = { is_power_bloc_leader = yes }
+	}
+
+	weight = 200
+	should_be_pinned_by_default = yes
+}
+
+### Spanish-American War
+
+je_spanish_american_war = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_global_international_situations
+
+	is_shown_when_inactive = {
+		exists = c:USA
+		exists = c:SPA
+		c:USA = { has_technology_researched = civilizing_mission }
+	}
+
+	is_shown_in_lobby = {
+		c:USA ?= THIS
+	}
+
+	should_be_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+		}
+	}
+
+	possible = {
+		exists = c:USA
+		exists = c:SPA
+		c:USA = {
+			has_technology_researched = civilizing_mission
+			custom_tooltip = {
+				text = je_spanish_american_war_ostend_fail
+				has_variable = ostend_negotiations_failed
+			}
+			custom_tooltip = {
+				text = je_spanish_american_war_relations_tt
+				"relations(c:SPA)" <= relations_threshold:cold
+			}
+			custom_tooltip = {
+				text = je_spanish_american_war_no_truce_tt
+				NOT = { has_truce_with = c:SPA }
+			}
+		}
+	}
+
+	timeout = 5475
+
+	immediate = {
+		c:SPA = {
+			set_variable = { name = saw_spain_americas_subjects value = 0 }
+			every_subject_or_below = {
+				limit = {
+					capital_state = {
+						OR = {
+							region = sr:region_carribean
+							region = sr:region_central_america
+							region = sr:region_north_america
+							region = sr:region_south_america
+							region = sr:region_great_plains
+							region = sr:region_dixie
+							region = sr:region_pacific_coast
+							region = sr:region_the_midwest
+						}
+					}
+				}
+				c:SPA = {
+					change_variable = { name = saw_spain_americas_subjects add = 1 }
+				}
+			}
+			set_variable = {
+				name = saw_spain_americas_subjects_threshold
+				value = var:saw_spain_americas_subjects
+				multiply = 0.5
+			}
+		}
+	}
+
+	custom_completion_header = je_spanish_american_war_american_victory_header
+
+	complete = {
+		custom_tooltip = {
+			text = je_saw_american_victory_humiliation_tt
+			c:USA = { has_variable = saw_usa_humiliated_spain }
+		}
+		custom_tooltip = {
+			text = je_saw_american_victory_subjects_tt
+			OR = {
+				NOT = {
+					c:SPA = {
+						any_subject_or_below = {
+							capital_state = {
+								OR = {
+									region = sr:region_carribean
+									region = sr:region_central_america
+									region = sr:region_north_america
+									region = sr:region_south_america
+									region = sr:region_great_plains
+									region = sr:region_dixie
+									region = sr:region_pacific_coast
+									region = sr:region_the_midwest
+								}
+							}
+						}
+					}
+				}
+				NOT = {
+					c:SPA = {
+						any_subject_or_below = {
+							count >= c:SPA.var:saw_spain_americas_subjects_threshold
+							capital_state = {
+								OR = {
+									region = sr:region_carribean
+									region = sr:region_central_america
+									region = sr:region_north_america
+									region = sr:region_south_america
+									region = sr:region_great_plains
+									region = sr:region_dixie
+									region = sr:region_pacific_coast
+									region = sr:region_the_midwest
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		c:USA ?= {
+			add_modifier = { name = saw_american_victory years = 10 }
+		}
+		c:SPA ?= {
+			add_modifier = { name = saw_spanish_defeat years = 10 }
+		}
+	}
+
+	custom_failure_header = je_spanish_american_war_spanish_victory_header
+
+	fail = {
+		custom_tooltip = {
+			text = je_saw_spanish_victory_humiliation_tt
+			c:USA = { has_variable = saw_spa_humiliated_usa }
+		}
+	}
+
+	on_fail = {
+		c:SPA ?= {
+			add_modifier = { name = saw_spanish_victory years = 10 }
+		}
+		c:USA ?= {
+			add_modifier = { name = saw_american_defeat years = 10 }
+		}
+	}
+
+	invalid = {
+		c:USA = {
+			"relations(c:SPA)" > relations_threshold:cordial
+		}
+	}
+
+	weight = 100
+	should_be_pinned_by_default = yes
+}
+
+### Ostend Manifesto
+
+je_ostend_manifesto = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	group = je_group_global_international_situations
+
+	is_shown_when_inactive = {
+		exists = c:USA
+		exists = c:SPA
+		exists = c:CUB
+		c:USA = { has_technology_researched = nationalism }
+	}
+
+	is_shown_in_lobby = {
+		c:USA ?= THIS
+	}
+
+	should_be_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+			c:CUB ?= THIS
+			c:PCO ?= THIS
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:USA ?= THIS
+			c:SPA ?= THIS
+			c:CUB ?= THIS
+			c:PCO ?= THIS
+		}
+	}
+
+	scripted_button = je_ostend_offer_cuba_button
+	scripted_button = je_ostend_offer_pco_button
+	scripted_button = je_ostend_conclude_negotiations_button
+	scripted_button = je_ostend_spa_conclude_negotiations_button
+	scripted_button = je_ostend_usa_rejects_button
+	scripted_button = je_ostend_spain_rejects_button
+	scripted_button = je_ostend_cuba_liberation_button
+	scripted_button = je_ostend_cuba_spain_button
+	scripted_button = je_ostend_pco_liberation_button
+	scripted_button = je_ostend_pco_spain_button
+
+	possible = {
+		exists = c:USA
+		exists = c:SPA
+		exists = c:CUB
+		c:USA = { has_technology_researched = nationalism }
+	}
+
+	immediate = {
+		c:USA = {
+			set_variable = {
+				name = ostend_rejection_cooldown
+				days = 365
+			}
+		}
+		c:SPA = {
+			set_variable = {
+				name = ostend_rejection_cooldown
+				days = 365
+			}
+		}
+	}
+
+	on_complete = {
+		c:USA = {
+			add_loyalists = {
+				value = 0.10
+				culture = cu:yankee
+			}
+			add_loyalists = {
+				value = 0.10
+				culture = cu:dixie
+			}
+		}
+		hidden_effect = {
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		hidden_effect = {
+			c:USA ?= { set_variable = ostend_negotiations_failed }
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+		}
+	}
+
+	fail = {
+		OR = {
+			custom_tooltip = {
+				text = je_ostend_manifesto_fail_negotiations_tt
+				OR = {
+					c:SPA = { has_variable = ostend_spain_rejected }
+					c:USA = { has_variable = ostend_usa_rejected }
+				}
+			}
+			custom_tooltip = {
+				text = je_ostend_manifesto_fail_war_tt
+				exists = c:USA
+				exists = c:SPA
+				c:USA = { has_war_with = c:SPA }
+			}
+		}
+	}
+
+	complete = {
+		c:USA = { exists = yes }
+		OR = {
+			custom_tooltip = {
+				text = je_ostend_manifesto_complete_concluded_tt
+				OR = {
+					c:USA = { has_variable = ostend_usa_negotiations_concluded }
+					c:SPA = { has_variable = ostend_spa_negotiations_concluded }
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_cuba_tt
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_pco_tt
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = c:SPA }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	weight = 100
+	should_be_pinned_by_default = yes
+}
