@@ -10,6 +10,26 @@ REPLACE:je_reform_indies = {
 		}
 	}
 
+	should_be_involved = {
+		OR = {
+			c:DEI = THIS
+			c:NET ?= THIS
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			is_subject_of = c:DEI
+			top_overlord ?= { c:DEI = THIS }
+		}
+	}
+
+	immediate = {
+		c:NET ?= {
+			scope:journal_entry = { add_involved_country = PREV }
+		}
+	}
+
 	possible = {
 		OR = {
 			has_law_or_variant = law_type:law_free_trade
@@ -18,6 +38,8 @@ REPLACE:je_reform_indies = {
 			NOT = { has_law_or_variant = law_type:law_serfdom }
 		}
 	}
+
+	custom_completion_header = je_reform_indies_complete_header
 
 	complete = {
 		scope:journal_entry = {
@@ -28,18 +50,50 @@ REPLACE:je_reform_indies = {
 			has_law_or_variant = law_type:law_mercantilism
 		}
 		NOT = { has_law_or_variant = law_type:law_land_based_taxation }
-		NOT = { has_law_or_variant = law_type:law_serfdom }
+		OR = {
+			has_law_or_variant = law_type:law_tenant_farmers
+			has_law_or_variant = law_type:law_homesteading
+		}
 		NOT = { has_law_or_variant = law_type:law_extraction_economy}
 		has_law_or_variant = law_type:law_slavery_banned
 	}
 
+	custom_on_completion_header = je_reform_indies_on_complete_header
+
 	on_complete = {
 		trigger_event = { id = east_indies.2 }
-		show_as_tooltip = {
-			add_journal_entry = {
-				type = je_ethical_policy
-			}
+	}
+
+	event_outcome_completed_desc = {
+		desc = je_reform_indies_complete_effects_tt
+	}
+
+	custom_failure_header = je_reform_indies_fail_header
+
+	fail = {
+		scope:journal_entry = {
+			is_goal_complete = yes
 		}
+		OR = {
+			has_law_or_variant = law_type:law_free_trade
+			has_law_or_variant = law_type:law_mercantilism
+		}
+		NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+		OR = {
+			has_law_or_variant = law_type:law_cultuurstelsel
+			has_law_or_variant = law_type:law_commercialized_agriculture
+		}
+		NOT = { has_law_or_variant = law_type:law_extraction_economy }
+		OR = {
+			has_law_or_variant = law_type:law_debt_slavery
+			has_law_or_variant = law_type:law_slave_trade
+		}
+	}
+
+	custom_on_failure_header = je_reform_indies_on_fail_header
+
+	on_fail = {
+		trigger_event = { id = east_indies.4 }
 	}
 
 	invalid = {
@@ -61,16 +115,36 @@ REPLACE:je_reform_indies = {
 
 	progressbar = yes
 
-	modifiers_while_active = {
-		dei_company_men
-	}
-
 	should_be_pinned_by_default = yes
 
 	weight = 100
 }
 
 REPLACE:je_ethical_policy = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	group = je_group_internal_affairs
+
+	complete = {
+		literacy_rate > 0.5
+		root.average_sol > 15
+	}
+
+	on_complete = {
+		trigger_event = { id = east_indies.3 }
+	}
+
+	invalid = {
+		OR = {
+			has_variable = bic_collapse_var
+			NOT = { c:DEI = THIS }
+		}
+	}
+
+	weight = 100
+}
+
+je_ethical_policy_feudalism = {
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
 	group = je_group_internal_affairs
