@@ -2,28 +2,28 @@
 # Invoked by scripted_buttons (effect = { ita_french_*_effect = yes }) or from GUI Execute(GetPlayer.ita_french_*_effect).
 
 ita_french_military_effect = {
-	add_journal_entry = ITA_French_militaryJE
+	add_journal_entry = { type = ITA_French_militaryJE }
 }
 
 ita_french_economy_effect = {
-	add_journal_entry = ITA_French_economyJE
+	add_journal_entry = { type = ITA_French_economyJE }
 }
 
 ita_french_laws_effect = {
-	add_journal_entry = ITA_French_lawsJE
+	add_journal_entry = { type = ITA_French_lawsJE }
 }
 
 # Austria path – stance bar moves toward Austria (Vienna)
 ita_austria_military_effect = {
-	add_journal_entry = ITA_Austria_militaryJE
+	add_journal_entry = { type = ITA_Austria_militaryJE }
 }
 
 ita_austria_economy_effect = {
-	add_journal_entry = ITA_Austria_economyJE
+	add_journal_entry = { type = ITA_Austria_economyJE }
 }
 
 ita_austria_laws_effect = {
-	add_journal_entry = ITA_Austria_lawsJE
+	add_journal_entry = { type = ITA_Austria_lawsJE }
 }
 
 # Scripted effects to shift the Italy diplomatic stance bar by 10 toward France or Austria.
@@ -494,4 +494,38 @@ italy_statuto_sentiment_20_effect = {
 }
 
 
+
+
+################################################################################
+# Two Sicilies political balance tick + outcome effects
+################################################################################
+
+# Called monthly from sic_fate_of_kingdom JE. Shifts two_sicilies_political_balance based on IGs, laws, radicals.
+# Applied by sic_tyrone.1 (Absolutist Victory)
+sic_absolutist_victory_effect = {
+	add_modifier = { name = sic_absolutist_dominance months = -1 }
+	ig:ig_landowners = { add_modifier = { name = sic_landowners_powerful months = -1 } }
+	remove_journal_entry = sic_fate_of_kingdom
+}
+
+# Applied by sic_tyrone.2 (Nationalist Victory)
+sic_nationalist_victory_effect = {
+	add_modifier = { name = sic_nationalist_surge months = 24 }
+	ig:ig_intelligentsia = { add_modifier = { name = sic_intelligentsia_powerful months = -1 } }
+	remove_journal_entry = sic_fate_of_kingdom
+}
+
+# Applied on completion of ita_stop_emigration — path 1: Close Borders (10 years, per state)
+ita_emigration_close_borders_complete_effect = {
+	every_scope_state = {
+		add_modifier = { name = ita_emigration_closed_borders months = 120 }
+	}
+}
+
+# Applied on completion of ita_stop_emigration — path 2: Prosperity (5 years, per state)
+ita_emigration_improve_italy_complete_effect = {
+	every_scope_state = {
+		add_modifier = { name = ita_emigration_prosperity months = 60 }
+	}
+}
 

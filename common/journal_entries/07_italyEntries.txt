@@ -197,10 +197,7 @@ Spenna_la_gallina_austriaca = {
 	timeout = 1460 
 
 	is_shown_when_inactive = {
-		OR = {
-			this = c:SAR
-			this = c:ITA
-		}
+		c:ITA ?= root
 	}
 	possible = {
 		custom_tooltip = {
@@ -292,7 +289,7 @@ Patti_lateranensi = {
 		}
 		custom_tooltip = {
 			text = ita_patti_lateranensi_italy_tt
-			c:ITA = root 
+			c:ITA ?= root 
 		}
 		has_technology_researched = pan-nationalism
 	}
@@ -338,10 +335,7 @@ Italian_Irredentism_main = {
 	}
 
 	is_shown_when_inactive = {
-		OR = { 
-			this ?= c:ITA
-			this ?= c:SAR
-		}
+		c:ITA ?= root
 	}
 
 	possible = {
@@ -526,10 +520,7 @@ Italian_Irredentism_jewel_colony = {
 	scripted_button = ita_jewel_colony_lybia_button
 
 	is_shown_when_inactive = {
-		OR = { 
-			this ?= c:ITA
-			this ?= c:SAR
-		}
+		c:ITA ?= root
 	}
 
 	immediate = {
@@ -1445,7 +1436,7 @@ italy_developing_industry = {
 	group = je_group_italy_tyrone
 
 	is_shown_when_inactive = {
-		c:ITA = root
+		c:ITA ?= root
 	}
 
 	modifiers_while_active = {
@@ -1868,6 +1859,15 @@ italy_LV_federationItaly = { #Slow but better way of forming
 
 	complete = {
 		has_technology_researched = pan-nationalism
+		any_country = {
+			filter = {
+				capital = { is_in_geographic_region = geographic_region_italy }
+				NOT = { this = ROOT }
+			}
+			percent = 1
+			is_subject_of = ROOT
+			relations:ROOT >= relations_threshold:cordial
+		}
 		custom_tooltip = {
 			text = italyFederalized_tt
 			var:italian_fed_var >= 3 #at least 3 subjects
@@ -1930,4 +1930,585 @@ italy_LV_centralizedItaly = { #Faster way
 	}
 	
 	should_be_pinned_by_default = yes
+}
+# ========== Two Sicilies: The Fate of the Kingdom ==========
+sic_fate_of_kingdom = {
+	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
+	group = je_group_italy_tyrone
+
+	scripted_progress_bar = sic_political_balance_bar
+
+	scripted_button = sic_fate_support_absolutist_button
+	scripted_button = sic_fate_support_nationalist_button
+
+	is_shown_when_inactive = {
+		c:SIC = this
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		is_player = yes
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_fate_status_noentry
+				trigger = { NOT = { has_journal_entry = sic_fate_of_kingdom } }
+			}
+			triggered_desc = {
+				desc = sic_fate_absolutist_dominant_desc
+				trigger = {
+					scope:journal_entry = {
+						"scripted_bar_progress(sic_political_balance_bar)" <= 25
+					}
+				}
+			}
+			triggered_desc = {
+				desc = sic_fate_nationalist_dominant_desc
+				trigger = {
+					scope:journal_entry = {
+						"scripted_bar_progress(sic_political_balance_bar)" >= 75
+					}
+				}
+			}
+			triggered_desc = {
+				desc = sic_fate_balanced_desc
+				trigger = { always = yes }
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = { name = sic_fate_stance_var value = 0 }
+	}
+
+	on_monthly_pulse = {
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = fate_sic_Complete_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(sic_political_balance_bar)" >= 200
+			}
+		}
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = fate_sic_fail_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(sic_political_balance_bar)" <= 0
+			} 
+			has_journal_entry = sic_fate_of_kingdom
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = sic_tyrone.1 popup = yes }
+	}
+
+	on_fail = {
+		trigger_event = { id = sic_tyrone.2 popup = yes }
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_fate_absolutist_outcome_tt
+			}
+		}
+	}
+
+	event_outcome_failed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_fate_nationalist_outcome_tt
+			}
+		}
+	}
+
+	invalid = {
+		NOT = { c:SIC ?= root }
+	}
+
+	should_be_pinned_by_default = yes
+}
+
+# ========== Two Sicilies: Conqueror of Italy (Absolutist path) ==========
+sic_conqueror_of_italy = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+		c:SIC = this
+		has_technology_researched = nationalism
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = sic_conqueror_of_italy_unlock_tt
+			has_variable = sic_conqueror_of_italy_var
+		}
+	}
+
+	complete = {
+		any_state = {
+				OR = {
+					state_region = { is_homeland = cu:north_italian }
+					state_region = { is_homeland = cu:south_italian }
+				}
+			owner = root
+			count >= 12
+		}
+	}
+
+	immediate = {
+		every_country = {
+			limit = {
+				capital = {
+					is_in_geographic_region = geographic_region_italy
+				}
+			}
+			change_relations = { country = ROOT value = -100 }
+		}
+		trigger_event = { id = sic_tyrone.13 popup = yes }
+	}
+
+	on_complete = {
+		trigger_event = { id = sic_tyrone.14 popup = yes }
+	}
+
+	event_outcome_completed_desc = {
+		desc = sic_conqueror_of_italy_completed_desc
+	}
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default = yes
+}
+
+# ========== Two Sicilies: Ruler of Italy (Nationalist path) ==========
+sic_ruler_of_italy = {
+	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+		c:SIC = this
+		has_technology_researched = nationalism
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = sic_ruler_of_italy_unlock_tt
+			has_variable = sic_ruler_of_italy_var
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = is_italy_tt
+			c:ITA ?= root
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = sic_tyrone.21 popup = yes }
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_ruler_of_italy_outcome_tt
+			}
+		}
+	}
+
+	invalid = {
+	}
+
+	scripted_button = sic_request_lmv_cession_button
+
+	on_monthly_pulse = {
+		effect = {
+			random_events = {
+				50 = 0
+				50 = sic_tyrone.15
+				50 = sic_tyrone.16
+				10 = sic_tyrone.17
+				10 = sic_tyrone.18
+				25 = sic_tyrone.19
+			}
+		}
+	}
+
+	should_be_pinned_by_default = yes
+}
+
+# ========== Stop Italian Emigration ==========
+ita_stop_emigration = {
+	icon = "gfx/interface/icons/decree/decree_greener_grass_campaign.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+		c:SIC ?= this
+	}
+
+	possible = {
+		hidden_trigger = { is_player = yes }
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = ita_stop_emigration_status_inactive_desc
+				trigger = { NOT = { has_journal_entry = ita_stop_emigration } }
+			}
+			triggered_desc = {
+				desc = ita_stop_emigration_status_desc
+				trigger = { always = yes }
+			}
+		}
+	}
+
+	complete = {
+		OR = {
+			has_law = law_type:law_closed_borders
+			average_sol >= 12
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = sic_tyrone.10 popup = yes }
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = ita_stop_emigration_outcome_both_tt
+			}
+		}
+	}
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default = yes
+}
+
+# ========== Two Sicilies: Reform the Latifundia (main chain JE) ==========
+sic_latifundia_reform = {
+	icon = "gfx/interface/icons/invention_icons/enclosure.dds"
+	group = je_group_italy_tyrone
+
+	scripted_progress_bar = sic_latifundia_reform_bar
+
+	is_shown_when_inactive = {
+		c:SIC = this
+	}
+
+	possible = {
+		is_player = yes
+	}
+
+	immediate = {
+		set_variable = sic_latifundia_reform_started
+		ig:ig_landowners ?= {
+			save_scope_as = latifundia_landowners
+		}
+		ig:ig_intelligentsia ?= {
+			save_scope_as = latifundia_intelligentsia
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_latifundia_reform_base_desc
+				trigger = { always = yes }
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			random_events = {
+				80 = 0
+				15 = sic_tyrone.3
+				15 = sic_tyrone.4
+				15 = sic_tyrone.5
+				15 = sic_tyrone.6
+				80 = sic_tyrone.7
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = sic_latifundia_agri_tt
+			sic_latifundia_agri_levels >= 150
+		}
+		custom_tooltip = {
+			text = sic_latifundia_reform_bar_complete_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(sic_latifundia_reform_bar)" >= 100
+			}
+		}
+		OR = {
+			custom_tooltip = {
+				text = sic_latifundia_modernizer_complete_tt
+				OR = {
+					has_journal_entry = sic_modernizer_king
+					has_variable = sic_modernizer_king_done
+				}
+			}
+			custom_tooltip = {
+				text = sic_latifundia_slavery_complete_tt
+				OR = {
+					has_journal_entry = sic_slavery_path
+					has_variable = sic_slavery_je_done
+				}
+			}
+		}
+		custom_tooltip = {
+			text = sic_latifundia_exports_complete_tt
+			total_country_exports > sic_latifundia_export_target
+		}
+	}
+
+	on_complete = {
+		set_variable = sic_latifundia_reform_done
+		add_modifier = { name = sic_latifundia_dismantled }
+	}
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default = yes
+	transferable = yes
+}
+
+# ========== Two Sicilies: Slavery Path ==========
+sic_slavery_path = {
+	icon = "gfx/interface/icons/law_icons/legacy_slavery.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+		c:SIC ?= this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = sic_slavery_path_unlock_tt
+			has_variable = sic_chose_slavery
+		}
+	}
+
+	modifiers_while_active = {
+		sic_slavery_path_active
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_slavery_path_noentry_desc
+				trigger = { NOT = { has_journal_entry = sic_slavery_path } }
+			}
+			triggered_desc = {
+				desc = sic_slavery_path_enacted_desc
+				trigger = { has_law_or_variant = law_type:law_slave_trade }
+			}
+			triggered_desc = {
+				desc = sic_slavery_path_pending_desc
+				trigger = { always = yes }
+			}
+		}
+	}
+
+	complete = {
+		has_law_or_variant = law_type:law_slave_trade
+	}
+
+	on_complete = {
+		set_variable = sic_slavery_je_done
+		activate_law = law_type:law_sic_slave_trade
+		trigger_event = { id = sic_tyrone.12 popup = yes }
+		custom_tooltip = {
+			text = sic_dismantle_latifundia_bar_progress_tt
+			je:sic_latifundia_reform = {
+				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			}
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_slavery_outcome_tt
+			}
+		}
+	}
+
+	fail = {
+		NOT = { is_enacting_law = law_type:law_sic_slave_trade }
+	}
+
+	on_fail = {
+		set_variable = sic_slavery_je_failed
+	}
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default = yes
+	transferable = yes
+}
+
+# ========== Two Sicilies: The Modernizer King ==========
+sic_modernizer_king = {
+	icon = "gfx/interface/icons/law_icons/monarchy.dds"
+	group = je_group_italy_tyrone
+
+	scripted_progress_bar = sic_modernizer_king_bar
+
+	is_shown_when_inactive = {
+		c:SIC = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = sic_modernizer_king_unlock_tt
+			has_variable = sic_chose_modernizer
+		}
+	}
+
+	modifiers_while_active = {
+		sic_modernizer_king_active
+	}
+
+	immediate = {
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_modernizer_king_status_noentry_desc
+				trigger = {
+					NOT = { has_journal_entry = sic_modernizer_king }
+				}
+			}
+			triggered_desc = {
+				desc = sic_modernizer_king_status_desc
+				trigger = {
+					has_journal_entry = sic_modernizer_king
+				}
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = sic_modernizer_king_bar_complete_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(sic_modernizer_king_bar)" >= 100
+			}
+		}
+	}
+
+	on_complete = {
+		set_variable = sic_modernizer_king_done
+		trigger_event = { id = sic_tyrone.9 popup = yes }
+		custom_tooltip = {
+			text = sic_dismantle_latifundia_bar_progress_tt
+			je:sic_latifundia_reform = {
+				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			}
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_modernizer_king_outcome_tt
+			}
+		}
+	}
+
+	invalid = {
+		NOT = { has_law_or_variant = law_type:law_monarchy }
+	}
+
+	should_be_pinned_by_default = yes
+	transferable = yes
+}
+
+# ========== Two Sicilies: Dismantle Latifundia ==========
+sic_dismantle_latifundia = {
+	icon = "gfx/interface/icons/invention_icons/improved_fertilizer.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+		c:SIC = this
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = sic_dismantle_latifundia_unlock_tt
+			always = no
+		}
+	}
+
+	status_desc = {
+		desc = sic_dismantle_latifundia_status_desc
+	}
+
+	complete = {
+		sic_latifundia_agri_levels >= 150
+		custom_tooltip = {
+			text = sic_dismantle_latifundia_all_fertilized_tt
+			any_scope_building = {
+                    filter = {
+                        is_building_group = bg_staple_crops
+                        state = {
+                            state_region = {
+                                is_homeland = cu:south_italian
+                            }
+                        }
+                    }
+                    OR = {
+						building_has_goods_shortage = no
+                        has_active_production_method = pm_fertilization
+                        hidden_trigger = {
+                            has_active_production_method = pm_fertilization_building_rice_farm
+                        }
+                    }
+                    percent >= 1
+                }
+		}
+	}
+
+	on_complete = {
+		set_variable = sic_dismantle_latifundia_done
+		trigger_event = { id = sic_tyrone.8 popup = yes }
+		custom_tooltip = {
+			text = sic_dismantle_latifundia_bar_progress_tt
+			je:sic_latifundia_reform = {
+				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			}
+		}
+		every_scope_state = {
+			limit = {
+				state_region = { is_homeland = cu:south_italian }
+			}
+			add_state_trait = state_trait_blessed_soils_south
+		}
+	}
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default = yes
+	transferable = yes
 }

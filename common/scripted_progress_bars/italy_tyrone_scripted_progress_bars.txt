@@ -583,3 +583,393 @@ ita_LV_confPO_papal = {
 		}
 	}
 }
+
+################################################################################
+# sic_latifundia_reform_bar: 0–100. Driven by bg_agriculture + bg_plantations
+# building levels. ~3–4/month baseline → completes in ~25–35 months.
+################################################################################
+sic_latifundia_reform_bar = {
+	name = "sic_latifundia_reform_bar_name"
+	desc = "sic_latifundia_reform_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# ── Base: building investment ───────────────────────────────────────
+		add = {
+			desc = "sic_latifundia_agri_levels_tt"
+			value = owner.sic_latifundia_agri_levels
+			divide = 50
+		}
+		# ── Positive laws ───────────────────────────────────────────────────
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_homesteading
+						has_law = law_type:law_tenant_farmers
+						has_law = law_type:law_expanded_latifundias
+					}
+				}
+			}
+			add = {
+				desc = "sic_latifundia_land_reform_law_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_laissez_faire
+						has_law = law_type:law_interventionism
+					}
+				}
+			}
+			add = {
+				desc = "sic_latifundia_free_market_tt"
+				value = 0.5
+			}
+		}
+		# ── Technology ──────────────────────────────────────────────────────
+		if = {
+			limit = {
+				owner = {
+					has_technology_researched = intensive_agriculture
+				}
+			}
+			add = {
+				desc = "sic_latifundia_intensive_agri_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_technology_researched = railways
+				}
+			}
+			add = {
+				desc = "sic_latifundia_intensive_agri_tt"
+				value = 0.25
+			}
+		}
+		# ── Negative laws ───────────────────────────────────────────────────
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_serfdom
+						has_law = law_type:law_latifundias
+					}
+				}
+			}
+			subtract = {
+				desc = "sic_latifundia_serfdom_tt"
+				value = 3
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_isolationism
+				}
+			}
+			subtract = {
+				desc = "sic_latifundia_isolationism_tt"
+				value = 3
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_traditionalism
+				}
+			}
+			subtract = {
+				desc = "sic_latifundia_traditionalism_tt"
+				value = 3
+			}
+		}
+	}
+}
+
+################################################################################
+# sic_modernizer_king_bar: 0–100. Law-based monthly tick.
+# Positive laws add 2–4/month; negative laws subtract 1–2/month.
+# Requires sustained reform to complete (~20–40 months depending on laws).
+################################################################################
+sic_modernizer_king_bar = {
+	name = "sic_modernizer_king_bar_name"
+	desc = "sic_modernizer_king_bar_desc"
+
+	default_green = yes
+
+	start_value = 5
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# ── Positive laws ──────────────────────────────────────────────────
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law_or_variant = law_type:law_homesteading
+						has_law_or_variant = law_type:law_tenant_farmers
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_land_reform_law_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_census_voting
+						has_law = law_type:law_wealth_voting
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_voting_law_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_universal_suffrage
+				}
+			}
+			add = {
+				desc = "sic_mk_universal_suffrage_tt"
+				value = 4
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_laissez_faire
+						has_law = law_type:law_interventionism
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_economy_law_tt"
+				value = 4
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_public_schools
+						has_law = law_type:law_religious_schools
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_schools_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_charitable_health_system
+						has_law = law_type:law_public_health_insurance
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_healthcare_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_national_militia
+						has_law = law_type:law_guaranteed_liberties
+					}
+				}
+			}
+			add = {
+				desc = "sic_mk_liberties_tt"
+				value = 2
+			}
+		}
+		# ── Negative laws ──────────────────────────────────────────────────
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_serfdom
+				}
+			}
+			subtract = {
+				desc = "sic_mk_serfdom_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_autocracy
+						has_law = law_type:law_oligarchy
+					}
+				}
+			}
+			subtract = {
+				desc = "sic_mk_autocracy_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_traditionalism
+				}
+			}
+			subtract = {
+				desc = "sic_mk_traditionalism_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_censorship
+				}
+			}
+			subtract = {
+				desc = "sic_mk_censorship_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_no_schools
+				}
+			}
+			subtract = {
+				desc = "sic_mk_no_schools_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_no_health_system
+				}
+			}
+			subtract = {
+				desc = "sic_mk_no_healthcare_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					has_law = law_type:law_no_home_affairs
+				}
+			}
+			subtract = {
+				desc = "sic_mk_no_policing_tt"
+				value = 2
+			}
+		}
+	}
+}
+
+################################################################################
+# Two Sicilies political balance bar: 0 = Bourbon Absolutists, 100 = neutral, 200 = Italian Nationalists.
+# Driven by two_sicilies_political_balance variable (-100..+100). Uses sync-variable pattern.
+# sic_balance_bar_display_var = balance + 100 (updated in JE on_monthly_pulse).
+################################################################################
+sic_political_balance_bar = {
+	name = "sic_political_balance_bar_name"
+	desc = "sic_political_balance_bar_absolutist_desc"
+	second_desc = "sic_political_balance_bar_nationalist_desc"
+	double_sided_gold = yes
+
+	start_value = 100
+	min_value = 0
+	max_value = 200
+
+	monthly_progress = {
+		# Player stance: absolutist — IG clout pushes toward 0
+			subtract = {
+				desc = "sic_bar_landowners_tt"
+				value = ig:ig_landowners.ig_clout
+				multiply = 2
+			}
+			subtract = {
+				desc = "sic_bar_devout_tt"
+				value = ig:ig_devout.ig_clout
+				multiply = 2
+			}
+		
+		# Player stance: nationalist — IG clout pushes toward 200
+			limit = { owner = { var:sic_fate_stance_var = 2 } }
+			add = {
+				desc = "sic_bar_intelligentsia_tt"
+				value = ig:ig_intelligentsia.ig_clout
+				multiply = 5
+			}
+			add = {
+				desc = "sic_bar_petite_bourgeoisie_tt"
+				value = ig:ig_petty_bourgeoisie.ig_clout
+				multiply = 5
+			}
+		
+		# Laws
+		if = {
+			limit = { owner = { has_law = law_type:law_censorship } }
+			subtract = { desc = "sic_bar_censorship_tt" value = 1 }
+		}
+		if = {
+			limit = {
+				owner = {
+					NOR = {
+						has_law = law_type:law_census_voting
+						has_law = law_type:law_universal_suffrage
+					}
+				}
+			}
+			subtract = { desc = "sic_bar_no_voting_tt" value = 1 }
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law = law_type:law_census_voting
+						has_law = law_type:law_universal_suffrage
+					}
+				}
+			}
+			add = { desc = "sic_bar_voting_tt" value = 2 }
+		}
+		# Literacy
+		if = {
+			limit = { owner = { literacy_rate >= 0.3 } }
+			add = { desc = "sic_bar_literacy_tt" value = 1 }
+		}
+		# Loyalists vs radicals
+		subtract = { desc = "sic_bar_loyalists_tt" value = loyalist_fraction multiply = 5 }
+		add = { desc = "sic_bar_radicals_tt" value = radical_fraction multiply = 5 }
+		
+	}
+}
