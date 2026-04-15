@@ -62,6 +62,50 @@ lmv_request_protectorate_decision = {
 	}
 }
 
+# ========== Sicilian Sulphur Monopoly decision ==========
+# Shown to SIC or to ITA formed via the Sicilian nationalist path (sic_ruler_of_italy variable).
+# Possible when Sicily has a sulphur mine at level >= 20, or the company is already established.
+# Adds the JE (company slot bonus) and establishes the company.
+sic_sulphur_company_decision = {
+	is_shown = {
+		NOT = { has_variable = sic_sulphur_company_je_taken }
+		is_player = yes
+		OR = {
+			c:SIC ?= this
+			AND = {
+				c:ITA ?= this
+				has_variable = sic_ruler_of_italy
+			}
+		}
+	}
+
+	possible = {
+		OR = {
+			any_scope_state = {
+				state_region = s:STATE_SICILY
+				any_scope_building = {
+					is_building_type = building_sulfur_mine
+					level >= 10
+				}
+			}
+			has_company = company_type:company_anglo_sicilian_sulphur_company
+		}
+	}
+
+	when_taken = {
+		set_variable = sic_sulphur_company_je_taken
+		add_journal_entry = { type = sic_sulphur_monopoly_je }
+		if = {
+			limit = {
+				NOT = { has_company = company_type:company_anglo_sicilian_sulphur_company }
+			}
+			add_company = company_type:company_anglo_sicilian_sulphur_company
+		}
+	}
+
+	ai_chance = { value = 10 }
+}
+
 # ========== Italy Developing Industry — investment decisions (cost 1 dev point each) ==========
 
 ita_invest_manufacturing_decision = {
