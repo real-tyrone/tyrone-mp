@@ -585,6 +585,53 @@ ita_LV_confPO_papal = {
 }
 
 ################################################################################
+# sic_dismantle_latifundia_fertilizer_bar: 0–25. Gains 1/month when >= 80% of
+# bg_staple_crops buildings in south Italian homelands use fertilizer.
+# Completes after 25 months of sustained fertilization.
+################################################################################
+sic_dismantle_latifundia_fertilizer_bar = {
+	name = "sic_dismantle_latifundia_fertilizer_bar_name"
+	desc = "sic_dismantle_latifundia_fertilizer_bar_desc"
+
+	default_green = yes
+
+	start_value = 0
+	min_value = 0
+	max_value = 25
+
+	monthly_progress = {
+		if = {
+			limit = {
+				owner = {
+					any_scope_building = {
+						filter = {
+							is_building_group = bg_staple_crops
+							state = {
+								state_region = {
+									is_homeland = cu:south_italian
+								}
+							}
+						}
+						OR = {
+							building_has_goods_shortage = no
+							has_active_production_method = pm_fertilization
+							hidden_trigger = {
+								has_active_production_method = pm_fertilization_building_rice_farm
+							}
+						}
+						percent >= 0.8
+					}
+				}
+			}
+			add = {
+				desc = "sic_dismantle_latifundia_fertilizer_bar_monthly_tt"
+				value = 1
+			}
+		}
+	}
+}
+
+################################################################################
 # sic_latifundia_reform_bar: 0–100. Driven by bg_agriculture + bg_plantations
 # building levels. ~3–4/month baseline → completes in ~25–35 months.
 ################################################################################
