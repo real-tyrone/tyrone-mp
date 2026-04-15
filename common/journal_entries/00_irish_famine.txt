@@ -1,0 +1,241 @@
+﻿je_irish_famine = {
+	icon = gfx/interface/icons/event_icons/potato_blight.dds
+	group = je_group_crises
+	should_be_pinned_by_default = yes
+
+	scripted_button = irish_famine_subsidize_grain_shipments
+	scripted_button = irish_famine_enforce_workhouse_reqs
+	scripted_button = irish_famine_promote_malthus
+
+	is_shown_when_inactive = {
+		exists = c:GBR
+		c:GBR = ROOT
+		NOT = {
+			country_has_primary_culture = cu:irish
+		}
+		any_scope_state = {
+			has_state_trait = state_trait_blight_potato_dependence
+		}
+		NOT = {
+			has_technology_researched = nitrogen_fixation
+		}
+	}
+	possible = {
+		any_scope_state = {
+			filter = {
+				has_state_trait = state_trait_blight_potato_dependence
+			}
+			percent >= 0.40
+			state_region = {
+				has_harvest_condition = disease_outbreak
+			}
+			has_famine = yes
+		}
+	}
+	# timeout = 730 #2 years and a bit
+	immediate = {
+		root = {
+			set_variable = {
+				name = irish_famine_var
+				value = 4
+			}
+		}
+		trigger_event = blight.3
+		scope:journal_entry = {
+			add_com_dlc_icon = {
+				dlc = dlc_rule_britannia
+			}
+		}
+	}
+	complete = {
+		any_state_in_ireland = {
+			count = all
+			NOT = {
+				has_famine = yes
+				state_region = {
+					has_harvest_condition = disease_outbreak
+				}
+			}
+		}
+		# s:STATE_MUNSTER = {
+		# 	NOT = {
+		# 		any_scope_state = {
+		# 			has_famine = yes
+		# 		}
+		# 		has_harvest_condition = disease_outbreak
+		# 	}
+		# }
+		# s:STATE_LEINSTER = {
+		# 	NOT = {
+		# 		any_scope_state = {
+		# 			has_famine = yes
+		# 		}
+		# 		has_harvest_condition = disease_outbreak
+		# 	}
+		# }
+		# s:STATE_CONNAUGHT = {
+		# 	NOT = {
+		# 		any_scope_state = {
+		# 			has_famine = yes
+		# 		}
+		# 		has_harvest_condition = disease_outbreak
+		# 	}
+		# }
+		# s:STATE_ULSTER = {
+		# 	NOT = {
+		# 		any_scope_state = {
+		# 			has_famine = yes
+		# 		}
+		# 		has_harvest_condition = disease_outbreak
+		# 	}
+		# }
+	}
+	on_complete = {
+		every_scope_state = {
+			limit = {
+				state_is_in_ireland = yes
+			}
+			add_modifier = {
+				name = irish_famine_legacy
+				multiplier = root.var:irish_famine_var
+				years = 30
+				is_decaying = yes
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			owns_entire_state_region = STATE_LEINSTER
+			owns_entire_state_region = STATE_MUNSTER
+			owns_entire_state_region = STATE_ULSTER
+			owns_entire_state_region = STATE_CONNAUGHT
+		}
+	}
+	on_invalid = {
+		every_state = {
+			limit = {
+				state_is_in_ireland = yes
+			}
+			add_modifier = {
+				name = irish_famine_legacy
+				multiplier = root.var:irish_famine_var
+				years = 30
+				is_decaying = yes
+			}
+		}
+	}
+	modifiers_while_active = {
+		emergency_measures_modifier
+	}
+	on_monthly_pulse = {
+		random_events = {
+			chance_of_no_event = 60
+			400 = blight.5 #irish exodus
+			400 = blight.6 #irish demand food exports stop
+			400 = blight.7 #charity donations
+			100 = blight.8 #Souperism
+		}
+	}
+}
+
+je_irish_question = {
+	icon = gfx/interface/icons/event_icons/irish_flag.dds
+	group = je_group_irish_question
+
+	should_be_pinned_by_default = yes
+
+	scripted_button = grant_irish_home_rule
+
+	is_shown_when_inactive = {
+		this = c:GBR
+	}
+
+	possible = {
+		OR = {
+			has_technology_researched = nationalism
+			has_journal_entry = je_springtime_of_the_peoples
+		}
+	}
+
+	immediate = {
+		trigger_event = {
+			id = irish_events.1
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_journal_entry = je_irish_famine
+				} 
+				desc = je_irish_question_irish_famine_ravaging
+			}
+		}
+	}
+
+	complete = {
+		OR = {
+			AND = {
+				has_law = law_type:law_multicultural
+				has_law = law_type:law_total_separation
+			}
+			custom_tooltip = {
+				text = has_granted_home_rule
+				has_variable = selected_federal_solution_var
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = irish_events.4 # a truly united kingdom
+		}
+	}
+
+	fail = {
+		has_technology_researched = political_agitation
+		any_scope_state = {
+			state_is_in_ireland = yes
+			turmoil >= 0.5
+		}
+	}
+
+	on_fail = {
+		trigger_event = {
+			id = irish_events.5 # irish revolution
+		}
+	}
+
+	invalid = {
+		every_scope_state = {
+			limit = {
+				state_is_in_ireland = yes
+			}
+			NOT = {
+				owner = root
+			}
+		}
+	}
+
+	on_invalid = {
+		
+	}
+
+	modifiers_while_active = {
+		irish_unrest_modifier
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			chance_of_no_event = 150
+			100 = irish_events.2 #young ireland rebellion
+			10 = irish_events.3 #intercommunal tensions
+			10 = irish_events.6 #fenian form
+			10 = irish_events.7 #fenian revolt
+			10 = irish_events.8 #land war starts
+			10 = irish_events.9 #boycott
+			10 = irish_events.10 #plan of campaign
+		}
+	}
+}

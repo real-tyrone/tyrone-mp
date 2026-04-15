@@ -201,3 +201,37 @@ on_wargoal_enforced = {
         }
     }
 }
+on_character_death = {
+    on_actions = {
+        on_colonial_secretary_death
+    }
+}
+
+on_colonial_secretary_death = {
+    trigger = {
+        has_variable = char_colonial_secretary_character
+        owner ?= {
+            has_journal_entry = je_african_conquest
+        }
+        c:GBR ?= owner
+    }
+    effect = {
+        owner ?= {
+            random_interest_group_in_government = {
+                leader = {
+                    save_scope_as = colonial_secretary_character
+                }
+            }
+            scope:colonial_secretary_character = {
+                set_variable = char_colonial_secretary_character
+            }
+			je:je_african_conquest = {
+				set_variable = {
+					name = colonial_secretary_character
+					value = scope:colonial_secretary_character
+				}
+			}
+            post_notification = colonial_secretary_term_over
+        }
+    }
+}

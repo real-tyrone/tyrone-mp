@@ -1,0 +1,192 @@
+﻿on_monthly_pulse = {
+	on_actions = {
+		blight_on_action
+	}
+}
+
+#some light-touch railroading of historical blight spawns
+blight_on_action = {
+	effect = {
+		if = {
+			limit = {
+				game_date > 1843.6.1
+				NOR = {
+					has_global_variable = potato_blight_spawned
+					has_global_variable = potato_blight_1845
+					has_global_variable = potato_blight_1846
+				}
+			}
+			set_global_variable = potato_blight_spawned
+			random_state_region = {
+				limit = {
+					blight_zone_usa_region = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			random_state_region = {
+				limit = {
+					blight_zone_usa_region = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			# every_country = {
+			# 	limit = {
+			# 		NOT = {
+			# 			is_country_type = decentralized
+			# 		}
+			# 		any_scope_state = {
+			# 			blight_zone_usa = yes
+			# 		}
+			# 	}
+			# 	trigger_event = blight.1
+			# }
+			
+		}
+		#spawn 1845 blight in europe
+		if = {
+			limit = {
+				game_date > 1845.6.1
+				NOR = {
+					has_global_variable = potato_blight_1845
+					has_global_variable = potato_blight_1846
+				}
+			}
+			random_state_region = {
+				limit = {
+					OR= {
+						blight_zone_europe_regions = yes
+						blight_zone_catastrophic_regions = yes
+					}
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			random_state_region = {
+				limit = {
+					OR= {
+						blight_zone_europe_regions = yes
+						blight_zone_catastrophic_regions = yes
+					}
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			set_global_variable = potato_blight_1845
+			# every_country = {
+			# 	limit = {
+			# 		any_scope_state = {
+			# 			blight_zone_europe = yes
+			# 		}
+			# 	}
+			# 	trigger_event = blight.2
+			# }
+		}
+		#spawn 1846 blight in europe
+		if = {
+			limit = {
+				OR = {
+					game_date > 1846.5.1
+					has_global_variable = hungry_forties_happened
+				}
+				NOT = {
+					has_global_variable = potato_blight_1846
+				}
+			}
+			random_state_region = {
+				limit = {
+					blight_zone_europe_regions = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			random_state_region = {
+				limit = {
+					blight_zone_europe_regions = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+			}
+			random_state_region = {
+				limit = {
+					blight_zone_catastrophic_regions = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+				every_scope_state = {
+					limit = {
+						NOT = {
+							has_modifier = blight_catastrophic
+						}
+					}
+					add_modifier = {
+						name = blight_catastrophic
+						years = 1
+					}
+				}
+			}
+			random_state_region = {
+				limit = {
+					blight_zone_catastrophic_regions = yes
+					NOT = {
+						has_harvest_condition = disease_outbreak
+					}
+				}
+				start_harvest_condition = disease_outbreak
+				every_scope_state = {
+					limit = {
+						NOT = {
+							has_modifier = blight_catastrophic
+						}
+					}
+					add_modifier = {
+						name = blight_catastrophic
+						years = 1
+					}
+				}
+			}
+			set_global_variable = potato_blight_1846
+			# every_country = {
+			# 	limit = {
+			# 		any_scope_state = {
+			# 			blight_zone_europe = yes
+			# 		}
+			# 	}
+			# 	trigger_event = blight.3
+			# }
+		}
+		#spawn 1846 crop failure in europe
+		# if = {
+		# 	limit = {
+		# 		game_date > 1846.6.1
+		# 		NOT = {
+		# 			has_global_variable = crop_failure_1846
+		# 		}
+		# 	}
+		# 	set_global_variable = crop_failure_1846
+		# 	every_country = {
+		# 		limit = {
+		# 			any_scope_state = {
+		# 				state_is_in_europe = yes
+		# 			}
+		# 		}
+		# 		trigger_event = blight.4
+		# 	}
+		# }
+	}
+}

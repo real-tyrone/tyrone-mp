@@ -133,3 +133,213 @@
 
 	should_be_pinned_by_default = yes
 }
+
+je_african_conquest = {
+	icon = "gfx/interface/icons/event_icons/african_colonization.dds"
+
+	group = je_group_foreign_affairs
+
+	is_shown_when_inactive = {
+		this = c:GBR
+		has_technology_researched = quinine
+	}
+
+	possible = {
+		has_technology_researched = civilizing_mission
+		OR = {
+			ig:ig_industrialists = {
+				is_in_government = yes
+			}
+			ig:ig_armed_forces = {
+				is_in_government = yes
+			}
+		}
+	}
+
+	immediate = {
+        random_interest_group_in_government = {
+            leader = {
+                save_scope_as = colonial_secretary_character
+            }
+        }
+        scope:colonial_secretary_character = {
+            set_variable = char_colonial_secretary_character
+        }
+		scope:journal_entry = {
+			set_variable = {
+				name = colonial_secretary_character
+				value = scope:colonial_secretary_character
+			}
+		}
+        scope:journal_entry = {
+            add_com_dlc_icon = {
+                dlc = dlc_rule_britannia
+            }
+            set_variable = com_remove_journal_icon
+        }
+    }
+
+	on_weekly_pulse = {
+		effect = {
+			every_scope_character = {
+				limit = {
+					has_variable = char_colonial_secretary_character
+				}
+				save_scope_as = current_colonial_secretary
+			}
+			if = {
+				limit = {
+					scope:current_colonial_secretary = {
+						OR = {
+							is_interest_group_type = ig_intelligentsia
+							is_interest_group_type = ig_petty_bourgeoisie
+							is_interest_group_type = ig_trade_unions
+						}
+					}
+				}
+				scope:journal_entry = {
+					set_variable = liberal_colonial_office
+				}
+			}
+			if = {
+				limit = {
+					AND = {
+						scope:current_colonial_secretary = {
+							OR = {
+								is_interest_group_type = ig_intelligentsia
+								is_interest_group_type = ig_petty_bourgeoisie
+								is_interest_group_type = ig_trade_unions
+							}
+						}
+						scope:journal_entry = {
+							has_variable = conservative_colonial_office
+						}
+					}
+				}
+				scope:journal_entry = {
+					remove_variable = conservative_colonial_office
+				}
+			}
+
+			#------------------------------------------------------
+
+			if = {
+				limit = {
+					scope:current_colonial_secretary = {
+						OR = {
+							is_interest_group_type = ig_landowners
+							is_interest_group_type = ig_industrialists
+							is_interest_group_type = ig_armed_forces
+							is_interest_group_type = ig_devout
+							is_interest_group_type = ig_rural_folk
+						}
+					}
+				}
+				scope:journal_entry = {
+					set_variable = conservative_colonial_office
+				}
+			}
+			if = {
+				limit = {
+					AND = {
+						scope:current_colonial_secretary = {
+							OR = {
+								is_interest_group_type = ig_landowners
+								is_interest_group_type = ig_industrialists
+								is_interest_group_type = ig_armed_forces
+								is_interest_group_type = ig_devout
+								is_interest_group_type = ig_rural_folk
+							}
+						}
+						scope:journal_entry = {
+							has_variable = liberal_colonial_office
+						}
+					}
+				}
+				scope:journal_entry = {
+					remove_variable = liberal_colonial_office
+				}
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			
+		}
+		random_events = {
+			250 = 0
+			10 = imperial_events.13 #mahdist uprising
+			10 = imperial_events.10 # jameson raid
+			10 = imperial_events.9 # fashoda incident
+			5 = imperial_events.8 # big hole mine
+			10 = imperial_events.7 # nigeria
+			5 = imperial_events.6 # local negotiations
+			5 = imperial_events.5 # strain on administration
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = africa_goals_complete_tt
+			country_or_subject_owns_entire_state_region = STATE_SINAI
+			country_or_subject_owns_entire_state_region = STATE_LOWER_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_MIDDLE_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_UPPER_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_DONGOLA
+			country_or_subject_owns_entire_state_region = STATE_BLUE_NILE
+			country_or_subject_owns_entire_state_region = STATE_MATRUH
+			country_or_subject_owns_entire_state_region = STATE_EGYPTIAN_DESERT
+			country_or_subject_owns_entire_state_region = STATE_KORDOFAN
+			country_or_subject_owns_entire_state_region = STATE_DARFUR
+			country_or_subject_owns_entire_state_region = STATE_EQUATORIA
+			country_or_subject_owns_entire_state_region = STATE_MATRUH
+			country_or_subject_owns_entire_state_region = STATE_EGYPTIAN_DESERT
+			country_or_subject_owns_entire_state_region = STATE_KORDOFAN
+			country_or_subject_owns_entire_state_region = STATE_DARFUR
+			country_or_subject_owns_entire_state_region = STATE_EQUATORIA
+			country_or_subject_owns_entire_state_region = STATE_CAPE_COLONY
+			country_or_subject_owns_entire_state_region = STATE_EASTERN_CAPE
+			country_or_subject_owns_entire_state_region = STATE_NORTHERN_CAPE
+			country_or_subject_owns_entire_state_region = STATE_TRANSVAAL
+			country_or_subject_owns_entire_state_region = STATE_VRYSTAAT
+			country_or_subject_owns_entire_state_region = STATE_NAMAQUALAND
+			country_or_subject_owns_entire_state_region = STATE_BOTSWANA
+			country_or_subject_owns_entire_state_region = STATE_ZAMBEZI
+			country_or_subject_owns_entire_state_region = STATE_ZAMBIA
+			country_or_subject_owns_entire_state_region = STATE_KAZEMBE
+			country_or_subject_owns_entire_state_region = STATE_LINDI
+			country_or_subject_owns_entire_state_region = STATE_TANGANYIKA
+			country_or_subject_owns_entire_state_region = STATE_ZANZIBAR
+			country_or_subject_owns_entire_state_region = STATE_RIFT_VALLEY
+			country_or_subject_owns_entire_state_region = STATE_UGANDA
+			country_or_subject_owns_entire_state_region = STATE_KENYA
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = imperial_events.14
+		}
+	}
+
+	fail = {
+		OR = {
+			has_law_or_variant = law_type:law_no_colonial_affairs
+			country_rank < rank_value:great_power
+		}
+	}
+
+	on_fail = {
+		trigger_event = {
+			id = imperial_events.15
+		}
+	}
+
+	scripted_button = occupy_egypt_button
+
+	weight = 100
+
+	should_be_pinned_by_default = yes
+
+}

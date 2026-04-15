@@ -52,3 +52,55 @@ enact_imperial_federation = {
 		value = 100
 	}
 }
+
+occupy_egypt_button = {
+	name = occupy_egypt_button
+	desc = occupy_egypt_button_desc
+
+	visible = {
+		this = c:GBR
+		c:EGY = {
+			is_subject_type = subject_type_protectorate
+			is_subject_of = c:TUR
+		}
+	}
+
+	possible = {
+		exists = c:EGY
+		c:EGY = {
+			is_subject_type = subject_type_protectorate
+			is_subject_of = c:TUR
+		}
+		c:TUR = {
+			OR = {
+				has_modifier = dead_man_of_europe
+				has_journal_entry = je_sick_man_main
+			}
+		}
+	}
+
+	effect = {
+		set_global_variable = britain_occupied_egypt
+		create_diplomatic_pact = {
+			country = c:EGY
+			type = puppet
+		}
+		create_incident = {
+			country = root
+			value = 15
+		}
+		every_country = {
+			limit = {
+				country_rank >= rank_value:great_power
+			}
+			change_relations = {
+				country = root
+				value = -50
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}

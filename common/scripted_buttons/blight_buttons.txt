@@ -1,0 +1,123 @@
+﻿irish_famine_subsidize_grain_shipments = {
+	name = "irish_famine_subsidize_grain_shipments"
+	desc = "irish_famine_subsidize_grain_shipments_desc"
+
+	ai_chance = {
+		value = 100
+	}
+
+	visible = {
+		NOT = {
+			has_variable = sent_grain_to_ireland
+		}
+	}
+
+	possible = {
+		OR = {
+			ig:ig_landowners = {
+				is_in_government = no
+			}
+			NOT = {
+				has_law = law_type:law_mercantilism
+			}
+		}
+	}
+
+	effect = {
+		set_variable = sent_grain_to_ireland
+		irish_famine_ease = yes
+		ig:ig_landowners = {
+			add_modifier = {
+				name = ig_helped_irish_negative_modifier
+				years = 4
+			}
+		}
+		every_scope_state = {
+			limit = {
+				state_is_in_ireland = yes
+			}
+			add_modifier = {
+				name = irish_grain_subsidized
+				years = 2
+			}
+		}
+
+	}
+}
+
+irish_famine_enforce_workhouse_reqs = {
+	name = "irish_famine_enforce_workhouse_reqs"
+	desc = "irish_famine_enforce_workhouse_reqs_desc"
+
+	ai_chance = {
+		value = 100
+	}
+
+	visible = {
+		NOT = {
+			has_variable = irish_famine_enforce_workhouse_reqs
+		}
+	}
+
+	possible = {
+		has_law = law_type:law_poor_laws
+	}
+
+	effect = {
+		set_variable = irish_famine_enforce_workhouse_reqs
+		irish_famine_deepen = yes
+		ig:ig_landowners = {
+			add_modifier = {
+				name = ig_irish_workhouses_positive_modifier
+				years = 3
+			}
+		}
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = ig_irish_workhouses_positive_modifier
+				years = 3
+			}
+		}
+	}
+}
+
+irish_famine_promote_malthus = {
+	name = "irish_famine_promote_malthus"
+	desc = "irish_famine_promote_malthus_desc"
+
+	visible = {
+		NOT = {
+			has_variable = irish_famine_promote_malthus
+		}
+		any_scope_character = {
+			has_trait = bigoted
+		}
+	}
+
+	possible = {
+		any_scope_character = {
+			has_trait = bigoted
+			interest_group = {
+				is_in_government = yes
+			}
+		}
+	}
+
+	effect = {
+		set_variable = irish_famine_promote_malthus
+		custom_tooltip = {
+			text = irish_famine_deepen_double
+			irish_famine_deepen = yes
+			irish_famine_deepen = yes
+		}
+		add_loyalists = {
+			value = small_radicals
+			culture = cu:british
+			strata = upper
+		}
+	}
+	ai_chance = {
+		value = 100
+	}
+}
+
