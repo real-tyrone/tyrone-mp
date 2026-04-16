@@ -112,7 +112,7 @@ italy_risorgimento_stage = {
 	complete = {
 		custom_tooltip = {
 			text = ita_italy_exists_complete_tt
-			exists = c:ITA
+			exists ?= c:ITA
 		}
 	}
 
@@ -175,12 +175,12 @@ italy_diplo_stance = {
 	complete = {
 		custom_tooltip = {
 			text = ita_italy_exists_complete_tt
-			exists = c:ITA
+			exists ?= c:ITA
 		}
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	on_complete = {
@@ -202,7 +202,7 @@ Spenna_la_gallina_austriaca = {
 	possible = {
 		custom_tooltip = {
 			text = ita_spenna_gallina_not_italy_tt
-			exists = c:ITA 
+			exists ?= c:ITA 
 		}
 		OR = {
 			NOT = { country_or_subject_owns_entire_state_region = STATE_LOMBARDY }
@@ -279,7 +279,7 @@ Patti_lateranensi = {
 			text = ita_patti_lateranensi_visible_tt
 			exists = c:PAP
 		}
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	possible = {
@@ -642,7 +642,7 @@ ITA_French_militaryJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	on_complete = {
@@ -742,7 +742,7 @@ ITA_Austria_militaryJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 
@@ -923,7 +923,7 @@ ITA_French_economyJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	should_be_pinned_by_default = yes
@@ -1090,7 +1090,7 @@ ITA_Austria_economyJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 
@@ -1156,7 +1156,7 @@ ITA_French_lawsJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	should_be_pinned_by_default = yes
@@ -1222,7 +1222,7 @@ ITA_Austria_lawsJE = {
 	}
 
 	invalid = {
-		exists = c:ITA
+		exists ?= c:ITA
 	}
 
 	should_be_pinned_by_default = yes
@@ -1247,7 +1247,7 @@ ita_garibaldi_thousand_expedition_JE = {
 	scripted_button = ita_garibaldi_prepare_expedition_button
 
 	is_shown_when_inactive = {
-		this ?= c:SAR
+		c:SAR ?= this
 	}
 
 	possible = {
@@ -1283,7 +1283,7 @@ ita_garibaldi_thousand_expedition_JE = {
 	complete = {
 		custom_tooltip = {
 			text = ita_italy_exists_complete_tt
-			exists = c:ITA
+			exists ?= c:ITA
 		}
 	}
 
@@ -1575,7 +1575,7 @@ italy_LV_startingout = {
 	group = je_group_italy_tyrone
 
 	is_shown_when_inactive = {
-		this ?= c:LMV
+		c:LMV ?= this
 		hidden_trigger = {
 			is_player = yes
 		}
@@ -1933,11 +1933,15 @@ sic_fate_of_kingdom = {
 	scripted_button = sic_fate_support_nationalist_button
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 	}
 
 	possible = {
-		has_technology_researched = nationalism
+		OR = {
+			has_journal_entry = je_springtime_of_the_peoples
+			has_technology_researched = nationalism
+		}
+		
 		is_player = yes
 	}
 
@@ -1978,6 +1982,7 @@ sic_fate_of_kingdom = {
 	}
 
 	complete = {
+		has_technology_researched = nationalism
 		custom_tooltip = {
 			text = fate_sic_Complete_tt
 			scope:journal_entry = {
@@ -1987,6 +1992,7 @@ sic_fate_of_kingdom = {
 	}
 
 	fail = {
+		has_technology_researched = nationalism
 		custom_tooltip = {
 			text = fate_sic_fail_tt
 			scope:journal_entry = {
@@ -1997,11 +2003,11 @@ sic_fate_of_kingdom = {
 	}
 
 	on_complete = {
-		trigger_event = { id = sic_tyrone.1 popup = yes }
+		trigger_event = { id = sic_tyrone.101 popup = yes }
 	}
 
 	on_fail = {
-		trigger_event = { id = sic_tyrone.2 popup = yes }
+		trigger_event = { id = sic_tyrone.102 popup = yes }
 	}
 
 	event_outcome_completed_desc = {
@@ -2033,7 +2039,7 @@ sic_conqueror_of_italy = {
 	group = je_group_italy_tyrone
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 		has_technology_researched = nationalism
 	}
 
@@ -2087,7 +2093,7 @@ sic_ruler_of_italy = {
 	group = je_group_italy_tyrone
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 		has_technology_researched = nationalism
 	}
 
@@ -2197,7 +2203,7 @@ sic_latifundia_reform = {
 	scripted_progress_bar = sic_latifundia_reform_bar
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 	}
 
 	possible = {
@@ -2226,12 +2232,12 @@ sic_latifundia_reform = {
 	on_monthly_pulse = {
 			random_events = {
 				80 = 0
-				15 = sic_tyrone.3
-				15 = sic_tyrone.4
-				15 = sic_tyrone.5
-				15 = sic_tyrone.6
-				80 = sic_tyrone.7
-				50 = sic_tyrone.11
+				5 = sic_tyrone.3
+				5 = sic_tyrone.4
+				5 = sic_tyrone.5
+				5 = sic_tyrone.6
+				20 = sic_tyrone.7
+				40 = sic_tyrone.11
 			}
 	}
 
@@ -2364,7 +2370,7 @@ sic_modernizer_king = {
 	scripted_progress_bar = sic_modernizer_king_bar
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 	}
 
 	possible = {
@@ -2439,10 +2445,64 @@ sic_dismantle_latifundia = {
 	icon = "gfx/interface/icons/invention_icons/improved_fertilizer.dds"
 	group = je_group_italy_tyrone
 
-	scripted_progress_bar = sic_dismantle_latifundia_fertilizer_bar
+	immediate = {
+		set_variable = {
+				name = sic_latifundia_fertilizer_var
+				value = 0
+			}
+	}
+
+	progressbar = yes
+	
+
+	current_value = {
+		value = root.var:sic_latifundia_fertilizer_var
+	}
+
+	goal_add_value = {
+		value = 24
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+                    limit = {
+                        any_scope_building = {
+                            filter = {
+                                is_building_group = bg_staple_crops
+                                state = {
+                                    state_region = {
+                                        is_homeland = cu:south_italian
+                                    }
+                                }
+                            }
+                            OR = {
+                                has_active_production_method = pm_soil_enriching_farming
+                            }
+                            percent >= 0.8
+                        }
+                        any_scope_building = {
+                            filter = {
+                                is_building_group = bg_staple_crops
+                                state = {
+                                    state_region = {
+                                        is_homeland = cu:south_italian
+                                    }
+                                }
+                            }
+                            OR = {
+                                has_active_production_method = pm_tools
+                            }
+                            percent >= 0.8
+                        }
+                    }
+                    change_variable = { name = sic_latifundia_fertilizer_var add = 1 }
+                }
+		}
+	}
 
 	is_shown_when_inactive = {
-		c:SIC = this
+		c:SIC ?= this
 	}
 
 	possible = {
@@ -2453,32 +2513,51 @@ sic_dismantle_latifundia = {
 	}
 
 	status_desc = {
-		desc = sic_dismantle_latifundia_status_desc
+		first_valid = {
+			triggered_desc = {
+				desc = sic_dismantle_latifundia_active_status_desc
+				trigger = { has_journal_entry = sic_dismantle_latifundia }
+			}
+			triggered_desc = {
+				desc = sic_dismantle_latifundia_status_desc
+				trigger = { always = yes }
+			}
+		}
 	}
 
 	complete = {
-		sic_latifundia_agri_levels >= 150
 		custom_tooltip = {
-			text = sic_dismantle_latifundia_all_fertilized_tt
-			any_scope_building = {
-                    filter = {
-                        is_building_group = bg_staple_crops
-                        state = {
-                            state_region = {
-                                is_homeland = cu:south_italian
-                            }
-                        }
-                    }
-                    OR = {
-						building_has_goods_shortage = no
-                        has_active_production_method = pm_fertilization
-                        hidden_trigger = {
-                            has_active_production_method = pm_fertilization_building_rice_farm
-                        }
-                    }
-                    percent >= 1
-                }
+			text = sic_latfundia_fer_complete_tt
+			scope:journal_entry = { is_goal_complete = yes }
 		}
+		any_scope_building = {
+                filter = {
+                    is_building_group = bg_staple_crops
+                    state = {
+                        state_region = {
+                            is_homeland = cu:south_italian
+                        }
+                    }
+                }
+                OR = {
+                    has_active_production_method = pm_soil_enriching_farming
+                }
+                percent >= 0.8
+            }
+            any_scope_building = {
+                filter = {
+                    is_building_group = bg_staple_crops
+                    state = {
+                        state_region = {
+                            is_homeland = cu:south_italian
+                        }
+                    }
+                }
+                OR = {
+                    has_active_production_method = pm_tools
+                }
+                percent >= 0.8
+            }
 	}
 
 	on_complete = {
@@ -2495,6 +2574,14 @@ sic_dismantle_latifundia = {
 				state_region = { is_homeland = cu:south_italian }
 			}
 			add_state_trait = state_trait_blessed_soils_south
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = sic_dismantle_latifundia_outcome_tt
+			}
 		}
 	}
 
@@ -2521,10 +2608,79 @@ sic_sulphur_monopoly_je = {
 	}
 
 	complete = {
+		always = no
 	}
 
 	invalid = {
 		NOT = { has_company = company_type:company_anglo_sicilian_sulphur_company }
+	}
+
+	should_be_pinned_by_default = yes
+}
+
+# ========== Italy: The Metternich System ==========
+ita_metternich_system = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	group = je_group_italy_tyrone
+
+	is_shown_when_inactive = {
+	}
+
+	possible = {
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = is_italy_tt
+			c:ITA ?= root
+		}
+		is_in_power_bloc = yes
+		c:AUS ?= { is_in_power_bloc = yes }
+		power_bloc = c:AUS.power_bloc
+	}
+
+	on_complete = {
+		custom_tooltip = {
+			text = ita_metternich_complete_tt
+			power_bloc = {
+				add_modifier = { name = ita_metternich_mandate_boost years = 5 }
+			}
+		}
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = is_italy_tt
+			c:ITA ?= root
+		}
+		is_in_power_bloc = yes
+		NOT = { power_bloc = c:AUS.power_bloc }
+	}
+
+	on_fail = {
+		if = {
+			limit = { is_power_bloc_leader = yes }
+			custom_tooltip = {
+				text = ita_metternich_fail_leader_bloc_tt
+				power_bloc = {
+					add_modifier = { name = ita_metternich_defiance_mandate years = 5 }
+				}
+			}
+			custom_tooltip = {
+				text = ita_metternich_fail_leader_country_tt
+				add_modifier = { name = ita_metternich_independence_bonus years = 5 }
+			}
+		}
+		else = {
+			custom_tooltip = {
+				text = ita_metternich_fail_member_tt
+				power_bloc = {
+					every_power_bloc_member = {
+						add_modifier = { name = ita_metternich_liberal_spread years = 5 }
+					}
+				}
+			}
+		}
 	}
 
 	should_be_pinned_by_default = yes
