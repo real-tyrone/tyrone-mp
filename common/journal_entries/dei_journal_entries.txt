@@ -1,19 +1,26 @@
 REPLACE:je_reform_indies = {
 	icon = "gfx/interface/icons/event_icons/event_industry.dds"
 
-	group = je_group_internal_affairs
+	group = je_group_dei_global
 
 	is_shown_when_inactive = {
-		AND = {
-			exists = c:DEI
-			c:DEI = THIS
+		OR = {
+			c:DEI ?= THIS
+			c:DEI ?= { top_overlord = { THIS = ROOT } }
+		}
+	}
+
+	is_shown_in_lobby = {
+		OR = {
+			c:DEI ?= THIS
+			c:DEI ?= { top_overlord = { THIS = ROOT } }
 		}
 	}
 
 	should_be_involved = {
 		OR = {
 			c:DEI = THIS
-			c:NET ?= THIS
+			c:DEI ?= { top_overlord = { THIS = ROOT } }
 		}
 	}
 
@@ -31,11 +38,13 @@ REPLACE:je_reform_indies = {
 	}
 
 	possible = {
-		OR = {
-			has_law_or_variant = law_type:law_free_trade
-			has_law_or_variant = law_type:law_mercantilism
-			NOT = { has_law_or_variant = law_type:law_land_based_taxation }
-			NOT = { has_law_or_variant = law_type:law_serfdom }
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+				NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+				NOT = { has_law_or_variant = law_type:law_serfdom }
+			}
 		}
 	}
 
@@ -45,23 +54,25 @@ REPLACE:je_reform_indies = {
 		scope:journal_entry = {
 			is_goal_complete = yes
 		}
-		OR = {
-			has_law_or_variant = law_type:law_free_trade
-			has_law_or_variant = law_type:law_mercantilism
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+			}
+			NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+			OR = {
+				has_law_or_variant = law_type:law_tenant_farmers
+				has_law_or_variant = law_type:law_homesteading
+			}
+			NOT = { has_law_or_variant = law_type:law_extraction_economy }
+			has_law_or_variant = law_type:law_slavery_banned
 		}
-		NOT = { has_law_or_variant = law_type:law_land_based_taxation }
-		OR = {
-			has_law_or_variant = law_type:law_tenant_farmers
-			has_law_or_variant = law_type:law_homesteading
-		}
-		NOT = { has_law_or_variant = law_type:law_extraction_economy}
-		has_law_or_variant = law_type:law_slavery_banned
 	}
 
 	custom_on_completion_header = je_reform_indies_on_complete_header
 
 	on_complete = {
-		trigger_event = { id = east_indies.2 }
+		c:DEI = { trigger_event = { id = east_indies.2 } }
 	}
 
 	event_outcome_completed_desc = {
@@ -74,26 +85,28 @@ REPLACE:je_reform_indies = {
 		scope:journal_entry = {
 			is_goal_complete = yes
 		}
-		OR = {
-			has_law_or_variant = law_type:law_free_trade
-			has_law_or_variant = law_type:law_mercantilism
-		}
-		NOT = { has_law_or_variant = law_type:law_land_based_taxation }
-		OR = {
-			has_law_or_variant = law_type:law_cultuurstelsel
-			has_law_or_variant = law_type:law_commercialized_agriculture
-		}
-		NOT = { has_law_or_variant = law_type:law_extraction_economy }
-		OR = {
-			has_law_or_variant = law_type:law_debt_slavery
-			has_law_or_variant = law_type:law_slave_trade
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+			}
+			NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+			OR = {
+				has_law_or_variant = law_type:law_cultuurstelsel
+				has_law_or_variant = law_type:law_commercialized_agriculture
+			}
+			NOT = { has_law_or_variant = law_type:law_extraction_economy }
+			OR = {
+				has_law_or_variant = law_type:law_debt_slavery
+				has_law_or_variant = law_type:law_slave_trade
+			}
 		}
 	}
 
 	custom_on_failure_header = je_reform_indies_on_fail_header
 
 	on_fail = {
-		trigger_event = { id = east_indies.4 }
+		c:DEI = { trigger_event = { id = east_indies.4 } }
 	}
 
 	invalid = {
@@ -105,11 +118,11 @@ REPLACE:je_reform_indies = {
 
 
 	current_value = {
-		value = root.gdp
+		value = c:DEI.gdp
 	}
 
 	goal_add_value = {
-		value = root.gdp
+		value = c:DEI.gdp
 		multiply = 0.5
 	}
 
