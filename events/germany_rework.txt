@@ -74,6 +74,9 @@ germany_rework.1 = {
 		trigger = {
 			c:AUS ?= THIS
 			has_law_or_variant = law_type:law_monarchy
+			NOT = {
+				has_variable = empire_of_austria_variable
+			}
 		}
 		add_modifier = {
 			name = brothers_war_defeat_aus
@@ -115,13 +118,21 @@ germany_rework.1 = {
 		trigger = {
 			c:AUS ?= THIS
 		}
-		add_modifier = {
-			name = brothers_war_defeat_aus
-			days = long_modifier_time
-			is_decaying = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = finished_hungary_var
+				}
+			}
+			add_modifier = {
+				name = brothers_war_defeat_aus
+				days = long_modifier_time
+				is_decaying = yes
+			}
 		}
 		add_radicals = {
 			value = large_radicals
+			culture = cu:hungarian
 		}
 		save_scope_as = austria_scope
 		s:STATE_CENTRAL_HUNGARY = {
@@ -141,9 +152,6 @@ germany_rework.1 = {
 					origin = root
 					tag = HUN
 					state = scope:budapest_state_scope
-					on_created = {
-						trigger_event = { id = hungary_events.6 popup = yes }
-					}
 				}
 				every_state = {
 					limit = {
