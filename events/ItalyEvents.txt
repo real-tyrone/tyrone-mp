@@ -3843,8 +3843,10 @@ sic_tyrone.15 = {
 			NOT = { this = ROOT }
 			is_subject = no
 			capital = { is_in_geographic_region = geographic_region_italy }
-			is_in_same_power_bloc = ROOT
-			relations:ROOT >= relations_threshold:cordial
+			OR = {
+				is_in_same_power_bloc = ROOT
+				relations:ROOT >= 40
+			}
 		}
 	}
 
@@ -3903,6 +3905,7 @@ sic_tyrone.16 = {
 			is_subject = no
 			capital = { is_in_geographic_region = geographic_region_italy }
 			relations:ROOT >= 20
+			NOT = { has_technology_researched = nationalism }
 		}
 	}
 
@@ -4108,7 +4111,6 @@ sic_tyrone.20 = {
 	duration = 3
 
 	cancellation_trigger = {
-		NOT = { exists = c:LOM }
 	}
 
 	immediate = {
@@ -4119,7 +4121,32 @@ sic_tyrone.20 = {
 
 	option = {
 		name = sic_tyrone.20.a
-		c:SIC = { annex_with_incorporation = LMV }
+		s:STATE_LOMBARDY = {
+				random_scope_state = {
+					limit = {
+						owner = {
+							OR = {
+								c:AUS = THIS
+								is_subject_of = c:AUS
+							}
+						}
+					}
+					set_state_owner = c:SIC
+				}
+			}
+		s:STATE_VENETIA = {
+				random_scope_state = {
+					limit = {
+						owner = {
+							OR = {
+								c:AUS = THIS
+								is_subject_of = c:AUS
+							}
+						}
+					}
+					set_state_owner = c:SIC
+				}
+			}
 		change_relations = {
 			country = c:SIC
 			value = 25
@@ -4210,7 +4237,7 @@ sic_tyrone.21 = {
 
 	# Construction of Italy – construction points + efficiency
 	option = {
-		name = sic_tyrone.21.d
+		name = sic_tyrone.21.e
 		add_modifier = {
 			name = sic_construction_italy
 			years = 10
