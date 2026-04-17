@@ -1,0 +1,341 @@
+# ========== Italy Tyrone Decisions ==========
+
+# Lateran Reconciliation: removes no_papal_recognition, trades it for a 5-year decaying concordat burden.
+# Requires political_agitation tech. Visible only while no_papal_recognition is active.
+ita_lateran_concordat_decision = {
+	is_shown = {
+		has_modifier = no_papal_recognition
+	}
+
+	possible = {
+		is_at_war = no
+		has_technology_researched = political_agitation
+	}
+
+	when_taken = {
+		remove_modifier = no_papal_recognition
+		add_modifier = {
+			name = ita_lateran_concordat
+			years = 5
+			decaying = yes
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+#only AI uses this, not gonna be localized
+ita_ai_form_decision = {
+	is_shown = {
+		c:PAP ?= { is_player = no } #too lazy to do scopes
+		c:LMV ?= { is_player = no }
+		c:SIC ?= { is_player = no }
+		is_subject = no
+		is_player = no
+		c:SAR ?= this
+		c:PAP ?= { is_subject = no }
+		c:SIC ?= { is_subject = no }
+		exists ?= c:SIC
+		exists ?= c:PAP
+		NOT = { exists ?= c:ITA }
+	}
+
+	possible = {
+		is_at_war = no
+		game_date >= 1842.1.1
+	}
+
+	when_taken = {
+		annex_with_incorporation = c:PAR
+		annex_with_incorporation = c:MOD
+		annex_with_incorporation = c:TUS
+		annex_with_incorporation = c:LUC
+		annex_with_incorporation = c:PAP
+		annex_with_incorporation = c:SIC
+		change_tag = ITA
+		add_primary_culture = cu:south_italian
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+# Lombardy-Venetia requests to be downgraded from crown land / personal union to protectorate.
+# Visible when Austria is weakened: lost the Brothers' War, became the Dual Monarchy, or Hungary no longer exists.
+# Fires an event on Austria — Austria chooses to accept or refuse.
+lmv_request_protectorate_decision = {
+	is_shown = {
+		c:LMV ?= this
+		is_subject_of = c:AUS
+		NOT = { is_subject_type = subject_type_protectorate }
+		NOT = { has_variable = lmv_protectorate_requested }
+	}
+
+	possible = {
+		is_at_war = no
+		c:AUS = { is_at_war = no }
+		OR = {
+			c:AUS = { has_modifier = brothers_war_defeat_aus }
+			c:AUS = { has_government_type = gov_dual_monarchy }
+			NOT = { exists = c:HUN }
+		}
+	}
+
+	when_taken = {
+		set_variable = lmv_protectorate_requested
+		c:AUS = {
+			trigger_event = {
+				id = italyEventsTyroneLV.8
+				popup = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 5
+	}
+}
+
+# ========== Sicilian Sulphur Monopoly decision ==========
+# Shown to SIC or to ITA formed via the Sicilian nationalist path (sic_ruler_of_italy variable).
+# Possible when Sicily has a sulphur mine at level >= 20, or the company is already established.
+# Adds the JE (company slot bonus) and establishes the company.
+sic_sulphur_company_decision = {
+	is_shown = {
+		NOT = { has_variable = sic_sulphur_company_je_taken }
+		is_player = yes
+		OR = {
+			c:SIC ?= this
+			AND = {
+				c:ITA ?= this
+				has_variable = sic_ruler_of_italy
+			}
+		}
+	}
+
+	possible = {
+		c:GBR ?= {
+				relations:root >= 50
+			}
+		has_company = company_type:company_anglo_sicilian_sulphur_company
+	}
+
+	when_taken = {
+		set_variable = sic_sulphur_company_je_taken
+		add_journal_entry = { type = sic_sulphur_monopoly_je }
+	}
+
+	ai_chance = { value = 10 }
+}
+
+# ========== Italy Developing Industry — investment decisions (cost 1 dev point each) ==========
+
+ita_invest_manufacturing_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_investment_power_available_tt
+			var:ita_investment_power_var >= 1
+		}
+		NOT = { has_modifier = ita_invest_manufacturing }
+	}
+
+	when_taken = {
+		custom_tooltip = {
+			text = ita_investment_power_spend_tt
+			change_variable = { name = ita_investment_power_var add = -1 }
+		}
+		add_modifier = { name = ita_invest_manufacturing years = 2 }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+ita_invest_agriculture_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_investment_power_available_tt
+			var:ita_investment_power_var >= 1
+		}
+		NOT = { has_modifier = ita_invest_agriculture }
+	}
+
+	when_taken = {
+		custom_tooltip = {
+			text = ita_investment_power_spend_tt
+			change_variable = { name = ita_investment_power_var add = -1 }
+		}
+		add_modifier = { name = ita_invest_agriculture years = 2 }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+ita_leverage_public_loans_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_investment_power_available_tt
+			var:ita_investment_power_var >= 1
+		}
+		NOT = { has_modifier = ita_leverage_public_loans }
+	}
+
+	when_taken = {
+		custom_tooltip = {
+			text = ita_investment_power_spend_tt
+			change_variable = { name = ita_investment_power_var add = -1 }
+		}
+		add_modifier = { name = ita_leverage_public_loans years = 2 }
+	}
+
+	ai_chance = { value = 3 }
+}
+
+ita_invest_education_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_investment_power_available_tt
+			var:ita_investment_power_var >= 1
+		}
+		NOT = { has_modifier = ita_invest_education }
+	}
+
+	when_taken = {
+		custom_tooltip = {
+			text = ita_investment_power_spend_tt
+			change_variable = { name = ita_investment_power_var add = -1 }
+		}
+		add_modifier = { name = ita_invest_education years = 2 }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+ita_invest_institutions_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_investment_power_available_tt
+			var:ita_investment_power_var >= 1
+		}
+		NOT = { has_modifier = ita_invest_institutions }
+	}
+
+	when_taken = {
+		custom_tooltip = {
+			text = ita_investment_power_spend_tt
+			change_variable = { name = ita_investment_power_var add = -1 }
+		}
+		add_modifier = { name = ita_invest_institutions years = 1 }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+# ========== Ministry of Industry — select ideology (3-year cooldown via timed variable) ==========
+
+ita_ministry_of_industry_decision = {
+	is_shown = {
+		has_journal_entry = italy_developing_industry
+		NOT = { has_variable = ita_ministry_selection_cooldown }
+	}
+
+	possible = {
+		always = yes
+	}
+
+	when_taken = {
+		set_variable = {
+			name = ita_ministry_selection_cooldown
+			days = 1095
+		}
+		trigger_event = { id = italian_development.2 popup = yes }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+# ========== Italian Irredentism expansion decisions ==========
+# Each costs 10 infamy and unlocks a sub-JE previously given automatically on parent JE completion.
+# Shown once the prerequisite states are owned (parent JE effectively done) and the sub-JE is not yet active.
+
+ita_irredentism_egypt_decision = {
+	is_shown = {
+		has_journal_entry = Italian_Irredentism_main
+		NOT = { has_journal_entry = Italian_Irredentism_egypt }
+		NOT = { has_variable = ita_irredentism_egypt_taken }
+	}
+
+	possible = {
+		is_at_war = no
+	}
+
+	when_taken = {
+		set_variable = ita_irredentism_egypt_taken
+		change_infamy = 25
+		add_journal_entry = { type = Italian_Irredentism_egypt }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+ita_irredentism_holy_city_decision = {
+	is_shown = {
+		has_journal_entry = Italian_Irredentism_main
+		NOT = { has_journal_entry = Italian_Irredentism_holy_city }
+		NOT = { has_variable = ita_irredentism_holy_city_taken }
+	}
+
+	possible = {
+		is_at_war = no
+	}
+
+	when_taken = {
+		set_variable = ita_irredentism_holy_city_taken
+		change_infamy = 10
+		add_journal_entry = { type = Italian_Irredentism_holy_city }
+	}
+
+	ai_chance = { value = 5 }
+}
+
+ita_irredentism_mediterranean_decision = {
+	is_shown = {
+		has_journal_entry = Italian_Irredentism_main
+		NOT = { has_journal_entry = Italian_Irredentism_mediterranean_islands }
+		NOT = { has_variable = ita_irredentism_mediterranean_taken }
+	}
+
+	possible = {
+		is_at_war = no
+	}
+
+	when_taken = {
+		set_variable = ita_irredentism_mediterranean_taken
+		change_infamy = 10
+		add_journal_entry = { type = Italian_Irredentism_mediterranean_islands }
+	}
+
+	ai_chance = { value = 5 }
+}

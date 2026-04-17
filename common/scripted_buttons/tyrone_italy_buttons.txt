@@ -1368,8 +1368,12 @@ LV_fix_legittimacy_button = {
 					has_law_or_variant = law_type:law_secret_police
 				}
 				has_law_or_variant = law_type:law_oligarchy
-				institution:institution_police.investment >= 2
-				institution:institution_home_affairs.investment >= 2
+				custom_tooltip = {
+					text = LV_police_homeaffair_lvl2_tt
+					institution:institution_police.investment >= 2
+					institution:institution_home_affairs.investment >= 2
+				}
+				
 			}
 
 			AND = {
@@ -2059,6 +2063,115 @@ italy_LV_itacentr_sway_sicily_button = {
 		change_relations = {
 			country = c:SIC
 			value = 20
+		}
+	}
+}
+# ========== Stop Italian Emigration JE ==========
+ita_emigration_close_borders_button = {
+	name = ita_emigration_close_borders_button
+	desc = ita_emigration_close_borders_button_desc
+
+	visible = {
+		has_journal_entry = ita_stop_emigration
+		NOT = { has_variable = ita_emigration_path_var }
+	}
+
+	possible = {
+		is_player = yes
+		NOT = { has_variable = ita_emigration_path_var }
+	}
+
+	effect = {
+		set_variable = { name = ita_emigration_path_var value = 1 }
+	}
+}
+
+ita_emigration_improve_italy_button = {
+	name = ita_emigration_improve_italy_button
+	desc = ita_emigration_improve_italy_button_desc
+
+	visible = {
+		has_journal_entry = ita_stop_emigration
+		NOT = { has_variable = ita_emigration_path_var }
+	}
+
+	possible = {
+		is_player = yes
+		NOT = { has_variable = ita_emigration_path_var }
+	}
+
+	effect = {
+		set_variable = { name = ita_emigration_path_var value = 2 }
+	}
+}
+
+# ========== Two Sicilies: Fate of the Kingdom stance buttons ==========
+
+sic_fate_support_absolutist_button = {
+	name = sic_fate_support_absolutist_button
+	desc = sic_fate_support_absolutist_button_desc
+
+	cooldown = { months = 12 }
+
+	visible = {
+		has_journal_entry = sic_fate_of_kingdom
+	}
+
+	possible = {
+	}
+
+	effect = {
+		je:sic_fate_of_kingdom = {
+			add_progress = { value = -25 name = sic_political_balance_bar }
+		}
+	}
+}
+
+sic_fate_support_nationalist_button = {
+	name = sic_fate_support_nationalist_button
+	desc = sic_fate_support_nationalist_button_desc
+
+	cooldown = { months = 12 }
+
+	visible = {
+		has_journal_entry = sic_fate_of_kingdom
+	}
+
+	possible = {
+	}
+
+	effect = {
+		je:sic_fate_of_kingdom = {
+			add_progress = { value = 25 name = sic_political_balance_bar }
+		}
+	}
+}
+
+# ========== sic_ruler_of_italy – Request cession of Lombardo-Venetia from Austria ==========
+sic_request_lmv_cession_button = {
+	name = sic_request_lmv_cession_button
+	desc = sic_request_lmv_cession_button_desc
+
+	cooldown = { months = 12 }
+
+	visible = {
+		is_player = yes
+		has_journal_entry = sic_ruler_of_italy
+	}
+
+	possible = {
+		exists = c:AUS
+		c:AUS = {
+			OR = {
+				country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+				country_or_subject_owns_entire_state_region = STATE_VENETIA
+			}
+		}
+	}
+
+	effect = {
+		c:AUS ?= {
+			trigger_event = { id = sic_tyrone.20 popup = yes }
 		}
 	}
 }

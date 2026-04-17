@@ -1,6 +1,8 @@
 # Italy Tyrone – all script values (single file).
 # Irredentism, Garibaldi expedition, sentiment bar, French economy JE.
 
+sic_latifundia_export_target = 400
+
 ################################################################################
 # Italian Irredentism (JE reason display + Proclaim Empire button)
 # Used as GetPlayer.MakeScope.ScriptValue('...') in Italian_Irredentism_main_reason.
@@ -136,4 +138,39 @@ ita_north_gdp_8pct_target = {
 ita_south_gdp_8pct_target = {
 	value = var:south_gdp_ita_var
 	multiply = 1.08
+}
+
+
+################################################################################
+# Latifundia Reform bar display values (sic_latifundia_reform_bar: 0–100).
+################################################################################
+
+# Total bg_agriculture building levels across all states owned by this country.
+sic_latifundia_agri_levels = {
+	value = 0
+	every_scope_state = {
+		every_scope_building = {
+			limit = { 
+				OR = {
+					is_building_group = bg_agriculture
+					is_building_group = bg_ranching
+					is_building_group = bg_plantations
+				}
+				 
+				NOT = { is_building_type = building_subsistence_farm }
+				}
+			add = level
+		}
+	}
+}
+
+# Total bg_plantations building levels across all states owned by this country.
+sic_latifundia_plant_levels = {
+	value = 0
+	every_scope_state = {
+		every_scope_building = {
+			limit = { is_building_group = bg_plantations }
+			add = level
+		}
+	}
 }
