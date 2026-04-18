@@ -148,7 +148,9 @@ ita_annex_romagna_only_button = {
 		NOT = { has_variable = NIF_formed }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	possible = {
 		custom_tooltip = {
 				text = ita_talks_with_the_pope_sentiment_tt
@@ -202,7 +204,9 @@ ita_occupy_abruzzi_button = {
 		c:PAP ?= { exists = yes }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	effect = {
 		custom_tooltip = {
 			text = ita_occupy_romagna_umbria_sentiment_penalty_tt
@@ -234,7 +238,9 @@ ita_talks_with_the_pope_button = {
 		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	possible = {
 		c:PAP = {
 			relations:root >= 30
@@ -307,7 +313,9 @@ ita_invite_pope_sphere_button = {
 		c:PAP ?= { exists = yes }
 		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	possible = {
 		c:PAP ?= { exists = yes }
 		c:PAP = {
@@ -475,7 +483,9 @@ ita_annex_pope_war_goal_button = {
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	possible = {
 		c:PAP ?= { exists = yes }
 		NOT = { is_at_war_with = c:PAP }
@@ -506,9 +516,10 @@ ita_form_italy_button = {
 
 	visible = {
 		NOT = { c:ITA ?= root }
-		is_player = yes
 	}
-
+	ai_chance = {
+		value = 50
+	}
 	possible = {
 		custom_tooltip = {
 				text = is_nif_tt
@@ -626,6 +637,9 @@ ita_declare_north_italian_federation_button = {
 		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
+	ai_chance = {
+		value = 50
+	}
 
 	possible = {
 		OR = {
@@ -662,6 +676,10 @@ ita_garibaldi_prepare_expedition_button = {
 	desc = ita_garibaldi_prepare_expedition_button_desc
 
 	cooldown = { years = 100 }
+
+	ai_chance = {
+		value = 50
+	}
 
 	visible = {
 		has_journal_entry = ita_garibaldi_thousand_expedition_JE
@@ -722,6 +740,18 @@ ita_north_italian_manifesto_button = {
 			c:MOD ?= { exists = yes }
 			c:LUC ?= { exists = yes }
 			c:TUS ?= { exists = yes }
+		}
+	}
+
+	ai_chance = {
+		value = 100
+		if = {
+			limit = { # Will not annex players until their liberty desire is below 5.
+				c:PAP ?= { is_player = no }
+				c:LMV ?= { is_player = no }
+				c:SIC ?= { is_player = no }
+			}
+			add = -1000
 		}
 	}
 
