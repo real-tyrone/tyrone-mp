@@ -2493,6 +2493,11 @@ italian_development.1 = {
 				months = 13
 				multiplier = 5
 			}
+		add_modifier = {
+				name = sic_construction_italy
+				days = very_short_modifier_time
+				multiplier = 2
+		}
 	}
 	option = {
 		name = italian_development.1.b
@@ -2505,6 +2510,10 @@ italian_development.1 = {
 				months = 13
 				multiplier = 3
 			}
+		add_modifier = {
+				name = sic_construction_italy
+				days = very_short_modifier_time
+		}
 	}
 	option = {
 		name = italian_development.c.a
@@ -3554,7 +3563,6 @@ sic_tyrone.9 = {
 		add_modifier = { 
 				name = sic_modernizer_legacy 
 				days = long_modifier_time 
-				is_decaying = yes
 			}
 		add_loyalists = { value = medium_radicals strata = middle }
 		ruler = { 
@@ -3569,7 +3577,6 @@ sic_tyrone.9 = {
 		add_modifier = { 
 				name = sic_reactionary_legacy 
 				days = long_modifier_time 
-				is_decaying = yes
 			}
 		add_radicals = { value = small_radicals strata = middle }
 		ruler = { 
@@ -3817,61 +3824,63 @@ sic_tyrone.14 = {
 
 # Event: Ruler of Italy – Puppet Italian Minor
 sic_tyrone.15 = {
-	type = country_event
-	placement = scope:puppet_target
+    type = country_event
+    placement = scope:puppet_target
 
-	title = sic_tyrone.15.t
-	desc = sic_tyrone.15.d
-	flavor = sic_tyrone.15.f
+    title = sic_tyrone.15.t
+    desc = sic_tyrone.15.d
+    flavor = sic_tyrone.15.f
 
-	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
-	event_image = { video = "votp_gunboat_diplomacy" }
+    event_image = { video = "votp_gunboat_diplomacy" }
 
-	duration = 3
+    duration = 3
 
-	cooldown = { days = 200 }
+    cooldown = { days = 200 }
 
-	trigger = {
-		any_country = {
-			NOT = { this = ROOT }
-			is_subject = no
-			capital = { is_in_geographic_region = geographic_region_italy }
-			OR = {
-				is_in_same_power_bloc = ROOT
-				relations:ROOT >= 40
-			}
-		}
-	}
+    trigger = {
+        any_country = {
+            any_country = {
+            NOT = { this = ROOT }
+            is_subject = no
+            capital = { is_in_geographic_region = geographic_region_italy }
+                OR = {
+                    is_in_same_power_bloc = ROOT
+                    relations:ROOT >= 40
+                }
+            }
+        }
+    }
 
-	immediate = {
-		random_country = {
-			limit = {
-				NOT = { this = ROOT }
-				is_subject = no
-				capital = { is_in_geographic_region = geographic_region_italy }
-				is_in_same_power_bloc = ROOT
-				relations:ROOT >= relations_threshold:cordial
-			}
-			save_scope_as = puppet_target
-		}
-	}
+    immediate = {
+        random_country = {
+            limit = {
+                NOT = { this = ROOT }
+                is_subject = no
+                capital = { is_in_geographic_region = geographic_region_italy }
+                OR = {
+                    is_in_same_power_bloc = ROOT
+                    relations:ROOT >= 40
+                }
+            }
+            save_scope_as = puppet_target
+        }
+    }
 
-	option = {
-		name = sic_tyrone.15.a
-		# Accept: absorb into sphere as puppet
-		create_diplomatic_pact = {
-			country = scope:puppet_target
-			type = puppet
-		}
-		scope:puppet_target = { add_technology_researched = nationalism }
-	}
+    option = {
+        name = sic_tyrone.15.a
+        # Accept: absorb into sphere as puppet
+        create_diplomatic_pact = {
+            country = scope:puppet_target
+            type = puppet
+        }
+    }
 
-	option = {
-		name = sic_tyrone.15.b
-		# Decline
-		scope:puppet_target = { add_technology_researched = nationalism }
-	}
+    option = {
+        name = sic_tyrone.15.b
+        # Decline
+    }
 }
 
 # Event: Voice of the Peninsula – nationalist pamphlet spreads to Italian minor
@@ -3959,7 +3968,6 @@ sic_tyrone.17 = {
 		add_modifier = {
 			name = sic_artisans_pilgrimage
 			days = normal_modifier_time
-			is_decaying = yes
 		}
 	}
 
@@ -4069,7 +4077,6 @@ sic_tyrone.19 = {
 		add_modifier = {
 			name = sic_rome_declared_capital
 			days = long_modifier_time
-			is_decaying = yes
 		}
 	}
 
@@ -4082,7 +4089,6 @@ sic_tyrone.19 = {
 		add_modifier = {
 			name = sic_papal_concordat
 			days = long_modifier_time
-			is_decaying = yes
 		}
 	}
 }
@@ -4126,6 +4132,7 @@ sic_tyrone.20 = {
 						}
 					}
 					set_state_owner = c:SIC
+					set_state_type = incorporated
 				}
 			}
 		s:STATE_VENETIA = {
@@ -4139,6 +4146,7 @@ sic_tyrone.20 = {
 						}
 					}
 					set_state_owner = c:SIC
+					set_state_type = incorporated
 				}
 			}
 		change_relations = {
@@ -4195,46 +4203,11 @@ sic_tyrone.21 = {
 		name = sic_tyrone.21.a
 		default_option = yes
 		add_modifier = {
-			name = sic_united_tradition
+			name = sic_founding_italy
 			years = 10
 		}
-	}
-
-	# Towards the Future – tech spread + society research (requires modernizer ruler)
-	option = {
-		name = sic_tyrone.21.b
-		trigger = {
-			ruler = {
-				has_ideology = ideology:ideology_modernizer_leader
-			}
-		}
-		add_modifier = {
-			name = sic_towards_future
-			years = 10
-		}
-	}
-
-	# United Against the Invader – offense, defense, conscription (requires not owning Lombardy or Venetia)
-	option = {
-		name = sic_tyrone.21.c
-		trigger = {
-			OR = {
-				NOT = { owns_entire_state_region = STATE_LOMBARDY }
-				NOT = { owns_entire_state_region = STATE_VENETIA }
-			}
-		}
-		add_modifier = {
-			name = sic_united_invader
-			years = 10
-		}
-	}
-
-	# Construction of Italy – construction points + efficiency
-	option = {
-		name = sic_tyrone.21.e
-		add_modifier = {
-			name = sic_construction_italy
-			years = 10
+		add_loyalists = {
+			value = 0.10
 		}
 	}
 }
