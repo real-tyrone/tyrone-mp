@@ -166,7 +166,7 @@ Already partially implemented. The existing annexation flow (Canada, Australia, 
 
 ### JE: `je_progress_to_federation` (replaces `je_imperial_federation`)
 
-**Implementation:** `REPLACE:je_imperial_federation` in `common/journal_entries/gbr_je_federation.txt`
+**Implementation:** `je_imperial_federation` in `common/journal_entries/gbr_je_federation.txt` — remove (or empty) the existing definition in `common/journal_entries/00_imperial.txt` first, since `je_imperial_federation` is mod-defined (not vanilla) and does not need `REPLACE:`.
 
 **Group:** `je_group_british_empire_affairs` (new custom group — see Appendix)
 
@@ -177,7 +177,7 @@ Already partially implemented. The existing annexation flow (Canada, Australia, 
 ```
 # common/journal_entries/gbr_je_federation.txt
 
-REPLACE:je_imperial_federation = {
+je_imperial_federation = {
     icon = "gfx/interface/icons/event_icons/waving_flag.dds"
 
     group = je_group_british_empire_affairs
@@ -217,19 +217,14 @@ REPLACE:je_imperial_federation = {
     }
 
     on_yearly_pulse = {
-        events = {
-            # Federation bar advance/regression events fired here
-            # See namespace gbr_fed_events in events/gbr_federation_events.txt
-        }
         random_events = {
-            chance_to_happen = 60
+            400 = 0
             100 = gbr_fed_events.1
             100 = gbr_fed_events.2
             100 = gbr_fed_events.3
             100 = gbr_fed_events.4
             100 = gbr_fed_events.5
             100 = gbr_fed_events.6
-            100 = 0
         }
     }
 
@@ -722,11 +717,9 @@ The JE is added only to GBR. The `should_be_involved` trigger shows it in the do
 
 Replaces the existing `je_company_equity` JE (currently defined in `common/journal_entries/00_bic_content.txt`). This JE is always active regardless of path chosen. It governs the relationship between GBR and BIC (the East India Company / British India).
 
-**Implementation:** `REPLACE:je_company_equity` in `common/journal_entries/gbr_je_india.txt`
+**Implementation:** `je_company_equity` in `common/journal_entries/gbr_je_india.txt` — remove (or empty) the existing definition in `common/journal_entries/00_bic_content.txt` first. `je_company_equity` is mod-defined (not vanilla) so `REPLACE:` is not needed.
 
-**JE key:** `je_governance_of_india` — however, since we REPLACE `je_company_equity`, the key in the file should be `je_company_equity` (overriding the definition) unless the namespace is changed. If the key is changed to `je_governance_of_india`, all references to `je_company_equity` elsewhere (in `bic_content.1`, any loc, any trigger) must also be updated.
-
-> **Recommendation:** Use `REPLACE:je_company_equity` and keep the key as `je_company_equity` internally, with the JE title and description loc changed to reflect the new "Governance of India" framing. This avoids cascading reference updates.
+**JE key:** `je_governance_of_india` — however, to avoid cascading reference updates in `bic_content.1`, loc, and triggers, keep the key as `je_company_equity` with updated title/desc loc strings to reflect the new "Governance of India" framing.
 
 **Added to:** GBR (and visible on BIC's journal via `should_be_involved`).
 
@@ -743,7 +736,7 @@ Replaces the existing `je_company_equity` JE (currently defined in `common/journ
 ```
 # common/journal_entries/gbr_je_india.txt
 
-REPLACE:je_company_equity = {
+je_company_equity = {
     icon = "gfx/interface/icons/event_icons/event_portrait.dds"
 
     group = je_group_british_empire_affairs
