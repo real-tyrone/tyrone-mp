@@ -2302,7 +2302,10 @@ sic_latifundia_reform = {
 
 	on_complete = {
 		set_variable = sic_latifundia_reform_done
-		add_modifier = { name = sic_latifundia_dismantled }
+		add_modifier = { 
+			name = sic_latifundia_dismantled 
+			days = long_modifier_time
+		}
 	}
 
 	invalid = {
@@ -2821,7 +2824,8 @@ sic_bourbon_monarchy_main = {
 			}
 			custom_tooltip = {
 				text = sic_bourbongaribaldi_fail_tt
-				has_variable = sic_garibaldi_coup_var
+				#fail anyway cuz Garibaldi enstablishes the Republic
+				always = no
 			}
 			NOT = { has_law_or_variant = law_type:law_monarchy }
 		}
@@ -3023,18 +3027,14 @@ sic_bourbon_monarchy_economy = {
                 OR = {
                     state_has_building_group_levels = {
                         type = bg_light_industry
-                        value >= 20
+                        value >= 10
                     }
                     state_has_building_group_levels = {
                         type = bg_heavy_industry
-                        value >= 10
+                        value >= 5
                     }
                 }
 				market_access = 1
-				any_scope_pop = {
-					is_pop_type = peasants
-					percent <= 0.4
-				}
                 count >= 3
             }
 
@@ -3042,18 +3042,14 @@ sic_bourbon_monarchy_economy = {
                 OR = {
                     state_has_building_group_levels = {
                         type = bg_light_industry
-                        value >= 40
+                        value >= 20
                     }
                     state_has_building_group_levels = {
                         type = bg_heavy_industry
-                        value >= 25
+                        value >= 15
                     }
                 }
 				market_access = 1
-				any_scope_pop = {
-					is_pop_type = peasants
-					percent <= 0.10
-				}
                 count >= 1
             }
 		}
@@ -3064,8 +3060,13 @@ sic_bourbon_monarchy_economy = {
             }
 	}
 
+	scripted_button = sic_bourbon_economy_skip_button
+
 	invalid = {
-		NOT = { has_journal_entry = sic_bourbon_monarchy_main }
+		OR = {
+			NOT = { has_journal_entry = sic_bourbon_monarchy_main }
+			has_variable = sic_bourbon_economy_skipped
+		}
 	}
 
 	on_complete = {
@@ -3112,7 +3113,7 @@ garibaldi_presidency_JE = {
 	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
 	group = je_group_italy_tyrone
 
-	timeout = 1825
+	timeout = 9125
 
 	is_shown_when_inactive = {
 	}

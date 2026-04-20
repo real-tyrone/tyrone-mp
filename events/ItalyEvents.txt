@@ -2486,40 +2486,31 @@ italian_development.1 = {
 		name = italian_development.1.a
 		set_variable = { #assign investment counter
 			name = ita_investment_power_var
-			value = 5
+			value = 4
 		} 
 		add_modifier = {
 				name = ita_industrial_dev_investment_costs
 				months = 13
-				multiplier = 5
+				multiplier = 6
 			}
-		add_modifier = {
-				name = sic_construction_italy
-				days = very_short_modifier_time
-				multiplier = 2
-		}
 	}
 	option = {
 		name = italian_development.1.b
 		set_variable = { #assign investment counter
 			name = ita_investment_power_var
-			value = 4
+			value = 2
 		}
 		add_modifier = {
 				name = ita_industrial_dev_investment_costs
 				months = 13
 				multiplier = 3
 			}
-		add_modifier = {
-				name = sic_construction_italy
-				days = very_short_modifier_time
-		}
 	}
 	option = {
 		name = italian_development.c.a
 		set_variable = { #assign investment counter
 			name = ita_investment_power_var
-			value = 2
+			value = 0
 		}
 	}
 }
@@ -3488,11 +3479,9 @@ sic_tyrone.8 = {
 	desc = sic_tyrone.8.d
 	flavor = sic_tyrone.8.f
 
-	gui_window = event_window_1char_tabloid
-
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
-	event_image = { video = "votp_monarch_holding_court" }
+	event_image = { video = "asia_poor_people_moving" }
 
 	duration = 3
 
@@ -3567,7 +3556,8 @@ sic_tyrone.9 = {
 		# Accept modernization fully — reformist monarchy
 		add_modifier = { 
 				name = sic_modernizer_legacy 
-				days = long_modifier_time 
+				days = long_modifier_time
+				is_decaying = yes 
 			}
 		add_loyalists = { value = medium_radicals strata = middle }
 		ruler = { 
@@ -3582,6 +3572,7 @@ sic_tyrone.9 = {
 		add_modifier = { 
 				name = sic_reactionary_legacy 
 				days = long_modifier_time 
+				is_decaying = yes
 			}
 		add_radicals = { value = small_radicals strata = middle }
 		ruler = { 
@@ -3787,6 +3778,12 @@ sic_tyrone.13 = {
 		}		
 		custom_tooltip = {
 			text = sic_tyrone.13.a_claims_tt
+		}
+		if = { limit = { exists = c:PAP } 
+			c:PAP = { add_modifier = { name = sic_italian_debuff_conqueror days = long_modifier_time } }
+		}
+		if = { limit = { exists = c:SAR } 
+			c:SAR = { add_modifier = { name = sic_italian_debuff_conqueror days = long_modifier_time } }
 		} 
 	}
 }
@@ -3821,6 +3818,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_authority }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		} 
 	}
 
 	option = {
@@ -3830,6 +3830,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_military }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		}
 	}
 
 	option = {
@@ -3839,6 +3842,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_innovation }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		}
 	}
 }
 
@@ -4517,6 +4523,8 @@ sic_tyrone.25 = {
 	desc = sic_tyrone.25.d
 	flavor = sic_tyrone.25.f
 
+	cooldown = { days = very_long_modifier_time }
+
 	gui_window = event_window_1char_lord_kitchener
 	left_icon = scope:garibaldi
 	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
@@ -4559,6 +4567,7 @@ sic_tyrone.25 = {
 	option = {
 		name = sic_tyrone.25.a
 		default_option = yes
+		add_technology_progress = { progress = 6000 technology = nationalism }
 		activate_law = law_type:law_universal_suffrage
 		activate_law = law_type:law_presidential_republic
 		add_journal_entry = { type = garibaldi_presidency_JE }
@@ -4566,11 +4575,31 @@ sic_tyrone.25 = {
 					limit = { has_trait = ita_grande_generale }
 					set_character_as_ruler = yes
 				}
+		add_modifier = { 
+			name = garibaldi_coup 
+			days = normal_modifier_time
+			is_decaying = yes
+			}
 	}
 
 	option = {
 		name = sic_tyrone.25.b
 		# placeholder — resist the coup
+		add_modifier = { 
+			name = garibaldi_coup 
+			days = normal_modifier_time
+			is_decaying = yes
+		}
+		add_radicals = {
+			value = 0.15
+			strata = lower
+		}
+		custom_tooltip = {
+			text = sic_bourbon_bar_progress_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			}
+		}
 	}
 }
 
