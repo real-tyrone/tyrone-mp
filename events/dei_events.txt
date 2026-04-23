@@ -1,0 +1,378 @@
+﻿namespace = dei_independence
+
+# Dutch East Indies Breakup - New Government
+dei_independence.1 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_independence.1.t
+	desc = dei_independence.1.d
+	flavor = dei_independence.1.f
+
+	event_image = {
+		video = "asia_politician_parliament_motion"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+		# Triggered by on_action
+	}
+
+	cancellation_trigger = {
+		is_subject = yes
+	}
+
+	option = {
+		name = dei_independence.1.a
+		default_option = yes
+		activate_law = law_type:law_parliamentary_republic
+		activate_law = law_type:law_census_voting
+	}
+
+	option = {
+		name = dei_independence.1.b
+		trigger = {
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_monarchy
+					value >= approve
+				}
+			}
+		}
+		activate_law = law_type:law_monarchy
+	}
+
+	option = {
+		name = dei_independence.1.c
+		trigger = {
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_corporate_state
+					value >= approve
+				}
+			}
+		}
+		activate_law = law_type:law_corporate_state
+	}
+
+	option = {
+		name = dei_independence.1.d
+		trigger = {
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_council_republic
+					value >= approve
+				}
+			}
+		}
+		activate_law = law_type:law_council_republic
+	}
+
+	option = {
+		name = dei_independence.1.e
+		trigger = {
+			country_has_state_religion = rel:sunni
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_theocracy
+					value >= approve
+				}
+			}
+		}
+		activate_law = law_type:law_theocracy
+		activate_law = law_type:law_autocracy
+		activate_law = law_type:law_people_of_the_book
+	}
+
+	option = {
+		name = dei_independence.1.g
+		trigger = {
+			country_has_state_religion = rel:protestant
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_theocracy
+					value >= approve
+				}
+			}
+		}
+		activate_law = law_type:law_theocracy
+		activate_law = law_type:law_autocracy
+		activate_law = law_type:law_state_religion
+		
+		custom_tooltip = {
+			text = dei_protestant_conversion_tt
+			every_scope_state = {
+			convert_population = {
+				target = rel:protestant
+				value = 0.05
+			}
+		}
+		}
+		
+		add_radicals = {
+			value = 0.05
+		}
+		add_modifier = {
+			name = dei_christianity_reasserted
+			years = 5
+			is_decaying = yes
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			set_country_type = recognized
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_cultuurstelsel
+				NOT = {
+					has_primary_culture = cu:dutch
+				}
+			}
+			trigger_event = { id = dei_independence.4 days = 7 }
+		}
+		if = {
+			limit = {
+				country_has_state_religion = rel:sunni
+			}
+			add_loyalists = {
+				value = 0.2
+			}
+		}
+	}
+}
+
+# The Dutch Emigre
+dei_independence.2 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_independence.2.t
+	desc = dei_independence.2.d
+	flavor = dei_independence.2.f
+
+	event_image = {
+		video = "unspecific_steam_ship"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# Triggered by on_action
+	}
+
+	immediate = {
+		c:NET ?= {
+			random_scope_state = {
+				limit = {
+					state_region = s:STATE_HOLLAND
+				}
+				save_scope_as = dutch_holland_state
+			}
+			random_scope_state = {
+				limit = {
+					state_region = s:STATE_FRIESLAND
+				}
+				save_scope_as = dutch_friesland_state
+			}
+		}
+	}
+
+	option = {
+		name = dei_independence.2.a
+		default_option = yes
+		every_scope_pop = {
+			limit = {
+				culture = cu:dutch
+			}
+			random_list = {
+				50 = { move_pop = scope:dutch_holland_state }
+				50 = { move_pop = scope:dutch_friesland_state }
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					active_law:lawgroup_citizenship ?= {
+						has_amendment = amendment_type:amendment_racialized_subjecthood
+					}
+					has_law = law_type:law_subjecthood
+				}
+			}
+			trigger_event = { id = dei_independence.3 days = 7 }
+		}
+	}
+}
+
+# The End of Apartheid
+dei_independence.3 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_independence.3.t
+	desc = dei_independence.3.d
+	flavor = dei_independence.3.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	trigger = {
+		# Triggered by dei_independence.2
+	}
+
+	option = {
+		name = dei_independence.3.a
+		default_option = yes
+		activate_law = law_type:law_national_supremacy
+	}
+}
+
+# The End of the Cultuurstelsel
+dei_independence.4 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_independence.4.t
+	desc = dei_independence.4.d
+	flavor = dei_independence.4.f
+
+	event_image = {
+		video = "asia_farmers_market"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	trigger = {
+		# Triggered by dei_independence.1
+	}
+
+	option = {
+		name = dei_independence.4.a
+		default_option = yes
+		activate_law = law_type:law_homesteading
+	}
+
+	option = {
+		name = dei_independence.4.b
+		activate_law = law_type:law_tenant_farmers
+	}
+}
+
+namespace = dei_reform
+
+# The Price of Reform
+dei_reform.1 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_reform.1.t
+	desc = dei_reform.1.d
+	flavor = dei_reform.1.f
+
+	event_image = {
+		video = "unspecific_politicians_arguing"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+
+	trigger = {
+		# Triggered by on_law_enactment_started
+	}
+
+	immediate = {
+		set_variable = dei_economic_debate_fired
+	}
+
+	# Interventionism
+	option = {
+		name = dei_reform.1.a
+		trigger = { is_enacting_law = law_type:law_interventionism }
+		default_option = yes
+		currently_enacting_law = {
+			add_amendment = {
+				type = amendment_generic_sponsor_polstr_increase
+				sponsor = PREV.ig:ig_petty_bourgeoisie
+			}
+		}
+		add_modifier = {
+			name = dei_interventionism_transition
+			days = 1825
+		}
+	}
+
+	# Agrarianism
+	option = {
+		name = dei_reform.1.b
+		trigger = { is_enacting_law = law_type:law_agrarianism }
+		default_option = yes
+		currently_enacting_law = {
+			add_amendment = {
+				type = amendment_generic_sponsor_polstr_increase
+				sponsor = PREV.ig:ig_landowners
+			}
+		}
+		add_modifier = {
+			name = dei_agrarianism_transition
+			days = 1825
+		}
+	}
+
+	# Laissez-Faire
+	option = {
+		name = dei_reform.1.c
+		trigger = { is_enacting_law = law_type:law_laissez_faire }
+		default_option = yes
+		currently_enacting_law = {
+			add_amendment = {
+				type = amendment_generic_sponsor_polstr_increase
+				sponsor = PREV.ig:ig_industrialists
+			}
+		}
+		currently_enacting_law = {
+			add_amendment = {
+				type = amendment_colonial_construction_control
+				sponsor = PREV.ig:ig_industrialists
+			}
+		}
+	}
+
+	# Deny
+	option = {
+		name = dei_reform.1.e
+	}
+}

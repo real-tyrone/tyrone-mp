@@ -1,0 +1,230 @@
+namespace = east_indies
+
+# Consolidation of [countryadjective] rule
+east_indies.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = east_indies.1.t
+	desc = east_indies.1.d # probably want a triggered desc here
+	flavor = east_indies.1.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = east_indies.1.a
+		default_option = yes
+		custom_tooltip = {
+			text = princely_states_relations_30_tt
+			every_princely_state = {
+				change_relations = {
+					country = ROOT
+					value = 30
+				}
+			}
+		}
+	}
+	option = {
+		name = east_indies.1.b
+		ig:ig_industrialists ?= {
+			add_modifier = {
+				name = east_india_company_men
+				days = long_modifier_time
+			}
+		}
+	}
+}
+
+# Reforming the Indies
+east_indies.2 = {
+	type = country_event
+	placement = ROOT
+
+	title = east_indies.2.t
+	desc = east_indies.2.d
+	flavor = east_indies.2.f
+
+	event_image = {
+		video = "southamerica_factory_opening"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				active_law:lawgroup_citizenship ?= {
+					has_amendment = amendment_type:amendment_racialized_subjecthood
+				}
+			}
+			active_law:lawgroup_citizenship ?= {
+				every_scope_amendment = { remove_amendment = yes }
+			}
+		}
+		change_tag = IDN
+		remove_primary_culture = cu:dutch
+		add_primary_culture = cu:balinese
+		add_primary_culture = cu:batak
+		add_primary_culture = cu:bornean
+		add_primary_culture = cu:dayak
+		add_primary_culture = cu:javan
+		add_primary_culture = cu:malay
+		add_primary_culture = cu:moluccan
+		add_primary_culture = cu:sumatran
+	}
+
+	option = {
+		name = east_indies.2.a
+		default_option = yes
+		add_modifier = { # capitalist investment pool contribution
+			name = indies_investment
+			days = long_modifier_time
+		}
+	}
+	option = {
+		name = east_indies.2.b
+		add_modifier = { # qualifications
+			name = indies_qualified_employees
+			days = long_modifier_time
+		}
+	}
+}
+
+# The Ethical Policy (NOT USED BUT HOLDING ONTO IT ANYWAY)
+east_indies.3 = {
+	type = country_event
+	placement = ROOT
+
+	title = east_indies.3.t
+	desc = east_indies.3.d
+	flavor = east_indies.3.f
+
+	event_image = {
+		video = "middleeast_middleclass_cafe"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+		root.religion = { save_scope_as = indies_religion }
+	}
+
+	option = {
+		name = east_indies.3.a
+		trigger = {
+			has_law_or_variant = law_type:law_religious_schools
+		}
+		# conversion
+		add_modifier = {
+			name = indies_conversion
+			days = long_modifier_time
+		}
+	}
+	option = {
+		name = east_indies.3.b
+		# migration
+		add_modifier = {
+			name = indies_migration
+			days = long_modifier_time
+		}
+	}
+	option = {
+		name = east_indies.3.c
+		default_option = yes
+		# loyalists from sol
+		add_modifier = {
+			name = indies_loyalists
+			days = long_modifier_time
+		}
+	}
+}
+
+# The New Feudalism
+east_indies.4 = {
+	type = country_event
+	placement = ROOT
+
+	title = east_indies.4.t
+	desc = east_indies.4.d
+	flavor = east_indies.4.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = east_indies.4.a
+		default_option = yes
+		add_journal_entry = {
+			type = je_ethical_policy_feudalism
+		}
+	}
+
+	after = {
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_agrarianism
+			}
+			activate_law = law_type:law_neofeudalism
+		}
+		else = {
+			active_law:lawgroup_economic_system = {
+				add_amendment = {
+					type = amendment_colonial_neofeudalism
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_slave_trade
+			}
+			active_law:lawgroup_slavery = {
+				add_amendment = {
+					type = amendment_expanded_colonial_slavery
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
+		}
+	}
+}
