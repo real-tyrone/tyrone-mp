@@ -72,14 +72,31 @@ east_indies.2 = {
 	}
 
 	immediate = {
+		if = {
+			limit = {
+				active_law:lawgroup_citizenship ?= {
+					has_amendment = amendment_type:amendment_racialized_subjecthood
+				}
+			}
+			active_law:lawgroup_citizenship ?= {
+				every_scope_amendment = { remove_amendment = yes }
+			}
+		}
+		change_tag = IDN
+		remove_primary_culture = cu:dutch
+		add_primary_culture = cu:balinese
+		add_primary_culture = cu:batak
+		add_primary_culture = cu:bornean
+		add_primary_culture = cu:dayak
+		add_primary_culture = cu:javan
+		add_primary_culture = cu:malay
+		add_primary_culture = cu:moluccan
+		add_primary_culture = cu:sumatran
 	}
 
 	option = {
 		name = east_indies.2.a
 		default_option = yes
-		add_journal_entry = {
-			type = je_ethical_policy
-		}
 		add_modifier = { # capitalist investment pool contribution
 			name = indies_investment
 			days = long_modifier_time
@@ -87,9 +104,6 @@ east_indies.2 = {
 	}
 	option = {
 		name = east_indies.2.b
-		add_journal_entry = {
-			type = je_ethical_policy
-		}
 		add_modifier = { # qualifications
 			name = indies_qualified_employees
 			days = long_modifier_time
@@ -97,41 +111,7 @@ east_indies.2 = {
 	}
 }
 
-# The New Feudalism
-east_indies.4 = {
-	type = country_event
-	placement = ROOT
-
-	title = east_indies.4.t
-	desc = east_indies.4.d
-	flavor = east_indies.4.f
-
-	event_image = {
-		video = "asia_sepoy_mutiny"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	duration = 3
-
-	trigger = {
-	}
-
-	immediate = {
-	}
-
-	option = {
-		name = east_indies.4.a
-		default_option = yes
-		add_journal_entry = {
-			type = je_ethical_policy_feudalism
-		}
-	}
-}
-
-# The Ethical Policy
+# The Ethical Policy (NOT USED BUT HOLDING ONTO IT ANYWAY)
 east_indies.3 = {
 	type = country_event
 	placement = ROOT
@@ -183,6 +163,68 @@ east_indies.3 = {
 		add_modifier = {
 			name = indies_loyalists
 			days = long_modifier_time
+		}
+	}
+}
+
+# The New Feudalism
+east_indies.4 = {
+	type = country_event
+	placement = ROOT
+
+	title = east_indies.4.t
+	desc = east_indies.4.d
+	flavor = east_indies.4.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = east_indies.4.a
+		default_option = yes
+		add_journal_entry = {
+			type = je_ethical_policy_feudalism
+		}
+	}
+
+	after = {
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_agrarianism
+			}
+			activate_law = law_type:law_neofeudalism
+		}
+		else = {
+			active_law:lawgroup_economic_system = {
+				add_amendment = {
+					type = amendment_colonial_neofeudalism
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_slave_trade
+			}
+			active_law:lawgroup_slavery = {
+				add_amendment = {
+					type = amendment_expanded_colonial_slavery
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
 		}
 	}
 }

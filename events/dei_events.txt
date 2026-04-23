@@ -1,4 +1,4 @@
-namespace = dei_independence
+﻿namespace = dei_independence
 
 # Dutch East Indies Breakup - New Government
 dei_independence.1 = {
@@ -82,6 +82,7 @@ dei_independence.1 = {
 	option = {
 		name = dei_independence.1.e
 		trigger = {
+			country_has_state_religion = rel:sunni
 			any_interest_group = {
 				is_in_government = yes
 				is_strongest_ig_in_government = yes
@@ -96,54 +97,64 @@ dei_independence.1 = {
 		activate_law = law_type:law_people_of_the_book
 	}
 
-	after = {
-		add_loyalists = {
-			value = 0.2
+	option = {
+		name = dei_independence.1.g
+		trigger = {
+			country_has_state_religion = rel:protestant
+			any_interest_group = {
+				is_in_government = yes
+				is_strongest_ig_in_government = yes
+				law_stance = {
+					law = law_type:law_theocracy
+					value >= approve
+				}
+			}
 		}
+		activate_law = law_type:law_theocracy
+		activate_law = law_type:law_autocracy
+		activate_law = law_type:law_state_religion
+		
+		custom_tooltip = {
+			text = dei_protestant_conversion_tt
+			every_scope_state = {
+			convert_population = {
+				target = rel:protestant
+				value = 0.05
+			}
+		}
+		}
+		
+		add_radicals = {
+			value = 0.05
+		}
+		add_modifier = {
+			name = dei_christianity_reasserted
+			years = 5
+			is_decaying = yes
+		}
+	}
+
+	after = {
 		hidden_effect = {
 			set_country_type = recognized
 		}
 		if = {
 			limit = {
 				has_law = law_type:law_cultuurstelsel
+				NOT = {
+					has_primary_culture = cu:dutch
+				}
 			}
 			trigger_event = { id = dei_independence.4 days = 7 }
 		}
-	}
-}
-
-# The End of the Cultuurstelsel
-dei_independence.4 = {
-	type = country_event
-	placement = root
-
-	duration = 3
-
-	title = dei_independence.4.t
-	desc = dei_independence.4.d
-	flavor = dei_independence.4.f
-
-	event_image = {
-		video = "asia_farmers_market"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_scales.dds"
-
-	trigger = {
-		# Triggered by dei_independence.1
-	}
-
-	option = {
-		name = dei_independence.4.a
-		default_option = yes
-		activate_law = law_type:law_homesteading
-	}
-
-	option = {
-		name = dei_independence.4.b
-		activate_law = law_type:law_tenant_farmers
+		if = {
+			limit = {
+				country_has_state_religion = rel:sunni
+			}
+			add_loyalists = {
+				value = 0.2
+			}
+		}
 	}
 }
 
@@ -201,8 +212,11 @@ dei_independence.2 = {
 		}
 		if = {
 			limit = {
-				active_law:lawgroup_citizenship ?= {
-					has_amendment = amendment_type:amendment_racialized_subjecthood
+				OR = {
+					active_law:lawgroup_citizenship ?= {
+						has_amendment = amendment_type:amendment_racialized_subjecthood
+					}
+					has_law = law_type:law_subjecthood
 				}
 			}
 			trigger_event = { id = dei_independence.3 days = 7 }
@@ -236,11 +250,42 @@ dei_independence.3 = {
 	option = {
 		name = dei_independence.3.a
 		default_option = yes
-		active_law:lawgroup_citizenship ?= {
-			every_scope_amendment = {
-				remove_amendment = yes
-			}
-		}
+		activate_law = law_type:law_national_supremacy
+	}
+}
+
+# The End of the Cultuurstelsel
+dei_independence.4 = {
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = dei_independence.4.t
+	desc = dei_independence.4.d
+	flavor = dei_independence.4.f
+
+	event_image = {
+		video = "asia_farmers_market"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	trigger = {
+		# Triggered by dei_independence.1
+	}
+
+	option = {
+		name = dei_independence.4.a
+		default_option = yes
+		activate_law = law_type:law_homesteading
+	}
+
+	option = {
+		name = dei_independence.4.b
+		activate_law = law_type:law_tenant_farmers
 	}
 }
 
