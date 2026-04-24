@@ -8,23 +8,26 @@ je_berlin_conference = {
 			is_involved_in_journal_entry = je_berlin_conference
 		}
 		OR = {
-			global_country_ranking = 1
-			global_country_ranking = 2
-			global_country_ranking = 3
-			is_in_geographic_region = geographic_region_europe
-		}
-		OR = {
-			global_country_ranking = 1
-			global_country_ranking = 2
-			global_country_ranking = 3
-			has_technology_researched = civilizing_mission
-			country_rank = rank_value:great_power
-			AND = {
+			hidden_trigger = {
 				OR = {
-					has_law = law_type:law_colonial_resettlement
-					has_law = law_type:law_colonial_exploitation
+					this ?= c:FRA
+					this ?= c:GBR
+					this ?= c:GER
+					this ?= c:ITA
+					this ?= c:RUS
+					this ?= c:AUS
+					this ?= c:SCA
+					this ?= c:SWE
+					this ?= c:UNL
+					this ?= c:NET
+					this ?= c:IBE
+					this ?= c:SPA
+					this ?= c:POR
 				}
-				country_rank = rank_value:major_power
+			}
+			AND = {
+				is_in_geographic_region = geographic_region_europe
+				country_rank = rank_value:great_power
 			}
 		}
 	}
@@ -73,26 +76,17 @@ je_berlin_conference = {
 		scope:journal_entry = {
 			set_variable = remove_journal_icon
 		}
+		add_to_global_variable_list = { name = part_of_berlin_conf_list target = this }
+		set_variable = visible_berlin_conf_treaty_article
 	}
 
 	immediate_all_involved = {
-        set_variable = { name = african_claims_var value = 3 }
+		assign_conference_gp_number_effect = yes
+		add_to_global_variable_list = { name = part_of_berlin_conf_list target = root }
+		set_variable = visible_berlin_conf_treaty_article
 		if = {
-			limit = {
-				NOT = { country_rank = rank_value:great_power }
-			}
-            change_variable = { name = african_claims_var subtract = 1 }
-		}
-		if = {
-			limit = {
-				NOT = { 
-					OR = {
-						has_law = law_type:law_colonial_resettlement
-						has_law = law_type:law_colonial_exploitation
-					}
-				}
-			}
-            change_variable = { name = african_claims_var subtract = 1 }
+			limit = { var:conference_gp_number <= 3 }
+			add_to_global_variable_list = { name = berlin_conf_top3_gp_list target = root }
 		}
 	}
 
@@ -129,9 +123,9 @@ je_berlin_conference = {
 				text = 3GPaccept_berlin_conf_tt
 				has_variable = accepted_conf_var
 				OR = {
-					var:conference_gp_number = 1
-					var:conference_gp_number = 2
-					var:conference_gp_number = 3
+					global_country_ranking = 1
+					global_country_ranking = 2
+					global_country_ranking = 3
 				}
 			}
 			count >= 3
@@ -158,6 +152,21 @@ je_berlin_conference = {
 	}
 
 	on_monthly_pulse = {
+		effect = {
+			clear_global_variable_list = part_of_berlin_conf_list
+			every_country = {
+				limit = { is_involved_in_journal_entry = je_berlin_conference }
+				add_to_global_variable_list = { name = part_of_berlin_conf_list target = this }
+			}
+			clear_global_variable_list = berlin_conf_top3_gp_list
+			every_country = {
+				limit = {
+					is_involved_in_journal_entry = je_berlin_conference
+					var:conference_gp_number <= 3
+				}
+				add_to_global_variable_list = { name = berlin_conf_top3_gp_list target = this }
+			}
+		}
 	}
 
 	invalid = {
