@@ -3396,7 +3396,7 @@ sic_tyrone.6 = {
 	option = {
 		name = sic_tyrone.6.b
 		# Gradual modernization
-		add_modifier = { name = sic_gradual_modernization days = normal_modifier_time }
+		add_modifier = { name = sic_rapid_mechanization days = normal_modifier_time multiplier = 0.4 }
 		add_loyalists = { value = small_radicals strata = lower }
 	}
 }
@@ -3442,7 +3442,7 @@ sic_tyrone.7 = {
 		hidden_effect = {
 			cancel_enactment = yes
 		}
-		start_enactment = law_type:law_sic_slave_trade
+		start_enactment = law_type:law_sic_serfdom
 		hidden_effect = {
 			add_enactment_modifier = {
 				name = ita_passing_slavery_mod
@@ -3479,15 +3479,18 @@ sic_tyrone.8 = {
 	desc = sic_tyrone.8.d
 	flavor = sic_tyrone.8.f
 
-	gui_window = event_window_1char_tabloid
-
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
-	event_image = { video = "votp_monarch_holding_court" }
+	event_image = { video = "asia_poor_people_moving" }
 
 	duration = 3
 
 	immediate = {
+		if = {
+			limit = {
+				NOT = { has_law = law_type:law_sic_serfdom }
+			}
+		}
 		activate_law = law_type:law_expanded_latifundias
 	}
 
@@ -3553,7 +3556,8 @@ sic_tyrone.9 = {
 		# Accept modernization fully — reformist monarchy
 		add_modifier = { 
 				name = sic_modernizer_legacy 
-				days = long_modifier_time 
+				days = long_modifier_time
+				is_decaying = yes 
 			}
 		add_loyalists = { value = medium_radicals strata = middle }
 		ruler = { 
@@ -3568,6 +3572,7 @@ sic_tyrone.9 = {
 		add_modifier = { 
 				name = sic_reactionary_legacy 
 				days = long_modifier_time 
+				is_decaying = yes
 			}
 		add_radicals = { value = small_radicals strata = middle }
 		ruler = { 
@@ -3773,6 +3778,12 @@ sic_tyrone.13 = {
 		}		
 		custom_tooltip = {
 			text = sic_tyrone.13.a_claims_tt
+		}
+		if = { limit = { exists = c:PAP } 
+			c:PAP = { add_modifier = { name = sic_italian_debuff_conqueror days = long_modifier_time } }
+		}
+		if = { limit = { exists = c:SAR } 
+			c:SAR = { add_modifier = { name = sic_italian_debuff_conqueror days = long_modifier_time } }
 		} 
 	}
 }
@@ -3807,6 +3818,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_authority }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		} 
 	}
 
 	option = {
@@ -3816,6 +3830,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_military }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		}
 	}
 
 	option = {
@@ -3825,6 +3842,9 @@ sic_tyrone.14 = {
 		heir = { add_trait = ita_conqueror_of_italy_innovation }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
 		add_loyalists = { value = 0.10 culture = cu:south_italian }
+		if = { limit = { exists = c:SAR } 
+			annex_with_incorporation = c:SAR
+		}
 	}
 }
 
@@ -4335,5 +4355,557 @@ italyEventsTyroneLV.8 = {
 
 	option = {
 		name = italyEventsTyroneLV.8.b
+	}
+}
+
+# ========== Italian National Movement activism events (sic_tyrone.22-24) ==========
+# Fire from sic_bourbon_monarchy_main on_monthly_pulse. Each gives +15% activism to movement_italian_national.
+
+sic_tyrone.22 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.22.t
+	desc = sic_tyrone.22.d
+	flavor = sic_tyrone.22.f
+
+	event_image = {
+		video = "votp_agitator_speaking"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	duration = 3
+	cooldown = { days = long_modifier_time }
+
+	trigger = {
+		any_political_movement = {
+			is_political_movement_type = movement_italian_national
+		}
+	}
+
+	immediate = {
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			save_scope_as = ita_movement
+		}
+	}
+
+	option = {
+		name = sic_tyrone.22.a
+		default_option = yes
+		scope:ita_movement = {
+			add_modifier = {
+				name = sic_ita_national_activism
+				days = long_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = sic_tyrone.22.b
+		capital = {
+			add_radicals_in_state = {
+				value = 0.05
+			}
+		}
+	}
+}
+
+sic_tyrone.23 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.23.t
+	desc = sic_tyrone.23.d
+	flavor = sic_tyrone.23.f
+
+	event_image = {
+		video = "europenorthamerica_springtime_of_nations"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+	duration = 3
+	cooldown = { days = long_modifier_time }
+
+	trigger = {
+		any_political_movement = {
+			is_political_movement_type = movement_italian_national
+		}
+	}
+
+	immediate = {
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			save_scope_as = ita_movement
+		}
+	}
+
+	option = {
+		name = sic_tyrone.23.a
+		default_option = yes
+		scope:ita_movement = {
+			add_modifier = {
+				name = sic_ita_national_activism
+				days = long_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = sic_tyrone.23.b
+		capital = {
+			add_radicals_in_state = {
+				value = 0.05
+			}
+		}
+	}
+}
+
+sic_tyrone.24 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.24.t
+	desc = sic_tyrone.24.d
+	flavor = sic_tyrone.24.f
+
+	event_image = {
+		video = "votp_conspiring"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	duration = 3
+	cooldown = { days = long_modifier_time }
+
+	trigger = {
+		any_political_movement = {
+			is_political_movement_type = movement_italian_national
+		}
+	}
+
+	immediate = {
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			save_scope_as = ita_movement
+		}
+	}
+
+	option = {
+		name = sic_tyrone.24.a
+		default_option = yes
+		scope:ita_movement = {
+			add_modifier = {
+				name = sic_ita_national_activism
+				days = long_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = sic_tyrone.24.b
+		capital = {
+			add_radicals_in_state = {
+				value = 0.05
+			}
+		}
+	}
+}
+
+# ========== Garibaldi's Coup ==========
+sic_tyrone.25 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.25.t
+	desc = sic_tyrone.25.d
+	flavor = sic_tyrone.25.f
+
+	cooldown = { days = very_long_modifier_time }
+
+	gui_window = event_window_1char_lord_kitchener
+	left_icon = scope:garibaldi
+	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
+	duration = 3
+
+	trigger = {
+		has_variable = sic_court_done
+		has_journal_entry = sic_bourbon_monarchy_main
+		je:sic_bourbon_monarchy_main = {
+			"scripted_bar_progress(bourbon_legitimacy_bar)" <= 20
+		}
+	}
+
+	immediate = {
+		capital = {
+			save_scope_as = capital_scope
+		}
+		create_character = {
+			template = garibaldi_character_template
+			is_general = yes
+			ig_leader = yes
+			ruler = no
+			on_created = {
+				add_trait = ita_grande_generale
+				save_scope_as = garibaldi
+			}
+		}
+		random_scope_character = {
+			limit = {
+				has_trait = ita_grande_generale
+			}
+			save_scope_as = garibaldi
+		}
+		
+	}
+
+	option = {
+		name = sic_tyrone.25.a
+		default_option = yes
+		add_technology_progress = { progress = 6000 technology = nationalism }
+		activate_law = law_type:law_universal_suffrage
+		activate_law = law_type:law_presidential_republic
+		add_journal_entry = { type = garibaldi_presidency_JE }
+		random_scope_character = {
+					limit = { has_trait = ita_grande_generale }
+					set_character_as_ruler = yes
+				}
+		add_modifier = { 
+			name = garibaldi_coup 
+			days = normal_modifier_time
+			is_decaying = yes
+			}
+	}
+
+	option = {
+		name = sic_tyrone.25.b
+		# placeholder — resist the coup
+		add_modifier = { 
+			name = garibaldi_counter_coup 
+			days = normal_modifier_time
+			is_decaying = yes
+		}
+		add_radicals = {
+			value = 0.15
+			strata = lower
+		}
+		custom_tooltip = {
+			text = sic_bourbon_bar_progress_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			}
+		}
+	}
+}
+
+sic_tyrone.26 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.26.t
+	desc = sic_tyrone.26.d
+	flavor = sic_tyrone.26.f
+
+	event_image = {
+		video = "votp_agitator_speaking"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+	duration = 3
+
+	trigger = {
+	}
+
+	cooldown = { days = long_modifier_time }
+
+	immediate = {
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			save_scope_as = ita_movement
+		}
+	}
+
+	option = {
+		name = sic_tyrone.26.a
+		default_option = yes
+		add_radicals = {
+			value = 0.10
+			strata = lower
+		}
+		trigger_event = { id = sic_tyrone.27 popup = yes }
+	}
+
+	option = {
+		name = sic_tyrone.26.b
+	}
+}
+
+sic_tyrone.27 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.27.t
+	desc = sic_tyrone.27.d
+	flavor = sic_tyrone.27.f
+
+	event_image = {
+		video = "votp_barricade"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+	duration = 3
+
+	trigger = {
+		any_political_movement = {
+			is_political_movement_type = movement_italian_national
+		}
+	}
+
+	immediate = {
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			save_scope_as = ita_movement
+		}
+	}
+
+	option = {
+		name = sic_tyrone.27.a
+		default_option = yes
+		scope:ita_movement = {
+			add_modifier = {
+				name = sic_ita_movement_surge
+				days = long_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = sic_tyrone.27.b
+	}
+}
+
+sic_tyrone.28 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.28.t
+	desc = sic_tyrone.28.d
+	flavor = sic_tyrone.28.f
+
+	event_image = { video = "votp_conspiring" }
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	trigger = {
+		NOT = { has_variable = sic_barracks_done }
+		has_journal_entry = sic_bourbon_monarchy_main
+		je:sic_bourbon_monarchy_main = {
+			"scripted_bar_progress(bourbon_legitimacy_bar)" <= 60
+		}
+	}
+
+	option = {
+		name = sic_tyrone.28.a
+		default_option = yes
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_whispers_barracks_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_barracks_done
+	}
+
+	option = {
+		name = sic_tyrone.28.b
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_whispers_barracks_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_barracks_done
+		custom_tooltip = {
+			text = sic_bourbon_bar_loss_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = -10 name = bourbon_legitimacy_bar }
+			}
+		}
+	}
+}
+
+sic_tyrone.29 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.29.t
+	desc = sic_tyrone.29.d
+	flavor = sic_tyrone.29.f
+
+	event_image = { video = "votp_barricade" }
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	trigger = {
+		has_variable = sic_barracks_done
+		NOT = { has_variable = sic_spark_done }
+		has_journal_entry = sic_bourbon_monarchy_main
+		je:sic_bourbon_monarchy_main = {
+			"scripted_bar_progress(bourbon_legitimacy_bar)" <= 50
+		}
+	}
+
+	option = {
+		name = sic_tyrone.29.a
+		default_option = yes
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_sicilian_spark_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_spark_done
+	}
+
+	option = {
+		name = sic_tyrone.29.b
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_sicilian_spark_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_spark_done
+		custom_tooltip = {
+			text = sic_bourbon_bar_loss_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = -10 name = bourbon_legitimacy_bar }
+			}
+		}
+	}
+}
+
+sic_tyrone.30 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.30.t
+	desc = sic_tyrone.30.d
+	flavor = sic_tyrone.30.f
+
+	event_image = { video = "votp_agitators_sneaking" }
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	trigger = {
+		has_variable = sic_spark_done
+		NOT = { has_variable = sic_redshirts_done }
+		has_journal_entry = sic_bourbon_monarchy_main
+		je:sic_bourbon_monarchy_main = {
+			"scripted_bar_progress(bourbon_legitimacy_bar)" <= 40
+		}
+	}
+
+	option = {
+		name = sic_tyrone.30.a
+		default_option = yes
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_red_shirts_gather_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_redshirts_done
+	}
+
+	option = {
+		name = sic_tyrone.30.b
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_red_shirts_gather_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_redshirts_done
+		custom_tooltip = {
+			text = sic_bourbon_bar_loss_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = -10 name = bourbon_legitimacy_bar }
+			}
+		}
+	}
+}
+
+sic_tyrone.31 = {
+	type = country_event
+	placement = root
+
+	title = sic_tyrone.31.t
+	desc = sic_tyrone.31.d
+	flavor = sic_tyrone.31.f
+
+	event_image = { video = "votp_hostile_court" }
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	trigger = {
+		has_variable = sic_redshirts_done
+		NOT = { has_variable = sic_court_done }
+		has_journal_entry = sic_bourbon_monarchy_main
+		je:sic_bourbon_monarchy_main = {
+			"scripted_bar_progress(bourbon_legitimacy_bar)" <= 30
+		}
+	}
+
+	option = {
+		name = sic_tyrone.31.a
+		default_option = yes
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_court_in_panic_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_court_done
+	}
+
+	option = {
+		name = sic_tyrone.31.b
+		custom_tooltip = sic_garibaldi_approaching_tt
+		add_modifier = {
+			name = sic_court_in_panic_mod
+			days = short_modifier_time
+		}
+		add_radicals = { value = 0.02 }
+		set_variable = sic_court_done
+		custom_tooltip = {
+			text = sic_bourbon_bar_loss_tt
+			je:sic_bourbon_monarchy_main = {
+				add_progress = { value = -10 name = bourbon_legitimacy_bar }
+			}
+		}
 	}
 }

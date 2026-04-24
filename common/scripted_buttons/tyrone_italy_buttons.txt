@@ -745,16 +745,6 @@ ita_north_italian_manifesto_button = {
 
 	ai_chance = {
 		value = 100
-		if = {
-			limit = {
-				OR = {
-					c:PAP ?= { is_player = yes }
-					c:LMV ?= { is_player = yes }
-					c:SIC ?= { is_player = yes }
-				}
-			}
-			add = -1000
-		}
 	}
 
 	effect = {
@@ -2178,6 +2168,189 @@ sic_fate_support_nationalist_button = {
 		je:sic_fate_of_kingdom = {
 			add_progress = { value = 25 name = sic_political_balance_bar }
 		}
+	}
+}
+
+# ========== sic_bourbon_monarchy_constitution – Offer census suffrage / right of assembly ==========
+sic_bourbon_offer_census_suffrage_button = {
+	name = sic_bourbon_offer_census_suffrage_button
+	desc = sic_bourbon_offer_census_suffrage_button_desc
+
+	visible = {
+		has_journal_entry = sic_bourbon_monarchy_constitution
+		NOT = {
+			OR = {
+				has_law_or_variant = law_type:law_wealth_voting
+				has_law_or_variant = law_type:law_census_voting
+				has_law_or_variant = law_type:law_universal_suffrage
+			}
+		}
+	}
+
+	possible = { 
+		OR = {
+			AND = {
+				government_legitimacy >= 50
+				any_interest_group = {
+					is_in_government = yes
+					OR = {
+						custom_tooltip = {
+							text = has_ideology_liberal_tt
+							OR = {
+								has_ideology = ideology:ideology_liberal
+								has_ideology = ideology:ideology_liberal_modern
+							}
+						}
+						leader = { has_ideology = ideology:ideology_radical }
+						leader = { has_ideology = ideology:ideology_market_liberal }
+					}
+				} 
+			}
+			AND = {
+				has_journal_entry = je_springtime_of_the_peoples
+				any_political_movement = {
+					OR = {
+						is_political_movement_type = movement_italian_national
+						is_political_movement_type = movement_radical
+						is_political_movement_type = movement_liberal
+					}
+					political_movement_radicalism >= define:NPolitics|RADICALISM_PROTESTING_THRESHOLD
+				}
+			}
+		}
+		
+	}
+
+	effect = {
+		activate_law = law_type:law_census_voting
+		random_political_movement = {
+			limit = { is_political_movement_type = movement_italian_national }
+			add_modifier = {
+				name = sic_ita_movement_suppressed
+				days = long_modifier_time
+			}
+		}
+	}
+}
+
+sic_bourbon_offer_right_of_assembly_button = {
+	name = sic_bourbon_offer_right_of_assembly_button
+	desc = sic_bourbon_offer_right_of_assembly_button_desc
+
+	visible = {
+		has_journal_entry = sic_bourbon_monarchy_constitution
+		NOT = {
+			OR = {
+				has_law_or_variant = law_type:law_right_of_assembly
+				has_law_or_variant = law_type:law_protected_speech
+			}
+		}
+	}
+
+	possible = {
+		OR = {
+			AND = {
+				government_legitimacy >= 50
+				any_interest_group = {
+					is_in_government = yes
+					OR = {
+						custom_tooltip = {
+							text = has_ideology_liberal_tt
+							OR = {
+								has_ideology = ideology:ideology_liberal
+								has_ideology = ideology:ideology_liberal_modern
+							}
+						}
+						leader = { has_ideology = ideology:ideology_radical }
+						leader = { has_ideology = ideology:ideology_market_liberal }
+					}
+				} 
+			}
+			AND = {
+				has_journal_entry = je_springtime_of_the_peoples
+				any_political_movement = {
+					OR = {
+						is_political_movement_type = movement_italian_national
+						is_political_movement_type = movement_radical
+						is_political_movement_type = movement_liberal
+					}
+					political_movement_radicalism >= define:NPolitics|RADICALISM_PROTESTING_THRESHOLD
+				}
+			}
+		}
+	}
+
+	effect = {
+		activate_law = law_type:law_right_of_assembly
+	}
+}
+
+# ========== sic_bourbon_monarchy_economy – Skip entry, grant variable without on_complete ==========
+sic_bourbon_economy_skip_button = {
+	name = sic_bourbon_economy_skip_button
+	desc = sic_bourbon_economy_skip_button_desc
+
+	visible = {
+		has_journal_entry = sic_bourbon_monarchy_economy
+	}
+
+	possible = {
+	}
+
+	effect = {
+		set_variable = sic_fix_economy
+		set_variable = sic_bourbon_economy_skipped
+	}
+}
+
+# ========== garibaldi_presidency_JE – Step down: make Garibaldi general, call election ==========
+garibaldi_steps_down_button = {
+	name = garibaldi_steps_down_button
+	desc = garibaldi_steps_down_button_desc
+
+	visible = {
+		has_journal_entry = garibaldi_presidency_JE
+	}
+
+	possible = {
+		any_scope_character = {
+			has_trait = ita_grande_generale
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = garibaldi_steps_down_tt
+			set_variable = garibaldi_stepped_down_var
+		}
+		random_scope_character = {
+			limit = { has_trait = ita_grande_generale }
+			make_general = yes
+		}
+		call_election = { months = 6 }
+	}
+}
+
+# ========== ita_stop_emigration – AI only: instantly pass closed borders ==========
+ita_stop_emigration_ai_button = {
+	name = ita_stop_emigration_ai_button
+	desc = ita_stop_emigration_ai_button_desc
+
+	visible = {
+		is_player = no
+		has_journal_entry = ita_stop_emigration
+		NOT = { has_law = law_type:law_closed_borders }
+	}
+
+	possible = {
+	}
+
+	ai_chance = {
+		value = 100
+	}
+
+	effect = {
+		activate_law = law_type:law_closed_borders
 	}
 }
 

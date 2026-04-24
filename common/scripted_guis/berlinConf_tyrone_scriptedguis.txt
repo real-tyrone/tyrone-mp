@@ -350,6 +350,25 @@ berlin_conf_claim_mozambique = {
 	}
 }
 
+berlin_conf_claim_zambezi = {
+	scope = country
+	is_shown = { is_involved_in_journal_entry = je_berlin_conference NOT = { has_global_variable = berlin_conference_ended } }
+	is_valid = { is_involved_in_journal_entry = je_berlin_conference NOT = { has_global_variable = berlin_conference_ended } }
+	ai_is_valid = { always = no }
+	effect = {
+		custom_tooltip = berlin_claim_zambezi_states_tt
+		if = {
+			limit = { has_variable = claimed_zambezi_var }
+			remove_variable = claimed_zambezi_var
+			remove_list_global_variable = { name = zambezi_claimed_countries_list target = this }
+		}
+		else = {
+			set_variable = claimed_zambezi_var
+			add_to_global_variable_list = { name = zambezi_claimed_countries_list target = this }
+		}
+	}
+}
+
 berlin_conf_accept_conf = {
 	scope = country
 	is_shown = { is_involved_in_journal_entry = je_berlin_conference NOT = { has_global_variable = berlin_conference_ended } }
@@ -366,5 +385,1053 @@ berlin_conf_accept_conf = {
 			set_variable = accepted_conf_var
 			add_to_global_variable_list = { name = berlin_accept_conf_list target = this }
 		}
+	}
+}
+
+# Lock SGUIs — one per area. GP1/2/3 can lock/unlock; only the locker can unlock their own lock.
+berlin_conf_lock_west_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_west_africa }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_west_africa_var
+		set_global_variable = locked_west_africa
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_west_africa_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_west_africa_var
+			remove_list_global_variable = { name = west_africa_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_equatorial_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_equatorial_africa }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_equatorial_africa_var
+		set_global_variable = locked_equatorial_africa
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_equatorial_africa_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_equatorial_africa_var
+			remove_list_global_variable = { name = equatorial_africa_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_liberia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_liberia }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_liberia_var
+		set_global_variable = locked_liberia
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_liberia_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_liberia_var
+			remove_list_global_variable = { name = liberia_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_morocco = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_morocco }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_morocco_var
+		set_global_variable = locked_morocco
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_morocco_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_morocco_var
+			remove_list_global_variable = { name = morocco_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_togo = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_togo }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_togo_var
+		set_global_variable = locked_togo
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_togo_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_togo_var
+			remove_list_global_variable = { name = togo_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_niger = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_niger }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_niger_var
+		set_global_variable = locked_niger
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_niger_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_niger_var
+			remove_list_global_variable = { name = niger_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_gold_coast = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_gold_coast }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_gold_coast_var
+		set_global_variable = locked_gold_coast
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_gold_coast_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_gold_coast_var
+			remove_list_global_variable = { name = gold_coast_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_congo = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_congo }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_congo_var
+		set_global_variable = locked_congo
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_congo_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_congo_var
+			remove_list_global_variable = { name = congo_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_cameroon = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_cameroon }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_cameroon_var
+		set_global_variable = locked_cameroon
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_cameroon_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_cameroon_var
+			remove_list_global_variable = { name = cameroon_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_gabon = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_gabon }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_gabon_var
+		set_global_variable = locked_gabon
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_gabon_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_gabon_var
+			remove_list_global_variable = { name = gabon_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_south_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_south_africa }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_south_africa_var
+		set_global_variable = locked_south_africa
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_south_africa_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_south_africa_var
+			remove_list_global_variable = { name = south_africa_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_angola = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_angola }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_angola_var
+		set_global_variable = locked_angola
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_angola_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_angola_var
+			remove_list_global_variable = { name = angola_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_namibia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_namibia }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_namibia_var
+		set_global_variable = locked_namibia
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_namibia_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_namibia_var
+			remove_list_global_variable = { name = namibia_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_zambia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_zambia }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_zambia_var
+		set_global_variable = locked_zambia
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_zambia_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_zambia_var
+			remove_list_global_variable = { name = zambia_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_east_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_east_africa }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_east_africa_var
+		set_global_variable = locked_east_africa
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_east_africa_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_east_africa_var
+			remove_list_global_variable = { name = east_africa_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_kenya = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_kenya }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_kenya_var
+		set_global_variable = locked_kenya
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_kenya_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_kenya_var
+			remove_list_global_variable = { name = kenya_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_madagascar = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_madagascar }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_madagascar_var
+		set_global_variable = locked_madagascar
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_madagascar_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_madagascar_var
+			remove_list_global_variable = { name = madagascar_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_ethiopia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_ethiopia }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_ethiopia_var
+		set_global_variable = locked_ethiopia
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_ethiopia_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_ethiopia_var
+			remove_list_global_variable = { name = ethiopia_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_zambezi = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_zambezi }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_zambezi_var
+		set_global_variable = locked_zambezi
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_zambezi_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_zambezi_var
+			remove_list_global_variable = { name = zambezi_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+berlin_conf_lock_mozambique = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_global_variable = locked_mozambique }
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_not_gp_lock_tt
+			var:conference_gp_number <= 3
+		}
+		custom_tooltip = {
+			text = berlin_conf_lock_no_locks_tt
+			var:africa_lock_left_var >= 1
+		}
+	}
+	effect = {
+		set_variable = locked_mozambique_var
+		set_global_variable = locked_mozambique
+		change_variable = { name = africa_lock_left_var subtract = 1 }
+		every_country = {
+			limit = {
+				is_involved_in_journal_entry = je_berlin_conference
+				has_variable = claimed_mozambique_var
+				var:conference_gp_number > 3
+			}
+			remove_variable = claimed_mozambique_var
+			remove_list_global_variable = { name = mozambique_claimed_countries_list target = this }
+			change_variable = { name = remaining_claims_var add = 1 }
+		}
+	}
+}
+
+# Unlock SGUIs — visible to all when area is locked; only the locker can execute.
+berlin_conf_unlock_west_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_west_africa
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_west_africa_var
+		}
+	}
+	effect = {
+		remove_variable = locked_west_africa_var
+		remove_global_variable = locked_west_africa
+	}
+}
+berlin_conf_unlock_equatorial_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_equatorial_africa
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_equatorial_africa_var
+		}
+	}
+	effect = {
+		remove_variable = locked_equatorial_africa_var
+		remove_global_variable = locked_equatorial_africa
+	}
+}
+berlin_conf_unlock_liberia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_liberia
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_liberia_var
+		}
+	}
+	effect = {
+		remove_variable = locked_liberia_var
+		remove_global_variable = locked_liberia
+	}
+}
+berlin_conf_unlock_morocco = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_morocco
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_morocco_var
+		}
+	}
+	effect = {
+		remove_variable = locked_morocco_var
+		remove_global_variable = locked_morocco
+	}
+}
+berlin_conf_unlock_togo = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_togo
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_togo_var
+		}
+	}
+	effect = {
+		remove_variable = locked_togo_var
+		remove_global_variable = locked_togo
+	}
+}
+berlin_conf_unlock_niger = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_niger
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_niger_var
+		}
+	}
+	effect = {
+		remove_variable = locked_niger_var
+		remove_global_variable = locked_niger
+	}
+}
+berlin_conf_unlock_gold_coast = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_gold_coast
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_gold_coast_var
+		}
+	}
+	effect = {
+		remove_variable = locked_gold_coast_var
+		remove_global_variable = locked_gold_coast
+	}
+}
+berlin_conf_unlock_congo = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_congo
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_congo_var
+		}
+	}
+	effect = {
+		remove_variable = locked_congo_var
+		remove_global_variable = locked_congo
+	}
+}
+berlin_conf_unlock_cameroon = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_cameroon
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_cameroon_var
+		}
+	}
+	effect = {
+		remove_variable = locked_cameroon_var
+		remove_global_variable = locked_cameroon
+	}
+}
+berlin_conf_unlock_gabon = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_gabon
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_gabon_var
+		}
+	}
+	effect = {
+		remove_variable = locked_gabon_var
+		remove_global_variable = locked_gabon
+	}
+}
+berlin_conf_unlock_south_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_south_africa
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_south_africa_var
+		}
+	}
+	effect = {
+		remove_variable = locked_south_africa_var
+		remove_global_variable = locked_south_africa
+	}
+}
+berlin_conf_unlock_angola = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_angola
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_angola_var
+		}
+	}
+	effect = {
+		remove_variable = locked_angola_var
+		remove_global_variable = locked_angola
+	}
+}
+berlin_conf_unlock_namibia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_namibia
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_namibia_var
+		}
+	}
+	effect = {
+		remove_variable = locked_namibia_var
+		remove_global_variable = locked_namibia
+	}
+}
+berlin_conf_unlock_zambia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_zambia
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_zambia_var
+		}
+	}
+	effect = {
+		remove_variable = locked_zambia_var
+		remove_global_variable = locked_zambia
+	}
+}
+berlin_conf_unlock_east_africa = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_east_africa
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_east_africa_var
+		}
+	}
+	effect = {
+		remove_variable = locked_east_africa_var
+		remove_global_variable = locked_east_africa
+	}
+}
+berlin_conf_unlock_kenya = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_kenya
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_kenya_var
+		}
+	}
+	effect = {
+		remove_variable = locked_kenya_var
+		remove_global_variable = locked_kenya
+	}
+}
+berlin_conf_unlock_madagascar = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_madagascar
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_madagascar_var
+		}
+	}
+	effect = {
+		remove_variable = locked_madagascar_var
+		remove_global_variable = locked_madagascar
+	}
+}
+berlin_conf_unlock_ethiopia = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_ethiopia
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_ethiopia_var
+		}
+	}
+	effect = {
+		remove_variable = locked_ethiopia_var
+		remove_global_variable = locked_ethiopia
+	}
+}
+berlin_conf_unlock_zambezi = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_zambezi
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_zambezi_var
+		}
+	}
+	effect = {
+		remove_variable = locked_zambezi_var
+		remove_global_variable = locked_zambezi
+	}
+}
+berlin_conf_unlock_mozambique = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_global_variable = locked_mozambique
+	}
+	is_valid = {
+		custom_tooltip = {
+			text = berlin_conf_unlock_not_locker_tt
+			has_variable = locked_mozambique_var
+		}
+	}
+	effect = {
+		remove_variable = locked_mozambique_var
+		remove_global_variable = locked_mozambique
+	}
+}
+
+berlin_conf_enable_treaty_vis = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_variable = visible_berlin_conf_treaty_article }
+	}
+	effect = {
+		set_variable = visible_berlin_conf_treaty_article
+	}
+}
+
+berlin_conf_disable_treaty_vis = {
+	scope = country
+	is_shown = {
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		has_variable = visible_berlin_conf_treaty_article
+	}
+	effect = {
+		remove_variable = visible_berlin_conf_treaty_article
 	}
 }

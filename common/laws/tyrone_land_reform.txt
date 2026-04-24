@@ -152,53 +152,53 @@ REPLACE:law_homesteading = {
 	}
 }
 
-REPLACE:law_commercialized_agriculture = {
+law_sic_serfdom = {
 	group = lawgroup_land_reform
+	parent = law_serfdom
 
-	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	icon = "gfx/interface/icons/law_icons/serfdom.dds"
 
-	progressiveness = 50
+	progressiveness = -50
 
-	modifier = {
-		country_financial_districts_buy_farms_likelihood = 0.75
-		state_capitalists_investment_pool_efficiency_mult = 0.1
+	is_visible = {
+		always = no
 	}
 
 	disallowing_laws = {
-		law_traditionalism
-	}
-
-	unlocking_technologies = {
-		mutual_funds
 	}
 
 	on_enact = {
 		if = {
 			limit = {
-				NOR = {
+				OR = {
 					has_law_or_variant = law_type:law_commercialized_agriculture
 					has_law_or_variant = law_type:law_homesteading
 				}
 			}
-			custom_tooltip = farmers_pb_ig_shift_effect_tt
+			custom_tooltip = farmers_pb_ig_shift_effect_negative_tt
 		}
 		if = {
 			limit = {
-				NOR = {
+				OR = {
 					has_law_or_variant = law_type:law_commercialized_agriculture
 					has_law_or_variant = law_type:law_collectivized_agriculture
 				}
 			}
-			custom_tooltip = rural_laborers_tu_ig_shift_effect_tt
+			custom_tooltip = rural_laborers_tu_ig_shift_effect_negative_tt
 		}
-		if = {
-			limit = {
-				has_journal_entry = je_pedro_brazil
-				NOT = { has_variable = landreform_pedropoint }
-			}
-			set_variable = landreform_pedropoint
-			remove_pedropoint_effect = yes
-		}
+	}
+
+	modifier = {
+		interest_group_ig_landowners_pol_str_mult = 0.5
+		state_peasants_internal_migration_disallowed_bool = yes
+		state_peasants_mass_migration_disallowed_bool = yes
+		building_minimum_incorporated_subsistence_employment_add = 0.1
+		country_authority_add = 150
+	}
+
+	# AI should never try to bring back serfdom
+	ai_will_do = {
+		always = no
 	}
 
 	ai_enact_weight_modifier = { #Petitions
@@ -207,49 +207,6 @@ REPLACE:law_commercialized_agriculture = {
 		if = {
 			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
 			add = 750
-		}
-
-		if = {
-			limit = {
-				has_journal_entry = je_meiji_main
-				has_law_or_variant = law_type:law_serfdom
-			}
-			add = 10000 # Top priority for Meiji AI is to get out of Serfdom
-		}
-
-		if = {
-			limit = {
-				NOT = {
-					has_variable = is_carlist_spain
-				}
-				OR = {
-					has_journal_entry = je_portugal_regeneration_agriculture
-					has_journal_entry = je_spa_economic_regeneration_land_reform
-				}
-				NOT = {
-					has_law = law_type:law_homesteading
-				}
-			}
-			add = 1000
-		}
-
-		# AI should really try to get out of Serfdom under the right circumstances
-		if = {
-			limit = {
-				has_law_or_variant = law_type:law_serfdom
-				NOT = { has_strategy = ai_strategy_reactionary_agenda }
-				OR = {
-					NOT = { has_strategy = ai_strategy_conservative_agenda }
-					any_political_movement = {
-						law_enactment_stance = {
-							law = law_type:law_commercialized_agriculture
-							value > neutral
-						}
-						political_movement_support >= 0.10
-					}
-				}
-			}
-			add = 1000
 		}
 	}
 }
