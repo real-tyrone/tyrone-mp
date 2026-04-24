@@ -1,0 +1,94 @@
+je_reform_economy = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	group = je_group_internal_affairs
+
+	is_shown_when_inactive = {
+		has_technology_researched = stock_exchange
+	}
+
+	is_shown_in_lobby = {
+	}
+
+
+	possible = {
+		OR = {
+			has_law_or_variant = law_type:law_laissez_faire
+            has_law_or_variant = law_type:law_interventionism
+		}
+		has_technology_researched = investment_banks
+	}
+
+
+	complete = {
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+		any_company = {
+			company_is_prosperous = yes
+			count >= 4
+		}
+		OR = {
+			AND = {
+				ig:ig_industrialists ?= {
+					ig_counts_as_marginal = no
+					ig_approval >= 10
+				}
+				has_law_or_variant = law_type:law_laissez_faire
+			}
+			AND = {
+           		has_law_or_variant = law_type:law_interventionism
+				OR = {
+					has_law_or_variant = law_type:law_autocracy
+					has_law_or_variant = law_type:law_neo_absolutism
+					has_law_or_variant = law_type:law_oligarchy
+					has_law_or_variant = law_type:law_organic_regulation
+					has_law_or_variant = law_type:law_single_party_state
+					has_law_or_variant = law_type:law_technocracy
+				}			
+			}
+		}
+
+		scaled_debt <= 0.5
+	}
+
+	on_complete = {
+		trigger_event = economic_reform.1
+	}
+
+
+	fail = {
+		OR = {
+			has_modifier = in_default
+			has_modifier = declared_bankruptcy						 
+		}
+	}
+
+
+	on_fail = {
+	}
+
+
+	invalid = {
+		NOR = {
+			has_law_or_variant = law_type:law_laissez_faire
+            has_law_or_variant = law_type:law_interventionism
+		}
+	}
+
+
+	current_value = {
+		value = root.gdp
+	}
+
+	goal_add_value = {
+		value = root.gdp
+		multiply = 0.5
+	}
+
+	progressbar = yes
+
+	should_be_pinned_by_default = yes
+
+	weight = 100
+}
