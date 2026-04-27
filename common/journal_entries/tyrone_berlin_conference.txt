@@ -78,7 +78,6 @@ je_berlin_conference = {
 		}
 		add_to_global_variable_list = { name = part_of_berlin_conf_list target = this }
 		set_variable = visible_berlin_conf_treaty_article
-		set_global_variable = { name = berlin_months_elapsed value = 0 }
 	}
 
 	immediate_all_involved = {
@@ -88,23 +87,6 @@ je_berlin_conference = {
 		if = {
 			limit = { var:conference_gp_number <= 3 }
 			add_to_global_variable_list = { name = berlin_conf_top3_gp_list target = root }
-		}
-		set_variable = { name = berlin_claimed_count value = 0 }
-		if = {
-			limit = { is_ai = yes  c:BEL ?= this  var:conference_gp_number >= 4 }
-			set_variable = snatching_congo
-		}
-		if = {
-			limit = { is_ai = yes  c:GER ?= this  var:conference_gp_number >= 4 }
-			set_variable = snatching_east_africa
-		}
-		if = {
-			limit = { is_ai = yes }
-			trigger_event = { id = berlin_conference.49 }
-		}
-		if = {
-			limit = { is_ai = yes  var:conference_gp_number = 1 }
-			get_ahead_africa_conference = yes
 		}
 	}
 
@@ -170,20 +152,7 @@ je_berlin_conference = {
 	}
 
 	on_monthly_pulse = {
-		events = {
-			berlin_conference.50
-			berlin_conference.51
-		}
 		effect = {
-			set_global_variable = { name = berlin_claims_this_month value = 0 }
-				random_country = {
-					limit = {
-						is_involved_in_journal_entry = je_berlin_conference
-						is_ai = yes
-					}
-					trigger_event = { id = berlin_conference.52 }
-					}
-			
 			clear_global_variable_list = part_of_berlin_conf_list
 			every_country = {
 				limit = { is_involved_in_journal_entry = je_berlin_conference }
