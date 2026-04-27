@@ -144,7 +144,6 @@ ita_annex_romagna_only_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
 		NOT = { has_variable = NIF_formed }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
 	}
@@ -194,7 +193,6 @@ ita_occupy_abruzzi_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
 		c:PAP ?= { exists = yes }
 		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
 	}
@@ -235,7 +233,6 @@ ita_talks_with_the_pope_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
 	ai_chance = {
@@ -308,7 +305,6 @@ ita_invite_pope_sphere_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
@@ -357,12 +353,13 @@ ita_request_italian_recognition_button = {
 	cooldown = { years = 99 }
 
 	visible = {
-		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
 	}
-
+	ai_chance = {
+		value = 10
+	}
 	possible = {
 		c:PAP ?= { exists = yes }
 		owns_entire_state_region = STATE_UMBRIA
@@ -409,7 +406,9 @@ ita_pap_rec_concession_2_button = {
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
 	}
-
+	ai_chance = {
+		value = 10
+	}
 	effect = {
 		set_variable = { name = pap_rec_concession_2_chosen value = 1 }
 		change_variable = { name = concession_to_pope_var add = 1 }
@@ -430,7 +429,9 @@ ita_pap_rec_concession_3_button = {
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
 	}
-
+	ai_chance = {
+		value = 10
+	}
 	effect = {
 		set_variable = { name = pap_rec_concession_3_chosen value = 1 }
 		change_variable = { name = concession_to_pope_var add = 1 }
@@ -450,6 +451,10 @@ ita_pap_rec_concession_4_button = {
 
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
+	}
+
+	ai_chance = {
+		value = 10
 	}
 
 	effect = {
@@ -479,12 +484,17 @@ ita_annex_pope_war_goal_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
 	}
 	ai_chance = {
-		value = 50
+		base = 50
+		modifier = { # Wait for two sicilies to be annexed
+			trigger = {
+				exists = c:SIC
+			}
+			add = -100
+		}
 	}
 	possible = {
 		c:PAP ?= { exists = yes }
@@ -561,7 +571,6 @@ ita_form_italy_garibaldi_button = {
 
 	visible = {
 		NOT = { c:ITA ?= root }
-		is_player = yes
 		has_global_variable = garibaldi_republic_established
 	}
 
@@ -634,7 +643,6 @@ ita_declare_north_italian_federation_button = {
 	cooldown = { years = 99 }
 
 	visible = {
-		is_player = yes
 		NOT = { has_variable = NIF_formed }
 	}
 	ai_chance = {
@@ -686,9 +694,11 @@ ita_garibaldi_prepare_expedition_button = {
 	}
 
 	possible = {
-		is_player = yes
 		exists ?= c:SIC
-		c:SIC = { country_or_subject_owns_entire_state_region = STATE_SICILY }
+		c:SIC = { 
+			is_player = no
+			country_or_subject_owns_entire_state_region = STATE_SICILY
+		}
 		custom_tooltip = {
 			text = ita_garibaldi_prepare_expedition_navy_tt
 			navy_power_projection >= ita_garibaldi_three_times_sicily_navy
@@ -727,6 +737,19 @@ ita_north_italian_manifesto_button = {
 			c:MOD ?= { exists = yes }
 			c:LUC ?= { exists = yes }
 			c:TUS ?= { exists = yes }
+		}
+		NOT = {
+			OR = {
+				c:SIC = {
+					is_player = yes
+				}
+				c:LMV = {
+					is_player = yes
+				}
+				c:PAP = {
+					is_player = yes
+				}
+			}
 		}
 	}
 
