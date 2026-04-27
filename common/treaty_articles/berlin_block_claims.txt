@@ -56,7 +56,184 @@ berlin_block_west_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_west_africa_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_west_africa_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_colonial_growth = yes }
+				add = {
+					desc = "berlin_accept_colonial_ambition"
+					value = -40
+				}
+			}
+
+			if = {
+				limit = { has_strategy = ai_strategy_colonial_expansion }
+				add = {
+					desc = "berlin_accept_colonial_strategy"
+					value = -25
+				}
+			}
+
+			if = {
+				limit = {
+					scope:source_country = {
+						is_country_type = unrecognized
+					}
+				}
+				add = {
+					desc = "concept_unrecognized_power_short"
+					value = -50
+				}
+			}
+
+		}
 	}
 }
 
@@ -113,7 +290,156 @@ berlin_block_equatorial_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_equatorial_africa_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_equatorial_africa_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -170,7 +496,156 @@ berlin_block_liberia_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_liberia_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_liberia_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -227,7 +702,156 @@ berlin_block_morocco_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_morocco_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_morocco_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -284,7 +908,156 @@ berlin_block_togo_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_togo_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_togo_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -341,7 +1114,156 @@ berlin_block_niger_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_niger_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_niger_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -398,7 +1320,156 @@ berlin_block_gold_coast_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_gold_coast_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_gold_coast_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -425,6 +1496,7 @@ berlin_block_congo_africa = {
 
 	can_ratify = {
 		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { scope:target_country = { has_variable = snatching_congo } }
 	}
 
 	on_entry_into_force = {
@@ -455,7 +1527,156 @@ berlin_block_congo_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_congo_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_congo_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -512,7 +1733,156 @@ berlin_block_cameroon_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_cameroon_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_cameroon_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -569,7 +1939,156 @@ berlin_block_gabon_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_gabon_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_gabon_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -626,7 +2145,156 @@ berlin_block_south_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_south_africa_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_south_africa_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -683,7 +2351,156 @@ berlin_block_angola_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_angola_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_angola_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -740,7 +2557,156 @@ berlin_block_namibia_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_namibia_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_namibia_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -797,7 +2763,156 @@ berlin_block_zambia_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_zambia_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_zambia_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -824,6 +2939,7 @@ berlin_block_east_africa = {
 
 	can_ratify = {
 		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { scope:target_country = { has_variable = snatching_east_africa } }
 	}
 
 	on_entry_into_force = {
@@ -854,7 +2970,156 @@ berlin_block_east_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_east_africa_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_east_africa_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -911,7 +3176,156 @@ berlin_block_kenya_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_kenya_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_kenya_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -968,7 +3382,156 @@ berlin_block_madagascar_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_madagascar_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_madagascar_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -1025,7 +3588,156 @@ berlin_block_ethiopia_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_ethiopia_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_ethiopia_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -1082,7 +3794,156 @@ berlin_block_zambezi_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_zambezi_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_zambezi_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -1139,7 +4000,156 @@ berlin_block_mozambique_africa = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { has_variable = claimed_mozambique_var }
+				add = 2
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -50
+			}
+
+			if = {
+				limit = { scope:target_country ?= this }
+				add = {
+					desc = "berlin_accept_wants_to_offer"
+					value = 40
+				}
+
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					if = {
+						limit = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = protective
+							}
+						}
+						value = -30
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = antagonistic
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = belligerent
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = domineering
+								}
+							}
+						}
+						value = 40
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_attitude = {
+									who = scope:other_country
+									attitude = wary
+								}
+								has_attitude = {
+									who = scope:other_country
+									attitude = disinterested
+								}
+							}
+						}
+						value = 20
+					}
+				}
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+			if = {
+				limit = { has_variable = claimed_mozambique_var }
+				add = {
+					desc = "berlin_accept_has_claim"
+					value = -30
+				}
+			}
+			else = {
+				add = {
+					desc = "berlin_accept_no_claim"
+					value = 25
+				}
+			}
+
+			if = {
+				limit = { country_rank >= rank_value:great_power }
+				add = {
+					desc = "berlin_accept_gp_rank"
+					value = -20
+				}
+			}
+
+		}
 	}
 }
 
@@ -1197,6 +4207,78 @@ berlin_approve_distribution = {
 
 	ai = {
 		treaty_categories = { expansion }
-		evaluation_chance = { value = 0 }
+		evaluation_chance = { value = 0.5 }
+
+		proposal_weight = {
+			value = 0
+			if = {
+				limit = { global_variable:berlin_months_elapsed >= 12 }
+				add = 1
+			}
+		}
+
+		article_ai_usage = { offer }
+
+		inherent_accept_score = {
+			value = 0
+
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
+			add = {
+				desc = "berlin_accept_base"
+				value = -30
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = protective
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = antagonistic
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -100
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = wary
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = disinterested
+							}
+						}
+					}
+					value = -50
+				}
+			}
+
+		}
 	}
 }
