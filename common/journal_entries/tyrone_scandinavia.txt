@@ -28,7 +28,7 @@ je_of_two_crowns = {
 	complete = {
 		OR = {
 		c:DEN = {
-			is_subject_of = c:SWE
+			is_subject_of = ROOT
 		}
 		c:DEN = {
 			AND = {
@@ -108,7 +108,7 @@ je_unification_of_three_crowns = {
 				text = scandinavia_partially_united_alt
 				OR = {
 					c:FIN = {
-						is_subject_of = c:SWE 
+						is_subject_of = ROOT
 					}
 					ROOT = {
 						country_or_subject_owns_entire_state_region = STATE_UUSIMAA
@@ -121,13 +121,20 @@ je_unification_of_three_crowns = {
 	}
 	}
 	is_shown_when_inactive = {
+		OR = {
 		AND = {
-			c:SWE = THIS
+			c:DEN ?= THIS
 			has_law = law_type:law_monarchy
+		}
+		AND = {
+			c:SWE ?= THIS
+			has_law = law_type:law_monarchy
+		}
 		}
 	}
 	is_shown_in_lobby = {
 		c:SWE = THIS
+		c:DEN = THIS
 	}
 
 	scripted_progress_bar = je_unification_of_three_crowns_progress_bar
@@ -150,13 +157,16 @@ je_unification_of_three_crowns = {
 						
 				NOT = {
 						c:NOR = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
 						}
 						c:FIN = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
 						}
 						c:DEN  = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
+						}
+						c:SWE = {
+							is_subject_of = ROOT
 						}
 					}			
 			}
@@ -179,6 +189,19 @@ je_unification_of_three_crowns = {
 	on_complete = {
 		custom_tooltip = {
 			text = je_scandinavia_unification_context
+		}
+		if = {
+			limit = {
+				any_subject_or_below = {
+					c:SWE = THIS
+					OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			annex_with_incorporation = c:SWE
+			hidden_effect = { add_primary_culture = cu:swedish }
 		}
 		if = {
 			limit = {
@@ -295,7 +318,7 @@ je_securing_scandinavia = {
 		if = {
 			limit = {
 				c:FIN = {
-				is_subject_of = c:SCA
+				is_subject_of = ROOT
 				}
 			}
 			annex_with_incorporation = c:FIN
@@ -512,7 +535,7 @@ je_denmark_scandinavia_1 = {
 	complete = {
 		has_technology_researched = nationalism
 		c:SWE = {
-			NOT = {is_subject_of = c:DEN}
+			NOT = { is_subject_of = ROOT }
 		}
 		custom_tooltip = {
 			text = je_denmark_scandinavia_1_relations_swe_tt
@@ -537,7 +560,7 @@ je_denmark_scandinavia_1 = {
 	fail = {
 		has_technology_researched = nationalism
 		c:SWE = {
-			is_subject_of = c:DEN
+			is_subject_of = ROOT
 		}
 		custom_tooltip = {
 			text = je_denmark_scandinavia_1_army_pp_tt
