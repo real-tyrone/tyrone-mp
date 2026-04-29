@@ -1,0 +1,199 @@
+# je_imperial_federation replaces the definition in 00_imperial.txt (cleared)
+
+je_imperial_federation = {
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	group = je_group_british_empire_affairs
+
+	should_be_involved = {
+		OR = {
+			c:GBR = this
+			c:BIC = this
+			c:SAF = this
+			c:CAN = this
+			c:HBC = this
+			c:QUE = this
+			c:QUE = this
+			c:BHT = this
+			c:ONT = this
+			c:NVS = this
+			c:NBS = this
+			c:ORG = this
+			c:WAS = this
+			c:KAU = this
+			c:SAS = this
+			c:TAS = this
+			c:NSW = this
+			c:AST = this
+			c:UNT = this
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			capital = {
+				region = sr:region_england
+			}
+            top_overlord ?= {
+                capital = {
+					region = sr:region_england
+                }
+            }
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			capital = { region = sr:region_england }
+			top_overlord ?= {
+				capital = { region = sr:region_england }
+			}
+		}
+	}
+
+	is_shown_in_lobby = {
+		c:GBR = THIS
+	}
+
+	possible = {
+		c:GBR ?= { has_variable = gbr_imperial_federation_path }
+	}
+
+	invalid = {
+		OR = {
+			NOT = { exists = c:GBR }
+		}
+	}
+
+	immediate = {
+		c:BIC = {
+			save_scope_as = company_scope
+		}
+		c:GBR = {
+			save_scope_as = gbr_scope
+		}
+		set_global_variable = imp_fed_started
+	}
+
+	on_monthly_pulse = {
+		effect = {
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_10 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 10 }
+					}
+					set_global_variable = fed_milestone_10
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.1 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_25 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 25 }
+					}
+					set_global_variable = fed_milestone_25
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.2 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_40 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 40 }
+					}
+					set_global_variable = fed_milestone_40
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.3 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_45 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 45 }
+					}
+					set_global_variable = fed_milestone_45
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.7 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_60 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 60 }
+					}
+					set_global_variable = fed_milestone_60
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.4 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_75 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 75 }
+					}
+					set_global_variable = fed_milestone_75
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.5 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_90 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 90 }
+					}
+					set_global_variable = fed_milestone_90
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.6 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						NOT = { has_global_variable = fed_milestone_95 }
+						scope:journal_entry = { "scripted_bar_progress(bar_federation_progress)" >= 95 }
+					}
+					set_global_variable = fed_milestone_95
+					c:GBR ?= {
+						trigger_event = { id = gbr_fed_events.7 popup = yes }
+					}
+				}
+			}
+	}
+
+	complete = {
+		c:GBR ?= {
+			has_technology_researched = pan-nationalism
+			OR = {
+				has_law = law_type:law_cultural_exclusion
+				has_law = law_type:law_multicultural
+			}
+		}
+		custom_tooltip = {
+		text = federation_progress_complete_tt
+		scope:journal_entry = {
+			"scripted_bar_progress(bar_federation_progress)" >= 100
+		}
+	}
+	}
+
+	on_complete = {
+		set_global_variable = imperial_federation_var
+		
+		c:GBR ?= {
+			trigger_event = { id = imperial_events.2 popup = yes } 
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = event_effects_gbr_imperial_federation_tt
+			}
+		}
+	}
+
+	scripted_progress_bar = bar_federation_progress
+
+	weight = 500
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}

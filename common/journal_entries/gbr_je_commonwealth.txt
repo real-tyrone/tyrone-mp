@@ -1,0 +1,251 @@
+je_british_commonwealth = {
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	group = je_group_british_empire_affairs
+
+	should_be_involved = {
+		OR = {
+			c:GBR = THIS
+			c:CAN ?= THIS    c:QUE ?= THIS
+			c:ONT ?= THIS    c:NVS ?= THIS    c:NBS ?= THIS
+			c:ORG ?= THIS    c:WAS ?= THIS
+			c:AST ?= THIS    c:NSW ?= THIS    c:KAU ?= THIS
+			c:SAS ?= THIS    c:TAS ?= THIS
+			c:SAF ?= THIS
+			c:IRE ?= THIS
+			c:HBC = THIS
+			c:UNT = this
+		}
+	}
+
+	is_shown_in_lobby = { c:GBR = THIS }
+
+	possible = { c:GBR ?= { has_variable = gbr_commonwealth_path } }
+
+	invalid = { NOT = { exists = c:GBR } }
+
+	immediate = {
+		c:GBR = { save_scope_as = gbr_scope }
+		if = {
+			limit = { exists = c:CAN }
+			c:CAN = { save_scope_as = can_scope }
+		}
+		else_if = {
+			limit = { exists = c:QUE }
+			c:QUE = { save_scope_as = can_scope }
+		}
+		if = {
+			limit = { exists = c:AST }
+			c:AST = { save_scope_as = aus_scope }
+		}
+		else_if = {
+			limit = { exists = c:NSW }
+			c:NSW = { save_scope_as = aus_scope }
+		}
+		c:SAF ?= { save_scope_as = saf_scope }
+		if = {
+			limit = { exists = c:IRE }
+			c:IRE = { save_scope_as = ire_scope }
+		}
+		else = {
+			set_global_variable = commonwealth_ire_inactive
+		}
+		set_global_variable = imp_commonwealth_started
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			# --- CAN bar thresholds ---
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_can_100 }
+					scope:journal_entry = { "scripted_bar_progress(bar_can_commonwealth)" >= 100 }
+				}
+				set_global_variable = commonwealth_can_100
+				scope:can_scope ?= { trigger_event = { id = gbr_commonwealth_events.1 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_100 } }
+					set_global_variable = commonwealth_gbr_100
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.10 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_can_200 }
+					scope:journal_entry = { "scripted_bar_progress(bar_can_commonwealth)" >= 200 }
+				}
+				set_global_variable = commonwealth_can_200
+				scope:can_scope ?= { trigger_event = { id = gbr_commonwealth_events.2 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_200 } }
+					set_global_variable = commonwealth_gbr_200
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.11 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_can_300 }
+					scope:journal_entry = { "scripted_bar_progress(bar_can_commonwealth)" >= 300 }
+				}
+				set_global_variable = commonwealth_can_300
+				scope:can_scope ?= { trigger_event = { id = gbr_commonwealth_events.30 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_300 } }
+					set_global_variable = commonwealth_gbr_300
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.12 popup = yes } }
+				}
+			}
+			# --- AST bar thresholds ---
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ast_100 }
+					scope:journal_entry = { "scripted_bar_progress(bar_ast_commonwealth)" >= 100 }
+				}
+				set_global_variable = commonwealth_ast_100
+				scope:aus_scope ?= { trigger_event = { id = gbr_commonwealth_events.1 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_100 } }
+					set_global_variable = commonwealth_gbr_100
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.10 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ast_200 }
+					scope:journal_entry = { "scripted_bar_progress(bar_ast_commonwealth)" >= 200 }
+				}
+				set_global_variable = commonwealth_ast_200
+				scope:aus_scope ?= { trigger_event = { id = gbr_commonwealth_events.2 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_200 } }
+					set_global_variable = commonwealth_gbr_200
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.11 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ast_300 }
+					scope:journal_entry = { "scripted_bar_progress(bar_ast_commonwealth)" >= 300 }
+				}
+				set_global_variable = commonwealth_ast_300
+				scope:aus_scope ?= { trigger_event = { id = gbr_commonwealth_events.31 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_300 } }
+					set_global_variable = commonwealth_gbr_300
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.12 popup = yes } }
+				}
+			}
+			# --- SAF bar thresholds ---
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_saf_100 }
+					scope:journal_entry = { "scripted_bar_progress(bar_saf_commonwealth)" >= 100 }
+				}
+				set_global_variable = commonwealth_saf_100
+				scope:saf_scope ?= { trigger_event = { id = gbr_commonwealth_events.1 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_100 } }
+					set_global_variable = commonwealth_gbr_100
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.10 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_saf_200 }
+					scope:journal_entry = { "scripted_bar_progress(bar_saf_commonwealth)" >= 200 }
+				}
+				set_global_variable = commonwealth_saf_200
+				scope:saf_scope ?= { trigger_event = { id = gbr_commonwealth_events.2 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_200 } }
+					set_global_variable = commonwealth_gbr_200
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.11 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_saf_300 }
+					scope:journal_entry = { "scripted_bar_progress(bar_saf_commonwealth)" >= 300 }
+				}
+				set_global_variable = commonwealth_saf_300
+				scope:saf_scope ?= { trigger_event = { id = gbr_commonwealth_events.3 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_300 } }
+					set_global_variable = commonwealth_gbr_300
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.12 popup = yes } }
+				}
+			}
+			# --- IRE bar thresholds (only fire if IRE is active) ---
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ire_100 }
+					NOT = { has_global_variable = commonwealth_ire_inactive }
+					scope:journal_entry = { "scripted_bar_progress(bar_ire_commonwealth)" >= 100 }
+				}
+				set_global_variable = commonwealth_ire_100
+				scope:ire_scope ?= { trigger_event = { id = gbr_commonwealth_events.1 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_100 } }
+					set_global_variable = commonwealth_gbr_100
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.10 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ire_200 }
+					NOT = { has_global_variable = commonwealth_ire_inactive }
+					scope:journal_entry = { "scripted_bar_progress(bar_ire_commonwealth)" >= 200 }
+				}
+				set_global_variable = commonwealth_ire_200
+				scope:ire_scope ?= { trigger_event = { id = gbr_commonwealth_events.2 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_200 } }
+					set_global_variable = commonwealth_gbr_200
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.11 popup = yes } }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_variable = commonwealth_ire_300 }
+					NOT = { has_global_variable = commonwealth_ire_inactive }
+					scope:journal_entry = { "scripted_bar_progress(bar_ire_commonwealth)" >= 300 }
+				}
+				set_global_variable = commonwealth_ire_300
+				scope:ire_scope ?= { trigger_event = { id = gbr_commonwealth_events.3 popup = yes } }
+				if = {
+					limit = { NOT = { has_global_variable = commonwealth_gbr_300 } }
+					set_global_variable = commonwealth_gbr_300
+					c:GBR ?= { trigger_event = { id = gbr_commonwealth_events.12 popup = yes } }
+				}
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+		text = commonwealth_progress_complete_tt
+			scope:journal_entry = { "scripted_bar_progress(bar_can_commonwealth)" >= 300 }
+			scope:journal_entry = { "scripted_bar_progress(bar_ast_commonwealth)" >= 300 }
+			scope:journal_entry = { "scripted_bar_progress(bar_saf_commonwealth)" >= 300 }
+			scope:journal_entry = { "scripted_bar_progress(bar_ire_commonwealth)" >= 300 }
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = event_effects_gbr_commonwealth_tt
+			}
+		}
+	}
+
+	scripted_progress_bar = bar_can_commonwealth
+	scripted_progress_bar = bar_ast_commonwealth
+	scripted_progress_bar = bar_saf_commonwealth
+	limit = {
+		NOT = { has_global_variable = commonwealth_ire_inactive }
+		scripted_progress_bar = bar_ire_commonwealth
+	}
+
+	weight = 500
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
