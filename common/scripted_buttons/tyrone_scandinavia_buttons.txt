@@ -1,3 +1,92 @@
+denmark_reestablish_diplomatic_channels = {
+	name = denmark_reestablish_diplomatic_channels.t
+	desc = denmark_reestablish_diplomatic_channels.d
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		c:SWE = {
+			relations:ROOT < 0
+		}
+		NOT = { scope:journal_entry = { has_modifier = modifier_denmark_strained_diplomatic_channels } }
+		custom_tooltip = {
+			text = denmark_no_military_intervention_tt
+			NOT = { has_variable = denmark_union_play_started }
+		}
+	}
+
+	effect = {
+		change_relations = {
+			country = c:SWE
+			value = 10
+		}
+		scope:journal_entry = {
+			add_modifier = {
+				name = modifier_denmark_strained_diplomatic_channels
+				months = 12
+				is_decaying = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 50
+	}
+}
+
+denmark_enforce_union = {
+	name = denmark_enforce_union.t
+	desc = denmark_enforce_union.d
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		c:SWE = {
+			relations:ROOT <= relations_threshold:poor
+		}
+		custom_tooltip = {
+			text = denmark_enforce_union_army_pp_tt
+			army_power_projection >= c:SWE.army_power_projection
+		}
+		hidden_trigger = {
+			NOT = { has_truce_with = c:SWE }
+			NOT = { is_at_war_with = c:SWE }
+			NOT = {
+				any_diplomatic_play = {
+					any_scope_country = { c:SWE ?= this }
+				}
+			}
+		}
+	}
+
+	effect = {
+		set_variable = denmark_union_play_started
+		scope:journal_entry = {
+			add_modifier = {
+				name = modifier_heed_the_call
+				years = 1
+				is_decaying = yes
+			}
+		}
+		create_incident = {
+			country = c:SWE
+			value = 15
+		}
+		create_diplomatic_play = {
+			target_state = s:STATE_SVEALAND.region_state:SWE
+			type = dp_enforce_pu
+		}
+	}
+
+	ai_chance = {
+		value = 0
+	}
+}
+
 scandinavian_baltic_claims_forfeit = {
 	name = scandinavia_baltic_claims_forfeit.t
 	desc = scandinavia_baltic_claims_forfeit.d
@@ -19,7 +108,7 @@ scandinavian_baltic_claims_forfeit = {
 
 	effect = {
 		add_loyalists = {
-				value = medium_radicals
+			value = medium_radicals
 		}
 		custom_tooltip = {
 			text = scandinavia_baltic_claims_forfeited
