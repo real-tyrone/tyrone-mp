@@ -1,4 +1,83 @@
-﻿namespace = formation
+﻿namespace = economic_reform
+
+economic_reform.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = economic_reform.1.t
+	desc = economic_reform.1.d
+	flavor = economic_reform.1.f	
+
+	event_image = {
+		video = "unspecific_gears_pistons"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	trigger = {
+		# Triggered by JE
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = economic_reform.1.a
+		trigger = {
+			has_law_or_variant = law_type:law_laissez_faire
+		}
+		if = {
+			limit = {
+				NOT = {
+					OR = {
+						has_variable = je_spa_economic_regeneration_master_completed_var
+						has_variable = regeneration_complete
+					}
+				}
+			}
+			activate_law = law_type:law_laissez_faire_plus
+		}
+		if = {
+			limit = {
+				OR = {
+					has_variable = je_spa_economic_regeneration_master_completed_var
+					has_variable = regeneration_complete
+				}
+			}
+			activate_law = law_type:law_laissez_faire_plus
+			active_law:lawgroup_economic_system ?= {
+				add_amendment = {
+					type = amendment_economic_regeneration_1
+					sponsor = PREV.ig:ig_industrialists
+					cooldown = 240
+				}
+			}
+		}
+		set_variable = laissez_faire_expanded_var
+	}
+
+	option = {
+		name = economic_reform.1.b
+		trigger = {
+			has_law_or_variant = law_type:law_interventionism
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_law = law_type:law_state_capitalism
+				}
+			}
+			activate_law = law_type:law_state_capitalism
+		}
+	}	
+
+}
+
+
+namespace = formation
 
 # Patria Grande
 formation.22 = {
@@ -768,7 +847,7 @@ kill_japanese_monarch.1 = {
     immediate = {
         random_scope_character  = {
             limit = {
-                is_ruler = yes
+                is_ruler_of_own_country = yes
             }
             kill_character = yes
         }

@@ -1,4 +1,32 @@
-﻿REPLACE:united_states_of_greater_austria = {
+﻿japanese_supreme_shogunate = {
+	color = "supreme_shogunate"
+	possible = {
+		exists = c:JAP
+		c:JAP ?= THIS
+		country_has_monarchy_law = yes
+		has_variable = shogunate_supreme
+	}
+}
+
+REPLACE:japanese_shogunate = {
+	color = "tokugawa_green"
+	possible = {
+		exists = c:JAP
+		c:JAP ?= THIS
+		country_has_monarchy_law = yes
+		OR = {
+			has_law = law_type:law_bakufu
+			any_active_law = {
+				has_amendment = amendment_type:amendment_taikunate
+			}
+		}
+		NOT = {
+			has_variable = shogunate_supreme
+		}
+	}
+}
+
+REPLACE:united_states_of_greater_austria = {
 	color = "usga_grey"
 
 	possible = {
@@ -106,6 +134,94 @@ REPLACE:brazil_republican = {
 		}
 		NOT = {
 			coa_fascist_trigger = yes
+		}
+	}
+}
+
+ita_empire_monarchy = {
+	color = "ita_empire_monarchy_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_monarchy_trigger = yes
+		NOT = { coa_theocracy_trigger = yes }
+		NOT = { coa_corporate_state_trigger = yes }
+	}
+}
+
+ita_empire_theocracy = {
+	color = "ita_empire_theocracy_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_theocracy_trigger = yes
+	}
+}
+
+ita_empire_corporate = {
+	color = "ita_empire_corporate_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_corporate_state_trigger = yes
+	}
+}
+
+ita_empire_republic = {
+	color = "ita_empire_republic_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		OR = {
+			has_law_or_variant = law_type:law_presidential_republic
+			has_law_or_variant = law_type:law_parliamentary_republic
+		}
+		NOT = { coa_dictatorship_trigger = yes }
+	}
+}
+
+ita_empire_dictator = {
+	color = "ita_empire_dictator_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_dictatorship_trigger = yes
+		NOT = { coa_communist_trigger = yes }
+	}
+}
+
+ita_empire_commie_rep = {
+	color = "ita_empire_commie_rep_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_communist_trigger = yes
+		NOT = { coa_dictatorship_trigger = yes }
+	}
+}
+
+ita_empire_commie_dict = {
+	color = "ita_empire_commie_dict_color"
+	possible = {
+		exists = c:ITA
+		c:ITA ?= this
+		coa_communist_trigger = yes
+		coa_dictatorship_trigger = yes
+	}
+}
+
+REPLACE:kalmar_union = {
+	color = "kalmar_union_color"
+	possible = {
+		exists = c:SCA
+		c:SCA ?= THIS
+		has_law = law_type:law_monarchy
+		OR = {
+			has_variable = denmark_kalmar_union_reborn
+			was_formed_from = DEN
+			ruler = {
+				has_culture = cu:danish
+			}
 		}
 	}
 }

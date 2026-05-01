@@ -20,14 +20,15 @@ je_of_two_crowns = {
 		hidden_trigger = { NOT = { has_global_variable = two_crowns_plus_one}}
 		c:SWE = THIS
 		has_law = law_type:law_monarchy
+		NOT = { c:DEN = { is_player = yes } }
 		}
-		
+
 	}
 
 	complete = {
 		OR = {
 		c:DEN = {
-			is_subject_of = c:SWE
+			is_subject_of = ROOT
 		}
 		c:DEN = {
 			AND = {
@@ -43,6 +44,7 @@ je_of_two_crowns = {
 	on_complete = {
 		hidden_effect = {set_global_variable = two_crowns_plus_one}
 		hidden_effect = { set_global_variable = secured_scandinavia }
+		add_modifier = { name = modifier_pan_scandinavianism_partially_realized }
 		trigger_event = { id = of_two_crowns.1 popup = yes}
 	}
 
@@ -77,7 +79,7 @@ je_of_two_crowns = {
 		NOT = { has_law = law_type:law_monarchy }
 	}
 
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 
 }
 
@@ -106,7 +108,7 @@ je_unification_of_three_crowns = {
 				text = scandinavia_partially_united_alt
 				OR = {
 					c:FIN = {
-						is_subject_of = c:SWE 
+						is_subject_of = ROOT
 					}
 					ROOT = {
 						country_or_subject_owns_entire_state_region = STATE_UUSIMAA
@@ -119,18 +121,25 @@ je_unification_of_three_crowns = {
 	}
 	}
 	is_shown_when_inactive = {
+		OR = {
 		AND = {
-			c:SWE = THIS
+			c:DEN ?= THIS
 			has_law = law_type:law_monarchy
+		}
+		AND = {
+			c:SWE ?= THIS
+			has_law = law_type:law_monarchy
+		}
 		}
 	}
 	is_shown_in_lobby = {
 		c:SWE = THIS
+		c:DEN = THIS
 	}
 
 	scripted_progress_bar = je_unification_of_three_crowns_progress_bar
 
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 	
 	fail = {
 		OR = {
@@ -148,13 +157,16 @@ je_unification_of_three_crowns = {
 						
 				NOT = {
 						c:NOR = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
 						}
 						c:FIN = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
 						}
 						c:DEN  = {
-							is_subject_of = c:SWE
+							is_subject_of = ROOT
+						}
+						c:SWE = {
+							is_subject_of = ROOT
 						}
 					}			
 			}
@@ -177,6 +189,19 @@ je_unification_of_three_crowns = {
 	on_complete = {
 		custom_tooltip = {
 			text = je_scandinavia_unification_context
+		}
+		if = {
+			limit = {
+				any_subject_or_below = {
+					c:SWE = THIS
+					OR = {
+					is_subject_type = subject_type_personal_union
+					is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			annex_with_incorporation = c:SWE
+			hidden_effect = { add_primary_culture = cu:swedish }
 		}
 		if = {
 			limit = {
@@ -243,7 +268,7 @@ je_securing_scandinavia = {
 	
 	group = je_group_scandinavian_unification
 	
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 
 
 	complete = {
@@ -271,7 +296,7 @@ je_securing_scandinavia = {
   je_scandinavia_missing_crown = {
 	icon = "gfx\interface\icons\event_icons\hegemon.dds"
 	group = je_group_scandinavian_unification
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 	possible = {
 		c:SCA = THIS
 		NOT = {
@@ -293,7 +318,7 @@ je_securing_scandinavia = {
 		if = {
 			limit = {
 				c:FIN = {
-				is_subject_of = c:SCA
+				is_subject_of = ROOT
 				}
 			}
 			annex_with_incorporation = c:FIN
@@ -315,7 +340,7 @@ je_securing_scandinavia = {
 je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification path is taken (Sweden, Norway, Finland) 
   	icon = "gfx\interface\icons\event_icons\hegemon.dds"
 	group = je_group_scandinavian_unification
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 	possible = {
 		c:SCA = THIS
 		NOT = {
@@ -344,10 +369,44 @@ je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification 
 	}
 }
 
-je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge case
+je_scandinavia_missing_crown_d = { #Swedish culture acquisition as an edge case (e.g. Denmark-led Kalmar Union path)
 	icon = "gfx\interface\icons\event_icons\hegemon.dds"
 	group = je_group_scandinavian_unification
 	should_be_pinned_by_default = yes
+	possible = {
+		c:SCA = THIS
+		NOT = {
+			country_has_primary_culture = cu:swedish
+		}
+	}
+
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_SVEALAND
+		country_or_subject_owns_entire_state_region = STATE_GOTALAND
+		country_or_subject_owns_entire_state_region = STATE_SCANIA
+		country_or_subject_owns_entire_state_region = STATE_NORRLAND
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				c:SWE = {
+					is_subject_of = ROOT
+				}
+			}
+			annex_with_incorporation = c:SWE
+		}
+		add_primary_culture = cu:swedish
+		custom_tooltip = {
+			text = je_scandinavia_missing_crown_d_completion_context
+		}
+	}
+}
+
+je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge case
+	icon = "gfx\interface\icons\event_icons\hegemon.dds"
+	group = je_group_scandinavian_unification
+	should_be_pinned_by_default_uninvolved_or_context = yes
 	possible = {
 		c:SCA = THIS
 		NOT = {
@@ -379,7 +438,7 @@ je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge cas
 je_scandinavian_baltic_claims = {
 	icon = "gfx\interface\icons\event_icons\bicorne_hat.dds"
 	group = je_group_foreign_affairs
-	should_be_pinned_by_default = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 	modifiers_while_active = {
 		modifier_avenging_great_northern_war
 	}
@@ -401,14 +460,14 @@ je_scandinavian_baltic_claims = {
 	}
 	possible = {
 		hidden_trigger = {
-		c:SCA = THIS
+		c:SCA ?= THIS
 		}
 		country_rank = rank_value:great_power
 		country_has_primary_culture = cu:finnish
 	}
 
 	is_shown_when_inactive = {
-		c:SCA = THIS
+		c:SCA ?= THIS
 	}
 
 	fail = {
@@ -446,6 +505,135 @@ je_scandinavian_baltic_claims = {
 			}
 			annex = c:UBD
 		}
+		}
+	}
+}
+je_denmark_scandinavia_1 = {
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	group = je_group_scandinavian_unification
+	
+	is_shown_in_lobby = {
+		c:DEN = THIS
+	}
+
+	is_shown_when_inactive= {
+		c:DEN = THIS
+	}
+
+	scripted_button = denmark_reestablish_diplomatic_channels
+	scripted_button = denmark_enforce_union
+
+	possible = {
+		c:DEN = THIS
+		has_law = law_type:law_monarchy
+		NOT = { c:SWE = { is_player = yes } }
+	}
+
+	custom_completion_header = je_denmark_scandinavia_1_complete_header
+
+	complete = {
+		has_technology_researched = nationalism
+		c:SWE = {
+			NOT = { is_subject_of = ROOT }
+		}
+		custom_tooltip = {
+			text = je_denmark_scandinavia_1_relations_swe_tt
+			c:SWE = {
+				relations:ROOT >= relations_threshold:amicable
+			}
+		}
+		OR = {
+			country_rank >= rank_value:major_power
+			custom_tooltip = {
+				text = je_denmark_scandinavia_1_prestige_tt
+				c:SWE = { prestige < ROOT.prestige }
+			}
+		}
+
+	}
+
+	custom_on_completion_header = je_denmark_scandinavia_1_on_complete_header
+
+	custom_failure_header = je_denmark_scandinavia_1_fail_header
+
+	fail = {
+		has_technology_researched = nationalism
+		c:SWE = {
+			is_subject_of = ROOT
+		}
+		custom_tooltip = {
+			text = je_denmark_scandinavia_1_army_pp_tt
+			c:SWE = { army_power_projection < ROOT.army_power_projection }
+		}
+				OR = {
+			country_rank >= rank_value:major_power
+			custom_tooltip = {
+				text = je_denmark_scandinavia_1_prestige_tt
+				c:SWE = { prestige < ROOT.prestige }
+			}
+		}
+
+	}
+
+	on_complete = {
+		hidden_effect = {
+			set_variable = denmark_kalmar_diplomatic
+		}
+		trigger_event = { id = denmark_content.3 popup = yes }
+	}
+
+	custom_on_failure_header = je_denmark_scandinavia_1_on_fail_header
+
+	on_fail = {
+		hidden_effect = {
+			set_variable = denmark_kalmar_military
+		}
+		trigger_event = { id = denmark_content.3 popup = yes }
+	}
+
+	invalid = {
+		NOT = { has_law = law_type:law_monarchy }
+	}
+
+}
+
+je_denmark_scandinavia_ruler = {
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	group = je_group_internal_affairs
+
+	modifiers_while_active = {
+		modifier_denmark_scandinavia_ruler
+	}
+
+	immediate = {
+		ruler = {
+			save_scope_as = denmark_ruler
+		}
+	}
+
+	complete = {
+		has_law = law_type:law_monarchy
+		custom_tooltip = {
+			text = je_denmark_scandinavia_ruler_no_longer_ruler_tt
+			NOT = { ruler = scope:denmark_ruler }
+		}
+	}
+
+	on_complete = {
+		add_modifier = {
+			name = modifier_denmark_scandinavia_ruler
+			days = 3650
+			is_decaying = yes
+		}
+	}
+
+	fail = {
+		NOT = { has_law = law_type:law_monarchy }
+		custom_tooltip = {
+			text = je_denmark_scandinavia_ruler_no_longer_ruler_tt
+			NOT = { ruler = scope:denmark_ruler }
 		}
 	}
 }

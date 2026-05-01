@@ -711,6 +711,7 @@ sic_latifundia_reform_bar = {
 				owner = {
 					OR = {
 						has_law = law_type:law_serfdom
+						has_law = law_type:law_sic_serfdom
 						has_law = law_type:law_latifundias
 					}
 				}
@@ -1017,6 +1018,40 @@ sic_political_balance_bar = {
 		# Loyalists vs radicals
 		subtract = { desc = "sic_bar_loyalists_tt" value = loyalist_fraction multiply = 5 }
 		add = { desc = "sic_bar_radicals_tt" value = radical_fraction multiply = 5 }
-		
+
+	}
+}
+
+################################################################################
+# bourbon_legitimacy_bar: 1–100. Tracks dynastic legitimacy of the Bourbon monarchy.
+# Loses 1/month for each of the 4 reform variables not yet set on the owner.
+################################################################################
+bourbon_legitimacy_bar = {
+	name = "bourbon_legitimacy_bar_name"
+	desc = "bourbon_legitimacy_bar_desc"
+
+	default_green = yes
+
+	start_value = 100
+	min_value = 1
+	max_value = 100
+
+	monthly_progress = {
+		if = {
+			limit = { owner = { NOT = { has_variable = sic_fix_police } } }
+			subtract = { desc = "bourbon_leg_missing_police_tt" value = 0.5 }
+		}
+		if = {
+			limit = { owner = { NOT = { has_variable = sic_fix_constitution } } }
+			subtract = { desc = "bourbon_leg_missing_constitution_tt" value = 0.5 }
+		}
+		if = {
+			limit = { owner = { NOT = { has_variable = sic_fix_economy } } }
+			subtract = { desc = "bourbon_leg_missing_economy_tt" value = 0.5 }
+		}
+		if = {
+			limit = { owner = { NOT = { has_variable = sic_fix_bureaucracy } } }
+			subtract = { desc = "bourbon_leg_missing_bureaucracy_tt" value = 0.5 }
+		}
 	}
 }

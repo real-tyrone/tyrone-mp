@@ -32,7 +32,7 @@
 REPLACE:ITA = { # Italy
 	dynamic_country_name = { # Papal Italy
 		name = dyn_c_papal_italy
-		adjective = dyn_c_papal_italy_adj
+		adjective = ITA_ADJ
 
 		is_main_tag_only = yes
 		priority = 5
@@ -74,8 +74,8 @@ REPLACE:ITA = { # Italy
 			}
 		}
 	}
-	dynamic_country_name = { # Empire of Italy
-		name = dyn_c_empire_italy
+	dynamic_country_name = {
+		name = dyn_c_ita_republica_garibaldina
 		adjective = ITA_ADJ
 
 		is_main_tag_only = yes
@@ -83,8 +83,217 @@ REPLACE:ITA = { # Italy
 
 		trigger = {
 			exists = scope:actor
-			scope:actor ?= { has_law = law_type:law_monarchy }
-			scope:actor ?= { has_variable = italian_empire_has_formed }
+			scope:actor ?= {
+				has_journal_entry = garibaldi_presidency_JE
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_monarchy
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 60
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_patria_imperiale
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 80
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				any_scope_character = {
+					has_trait = ita_grande_generale
+					is_ruler_of_own_country = yes
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_monarchy
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 100
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				coa_monarchy_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_theocracy
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 76
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				coa_theocracy_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_corporate
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 76
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				coa_corporate_state_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_dictatorship
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 75
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				coa_dictatorship_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_grand_republic
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 75
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				OR = {
+					has_law_or_variant = law_type:law_presidential_republic
+					has_law_or_variant = law_type:law_parliamentary_republic
+				}
+				
+				NOT = { coa_dictatorship_trigger = yes }
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_comuni
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 75
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				has_law_or_variant = law_type:law_council_republic
+				NOT = { coa_dictatorship_trigger = yes }
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_vanguard
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 79
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				has_law_or_variant = law_type:law_council_republic
+				coa_dictatorship_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_ita_empire_people_republic
+		adjective = dyn_c_ita_patria_imperiale_adj
+
+		is_main_tag_only = yes
+		priority = 75
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = italian_empire_has_formed
+				coa_communist_trigger = yes
+			}
+		}
+	}
+}
+
+REPLACE:SIC = {
+	dynamic_country_name = {
+		name = dyn_c_sic_republica_garibaldina
+		adjective = dyn_c_sic_republica_garibaldina_adj
+
+		is_main_tag_only = yes
+		priority = 50
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_journal_entry = garibaldi_presidency_JE
+			}
+		}
+	}
+}
+
+REPLACE:SAR = {
+	dynamic_country_name = {
+		name = dyn_c_north_italian_federation
+		adjective = dyn_c_north_italian_federation_adj
+
+		is_main_tag_only = yes
+		priority = 10
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = NIF_formed
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_north_italian_theocracy_federation
+		adjective = dyn_c_north_italian_federation_adj
+
+		is_main_tag_only = yes
+		priority = 25
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				has_variable = NIF_formed
+				has_law = law_type:law_theocracy
+			}
 		}
 	}
 }
@@ -371,25 +580,51 @@ REPLACE:POR = {
 }
 
 #japan
-REPLACE:JAP = { 
-	dynamic_country_name = {
-		name = dyn_c_japan_shogunate
-		adjective = dyn_c_japan_shogunate_adj
+REPLACE:JAP = { # Japan
+	dynamic_country_name = { # Tokugawa Shogunate
+		name = dyn_c_tokugawa_shogunate
+		adjective = JAP_ADJ
 
 		is_main_tag_only = yes
 		priority = 10
 
 		trigger = {
-			exists = scope:actor
 			scope:actor ?= {
-				has_law = law_type:law_monarchy
-				NOT = { has_variable = meiji_var }
+				country_has_monarchy_law = yes
+				OR = {
+					game_date < 1836.1.2 # Needed to get around initialization
+					ruler ?= {
+						has_variable = house_tokugawa
+					}
+					AND = {
+						has_gov_regency = yes
+						heir ?= {
+							has_variable = house_tokugawa
+						}
+					}
+				}
+				has_law = law_type:law_bakufu
+			}
+		}
+	}
+	dynamic_country_name = { # Japanese Taikunate
+		name = dyn_c_japanese_taikunate
+		adjective = JAP_ADJ
+
+		is_main_tag_only = yes
+		priority = 25
+
+		trigger = {
+			scope:actor ?= {
+				any_active_law = {
+					has_amendment = amendment_type:amendment_taikunate
+				}
 			}
 		}
 	}
 	dynamic_country_name = {
 		name = dyn_c_empire_of_japan
-		adjective = dyn_c_empire_of_japan_adj
+		adjective = JAP_ADJ
 
 		is_main_tag_only = yes
 		priority = 20
@@ -397,9 +632,38 @@ REPLACE:JAP = {
 		trigger = {
 			exists = scope:actor
 			scope:actor ?= {
-				has_law = law_type:law_monarchy
-				has_variable = meiji_var
+				country_has_monarchy_law = yes
+				NOT = {
+					has_law = law_type:law_bakufu
+				}
 			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_shogunate_of_japan
+		adjective = JAP_ADJ
+
+		is_main_tag_only = yes
+		priority = 50
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				country_has_monarchy_law = yes
+				has_variable = shogunate_supreme
+			}
+		}
+	}
+	dynamic_country_name = { # Republic of Japan
+		name = dyn_c_republic_of_japan
+		adjective = JAP_ADJ
+
+		is_main_tag_only = yes
+		priority = 30
+
+		trigger = {
+			exists = scope:actor
+			coa_def_republic_flag_trigger = yes
 		}
 	}
 	dynamic_country_name = {
@@ -414,6 +678,7 @@ REPLACE:JAP = {
 		}
 	}
 }
+
 
 #france
 INJECT:FRA = {
@@ -615,6 +880,21 @@ REPLACE:RUS = { # Russia
 
 REPLACE:SCA = { #Scandinavia
 	dynamic_country_name = {
+		name = dyn_c_kalmar_union
+		adjective = dyn_c_kalmar_union_adj
+		is_main_tag_only = yes
+		priority = 2000
+		trigger = {
+			scope:actor = {
+				has_law_or_variant = law_type:law_monarchy
+				OR = {
+					has_variable = denmark_kalmar_union_reborn
+					was_formed_from = DEN
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
 		name = dyn_c_scandinavia_monarchy
 		adjective = SCA_ADJ
 		is_main_tag_only = yes
@@ -622,6 +902,53 @@ REPLACE:SCA = { #Scandinavia
 		trigger = {
 			scope:actor = {
 				has_law_or_variant = law_type:law_monarchy
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kalmar_corporate_state
+		adjective = dyn_c_kalmar_union_adj
+		is_main_tag_only = yes
+		priority = 2000
+		trigger = {
+			scope:actor = {
+				coa_corporate_state_trigger = yes
+				OR = {
+					has_variable = denmark_kalmar_union_reborn
+					was_formed_from = DEN
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kalmar_republic
+		adjective = dyn_c_kalmar_union_adj
+		is_main_tag_only = yes
+		priority = 2000
+		trigger = {
+			scope:actor = {
+				NOT = { has_law_or_variant = law_type:law_monarchy }
+				NOT = { coa_def_communist_flag_trigger = yes }
+				NOT = { coa_corporate_state_trigger = yes }
+				OR = {
+					has_variable = denmark_kalmar_union_reborn
+					was_formed_from = DEN
+				}
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_kalmar_commune
+		adjective = dyn_c_kalmar_union_adj
+		is_main_tag_only = yes
+		priority = 2000
+		trigger = {
+			scope:actor = {
+				coa_def_communist_flag_trigger = yes
+				OR = {
+					has_variable = denmark_kalmar_union_reborn
+					was_formed_from = DEN
+				}
 			}
 		}
 	}

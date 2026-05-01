@@ -1,0 +1,211 @@
+claim_south_africa_subject = {
+	is_shown = {
+		is_ai = yes
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_variable = claimed_south_africa_var }
+		NOT = { has_variable = treaty_blocked_south_africa }
+		NOT = { any_country = { has_variable = claimed_south_africa_var } }
+		any_subject_or_below = {
+			capital = {
+                is_in_geographic_region = geographic_region_south_africa
+            }
+		}
+		
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		set_variable = claimed_south_africa_var
+		add_to_global_variable_list = { name = south_africa_claimed_countries_list target = this }
+		change_variable = { name = berlin_claimed_count add = 1 }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+pls_claim_zambezi = {
+	is_shown = {
+		is_ai = yes
+		OR = {
+			has_variable = claimed_south_africa_var
+			has_variable = claimed_mozambique_var
+			has_variable = claimed_angola_var
+			has_variable = claimed_zambia_var
+		} 
+		NOT = {
+			any_country = { 
+				has_variable = claimed_zambezi_var 
+			} 
+		}
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		set_variable = claimed_zambezi_var
+		add_to_global_variable_list = { name = zambezi_claimed_countries_list target = this }
+		change_variable = { name = remaining_claims_var subtract = 1 }
+		change_variable = { name = berlin_claimed_count add = 1 }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+pls_claim_equatorial = {
+	is_shown = {
+		is_ai = yes
+		OR = {
+			has_variable = claimed_west_africa_var
+			has_variable = claimed_gabon_var
+		} 
+		NOT = {
+			any_country = { 
+				has_variable = claimed_equatorial_africa_var 
+			} 
+		}
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		set_variable = claimed_equatorial_africa_var
+		add_to_global_variable_list = { name = equatorial_africa_claimed_countries_list target = this }
+		change_variable = { name = remaining_claims_var subtract = 1 }
+		change_variable = { name = berlin_claimed_count add = 1 }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+berlin_accept_conference = {
+	is_shown = {
+		is_ai = yes
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+		NOT = { has_variable = accepted_conf_var }
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		random_list = {
+			90 = {
+			}
+			3 = {
+				set_variable = accepted_conf_var
+				add_to_global_variable_list = { name = berlin_accept_conf_list target = this }
+				custom_tooltip = {
+					text = berlin_conf_accept
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+berlin_getahead1_conference = {
+	is_shown = {
+		is_ai = yes
+		is_involved_in_journal_entry = je_berlin_conference
+		OR = {
+			var:conference_gp_number = 1
+			AND = {
+				var:conference_gp_number = 2
+				any_country = { 
+					has_variable = is_ahead_berlin_conf 
+					var:conference_gp_number = 1
+				} 
+			}
+		}
+		NOT = { has_variable = is_ahead_berlin_conf }
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		set_variable = is_ahead_berlin_conf
+		random_list = {
+			50 = {
+				trigger = {
+					NOT = {
+						has_variable = treaty_blocked_niger_africa
+						any_country = { 
+							has_variable = claimed_niger_var 
+						} 
+					}
+				}
+				set_variable = claimed_niger_var
+				add_to_global_variable_list = { name = niger_claimed_countries_list target = this }
+				change_variable = { name = remaining_claims_var subtract = 1 }
+				change_variable = { name = berlin_claimed_count add = 1 }
+			}
+			50 = {
+				trigger = {
+					NOT = {
+						has_variable = treaty_blocked_south_africa
+						any_country = { 
+							has_variable = claimed_south_africa_var 
+						} 
+					}
+				}
+				set_variable = claimed_south_africa_var
+				add_to_global_variable_list = { name = south_africa_claimed_countries_list target = this }
+				change_variable = { name = remaining_claims_var subtract = 1 }
+				change_variable = { name = berlin_claimed_count add = 1 }
+			}
+			50 = {
+				trigger = {
+					NOT = {
+						has_variable = treaty_blocked_kenya_africa
+						any_country = { 
+							has_variable = claimed_kenya_var 
+						} 
+					}
+				}
+				set_variable = claimed_kenya_var
+				add_to_global_variable_list = { name = kenya_claimed_countries_list target = this }
+				change_variable = { name = remaining_claims_var subtract = 1 }
+				change_variable = { name = berlin_claimed_count add = 1 }
+			}
+			50 = {
+				trigger = {
+					NOT = {
+						has_variable = treaty_blocked_madagascar_africa
+						any_country = { 
+							has_variable = claimed_madagascar_var 
+						} 
+					}
+				}
+				set_variable = claimed_madagascar_var
+				add_to_global_variable_list = { name = madagascar_claimed_countries_list target = this }
+				change_variable = { name = remaining_claims_var subtract = 1 }
+				change_variable = { name = berlin_claimed_count add = 1 }
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
