@@ -1,0 +1,244 @@
+﻿on_monthly_pulse_country = {
+    on_actions = {
+        kill_tokugawa_ieyoshi
+        kill_yamato_ninko
+        kill_yamato_komei
+    }
+    random_events = {
+        200 = 0
+    }
+    events = {
+        springtime.1
+        eiffel_tower.1
+        company_events.1
+        company_events.2
+        company_events.3
+        company_events.4
+        laissez_faire_subject.1
+        flag_events.1
+        flag_events.2
+        austria_integrate.1
+        austria_integrate.2
+    }
+    effect = {
+		if = { # Berlin Conference
+			limit = {
+				NOT = { has_global_variable = berlin_conference_happening }
+				NOT = { has_global_variable = berlin_conference_ended }
+                OR = {
+                    has_law = law_type:law_colonial_resettlement
+                    has_law = law_type:law_colonial_exploitation
+                }
+				is_in_geographic_region = geographic_region_europe
+				has_technology_researched = civilizing_mission
+				country_rank >= rank_value:major_power
+			}
+			set_global_variable = berlin_conference_happening
+			every_country_in_europe = {
+				limit = {
+				    country_rank >= rank_value:major_power
+                    OR = {
+                        has_law = law_type:law_colonial_resettlement
+                        has_law = law_type:law_colonial_exploitation
+                        country_rank = rank_value:great_power
+                    }
+				}
+				trigger_event = { id = berlin_conference.1 popup = yes }
+			}
+		}
+    }
+}
+
+kill_tokugawa_ieyoshi = {
+    trigger = {
+        this = c:JAP
+        game_date >= 1837.1.1
+        exists = heir
+		ruler ?= {
+			has_template = JAP_ienari_tokugawa
+		}
+    }
+    random_events = {
+        50 = kill_japanese_monarch.1
+        50 = 0
+    }
+}
+
+kill_yamato_ninko = {
+    trigger = {
+        this = c:JAP
+        game_date >= 1847.1.1
+        exists = heir
+		ruler ?= {
+			has_template = JAP_ninko_yamato
+		}
+    }
+    random_events = {
+        50 = kill_japanese_monarch.1
+        50 = 0
+    }
+}
+
+kill_yamato_komei = {
+    trigger = {
+        this = c:JAP
+        game_date >= 1867.1.1
+        exists = heir
+		ruler ?= {
+			has_template = JAP_komei_yamato
+		}
+    }
+    random_events = {
+        50 = kill_japanese_monarch.1
+        50 = 0
+    }
+}
+
+on_yearly_pulse_country = {
+    on_actions = {
+    }
+
+    effect = {
+		every_country = {
+			limit = { 
+				NOT = {
+					has_modifier = mil_tech_delay
+				}
+			}
+			if = {
+				limit = {
+					has_game_rule = mil_tech_delayed
+                    game_date >= 1860.1.1
+				}
+				add_modifier = {
+					name = mil_tech_delay
+				}
+			}
+			limit = { 
+				has_modifier = mil_tech_delay
+			}
+			if = {
+				limit = {
+					has_game_rule = mil_tech_default
+				}
+				remove_modifier = {
+					name = mil_tech_delay
+				}
+			}
+		}
+        if = {
+            limit = {
+                c:GBR ?= {
+                    has_technology_researched = pan-nationalism
+                    has_technology_researched = civilizing_mission
+                    custom_tooltip = {
+                        text = federated_canada_tt
+                        has_variable = canada_federated_var
+                    }
+                    custom_tooltip = {
+                        text = federated_australia_tt
+                        has_variable = australia_federated_var
+                    }
+                }
+                c:CAN ?= {
+                    exists = yes
+                    is_subject_of = c:GBR
+                    OR = {
+                        is_subject_type = subject_type_colony
+                        is_subject_type = subject_type_dominion
+                    }
+                }
+                c:AST ?= {
+                    exists = yes
+                    is_subject_of = c:GBR
+                    OR = {
+                        is_subject_type = subject_type_colony
+                        is_subject_type = subject_type_dominion
+                    }
+                }
+                c:SAF ?= {
+                    exists = yes
+                    is_subject_of = c:GBR
+                    OR = {
+                        is_subject_type = subject_type_colony
+                        is_subject_type = subject_type_dominion
+                    }
+                }
+                c:BIC ?= {
+                    exists = yes
+                    is_subject_of = c:GBR
+                    OR = {
+                        is_subject_type = subject_type_colony
+                        is_subject_type = subject_type_dominion
+                    }
+                }
+            }
+            every_country_in_europe = {
+                limit = {
+                    is_in_british_empire = yes
+                }
+	            add_contextless_journal_entry = je_imperial_federation
+            }           
+        }
+    }
+
+    events = {
+        portugaliza.1
+        regency.99
+    }
+}
+
+on_country_formed = {
+	effect = {
+		if = {
+			limit = {
+				c:UNSA ?= ROOT
+			}
+            s:STATE_PATAGONIA = {
+                add_homeland = cu:platinean
+            }
+            s:STATE_ARAUCANIA = {
+                add_homeland = cu:south_andean
+            }
+		}
+    }
+}
+
+# DEI - Economic Transition Event
+on_law_enactment_started = {
+    effect = {
+        if = {
+            limit = {
+                c:DEI = THIS
+                has_law = law_type:law_extraction_economy
+                NOT = { has_variable = dei_economic_debate_fired }
+                OR = {
+                    is_enacting_law = law_type:law_interventionism
+                    is_enacting_law = law_type:law_agrarianism
+                    is_enacting_law = law_type:law_laissez_faire
+                }
+            }
+            trigger_event = { id = dei_reform.1 months = 1 }
+        }
+    }
+}
+
+# DEI - Economic Transition Event
+on_law_enactment_started = {
+    effect = {
+        if = {
+            limit = {
+                c:DEI = THIS
+                has_law = law_type:law_extraction_economy
+                NOT = { has_variable = dei_economic_debate_fired }
+                OR = {
+                    is_enacting_law = law_type:law_interventionism
+                    is_enacting_law = law_type:law_agrarianism
+                    is_enacting_law = law_type:law_laissez_faire
+                }
+            }
+            trigger_event = { id = dei_reform.1 months = 1 }
+        }
+    }
+}
+

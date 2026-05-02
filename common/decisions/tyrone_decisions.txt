@@ -152,7 +152,7 @@ matter_of_hungary_federate_three_crowns_decision = {
 				}
 				capital = {
 					OR = {
-						region = sr:region_danubia
+						region = sr:region_balkans
 						region = sr:region_balkans
 					}
 				}
@@ -255,7 +255,7 @@ matter_of_hungary_federate_hungary_decision = {
 					is_subject_type = subject_type_puppet
 				}
 				capital = {
-					region = sr:region_danubia
+					region = sr:region_balkans
 				}
 			}
 			c:AUS ?= {
@@ -563,8 +563,8 @@ germany_rejoin_decision = {
 			limit = {
 				capital = {
 					OR = {
-						region = sr:region_north_germany
-						region = sr:region_south_germany
+						region = sr:region_central_europe
+						region = sr:region_central_europe
 					}
 				}
 				NOT = {
@@ -1019,8 +1019,8 @@ REPLACE:decision_depose_ruling_dynasty = {
 		}
 		any_scope_character = {
 			OR = {
-				has_role = general
-				has_role = admiral
+				has_role_of_type = general
+				has_role_of_type = admiral
 			}
 			character_has_ideology_conflicting_with_ruling_dynasty = yes
 			NOT = { # You cannot hire a communist to install the Orleanists on the throne
@@ -1052,8 +1052,8 @@ REPLACE:decision_depose_ruling_dynasty = {
 		ordered_scope_character = {
 			limit = {
 				OR = {
-					has_role = general
-					has_role = admiral
+					has_role_of_type = general
+					has_role_of_type = admiral
 				}
 				has_variable = monthly_cached_commander_coup_strength
 				character_has_ideology_conflicting_with_ruling_dynasty = yes
@@ -1125,9 +1125,9 @@ start_great_game_rus = {
 	}
 
 	possible = {
-		has_interest_marker_in_region = region_persia
-		has_interest_marker_in_region = region_central_asia
-		has_interest_marker_in_region = region_caucasus
+		has_interest_marker_in_region = sr:region_greater_persia
+		has_interest_marker_in_region = sr:region_central_asia
+		has_interest_marker_in_region = sr:region_russia
 		custom_tooltip = {
             text = je_pacify_kazakh_steppes_success_tt
             has_global_variable = kazakhstan_victory_var
@@ -1207,8 +1207,8 @@ start_great_game_gbr = {
 	}
 
 	possible = {
-		has_interest_marker_in_region = region_persia
-		has_interest_marker_in_region = region_caucasus
+		has_interest_marker_in_region = sr:region_greater_persia
+		has_interest_marker_in_region = sr:region_russia
 		has_technology_researched = nationalism
 	}
 	
@@ -1290,7 +1290,7 @@ claims_on_algeria = {
 	}
 
 	possible = {
-		has_interest_marker_in_region = region_north_africa
+		has_interest_marker_in_region = sr:region_north_africa
 	}
 
 	when_taken = {
@@ -1376,11 +1376,11 @@ claims_on_algeria = {
 british_hbc = {
 
 	is_shown = {
-		exists = c:HBC
+		exists ?= c:HBC
 		root = c:GBR
 		OR = {
-			c:QUE ?= exists
-			c:ONT ?= exists
+			exists ?= c:QUE
+			exists ?= c:ONT 
 		}
 		NOT = { has_variable = annex_hbc }
 		any_subject_or_below = {
@@ -1389,10 +1389,10 @@ british_hbc = {
 				country_has_primary_culture = cu:franco_canadian
 			}
 		}
-		c:ONT = {
+		c:ONT ?= {
 			is_subject_of = ROOT
 		}
-		c:QUE = {
+		c:QUE ?= {
 			is_subject_of = ROOT
 		}
 	}

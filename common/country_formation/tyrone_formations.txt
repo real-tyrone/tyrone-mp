@@ -33,7 +33,7 @@ REPLACE:BRZ = {
 }
 
 REPLACE:YUG = {
-	geographic_region = geographic_region_yugoslavia
+	use_culture_states = yes
 
 	is_major_formation = yes
 
@@ -160,7 +160,8 @@ REPLACE:ARA = {
 }
 
 REPLACE:ITA = {
-	geographic_region = geographic_region_italy
+
+	use_culture_states = yes
 
 	is_major_formation = yes
 
@@ -228,7 +229,7 @@ REPLACE:ITA = {
 }
 
 REPLACE:FND = {
-	geographic_region = geographic_region_andean_federation
+	use_culture_states = yes
 
 	is_major_formation = yes
 
@@ -387,7 +388,7 @@ REPLACE:MGB = {
 }
 
 REPLACE:SCA = {
-	geographic_region = geographic_region_scandinavia
+	use_culture_states = yes
 
 	is_major_formation = yes
 
@@ -423,6 +424,57 @@ REPLACE:SCA = {
 			}
 			has_technology_researched = pan-nationalism
 			percent = 1
+		}
+	}
+}
+
+REPLACE:GER = {
+	use_culture_states = yes
+
+	is_major_formation = yes
+
+	unification_play = dp_unify_germany
+	leadership_play = dp_leadership_germany
+
+	required_states_fraction = 0.73
+
+	ai_will_do = { has_technology_researched = nationalism }
+
+	possible = {
+		OR = {
+			has_technology_researched = pan-nationalism
+			custom_tooltip = {
+				text = je_german_unification_idea_trigger_desc
+				has_variable = je_german_unification_idea
+			}
+		}
+		custom_tooltip = {
+			text = no_confederation_of_the_rhine_tt
+			NOT = {
+				exists = c:RHN
+			}
+		}
+		custom_tooltip = {
+			text = no_dual_or_triple_monarchy_tt
+			NOR = {
+				has_government_type = gov_dual_monarchy
+				has_government_type = gov_triple_monarchy
+			}
+		}
+		NOT = {
+			c:KUK ?= this
+		}
+	}
+
+	max_num_formation_candidates = 3
+	can_be_formation_candidate = {
+		country_rank >= rank_value:major_power
+	}
+
+	can_be_unification_target = {
+		NOR = {
+			has_government_type = gov_dual_monarchy
+			has_government_type = gov_triple_monarchy
 		}
 	}
 }

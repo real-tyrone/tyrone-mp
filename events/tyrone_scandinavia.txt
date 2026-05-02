@@ -92,10 +92,8 @@ scandinavian_unification.1 = { #Monarchist Unification
 		}
 	}
 	after = {
-		add_modifier = {
-			name = modifier_scandinavian_royal_authority
-			months = 120
-		}
+		remove_modifier = modifier_pan_scandinavianism_partially_realized
+		add_modifier = { name = modifier_scandinavia_realized }
 		hidden_effect = {
 			set_global_variable = scandinavia_unified
 		}
@@ -123,6 +121,14 @@ scandinavian_unification.1 = { #Monarchist Unification
 				}
 			}
 			add_journal_entry = { type = je_scandinavia_missing_crown_c }
+		}
+		if = { #edge case if sweden is somehow not unified (e.g. Denmark-led Kalmar Union path)
+			limit = {
+				NOT = {
+					country_has_primary_culture = cu:swedish
+				}
+			}
+			add_journal_entry = { type = je_scandinavia_missing_crown_d }
 		}
 		add_loyalists = {
 			value = large_radicals
@@ -166,4 +172,147 @@ shattered_crown.1 = {
 		
 	}
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+}
+namespace = denmark_content
+
+denmark_content.1 = {
+	type = country_event
+	placement = root
+	duration = 1
+
+	title = denmark_content.1.t
+	desc = denmark_content.1.d
+	flavor = denmark_content.1.f
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+		# Triggered by on_action — fires once on game start for Denmark
+	}
+
+	option = {
+		name = denmark_content.1.a
+		default_option = yes
+		add_journal_entry = { type = je_denmark_scandinavia_ruler }
+		hidden_effect = {
+			trigger_event = { id = denmark_content.2 days = 1433 }
+		}
+	}
+}
+
+denmark_content.2 = { #Silently kills Frederick on his approximate historical date of death
+	type = country_event
+	hidden = yes
+
+	trigger = {
+		has_journal_entry = je_denmark_scandinavia_ruler
+	}
+
+	immediate = {
+		ruler = {
+			kill_character = yes
+		}
+	}
+}
+
+denmark_content.3 = {
+	type = country_event
+	placement = root
+	duration = 3
+
+	title = denmark_content.3.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_variable = denmark_kalmar_diplomatic }
+				desc = denmark_content.3.d_diplomatic
+			}
+			triggered_desc = {
+				trigger = { has_variable = denmark_kalmar_military }
+				desc = denmark_content.3.d_military
+			}
+		}
+	}
+	flavor = denmark_content.3.f
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+		# Triggered by je_denmark_scandinavia_1 on_complete and on_fail
+	}
+
+	immediate = {
+		set_global_variable = secured_scandinavia
+		if = {
+			limit = { has_variable = denmark_kalmar_diplomatic }
+			create_diplomatic_pact = {
+				country = c:SWE
+				type = personal_union
+			}
+		}
+	}
+
+	option = {
+		name = denmark_content.3.a
+		default_option = yes
+		if = {
+			limit = { has_variable = denmark_kalmar_military }
+			add_modifier = {
+				name = modifier_scandinavian_revaunchism
+			}
+		}
+	}
+	after = {
+		hidden_effect = {
+			set_variable = denmark_kalmar_union_reborn
+		}
+		add_modifier = {
+			name = modifier_pan_scandinavianism_partially_realized
+		}
+		add_journal_entry = { type = je_unification_of_three_crowns }
+		if = {
+			limit = { has_variable = denmark_kalmar_diplomatic }
+			custom_tooltip = { text = denmark_content_3_nordic_genesis_tt }
+			every_state = {
+				limit = {
+					owner = root
+					state_region = {
+						OR = {
+							is_homeland = cu:norwegian
+							is_homeland = cu:swedish
+							is_homeland = cu:danish
+							is_homeland = cu:icelandic
+						}
+					}
+				}
+				add_modifier = { name = modifier_nordic_genesis }
+			}
+			every_subject_or_below = {
+				every_state = {
+					limit = {
+						owner = prev
+						state_region = {
+							OR = {
+								is_homeland = cu:norwegian
+								is_homeland = cu:swedish
+								is_homeland = cu:danish
+								is_homeland = cu:icelandic
+							}
+						}
+					}
+					add_modifier = { name = modifier_nordic_genesis }
+				}
+			}
+		}
+	}
 }
