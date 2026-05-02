@@ -1,4 +1,5 @@
 ﻿namespace = resignation
+namespace = wedding
 
 resignation.1 = {
 	type = country_event
@@ -496,3 +497,107 @@ resignation.3 = {
 		}
 	}
 }
+
+wedding.3 = {
+	type = country_event
+	placement = ROOT
+
+	title = wedding.3.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = wedding.3.d1
+				trigger = {
+					ruler.interest_group ?= {
+						OR = {
+							ig_approval <= angry
+							ig_clout < define:NPolitics|MARGINAL_IG_THRESHOLD
+						}
+					}
+				}
+			}
+			triggered_desc = {
+				desc = wedding.3.d2
+				trigger = {
+					ruler = {
+						popularity <= -50
+					}
+				}
+			}
+			triggered_desc = {
+				desc = wedding.3.d3
+				trigger = {
+					ruler = {
+						OR = {
+							has_trait = psychological_affliction
+							age >= 75
+						}
+					}
+				}
+			}
+		}
+	}
+	flavor = wedding.3.f
+
+	gui_window = event_window_2char
+
+	left_icon = scope:abdicating_monarch
+	right_icon = scope:heir_scope
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/misc/2Characters"
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+
+	duration = 3
+
+	dlc = dlc004
+
+	trigger = {
+		# triggered by abdicate_monarch interaction
+	}
+
+	immediate = {
+		ruler = {
+			save_scope_as = abdicating_monarch
+			interest_group ?= {
+				save_scope_as = monarch_ig
+			}
+		}
+		heir ?= {
+			save_scope_as = heir_scope
+		}
+		law_type:law_monarchy = {
+			save_scope_as = monarchy_law
+		}
+	}
+
+	option = { # reassure the aristocracy
+		name = wedding.3.a
+		default_option = yes
+		add_loyalists = {
+			value = 0.1
+			pop_type = aristocrats
+		}
+		scope:heir_scope ?= {
+			set_character_as_ruler = yes
+		}
+		scope:abdicating_monarch = {
+			remove_character_role = ruler
+		}
+	}
+
+	option = { # reassure the people
+		name = wedding.3.b
+		add_loyalists = {
+			value = 0.01
+		}
+		scope:heir_scope ?= {
+			set_character_as_ruler = yes
+		}
+		scope:abdicating_monarch = {
+			remove_character_role = ruler
+		}
+	}
+}
+
