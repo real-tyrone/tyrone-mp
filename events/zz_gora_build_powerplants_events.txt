@@ -1,0 +1,178 @@
+﻿namespace = build_powerplants_events
+
+# ═══════════════════════════════════════════════════════
+#  İyileştirilmiş Otomatik Elektrik Santrali Mod
+#  Değişiklikler:
+#   ★ Sadece entegre vilayetler taranır (performans)
+#   ★ İş gücü (labor) kontrolü eklendi
+#   ★ Devam eden inşaat kontrolü eklendi
+#   - trigger = { always = yes } korunuyor
+# ═══════════════════════════════════════════════════════
+
+build_powerplants_events.1 = {
+    type = country_event
+    hidden = yes
+    trigger = { always = yes }  # DEĞİŞMEDİ
+
+    immediate = {
+        set_variable = { name = total_queued value = 0 }
+
+        # ═══════════════════════════════════════════
+        # ★ PERFORMANS: Sadece entegre vilayetler
+        #   Entegre olmayan koloniler/protektoralar
+        #   atlanır → daha az hesaplama
+        # ═══════════════════════════════════════════
+        every_scope_state = {
+            limit = {
+                is_incorporated = yes
+            }
+
+            if = {
+                limit = {
+                    # ── Temel koşullar (orijinal) ──
+                    sg:electricity = { state_goods_delta < 0 }
+                    sg:electricity = { state_goods_pricier > 0.20 }
+
+                    OR = {
+                        any_scope_building = {
+                            is_building_type = building_power_plant
+                            occupancy > 0.75
+                        }
+                        NOT = {
+                            any_scope_building = {
+                                is_building_type = building_power_plant
+                            }
+                        }
+                    }
+
+                    # Kârlılık kontrolü (orijinal)
+                    OR = {
+                        any_scope_building = {
+                            is_building_type = building_power_plant
+                            weekly_profit >= 0
+                        }
+                        any_scope_building = {
+                            is_building_type = building_power_plant
+                            is_subsidized = yes
+                        }
+                        NOT = {
+                            any_scope_building = {
+                                is_building_type = building_power_plant
+                            }
+                        }
+                    }
+
+                    # ═══════════════════════════════
+                    # ★ YENİ: Devam eden inşaat yok
+                    # ═══════════════════════════════
+                    NOT = {
+                        any_scope_building = {
+                            is_building_type = building_power_plant
+                            is_under_construction = yes
+                        }
+                    }
+
+                    # ═══════════════════════════════
+                    # ★ YENİ: İş gücü kontrolü
+                    #   Bir power plant seviyesi
+                    #   ~3.000-5.000 laborer çeker.
+                    #   Eyalette en az 10.000 laborer
+                    #   nüfusu olmalı ki hem santral
+                    #   çalışsın hem mevcut sanayi
+                    #   işçisiz kalmasın.
+                    # ═══════════════════════════════
+                    state_population >= 10000
+                }
+
+                # ── Teknolojiye göre üretim (orijinal) ──
+                set_variable = {
+                    name = electricity_per_plant
+                    value = {
+                        value = 25
+                        if = {
+                            limit = {
+                                owner = {
+                                    has_technology_researched = oil_turbine
+                                }
+                            }
+                            value = 80
+                        }
+                        else_if = {
+                            limit = {
+                                owner = {
+                                    has_technology_researched = steam_turbine
+                                }
+                            }
+                            value = 50
+                        }
+                    }
+                }
+
+                # ── Ceiling hesaplama (orijinal) ──
+                set_variable = {
+                    name = levels_to_build
+                    value = {
+                        value = sg:electricity.state_goods_delta
+                        multiply = -1
+                        add = var:electricity_per_plant
+                        subtract = 1
+                        divide = var:electricity_per_plant
+                    }
+                }
+
+                # ── Eyalet sınırı (orijinal) ──
+                if = {
+                    limit = { var:levels_to_build > 3 }
+                    set_variable = {
+                        name = levels_to_build value = 3
+                    }
+                }
+
+                # ── Ülke sınırı (orijinal) ──
+                if = {
+                    limit = {
+                        var:levels_to_build > 0
+                        owner.var:total_queued < 10
+                    }
+                    set_variable = {
+                        name = remaining_quota
+                        value = {
+                            value = 10
+                            subtract = owner.var:total_queued
+                        }
+                    }
+                    if = {
+                        limit = {
+                            var:levels_to_build
+                                > var:remaining_quota
+                        }
+                        set_variable = {
+                            name = levels_to_build
+                            value = var:remaining_quota
+                        }
+                    }
+
+                    while = {
+                        count = var:levels_to_build
+                        start_building_construction
+                            = building_power_plant
+                    }
+
+                    owner = {
+                        change_variable = {
+                            name = total_queued
+                            add = prev.var:levels_to_build
+                        }
+                    }
+                }
+
+                # ── Temizlik ──
+                remove_variable = electricity_per_plant
+                remove_variable = levels_to_build
+                remove_variable = remaining_quota
+            }
+        }
+
+        remove_variable = total_queued
+    }
+}
