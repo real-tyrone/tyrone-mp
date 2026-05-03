@@ -209,3 +209,62 @@ berlin_getahead1_conference = {
 		value = 100
 	}
 }
+
+pls_claim_zambezi = {
+	is_shown = {
+		is_ai = yes
+		OR = {
+			has_variable = claimed_south_africa_var
+			has_variable = claimed_mozambique_var
+			has_variable = claimed_angola_var
+			has_variable = claimed_zambia_var
+		} 
+		NOT = {
+			any_country = { 
+				has_variable = claimed_zambezi_var 
+			} 
+		}
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		set_variable = claimed_zambezi_var
+		add_to_global_variable_list = { name = zambezi_claimed_countries_list target = this }
+		change_variable = { name = remaining_claims_var subtract = 1 }
+		change_variable = { name = berlin_claimed_count add = 1 }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+pls_free_colony = {
+	is_shown = {
+		is_ai = yes
+		NOT = { has_variable = berlin_conf_free_law }
+		NOT = {
+			OR = {
+				has_law = law_type:law_colonial_resettlement
+				has_law = law_type:law_colonial_exploitation
+			}			
+		}
+		is_involved_in_journal_entry = je_berlin_conference
+		NOT = { has_global_variable = berlin_conference_ended }
+	}
+
+	possible = {
+		
+	}
+
+	when_taken = {
+		trigger_event = { id = berlin_conference.4 days = 0 popup = yes }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
