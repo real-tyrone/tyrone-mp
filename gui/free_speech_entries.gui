@@ -1,0 +1,434 @@
+﻿@panel_width_half = 270
+
+### JE INJECTION WIDGET (1.13.0+)
+flowcontainer = {
+	name = "widget_je_reform_censorship_panel"
+	visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_reform_censorship'))]"
+
+	widget = {
+		parentanchor = hcenter|vcenter
+		size = { 520 700 }
+		visible = yes
+
+		background = {
+			using = fancy_frame_solid_bg
+		}
+
+		widget = {
+			parentanchor = hcenter|vcenter
+			position = { 0 -180 }
+			size = { 300 400 }
+
+			background = { using = paper_bg_dark }
+
+			default_header_clean_faded = {
+				parentanchor = hcenter|top
+				blockoverride "text" { raw_text = "Ministry of Propaganda" }
+				blockoverride "size" { size = { 300 36 } }
+			}
+
+			flowcontainer = {
+				parentanchor = hcenter|vcenter
+				widgetanchor = hcenter|vcenter
+				position = { 0 0 }
+				direction = vertical
+				spacing = 15
+
+				container = {
+					datacontext = "[GetMetaPlayer.GetPlayedOrObservedCountry.GetInterestGroupOfType('ig_armed_forces').GetLeader]"
+					parentanchor = hcenter
+					flowcontainer = {
+						direction = vertical
+						spacing = 4
+						character_portrait_large_torso = {
+							parentanchor = hcenter|vcenter
+							position = { 0 -12 }
+							blockoverride "show_hat" {}
+							blockoverride "highlight" {}
+							blockoverride "commander_order_icon" {}
+						}
+						textbox = {
+							text = "[Character.GetFullName]"
+							parentanchor = hcenter
+							autoresize = yes
+							max_width = @panel_width_half
+							using = fontsize_large
+						}
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = horizontal
+					spacing = 10
+
+					button = {
+						using = default_button
+						size = { 54 54 }
+						tooltip = "ig_intelligentsia"
+						onclick = "[GetScriptedGui('t4_speechreform_select_intelligentsia_sgui').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+
+						icon = {
+							visible = "[GetScriptedGui('t4_speechreform_intelligentsia_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							using = highlighted_square_selection
+						}
+
+						icon = {
+							parentanchor = center
+							size = { 38 38 }
+							texture = "gfx/interface/icons/ig_icons/intelligensia.dds"
+						}
+					}
+
+					button = {
+						using = default_button
+						size = { 54 54 }
+						tooltip = "ig_industrialists"
+						onclick = "[GetScriptedGui('t4_speechreform_select_industrialist_sgui').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+
+						icon = {
+							visible = "[GetScriptedGui('t4_speechreform_industrialist_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							using = highlighted_square_selection
+						}
+
+						icon = {
+							parentanchor = center
+							size = { 38 38 }
+							texture = "gfx/interface/icons/ig_icons/industrialists.dds"
+						}
+					}
+
+					button = {
+						using = default_button
+						size = { 54 54 }
+						tooltip = "ig_armed_forces"
+						onclick = "[GetScriptedGui('t4_speechreform_select_armed_forces_sgui').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+
+						icon = {
+							visible = "[GetScriptedGui('t4_speechreform_armed_forces_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							using = highlighted_square_selection
+						}
+
+						icon = {
+							parentanchor = center
+							size = { 38 38 }
+							texture = "gfx/interface/icons/ig_icons/armed_forces.dds"
+						}
+					}
+				}
+			}
+		}
+
+		widget = {
+			parentanchor = hcenter|bottom
+			widgetanchor = hcenter|bottom
+			position = { 0 -224 }
+			size = { 500 80 }
+			tooltip = "t4_speechreform_balance_bar_tt"
+			background = {
+				using = dark_area
+				alpha = 0.55
+			}
+
+			flowcontainer = {
+				parentanchor = hcenter|top
+				widgetanchor = hcenter|top
+				direction = vertical
+				spacing = 7
+
+				default_header_clean_faded = {
+					parentanchor = right|top
+					blockoverride "text" { text = "t4_speechreform_balance_bar_name" }
+					blockoverride "size" { size = { 500 36 } }
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = horizontal
+					spacing = 8
+
+					textbox = {
+						text = "t4_speechreform_balance_free_speech"
+						size = { 106 20 }
+						align = left|nobaseline
+						using = fontsize_small
+					}
+
+					gold_progressbar_horizontal = {
+						size = { 260 18 }
+						parentanchor = left|bottom
+						tooltip = "t4_speechreform_balance_bar_tt"
+						blockoverride "values" {
+							value = "[JournalEntry.GetCountry.MakeScope.Var('speechreform_state_control_balance').GetValue]"
+							min = 0
+							max = 100
+						}
+					}
+
+					textbox = {
+						text = "t4_speechreform_balance_state_control"
+						size = { 106 20 }
+						align = right|nobaseline
+						using = fontsize_small
+					}
+				}
+			}
+		}
+
+		widget = {
+			parentanchor = hcenter|bottom
+			widgetanchor = hcenter|bottom
+			position = { 0 -18 }
+			size = { 500 198 }
+			background = {
+				using = bg_bronze_with_frame
+			}
+
+			flowcontainer = {
+				visible = "[GetScriptedGui('t4_speechreform_intelligentsia_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+				parentanchor = hcenter|vcenter
+				widgetanchor = hcenter|vcenter
+				direction = vertical
+				spacing = 6
+
+				widget = {
+					parentanchor = hcenter
+					size = { 470 30 }
+
+					icon = {
+						parentanchor = left|vcenter
+						position = { 8 0 }
+						size = { 22 22 }
+						texture = "gfx/interface/icons/ig_icons/intelligensia.dds"
+					}
+
+					default_header_clean_faded = {
+						parentanchor = hcenter|vcenter
+						blockoverride "text" { raw_text = "Intellectual Program" }
+						blockoverride "size" { size = { 470 30 } }
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = horizontal
+					spacing = 12
+
+					container = {
+						datacontext = "[GetMetaPlayer.GetPlayedOrObservedCountry.GetInterestGroupOfType('ig_intelligentsia').GetLeader]"
+						size = { 118 118 }
+						background = {
+							using = dark_area
+							alpha = 0.45
+						}
+						character_portrait_large = {
+							parentanchor = center
+							blockoverride "show_hat" {}
+							blockoverride "highlight" {}
+							blockoverride "commander_order_icon" {}
+						}
+					}
+
+					flowcontainer = {
+						direction = vertical
+						spacing = 6
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Sponsor Newspapers"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_intelligentsia_newspapers_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Protect Dissidents"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_intelligentsia_dissidents_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Academic Propaganda"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_intelligentsia_academia_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetScriptedGui('t4_speechreform_industrialist_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+				parentanchor = hcenter|vcenter
+				widgetanchor = hcenter|vcenter
+				direction = vertical
+				spacing = 6
+
+				widget = {
+					parentanchor = hcenter
+					size = { 470 30 }
+
+					icon = {
+						parentanchor = left|vcenter
+						position = { 8 0 }
+						size = { 22 22 }
+						texture = "gfx/interface/icons/ig_icons/industrialists.dds"
+					}
+
+					default_header_clean_faded = {
+						parentanchor = hcenter|vcenter
+						blockoverride "text" { raw_text = "Industrial Program" }
+						blockoverride "size" { size = { 470 30 } }
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = horizontal
+					spacing = 12
+
+					container = {
+						datacontext = "[GetMetaPlayer.GetPlayedOrObservedCountry.GetInterestGroupOfType('ig_industrialists').GetLeader]"
+						size = { 118 118 }
+						background = {
+							using = dark_area
+							alpha = 0.45
+						}
+						character_portrait_large = {
+							parentanchor = center
+							blockoverride "show_hat" {}
+							blockoverride "highlight" {}
+							blockoverride "commander_order_icon" {}
+						}
+					}
+
+					flowcontainer = {
+						direction = vertical
+						spacing = 6
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Fund Newsreels"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_industrialist_newsreels_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Corporate Messaging"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_industrialist_corporate_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Promote Modern Industry"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_industrialist_industry_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetScriptedGui('t4_speechreform_armed_forces_selected_sgui').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+				parentanchor = hcenter|vcenter
+				widgetanchor = hcenter|vcenter
+				direction = vertical
+				spacing = 6
+
+				widget = {
+					parentanchor = hcenter
+					size = { 470 30 }
+
+					icon = {
+						parentanchor = left|vcenter
+						position = { 8 0 }
+						size = { 22 22 }
+						texture = "gfx/interface/icons/ig_icons/armed_forces.dds"
+					}
+
+					default_header_clean_faded = {
+						parentanchor = hcenter|vcenter
+						blockoverride "text" { raw_text = "Military Program" }
+						blockoverride "size" { size = { 470 30 } }
+					}
+				}
+
+				flowcontainer = {
+					parentanchor = hcenter
+					direction = horizontal
+					spacing = 12
+
+					container = {
+						datacontext = "[GetMetaPlayer.GetPlayedOrObservedCountry.GetInterestGroupOfType('ig_armed_forces').GetLeader]"
+						size = { 118 118 }
+						background = {
+							using = dark_area
+							alpha = 0.45
+						}
+						character_portrait_large = {
+							parentanchor = center
+							blockoverride "show_hat" {}
+							blockoverride "highlight" {}
+							blockoverride "commander_order_icon" {}
+						}
+					}
+
+					flowcontainer = {
+						direction = vertical
+						spacing = 6
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Patriotic Film Bureau"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_armed_forces_film_bureau_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "Barracks Screenings"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_armed_forces_barracks_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+
+						button = {
+							using = default_button
+							size = { 340 34 }
+							text = "National Discipline"
+							datacontext = "[GetScriptedGui('t4_speechreform_action_armed_forces_discipline_sgui')]"
+							enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+						}
+					}
+				}
+			}
+		}
+	}
+}

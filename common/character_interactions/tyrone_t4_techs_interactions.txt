@@ -1,0 +1,74 @@
+bolster_popularity_character_interaction = {
+	icon = "gfx/interface/icons/generic_icons/ig_bolster.dds"
+	clicksound = "event:/SFX/UI/Global/suppress"
+    
+    show_requirements = yes
+
+	potential = {
+        owner ?= { has_law = law_type:law_civic_speech_protections }
+		owner = scope:actor
+	}
+
+    cooldown = { days = short_modifier_time }
+
+	possible = {
+	}
+
+	effect = {
+        add_modifier = {
+            name = bolster_popularity_character
+            days = short_modifier_time
+            is_decaying = yes
+        }
+	}
+
+	ai_chance = {
+		value = 0
+	}
+}
+
+manual_lobotomy_character_interaction = {
+    clicksound = "event:/SFX/DLC/1.3_ip1/UI/exile_character"
+
+    potential = {
+        is_in_exile_pool = no
+        is_in_void = no
+        is_ruler_of_own_country = no
+        is_immortal = no
+        owner ?= { has_law = law_type:law_centralized_press_authority }
+        owner = scope:actor
+    }
+
+    show_requirements = yes
+
+    possible = {
+    }
+
+    effect = {
+        kill_character = yes
+        this.interest_group ?= {
+            save_scope_as = relevant_ig
+        }
+        owner ?= {
+            add_radicals = {
+                value = very_large_radicals
+                interest_group = scope:relevant_ig
+            }
+        }
+    }
+
+    cooldown = { days = normal_modifier_time }
+    show_confirmation_box = yes
+    
+    should_ai_evaluate = {
+        country_rank >= rank_value:minor_power # Don't burn performance on tiny AI countries messing around with character interactions
+    }
+    
+    ai_will_do = {
+        is_heir_of_own_country = no # The AI won't kill its own heirs
+    }
+
+    ai_chance = {
+        value = -50
+    }
+}

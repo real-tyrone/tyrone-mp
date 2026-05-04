@@ -1,0 +1,274 @@
+je_reform_economy = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	group = je_group_internal_affairs
+
+	is_shown_when_inactive = {
+		has_technology_researched = stock_exchange
+	}
+
+	is_shown_in_lobby = {
+	}
+
+
+	possible = {
+		OR = {
+			has_law_or_variant = law_type:law_laissez_faire
+            has_law_or_variant = law_type:law_interventionism
+		}
+		has_technology_researched = investment_banks
+	}
+
+
+	complete = {
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+		any_company = {
+			company_is_prosperous = yes
+			count >= 4
+		}
+		OR = {
+			AND = {
+				ig:ig_industrialists ?= {
+					ig_counts_as_marginal = no
+					ig_approval >= 10
+				}
+				has_law_or_variant = law_type:law_laissez_faire
+			}
+			AND = {
+           		has_law_or_variant = law_type:law_interventionism
+				OR = {
+					has_law_or_variant = law_type:law_autocracy
+					has_law_or_variant = law_type:law_neo_absolutism
+					has_law_or_variant = law_type:law_oligarchy
+					has_law_or_variant = law_type:law_organic_regulation
+					has_law_or_variant = law_type:law_single_party_state
+					has_law_or_variant = law_type:law_technocracy
+					any_active_law = {
+						has_amendment = amendment_type:amendment_taikunate
+					}
+				}			
+			}
+		}
+
+		scaled_debt <= 0.5
+	}
+
+	on_complete = {
+		trigger_event = economic_reform.1
+	}
+
+
+	fail = {
+		OR = {
+			has_modifier = in_default
+			has_modifier = declared_bankruptcy						 
+		}
+	}
+
+
+	on_fail = {
+	}
+
+
+	invalid = {
+		NOR = {
+			has_law_or_variant = law_type:law_laissez_faire
+            has_law_or_variant = law_type:law_interventionism
+		}
+	}
+
+
+	current_value = {
+		value = root.gdp
+	}
+
+	goal_add_value = {
+		value = root.gdp
+		multiply = 0.5
+	}
+
+	progressbar = yes
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	weight = 100
+}
+
+je_reform_censorship = {
+	icon = "gfx/interface/icons/invention_icons/political_agitation.dds"
+
+	group = je_group_internal_affairs
+
+	widget = {
+		gui = "gui/free_speech_entries.gui"
+		name = "widget_je_reform_censorship_panel"
+		container = "custom_widget_container_2"
+	}
+
+	is_shown_when_inactive = {
+		has_technology_researched = stock_exchange
+	}
+
+	is_shown_in_lobby = {
+	}
+
+	immediate = {
+		set_variable = { name = intelligentsia_speechreform_appeasement value = 0 }
+		set_variable = { name = industrialist_speechreform_appeasement value = 0 }
+		set_variable = { name = armed_forces_speechreform_appeasement value = 0 }
+		set_variable = { name = speechreform_state_control_balance value = 50 }
+		trigger_event = { id = free_speech_reform.1 popup = yes }
+	}
+
+
+	possible = {
+		OR = {
+			has_law_or_variant = law_type:law_outlawed_dissent
+            has_law_or_variant = law_type:law_protected_speech
+		}
+		has_technology_researched = film
+	}
+
+
+	complete = {
+		OR = {
+			AND = {
+				has_law_or_variant = law_type:law_outlawed_dissent
+				OR = {
+					var:armed_forces_speechreform_appeasement >= 100
+					var:industrialist_speechreform_appeasement >= 100
+				}
+			}
+			AND = {
+				has_law_or_variant = law_type:law_protected_speech
+				OR = {
+					var:intelligentsia_speechreform_appeasement >= 100
+					var:industrialist_speechreform_appeasement >= 100
+				}
+			}
+		}
+	}
+
+	on_complete = {
+	}
+
+
+	fail = {
+		
+	}
+
+
+	on_fail = {
+	}
+
+
+	invalid = {
+		NOR = {
+			has_law_or_variant = law_type:law_protected_speech
+            has_law_or_variant = law_type:law_outlawed_dissent
+		}
+	}
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	weight = 100
+
+}
+
+
+je_lebensraum_slavery = {
+	icon = "gfx/interface/icons/invention_icons/political_agitation.dds"
+
+	group = je_group_internal_affairs
+
+	is_shown_in_lobby = {
+	}
+
+	modifiers_while_active = {
+		lebensraum_base_slavery
+	}
+
+	scripted_button = lebensraum_base_slavery_button
+	scripted_button = lebensraum_expand_slavery_button
+	scripted_button = lebensraum_remove_slavery_railway_button
+	scripted_button = lebensraum_expand_slavery_railway_button
+	scripted_button = lebensraum_remove_slavery_turmoil_button
+	scripted_button = lebensraum_expand_slavery_turmoil_button
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_lebensraum_slavery_status2
+				trigger = {
+					has_variable = expanded_lebensraum
+				}
+			}
+			triggered_desc = {
+				desc = je_lebensraum_slavery_status
+			}
+		}
+	}
+
+	immediate = {
+		every_scope_pop = {
+			limit = {
+				is_pop_type = laborers
+				NOT = { strata = upper }
+				NOT = { strata = middle }
+				pop_acceptance < acceptance_status_2
+				OR = {
+					pop_employment_building_group = bg_agriculture
+					pop_employment_building_group = bg_ranching
+					pop_employment_building_group = bg_plantations
+				}
+			}
+			change_poptype = pop_type:slaves
+		}
+		
+	}
+
+	complete = {
+	}
+
+	on_complete = {
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			every_scope_pop = {
+				limit = {
+					NOT = { is_pop_type = farmers } 
+					NOT = { is_pop_type = clerks } 
+					NOT = { is_pop_type = machinists } 
+					pop_acceptance < acceptance_status_3
+					NOT = { strata = upper }
+					NOT = { strata = middle }
+				}
+				change_poptype = pop_type:slaves
+			}
+		}
+	}
+
+	fail = {
+		OR = {
+			NOT = { has_law = law_type:law_lebensraum_slavery }
+			NOT = { has_law_or_variant = law_type:law_ethnostate }
+		}
+	}
+
+
+	on_fail = {
+		activate_law = law_type:law_slavery_banned
+	}
+
+
+	invalid = {
+	}
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	weight = 100
+
+}
