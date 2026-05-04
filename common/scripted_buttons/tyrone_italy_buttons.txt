@@ -6,9 +6,10 @@
 ita_join_france_bloc_button = {
 	name = ita_join_france_bloc_button
 	desc = ita_join_france_bloc_button_desc
+	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
+		this ?= c:SAR
 		NOT = { has_variable = ita_nif_stand_alone }
 	}
 
@@ -29,14 +30,19 @@ ita_join_france_bloc_button = {
 	effect = {
 		join_power_bloc = c:FRA
 	}
+
+	ai_chance = {
+		value = 100
+	}
 }
 
 ita_join_austria_bloc_button = {
 	name = ita_join_austria_bloc_button
 	desc = ita_join_austria_bloc_button_desc
+	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
+		this ?= c:SAR
 		NOT = { has_variable = ita_nif_stand_alone }
 	}
 
@@ -57,6 +63,10 @@ ita_join_austria_bloc_button = {
 	effect = {
 		join_power_bloc = c:AUS
 	}
+
+	ai_chance = {
+		value = 100
+	}
 }
 
 # ========== Treaty of Turin (Savoy & Provence) / Lombardy cession ==========
@@ -67,7 +77,11 @@ ita_treaty_turin_button = {
 	cooldown = { months = 24 }
 
 	visible = {
-		is_player = yes
+		OR = {
+			is_player = yes
+			is_in_same_power_bloc = c:FRA
+		}
+		
 		NOT = {
 			has_variable = turin_done
 		}
@@ -95,6 +109,9 @@ ita_treaty_turin_button = {
 			trigger_event = { id = italyEventsTyrone.3 popup = yes }
 		}
 		set_variable = turin_done
+	}
+	ai_chance = {
+		value = 100
 	}
 }
 
@@ -133,6 +150,7 @@ ita_lombardy_cession_button = {
 		}
 		set_variable = lombardy_done
 	}
+	
 }
 
 # ========== Annex Romagna only (unincorporated) – bar 40–60, not in bloc, bad relations with Pope ==========

@@ -125,6 +125,7 @@ italy_risorgimento_stage = {
 italy_diplo_stance = {
 	icon = "gfx/interface/icons/invention_icons/international_diplomacy.dds"
 	group = je_group_italy_tyrone
+
 	scripted_progress_bar = italy_aus_fra_stance_bar
 
 	scripted_button = ita_join_france_bloc_button
@@ -142,6 +143,12 @@ italy_diplo_stance = {
 				country = c:PAP
 				years = 30
 			}
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			has_interest_marker_in_region = sr:region_southern_europe
 		}
 	}
 
@@ -1244,16 +1251,16 @@ ita_garibaldi_thousand_expedition_JE = {
 
 	is_shown_when_inactive = {
 		c:SAR ?= this
+		has_journal_entry = italy_risorgimento_stage
 	}
 
 	possible = {
 		has_technology_researched = nationalism
-		custom_tooltip = {
-			text = ita_garibaldi_expedition_sentiment_60_tt
-			var:italian_sentiment_var >= 60
-		}
 		OR = {
-			is_great_power = yes
+			custom_tooltip = {
+				text = ita_garibaldi_expedition_sentiment_60_tt
+				var:italian_sentiment_var >= 60
+			}
 			custom_tooltip = {
 				text = is_nif_tt
 				has_variable = NIF_formed
@@ -1364,6 +1371,7 @@ ita_consolidating_south_JE = {
 	}
 
 	on_complete = {
+		add_primary_culture = cu:south_italian
 		add_loyalists = {
 				value = 0.25
 				culture = cu:south_italian
@@ -1452,10 +1460,8 @@ italy_developing_industry = {
 	}
 
 	possible = {
-		OR = {
 		has_technology_researched = steel_frame_buildings
 		gdp > 50000000
-		}
 	}
 
 
