@@ -222,6 +222,14 @@ je_austrian_neo_absolutism = {
 				text = pb_ruler_tt
 				ruler.interest_group ?= ig:ig_petty_bourgeoisie
 			}
+			custom_tooltip = {
+				text = hungarians_crushed_tt
+				has_variable = crushed_hungarian_uprising
+			}
+			custom_tooltip = {
+				text = autocratic_reforms_var_tt
+				has_variable = autocratic_reforms_var
+			}
 		}
 	}
 
@@ -455,4 +463,178 @@ je_austrian_neo_absolutism = {
 
 	weight = 100
 	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_hungarian_revolution_aus = {
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	icon = "gfx/interface/icons/event_icons/hungarian_revolution.dds"
+
+	group = je_group_historical_content
+
+	immediate = {
+		c:HUN ?= { save_scope_as = hungary_scope }
+	}
+	
+	complete = {
+		custom_tooltip = {
+			text = hungary_doesnt_exist_tt
+			NOT = {
+				exists = c:HUN
+			}
+		}
+		every_state = {
+			limit = {
+				is_in_geographic_region = geographic_region_hungary
+			}
+			c:AUS ?= owner
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = germany_rework.6 popup = yes	
+		}
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = je_matter_of_hungary_fail_hungary_is_free
+			OR = {
+				AND = {
+					NOT = {
+						any_scope_state = {
+							is_in_geographic_region = geographic_region_hungary
+						}
+					}
+					c:HUN ?= {
+						NOT = {
+							is_subject_of = root
+						}
+					}
+				}
+				c:HUN ?= {
+					NOT = {
+						is_subject_of = root
+					}
+				}
+			}
+		}
+	}
+
+}
+
+je_german_ambition = {
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	immediate = {
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:PRU ?= { save_scope as = prussia_scope }
+	}
+
+	complete = {
+		custom_tooltip = {
+			OR = {
+				c:GER ?= this
+				owns_entire_state_region = STATE_BRANDENBURG
+			}
+			text = je_german_unification_complete_trigger_desc
+		}
+	}
+
+	fail = {
+		OR = {
+			has_modifier = brothers_war_defeat_aus
+			custom_tooltip = {
+				text = abandoned_germany_fail
+				has_variable = abandoned_germany_button_var
+			}
+		}
+	}
+
+	on_fail = {
+		trigger_event = { id = austria_events.9 popup = yes }
+		set_variable = reclaiming_empire_aus_var
+	}
+
+
+	scripted_button = modernize_government_button
+	scripted_button = appease_minorities_button
+	scripted_button = fix_administration_button
+	scripted_button = autocratic_reforms_button
+	scripted_button = military_reforms_button
+	scripted_button = invite_south_germany_button
+	scripted_button = support_metternich_button
+	scripted_button = propose_south_german_unification
+	scripted_button = unify_germany_button
+	scripted_button = abandon_germany_button
+
+
+	group = je_group_historical_content
+
+	is_shown_in_lobby = {
+		c:AUS ?= this
+	}
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	modifiers_while_active = {
+		modifier_german_ambition
+	}	
+
+}
+
+je_austrian_reclamation = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	immediate = {
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:HUN ?= { save_scope_as = hungary_scope }
+		c:CRO ?= { save_scope_as = croatia_scope }
+		c:TRS ?= { save_scope_as = transylvania_scope }
+		c:GAL ?= { save_scope_as = galicia_scope }
+	}
+
+	complete = {
+		custom_tooltip = {
+			AND = {
+				has_journal_entry = je_matter_of_hungary
+				OR = {
+					c:HUN = {
+						is_subject_of = c:AUS
+					}
+					NOT = { exists ?= c:HUN }				
+				}
+				OR = {
+					c:CRO = {
+						is_subject_of = c:AUS
+					}
+					NOT = { exists ?= c:CRO }				
+				}
+				OR = {
+					c:TRS = {
+						is_subject_of = c:AUS
+					}
+					NOT = { exists ?= c:TRS }				
+				}
+				OR = {
+					c:GAL = {
+						is_subject_of = c:AUS
+					}
+					NOT = { exists ?= c:GAL }				
+				}
+			}
+			text = finished_reclamation_tt
+		}
+	}
+
+	scripted_button = revisit_matter_of_hungary_button
+	scripted_button = reclaim_hungary_button
+	scripted_button = reclaim_croatia_button
+	scripted_button = reclaim_galicia_button
+	scripted_button = reclaim_transylvania_button
+
+	group = je_group_historical_content
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
 }

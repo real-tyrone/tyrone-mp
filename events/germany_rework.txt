@@ -118,6 +118,9 @@ germany_rework.1 = {
 		trigger = {
 			c:AUS ?= THIS
 		}
+		add_journal_entry = {
+			type = je_hungarian_revolution_aus
+		}
 		if = {
 			limit = {
 				NOT = {
@@ -609,5 +612,174 @@ germany_rework.5 = {
 		}
 		change_tag = GER
         add_primary_culture = cu:south_german
+    }
+}
+
+germany_rework.6 = {
+    type = country_event
+    placement = root
+
+    title = germany_rework.6.t
+    desc = germany_rework.6.d
+    flavor = germany_rework.6.f
+
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+    duration = 3
+
+	immediate = {
+		every_state = {
+			limit = {
+				is_in_geographic_region = geographic_region_hungary
+			}
+			set_state_type = incorporated
+		}
+	}		
+
+    option = {
+        name = germany_rework.6.a
+		set_variable = crushed_hungarian_uprising
+		if = {
+			limit = {
+				NOT = {
+					has_law = law_type:law_autocracy
+				}
+			}
+			activate_law = law_type:law_autocracy
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_law = law_type:law_secret_police
+				}
+			}
+			activate_law = law_type:law_secret_police
+		}
+		add_loyalists = { value = 0.1 }
+		add_modifier = {
+			name = modifier_austrian_royal_authority
+			days = normal_modifier_time
+		}
+    }
+
+    option = {
+        name = germany_rework.6.b
+		save_scope_as = austria_scope
+		hidden_effect = {
+			remove_claims_on_germany = yes
+		}
+		s:STATE_CENTRAL_HUNGARY = {
+			random_scope_state = {
+				save_scope_as = budapest_state_scope
+			}
+		}
+		custom_tooltip = {
+			text = matter_of_hungary_ausgleich_tt
+			if = {
+				limit = {
+					NOT = {
+						exists = c:HUN
+					}
+				}
+				create_country = {
+					origin = root
+					tag = HUN
+					state = scope:budapest_state_scope
+					on_created = {
+						add_loyalists = { value = 0.10 }
+						add_liberty_desire = -100
+					}
+				}
+			}
+		}
+		set_variable = cisleithania_var
+		c:HUN ?= {
+			add_liberty_desire = -100
+			if = {
+				limit = {
+					NOT = {
+						has_law = law_type:law_monarchy
+					}
+				}
+				activate_law  = law_type:law_monarchy
+			}
+
+			save_scope_as = hungary_scope
+			set_variable = transleithania_var
+			hidden_effect = {
+				if = {
+					limit = {
+						NOT = {
+							capital = {
+								state_region = s:STATE_CENTRAL_HUNGARY
+							}
+						}
+					}
+					set_capital = STATE_CENTRAL_HUNGARY
+				}
+				every_state = {
+					limit = {
+						OR = {
+							owner ?= ROOT
+							owner = {
+								is_subject_of = ROOT
+							}
+						}
+						NOT = {
+							c:HUN ?= owner
+						}
+						state_region = {
+							is_homeland = cu:hungarian
+						}
+					}
+					set_state_owner = c:HUN
+				}
+				s:STATE_CROATIA = {
+					every_scope_state = {
+						limit = {
+							OR = {
+								owner = root
+								owner = {
+									is_subject_of = root
+									NOT = {
+										c:HUN ?= this
+									}
+								}
+							}
+						}
+						set_state_owner = c:HUN
+					}
+				}
+				s:STATE_SLAVONIA = {
+					every_scope_state = {
+						limit = {
+							OR = {
+								owner = root
+								owner = {
+									is_subject_of = root
+									NOT = {
+										c:HUN ?= this
+									}
+								}
+							}
+						}
+						set_state_owner = c:HUN
+					}
+				}
+			}
+
+		}
+		create_diplomatic_pact = {
+			country = c:HUN
+			type = personal_union
+		}	
+		set_variable = established_austria_hungary_var
+		add_loyalists = { value = 0.05 }
     }
 }

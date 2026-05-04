@@ -57,14 +57,19 @@ matter_of_hungary_dual_monarchy_button = {
 						text = je_matter_of_hungary_neoabsolutist_fail_tt
 						has_variable = je_austrian_neo_absolutism_failed_var
 					}
+					custom_tooltip = {
+						text = je_matter_of_hungary_german_ambition_fail_tt
+						has_variable = reclaiming_empire_aus_var
+					}
 				}
 			}
 			custom_tooltip = {
-				text = germany_exists_tt
-				exists = c:GER
+				text = north_germany_exists_tt
+				exists = c:NGF
 			}
 			has_technology_researched = philosophical_pragmatism
 		}
+		has_technology_researched = nationalism
 		is_diplomatic_play_committed_participant = no
 		is_at_war = no
 	}
@@ -74,7 +79,9 @@ matter_of_hungary_dual_monarchy_button = {
 
 	effect = {
 		save_scope_as = austria_scope
-		remove_claims_on_germany = yes
+		hidden_effect = {
+			remove_claims_on_germany = yes
+		}
 		s:STATE_CENTRAL_HUNGARY = {
 			random_scope_state = {
 				save_scope_as = budapest_state_scope
@@ -538,10 +545,17 @@ aus_end_matter_of_hungary = {
 		}	
 	}
 	possible = {
-		custom_tooltip = {
-			text = hungary_doesnt_exist_tt
-			NOT = {
-				exists = c:HUN
+		OR = {
+			custom_tooltip = {
+				text = hungarians_crushed_tt
+				has_variable = crushed_hungarian_uprising
+			}
+			custom_tooltip = {
+				text = compromise_hungarians_tt
+				OR = {
+					has_variable = federated_three_crowns_var
+					has_variable = federated_hungarians_var
+				}
 			}
 		}
 	}
@@ -578,18 +592,25 @@ austrian_neo_absolutism_abolish_crown_land_autonomy_button = {
 			exists = c:HUN
 		}
 		has_law_or_variant = law_type:law_appointed_bureaucrats
-		any_scope_state = {
-			state_region = {
-				OR = {
-					is_homeland = cu:hungarian
-					is_homeland = cu:croat
-					is_homeland = cu:polish
+		OR = {
+			any_scope_state = {
+				state_region = {
+					OR = {
+						is_homeland = cu:hungarian
+						is_homeland = cu:croat
+						is_homeland = cu:polish
+					}
 				}
+				count >= 12
+				is_incorporated = yes
+				turmoil < 0.33
 			}
-			count >= 12
-			is_incorporated = yes
-			turmoil < 0.33
+			custom_tooltip = {
+				text = autocratic_reforms_var_tt
+				has_variable = autocratic_reforms_var
+			}
 		}
+
 		NOT = {
 			any_political_movement = {
 				is_political_movement_type = movement_cultural_minority

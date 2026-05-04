@@ -1,0 +1,526 @@
+﻿fix_administration_button = {
+	name = fix_administration_button
+	desc = fix_administration_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = fixed_administration_var
+		}
+		has_modifier = modifier_overstretched_administration
+	}
+
+	possible = {
+		has_law_or_variant = law_type:law_appointed_bureaucrats
+		bureaucracy >= 0
+		approaching_bureaucracy_shortage = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		remove_modifier = modifier_overstretched_administration
+		set_variable = fixed_administration_var
+	}
+
+}
+
+support_metternich_button = {
+	name = support_metternich_button
+	desc = support_metternich_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = support_metternich_var
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = metternich_button_possible_2_tt
+			metternich_agenda_value >= 6
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = metternich_supported
+			set_variable = support_metternich_var
+		}
+	}
+}
+
+appease_minorities_button = {
+	name = appease_minorities_button
+	desc = appease_minorities_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = appeased_minorities_var
+		}
+	}
+
+	possible = {
+		OR = {
+			has_law_or_variant = law_type:law_cultural_exclusion
+			has_law_or_variant = law_type:law_multicultural
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		add_loyalists = {
+			culture = cu:czech
+			value = large_radicals
+		}
+		add_loyalists = {
+			culture = cu:slovene
+			value = large_radicals
+		}
+		add_loyalists = {
+			culture = cu:croat
+			value = very_large_radicals
+		}
+		add_loyalists = {
+			culture = cu:serb
+			value = very_large_radicals
+		}
+		add_loyalists = {
+			culture = cu:polish
+			value = very_large_radicals
+		}
+		add_loyalists = {
+			culture = cu:north_italian
+			value = very_large_radicals
+		}
+		add_radicals = {
+			culture = cu:south_german
+			value = medium_radicals
+		}		
+		set_variable = appeased_minorities_var
+	}
+
+}
+
+modernize_government_button = {
+	name = modernize_government_button
+	desc = modernize_government_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = modernize_government_var
+		}
+	}
+
+	possible = {
+		NOR = {
+			has_law_or_variant = law_type:law_hereditary_bureaucrats
+			has_law_or_variant = law_type:law_land_based_taxation
+			has_law_or_variant = law_type:law_manorialism
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		active_law:lawgroup_distribution_of_power ?= { # Autocracy
+			every_scope_amendment = {
+				remove_amendment = yes
+			}
+		}
+		active_law:lawgroup_distribution_of_power ?= { # Autocracy
+			add_amendment = {
+				type = amendment_geheime_staatskonferenz_modernized
+				sponsor = PREV.ig:ig_landowners
+				cooldown = 120
+			}
+		}
+		set_variable = modernize_government_var
+	}
+}
+
+autocratic_reforms_button = {
+	name = autocratic_reforms_button
+	desc = autocratic_reforms_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = autocratic_reforms_var
+		}
+	}
+
+	possible = {
+		has_law_or_variant = law_type:law_autocracy
+		has_law_or_variant = law_type:law_secret_police
+		has_law_or_variant = law_type:law_censorship
+		custom_tooltip = {
+			text = autocratic_reform_institutions
+			institution:institution_police.investment >= 3
+			institution:institution_home_affairs.investment >= 3
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = autocratic_reforms_completed
+			set_variable = autocratic_reforms_var
+		}
+	}
+}
+
+military_reforms_button = {
+	name = military_reforms_button
+	desc = military_reforms_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = military_reforms_var
+		}
+	}
+
+	possible = {
+		has_technology_researched = shell_gun
+		army_size >= 125
+		any_scope_building = {
+			filter = {
+				is_building_type = building_barrack
+			}
+			NOR = {
+				building_has_goods_shortage = yes
+				has_active_production_method = pm_no_organization
+			}
+			percent = 1
+		}
+		NOT = {
+			any_military_formation = {
+				filter = {
+					is_army = yes
+				}
+				any_combat_unit = {
+					OR = {
+						has_unit_type = unit_type:combat_unit_type_line_infantry
+						has_unit_type = unit_type:combat_unit_type_irregular_infantry
+					}
+				}
+				percent >= 0.25
+			}
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		add_modifier = {
+			name = modifier_ottoman_army_modernization
+			days = long_modifier_time
+		}		
+		set_variable = military_reforms_var
+	}
+}
+
+invite_south_germany_button = {
+	name = invite_south_germany_button
+	desc = invite_south_germany_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = invited_south_germany_button_var
+		}
+	}
+
+	possible = {
+		c:BAD = {
+			relations:root >= relations_threshold:amicable
+		}
+		c:WUR = {
+			relations:root >= relations_threshold:amicable
+		}
+		c:BAV = {
+			relations:root >= relations_threshold:amicable
+		}
+	}
+
+	selected = {
+	}
+
+	effect = {
+		every_country = {
+			limit = {
+				capital = {
+					region = sr:region_central_europe
+				}
+				country_has_primary_culture = cu:south_german
+				NOT = {
+					OR = {
+						c:SWI?= this
+						c:HOH?= this
+						c:AUS ?= this
+					}
+				}
+			}
+			c:AUS.power_bloc ?= {
+				add_leverage = { target = prev value = 200 }
+			}
+		}
+		set_variable = invited_south_germany_button_var
+	}
+}
+
+propose_south_german_unification = {
+	name = propose_south_german_unification
+	desc = propose_south_german_unification_desc
+
+	visible = {
+		NOT = {
+			has_variable = proposed_south_german_unification_var
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		country_rank >= rank_value:great_power
+		is_power_bloc_leader = yes
+		is_in_same_power_bloc = c:BAD
+		is_in_same_power_bloc = c:BAV
+		is_in_same_power_bloc = c:WUR
+		has_journal_entry = je_south_german_unification
+	}
+
+	selected = {
+	}
+
+	effect = {
+		trigger_event = { id = austria_events.8 } # South German Confederation
+		set_variable = proposed_south_german_unification_var
+	}
+}
+
+unify_germany_button = {
+	name = unify_germany_button
+	desc = unify_germany_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = unify_germany_button_var
+		}
+		OR = {
+			exists ?= c:PRU
+			exists ?= c:NGF
+		}
+	}
+
+	possible = {
+		has_technology_researched = pan-nationalism
+		country_rank >= rank_value:great_power
+		c:SGF ?= this
+	}
+
+	selected = {
+	}
+
+	effect = {
+		if = {
+			limit = {
+				exists ?= c:PRU
+			}
+			create_diplomatic_play = {
+				target_state = s:STATE_BRANDENBURG.region_state:PRU
+				type = dp_unify_germany
+				add_war_goal = {
+					holder = root
+					target_country = c:PRU
+					type = annex_country
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				exists ?= c:NGF
+			}
+			create_diplomatic_play = {
+				target_state = s:STATE_BRANDENBURG.region_state:NGF
+				type = dp_unify_germany
+				add_war_goal = {
+					holder = root
+					target_country = c:NGF
+					type = annex_country
+				}
+			}
+		}
+
+		set_variable = unify_germany_button_var
+	}
+}
+
+abandon_germany_button = {
+	name = abandon_germany_button
+	desc = abandon_germany_button_desc
+
+	visible = {
+		NOT = {
+			has_variable = abandoned_germany_button_var
+		}
+	}
+
+	possible = {
+		always = yes
+	}
+
+	selected = {
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = abandoned_germany_tt
+			set_variable = abandoned_germany_button_var
+		}
+	}	
+}
+
+reclaim_hungary_button = {
+	name = reclaim_hungary_button
+	desc = reclaim_hungary_button_desc
+
+	visible = {
+		NOT = {
+			c:HUN = { is_subject_of = root }
+		}
+		exists = c:HUN
+	}
+
+	possible = {
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			type = dp_make_crownland
+			target_country = c:HUN
+		}
+	}	
+}
+
+reclaim_croatia_button = {
+	name = reclaim_croatia_button
+	desc = reclaim_croatia_button_desc
+
+	visible = {
+		NOT = {
+			c:CRO = { is_subject_of = root }
+		}
+		exists = c:CRO
+	}
+
+	possible = {
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			type = dp_make_crownland
+			target_country = c:CRO
+		}
+	}	
+}
+
+reclaim_galicia_button = {
+	name = reclaim_galicia_button
+	desc = reclaim_galicia_button_desc
+
+	visible = {
+		NOT = {
+			c:GAL = { is_subject_of = root }
+		}
+		exists = c:GAL
+	}
+
+	possible = {
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			type = dp_make_crownland
+			target_country = c:GAL
+		}
+	}	
+}
+
+reclaim_transylvania_button = {
+	name = reclaim_transylvania_button
+	desc = reclaim_transylvania_button_desc
+
+	visible = {
+		NOT = {
+			c:TRS = { is_subject_of = root }
+		}
+		exists = c:TRS
+	}
+
+	possible = {
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
+	}
+
+	selected = {
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			type = dp_make_crownland
+			target_country = c:TRS
+		}
+	}	
+}
+
+revisit_matter_of_hungary_button = {
+	name = revisit_matter_of_hungary_button
+	desc = revisit_matter_of_hungary_button_desc
+	
+	visible = {
+		NOT = {
+			has_variable = matter_of_hungary_je_recreated
+		}
+	}
+
+	possible = {
+		c:HUN = {
+			is_subject_type = subject_type_crown_land
+		}
+		c:HUN = {
+			is_subject_of = c:AUS
+		}
+	}
+
+	effect = {
+		set_variable = matter_of_hungary_je_recreated
+		add_journal_entry = {
+			type = je_matter_of_hungary
+		}
+	}	
+}
+
+

@@ -390,10 +390,13 @@ je_south_german_unification = {
 		if = {
 			limit = {
 				NOT = {
-					custom_tooltip = {
-						text = germany_exists_tt
-						exists = c:GER
-					}	
+					OR = {
+						custom_tooltip = {
+							text = germany_exists_tt
+							exists = c:GER
+						}
+						has_journal_entry = je_german_ambition	
+					}
 				}
 			}
 			trigger_event = germany_rework.1
@@ -412,6 +415,12 @@ je_south_german_unification = {
 	on_complete = {
 		trigger_event = { id = german_unification.1 } # South German Confederation
 		remove_variable = je_unification_progress
+	}
+
+	invalid = {
+		OR = {
+			has_variable = established_austria_hungary_var
+		}
 	}
 
 	status_desc = {
@@ -466,7 +475,10 @@ je_german_unification = {
 			AND = {
 				NOT = {
 					custom_tooltip = {
-						c:AUS ?= this
+						OR = {
+							c:AUS ?= this
+							was_formed_from = AUS
+						}				
 						text = not_austria_tt
 					}
 				}
