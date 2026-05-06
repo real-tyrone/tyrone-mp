@@ -1,0 +1,244 @@
+﻿je_nihilist_movement = {
+	icon = "gfx/interface/icons/ideology_icons/ideology_leader/ideology_leader_nihilist.dds"
+
+	group = je_group_internal_affairs
+
+	widget = {
+		gui = "gui/t4_nihilism_journal_entry.gui"
+		name = "widget_je_nihilism_panel"
+		container = "custom_widget_container_2"
+	}
+
+	scripted_progress_bar = t4_nihilism_nihilist_progress_bar
+	scripted_progress_bar = t4_nihilism_devout_progress_bar
+
+	is_progressing = {
+		OR = {
+			AND = {
+				OR = {
+					has_law_or_variant = law_type:law_outlawed_dissent
+					has_law_or_variant = law_type:law_censorship
+				}
+				any_political_movement = {
+					is_political_movement_type = movement_nihilist
+					is_being_suppressed = yes
+				}
+			}
+			ig:ig_intelligentsia ?= {
+				OR = {
+					ig_approval > 0
+					ig_counts_as_marginal = yes
+				}
+			}
+		}
+	}
+
+	is_shown_when_inactive = {
+		has_technology_researched = realism
+		NOT = {
+			has_technology_researched = socialism
+		}
+		OR = {
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_freedom_of_conscience
+		}
+	}
+
+	possible = {
+		has_technology_researched = realism
+		NOT = {
+			has_technology_researched = socialism
+		}
+		OR = {
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_freedom_of_conscience
+		}
+		OR = {
+			has_law_or_variant = law_type:law_autocracy
+			has_law_or_variant = law_type:law_oligarchy
+			has_law_or_variant = law_type:landed_voting
+			has_law_or_variant = law_type:law_wealth_voting
+		}
+		ig:ig_intelligentsia ?= {
+			ig_counts_as_marginal = no
+			ig_approval < 0
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = nihilism_progress_var
+			value = 1
+		}
+		remove_variable = t4_nihilism_event_4_fired
+		remove_variable = t4_nihilism_event_5_fired
+		remove_variable = t4_nihilism_event_6_fired
+		remove_variable = t4_nihilism_event_7_fired
+		remove_variable = t4_nihilism_event_8_fired
+		remove_variable = t4_nihilism_event_9_fired
+		remove_variable = t4_nihilism_event_10_fired
+		remove_variable = t4_nihilism_event_11_fired
+		remove_variable = t4_nihilism_event_12_fired
+		remove_variable = t4_nihilism_event_13_fired
+		show_as_tooltip = {
+			if = {
+				limit = {
+					NOT = {
+						any_political_movement = {
+							is_political_movement_type = movement_nihilist
+						}
+					}
+				}
+				create_political_movement = { type = movement_nihilist }
+			}
+		}
+		ig:ig_intelligentsia ?= {
+			save_scope_as = nihilist_ig
+		}
+		trigger_event = { id = nihilism.1 popup = yes }
+		scope:journal_entry = {
+			clear_variable_list = t4_nihilist_gui_character
+		}
+		random_scope_character = {
+			limit = {
+				has_role_of_type = agitator
+				has_ideology = ideology:ideology_nihilist
+			}
+			scope:journal_entry = {
+				add_to_variable_list = {
+					name = t4_nihilist_gui_character
+					target = PREV
+				}
+			}
+		}
+	}
+
+	custom_completion_header = t4_nihilism_overcome_victory_header
+
+	complete = {
+		custom_tooltip = {
+			text = t4_nihilism_overcome_victory_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(t4_nihilism_devout_progress_bar)" >= 100
+			}
+			OR = {
+				has_law_or_variant = law_type:law_freedom_of_conscience
+				has_law_or_variant = law_type:law_state_religion
+			}
+			ig:ig_devout ?= {
+				is_in_government = yes
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = nihilism.2 popup = yes }
+	}
+
+	custom_failure_header = t4_nihilism_victory_header
+
+	fail = {
+		custom_tooltip = {
+			text = t4_nihilism_victory_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(t4_nihilism_nihilist_progress_bar)" >= 100
+			}
+			has_law_or_variant = law_type:law_state_atheism
+			ig:ig_intelligentsia ?= {
+				OR = {
+					is_in_government = yes
+					ig_counts_as_marginal = yes
+				}
+			}
+		}
+	}
+
+	on_fail = {
+		trigger_event = { id = nihilism.14 popup = yes }
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					NOT = {
+						any_political_movement = {
+							is_political_movement_type = movement_nihilist
+						}
+					}
+				}
+				create_political_movement = { type = movement_nihilist }
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						ig:ig_intelligentsia ?= {
+							ig_approval > 0
+						}
+						ig:ig_intelligentsia ?= {
+							ig_counts_as_marginal = yes
+						}
+						AND = {
+							OR = {
+								has_law_or_variant = law_type:law_outlawed_dissent
+								has_law_or_variant = law_type:law_censorship
+							}
+							any_political_movement = {
+								is_political_movement_type = movement_nihilist
+								is_being_suppressed = yes
+							}
+						}
+					}
+
+				}
+				change_variable = {
+					name = nihilism_progress_var
+					add = 1
+				}
+			}
+			scope:journal_entry = {
+				clear_variable_list = t4_nihilist_gui_character
+			}
+			random_scope_character = {
+				limit = {
+					has_role_of_type = agitator
+					has_ideology = ideology:ideology_nihilist
+				}
+				scope:journal_entry = {
+					add_to_variable_list = {
+						name = t4_nihilist_gui_character
+						target = PREV
+					}
+				}
+			}
+		}
+		random_events = {
+			160 = 0
+			30 = nihilism.4
+			10 = nihilism.5
+			10 = nihilism.6
+			10 = nihilism.7
+			10 = nihilism.8
+			10 = nihilism.9
+			10 = nihilism.10
+			10 = nihilism.11
+			10 = nihilism.12
+			45 = nihilism.13
+		}
+	}
+
+	timeout = 3650
+
+	on_timeout = {
+		trigger_event = { id = nihilism.3 popup = yes }
+	}
+
+	weight = 100
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}

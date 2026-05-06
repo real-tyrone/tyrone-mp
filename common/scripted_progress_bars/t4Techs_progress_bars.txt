@@ -1,0 +1,162 @@
+t4_nihilism_nihilist_progress_bar = {
+	name = "t4_nihilism_nihilist_progress_bar"
+	desc = "t4_nihilism_nihilist_progress_bar_desc"
+
+	default_bad = yes
+
+	weekly_progress = {
+		owner = {
+			add = {
+				desc = "t4_nihilism_nihilist_progress_from_radicals_tt"
+				value = radical_fraction
+				multiply = 10
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					any_scope_character = {
+						has_ideology = ideology:ideology_nihilist
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_nihilist_progress_from_characters_tt"
+				owner = {
+					every_scope_character = {
+						limit = {
+							has_ideology = ideology:ideology_nihilist
+						}
+						add = this.popularity
+						divide = 100
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					ig:ig_intelligentsia ?= {
+						is_in_government = yes
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_nihilist_progress_from_intelligentsia_government_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law_or_variant = law_type:law_state_atheism
+						has_law_or_variant = law_type:law_total_separation
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_nihilist_progress_from_secular_laws_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law_or_variant = law_type:law_state_religion
+						has_law_or_variant = law_type:law_freedom_of_conscience
+					}
+				}
+			}
+			subtract = {
+				desc = "t4_nihilism_nihilist_progress_from_religious_laws_tt"
+				value = 2
+			}
+		}
+	}
+
+	start_value = 1
+	min_value = 1
+	max_value = 100
+}
+
+t4_nihilism_devout_progress_bar = {
+	name = "t4_nihilism_devout_progress_bar"
+	desc = "t4_nihilism_devout_progress_bar_desc"
+
+	default_green = yes
+
+	weekly_progress = {
+		owner = {
+			add = {
+				desc = "t4_nihilism_devout_progress_from_loyalists_tt"
+				value = loyalist_fraction
+				multiply = 10
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					ig:ig_devout ?= {
+						leader = {
+							always = yes
+						}
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_devout_progress_from_leader_popularity_tt"
+				owner = {
+					value = ig:ig_devout.leader.popularity
+					divide = 100
+				}
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					ig:ig_devout ?= {
+						is_in_government = yes
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_devout_progress_from_government_tt"
+				value = 1
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law_or_variant = law_type:law_state_religion
+						has_law_or_variant = law_type:law_freedom_of_conscience
+					}
+				}
+			}
+			add = {
+				desc = "t4_nihilism_devout_progress_from_religious_laws_tt"
+				value = 2
+			}
+		}
+		if = {
+			limit = {
+				owner = {
+					OR = {
+						has_law_or_variant = law_type:law_state_atheism
+						has_law_or_variant = law_type:law_total_separation
+					}
+				}
+			}
+			subtract = {
+				desc = "t4_nihilism_devout_progress_from_secular_laws_tt"
+				value = 2
+			}
+		}
+	}
+
+	start_value = 1
+	min_value = 1
+	max_value = 100
+}

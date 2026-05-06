@@ -1,0 +1,401 @@
+@t4_nihilism_width = 520
+@t4_nihilism_inner = 486
+@t4_nihilism_portrait_width = 270
+
+flowcontainer = {
+	name = "widget_je_nihilism_panel"
+	visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_nihilist_movement'))]"
+	direction = vertical
+	parentanchor = hcenter
+	spacing = 12
+	size = { @t4_nihilism_width -1 }
+	margin_top = 10
+	margin_bottom = 10
+
+	background = {
+		using = entry_bg
+	}
+
+	flowcontainer = {
+		direction = vertical
+		parentanchor = hcenter
+		visible = "[DataModelHasItems(JournalEntry.MakeScope.GetList('t4_nihilist_gui_character'))]"
+		datamodel = "[DataModelFirst(JournalEntry.MakeScope.GetList('t4_nihilist_gui_character'), '(int32)1')]"
+
+		item = {
+			widget = {
+				size = { @t4_nihilism_width 320 }
+				parentanchor = hcenter
+				datacontext = "[Scope.GetCharacter]"
+				tooltipwidget = {
+					FancyTooltip_Character = {}
+				}
+
+				character_portrait_large_torso = {
+					position = { 0 0 }
+					parentanchor = hcenter
+					blockoverride "show_hat" {}
+					blockoverride "tooltip" {}
+					blockoverride "portrait_icons" {}
+				}
+
+				default_header_clean_faded = {
+					size = { @t4_nihilism_portrait_width 40 }
+					position = { 0 252 }
+					blockoverride "text" {}
+					parentanchor = hcenter
+					textbox = {
+						text = "[Character.GetFullName]"
+						parentanchor = vcenter|hcenter
+						position = { 0 -2 }
+						autoresize = yes
+						max_width = @t4_nihilism_portrait_width
+						using = fontsize_large
+					}
+				}
+
+				textbox = {
+					text = "t4_nihilism_gui_agitator_role"
+					parentanchor = hcenter
+					position = { 0 294 }
+					autoresize = yes
+					align = hcenter|nobaseline
+					using = fontsize_small
+				}
+			}
+		}
+	}
+
+	textbox = {
+		visible = "[Not(DataModelHasItems(JournalEntry.MakeScope.GetList('t4_nihilist_gui_character')))]"
+		text = "t4_nihilism_gui_no_agitator"
+		parentanchor = hcenter
+		autoresize = yes
+		multiline = yes
+		max_width = @t4_nihilism_inner
+		align = hcenter|nobaseline
+		using = fontsize_large
+		margin = { 18 12 }
+	}
+
+	section_header_button = {
+		blockoverride "layout" {
+			size = { @t4_nihilism_inner 36 }
+		}
+		blockoverride "left_text" {
+			text = "t4_nihilism_gui_events_header"
+		}
+		blockoverride "onclick" {
+			onclick = "[GetVariableSystem.Toggle('t4_nihilism_events_open')]"
+		}
+		blockoverride "onclick_showmore" {
+			visible = "[Not(GetVariableSystem.Exists('t4_nihilism_events_open'))]"
+		}
+		blockoverride "onclick_showless" {
+			visible = "[GetVariableSystem.Exists('t4_nihilism_events_open')]"
+		}
+	}
+
+	flowcontainer = {
+		visible = "[GetVariableSystem.Exists('t4_nihilism_events_open')]"
+		direction = vertical
+		parentanchor = hcenter
+		spacing = 5
+		margin_bottom = 14
+		minimumsize = { @t4_nihilism_inner -1 }
+		background = {
+			using = dark_area
+			alpha = 0.55
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_4_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_4_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_4_gui_text"
+				tooltip = "t4_nihilism_event_4_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_5_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_5_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_5_gui_text"
+				tooltip = "t4_nihilism_event_5_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_6_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_6_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_6_gui_text"
+				tooltip = "t4_nihilism_event_6_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_7_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_7_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_7_gui_text"
+				tooltip = "t4_nihilism_event_7_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_8_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_8_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_8_gui_text"
+				tooltip = "t4_nihilism_event_8_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_9_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_9_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_9_gui_text"
+				tooltip = "t4_nihilism_event_9_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_10_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_10_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_10_gui_text"
+				tooltip = "t4_nihilism_event_10_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_11_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_11_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_11_gui_text"
+				tooltip = "t4_nihilism_event_11_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_12_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_12_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_12_gui_text"
+				tooltip = "t4_nihilism_event_12_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+
+		flowcontainer = {
+			direction = horizontal
+			size = { @t4_nihilism_inner 22 }
+			spacing = 8
+			margin = { 12 0 12 8 }
+			icon = {
+				visible = "[Not(JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_13_fired').IsSet)]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_simple.dds"
+			}
+			icon = {
+				visible = "[JournalEntry.GetCountry.MakeScope.Var('t4_nihilism_event_13_fired').IsSet]"
+				size = { 16 16 }
+				parentanchor = vcenter
+				texture = "gfx/interface/icons/generic_icons/checkbox_greencheck.dds"
+			}
+			textbox = {
+				text = "t4_nihilism_event_13_gui_text"
+				tooltip = "t4_nihilism_event_13_gui_tt"
+				parentanchor = vcenter
+				position = { 0 5 }
+				margin_top = 3
+				size = { 430 22 }
+				using = fontsize_small
+				align = left|vcenter|nobaseline
+			}
+		}
+	}
+}
