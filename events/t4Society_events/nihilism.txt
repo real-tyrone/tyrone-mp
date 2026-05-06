@@ -246,9 +246,9 @@ nihilism.1 = {
 nihilism.2 = {
 	type = country_event
 
-	title = nihilism.2.t
-	desc = nihilism.2.d
-	flavor = nihilism.2.f
+	title = t4nihilism.2.t
+	desc = t4nihilism.2.d
+	flavor = t4nihilism.2.f
 
 	event_image = {
 		video = "votp_cops_march"
@@ -269,7 +269,7 @@ nihilism.2 = {
 	}
 
 	option = {
-		name = nihilism.2.a
+		name = t4nihilism.2.a
 		default_option = yes
 		active_law:lawgroup_church_and_state ?= {
 			add_amendment = {
@@ -299,7 +299,7 @@ nihilism.2 = {
 	}
 
 	option = {
-		name = nihilism.2.b
+		name = t4nihilism.2.b
 		add_modifier = {
 			name = modifier_end_of_nihilism_country
 			days = normal_modifier_time
@@ -332,176 +332,69 @@ nihilism.3 = {
 	}
 
 	immediate = {
-
 	}
 
 	option = {
 		name = nihilism.3.a
 		default_option = yes
-		if = {
-			limit = {
-				has_technology_researched = socialism
-			}
-			every_scope_character = {
-				limit = {
-					has_role_of_type = agitator
-					has_ideology = ideology:ideology_nihilist
-				}
-				set_ideology = ideology:ideology_communist
-			}
-			if = {
-				limit = {
-					ig:ig_intelligentsia ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				create_character = {
-					ig_leader = yes
-					interest_group = ig_intelligentsia
-					ideology = ideology_communist
-				}
-			}
-			if = {
-				limit = {
-					ig:ig_trade_unions ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				ig:ig_trade_unions ?= {
-					leader = {
-						set_ideology = ideology:ideology_communist
-					}
-				}
-			}
-		}
-		else = {
-			if = {
-				limit = {
-					ig:ig_intelligentsia ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				create_character = {
-					ig_leader = yes
-					interest_group = ig_intelligentsia
-					ideology = ideology_radical
-				}
-			}
-			if = {
-				limit = {
-					ig:ig_trade_unions ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				ig:ig_trade_unions ?= {
-					leader = {
-						set_ideology = ideology:ideology_radical
-					}
-				}
-			}
-			every_scope_character = {
-				limit = {
-					has_role_of_type = agitator
-					has_ideology = ideology:ideology_nihilist
-				}
-				set_ideology = ideology:ideology_radical
-			}
-		}
-		add_radicals = {
-			value = small_radicals
-			interest_group = ig:ig_intelligentsia
-		}
 		add_modifier = {
-			name = modifier_active_intelligentsia
-			days = normal_modifier_time
+			name = t4_unaddressed_nihilism
+			years = 5
 			is_decaying = yes
 		}
-	}
-	option = {
-		name = nihilism.3.b
-		if = {
+		every_political_movement = {
 			limit = {
-				has_technology_researched = socialism
+				is_political_movement_type = movement_nihilist
 			}
-			if = {
-				limit = {
-					ig:ig_intelligentsia ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				create_character = {
-					ig_leader = yes
-					interest_group = ig_intelligentsia
-					ideology = ideology_communist
-				}
-			}
-			if = {
-				limit = {
-					ig:ig_trade_unions ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				ig:ig_trade_unions ?= {
-					leader = {
-						set_ideology = ideology:ideology_communist
-					}
-				}
-			}
-			every_scope_character = {
-				limit = {
-					has_role_of_type = agitator
-					has_ideology = ideology:ideology_nihilist
-				}
-				set_ideology = ideology:ideology_communist
+			add_modifier = {
+				name = t4_unaddressed_nihilist_movement
+				years = 5
+				is_decaying = yes
 			}
 		}
-		else = {
-			if = {
-				limit = {
-					ig:ig_intelligentsia ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				create_character = {
-					ig_leader = yes
-					interest_group = ig_intelligentsia
-					ideology = ideology_radical
-				}
+		every_scope_character = {
+			limit = {
+				has_ideology = ideology:ideology_nihilist
 			}
-			if = {
-				limit = {
-					ig:ig_trade_unions ?= {
-						leader = {
-							has_ideology = ideology:ideology_nihilist
-						}
-					}
-				}
-				ig:ig_trade_unions ?= {
-					leader = {
-						set_ideology = ideology:ideology_radical
-					}
-				}
+			set_ideology = ideology:ideology_communist
+		}
+		ig:ig_devout ?= {
+			add_modifier = {
+				name = t4_unaddressed_nihilism_devout
+				years = 5
+				is_decaying = yes
 			}
-			every_scope_character = {
-				limit = {
-					has_role_of_type = agitator
-					has_ideology = ideology:ideology_nihilist
-				}
-				set_ideology = ideology:ideology_radical
+		}
+	}
+
+	option = {
+		name = nihilism.3.b
+		add_modifier = {
+			name = t4_unaddressed_nihilism
+			years = 5
+			is_decaying = yes
+		}
+		every_political_movement = {
+			limit = {
+				is_political_movement_type = movement_nihilist
+			}
+			add_modifier = {
+				name = t4_unaddressed_nihilist_movement
+				years = 5
+				is_decaying = yes
+			}
+		}
+		every_scope_character = {
+			limit = {
+				has_ideology = ideology:ideology_nihilist
+			}
+			set_ideology = ideology:ideology_communist
+		}
+		ig:ig_devout ?= {
+			add_modifier = {
+				name = t4_unaddressed_nihilism_devout
+				years = 5
+				is_decaying = yes
 			}
 		}
 	}
@@ -559,9 +452,9 @@ nihilism.4 = {  #Fathers and Sons
 		name = nihilism.4.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_devout_progress_8_tt
+			text = t4_nihilism_option_devout_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_devout_progress_bar }
 			}
 		}
 		ig:ig_intelligentsia ?= {
@@ -628,9 +521,9 @@ nihilism.4 = {  #Fathers and Sons
 	option = {
 		name = nihilism.4.b
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_8_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		ig:ig_intelligentsia ?= {
@@ -723,9 +616,9 @@ nihilism.5 = { #University Nihilists
 	option = {
 		name = nihilism.5.b
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_8_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		random_scope_state = {
@@ -736,6 +629,10 @@ nihilism.5 = { #University Nihilists
 				strata = middle
 				value = small_radicals
 			}
+		}
+		add_modifier = {
+			name = t4_nihilist_campus_societies
+			days = normal_modifier_time
 		}
 	}
 }
@@ -898,9 +795,9 @@ nihilism.7 = { #Turmoil at universities
 		name = nihilism.7.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_devout_progress_8_tt
+			text = t4_nihilism_option_devout_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_devout_progress_bar }
 			}
 		}
 		scope:courtyard_chaos_affected_state = {
@@ -990,10 +887,10 @@ nihilism.8 = { #Outrageous act of protest, Devout demand repressions
 		name = nihilism.8.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_mixed_progress_6_4_tt
+			text = t4_nihilism_option_mixed_progress_5_5_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 6 name = t4_nihilism_devout_progress_bar }
-			add_progress = { value = 4 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 5 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 5 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		ig:ig_devout ?= {
@@ -1001,6 +898,26 @@ nihilism.8 = { #Outrageous act of protest, Devout demand repressions
 				name = modifier_respect_enforced_pos
 				days = normal_modifier_time
 			}
+			add_modifier = {
+				name = t4_devout_theocratic_backlash
+				days = normal_modifier_time
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = t4_nihilism_devout_theocrat_created }
+				ig:ig_devout ?= {
+					leader = {
+						NOT = { has_ideology = ideology:ideology_theocrat }
+					}
+				}
+			}
+			create_character = {
+				ig_leader = yes
+				interest_group = ig_devout
+				ideology = ideology_theocrat
+			}
+			set_variable = t4_nihilism_devout_theocrat_created
 		}
 		random_scope_state = {
 			limit = {
@@ -1015,9 +932,9 @@ nihilism.8 = { #Outrageous act of protest, Devout demand repressions
 	option = {
 		name = nihilism.8.b
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_8_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		ig:ig_devout ?= {
@@ -1031,6 +948,10 @@ nihilism.8 = { #Outrageous act of protest, Devout demand repressions
 				strata = upper
 				value = small_radicals
 			}
+		}
+		add_modifier = {
+			name = t4_public_sacrilege_scandal
+			days = normal_modifier_time
 		}
 	}
 }
@@ -1088,9 +1009,9 @@ nihilism.9 = { #Nihilists commit arson on government buildings
 		name = nihilism.9.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_devout_progress_8_tt
+			text = t4_nihilism_option_devout_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_devout_progress_bar }
 			}
 		}
 		scope:kissed_by_fire_state = {
@@ -1121,14 +1042,18 @@ nihilism.9 = { #Nihilists commit arson on government buildings
 			name = govt_administration_burned
 			days = short_modifier_time
 		}
+		add_modifier = {
+			name = t4_security_crackdown
+			days = short_modifier_time
+		}
 	}
 	option = {
 		name = nihilism.9.b
 		custom_tooltip = {
-			text = t4_nihilism_option_mixed_progress_6_6_tt
+			text = t4_nihilism_option_mixed_progress_5_5_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 6 name = t4_nihilism_devout_progress_bar }
-			add_progress = { value = 6 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 5 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 5 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		scope:kissed_by_fire_state = {
@@ -1173,6 +1098,10 @@ nihilism.9 = { #Nihilists commit arson on government buildings
 				name = modifier_abuses_of_students
 				days = normal_modifier_time
 			}
+		}
+		add_modifier = {
+			name = t4_nihilist_admin_panic
+			days = short_modifier_time
 		}
 	}
 }
@@ -1277,9 +1206,9 @@ nihilism.10 = { #Intellectual leader becomes a nihilist
 		name = nihilism.10.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_12_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 12 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		show_as_tooltip = {
@@ -1405,9 +1334,9 @@ nihilism.11 = { #Agitator fight! Nihilist agitator argues with communists about 
 		name = nihilism.11.a
 		default_option = yes
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_8_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 8 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		scope:nihilist_scope = {
@@ -1458,6 +1387,28 @@ nihilism.11 = { #Agitator fight! Nihilist agitator argues with communists about 
 				value = small_radicals
 			}
 		}
+		if = {
+			limit = {
+				NOT = { has_variable = t4_nihilism_rural_communist_created }
+				ig:ig_rural_folk ?= {
+					leader = {
+						NOT = { has_ideology = ideology:ideology_communist }
+					}
+				}
+			}
+			create_character = {
+				ig_leader = yes
+				interest_group = ig_rural_folk
+				ideology = ideology_communist
+			}
+			set_variable = t4_nihilism_rural_communist_created
+		}
+		ig:ig_rural_folk ?= {
+			add_modifier = {
+				name = t4_nihilist_rural_communes
+				days = normal_modifier_time
+			}
+		}
 		set_variable = { name = nihilist_communist_front }
 	}
 }
@@ -1465,9 +1416,9 @@ nihilism.11 = { #Agitator fight! Nihilist agitator argues with communists about 
 nihilism.12 = { #Trade Unions are pulled into the nihilist-anarchist front
 	type = country_event
 
-	title = nihilism.12.t
-	desc = nihilism.12.d
-	flavor = nihilism.12.f
+	title = t4nihilism.12.t
+	desc = t4nihilism.12.d
+	flavor = t4nihilism.12.f
 
 	event_image = {
 		video = "asia_union_leader"
@@ -1508,7 +1459,7 @@ nihilism.12 = { #Trade Unions are pulled into the nihilist-anarchist front
 	}
 
 	option = {
-		name = nihilism.12.a
+		name = t4nihilism.12.a
 		default_option = yes
 		custom_tooltip = {
 			text = t4_nihilism_option_nihilist_progress_10_tt
@@ -1532,13 +1483,35 @@ nihilism.12 = { #Trade Unions are pulled into the nihilist-anarchist front
 				days = normal_modifier_time
 			}
 		}
+		if = {
+			limit = {
+				NOT = { has_variable = t4_nihilism_rural_communist_created }
+				ig:ig_rural_folk ?= {
+					leader = {
+						NOT = { has_ideology = ideology:ideology_communist }
+					}
+				}
+			}
+			create_character = {
+				ig_leader = yes
+				interest_group = ig_rural_folk
+				ideology = ideology_communist
+			}
+			set_variable = t4_nihilism_rural_communist_created
+		}
+		ig:ig_rural_folk ?= {
+			add_modifier = {
+				name = t4_nihilist_rural_communes
+				days = normal_modifier_time
+			}
+		}
 	}
 	option = {
-		name = nihilism.12.b
+		name = t4nihilism.12.b
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_12_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 12 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		scope:nihilist_movement = {
@@ -1644,9 +1617,9 @@ nihilism.13 = { #Instant law pass for abolishing state religion/instituting athe
 			}
 		}
 		custom_tooltip = {
-			text = t4_nihilism_option_nihilist_progress_20_tt
+			text = t4_nihilism_option_nihilist_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 20 name = t4_nihilism_nihilist_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_nihilist_progress_bar }
 			}
 		}
 		if = {
@@ -1690,9 +1663,9 @@ nihilism.13 = { #Instant law pass for abolishing state religion/instituting athe
 			base = 50
 		}
 		custom_tooltip = {
-			text = t4_nihilism_option_devout_progress_15_tt
+			text = t4_nihilism_option_devout_progress_10_tt
 			je:je_nihilist_movement ?= {
-			add_progress = { value = 15 name = t4_nihilism_devout_progress_bar }
+			add_progress = { value = 10 name = t4_nihilism_devout_progress_bar }
 			}
 		}
 		# gain success chance, lose enactment time
@@ -1705,9 +1678,9 @@ nihilism.13 = { #Instant law pass for abolishing state religion/instituting athe
 nihilism.14 = { #The nihilist movement triumphs after the country abandons state religion
 	type = country_event
 
-	title = nihilism.14.t
-	desc = nihilism.14.d
-	flavor = nihilism.14.f
+	title = t4nihilism.14.t
+	desc = t4nihilism.14.d
+	flavor = t4nihilism.14.f
 
 	event_image = {
 		video = "votp_agitator_speaking"
@@ -1728,7 +1701,7 @@ nihilism.14 = { #The nihilist movement triumphs after the country abandons state
 	}
 
 	option = {
-		name = nihilism.14.a
+		name = t4nihilism.14.a
 		default_option = yes
 		activate_law = law_type:law_state_atheism
 		active_law:lawgroup_church_and_state ?= {
@@ -1748,7 +1721,7 @@ nihilism.14 = { #The nihilist movement triumphs after the country abandons state
 	}
 
 	option = {
-		name = nihilism.14.b
+		name = t4nihilism.14.b
 		if = {
 			limit = {
 				NOT = {
