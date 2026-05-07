@@ -13,15 +13,7 @@
 	}
 
 	should_show_when_not_involved = {
-		OR = {
-			is_in_geographic_region = geographic_region_europe
-			country_has_interest_marker_in_europe = yes
-            top_overlord ?= {
-                capital = {
-                    is_in_geographic_region = geographic_region_europe
-                }
-            }
-		}
+		is_in_geographic_region = geographic_region_europe
 	}
 
 	is_shown_when_inactive = {
@@ -190,19 +182,21 @@
 				any_scope_je_involved = {
 					is_player = yes
 					NOT = {
-						any_interest_group = {
-							leader = { has_ideology = ideology:ideology_radical }
-							ig_counts_as_marginal = no
-						}
-						any_scope_character = {
-							has_ideology = ideology:ideology_radical
-							has_role_of_type = agitator
+						OR = {
+							any_interest_group = {
+								leader = {
+									has_ideology = ideology:ideology_radical
+								}
+							}
+							any_scope_character = {
+								has_role_of_type = agitator
+								has_ideology = ideology:ideology_radical
+							}
 						}
 					}
 				}
 			}
 		}
-		custom_tooltip = springtime_of_the_peoples_timer_dummy_tt
 		custom_tooltip = {
 			text = all_radical_movements_suppressed_tt
 			scope:journal_entry = {
@@ -215,11 +209,8 @@
 							is_political_movement_type = movement_italian_national
 							is_political_movement_type = movement_radical
 						}
-						political_movement_support <= 0.10
 						is_being_suppressed = yes
 					}
-					has_variable = springtime_timer_var
-					var:springtime_timer_var >= 12
 				}
 			}
 		}
@@ -322,10 +313,12 @@
 	}
 
 	weight = 10000
+		
+	should_be_pinned_by_default_involved = yes
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	transferable = no
-	can_revolution_inherit = no
+	can_revolution_inherit = yes
 
 	timeout = 1095
 }
@@ -477,6 +470,7 @@ je_red_summer = {
 	}
 
 	weight = 9000
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	transferable = no

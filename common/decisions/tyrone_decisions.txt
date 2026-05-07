@@ -1,4 +1,148 @@
-﻿failsafe_italy_naples = {
+﻿decision_unify_with_brazil = {
+	is_shown = {
+		c:POR ?= ROOT
+		exists = c:BRZ
+		NOT = {
+			has_variable = unified_with_brazil_var
+		}
+	}
+
+	possible = {
+		c:BRZ ?= {
+			is_subject_of = ROOT
+			is_subject_type = subject_type_crown_land
+			liberty_desire < 25
+		}
+		has_law_or_variant = law_type:law_monarchy
+	}
+
+	when_taken = {
+		set_variable = unified_with_brazil_var
+
+		c:POR = {
+			annex_with_incorporation = c:BRZ
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+
+REPLACE:decision_restore_kingdom_of_brazil = {
+	is_shown = {
+		has_dlc_feature = ip4_content
+		c:POR ?= ROOT
+		country_has_monarchy_law = yes
+		NOT = {
+			has_variable = restored_kingdom_of_brazil_var
+		}
+	}
+
+	possible = {
+		OR = {
+			c:BRZ ?= {
+				is_subject_of = ROOT
+				NOT = {
+					OR = {
+						is_subject_type = subject_type_personal_union
+						is_subject_type = subject_type_crown_land
+					}
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = brz_does_not_exist_tt
+					NOT = {
+						exists = c:BRZ
+					}
+				}
+				owns_entire_state_region = STATE_RIO_DE_JANEIRO
+			}
+		}
+	}
+
+	when_taken = {
+		set_variable = restored_kingdom_of_brazil_var
+		if = {
+			limit = {
+				exists = c:BRZ
+				c:BRZ ?= {
+					is_subject_of = ROOT
+				}
+			}
+			c:BRZ ?= {
+				set_variable = kingdom_var
+				if = {
+					limit = {
+						NOT = {
+							has_law = ROOT.active_law:lawgroup_governance_principles.type
+						}
+					}
+					activate_law = ROOT.active_law:lawgroup_governance_principles.type
+				}
+				change_subject_type = subject_type_personal_union
+			}
+		}
+		else_if = {
+			limit = {
+				AND = {
+					NOT = {
+						exists = c:BRZ
+					}
+					owns_entire_state_region = STATE_RIO_DE_JANEIRO
+				}
+			}
+			random_scope_state = {
+				limit = {
+					state_region = s:STATE_RIO_DE_JANEIRO
+				}
+				save_scope_as = rio_scope
+			}
+			custom_tooltip = {
+				text = portugal_spawn_brazil_tt
+				create_country = {
+					origin = root
+					tag = BRZ
+					state = scope:rio_scope
+					on_created = {
+						set_variable = kingdom_var
+					}
+				}
+				every_state_in_brazil = {
+					limit = {
+						OR = {
+							owner ?= ROOT
+							owner = {
+								is_subject_of = ROOT
+							}
+						}
+						NOT = {
+							c:BRZ ?= owner
+						}
+					}
+					set_state_owner = c:BRZ
+				}
+			}
+			create_diplomatic_pact = {
+				country = c:BRZ
+				type = personal_union
+			}
+		}
+		else = {
+			custom_tooltip = {
+				text = portugal_spawn_brazil_tt
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+failsafe_italy_naples = {
 	is_shown = {
 		hidden_trigger = {
 			NOT = {

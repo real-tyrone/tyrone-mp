@@ -30,50 +30,55 @@
 	}
 
 	complete = {
-		trigger_if = {
-			limit = {
-				OR = {
-					c:HOL ?= this
-					c:SCH ?= this
+		OR = {
+			has_technology_researched = pan-nationalism
+			AND = {
+				trigger_if = {
+					limit = {
+						OR = {
+							c:HOL ?= this
+							c:SCH ?= this
+						}
+					}
+					is_subject = no
 				}
-			}
-			is_subject = no
-		}
-		trigger_if = {
-			limit = {
-				NOT = { c:HOL ?= this }
-				NOT = { c:SCH ?= this }
-				exists = c:DEN
-			}
-			custom_tooltip = {
-				text = je_schleswig_holstein_question_state_ownership_desc
-				any_scope_state = { state_region = s:STATE_SCHLESWIG_HOLSTEIN }
-				s:STATE_SCHLESWIG_HOLSTEIN = {
-					NOT = {
-						any_scope_state = {
-							OR = {
-								NOT = {
-									owner = {
-										OR = {
-											country_has_primary_culture = cu:north_german
-											country_has_primary_culture = cu:south_german
+				trigger_if = {
+					limit = {
+						NOT = { c:HOL ?= this }
+						NOT = { c:SCH ?= this }
+						exists = c:DEN
+					}
+					custom_tooltip = {
+						text = je_schleswig_holstein_question_state_ownership_desc
+						any_scope_state = { state_region = s:STATE_SCHLESWIG_HOLSTEIN }
+						s:STATE_SCHLESWIG_HOLSTEIN = {
+							NOT = {
+								any_scope_state = {
+									OR = {
+										NOT = {
+											owner = {
+												OR = {
+													country_has_primary_culture = cu:north_german
+													country_has_primary_culture = cu:south_german
+												}
+											}
+										}
+										owner = {
+											is_subject_of = c:DEN
 										}
 									}
-								}
-								owner = {
-									is_subject_of = c:DEN
 								}
 							}
 						}
 					}
 				}
+				trigger_if = {
+					limit = {
+						c:LUB ?= this
+					}
+					country_or_subject_owns_entire_state_region = STATE_SCHLESWIG_HOLSTEIN
+				}
 			}
-		}
-		trigger_if = {
-			limit = {
-				c:LUB ?= this
-			}
-			country_or_subject_owns_entire_state_region = STATE_SCHLESWIG_HOLSTEIN
 		}
 	}
 
@@ -333,6 +338,71 @@ je_north_german_unification = {
 	on_complete = {
 		trigger_event = { id = german_unification.1 } # North German Confederation
 		remove_variable = je_unification_progress
+		if = {
+			limit = {
+				is_ai = yes
+				OR = {
+					AND = {
+						NOT = {
+							custom_tooltip = {
+								OR = {
+									c:AUS ?= this
+									was_formed_from = AUS
+								}				
+								text = not_austria_tt
+							}
+						}
+						OR = {
+							has_technology_researched = pan-nationalism
+							owns_entire_state_region = STATE_ALSACE_LORRAINE
+						}
+					}
+					custom_tooltip = {
+						c:GER ?= this
+						text = je_german_unification_complete_trigger_desc
+					}
+				}
+			}
+			trigger_event = { id = german_unification.4 popup = yes }
+			remove_variable = je_unification_progress
+			hidden_effect = {
+				every_country = {
+					if = {
+						limit = {
+							NOT = {
+								c:GER ?= this
+							}
+						}
+						every_country = {
+							limit = {
+								country_rank < rank_value:great_power
+								OR = {
+									country_has_primary_culture = cu:north_german
+									country_has_primary_culture = cu:south_german
+								}
+								NOR = {
+									THIS = ROOT
+									THIS = c:AUS
+									THIS = c:LUX
+									THIS = c:TRS
+									THIS = c:BNT
+									is_subject_type = subject_type_colony
+									is_subject_type = subject_type_dominion
+									is_subject_type = subject_type_chartered_company
+								}
+							}
+
+							if = {
+								limit = {
+									is_ai = yes
+								}
+								root = { annex_with_incorporation = prev }
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	status_desc = {

@@ -365,6 +365,7 @@ ita_request_italian_recognition_button = {
 		owns_entire_state_region = STATE_UMBRIA
 		owns_entire_state_region = STATE_ROMAGNA
 		NOT = { has_journal_entry = Pap_recognition_for_italy }
+		NOT = { has_variable = annex_pap }
 	}
 
 	effect = {
@@ -486,22 +487,25 @@ ita_annex_pope_war_goal_button = {
 	visible = {
 		has_variable = NIF_formed
 		c:PAP ?= { exists = yes }
+		NOT = { has_variable = annex_pap }
 	}
 	ai_chance = {
 		value = 50
-		modifier = { # Wait for two sicilies to be annexed
-			trigger = {
+		if = {
+			limit = {
 				exists = c:SIC
 			}
-			add = -100
+			subtract = 100
 		}
 	}
+	
 	possible = {
 		c:PAP ?= { exists = yes }
 		NOT = { is_at_war_with = c:PAP }
 	}
 
 	effect = {
+		set_variable = annex_pap
 		create_diplomatic_play = {
 			name = ita_annex_pope_war
 			target_country = c:PAP

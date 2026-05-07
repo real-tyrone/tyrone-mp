@@ -327,6 +327,10 @@ manifest_destiny.4 = {
 		default_option = yes
 
 		usa_take_mexican_cession_territories = yes
+		trigger_event = { id = manifest_destiny.5 }
+		ai_chance = {
+			base = 80
+		}
 	}
 
 	# Demand Baja California as well
@@ -336,32 +340,105 @@ manifest_destiny.4 = {
 		usa_take_mexican_cession_territories = yes
 		transfer_state = { STATE = s:STATE_BAJA_CALIFORNIA GIVER = c:MEX TAKER = ROOT }
 		create_incident = { country = c:MEX value = 5 }
+		trigger_event = { id = manifest_destiny.5 }
+		ai_chance = {
+			base = 10
+		}
 	}
 
-	# Make Mexico a puppet
+	# Add Rio Grande as well
 	option = {
 		name = manifest_destiny.4.c
 		trigger = { exists = c:MEX }
 
 		usa_take_mexican_cession_territories = yes
-		create_diplomatic_pact = {
-			country = c:MEX
-			type = puppet
+		transfer_state = { STATE = s:STATE_BAJA_CALIFORNIA GIVER = c:MEX TAKER = ROOT }
+		transfer_state = { STATE = s:STATE_RIO_GRANDE GIVER = c:MEX TAKER = ROOT }
+		create_incident = { country = c:MEX value = 10 }
+		trigger_event = { id = manifest_destiny.5 }
+		ai_chance = {
+			base = 5
 		}
-		create_incident = { country = c:MEX value = 50 }
 	}
 
-	# Demand Baja California and make Mexico a puppet
+	# Demand All of Northern Mexico
 	option = {
 		name = manifest_destiny.4.d
 		trigger = { exists = c:MEX }
 
 		usa_take_mexican_cession_territories = yes
 		transfer_state = { STATE = s:STATE_BAJA_CALIFORNIA GIVER = c:MEX TAKER = ROOT }
-		create_diplomatic_pact = {
-			country = c:MEX
-			type = puppet
+		transfer_state = { STATE = s:STATE_RIO_GRANDE GIVER = c:MEX TAKER = ROOT }
+		transfer_state = { STATE = s:STATE_CHIHUAHUA GIVER = c:MEX TAKER = ROOT }
+		transfer_state = { STATE = s:STATE_SONORA GIVER = c:MEX TAKER = ROOT }
+		transfer_state = { STATE = s:STATE_SINALOA GIVER = c:MEX TAKER = ROOT }
+		create_incident = { country = c:MEX value = 20 }
+		trigger_event = { id = manifest_destiny.5 }
+		ai_chance = {
+			base = 5
 		}
-		create_incident = { country = c:MEX value = 55 }
 	}
 }
+
+# The Occupation of Mexico
+manifest_destiny.5 = {
+	type = country_event
+	placement = ROOT
+
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	title = manifest_destiny.5.t
+	desc = manifest_destiny.5.desc
+	flavor = manifest_destiny.5.f
+
+	duration = 3
+
+	trigger = {
+		c:USA ?= ROOT
+		exists = c:MEX
+	}
+
+	# Accept the Treaty of Guadalupe Hidalgo as is
+	option = {
+		name = manifest_destiny.5.a
+		default_option = yes
+		change_relations = { country = c:MEX value = 20 }
+		ai_chance = {
+			base = 90
+		}
+	}
+
+	# Continue the occupation and force Mexico into protectorate status
+	option = {
+		name = manifest_destiny.5.b
+		trigger = { exists = c:MEX }
+
+		create_diplomatic_play = {
+			target_country = c:MEX
+			type = dp_make_protectorate
+		}
+		create_incident = { country = c:MEX value = 30 }
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	# Push for the annexation of Mexico
+	option = {
+		name = manifest_destiny.5.c
+		trigger = { exists = c:MEX }
+
+		create_diplomatic_play = {
+			target_country = c:MEX
+			type = dp_annex_war
+		}
+		create_incident = { country = c:MEX value = 50 }
+
+}
+
