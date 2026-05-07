@@ -1,0 +1,253 @@
+namespace = gbr_commonwealth_events
+
+# Milestone events fired by je_british_commonwealth's on_monthly_pulse.
+#
+# .1/.2    — dominion bar crosses 100/200 (same event for all dominions)
+# .3       — SAF/IRE bar crosses 300
+# .30      — CAN/QUE bar crosses 300 (handles QUE unification if CAN never formed)
+# .31      — AST/NSW bar crosses 300 (handles NSW unification if AST never formed)
+# .10/.11/.12 — GBR events when the FIRST dominion crosses 100/200/300
+
+# ----------------------------------------------------------------
+# DOMINION STAGE 1 — bar crosses 100
+# ----------------------------------------------------------------
+gbr_commonwealth_events.1 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.1.t
+	desc = gbr_commonwealth_events.1.d
+	flavor = gbr_commonwealth_events.1.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:GBR ?= { save_scope_as = gbr_scope }
+	}
+
+	option = {
+		name = gbr_commonwealth_events.1.a
+		default_option = yes
+		add_modifier = { name = gbr_commonwealth_stage1_dominion }
+		custom_tooltip = { text = commonwealth_dominion_stage1_upgrade_tt }
+	}
+}
+
+# ----------------------------------------------------------------
+# DOMINION STAGE 2 — bar crosses 200
+# ----------------------------------------------------------------
+gbr_commonwealth_events.2 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.2.t
+	desc = gbr_commonwealth_events.2.d
+	flavor = gbr_commonwealth_events.2.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:GBR ?= { save_scope_as = gbr_scope }
+	}
+
+	option = {
+		name = gbr_commonwealth_events.2.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage1_dominion
+		add_modifier = { name = gbr_commonwealth_stage2_dominion }
+		custom_tooltip = { text = commonwealth_dominion_stage2_upgrade_tt }
+	}
+}
+
+# ----------------------------------------------------------------
+# DOMINION STAGE 3 — bar crosses 300 — SAF and IRE
+# ----------------------------------------------------------------
+gbr_commonwealth_events.3 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.3.t
+	desc = gbr_commonwealth_events.3.d
+	flavor = gbr_commonwealth_events.3.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:GBR ?= { save_scope_as = gbr_scope }
+	}
+
+	option = {
+		name = gbr_commonwealth_events.3.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage2_dominion
+		add_modifier = { name = gbr_commonwealth_stage3_dominion }
+		c:GBR ?= {
+			create_diplomatic_pact = {
+				country = ROOT
+				type = altys_commonwealth_member
+			}
+		}
+	}
+}
+
+# ----------------------------------------------------------------
+# DOMINION STAGE 3 — bar crosses 300 — CAN or QUE
+# If QUE (Canada never unified): annex remaining Canadian fragments first.
+# ----------------------------------------------------------------
+gbr_commonwealth_events.30 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.3.t
+	desc = gbr_commonwealth_events.3.d
+	flavor = gbr_commonwealth_events.3.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:GBR ?= { save_scope_as = gbr_scope }
+	}
+
+	option = {
+		name = gbr_commonwealth_events.3.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage2_dominion
+		add_modifier = { name = gbr_commonwealth_stage3_dominion }
+		# QUE path: unify remaining Canadian fragments into QUE before becoming a member
+		if = {
+			limit = { NOT = { exists = c:CAN } }
+			if = { limit = { exists = c:ONT } annex_with_incorporation = c:ONT }
+			if = { limit = { exists = c:NVS } annex_with_incorporation = c:NVS }
+			if = { limit = { exists = c:NBS } annex_with_incorporation = c:NBS }
+			if = { limit = { exists = c:ORG } annex_with_incorporation = c:ORG }
+			if = { limit = { exists = c:HBC } annex_with_incorporation = c:HBC }
+		}
+		c:GBR ?= {
+			create_diplomatic_pact = {
+				country = ROOT
+				type = altys_commonwealth_member
+			}
+		}
+	}
+}
+
+# ----------------------------------------------------------------
+# DOMINION STAGE 3 — bar crosses 300 — AST or NSW
+# If NSW (Australia never unified): annex remaining Australian fragments first.
+# ----------------------------------------------------------------
+gbr_commonwealth_events.31 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.3.t
+	desc = gbr_commonwealth_events.3.d
+	flavor = gbr_commonwealth_events.3.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:GBR ?= { save_scope_as = gbr_scope }
+	}
+
+	option = {
+		name = gbr_commonwealth_events.3.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage2_dominion
+		add_modifier = { name = gbr_commonwealth_stage3_dominion }
+		# NSW path: unify remaining Australian fragments into NSW before becoming a member
+		if = {
+			limit = { NOT = { exists = c:AST } }
+			if = { limit = { exists = c:WAS } annex_with_incorporation = c:WAS }
+			if = { limit = { exists = c:TAS } annex_with_incorporation = c:TAS }
+			if = { limit = { exists = c:KAU } annex_with_incorporation = c:KAU }
+			if = { limit = { exists = c:UNT } annex_with_incorporation = c:UNT }
+			if = { limit = { exists = c:SAS } annex_with_incorporation = c:SAS }
+		}
+		c:GBR ?= {
+			create_diplomatic_pact = {
+				country = ROOT
+				type = altys_commonwealth_member
+			}
+		}
+	}
+}
+
+# ----------------------------------------------------------------
+# GBR STAGE 1 — fires once when the first dominion crosses 100
+# ----------------------------------------------------------------
+gbr_commonwealth_events.10 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.10.t
+	desc = gbr_commonwealth_events.10.d
+	flavor = gbr_commonwealth_events.10.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	option = {
+		name = gbr_commonwealth_events.10.a
+		default_option = yes
+		add_modifier = { name = gbr_commonwealth_stage1_gbr }
+		custom_tooltip = { text = commonwealth_gbr_stage1_upgrade_tt }
+	}
+}
+
+# ----------------------------------------------------------------
+# GBR STAGE 2 — fires once when the first dominion crosses 200
+# ----------------------------------------------------------------
+gbr_commonwealth_events.11 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.11.t
+	desc = gbr_commonwealth_events.11.d
+	flavor = gbr_commonwealth_events.11.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	option = {
+		name = gbr_commonwealth_events.11.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage1_gbr
+		add_modifier = { name = gbr_commonwealth_stage2_gbr }
+		custom_tooltip = { text = commonwealth_gbr_stage2_upgrade_tt }
+	}
+}
+
+# ----------------------------------------------------------------
+# GBR STAGE 3 — fires once when the first dominion crosses 300
+# ----------------------------------------------------------------
+gbr_commonwealth_events.12 = {
+	type = country_event
+	duration = 5
+
+	title = gbr_commonwealth_events.12.t
+	desc = gbr_commonwealth_events.12.d
+	flavor = gbr_commonwealth_events.12.f
+
+	event_image = { video = "europenorthamerica_capitalists_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	option = {
+		name = gbr_commonwealth_events.12.a
+		default_option = yes
+		remove_modifier = gbr_commonwealth_stage2_gbr
+		add_modifier = { name = gbr_commonwealth_stage3_gbr }
+	}
+}

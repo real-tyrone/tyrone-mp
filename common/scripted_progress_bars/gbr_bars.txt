@@ -1,0 +1,475 @@
+bar_federation_progress = {
+	name = "BAR_FEDERATION_PROGRESS"
+	desc = "BAR_FEDERATION_LEFT"
+	second_desc = "BAR_FEDERATION_RIGHT"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		add = {
+			value = 0.1
+			desc = "fed_bar_baseline_tt"
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_technology_researched = nationalism }
+				add = { value = 0.2   desc = "fed_bar_nationalism_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_technology_researched = pan-nationalism }
+				add = { value = 0.4   desc = "fed_bar_pan_nationalism_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_cultural_exclusion }
+				add = { value = 0.1   desc = "fed_bar_cultural_exclusion_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_multicultural }
+				add = { value = 0.3   desc = "fed_bar_multiculturalism_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_total_separation }
+				add = { value = 0.2   desc = "fed_bar_total_separation_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_no_migration_controls }
+				add = { value = 0.1   desc = "fed_bar_open_migration_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_variable = canada_federated_var }
+				add = { value = 0.5   desc = "fed_bar_canada_unified_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_variable = australia_federated_var }
+				add = { value = 0.5   desc = "fed_bar_australia_unified_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_closed_borders }
+				subtract = { value = 0.1   desc = "fed_bar_closed_borders_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_censorship }
+				subtract = { value = 0.1   desc = "fed_bar_censorship_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_free_trade }
+				subtract = { value = 0.1   desc = "fed_bar_free_trade_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_state_religion }
+				subtract = { value = 0.5   desc = "fed_bar_state_religion_tt" }
+			}
+		}
+		c:GBR ?= {
+			if = {
+				limit = { has_law = law_type:law_ethnostate }
+				subtract = { value = 0.5   desc = "fed_bar_ethnostate_tt" }
+			}
+		}
+	}
+}
+
+# -------------------------------------------------------
+# Commonwealth dominion partnership bars (0–300)
+# Each bar tracks one dominion's depth of Commonwealth partnership.
+# Conditions are evaluated on the dominion country's scope.
+# bar_ire_commonwealth: instantly fills if IRE inactive at JE start.
+# -------------------------------------------------------
+
+# Shared monthly_progress macro (written inline per bar — CAN/QUE, AST/NSW, SAF, IRE)
+
+bar_can_commonwealth = {
+	name = "BAR_CAN_COMMONWEALTH"
+	desc = "BAR_CAN_COMMONWEALTH_DESC"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 300
+
+	monthly_progress = {
+		# Baseline — country exists
+		c:CAN ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		c:QUE ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		# Nationalism tech
+		c:CAN ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		c:QUE ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		# Pan-nationalism tech
+		c:CAN ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		c:QUE ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		# Advanced government form
+		c:CAN ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		c:QUE ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		# Citizenship law (Ethnostate OR Multicultural)
+		c:CAN ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		c:QUE ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		# No migration controls
+		c:CAN ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		c:QUE ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		# GDP growth > 5%
+		c:CAN ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		c:QUE ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		# Population > 20M: +1.0; > 10M: +0.5
+		c:CAN ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+		c:QUE ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+		# Unification bonus: c:CAN exists = fully unified Canada (+1)
+		c:CAN ?= { add = { value = 1.0   desc = "commonwealth_bar_unified_tt" } }
+	}
+}
+
+bar_ast_commonwealth = {
+	name = "BAR_AST_COMMONWEALTH"
+	desc = "BAR_AST_COMMONWEALTH_DESC"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 300
+
+	monthly_progress = {
+		c:AST ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		c:NSW ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		c:AST ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		c:NSW ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		c:AST ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		c:NSW ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		c:AST ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		c:NSW ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		c:AST ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		c:NSW ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		c:AST ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		c:NSW ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		c:AST ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		c:NSW ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		c:AST ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+		c:NSW ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+		# Unification bonus: c:AST exists = fully unified Australia (+1)
+		c:AST ?= { add = { value = 1.0   desc = "commonwealth_bar_unified_tt" } }
+	}
+}
+
+bar_saf_commonwealth = {
+	name = "BAR_SAF_COMMONWEALTH"
+	desc = "BAR_SAF_COMMONWEALTH_DESC"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 300
+
+	monthly_progress = {
+		c:SAF ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		c:SAF ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		c:SAF ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		c:SAF ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		c:SAF ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		c:SAF ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		c:SAF ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		c:SAF ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+	}
+}
+
+bar_ire_commonwealth = {
+	name = "BAR_IRE_COMMONWEALTH"
+	desc = "BAR_IRE_COMMONWEALTH_DESC"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 300
+
+	monthly_progress = {
+		# If IRE never existed, fill bar to 300 (clamped) so it doesn't block completion
+		if = {
+			limit = { NOT = { exists = c:IRE } }
+			add = { value = 9999   desc = "commonwealth_ire_inactive_bar_tt" }
+		}
+		# Normal conditions when IRE exists
+		c:IRE ?= { add = { value = 0.5   desc = "commonwealth_bar_baseline_tt" } }
+		c:IRE ?= {
+			if = { limit = { has_technology_researched = nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_nationalism_tt" } }
+		}
+		c:IRE ?= {
+			if = { limit = { has_technology_researched = pan-nationalism }
+				   add = { value = 0.2   desc = "commonwealth_bar_pan_nationalism_tt" } }
+		}
+		c:IRE ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_theocracy
+						has_law = law_type:law_parliamentary_republic
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_corporate_state
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_gov_form_tt" }
+			}
+		}
+		c:IRE ?= {
+			if = {
+				limit = {
+					OR = {
+						has_law = law_type:law_ethnostate
+						has_law = law_type:law_multicultural
+					}
+				}
+				add = { value = 0.5   desc = "commonwealth_bar_citizenship_tt" }
+			}
+		}
+		c:IRE ?= {
+			if = { limit = { has_law = law_type:law_no_migration_controls }
+				   add = { value = 0.5   desc = "commonwealth_bar_open_migration_tt" } }
+		}
+		c:IRE ?= {
+			if = { limit = { var:GDPGR_rolling_gdp_growth_rate > 0.05 }
+				   add = { value = 1.0   desc = "commonwealth_bar_gdp_growth_tt" } }
+		}
+		c:IRE ?= {
+			if = {
+				limit = { total_population >= 20000000 }
+				add = { value = 1.0   desc = "commonwealth_bar_pop_large_tt" }
+			}
+			else_if = {
+				limit = { total_population >= 10000000 }
+				add = { value = 0.5   desc = "commonwealth_bar_pop_medium_tt" }
+			}
+		}
+	}
+}

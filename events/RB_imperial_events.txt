@@ -1,50 +1,6 @@
 ﻿namespace = imperial_events
 
-#matter of empire
-imperial_events.1 = {
-	type = country_event
-
-	title = imperial_events.1.t
-	desc = imperial_events.1.d
-	flavor = imperial_events.1.f
-
-
-	duration = 3
-
-	event_image = {
-		video = "ip4_university_lecture"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
-
-	trigger = {
-		#JE
-	}
-
-
-	immediate = {
-		c:CAN = {
-			save_scope_as = can_scope
-		}
-		c:BIC = {
-			save_scope_as = raj_scope
-		}
-		c:AST = {
-			save_scope_as = aus_scope
-		}
-	}
-
-	option = {
-		name = imperial_events.1.a #imperial federation path
-	}
-
-	option = {
-		name = imperial_events.1.b #commonwealth
-		set_global_variable = imp_fed_cancelled
-	}
-}
+# imperial_events.1 retired — path selection now handled by gbr_path.1
 
 #imperial fed formed
 imperial_events.2 = {
@@ -72,50 +28,43 @@ imperial_events.2 = {
 
 	option = {
 		name = imperial_events.2.a
+		c:GBR = {
+			annex_with_incorporation = c:CAN
+			annex_with_incorporation = c:AST
+			annex_with_incorporation = c:SAF
+			annex_with_incorporation = c:HBC
+			annex_with_incorporation = c:QUE
+			annex_with_incorporation = c:BHT
+			annex_with_incorporation = c:ONT
+			annex_with_incorporation = c:NVS
+			annex_with_incorporation = c:NBS
+			annex_with_incorporation = c:ORG
+			annex_with_incorporation = c:WAS
+			annex_with_incorporation = c:KAU
+			annex_with_incorporation = c:SAS
+			annex_with_incorporation = c:TAS
+			annex_with_incorporation = c:NSW
+			annex_with_incorporation = c:UNT
+			add_primary_culture = cu:anglo_canadian
+			add_primary_culture = cu:franco_canadian
+			add_primary_culture = cu:scottish
+			add_primary_culture = cu:scottish_gaelic
+			add_primary_culture = cu:australian
+			add_primary_culture = cu:irish
+		}
 		add_modifier = {
 			name = imperial_federation_modifier
-			years = 25
 		}
 		if = {
 			limit = {
 				exists = c:BIC
 			}
 			c:BIC = {
-				add_modifier = exclusion_from_federation
+				add_modifier = imperial_jewel
 			}
 		}
+		activate_law = law_type:law_imperial_federal_bureaucracy
 	}
 }
 
-#imperial fed failed
-imperial_events.3 = {
-	type = country_event
-
-	title = imperial_events.3.t
-	desc = imperial_events.3.d
-	flavor = imperial_events.3.f
-
-
-	duration = 3
-
-	event_image = {
-		video = "ip4_abdication"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
-
-
-	immediate = {
-		set_global_variable = imperial_federation_failed
-	}
-
-	option = {
-		name = imperial_events.3.a
-		add_modifier = {
-			name = imperial_federation_failure
-			years = 25
-		}
-	}
-}
+# imperial_events.3 retired — new JE has no timeout
