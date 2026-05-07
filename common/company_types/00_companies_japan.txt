@@ -6,15 +6,22 @@ company_mitsui = {
 	flavored_company = yes
 
 	preferred_headquarters = { STATE_KANTO }
+	preferred_headquarters = { STATE_KANTO }
 
 	building_types = {
 		building_textile_mill
 		building_silk_plantation
 		building_dye_plantation
 		building_iron_mine
+		building_dye_plantation
+		building_iron_mine
 	}
 
 	extension_building_types = {
+		building_tea_plantation
+		building_food_industry
+		building_glassworks
+		building_coal_mine
 		building_tea_plantation
 		building_food_industry
 		building_glassworks
@@ -26,6 +33,7 @@ company_mitsui = {
 	}
 
 	potential = {
+		has_interest_marker_in_region = sr:region_northeast_asia
 		has_interest_marker_in_region = sr:region_northeast_asia
 	}
 
@@ -53,12 +61,16 @@ company_mitsui = {
 		interest_group_ig_industrialists_pol_str_mult = 0.1
 		country_production_tech_research_speed_mult = 0.05
 		state_trade_advantage_mult = 0.05
+		interest_group_ig_industrialists_pol_str_mult = 0.1
+		country_production_tech_research_speed_mult = 0.05
+		state_trade_advantage_mult = 0.05
 	}
 
 	ai_will_do = {
 		has_technology_researched = cotton_gin
 		custom_tooltip = {
 			text = is_meiji_japan
+			has_variable = japan_restoration_complete
 			has_variable = japan_restoration_complete
 		}
 		any_scope_state = {
@@ -199,9 +211,11 @@ company_mantetsu = {
 		custom_tooltip = {
 			text = is_meiji_japan
 			has_variable = japan_restoration_complete
+			has_variable = japan_restoration_complete
 		}
 		any_scope_state = {
 			OR = {
+				region = sr:region_northeast_asia
 				region = sr:region_northeast_asia
 				region = sr:region_north_china
 			}
@@ -215,6 +229,7 @@ company_mantetsu = {
 
 	prosperity_modifier = {
 		state_non_homeland_colony_growth_speed_mult = 0.1
+		state_non_homeland_colony_growth_speed_mult = 0.1
 		building_wheat_farm_throughput_add = 0.15
 		state_construction_mult = 0.10
 		country_manchu_cultural_acceptance_add = 20
@@ -226,9 +241,11 @@ company_mantetsu = {
 		custom_tooltip = {
 			text = is_meiji_japan
 			has_variable = japan_restoration_complete
+			has_variable = japan_restoration_complete
 		}
 		any_scope_state = {
 			OR = {
+				region = sr:region_northeast_asia
 				region = sr:region_northeast_asia
 				region = sr:region_north_china
 			}
@@ -241,6 +258,7 @@ company_mantetsu = {
 			state_trigger = {
 				OR = {
 					region = sr:region_northeast_asia
+					region = sr:region_northeast_asia
 					region = sr:region_north_china
 				}
 			}
@@ -249,6 +267,17 @@ company_mantetsu = {
 
 	ai_weight = {
 		value = 3 # Higher base value for flavored companies
+		if = {
+			limit = {
+				has_journal_entry = je_colonize_korea
+				NOT = {
+					any_company = {
+						is_company_type = company_type:company_oriental_development_company # Only one needed
+					}
+				}
+			}
+			add = 6
+		}
 		if = {
 			limit = {
 				has_journal_entry = je_colonize_korea
