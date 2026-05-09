@@ -1,0 +1,483 @@
+namespace = dei_events
+
+dei_events.1 = {
+	type = country_event
+	title = dei_events.1.t
+	desc = dei_events.1.d
+	flavor = dei_events.1.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+	
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:NET = { save_scope_as = netherlands_scope }
+
+		c:DEI = { save_scope_as = dei_scope }
+
+	}
+
+	duration = 1
+	option = {
+		name = dei_events.1.a
+		default_option = yes
+		if = {
+			limit = {
+				exists = c:DEI
+				C:DEI = {
+					is_subject_of = ROOT
+				}
+			}
+			c:DEI = {
+				change_relations = { country = root value = 50 }
+				add_liberty_desire = -75
+			}
+		}
+		if = {
+			limit = {
+				exists = c:IDN
+				c:IDN = {
+					is_subject_of = ROOT
+				}
+			}
+			c:IDN = {
+				change_relations = { country = root value = 50 }
+				add_liberty_desire = -75
+			}
+		}
+		add_modifier = {
+			name = consolidated_dei
+			days = long_modifier_time
+		}
+	}
+}
+
+dei_events.2 = {
+	type = country_event
+	title = dei_events.2.t
+	desc = dei_events.2.d
+	flavor = dei_events.2.f
+	placement = c:DEI
+
+	event_image = {
+		video = "southamerica_aristocrats"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+
+	duration = 3
+
+	immediate = {
+	}
+
+	trigger = {
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	option = {
+		name = dei_events.2.a
+		default_option = yes
+		add_journal_entry = {
+			type = je_reform_indies
+		}
+		je:je_reform_indies = {
+			add_involved_country = ROOT
+		}
+		c:DEI = {
+			set_variable = {
+				name = dei_gdp_goal
+				value = this.gdp
+			}
+			change_variable = {
+				name = dei_gdp_goal
+				multiply = 1.5
+			}
+		}
+	}
+}
+
+dei_events.3 = {
+	type = country_event
+	title = dei_events.3.t
+	desc = dei_events.3.d
+	flavor = dei_events.3.f
+
+	event_image = {
+		video = "africa_construction_colony"
+	}
+	
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:NET = { save_scope_as = netherlands_scope }
+
+		c:DEI = { save_scope_as = dei_scope }
+
+	}
+
+	duration = 1
+	option = { # Maintain current colonial rule
+		name = dei_events.3.a
+		default_option = yes
+		c:DEI = {
+			add_modifier = {
+				name = DEI_colonial_rule_supported
+				days = long_modifier_time
+			}
+			add_loyalists = {
+				value = very_large_radicals
+				culture = cu:dutch
+			}
+		}
+	}
+	option = { # Reform the VOC
+		name = dei_events.3.b
+		default_option = yes
+		c:DEI = {
+			if = {
+				limit = {
+					NOT = { is_subject_type = subject_type_chartered_company }
+				}
+				change_subject_type = subject_type_chartered_company
+			}
+			set_variable = VOC_reformed
+		}
+		add_modifier = {
+			name = VOC_reformed_modifier
+			days = very_long_modifier_time
+		}
+		company:company_nhm = {
+			add_owned_country = c:DEI #links the country to this company
+		}
+	}
+	option = { # Push for liberal reform
+		name = dei_events.3.c
+		default_option = yes
+		c:DEI = {
+			activate_law = law_type:law_slavery_banned
+			add_modifier = {
+				name = DEI_liberal_reforms_modifier
+				days = long_modifier_time
+			}
+			add_loyalists = {
+				value = medium_radicals
+			}
+		}
+	}
+}
+
+dei_events.4 = {
+	type = country_event
+	title = dei_events.4.t
+	desc = dei_events.4.d
+	flavor = dei_events.4.f
+
+	event_image = {
+		video = "ip4_colonial_exploitation_going_well"
+	}
+	
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	immediate = {
+		c:NET = { save_scope_as = netherlands_scope }
+		c:IDN = { save_scope_as = indonesia_scope }
+		c:DEI = { save_scope_as = dei_scope }
+
+	}
+
+	duration = 1
+	option = { # Maintain current status quo
+		name = dei_events.4.a
+		default_option = yes
+		trigger = {
+			exists = c:IDN
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = DEI_successful_reforms
+			days = long_modifier_time
+		}
+		ig:ig_intelligentsia ?= {
+			add_modifier = {
+				name = DEI_successful_reforms_ig
+				days = normal_modifier_time
+			}
+		}
+		ig:ig_trade_unions ?= { 
+			add_modifier = {
+				name = DEI_successful_reforms_ig
+				days = normal_modifier_time
+			}
+		}
+		c:IDN = {
+			add_modifier = {
+				name = DEI_successful_reforms
+				days = long_modifier_time
+			}
+			add_loyalists = {
+				value = large_radicals
+			}
+			add_liberty_desire = -50
+		}
+	}
+	option = { # Form a Personal Union
+		name = dei_events.4.b
+		trigger = {
+			exists = c:IDN
+			has_law_or_variant = law_type:law_monarchy
+		}
+		ig:ig_petty_bourgeoisie ?= {
+			add_modifier = {
+				name = DEI_successful_reforms_ig
+				days = normal_modifier_time
+			}
+		}
+		ig:ig_devout ?= {
+			add_modifier = {
+				name = DEI_successful_reforms_ig
+				days = normal_modifier_time
+			}
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = DEI_personal_union
+			days = long_modifier_time
+		}
+		c:IDN = {
+			activate_law = law_type:law_monarchy
+			add_modifier = {
+				name = DEI_personal_union
+				days = long_modifier_time
+			}
+			change_subject_type = subject_type_personal_union
+			add_loyalists = {
+				value = medium_radicals
+			}
+			add_liberty_desire = -50
+		}
+	}
+	option = { # VOC bonuses
+		name = dei_events.4.c
+		trigger = {
+			c:DEI = {
+				is_subject_type = subject_type_chartered_company
+			}
+		}
+		ig:ig_industrialists ?= {
+			add_modifier = {
+				name = DEI_successful_reforms_ig
+				days = normal_modifier_time
+			}
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = VOC_success
+			days = long_modifier_time
+		}
+		c:DEI = {
+			add_modifier = {
+				name = VOC_DEI_success
+				days = long_modifier_time
+			}
+			add_loyalists = {
+				value = medium_radicals
+			}
+			add_liberty_desire = -50
+		}
+	}
+	
+	option = { # Basic bonuses
+		name = dei_events.4.e
+		trigger = {
+			c:DEI ?= {
+				OR = {
+					is_subject_type = subject_type_colony
+					is_subject_type = subject_type_dominion
+				}
+			}
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = DEI_success_overlord
+			days = long_modifier_time
+		}
+		c:DEI = {
+			add_modifier = {
+				name = DEI_success_subject
+				days = long_modifier_time
+			}
+			add_loyalists = {
+				value = medium_radicals
+			}
+			add_liberty_desire = -50
+		}
+	}
+
+	option = { # Annexation
+		name = dei_events.4.g
+		trigger = {
+			c:DEI ?= {
+				OR = {
+					is_subject_type = subject_type_colony
+					is_subject_type = subject_type_dominion
+				}
+			}
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+		c:DEI = {
+			every_scope_state = {
+				is_in_geographic_region = geographic_region_indonesia
+				add_modifier = {
+					name = integrating_indonesia
+					days = long_modifier_time
+				}
+			}
+		}
+		root = {
+			annex = c:DEI
+		}
+	}
+}
+
+# Reforming the Indies
+dei_events.5 = {
+	type = country_event
+	placement = ROOT
+
+	title = dei_events.5.t
+	desc = dei_events.5.d
+	flavor = dei_events.5.f
+
+	event_image = {
+		video = "southamerica_factory_opening"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				active_law:lawgroup_citizenship ?= {
+					has_amendment = amendment_type:amendment_racialized_subjecthood
+				}
+			}
+			active_law:lawgroup_citizenship ?= {
+				every_scope_amendment = { remove_amendment = yes }
+			}
+		}
+		remove_primary_culture = cu:dutch
+		add_primary_culture = cu:balinese
+		add_primary_culture = cu:batak
+		add_primary_culture = cu:bornean
+		add_primary_culture = cu:dayak
+		add_primary_culture = cu:javan
+		add_primary_culture = cu:malay
+		add_primary_culture = cu:moluccan
+		add_primary_culture = cu:sumatran
+		change_subject_type = subject_type_protectorate
+		set_country_type = recognized
+		change_tag = IDN
+
+	}
+
+	option = {
+		name = dei_events.5.a
+		default_option = yes
+		add_modifier = { # capitalist investment pool contribution
+			name = indies_investment
+			days = long_modifier_time
+		}
+	}
+
+	option = {
+		name = dei_events.5.b
+		add_modifier = { # qualifications
+			name = indies_qualified_employees
+			days = long_modifier_time
+		}
+	}
+}
+
+# The New Feudalism
+dei_events.6 = {
+	type = country_event
+	placement = ROOT
+
+	title = dei_events.6.t
+	desc = dei_events.6.d
+	flavor = dei_events.6.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+	}
+
+	immediate = {
+	}
+
+	option = {
+		name = dei_events.6.a
+		default_option = yes
+		add_journal_entry = {
+			type = je_ethical_policy_feudalism
+		}
+	}
+
+	after = {
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_agrarianism
+			}
+			activate_law = law_type:law_neofeudalism
+		}
+		else = {
+			active_law:lawgroup_economic_system = {
+				add_amendment = {
+					type = amendment_colonial_neofeudalism
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_slave_trade
+			}
+			active_law:lawgroup_slavery = {
+				add_amendment = {
+					type = amendment_expanded_colonial_slavery
+					sponsor = PREV.ig:ig_landowners
+				}
+			}
+		}
+	}
+}

@@ -468,6 +468,7 @@ congo_free_state_events.5 = { #Free State can be reintegrated
 	immediate = {
 		c:AFS ?= {
 			save_scope_as = free_state
+			remove_modifier = resource_extraction_colony_modifier
 		}
 		random_scope_character = {
 			limit = {
@@ -504,10 +505,6 @@ congo_free_state_events.5 = { #Free State can be reintegrated
 					days = long_modifier_time
 				}
 			}
-			add_modifier = {
-				name = free_state_monarchy_modifier #legitimacy head of state
-				days = normal_modifier_time
-			}
 		}
 	}
 
@@ -530,9 +527,214 @@ congo_free_state_events.5 = { #Free State can be reintegrated
 					days = long_modifier_time
 				}
 			}
+		}
+	}
+	option = { #Regular Colony
+		name = congo_free_state_events.5.c
+		custom_tooltip = {
+			text = colonial_congo_administration_events.1_tt_1
+			c:AFS ?= {
+				activate_law = law_type:law_colonial_administration
+				activate_law = law_type:law_oligarchy
+				activate_law = law_type:law_subjecthood
+				active_law:lawgroup_citizenship ?= { # Subjecthood
+					add_amendment = {
+						type = amendment_racialized_subjecthood
+						sponsor = PREV.ig:ig_armed_forces
+					}
+				}
+				activate_law = law_type:law_extraction_economy
+				activate_law = law_type:law_colonial_exploitation
+				activate_law = law_type:law_no_schools
+				activate_law = law_type:law_no_health_system
+				activate_law = law_type:law_censorship
+				activate_law = law_type:law_no_workers_rights
+				activate_law = law_type:law_child_labor_allowed
+				activate_law = law_type:law_no_social_security
+				activate_law = law_type:law_migration_controls
+			}
+		}
+		c:AFS ?= {
+			change_subject_type = subject_type_colony
+			set_strategy = ai_strategy_colonial_extraction
 			add_modifier = {
-				name = free_state_monarchy_modifier #legitimacy head of state
+				name = resource_extraction_charter_modifier
+			}
+			ig:ig_industrialists ?= {
+				if = {
+					limit = {
+						has_ideology = ideology:ideology_laissez_faire
+					}
+					remove_ideology = ideology_laissez_faire
+					add_ideology = ideology_colonialist
+				}
+			}
+		}
+		every_interest_group = {
+			limit = {
+				OR = {
+					law_stance = {
+						law = law_type:law_laissez_faire
+						value > neutral
+					}
+					law_stance = {
+						law = law_type:law_free_trade
+						value > neutral
+					}
+					law_stance = {
+						law = law_type:law_interventionism
+						value > neutral
+					}
+				}
+				ig_counts_as_marginal = no
+			}
+			add_modifier = {
+				name = colonial_enterprise_modifier
 				days = normal_modifier_time
+			}
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_monarchy
+				ruler = {
+					has_variable = free_state_monarch
+				}
+			}
+			ruler = {
+				remove_variable = free_state_created
+				add_modifier = {
+					name = free_state_monarch_modifier #popularity loss
+					days = long_modifier_time
+				}
+			}
+		}
+	}
+	option = { #Assign it to the Compagnie du Congo
+		name = congo_free_state_events.5.e
+		create_diplomatic_pact = {
+			country = C:AFS
+			type = chartered_company
+		}
+		add_company = company_type:company_ccci
+		company:company_ccci = {
+            set_company_state_region = s:STATE_WALLONIA
+			add_owned_country = c:AFS #links the country to this company
+		}
+		s:STATE_BAS_CONGO.region_state:AFS = {
+			create_building = {
+				building = building_iron_mine
+				add_ownership = {
+					company={
+						type=company_ccci
+						country="root"
+						levels=5
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = colonial_congo_administration_events.1_tt_1
+			c:AFS ?= {
+				activate_law = law_type:law_colonial_administration
+				activate_law = law_type:law_oligarchy
+				activate_law = law_type:law_subjecthood
+				active_law:lawgroup_citizenship ?= { # Subjecthood
+					add_amendment = {
+						type = amendment_racialized_subjecthood
+						sponsor = PREV.ig:ig_armed_forces
+					}
+				}
+				activate_law = law_type:law_extraction_economy
+				activate_law = law_type:law_colonial_exploitation
+				activate_law = law_type:law_no_schools
+				activate_law = law_type:law_no_health_system
+				activate_law = law_type:law_censorship
+				activate_law = law_type:law_no_workers_rights
+				activate_law = law_type:law_child_labor_allowed
+				activate_law = law_type:law_no_social_security
+				activate_law = law_type:law_migration_controls
+			}
+		}
+		c:AFS ?= {
+			set_strategy = ai_strategy_colonial_extraction
+			add_modifier = {
+				name = resource_extraction_charter_modifier
+			}
+			add_modifier = {
+				name = congolese_rubber_modifier
+			}
+			ig:ig_industrialists ?= {
+				if = {
+					limit = {
+						has_ideology = ideology:ideology_laissez_faire
+					}
+					remove_ideology = ideology_laissez_faire
+					add_ideology = ideology_colonialist
+				}
+			}
+		}
+		every_interest_group = {
+			limit = {
+				OR = {
+					law_stance = {
+						law = law_type:law_laissez_faire
+						value > neutral
+					}
+					law_stance = {
+						law = law_type:law_free_trade
+						value > neutral
+					}
+					law_stance = {
+						law = law_type:law_interventionism
+						value > neutral
+					}
+				}
+				ig_counts_as_marginal = no
+			}
+			add_modifier = {
+				name = colonial_enterprise_modifier
+				days = normal_modifier_time
+			}
+		}
+		if = {
+			limit = {
+				has_law = law_type:law_monarchy
+				ruler = {
+					has_variable = free_state_monarch
+				}
+			}
+			ruler = {
+				remove_variable = free_state_created
+				add_modifier = {
+					name = free_state_monarch_modifier #popularity loss
+					days = long_modifier_time
+				}
+			}
+		}
+	}
+	option = { #Keep it under a Personal Union
+		name = congo_free_state_events.5.g
+		c:AFS ?= {
+			add_modifier = {
+				name = resource_extraction_colony_modifier
+				days = very_long_modifier_time
+				multiplier = 1.5
+			}
+		}
+		change_infamy = 20
+		if = {
+			limit = {
+				has_law = law_type:law_monarchy
+				ruler = {
+					has_variable = free_state_monarch
+				}
+			}
+			ruler = {
+				remove_variable = free_state_created
+				add_modifier = {
+					name = free_state_monarch_modifier #popularity loss
+					days = long_modifier_time
+				}
 			}
 		}
 	}

@@ -1,0 +1,327 @@
+je_consolidate_east_indies = {
+
+	group = je_group_historical_content
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	transferable = no
+	weight = 10000
+
+	immediate = {
+		c:DEI = {
+			save_scope_as = east_indies_scope
+		}
+		c:NET = {
+			save_scope_as = netherlands_scope
+		}
+	}
+
+	complete = {
+        any_state = {
+            filter = {
+				region = sr:region_indonesia
+				NOT = {
+					OR = {
+						state_region = s:STATE_NORTH_BORNEO		
+						state_region = s:STATE_LUZON
+						state_region = s:STATE_VISAYAS
+						state_region = s:STATE_MINDANAO		
+						state_region = s:STATE_SUNDA_ISLANDS			
+					}			
+				}
+            }
+			custom_tooltip = {
+				text = completely_owned_by_this_country_or_subjects_tt
+				OR = {
+					owner = ROOT
+					owner = {
+						is_subject_of = ROOT
+					}
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+				NOT = {
+					this.state_region = {
+						any_scope_state = {
+							owner = {
+								NOR = {
+									this = ROOT
+									is_subject_of = ROOT
+									is_country_type = decentralized
+								}
+							}
+						}
+					}
+				}
+			}
+            percent = 1
+        }
+	}
+
+	on_complete = {
+		trigger_event ={
+			id = dei_events.1
+		}
+	}
+
+	fail = {
+	}
+
+    event_outcome_completed_desc = {
+        first_valid = {
+            triggered_desc = {
+                desc = event_effects_dei_events.1_tt
+            }
+        }
+    }
+
+	weight = 1000
+	transferable = yes
+}
+
+je_path_of_east_indies = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	should_be_pinned_by_default_uninvolved_or_context = no
+
+	group = je_group_foreign_affairs
+
+	is_shown_in_lobby = {
+		c:NET = THIS
+	}
+
+	is_shown_when_inactive = {
+		OR = {
+			c:NET ?= THIS
+			c:UNL ?= THIS
+		}
+	}
+
+	possible = {
+		OR = {
+			c:DEI = {
+				is_subject_of = ROOT
+			}
+			c:IDN = {
+				is_subject_of = ROOT
+			}
+		}
+		institution_investment_level = {
+			institution = institution_colonial_affairs
+			value >= 2
+		}
+		any_company = {
+			is_company_type = company_type:company_nhm
+			company_is_prosperous = yes
+		}	
+	}
+
+	immediate = {
+		c:NET = { save_scope_as = netherlands_scope }
+		c:DEI = { save_scope_as = dei_scope }
+		trigger_event ={
+			id = dei_events.3
+		}
+	}
+
+	complete = {
+		OR = {
+			AND = {
+				c:DEI = {
+					is_subject_of = ROOT
+					is_subject_type = subject_type_colony
+					liberty_desire < 25
+				}
+				has_technology_researched = civilizing_mission
+			}
+			AND = {
+				c:DEI = {
+					is_subject_of = ROOT
+					is_subject_type = subject_type_chartered_company
+					liberty_desire < 25
+				}
+				has_technology_researched = mutual_funds
+			}
+			AND = {
+				c:IDN = {
+					is_subject_of = ROOT
+					relations:root >= relations_threshold:amicable
+				}
+				has_technology_researched = human_rights
+				custom_tooltip = {
+					text = indonesia_exists_tt
+					exists = c:IDN
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event ={
+			id = dei_events.4
+		}
+	}
+
+	event_outcome_completed_desc = {
+		desc = event_effects_dei_events.4_tt
+	}
+
+	fail = {
+		NOT = {
+			any_subject_or_below = {
+				capital.region = sr:region_indonesia
+			}
+		}
+	}
+
+	weight = 200
+
+	transferable = yes
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+REPLACE:je_reform_indies = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	group = je_group_global_international_situations
+	should_be_pinned_by_default_uninvolved_or_context = no
+	should_be_pinned_by_default_involved = yes
+
+	immediate = {
+		c:DEI = {
+			save_scope_as = east_indies_scope
+		}
+		c:NET = {
+			save_scope_as = netherlands_scope
+		}
+	}
+
+	is_shown_in_lobby = {
+		OR = {
+			c:DEI ?= THIS
+			any_subject_or_below = {
+				c:DEI ?= THIS
+			}
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			c:DEI ?= THIS
+			any_subject_or_below = {
+				c:DEI ?= THIS
+			}
+		}
+	}
+
+	is_shown_when_inactive = {
+		OR = {
+			c:DEI ?= THIS
+			any_subject_or_below = {
+				c:DEI ?= THIS
+			}
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:DEI ?= THIS
+			any_subject_or_below = {
+				c:DEI ?= THIS
+			}
+		}
+	}
+
+	possible = {
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+				NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+				NOT = { has_law_or_variant = law_type:law_serfdom }
+			}
+		}
+	}
+
+	custom_completion_header = je_reform_indies_complete_header
+
+	complete = {
+		custom_tooltip = {
+			text = dei_gdp_reached_50_tt
+      	 	c:DEI.gdp > c:DEI.var:dei_gdp_goal
+		}
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+			}
+			NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+			OR = {
+				has_law_or_variant = law_type:law_tenant_farmers
+				has_law_or_variant = law_type:law_homesteading
+			}
+			NOT = { has_law_or_variant = law_type:law_extraction_economy }
+			has_law_or_variant = law_type:law_slavery_banned
+		}
+	}
+
+	custom_on_completion_header = je_reform_indies_on_complete_header
+
+	on_complete = {
+		c:DEI = { trigger_event = { id = dei_events.5 } }
+	}
+
+	event_outcome_completed_desc = {
+		desc = je_reform_indies_complete_effects_tt
+	}
+
+	custom_failure_header = je_reform_indies_fail_header
+
+	fail = {
+		custom_tooltip = {
+			text = dei_gdp_reached_50_tt
+      	 	c:DEI.gdp > c:DEI.var:dei_gdp_goal
+		}
+		c:DEI = {
+			OR = {
+				has_law_or_variant = law_type:law_free_trade
+				has_law_or_variant = law_type:law_mercantilism
+			}
+			NOT = { has_law_or_variant = law_type:law_land_based_taxation }
+			OR = {
+				has_law = law_type:law_cultuurstelsel
+				has_law_or_variant = law_type:law_commercialized_agriculture
+			}
+			NOT = { has_law_or_variant = law_type:law_extraction_economy }
+			OR = {
+				has_law_or_variant = law_type:law_debt_slavery
+				has_law_or_variant = law_type:law_slave_trade
+			}
+		}
+	}
+
+	custom_on_failure_header = je_reform_indies_on_fail_header
+
+	on_fail = {
+		c:DEI = { trigger_event = { id = dei_events.6 } }
+	}
+
+
+	invalid = {
+		c:DEI = {
+			is_subject = no
+		}
+	}
+
+	weight = 100
+}
+
+REPLACE:je_ethical_policy = {
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	group = je_group_internal_affairs
+
+	possible = { always = no }
+
+	weight = 100
+}
