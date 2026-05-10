@@ -1646,3 +1646,77 @@ allow_monopoly_subject_remove = {
 		value = 10
 	}
 }
+
+belgium_unl_ai_return_bas_congo = {
+	is_shown = {
+		is_ai = yes
+		OR = {
+			c:BEL ?= this
+			c:UNL ?= this
+		}
+		has_global_variable = berlin_conference_ended
+		NOT = { has_variable = belgium_unl_return_bas_congo_started }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		s:STATE_BAS_CONGO = {
+			has_claim_by = ROOT
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					is_country_type = unrecognized
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		has_technology_researched = civilizing_mission
+		s:STATE_BAS_CONGO = {
+			has_claim_by = ROOT
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					is_country_type = unrecognized
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		set_variable = belgium_unl_return_bas_congo_started
+		s:STATE_BAS_CONGO = {
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner = {
+						is_country_type = unrecognized
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+				save_scope_as = bas_congo_return_state_scope
+				owner = {
+					save_scope_as = bas_congo_return_country_scope
+				}
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:bas_congo_return_country_scope
+			target_state = scope:bas_congo_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
