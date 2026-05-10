@@ -1,0 +1,452 @@
+﻿namespace = egyptian_crisis_events
+
+egyptian_crisis_events.1 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.1.t
+	desc = egyptian_crisis_events.1.d
+	flavor = egyptian_crisis_events.1.f
+
+	event_image = {
+		video = "ep1_ca_mountain_pass_civilian"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	trigger = {
+		exists = c:EGY
+		c:TUR = {
+			NOT = {
+				has_truce_with = c:EGY
+			}
+		}
+		NOT = {
+			has_variable = egyptian_crisis
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = egyptian_crisis
+		}
+		if = {
+			limit = { exists = s:STATE_SYRIA.region_state:EGY }
+			s:STATE_SYRIA.region_state:EGY = { save_scope_as = egyptian_crisis_state }
+		}
+		else = {
+			c:EGY.capital = { save_scope_as = egyptian_crisis_state }
+		}
+		add_contextless_journal_entry = je_oriental_crisis
+	}
+
+	option = {
+		name = egyptian_crisis_events.1.a
+		je:je_oriental_crisis ?= {
+			add_involved_country = ROOT
+		}
+		# country_influence_mult
+		add_modifier = {
+			name = working_with_the_great_powers
+			days = long_modifier_time
+		}
+		every_country_in_europe = {
+			limit = {
+				country_rank = rank_value:great_power
+				NOR = {
+					c:EGY = this
+					c:TUR = this
+					has_war_with = c:TUR
+					has_war_with = c:EGY
+					has_diplomatic_pact = {
+						who = root
+						type = rivalry
+					}
+				}
+			}
+			change_relations = {
+				country = root
+				value = 40
+			}
+		}
+		every_country_in_europe = {
+			limit = {
+				country_rank = rank_value:great_power
+				NOR = {
+					has_interest_marker_in_region = sr:region_arabia
+					c:EGY = this
+					c:TUR = this
+					has_war_with = c:TUR
+					has_war_with = c:EGY
+				}
+			}
+			custom_tooltip = egyptian_crisis_events.1.a.tt
+			hidden_effect = { trigger_event = { id = egyptian_crisis_events.4 } }
+		}
+		c:EGY ?= {
+			trigger_event = { id = egyptian_crisis_events.2 }
+		}
+	}
+
+    option = {
+		name = egyptian_crisis_events.1.b
+        default_option = yes
+		je:je_oriental_crisis ?= {
+			add_involved_country = ROOT
+		}
+        every_country_in_europe = {
+        	limit = {
+        		country_rank = rank_value:great_power
+        		NOR = {
+        			has_interest_marker_in_region = sr:region_arabia
+        			c:EGY = this
+        			c:TUR = this
+        			has_war_with = c:TUR
+        			has_war_with = c:EGY
+        		}
+        	}
+        	custom_tooltip = egyptian_crisis_events.1.a.tt
+			hidden_effect = { trigger_event = { id = egyptian_crisis_events.4 } }
+        }
+        c:EGY ?= {
+        	trigger_event = { id = egyptian_crisis_events.2 }
+        }
+	}
+}
+
+egyptian_crisis_events.2 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.2.t
+	desc = egyptian_crisis_events.2.d
+	flavor = egyptian_crisis_events.2.f
+
+	event_image = {
+		video = "middleeast_courtroom_upheaval"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	immediate = {
+		if = {
+			limit = { exists = s:STATE_SYRIA.region_state:EGY }
+			s:STATE_SYRIA.region_state:EGY = { save_scope_as = egyptian_crisis_state }
+		}
+		else = {
+			c:EGY.capital = { save_scope_as = egyptian_crisis_state }
+		}
+	}
+
+	option = {
+		name = egyptian_crisis_events.2.a
+        default_option = yes
+		custom_tooltip = egyptian_crisis_events.2.a.tt
+		je:je_oriental_crisis ?= {
+			add_involved_country = ROOT
+		}
+	}
+}
+
+egyptian_crisis_events.3 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.3.t
+	desc = egyptian_crisis_events.3.d
+	flavor = egyptian_crisis_events.3.f
+
+	event_image = {
+		video = "middleeast_courtroom_upheaval"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	immediate = {
+		if = {
+			limit = { exists = s:STATE_SYRIA.region_state:EGY }
+			s:STATE_SYRIA.region_state:EGY = { save_scope_as = egyptian_crisis_state }
+		}
+		else = {
+			c:EGY.capital = { save_scope_as = egyptian_crisis_state }
+		}
+	}
+
+	option = { #Accept the terms of the Convention of London
+		name = egyptian_crisis_events.3.a
+        default_option = no
+		transfer_state = { STATE = s:STATE_ADANA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_ALEPPO GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_SYRIA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_LEBANON GIVER = c:EGY TAKER = c:TUR }
+		c:TUR ?= { transfer_subject = c:HDJ }
+		add_liberty_desire = -50
+		set_global_variable = oriental_crisis_ottoman_victory
+	}
+
+	option = {
+		name = egyptian_crisis_events.3.b
+		create_diplomatic_play = {
+			name = oriental_crisis_war
+			type = dp_oriental_crisis
+			target_country = c:TUR
+			add_war_goal = { holder = c:TUR target_country = c:EGY type = oriental_crisis_wargoal }
+		}
+	}
+}
+
+egyptian_crisis_events.4 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.4.t
+	desc = egyptian_crisis_events.4.d
+	flavor = egyptian_crisis_events.4.f
+
+	event_image = {
+		video = "middleeast_courtroom_upheaval"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_fire.dds"
+
+	duration = 3
+
+	immediate = {
+		if = {
+			limit = { exists = s:STATE_SYRIA.region_state:EGY }
+			s:STATE_SYRIA.region_state:EGY = { save_scope_as = egyptian_crisis_state }
+		}
+		else = {
+			c:EGY.capital = { save_scope_as = egyptian_crisis_state }
+		}
+	}
+
+	option = {
+		name = egyptian_crisis_events.4.a
+        default_option = yes
+		add_involvement = {
+			strategic_region = sr:region_near_east
+			value = 2500
+		}
+		je:je_oriental_crisis ?= {
+			add_involved_country = ROOT
+		}
+	}
+
+	option = {
+		name = egyptian_crisis_events.4.b
+	}
+}
+
+egyptian_crisis_events.5 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.5.t
+	desc = egyptian_crisis_events.5.d
+	flavor = egyptian_crisis_events.5.f
+
+	event_image = {
+		video = "ep1_ca_mountain_pass_civilian"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	immediate = {
+		c:TUR = {
+			save_scope_as = ottoman_scope
+		}
+		c:EGY = {
+			save_scope_as = egypt_scope
+		}
+		if = {
+			limit = { exists = s:STATE_SYRIA.region_state:EGY }
+			s:STATE_SYRIA.region_state:EGY = { save_scope_as = egyptian_crisis_state }
+		}
+		else = {
+			c:EGY.capital = { save_scope_as = egyptian_crisis_state }
+		}
+	}
+
+	option = { # Enforce the terms of the Convention of London
+		name = egyptian_crisis_events.5.a
+		transfer_state = { STATE = s:STATE_ADANA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_ALEPPO GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_SYRIA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_LEBANON GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_PALESTINE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_TRANSJORDAN GIVER = c:EGY TAKER = c:TUR }
+		c:EGY = {
+			c:TUR ?= { transfer_subject = c:HDJ }
+			add_liberty_desire = -50			
+		}
+		ai_chance = {
+			value = 80
+		}
+	}
+	option = { # Punish the Egyptians for their defiance
+		name = egyptian_crisis_events.5.b
+		default_option = yes
+		transfer_state = { STATE = s:STATE_ADANA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_ALEPPO GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_SYRIA GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_LEBANON GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_PALESTINE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_TRANSJORDAN GIVER = c:EGY TAKER = c:TUR }
+		create_diplomatic_play = {
+			name = reduce_autonomy
+			type = dp_reduce_autonomy
+			target_country = c:EGY
+		}
+		ai_chance = {
+			value = 20
+		}
+	}
+}
+
+egyptian_crisis_events.6 = {
+	type = country_event
+	placement = scope:egyptian_crisis_state
+
+	title = egyptian_crisis_events.6.t
+	desc = egyptian_crisis_events.6.d
+	flavor = egyptian_crisis_events.6.f
+
+	event_image = {
+		video = "ep1_ca_mountain_pass_civilian"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	immediate = {
+		c:TUR = {
+			save_scope_as = ottoman_scope
+		}
+		c:EGY = {
+			save_scope_as = egypt_scope
+		}
+		if = {
+			limit = { exists = s:STATE_EASTERN_THRACE.region_state:TUR }
+			s:STATE_EASTERN_THRACE.region_state:TUR = { save_scope_as = egyptian_crisis_state }
+		}
+		ig:ig_landowners ?= {
+			save_scope_as = landowners_ig
+		}
+	}
+
+	option = { # Modernize Egypt
+		name = egyptian_crisis_events.6.a
+		default_option = yes
+		add_modifier = {
+			name = egyptian_modernization_modifier
+			days = long_modifier_time
+		}
+		scope:landowners_ig ?= {
+			leader = {
+				set_ideology = ideology:ideology_modernizer_leader
+			}
+		}
+		make_independent = yes
+		set_country_type = recognized
+		ai_chance = {
+			value = 70
+		}
+	}
+	option = { # Annex the Arab territories of the Ottoman Empire
+		name = egyptian_crisis_events.6.b
+		transfer_state = { STATE = s:STATE_DEIR_EZ_ZOR GIVER = c:TUR TAKER = c:EGY }
+		transfer_state = { STATE = s:STATE_MOSUL GIVER = c:TUR TAKER = c:EGY }
+		transfer_state = { STATE = s:STATE_BASRA GIVER = c:TUR TAKER = c:EGY }
+		transfer_state = { STATE = s:STATE_BAGHDAD GIVER = c:TUR TAKER = c:EGY }
+		c:TUR = {
+			c:EGY ?= { transfer_subject = c:TRI }
+		}
+		if = {
+			limit = {
+				any_subject_or_below ?= {
+					this ?= c:HDJ
+					is_subject_type = subject_type_tributary
+				}
+			}
+			ROOT = {
+				create_diplomatic_pact = {
+					country = c:HDJ
+					type = vassal
+				}
+			}
+		}
+		make_independent = yes
+		ai_chance = {
+			value = 20
+		}
+	}
+	option = { # Become the new Ottoman Empire
+		name = egyptian_crisis_events.6.c
+		add_journal_entry = {
+			type = je_new_ottoman_dynasty
+		}
+		create_diplomatic_play = {
+			target_country = c:TUR
+			type = dp_annex_war
+		}
+		make_independent = yes
+		ai_chance = {
+			value = 10
+		}
+	}
+}
+
+egyptian_crisis_events.7 = {
+	type = country_event
+	placement = root
+
+	title = egyptian_crisis_events.7.t
+	desc = egyptian_crisis_events.7.d
+	flavor = egyptian_crisis_events.7.f
+
+	event_image = {
+		video = "middleeast_courtroom_upheaval"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	immediate = {
+	}
+
+	option = {
+		name = egyptian_crisis_events.7.a
+        default_option = yes
+		change_tag = TUR
+		add_primary_culture = cu:turkish
+		set_variable = alawite_empire_variable
+	}
+}

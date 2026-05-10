@@ -1,0 +1,66 @@
+oriental_crisis_wargoal = {
+	icon = "gfx/interface/icons/war_goals/conquer_state.dds"
+
+	kind = humiliation
+
+	settings = {
+		require_target_be_part_of_war
+
+		# Validation
+		validate_conflicts_war_goals_all
+	}
+
+	execution_priority = 18
+
+	contestion_type = control_any_target_incorporated_state
+
+	target_type = country
+
+	possible = {
+		# trigger to determine if a goal with its target data is listed when selecting a war goal in the diplo play panel
+		always = no
+	}
+
+	valid = {
+		# trigger in addition to some basic validation code-side
+	}
+
+	maneuvers = {
+		value = 0
+
+		add = {
+			desc = "MANEUVERS_BASE_VALUE"
+			value = 20
+		}
+	}
+
+	infamy = {
+		value = 0
+
+	}
+
+	on_enforced = {
+		custom_tooltip = {
+			text = oriental_crisis_wargoal_tt
+		}
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			set_global_variable = oriental_crisis_egyptian_victory
+		}
+		else_if = {
+			limit = {
+				scope:target_country = {
+					is_subject_of = root
+				}
+			}
+			set_global_variable = oriental_crisis_ottoman_victory
+			set_variable = defeated_egypt_militarily
+		}
+	}
+
+	ai = {
+		is_significant_demand = yes
+	}
+}

@@ -1,0 +1,112 @@
+je_oriental_crisis = {
+
+	group = je_group_global_international_situations
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+	transferable = no
+	weight = 10000
+
+	immediate = {
+		c:TUR = {
+			save_scope_as = ottoman_scope
+			create_bidirectional_truce = {
+				country = c:EGY
+				months = 6
+			}			
+		}
+		c:EGY = {
+			save_scope_as = egypt_scope
+			trigger_event = {
+				id = egyptian_crisis_events.3
+				months = 6
+			}
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			c:TUR ?= THIS
+       	 	c:EGY ?= THIS
+		}
+
+	}
+
+	is_shown_when_inactive = {
+		NOT = {
+			OR = {
+				has_global_variable = oriental_crisis_ottoman_victory
+				has_global_variable = oriental_crisis_egyptian_victory
+			}
+		}
+        c:TUR ?= THIS
+        c:EGY ?= THIS
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = ottoman_victory_tt
+			has_global_variable = oriental_crisis_ottoman_victory
+		}
+	}
+
+	on_complete = {
+		c:TUR = {
+			if = {
+				limit = {
+					has_variable = defeated_egypt_militarily
+				}
+				trigger_event = { id = egyptian_crisis_events.5 }
+			}
+		}
+	}
+
+	fail = {
+		custom_tooltip = {
+			text = egyptian_victory_tt
+			has_global_variable = oriental_crisis_egyptian_victory
+		}
+	}
+
+	on_fail = {
+		c:EGY = {
+			trigger_event = { id = egyptian_crisis_events.6 }
+		}
+	}
+
+	weight = 1000
+}
+
+je_new_ottoman_dynasty = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	group = je_group_historical_content
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	immediate = {
+		c:TUR = {
+			save_scope_as = ottoman_scope		
+		}
+		c:EGY = {
+			save_scope_as = egypt_scope
+		}
+	}
+	complete = {
+		country_or_subject_owns_entire_state_region = STATE_EASTERN_THRACE
+		custom_tooltip = {
+			text = ottoman_annexed_tt
+			NOT = {
+				exists = c:TUR
+			}
+		}
+	}
+	fail = {
+		exists = c:TUR
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+	}
+	on_complete = {
+		trigger_event = { id = egyptian_crisis_events.7 }
+	}
+}
