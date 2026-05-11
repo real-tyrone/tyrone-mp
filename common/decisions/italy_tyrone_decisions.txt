@@ -62,6 +62,85 @@ lmv_request_protectorate_decision = {
 	}
 }
 
+ita_ai_transfer_lmv_from_austria = {
+	is_shown = {
+		is_ai = yes
+		c:ITA ?= this
+		exists = c:AUS
+		exists = c:LMV
+		exists = c:PRU
+		NOT = { has_variable = ita_ai_transfer_lmv_from_austria_started }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = { has_war_with = c:AUS }
+		c:AUS = {
+			has_war_with = c:PRU
+		}
+		c:LMV = {
+			is_subject_of = c:AUS
+			NOT = { is_subject_of = ROOT }
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = { has_war_with = c:AUS }
+		c:AUS = {
+			has_war_with = c:PRU
+		}
+		c:LMV = {
+			is_subject_of = c:AUS
+			NOT = { is_subject_of = ROOT }
+		}
+	}
+
+	when_taken = {
+		set_variable = ita_ai_transfer_lmv_from_austria_started
+		create_diplomatic_play = {
+			name = transfer_subject
+			type = dp_transfer_subject
+			target_country = c:LMV
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+ita_annex_lmv_subject_decision = {
+	is_shown = {
+		c:ITA ?= this
+		exists = c:LMV
+		NOT = { has_variable = ita_annexed_lmv_subject }
+		c:LMV = {
+			is_subject_of = ROOT
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:LMV = {
+			is_subject_of = ROOT
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	when_taken = {
+		set_variable = ita_annexed_lmv_subject
+		ROOT = {
+			annex_with_incorporation = c:LMV
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 # ========== Sicilian Sulphur Monopoly decision ==========
 # Shown to SIC or to ITA formed via the Sicilian nationalist path (sic_ruler_of_italy variable).
 # Possible when Sicily has a sulphur mine at level >= 20, or the company is already established.
