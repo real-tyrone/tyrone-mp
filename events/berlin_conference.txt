@@ -137,6 +137,44 @@ berlin_conference.3 = {
 
 	immediate = {
 		set_global_variable = berlin_conference_ended
+		if = {
+			limit = {
+				has_game_rule = berlin_conf_territory_grant_enabled
+				exists = c:TRI
+			}
+			every_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_TRIPOLI
+						state_region = s:STATE_LIBYAN_DESERT
+						state_region = s:STATE_LIBYA
+					}
+				}
+				set_state_owner = c:TRI
+			}
+		}
+		if = {
+			limit = {
+				has_game_rule = berlin_conf_territory_grant_enabled
+			}
+			every_country = {
+				limit = {
+					owns_entire_state_region = STATE_KORDOFAN
+					owns_entire_state_region = STATE_BLUE_NILE
+					owns_entire_state_region = STATE_DONGOLA
+				}
+				save_scope_as = upper_nile_grant_country
+				every_state = {
+					limit = {
+						OR = {
+							state_region = s:STATE_DARFUR
+							state_region = s:STATE_EQUATORIA
+						}
+					}
+					set_state_owner = scope:upper_nile_grant_country
+				}
+			}
+		}
 		every_state = {
 			limit = {
 				OR = {
