@@ -1527,6 +1527,7 @@ usa_annex_independent_csa = {
 			target_country = c:CSA
 			type = dp_annex_war
 		}
+		change_infamy = -50
 	}
 
 	ai_chance = {
@@ -2413,6 +2414,7 @@ brz_ai_return_brazilian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:CLM }
+						NOT = { owner = c:BOL }
 					}
 					state_region = s:STATE_GOIAS
 					AND = {
@@ -2460,6 +2462,7 @@ brz_ai_return_brazilian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:CLM }
+						NOT = { owner = c:BOL }
 					}
 					state_region = s:STATE_GOIAS
 					AND = {
@@ -2501,6 +2504,7 @@ brz_ai_return_brazilian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:CLM }
+							NOT = { owner = c:BOL }
 						}
 						state_region = s:STATE_GOIAS
 						AND = {
@@ -2532,6 +2536,7 @@ brz_ai_return_brazilian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:CLM }
+							NOT = { owner = c:BOL }
 						}
 						state_region = s:STATE_GOIAS
 						AND = {
@@ -2678,6 +2683,150 @@ peu_ai_return_peruvian_states = {
 			type = dp_return_state
 			target_country = scope:peu_return_target_country_scope
 			target_state = scope:peu_return_target_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+bol_ai_return_bolivian_states = {
+	is_shown = {
+		is_ai = yes
+		c:BOL ?= this
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			is_subject = no
+			NOT = { is_country_type = decentralized }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				OR = {
+					state_region = s:STATE_LA_PAZ
+					state_region = s:STATE_SANTA_CRUZ
+					state_region = s:STATE_POTOSI
+					AND = {
+						state_region = s:STATE_JUJUY
+						NOT = { owner = c:ARG }
+					}
+					state_region = s:STATE_TARAPACA
+					state_region = s:STATE_ANTOFAGASTA
+					AND = {
+						state_region = s:STATE_AMAZONAS
+						NOT = { owner = c:BRZ }
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			is_subject = no
+			NOT = { is_country_type = decentralized }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				OR = {
+					state_region = s:STATE_LA_PAZ
+					state_region = s:STATE_SANTA_CRUZ
+					state_region = s:STATE_POTOSI
+					AND = {
+						state_region = s:STATE_JUJUY
+						NOT = { owner = c:ARG }
+					}
+					state_region = s:STATE_TARAPACA
+					state_region = s:STATE_ANTOFAGASTA
+					AND = {
+						state_region = s:STATE_AMAZONAS
+						NOT = { owner = c:BRZ }
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				is_subject = no
+				NOT = { is_country_type = decentralized }
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					OR = {
+						state_region = s:STATE_LA_PAZ
+						state_region = s:STATE_SANTA_CRUZ
+						state_region = s:STATE_POTOSI
+						AND = {
+							state_region = s:STATE_JUJUY
+							NOT = { owner = c:ARG }
+						}
+						state_region = s:STATE_TARAPACA
+						state_region = s:STATE_ANTOFAGASTA
+						AND = {
+							state_region = s:STATE_AMAZONAS
+							NOT = { owner = c:BRZ }
+						}
+					}
+				}
+			}
+			save_scope_as = bol_return_target_country_scope
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					OR = {
+						state_region = s:STATE_LA_PAZ
+						state_region = s:STATE_SANTA_CRUZ
+						state_region = s:STATE_POTOSI
+						AND = {
+							state_region = s:STATE_JUJUY
+							NOT = { owner = c:ARG }
+						}
+						state_region = s:STATE_TARAPACA
+						state_region = s:STATE_ANTOFAGASTA
+						AND = {
+							state_region = s:STATE_AMAZONAS
+							NOT = { owner = c:BRZ }
+						}
+					}
+				}
+				save_scope_as = bol_return_target_state_scope
+			}
+		}
+		scope:bol_return_target_state_scope.state_region = {
+			add_claim = ROOT
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:bol_return_target_country_scope
+			target_state = scope:bol_return_target_state_scope
 		}
 	}
 

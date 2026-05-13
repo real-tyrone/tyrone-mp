@@ -59,6 +59,7 @@ expedition_events.2 = { #Choose commander
 			limit = {
 				is_busy = no
 				is_ruler_of_own_country = no
+				character_is_valid_for_events = yes
 				OR = {
 					has_role_of_type = general
 					has_role_of_type = admiral
@@ -70,6 +71,7 @@ expedition_events.2 = { #Choose commander
 			limit = {
 				is_busy = no
 				is_ruler_of_own_country = no
+				character_is_valid_for_events = yes
 				OR = {
 					has_role_of_type = general
 					has_role_of_type = admiral
@@ -85,6 +87,7 @@ expedition_events.2 = { #Choose commander
 			limit = {
 				is_busy = no
 				is_ruler_of_own_country = no
+				character_is_valid_for_events = yes
 				OR = {
 					has_role_of_type = general
 					has_role_of_type = admiral
@@ -109,11 +112,7 @@ expedition_events.2 = { #Choose commander
 			multiplier = money_amount_multiplier_medium
 		}
 		scope:expedition_leader_1 = {
-			set_variable = expedition_leader_var
-			set_character_busy_and_immortal = yes
-			ROOT = {
-				set_variable = { name = expedition_leader_storage_var value = prev }
-			}
+			set_as_expedition_leader = yes
 		}
 		trigger_event = { id = expedition_events.4 days = 30 }
 	}
@@ -129,11 +128,7 @@ expedition_events.2 = { #Choose commander
 			multiplier = money_amount_multiplier_medium
 		}
 		scope:expedition_leader_2 = {
-			set_variable = expedition_leader_var
-			set_character_busy_and_immortal = yes
-			ROOT = {
-				set_variable = { name = expedition_leader_storage_var value = prev }
-			}
+			set_as_expedition_leader = yes
 		}
 		trigger_event = { id = expedition_events.4 days = 30 }
 	}
@@ -149,11 +144,7 @@ expedition_events.2 = { #Choose commander
 			multiplier = money_amount_multiplier_medium
 		}
 		scope:expedition_leader_3 = {
-			set_variable = expedition_leader_var
-			set_character_busy_and_immortal = yes
-			ROOT = {
-				set_variable = { name = expedition_leader_storage_var value = prev }
-			}
+			set_as_expedition_leader = yes
 		}
 		trigger_event = { id = expedition_events.4 days = 30 }
 	}
@@ -1280,6 +1271,7 @@ expedition_events.110 = { #Leader dies
 			}
 			save_scope_as = expedition_leader
 			set_character_busy_and_immortal = yes
+			unassign_from_formation = yes
 		}
 		set_variable = expedition_new_leader
 		if = {
@@ -1313,6 +1305,7 @@ expedition_events.110 = { #Leader dies
 		}
 		scope:expedition_leader = {
 			set_variable = expedition_leader_var
+			unassign_from_formation = yes
 			ROOT = {
 				set_variable = { name = expedition_leader_storage_var value = prev }
 			}
@@ -1495,6 +1488,7 @@ expedition_events.130 = { #kidnapped ambassador
 		}
 		NOT = { has_variable = kidnapped_ambassador_var }
 		any_country = {
+			NOT = { this = ROOT }
 			relations:root >= relations_threshold:neutral
 			NOR = {
 				is_country_type = decentralized
@@ -1510,12 +1504,11 @@ expedition_events.130 = { #kidnapped ambassador
 	immediate = {
 		random_country = {
 			limit = {
-				owner = {
+				NOT = { this = ROOT }
 					relations:root >= relations_threshold:neutral
 					NOR = {
 						is_country_type = decentralized
 						is_country_type = unrecognized
-					}
 				}
 			}
 			save_scope_as = ambassador_country

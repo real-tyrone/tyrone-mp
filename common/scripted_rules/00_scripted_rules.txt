@@ -27,6 +27,9 @@ is_weak_power_bloc = {
 # Checks if any diplomatic play is possible against the target country
 # Root = Country
 # scope:target_country = target of a diplomatic play
+# scope:region = strategic region of the initial war goal
+# scope:stakeholder = the stakeholder of the initial war goal, in case it's not the target country
+# scope:state = if the war goal is targeting a state, that. otherwise, empty
 can_start_diplomatic_plays_against = {
 	# Not allowed to attack subjects of play participants
 	NOT = {
@@ -57,6 +60,16 @@ can_start_diplomatic_plays_against = {
 			is_indirect_subject_of = root
 		}
 	}
+
+	OR = {
+		has_strategic_region_interest_tier = {
+			strategic_region = scope:region
+			value >= interest_tier_effect_can_start_diplomatic_plays_min_tier
+		}
+		is_direct_subject_of = scope:target_country
+		scope:target_country = { is_direct_subject_of = root }
+	}
+
 	NOT = {
 		scope:target_country = {
 			has_journal_entry = je_the_first_carlist_war
@@ -68,6 +81,8 @@ can_start_diplomatic_plays_against = {
 # Root = Country
 # scope:target_country = country of the side to join to
 # scope:enemy_country = enemy country of target_country to which we could fight against
+# scope:initiator = country that started the play (i.e the attacker)
+# scope:region = strategic region of the initial war goal
 can_join_side_in_diplomatic_play = {
 	# Might be disallowed by power bloc
 	NOT = {
@@ -90,6 +105,39 @@ can_join_side_in_diplomatic_play = {
 		scope:enemy_country = {
 			is_indirect_subject_of = root
 		}
+	}
+
+	OR = {
+		has_strategic_region_interest_tier = {
+			strategic_region = scope:region
+			value >= interest_tier_effect_can_join_diplomatic_plays_min_tier
+		}
+		has_treaty_alliance_with = { TARGET = scope:target_country }
+		AND = {
+			has_treaty_defensive_pact_with = { TARGET = scope:target_country }
+			hidden_trigger = {
+				scope:target_country = {
+					scope:initiator != this
+				}
+			}
+		}
+		AND = {
+			scope:target_country = {
+				has_treaty_guarantee_independence_with = { TARGET = root }
+			}
+			hidden_trigger = {
+				scope:target_country = {
+					scope:initiator != this
+				}
+			}
+		}
+		scope:target_country = {
+			has_treaty_support_independence_with = { TARGET = root }
+		}
+		is_direct_subject_of = scope:enemy_country
+		scope:enemy_country = { is_direct_subject_of = root }
+		is_direct_subject_of = scope:target_country
+		scope:target_country = { is_direct_subject_of = root }
 	}
 }
 
@@ -189,13 +237,6 @@ unlock_power_bloc_formation_principle_slot_4 = {
 	always = no
 }
 
-# unlock_power_bloc_formation_principle_slot_5 = {
-# 	always = no
-# }
-
-# unlock_power_bloc_formation_principle_slot_6 = {
-# 	always = no
-# }																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										
 
 # Evaluated when checking if a country can sign a treaty with another. Either through the player doing it in the UI or the AI looking for treaties to propose
 # root = initiating country
@@ -203,10 +244,53 @@ unlock_power_bloc_formation_principle_slot_4 = {
 can_sign_treaty_with = {
 	scope:other_country = {
 		NOT = { is_country_type = decentralized }
-		is_revolutionary = no
 	}
 	root = {
 		NOT = { is_diplomatic_play_enemy_of = scope:other_country }
 	}
-	has_diplomatic_relevance = scope:other_country
+
+	OR = {
+		has_strategic_adjacency = scope:other_country
+		AND = {
+			has_port_country = yes
+			scope:other_country = { has_port_country = yes }
+		}
+		is_in_same_power_bloc = scope:other_country
+	}
+}
+
+# Evaluated when checking if a country can threaten naval hostilities in a treaty
+# root = threatening country
+# scope:other_country = threatened country
+can_threaten_naval_hostilities = {
+	navy_size >= 10
+
+	custom_tooltip = {
+		text = "THREATEN_NAVAL_HOSTILITIES_NAVY_MUST_BE_STRONGER"
+		naval_combat_power > scope:other_country.naval_combat_power
+	}
+
+	custom_tooltip = {
+		text = "THREATEN_NAVAL_HOSTILITIES_NOT_LANDLOCKED"
+		scope:other_country = {
+			any_scope_state = {
+				is_coastal = yes
+			}
+		}
+	}
+
+	"relations(scope:other_country)" < relations_threshold:cordial
+	NOR = {
+		is_diplomatic_play_ally_of = scope:other_country
+		any_scope_treaty = {
+			binds = scope:other_country
+			any_scope_article = {
+				OR = {
+					has_type = alliance
+					has_type = defensive_pact
+					has_type = guarantee_independence
+				}
+			}
+		}
+	}
 }

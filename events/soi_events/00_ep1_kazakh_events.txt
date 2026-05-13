@@ -42,12 +42,9 @@ kazakhstan_events.1 = {
 			}
 		}
 		else = {
-			random_state = {
+			s:STATE_SYRDARYA = {
+				random_scope_state = {
 				limit = {
-					state_region = s:STATE_SYRDARYA
-					this.state_region = {
-						is_homeland = cu:kazak
-					}
 					owner = {
 						OR = {
 							c:RUS ?= THIS
@@ -59,6 +56,7 @@ kazakhstan_events.1 = {
 				owner = {
 					save_scope_as = kenesary_country
 				}
+			}
 			}
 			create_country = {
 				tag = KAZ
@@ -124,31 +122,33 @@ kazakhstan_events.1 = {
 		name = kazakhstan_events.1.a
 		add_journal_entry = { type = je_the_last_kazakh_khan }
         default_option = yes
-		every_state = {
+		s:STATE_SEMIRECHE ?= {
+			every_scope_state = {
 			limit = {
-				state_region = s:STATE_SEMIRECHE
 				owner = {
 					OR = {
-						is_subject_of = c:RUS
 						c:RUS ?= THIS
+							is_subject_of = c:RUS
 					}
 				}
 			}
 			set_state_owner = c:KAZ
 			set_state_type = incorporated
 		}
-		every_state = {
+		}
+		s:STATE_SYRDARYA ?= {
+			every_scope_state = {
 			limit = {
-				state_region = s:STATE_SYRDARYA
 				owner = {
 					OR = {
-						is_subject_of = c:RUS
 						c:RUS ?= THIS
+							is_subject_of = c:RUS
 					}
 				}
 			}
 			set_state_owner = c:KAZ
 			set_state_type = incorporated
+		}
 		}
 		if = {
 			limit = {
@@ -277,7 +277,7 @@ kazakhstan_events.1 = {
 				}
 			}
 		}
-		every_state = {
+		every_state_in_central_asia = {
 			limit = {
 				owner = {
 					OR = {
@@ -309,9 +309,9 @@ kazakhstan_events.1 = {
 				add_initiator_backers = { prev }
 			}
 		}
-		every_country = {
+		c:RUS ?= {
+			every_subject_or_below = {
 			limit = {
-				is_subject_of = c:RUS
 				country_has_primary_culture = cu:kazak
 			}
 			add_radicals = {
@@ -320,11 +320,10 @@ kazakhstan_events.1 = {
 			}
 			add_modifier = { name = modifier_kazakh_ungovernable_provinces days = long_modifier_time is_decaying = yes }
 		}
-		hidden_effect = {
-			every_state = {
-				limit = {
-					owner = c:KAZ
 				}
+		hidden_effect = {
+			c:KAZ ?= {
+				every_scope_state = {
 				add_modifier = {
 					name = modifier_taiping_hiring_bonus # Temporary bonus to fill their barracks
 					months = 6
@@ -332,35 +331,38 @@ kazakhstan_events.1 = {
 			}
 		}
 	}
+	}
 
     option = {
 		name = kazakhstan_events.1.b
 		add_journal_entry = { type = je_the_last_kazakh_khan }
-		every_state = {
+		s:STATE_SEMIRECHE ?= {
+			every_scope_state = {
 			limit = {
-				state_region = s:STATE_SEMIRECHE
 				owner = {
 					OR = {
-						is_subject_of = c:RUS
 						c:RUS ?= THIS
+							is_subject_of = c:RUS
 					}
 				}
 			}
 			set_state_owner = c:KAZ
 			set_state_type = incorporated
 		}
-		every_state = {
+		}
+		s:STATE_SYRDARYA ?= {
+			every_scope_state = {
 			limit = {
-				state_region = s:STATE_SYRDARYA
 				owner = {
 					OR = {
-						is_subject_of = c:RUS
 						c:RUS ?= THIS
+							is_subject_of = c:RUS
 					}
 				}
 			}
 			set_state_owner = c:KAZ
 			set_state_type = incorporated
+		}
 		}
 		if = {
 			limit = {
@@ -506,9 +508,9 @@ kazakhstan_events.1 = {
 				add_initiator_backers = { prev }
 			}
 		}
-		every_country = {
+		c:RUS ?= {
+			every_subject_or_below = {
 			limit = {
-				is_subject_of = c:RUS
 				country_has_primary_culture = cu:kazak
 			}
 			add_radicals = {
@@ -517,11 +519,6 @@ kazakhstan_events.1 = {
 			}
 			add_modifier = { name = modifier_kazakh_ungovernable_provinces days = long_modifier_time is_decaying = yes }
 		}
-		play_as = c:KAZ
-		hidden_effect = {
-			every_state = {
-				limit = {
-					owner = c:KAZ
 				}
 				add_modifier = {
 					name = modifier_taiping_hiring_bonus # Temporary bonus to fill their barracks
@@ -529,6 +526,8 @@ kazakhstan_events.1 = {
 				}
 			}
 		}
+	}
+		play_as = c:KAZ
 	}
 }
 
@@ -559,11 +558,10 @@ kazakhstan_events.2 = {
 		c:RUS ?= {
         	save_scope_as = russia_scope
         }
-		random_state = {
-			limit = {
-				state_region = s:STATE_AKMOLINSK
-			}
+		s:STATE_AKMOLINSK ?= {
+			random_scope_state = {
 			save_scope_as = akmolinsk_state
+		}
 		}
 		random_country = {
 			limit = {
@@ -713,7 +711,7 @@ kazakhstan_events.4 = { #Raid on Russian convoy
 	cooldown = { days = short_modifier_time }
 
 	trigger = {
-		any_state = {
+		any_state_in_central_asia = {
 			owner = {
 				country_has_primary_culture = cu:kazak
 				is_subject_of = root
@@ -728,7 +726,7 @@ kazakhstan_events.4 = { #Raid on Russian convoy
             }
             save_scope_as = kenesary_scope
         }
-		random_state = {
+		random_state_in_central_asia = {
 			limit = {
 				owner = {
 					country_has_primary_culture = cu:kazak
@@ -799,7 +797,7 @@ kazakhstan_events.5 = { #Raid on Russian fortress
 	cooldown = { days = short_modifier_time }
 
 	trigger = {
-		any_state = {
+		any_state_in_central_asia = {
 			owner = {
 				country_has_primary_culture = cu:kazak
 				is_subject_of = root
@@ -817,7 +815,7 @@ kazakhstan_events.5 = { #Raid on Russian fortress
         c:RUS ?= {
         	save_scope_as = russia_scope
         }
-		random_state = {
+		random_state_in_central_asia = {
 			limit = {
 				owner = {
 					country_has_primary_culture = cu:kazak
@@ -1047,7 +1045,7 @@ kazakhstan_events.8 = { #Raid Repelled
 	cooldown = { days = short_modifier_time }
 
 	trigger = {
-		any_state = {
+		any_state_in_central_asia = {
 			owner = {
 				country_has_primary_culture = cu:kazak
 				is_subject_of = root
@@ -1058,7 +1056,7 @@ kazakhstan_events.8 = { #Raid Repelled
 			any_scope_character = {
                 has_role_of_type = general
             }
-			current_hq ?= p:x86A90A.land_hq
+			current_hq.region ?= sr:region_central_asia
 		}
 	}
 
@@ -1069,7 +1067,7 @@ kazakhstan_events.8 = { #Raid Repelled
             }
             save_scope_as = kenesary_scope
         }
-		random_state = {
+		random_state_in_central_asia = {
 			limit = {
 				owner = {
 					country_has_primary_culture = cu:kazak
@@ -1092,7 +1090,7 @@ kazakhstan_events.8 = { #Raid Repelled
 				any_scope_character = {
 					has_role_of_type = general
 				}
-				current_hq ?= p:x86A90A.land_hq
+				current_hq.region ?= sr:region_central_asia
 			}
 			random_scope_character = {
 				limit = {
@@ -1267,25 +1265,13 @@ russian_central_asia.2 = {
         		is_in_geographic_region = geographic_region_europe
         		OR = {
         			any_scope_state = {
-        				OR = {
-							region = sr:region_north_india
-							region = sr:region_south_india
-							region = sr:region_south_india
-							region = sr:region_north_india
-							region = sr:region_north_india
-    					}
+						is_in_geographic_region = geographic_region_india
 						count >= 3
         			}
         			any_country = {
         				is_subject_of = prev
         				any_scope_state = {
-        					OR = {
- 								region = sr:region_north_india
-								region = sr:region_south_india
-								region = sr:region_south_india
-								region = sr:region_north_india
-								region = sr:region_north_india
-        					}
+							is_in_geographic_region = geographic_region_india
 							count >= 3
 	        			}
         			}
@@ -1356,25 +1342,13 @@ russian_central_asia.2 = {
         	limit = {
         		OR = {
         			any_scope_state = {
-        				OR = {
-							region = sr:region_north_india
-							region = sr:region_south_india
-							region = sr:region_south_india
-							region = sr:region_north_india
-							region = sr:region_north_india
-    					}
+						is_in_geographic_region = geographic_region_india
 						count >= 3
         			}
         			any_country = {
         				is_subject_of = prev
         				any_scope_state = {
-        					OR = {
-  								region = sr:region_north_india
-								region = sr:region_south_india
-								region = sr:region_south_india
-								region = sr:region_north_india
-								region = sr:region_north_india
-        					}
+							is_in_geographic_region = geographic_region_india
 							count >= 3
 	        			}
         			}

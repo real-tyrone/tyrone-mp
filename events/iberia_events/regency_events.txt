@@ -23,14 +23,22 @@ regency.1 = {
 
 	trigger = {
 		# Is a monarchy, ruler is undr age of majority
+		has_law = law_type:law_monarchy
+		has_gov_regency = no
 	}
 
 	cancellation_trigger = {
-
+		OR = {
+			NOT = {
+				has_law = law_type:law_monarchy
+			}
+			scope:monarch_scope ?= {
+				is_adult = yes
+			}
+		}
 	}
 
 	immediate = {		
-		
 		ordered_interest_group = { # Just the most notable IG in government
 			limit = {
 				is_in_government = yes
@@ -101,6 +109,7 @@ regency.1 = {
 	option = {
 		name = regency.1.a
 		default_option = yes
+		add_regency_modifier = yes
 		set_variable = { name = hide_ruler_change_notification days = 3 }
 		scope:ig_candidate_1.leader = {
 			set_character_as_ruler = yes
@@ -115,7 +124,6 @@ regency.1 = {
 			}
 		}
 		set_heir = scope:monarch_scope
-		add_regency_modifier = yes
 	}
 
 	option = {
@@ -123,6 +131,7 @@ regency.1 = {
 		trigger = {
 			exists = scope:ig_candidate_2
 		}
+		add_regency_modifier = yes
 		set_variable = { name = hide_ruler_change_notification days = 3 }
 		scope:ig_candidate_2.leader = {
 			set_character_as_ruler = yes
@@ -137,7 +146,6 @@ regency.1 = {
 			}
 		}
 		set_heir = scope:monarch_scope
-		add_regency_modifier = yes
 	}
 
 	option = {
@@ -145,6 +153,7 @@ regency.1 = {
 		trigger = {
 			exists = scope:ig_candidate_3
 		}
+		add_regency_modifier = yes
 		set_variable = { name = hide_ruler_change_notification days = 3 }
 		scope:ig_candidate_3.leader = {
 			set_character_as_ruler = yes
@@ -159,7 +168,6 @@ regency.1 = {
 			}
 		}
 		set_heir = scope:monarch_scope
-		add_regency_modifier = yes
 	}
 
 	option = {
@@ -167,6 +175,7 @@ regency.1 = {
 		trigger = {
 			exists = scope:ig_candidate_4
 		}
+		add_regency_modifier = yes
 		set_variable = { name = hide_ruler_change_notification days = 3 }
 		scope:ig_candidate_4.leader = {
 			set_character_as_ruler = yes
@@ -181,7 +190,6 @@ regency.1 = {
 			}
 		}
 		set_heir = scope:monarch_scope
-		add_regency_modifier = yes
 	}
 	option = {
 		name = regency.1.h
@@ -244,7 +252,7 @@ regency.2 = {
 	immediate = {
 		ruler ?= {
 			save_scope_as = regent_scope
-			interest_group = {
+			interest_group ?= {
 				save_scope_as = ig_candidate_1
 			}
 		}
@@ -330,9 +338,7 @@ regency.2 = {
 					}
 					set_character_immortal = no
 				}
-				kill_character = {
-					hidden = yes
-				}
+				retire_character = yes
 			}
 		}
 	}
@@ -362,9 +368,7 @@ regency.2 = {
 					}
 					set_character_immortal = no
 				}
-				kill_character = {
-					hidden = yes
-				}
+				retire_character = yes
 			}
 		}
 	}
@@ -394,9 +398,7 @@ regency.2 = {
 					}
 					set_character_immortal = no
 				}
-				kill_character = {
-					hidden = yes
-				}
+				retire_character = yes
 			}
 		}
 	}
@@ -426,9 +428,7 @@ regency.2 = {
 					}
 					set_character_immortal = no
 				}
-				kill_character = {
-					hidden = yes
-				}
+				retire_character = yes
 			}
 		}
 	}
@@ -459,7 +459,7 @@ regency.3 = {
 	trigger = {
 		has_gov_regency = yes
 		heir ?= {
-			age >= define:NCharacters|ADULT_AGE
+			is_adult = yes
 		}
 	}
 
