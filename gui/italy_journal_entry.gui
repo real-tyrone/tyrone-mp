@@ -1,10 +1,9 @@
-# Italy Tyrone – journal entry character portrait widgets
+# Italy Tyrone â€“ journal entry character portrait widgets
 # Used by journal_entry.gui (italy_je_characters). Requires com_journal_characters variable list on journal entry scope.
 # italy_risorgimento_quote: for italy_risorgimento_stage JE. Requires com_risorgimento_mazzini list with one character (Mazzini) when JE is added.
-# italy_irredentism_illustration: for Italian_Irredentism_main JE only (matched by unique icon).
 
 @panel_width_plus_20 = 560
-@italy_panel_width_plus_20_half = @[panel_width_plus_20 / 2]
+@italy_panel_width_plus_20_half = 280
 # 80% of panel width so 10% margin each side (560*0.8 = 448)
 @italy_risorgimento_quote_width = 448
 
@@ -22,7 +21,6 @@ types italy_journal_entry_characters {
 			size = { @italy_risorgimento_quote_width 120 }
 			minimumsize = { @italy_risorgimento_quote_width 80 }
 			parentanchor = hcenter
-			margin_top = 20
 			background = {
 				using = paper_bg
 			}
@@ -30,8 +28,8 @@ types italy_journal_entry_characters {
 				text = "italy_risorgimento_martyr_quote"
 				autoresize = yes
 				multiline = yes
-				minimumsize = { @italy_risorgimento_quote_width - 48 60 }
-				max_width = @italy_risorgimento_quote_width - 48
+				minimumsize = { @[italy_risorgimento_quote_width - 48] 60 }
+				max_width = @[italy_risorgimento_quote_width - 48]
 				parentanchor = hcenter|vcenter
 				align = hcenter|nobaseline
 				using = fontsize_xxl
@@ -112,125 +110,7 @@ types italy_journal_entry_characters {
 			}
 		}
 
-		# Italian unification sentiment bar (0–100 from italian_sentiment_var). datacontext = country so ScriptValue reads owner.var.
-		flowcontainer = {
-			direction = vertical
-			parentanchor = hcenter
-			spacing = 50	
-			margin_top = 8
-			datacontext = "[GetPlayer]"
-			default_header_clean_faded = {
-				blockoverride "text" {
-					text = "italy_sentiment_bar_name"
-				}
-				blockoverride "size" {
-					size = { @[italy_risorgimento_quote_width - 24] 32 }
-				}
-			}
-			green_progressbar_horizontal = {
-				size = { @[italy_risorgimento_quote_width - 24] 24 }
-				parentanchor = hcenter
-				tooltip = "italy_sentiment_bar_from_var_tt"
-				blockoverride "values" {
-					value = "[JournalEntry.GetCountry.MakeScope.Var('italian_sentiment_var').GetValue]"
-					min = 0
-					max = 100
-				}
-				icon = {
-					size = { 60 60 }
-					position = { 130 -24 }
-					widgetanchor = center|bottom
-					texture = "gfx/interface/icons/timed_modifier_icons/modifier_fire_negative.dds"
-					tooltip = "italy_gui_tension_30_tt"
-				}
-				icon = {
-					size = { 60 60 }
-					position = { 250 -24 }
-					widgetanchor = center|bottom
-					texture = "gfx/interface/icons/timed_modifier_icons/modifier_fire_negative.dds"
-					tooltip = "italy_gui_tension_60_tt"
-				}
-				icon = {
-					size = { 80 80 }
-					position = { 380 -40 }
-					widgetanchor = center|bottom
-					texture = "gfx/interface/icons/timed_modifier_icons/modifier_fire_positive.dds"
-					tooltip = "italy_gui_tension_90_tt"
-				}
-			}
-		}
-
 		divider_clean = {}
-	}
-
-	type italy_irredentism_illustration = flowcontainer {
-		direction = vertical
-		parentanchor = hcenter
-		visible = "[EqualTo_string(JournalEntry.GetName, Localize('Italian_Irredentism_main'))]"
-		size = { 478 560 }
-		background = {
-			using = entry_bg
-		}
-		# Show only for Italian_Irredentism_main (identified by its unique icon)
-		visible = "[EqualTo_string(JournalEntry.GetIcon, 'gfx/interface/icons/event_icons/ItalianMain.jpg')]"
-
-		default_header_clean_faded = {
-			blockoverride "text" {
-				text = "Italian Irredentism"
-			}
-			blockoverride "size" {
-				size = { @italy_risorgimento_quote_width 45 }
-			}
-		}
-
-		widget = {
-			size = { 478 543 }
-			minimumsize = { 478 543 }
-			parentanchor = hcenter
-
-			icon = {
-					parentanchor = center
-					texture = "gfx/interface/icons/event_icons/ItalianMain.jpg"
-					size = { 458 543 }
-				}
-		}
-		divider_clean = {}
-
-	}
-
-	type italy_jewelcolony_illustration = flowcontainer {
-		direction = vertical
-		parentanchor = hcenter
-		visible = "[EqualTo_string(JournalEntry.GetName, Localize('Italian_Irredentism_jewel_colony'))]"
-		size = { 478 560 }
-		background = {
-			using = entry_bg
-		}
-		# Show only for Italian_Irredentism_main (identified by its unique icon)
-		visible = "[EqualTo_string(JournalEntry.GetIcon, 'gfx/interface/icons/event_icons/ItalyEgypt.jpg')]"
-
-		default_header_clean_faded = {
-			blockoverride "text" {
-				text = "Italian Colonialism"
-			}
-			blockoverride "size" {
-				size = { @italy_risorgimento_quote_width 45 }
-			}
-		}
-
-		widget = {
-			size = { 478 543 }
-			minimumsize = { 478 543 }
-			parentanchor = hcenter
-
-			icon = {
-					parentanchor = center
-					texture = "gfx/interface/icons/event_icons/ItalyEgypt.jpg"
-					size = { 458 543 }
-				}
-		}
-		divider_clean = {}
-
 	}
 
 	type italy_je_character = widget {
@@ -328,9 +208,9 @@ types italy_journal_entry_characters {
 				direction = horizontal
 				spacing = 40
 				parentanchor = hcenter
-				# Left column – French flag + 3 buttons stacked and centered
+				# Left column â€“ French flag + 3 buttons stacked and centered
 			flowcontainer = {
-				size = { @italy_panel_width_plus_20_half 240 }
+				minimumsize = { @italy_panel_width_plus_20_half 240 }
 				direction = vertical
 				spacing = 6
 				margin_top = 18
@@ -372,7 +252,7 @@ types italy_journal_entry_characters {
 							}
 						}
 						textbox = {
-							text = "Artillery Tactics"
+							raw_text = "Artillery Tactics"
 							parentanchor = vcenter
 							margin_left = -180
 						}
@@ -393,7 +273,7 @@ types italy_journal_entry_characters {
 							}
 						}
 						textbox = {
-							text = "Laissez-Faire"
+							raw_text = "Laissez-Faire"
 							parentanchor = vcenter
 							margin_left = -160
 						}
@@ -414,16 +294,16 @@ types italy_journal_entry_characters {
 							}
 						}
 						textbox = {
-							text = "Liberal Politics"
+							raw_text = "Liberal Politics"
 							parentanchor = vcenter
 							margin_left = -170
 						}
 					}
 				}
 			}
-			# Right column – Austrian flag + 3 buttons stacked and centered
+			# Right column â€“ Austrian flag + 3 buttons stacked and centered
 			flowcontainer = {
-				size = { @italy_panel_width_plus_20_half 240 }
+				minimumsize = { @italy_panel_width_plus_20_half 240 }
 				direction = vertical
 				spacing = 6
 				parentanchor = hcenter
@@ -454,7 +334,7 @@ types italy_journal_entry_characters {
 						parentanchor = hcenter
 						datacontext = "[GetScriptedGui('ita_austrian_military_scriptedgui')]"
 						textbox = {
-							text = "Infantry Tactics"
+							raw_text = "Infantry Tactics"
 							parentanchor = vcenter
 							margin_left = 70
 						}
@@ -475,7 +355,7 @@ types italy_journal_entry_characters {
 						parentanchor = hcenter
 						datacontext = "[GetScriptedGui('ita_austrian_economy_scriptedgui')]"
 						textbox = {
-							text = "Interventionism"
+							raw_text = "Interventionism"
 							parentanchor = vcenter
 							margin_left = 70
 						}
@@ -496,7 +376,7 @@ types italy_journal_entry_characters {
 						parentanchor = hcenter
 						datacontext = "[GetScriptedGui('ita_austrian_laws_scriptedgui')]"
 						textbox = {
-							text = "Autocratic Politics"
+							raw_text = "Autocratic Politics"
 							parentanchor = vcenter
 							margin_left = 70
 						}
@@ -536,7 +416,7 @@ types italy_journal_entry_characters {
 		}
 	}
 
-	# Italy: Developing Industry – three bars (North, Padana, South) from vars
+	# Italy: Developing Industry â€“ three bars (North, Padana, South) from vars
 	type italy_developing_industry_bars = flowcontainer {
 		direction = vertical
 		parentanchor = hcenter
@@ -548,7 +428,7 @@ types italy_journal_entry_characters {
 		margin = { 28 0 }
 		default_header_clean_faded = {
 			blockoverride "text" {
-				text = "Italian Developing Industry"
+				raw_text = "Italian Developing Industry"
 			}
 			parentanchor = hcenter
 			blockoverride "size" {
@@ -576,7 +456,7 @@ types italy_journal_entry_characters {
 									parentanchor = vcenter|hcenter
 									position = { 0 -2 }
 									autoresize = yes
-									max_width = @panel_width_half
+									max_width = @italy_panel_width_plus_20_half
 									align = hcenter|nobaseline
 									using = fontsize_large
 								}
@@ -598,7 +478,7 @@ types italy_journal_entry_characters {
 									parentanchor = vcenter|hcenter
 									position = { 0 -2 }
 									autoresize = no
-									max_width = @panel_width_half
+									max_width = @italy_panel_width_plus_20_half
 									align = hcenter|nobaseline
 									using = fontsize_large
 								}
@@ -609,11 +489,11 @@ types italy_journal_entry_characters {
 								blockoverride "text" {}
 								parentanchor = hcenter
 								textbox = {
-									text = "Remaining Yearly Budget: #variable [JournalEntry.GetCountry.MakeScope.Var('ita_investment_power_var').GetValue|v0]#!"
+									raw_text = "Remaining Yearly Budget: #variable [JournalEntry.GetCountry.MakeScope.Var('ita_investment_power_var').GetValue|v0]#!"
 									parentanchor = vcenter|hcenter
 									position = { 0 -2 }
 									autoresize = yes
-									max_width = @panel_width_half
+									max_width = @italy_panel_width_plus_20_half
 									align = hcenter|nobaseline
 									using = fontsize_medium
 								}
@@ -632,13 +512,13 @@ types italy_journal_entry_characters {
 
 				textbox = {
 					position = { -210 60 }
-					text = "Industrial Triangle Investments (Piedmont/Lombardy)"
+					raw_text = "Industrial Triangle Investments (Piedmont/Lombardy)"
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				widget = {
 					size = { 500 30 }
-					parentanchor = lcenter
+					parentanchor = left|vcenter
 	
 	
 					progressbar_properties  = {
@@ -660,10 +540,6 @@ types italy_journal_entry_characters {
 						}
 						blockoverride "glow_line" {
 							texture = "gfx/interface/progressbar/progressbar_deregulation_glow_line.png"
-						}
-	
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
 						}
 	
 						tooltip = ""
@@ -735,13 +611,13 @@ types italy_journal_entry_characters {
 				}
 				textbox = {
 					position = { -210 180 }
-					text = "Pianura Padana Investment (Venetia/Romagna/Lombardy)"
+					raw_text = "Pianura Padana Investment (Venetia/Romagna/Lombardy)"
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				widget = {
 					size = { 500 30 }
-					parentanchor = lcenter
+					parentanchor = left|vcenter
 
 
 					progressbar_properties  = {
@@ -763,10 +639,6 @@ types italy_journal_entry_characters {
 						}
 						blockoverride "glow_line" {
 							texture = "gfx/interface/progressbar/progressbar_deregulation_glow_line.png"
-						}
-
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
 						}
 
 						tooltip = ""
@@ -836,13 +708,13 @@ types italy_journal_entry_characters {
 				}
 				textbox = {
 					position = { -210 300 }
-					text = "Mezzogiorno Investments (South Italy)"
+					raw_text = "Mezzogiorno Investments (South Italy)"
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				widget = {
 					size = { 500 30 }
-					parentanchor = lcenter
+					parentanchor = left|vcenter
 
 					progressbar_properties  = {
 						position = { 20 320 }
@@ -863,10 +735,6 @@ types italy_journal_entry_characters {
 						}
 						blockoverride "glow_line" {
 							texture = "gfx/interface/progressbar/progressbar_deregulation_glow_line.png"
-						}
-
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
 						}
 
 						tooltip = ""
@@ -936,25 +804,25 @@ types italy_journal_entry_characters {
 				}
 				textbox = {
 					position = { -210 400 }
-					text = "The nation must grow as one. Regions left behind"
+					raw_text = "The nation must grow as one. Regions left behind"
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				textbox = {
 					position = { -210 423 }
-					text = "by development will fall into decline, overinvesting "
+					raw_text = "by development will fall into decline, overinvesting "
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				textbox = {
 					position = { -210 446 }
-					text = "in one region while neglecting others will cause the "
+					raw_text = "in one region while neglecting others will cause the "
 					parentanchor = hcenter
 					using = fontsize_large
 				}
 				textbox = {
 					position = { -210 469 }
-					text = "underdeveloped areas to suffer economic penalties."
+					raw_text = "underdeveloped areas to suffer economic penalties."
 					parentanchor = hcenter
 					using = fontsize_large
 				}
@@ -968,7 +836,7 @@ types italy_journal_entry_characters {
 					}
 					default_header_clean_faded = {
 						blockoverride "text" {
-							text = "Assign Development"
+							raw_text = "Assign Development"
 						}
 						parentanchor = hcenter
 						blockoverride "size" {
@@ -977,19 +845,19 @@ types italy_journal_entry_characters {
 					}
 					textbox = {
 						position = { -200 80 }
-						text = "North"
+						raw_text = "North"
 						parentanchor = hcenter
 						using = fontsize_large
 					}
 					textbox = {
 						position = { -48 80 }
-						text = "Padana Plain"
+						raw_text = "Padana Plain"
 						parentanchor = hcenter
 						using = fontsize_large
 					}
 					textbox = {
 						position = { 155 80 }
-						text = "South"
+						raw_text = "South"
 						parentanchor = hcenter
 						using = fontsize_large
 					}
@@ -1056,7 +924,7 @@ types italy_journal_entry_characters {
 					}
 					default_header_clean_faded = {
 						blockoverride "text" {
-							text = "Development View"
+							raw_text = "Development View"
 						}
 						parentanchor = hcenter
 						blockoverride "size" {
@@ -1082,10 +950,6 @@ types italy_journal_entry_characters {
 						}
 						blockoverride "glow_line" {
 							texture = "gfx/interface/progressbar/progressbar_deregulation_glow_line.png"
-						}
-	
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
 						}
 	
 						tooltip = "north_italy_dev_tt"
@@ -1117,10 +981,6 @@ types italy_journal_entry_characters {
 							texture = "gfx/interface/progressbar/progressbar_deregulation_glow_line.png"
 						}
 	
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
-						}
-	
 						tooltip = "south_italy_dev_tt"
 						blockoverride "values" {
 							value = "[JournalEntry.GetCountry.MakeScope.Var('sluggish_south_ita_var').GetValue]"
@@ -1148,10 +1008,6 @@ types italy_journal_entry_characters {
 						}
 						blockoverride "glow_line" {
 							texture = "gfx/interface/progressbar/progressbar_green_glow_line.dds"
-						}
-	
-						blockoverride "frame" {
-							texture = "gfx/interface/progressbar/bar_horizontal_frame_samcheong.png"
 						}
 	
 						tooltip = "padana_italy_dev_tt"
@@ -1187,3 +1043,5 @@ types italy_journal_entry_characters {
 			}
 	}
 }
+
+

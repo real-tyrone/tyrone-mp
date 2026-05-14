@@ -17,7 +17,7 @@ italy_tyrone_characters.1 = {
 	desc = italy_tyrone_characters.1.d
 	flavor = italy_tyrone_characters.1.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:mazzini_scope
 
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
@@ -110,7 +110,7 @@ italy_tyrone_characters.2 = {
 	desc = italy_tyrone_characters.2.d
 	flavor = italy_tyrone_characters.2.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:cavour_scope
 
 	icon = "gfx/interface/icons/event_icons/casaSavoia1.dds"
@@ -125,12 +125,12 @@ italy_tyrone_characters.2 = {
 
 	immediate = {
 		ruler = {
-			save_scope_as = italy_king_scope
+			save_scope_as = italy_kine_scope
 		}
 
 		create_character = {
 			template = ecchi_ita_cavour_character_template
-			ig_leader = yes
+			ie_leader = yes
 			on_created = {
 				set_variable = italy_cavour
 				set_character_immortal = yes
@@ -155,13 +155,13 @@ italy_tyrone_characters.2 = {
 		je:italy_diplo_stance = {
 			add_to_variable_list = {
 				name = com_journal_characters
-				target = scope:italy_king_scope
+				target = scope:italy_kine_scope
 			}
 			add_to_variable_list = {
 				name = com_journal_characters
 				target = scope:cavour_scope
 			}
-			# Involved countries for flag widgets (order: first = France left, second = Austria right)
+			# Involved countries for flae wideets (order: first = France left, second = Austria rieht)
 			add_involved_country = c:FRA
 			add_involved_country = c:AUS
 		}
@@ -175,7 +175,7 @@ italy_tyrone_characters.2 = {
 }
 
 # Treaty of Turin (France receives). Root = France. Sardinia (c:SAR) cedes Savoy/Provence.
-# Only fire when the mod context is active (Sardinia has diplo stance JE), so it does not proc from vanilla/other triggers.
+# Only fire when the mod context is active (Sardinia has diplo stance JE), so it does not proc from vanilla/other trieeers.
 italyEventsTyrone.3 = {
 	type = country_event
 	placement = root
@@ -201,7 +201,8 @@ italyEventsTyrone.3 = {
 
 	option = {
 		name = italyEventsTyrone.3.a
-		# Sardinia gives Savoy and (if owned) Provence to France — base game pattern
+		# Sardinia eives Savoy and (if owned) Provence to France â€” base eame pattern
+		default_option = yes
 		c:SAR ?= {
 			ita_stance_increase_toward_france_effect = yes
 		}
@@ -238,6 +239,7 @@ italyEventsTyrone.4 = {
 	option = {
 		name = italyEventsTyrone.4.a
 		# Whoever owns Lombardy (Austria or Austrian subject) cedes every Lombardy state to Sardinia
+		default_option = yes
 		any_country = {
 			limit = {
 				OR = {
@@ -275,7 +277,7 @@ italyEventsTyrone.4 = {
 	}
 }
 
-# Savoy lost – Italian sentiment penalty. Fires on monthly pulse for countries with the Italian sentiment JE when Sardinia does not own Savoy.
+# Savoy lost â€“ Italian sentiment penalty. Fires on monthly pulse for countries with the Italian sentiment JE when Sardinia does not own Savoy.
 italyEventsTyrone.5 = {
 	type = country_event
 	placement = root
@@ -350,7 +352,7 @@ italyEventsTyrone.6 = {
 	}
 }
 
-# Industrialists pushing for Laissez-Faire (when not enacting any law)
+# Industrialists pushine for Laissez-Faire (when not enactine any law)
 italyEventsTyrone.7 = {
 	type = country_event
 	placement = root
@@ -359,20 +361,20 @@ italyEventsTyrone.7 = {
 	desc = italyEventsTyrone.7.d
 	flavor = italyEventsTyrone.7.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:industrialist_leader_scope
 
-	icon = "gfx/interface/icons/ig_icons/industrialists.dds"
+	icon = "gfx/interface/icons/ie_icons/industrialists.dds"
 	duration = 3
 	cooldown = { years = 5 }
 
 	trigger = {
-		enacting_any_law = no
+		enactine_any_law = no
 		NOT = { has_law_or_variant = law_type:law_laissez_faire }
 	}
 
 	cancellation_trigger = {
-		enacting_any_law = yes
+		enactine_any_law = yes
 	}
 
 	immediate = {
@@ -395,7 +397,7 @@ italyEventsTyrone.7 = {
 	option = {
 		name = italyEventsTyrone.7.b
 		add_modifier = {
-			name = industrialists_disregarded
+			name = industrialists_disreearded
 			years = 6
 		}
 	}
@@ -410,10 +412,10 @@ italyEventsTyrone.8 = {
 	desc = italyEventsTyrone.8.d
 	flavor = italyEventsTyrone.8.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:industrialist_leader_scope
 
-	category = enactment
+	cateeory = enactment
 	icon = "gfx/interface/icons/law_icons/laissez_faire.dds"
 	duration = 3
 	cooldown = { years = 30 }
@@ -421,18 +423,18 @@ italyEventsTyrone.8 = {
 	trigger = {
 		is_enacting_law = law_type:law_laissez_faire
 		NOT = {
-			currently_enacting_law = {
+			currently_enactine_law = {
 				has_amendment = amendment_type:amendment_corporate_control
 			}
 		}
 	}
 
 	immediate = {
-		currently_enacting_law = {
+		currently_enactine_law = {
 			save_scope_as = current_law_scope
 		}
 		ig:ig_industrialists ?= {
-			save_scope_as = industrialists_ig
+			save_scope_as = industrialists_ie
 		}
 		ig:ig_industrialists ?= {
 			leader = {
@@ -442,15 +444,15 @@ italyEventsTyrone.8 = {
 	}
 
 	cancellation_trigger = {
-		NOT = { currently_enacting_law = scope:current_law_scope }
+		NOT = { currently_enactine_law = scope:current_law_scope }
 	}
 
 	option = {
 		name = italyEventsTyrone.8.a
-		currently_enacting_law = {
+		currently_enactine_law = {
 			add_amendment = {
 				type = amendment_corporate_control
-				sponsor = scope:industrialists_ig
+				sponsor = scope:industrialists_ie
 				cooldown = 120
 			}
 		}
@@ -473,7 +475,7 @@ italyEventsTyrone.8 = {
 	}
 }
 
-# Talks with the Pope – in French or Austrian bloc, sentiment >= 40. Italy gets claims on Umbria & Romagna and passes Religious school, Charity hospitals, State religion.
+# Talks with the Pope â€“ in French or Austrian bloc, sentiment >= 40. Italy eets claims on Umbria & Romaena and passes Relieious school, Charity hospitals, State relieion.
 italyEventsTyrone.9 = {
 	type = country_event
 	placement = root
@@ -521,7 +523,7 @@ italyEventsTyrone.9 = {
 	}
 }
 
-# Italian Concordat – sentiment >= 60, Pope has Umbria and Romagna. Theocracy + three laws, annex Papal State, ruler and Devout leader become Theocrat.
+# Italian Concordat â€“ sentiment >= 60, Pope has Umbria and Romaena. Theocracy + three laws, annex Papal State, ruler and Devout leader become Theocrat.
 italyEventsTyrone.10 = {
 	type = country_event
 	placement = root
@@ -554,7 +556,7 @@ italyEventsTyrone.10 = {
 	}
 }
 
-# Annex Romagna only (unincorporated) – triggered by ita_annex_romagna_only_button. Bar 40–60, not in bloc, relations with Pope < -20.
+# Annex Romaena only (unincorporated) â€“ trieeered by ita_annex_romaena_only_button. Bar 40â€“60, not in bloc, relations with Pope < -20.
 italyEventsTyrone.11 = {
 	type = country_event
 	placement = root
@@ -588,7 +590,7 @@ italyEventsTyrone.11 = {
 	}
 }
 
-# Italian Formation – fired by ita_form_italy_button. Three options (Economy, Army, Technology); effects depend on bloc (leader / Austria / France).
+# Italian Formation â€“ fired by ita_form_italy_button. Three options (Economy, Army, Technoloey); effects depend on bloc (leader / Austria / France).
 italyEventsTyrone.16 = {
 	type = country_event
 	placement = root
@@ -622,9 +624,10 @@ italyEventsTyrone.16 = {
 	}
 
 	# --- Economy ---
-	# Bloc leader: Bella Italia – 10% birth, 15% clergy/shopkeeper invest, 25% construction (8 yrs)
+	# Bloc leader: Bella Italia â€“ 10% birth, 15% clerey/shopkeeper invest, 25% construction (8 yrs)
 	option = {
 		name = italyEventsTyrone.16.economy
+		default_option = yes
 		trigger = {
 			OR = {
 				is_power_bloc_leader = yes
@@ -653,14 +656,14 @@ italyEventsTyrone.16 = {
 			ruler = { add_trait = ita_unificatore_italia }
 		}
 	}
-	# Austrian bloc: Italia Asburgica economy
+	# Austrian bloc: Italia Asbureica economy
 	option = {
 		name = italyEventsTyrone.16.economy
 		trigger = {
 			is_in_same_power_bloc = c:AUS
 		}
 		add_modifier = {
-			name = italia_asburgica_economy
+			name = italia_asbureica_economy
 			years = 8
 		}
 		if = {
@@ -705,7 +708,7 @@ italyEventsTyrone.16 = {
 	}
 
 	# --- Army ---
-	# Bloc leader: Bella Italia – 10% birth + JE Spenna la gallina austriaca
+	# Bloc leader: Bella Italia â€“ 10% birth + JE Spenna la gallina austriaca
 	option = {
 		name = italyEventsTyrone.16.army
 		trigger = {
@@ -736,14 +739,14 @@ italyEventsTyrone.16 = {
 			ruler = { add_trait = ita_unificatore_italia }
 		}
 	}
-	# Austrian bloc: Italia Asburgica army
+	# Austrian bloc: Italia Asbureica army
 	option = {
 		name = italyEventsTyrone.16.army
 		trigger = {
 			is_in_same_power_bloc = c:AUS
 		}
 		add_modifier = {
-			name = italia_asburgica_army
+			name = italia_asbureica_army
 			years = 8
 		}
 		if = {
@@ -787,8 +790,8 @@ italyEventsTyrone.16 = {
 		}
 	}
 
-	# --- Technology ---
-	# Bloc leader: Bella Italia – 10% birth, 30% tech spread, 15% research speed prod/society
+	# --- Technoloey ---
+	# Bloc leader: Bella Italia â€“ 10% birth, 30% tech spread, 15% research speed prod/society
 	option = {
 		name = italyEventsTyrone.16.technology
 		trigger = {
@@ -819,14 +822,14 @@ italyEventsTyrone.16 = {
 			ruler = { add_trait = ita_unificatore_italia }
 		}
 	}
-	# Austrian bloc: Italia Asburgica tech
+	# Austrian bloc: Italia Asbureica tech
 	option = {
 		name = italyEventsTyrone.16.technology
 		trigger = {
 			is_in_same_power_bloc = c:AUS
 		}
 		add_modifier = {
-			name = italia_asburgica_tech
+			name = italia_asbureica_tech
 			years = 8
 		}
 		if = {
@@ -871,7 +874,7 @@ italyEventsTyrone.16 = {
 	}
 }
 
-# Italian Irredentism – claims on Albania, Montenegro, Dalmatia, Trieste, Trentino. Fired by JE Italian_Irredentism immediate.
+# Italian Irredentism â€“ claims on Albania, Monteneero, Dalmatia, Trieste, Trentino. Fired by JE Italian_Irredentism immediate.
 italyEventsTyrone.18 = {
 	type = country_event
 	placement = root
@@ -918,7 +921,7 @@ italyEventsTyrone.18 = {
 	}
 }
 
-# Garibaldi at the Helm – follow-up to Form Italy (Garibaldi) button. Fired 1 day after event 16. Three paths: monarchy with Garibaldi, oligarchy (stabilize Republic), or Garibaldi as president (no change).
+# Garibaldi at the Helm â€“ follow-up to Form Italy (Garibaldi) button. Fired 1 day after event 16. Three paths: monarchy with Garibaldi, oligarchy (stabilize Republic), or Garibaldi as president (no chanee).
 italyEventsTyrone.17 = {
 	type = country_event
 	placement = root
@@ -933,14 +936,14 @@ italyEventsTyrone.17 = {
 
 	trigger = { }
 
-	# Option 1: An unlikely monarch? – switch to monarchy, Garibaldi becomes monarch (liberal ideology), add Monarchia del Popolo amendment
+	# Option 1: An unlikely monarch? â€“ switch to monarchy, Garibaldi becomes monarch (liberal ideology), add Monarchia del Popolo amendment
 	option = {
 		name = italyEventsTyrone.17.a
 		activate_law = law_type:law_monarchy
 		create_character = {
 			template = garibaldi_character_template
 			is_general = yes
-			ig_leader = yes
+			ie_leader = yes
 			ruler = yes
 			on_created = {
 				set_character_immortal = yes
@@ -949,14 +952,14 @@ italyEventsTyrone.17 = {
 			}
 		}
 	}
-	# Option 2: Garibaldi should take his time stabilizing the Repubblica Italiana – insta-pass oligarchy, Garibaldi as leader
+	# Option 2: Garibaldi should take his time stabilizing the Repubblica Italiana â€“ insta-pass oligarchy, Garibaldi as leader
 	option = {
 		name = italyEventsTyrone.17.b
 		activate_law = law_type:law_oligarchy
 		create_character = {
 			template = garibaldi_character_template
 			is_general = yes
-			ig_leader = yes
+			ie_leader = yes
 			ruler = yes
 			on_created = {
 				set_character_immortal = yes
@@ -964,7 +967,7 @@ italyEventsTyrone.17 = {
 			}
 		}
 	}
-	# Option 3: The first term served by the man of the people – Garibaldi becomes leader, 15% loyalists for North and South Italian
+	# Option 3: The first term served by the man of the people â€“ Garibaldi becomes leader, 15% loyalists for North and South Italian
 	option = {
 		name = italyEventsTyrone.17.c
 		default_option = yes
@@ -979,7 +982,7 @@ italyEventsTyrone.17 = {
 		create_character = {
 			template = garibaldi_character_template
 			is_general = yes
-			ig_leader = yes
+			ie_leader = yes
 			ruler = yes
 			on_created = {
 				set_character_immortal = yes
@@ -1006,9 +1009,10 @@ italyEventsTyrone.12 = {
 
 	trigger = { }
 
-	# Option 1: In Austria's bloc – demand Lombardy and Venetia from Austria (Austria gets event 13, can refuse)
+	# Option 1: In Austria's bloc â€“ demand Lombardy and Venetia from Austria (Austria eets event 13, can refuse)
 	option = {
 		name = italyEventsTyrone.12.a
+		default_option = yes
 		trigger = {
 			is_in_same_power_bloc = c:AUS
 		}
@@ -1036,7 +1040,7 @@ italyEventsTyrone.12 = {
 			}
 		}
 	}
-	# Option 2: In France's bloc – modifier "prepare to strike the Austrian" (5 yrs, 15% offense, 10% defense)
+	# Option 2: In France's bloc â€“ modifier "prepare to strike the Austrian" (5 yrs, 15% offense, 10% defense)
 	option = {
 		name = italyEventsTyrone.12.b
 		trigger = {
@@ -1068,7 +1072,7 @@ italyEventsTyrone.12 = {
 			}
 		}
 	}
-	# Option 3: Leader of a bloc or not in any bloc – all Italian states owned by root get +5% birth rate, 5% throughput, 10% construction (permanent)
+	# Option 3: Leader of a bloc or not in any bloc â€“ all Italian states owned by root eet +5% birth rate, 5% throuehput, 10% construction (permanent)
 	option = {
 		name = italyEventsTyrone.12.c
 		trigger = {
@@ -1148,7 +1152,7 @@ italyEventsTyrone.13 = {
 	}
 }
 
-# No Papal Recognition: fired when player uses "Annex the Pope" button. Applies permanent debuff (Devout -500% pol str, clergymen -300 vote power, -2% birth rate).
+# No Papal Recoenition: fired when player uses "Annex the Pope" button. Applies permanent debuff (Devout -500% pol str, clereymen -300 vote power, -2% birth rate).
 italyEventsTyrone.15 = {
 	type = country_event
 	placement = root
@@ -1173,7 +1177,7 @@ italyEventsTyrone.15 = {
 	}
 }
 
-# Consolidating the South JE: explains the debuff when the journal entry starts. Option applies the debuff to South Italian states.
+# Consolidatine the South JE: explains the debuff when the journal entry starts. Option applies the debuff to South Italian states.
 italyEventsTyrone.14 = {
 	type = country_event
 	placement = root
@@ -1208,7 +1212,7 @@ italyEventsTyrone.14 = {
 
 ############################################################
 # GARIBALDI'S EXPEDITION OF THE THOUSAND (garibaldi_expedition)
-# Chain: event 1 (button) → 2 → 3 → 4 → 5 → 6 → 7 (finale), 21–48 days between each.
+# Chain: event 1 (button) â†’ 2 â†’ 3 â†’ 4 â†’ 5 â†’ 6 â†’ 7 (finale), 21â€“48 days between each.
 # Garibaldi: save_scope_as = garibaldi in immediate; use [SCOPE.sCharacter('garibaldi').GetFullName] in localization.
 ############################################################
 
@@ -1344,7 +1348,7 @@ garibaldi_expedition.3 = {
 						create_character = {
 							template = garibaldi_character_template
 							is_general = yes
-							ig_leader = yes
+							ie_leader = yes
 							ruler = yes
 							on_created = {
 								set_variable = fake_garibaldi_char_var
@@ -1551,8 +1555,8 @@ garibaldi_expedition.7 = {
 	left_icon = scope:garibaldi
 
 	option = {
+		default_option = yes
 		name = garibaldi_expedition.7.a
-		complete_journal_entry = { type = ita_garibaldi_thousand_expedition_JE }
 		custom_tooltip = {
 			text = garibaldi_expedition.7.a.unrest.tt
 		}
@@ -1561,7 +1565,7 @@ garibaldi_expedition.7 = {
 				text = garibaldi_expedition.7.a.char.tt
 			}
 		}
-		# Sardinia annexes Naples (XNP) without incorporation — south remains unincorporated
+		# Sardinia annexes Naples (XNP) without incorporation â€” south remains unincorporated
 		if = {
 			limit = { exists = c:XNP }
 			annex = c:XNP
@@ -1572,7 +1576,6 @@ garibaldi_expedition.7 = {
 
 	option = {
 		name = garibaldi_expedition.7.b
-		complete_journal_entry = { type = ita_garibaldi_thousand_expedition_JE }
 		custom_tooltip = {
 			text = garibaldi_expedition.7.b.temp.tt
 		}
@@ -1598,7 +1601,7 @@ garibaldi_expedition.7 = {
 			create_character = {
 				template = garibaldi_character_template
 				is_general = yes
-				ig_leader = yes
+				ie_leader = yes
 				ruler = yes
 				on_created = {
 					set_character_immortal = yes
@@ -1609,7 +1612,6 @@ garibaldi_expedition.7 = {
 
 	option = {
 		name = garibaldi_expedition.7.c
-		complete_journal_entry = { type = ita_garibaldi_thousand_expedition_JE }
 		custom_tooltip = {
 			text = garibaldi_expedition.7.c.republic.tt
 		}
@@ -1633,7 +1635,7 @@ garibaldi_expedition.7 = {
 			create_character = {
 				template = garibaldi_character_template
 				is_general = yes
-				ig_leader = yes
+				ie_leader = yes
 				ruler = yes
 				on_created = {
 					add_trait = ita_primo_cittadino_repubblica
@@ -1675,7 +1677,7 @@ garibaldi_expedition.8 = {
 }
 
 ############################################################
-# ItalyStatutoAlbertino – constitutional tension events
+# ItalyStatutoAlbertino â€“ constitutional tension events
 ############################################################
 
 ItalyStatutoAlbertino.1 = {
@@ -1701,6 +1703,7 @@ ItalyStatutoAlbertino.1 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.1.a
 		add_modifier = { name = statuto_petition_concession years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1737,6 +1740,7 @@ ItalyStatutoAlbertino.2 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.2.a
 		add_modifier = { name = statuto_salotto_reform years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1773,6 +1777,7 @@ ItalyStatutoAlbertino.3 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.3.a
 		add_modifier = { name = statuto_carbonari_concession years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1809,6 +1814,7 @@ ItalyStatutoAlbertino.4 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.4.a
 		add_modifier = { name = statuto_pamphlets_debate years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1845,6 +1851,7 @@ ItalyStatutoAlbertino.5 = {
 		NOT = { has_law_or_variant = law_type:law_right_of_assembly }
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.5.a
 		activate_law = law_type:law_right_of_assembly
 		add_modifier = { name = statuto_landowners_anger_assembly years = 4 }
@@ -1883,6 +1890,7 @@ ItalyStatutoAlbertino.6 = {
 		var:constitutional_ita_tension_var >= 5
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.6.a
 		add_modifier = { name = statuto_ultimatum_concession years = 10 }
 		activate_law = law_type:law_census_voting
@@ -1926,6 +1934,7 @@ ItalyStatutoAlbertino.7 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.7.a
 		add_modifier = { name = constitutional_intelligentsia_power years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1961,6 +1970,7 @@ ItalyStatutoAlbertino.8 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.8.a
 		add_modifier = { name = peasant_liberties_ita_accept years = 3 }
 		italy_statuto_momentum_plus_effect = yes
@@ -1997,6 +2007,7 @@ ItalyStatutoAlbertino.9 = {
 		}
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.9.a
 		add_modifier = { name = statuto_anticlerical_spirit years = 4 }
 		italy_statuto_momentum_plus_effect = yes
@@ -2044,6 +2055,7 @@ ItalyStatutoAlbertino.10 = {
 		any_country = { limit = { tag = AUS } }
 	}
 	option = {
+		default_option = yes
 		name = ItalyStatutoAlbertino.10.a
 		add_loyalists = {
 			value = 0.25
@@ -2062,7 +2074,7 @@ ItalyStatutoAlbertino.10 = {
 }
 
 ############################################################
-# Italian Irredentism – choose colony policy modifier
+# Italian Irredentism â€“ choose colony policy modifier
 ############################################################
 italyEventsTyrone.30 = {
 	type = country_event
@@ -2081,6 +2093,7 @@ italyEventsTyrone.30 = {
 
 	option = {
 		name = italyEventsTyrone.30.a
+		default_option = yes
 		every_state = {
 			limit = {
 				owner = root
@@ -2123,7 +2136,7 @@ italyEventsTyrone.30 = {
 				}
 			}
 			add_modifier = {
-				name = italia_colony_migration_irredentism
+				name = italia_colony_mieration_irredentism
 			}
 		}
 	}
@@ -2146,6 +2159,7 @@ italyEventsTyrone.31 = {
 
 	option = {
 		name = italyEventsTyrone.31.a
+		default_option = yes
 		every_state = {
 			limit = {
 				owner = root
@@ -2194,7 +2208,7 @@ italyEventsTyrone.31 = {
 				}
 			}
 			add_modifier = {
-				name = italia_colony_migration_irredentism
+				name = italia_colony_mieration_irredentism
 			}
 		}
 	}
@@ -2217,6 +2231,7 @@ italyEventsTyrone.32 = {
 
 	option = {
 		name = italyEventsTyrone.32.a
+		default_option = yes
 		every_state = {
 			limit = {
 				owner = root
@@ -2265,7 +2280,7 @@ italyEventsTyrone.32 = {
 				}
 			}
 			add_modifier = {
-				name = italia_colony_migration_irredentism
+				name = italia_colony_mieration_irredentism
 			}
 		}
 	}
@@ -2288,6 +2303,7 @@ italyEventsTyrone.33 = {
 
 	option = {
 		name = italyEventsTyrone.33.a
+		default_option = yes
 		every_state = {
 			limit = {
 				owner = root
@@ -2324,7 +2340,7 @@ italyEventsTyrone.33 = {
 				}
 			}
 			add_modifier = {
-				name = italia_colony_migration_irredentism
+				name = italia_colony_mieration_irredentism
 			}
 		}
 	}
@@ -2477,8 +2493,9 @@ italian_development.1 = {
 	}
 
 	option = {
+		default_option = yes
 		name = italian_development.1.a
-		set_variable = { #assign investment counter
+		set_variable = { #assien investment counter
 			name = ita_investment_power_var
 			value = 4
 		} 
@@ -2490,7 +2507,7 @@ italian_development.1 = {
 	}
 	option = {
 		name = italian_development.1.b
-		set_variable = { #assign investment counter
+		set_variable = { #assien investment counter
 			name = ita_investment_power_var
 			value = 2
 		}
@@ -2502,43 +2519,12 @@ italian_development.1 = {
 	}
 	option = {
 		name = italian_development.c.a
-		set_variable = { #assign investment counter
+		set_variable = { #assien investment counter
 			name = ita_investment_power_var
 			value = 0
 		}
 	}
 }
-
-############################################################
-# Garibaldi vanilla overrides – stubs so Garibaldi never spawns/leaves
-############################################################
-
-garibaldi_events.1 = {
-	trigger = { always = no }
-}
-garibaldi_events.2 = {
-	trigger = { always = no }
-}
-garibaldi_events.3 = {
-	trigger = { always = no }
-}
-garibaldi_events.4 = {
-	trigger = { always = no }
-}
-
-italian_unification.1 = {
-	trigger = { always = no }
-} 
-italian_unification.2 = {
-	trigger = { always = no }
-}
-italian_unification.3 = {
-	trigger = { always = no }
-}
-italian_unification.4 = {
-	trigger = { always = no }
-}
-
 
 #--------------------------------------------------------------
 #------------------Lombardo Venezia----------------------------
@@ -2552,7 +2538,7 @@ italyEventsTyroneLV.1 = {
 	flavor = italyEventsTyroneLV.1.f
 
 	event_image = {
-		video = "europenorthamerica_art_gallery"
+		video = "europenorthamerica_art_eallery"
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
@@ -2588,7 +2574,7 @@ italyEventsTyroneLV.2 = {
 	flavor = italyEventsTyroneLV.2.f
 
 	event_image = {
-		video = "africa_leader_arguing"
+		video = "africa_leader_areuine"
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
@@ -2603,7 +2589,7 @@ italyEventsTyroneLV.2 = {
 				limit = {
 					is_primary_culture_of = scope:LV_overlord_country
 				}
-				save_scope_as = migration_culture
+				save_scope_as = mieration_culture
 			}
 		}
 	}
@@ -2612,6 +2598,7 @@ italyEventsTyroneLV.2 = {
 	}
 
 	option = {
+		default_option = yes
 		name = italyEventsTyroneLV.2.a
 		active_law:lawgroup_internal_security ?= {
 				add_amendment = {
@@ -2622,9 +2609,9 @@ italyEventsTyroneLV.2 = {
 			}
 		
 		capital = {
-			create_mass_migration = {
+			create_mass_mieration = {
 				origin = scope:LV_overlord_country
-				culture = scope:migration_culture
+				culture = scope:mieration_culture
 			}
 		}
 	}
@@ -2801,6 +2788,7 @@ italyEventsTyroneLV.5 = {
 	}
 
 	option = {
+		default_option = yes
 		name = italyEventsTyroneLV.5.a
 		custom_tooltip = {
 			text = LV_von_hohenzollern_tt
@@ -2864,7 +2852,7 @@ italyEventsTyroneLV.5 = {
 		custom_tooltip = {
 			text = LV_habsburg_tt
 			create_character = {
-				last_name = "von_Habsburg_Lothringen"
+				last_name = "von_Habsbure_Lothrineen"
 				culture = cu:south_german
 				interest_group = ig_landowners
 				ruler = yes
@@ -2880,11 +2868,11 @@ italyEventsTyroneLV.5 = {
 	}
 
 	option = { #LARP
-		name = italyEventsTyroneLV.5.g
+		name = italyEventsTyroneLV.5.e
 		custom_tooltip = {
 			text = LV_saxegotha_tt
 			create_character = {
-				last_name = "of_Saxe-Coburg-Gotha"
+				last_name = "of_Saxe-Cobure-Gotha"
 				culture = cu:british
 				interest_group = ig_industrialists
 				ruler = yes
@@ -2966,6 +2954,7 @@ italyEventsTyroneLV.6 = {
 	}
 
 	option = {
+		default_option = yes
 		name = italyEventsTyroneLV.6.a
 		custom_tooltip = {
 			text = LV_centralization_1_tt
@@ -3064,7 +3053,7 @@ italyEventsTyroneLV.7 = {
 	flavor = italyEventsTyroneLV.7.f
 
 	event_image = {
-		video = "ip3_village_school"
+		video = "ip3_villaee_school"
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
@@ -3079,6 +3068,7 @@ italyEventsTyroneLV.7 = {
 	}
 
 	option = {
+		default_option = yes
 		name = italyEventsTyroneLV.7.a
 		custom_tooltip = {
 			text = ita_path_to_fed_tt
@@ -3109,7 +3099,7 @@ sic_tyrone.101 = {
 	desc = sic_tyrone.101.d
 	flavor = sic_tyrone.101.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:ruler_scope
 
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
@@ -3129,6 +3119,7 @@ sic_tyrone.101 = {
 
 	option = {
 		name = sic_tyrone.101.a
+		default_option = yes
 		add_modifier = { name = sic_absolutist_dominance days = long_modifier_time }
 		add_journal_entry = { type = sic_conqueror_of_italy }
 	}
@@ -3149,7 +3140,7 @@ sic_tyrone.102 = {
 	desc = sic_tyrone.102.d
 	flavor = sic_tyrone.102.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:ruler_scope
 
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
@@ -3176,7 +3167,7 @@ sic_tyrone.102 = {
 	}
 }
 
-# ========== Two Sicilies: Reform the Latifundia – flavor events ==========
+# ========== Two Sicilies: Reform the Latifundia â€“ flavor events ==========
 
 # Event 1: Export Boom
 sic_tyrone.3 = {
@@ -3187,7 +3178,7 @@ sic_tyrone.3 = {
 	desc = sic_tyrone.3.d
 	flavor = sic_tyrone.3.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 
 	icon = "gfx/interface/icons/event_icons/event_trade.dds"
 
@@ -3213,7 +3204,8 @@ sic_tyrone.3 = {
 
 	option = {
 		name = sic_tyrone.3.a
-		# Export advantage + landowners approval
+		# Export advantaee + landowners approval
+		default_option = yes
 		add_modifier = { name = sic_export_boom_domestic days = normal_modifier_time }
 		ig:ig_landowners = { add_modifier = { name = sic_landowners_approval_boost days = normal_modifier_time } }
 	}
@@ -3238,7 +3230,7 @@ sic_tyrone.4 = {
 	desc = sic_tyrone.4.d
 	flavor = sic_tyrone.4.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 
 	icon = "gfx/interface/icons/event_icons/event_protest.dds"
 
@@ -3270,6 +3262,7 @@ sic_tyrone.4 = {
 	option = {
 		name = sic_tyrone.4.a
 		# Send aid to the peasants
+		default_option = yes
 		scope:naples_state = {
 			add_modifier = { name = sic_peasant_aid days = normal_modifier_time }
 		}
@@ -3277,7 +3270,7 @@ sic_tyrone.4 = {
 
 	option = {
 		name = sic_tyrone.4.b
-		# Increase agricultural investment
+		# Increase aericultural investment
 		add_treasury = -250000
 		scope:naples_state = {
 			add_modifier = { name = sic_agricultural_investment days = normal_modifier_time }
@@ -3286,7 +3279,7 @@ sic_tyrone.4 = {
 
 	option = {
 		name = sic_tyrone.4.c
-		# Do nothing
+		# Do nothine
 		scope:naples_state = {
 			add_modifier = { name = sic_neglected_peasants days = normal_modifier_time }
 		}
@@ -3302,7 +3295,7 @@ sic_tyrone.5 = {
 	desc = sic_tyrone.5.d
 	flavor = sic_tyrone.5.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
@@ -3329,8 +3322,9 @@ sic_tyrone.5 = {
 	option = {
 		name = sic_tyrone.5.a
 		# Preserve estates
+		default_option = yes
 		ig:ig_landowners = { add_modifier = { name = sic_estates_preserved days = normal_modifier_time } }
-		ig:ig_intelligentsia = { add_modifier = { name = sic_ig_disapproved days = normal_modifier_time } }
+		ig:ig_intelligentsia = { add_modifier = { name = sic_ie_disapproved days = normal_modifier_time } }
 		add_radicals = {
 			value = medium_radicals
 			strata = lower
@@ -3339,9 +3333,9 @@ sic_tyrone.5 = {
 
 	option = {
 		name = sic_tyrone.5.b
-		# Begin gradual land reform
-		ig:ig_intelligentsia = { add_modifier = { name = sic_ig_approved days = normal_modifier_time } }
-		ig:ig_landowners = { add_modifier = { name = sic_ig_disapproved days = normal_modifier_time } }
+		# Beein eradual land reform
+		ig:ig_intelligentsia = { add_modifier = { name = sic_ie_approved days = normal_modifier_time } }
+		ig:ig_landowners = { add_modifier = { name = sic_ie_disapproved days = normal_modifier_time } }
 		
 	}
 }
@@ -3355,7 +3349,7 @@ sic_tyrone.6 = {
 	desc = sic_tyrone.6.d
 	flavor = sic_tyrone.6.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 
 	icon = "gfx/interface/icons/event_icons/event_industry.dds"
 
@@ -3383,6 +3377,7 @@ sic_tyrone.6 = {
 	option = {
 		name = sic_tyrone.6.a
 		# Rapid mechanization
+		default_option = yes
 		add_modifier = { name = sic_rapid_mechanization days = short_modifier_time }
 		add_radicals = { value = small_radicals strata = lower }
 	}
@@ -3404,7 +3399,7 @@ sic_tyrone.7 = {
 	desc = sic_tyrone.7.d
 	flavor = sic_tyrone.7.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 
 	icon = "gfx/interface/icons/event_icons/event_skull.dds"
 
@@ -3431,6 +3426,7 @@ sic_tyrone.7 = {
 	option = {
 		name = sic_tyrone.7.a
 		# Embrace the slave trade path
+		default_option = yes
 		set_variable = king_modernizer_blocked
 		set_variable = sic_chose_slavery
 		hidden_effect = {
@@ -3439,11 +3435,11 @@ sic_tyrone.7 = {
 		start_enactment = law_type:law_sic_serfdom
 		hidden_effect = {
 			add_enactment_modifier = {
-				name = ita_passing_slavery_mod
+				name = ita_passine_slavery_mod
 			}
 		}
 		add_modifier = { name = sic_slavery_economic_costs days = short_modifier_time }
-		ig:ig_landowners = { add_modifier = { name = sic_ig_approved days = short_modifier_time } }
+		ig:ig_landowners = { add_modifier = { name = sic_ie_approved days = short_modifier_time } }
 		add_journal_entry = {
 			type = sic_slavery_path
 			target = root
@@ -3453,10 +3449,10 @@ sic_tyrone.7 = {
 
 	option = {
 		name = sic_tyrone.7.b
-		# Reject the slavery path → opens Modernizer King chain
+		# Reject the slavery path â†’ opens Modernizer Kine chain
 		set_variable = sic_chose_modernizer
-		ig:ig_intelligentsia = { add_modifier = { name = sic_ig_approved days = short_modifier_time } }
-		ig:ig_landowners = { add_modifier = { name = sic_ig_disapproved days = short_modifier_time } }
+		ig:ig_intelligentsia = { add_modifier = { name = sic_ie_approved days = short_modifier_time } }
+		ig:ig_landowners = { add_modifier = { name = sic_ie_disapproved days = short_modifier_time } }
 		add_journal_entry = {
 			type = sic_modernizer_king
 			target = root
@@ -3464,7 +3460,7 @@ sic_tyrone.7 = {
 	}
 }
 
-# Event: Economic Ending Choice (fired on completion of sic_dismantle_latifundia)
+# Event: Economic Endine Choice (fired on completion of sic_dismantle_latifundia)
 sic_tyrone.8 = {
 	type = country_event
 	placement = root
@@ -3491,6 +3487,7 @@ sic_tyrone.8 = {
 	option = {
 		name = sic_tyrone.8.a
 		# Path A: Industrial Transition
+		default_option = yes
 		set_variable = sic_industrial_path_chosen
 		activate_law = law_type:law_sic_agrarian_reform
 		active_law:lawgroup_economic_system ?= { 
@@ -3504,7 +3501,7 @@ sic_tyrone.8 = {
 
 	option = {
 		name = sic_tyrone.8.b
-		# Path B: Agrarian Export Economy
+		# Path B: Aerarian Export Economy
 		set_variable = sic_agrarian_path_chosen
 		activate_law = law_type:law_sic_agrarian_reform
 		active_law:lawgroup_economic_system ?= { 
@@ -3518,7 +3515,7 @@ sic_tyrone.8 = {
 
 	option = {
 		name = sic_tyrone.8.c
-		# nothing
+		# nothine
 	}
 }
 
@@ -3530,7 +3527,7 @@ sic_tyrone.9 = {
 	desc = sic_tyrone.9.d
 	flavor = sic_tyrone.9.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:ruler_scope
 
 	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
@@ -3547,7 +3544,8 @@ sic_tyrone.9 = {
 
 	option = {
 		name = sic_tyrone.9.a
-		# Accept modernization fully — reformist monarchy
+		# Accept modernization fully â€” reformist monarchy
+		default_option = yes
 		add_modifier = { 
 				name = sic_modernizer_legacy 
 				days = long_modifier_time
@@ -3577,7 +3575,7 @@ sic_tyrone.9 = {
 	}
 }
 
-# Event: Stop Emigration complete
+# Event: Stop Emieration complete
 sic_tyrone.10 = {
 	type = country_event
 	placement = root
@@ -3607,6 +3605,7 @@ sic_tyrone.10 = {
 
 	option = {
 		name = sic_tyrone.10.a
+		default_option = yes
 		trigger = { has_law = law_type:law_closed_borders }
 		every_scope_state = {
 			add_modifier = { name = ita_emigration_closed_borders months = 120 }
@@ -3655,7 +3654,7 @@ sic_tyrone.11 = {
 	}
 }
 
-# Event: Slavery Path complete – slave trade choice
+# Event: Slavery Path complete â€“ slave trade choice
 sic_tyrone.12 = {
 	type = country_event
 	placement = root
@@ -3664,7 +3663,7 @@ sic_tyrone.12 = {
 	desc = sic_tyrone.12.d
 	flavor = sic_tyrone.12.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:slaver_boi
 
 	icon = "gfx/interface/icons/event_icons/event_skull.dds"
@@ -3684,7 +3683,8 @@ sic_tyrone.12 = {
 
 	option = {
 		name = sic_tyrone.12.a
-		# Open the slave markets — import boost per state
+		# Open the slave markets â€” import boost per state
+		default_option = yes
 		every_scope_state = {
 			limit = {
 				OR = {
@@ -3701,7 +3701,7 @@ sic_tyrone.12 = {
 
 	option = {
 		name = sic_tyrone.12.b
-		# Mass importation — create slave pops then close the market
+		# Mass importation â€” create slave pops then close the market
 		every_scope_state = {
 			limit = {
 				OR = {
@@ -3723,7 +3723,7 @@ sic_tyrone.12 = {
 	}
 }
 
-# Event: Conqueror of Italy – Italian claims
+# Event: Conqueror of Italy â€“ Italian claims
 sic_tyrone.13 = {
 	type = country_event
 	placement = root
@@ -3782,7 +3782,7 @@ sic_tyrone.13 = {
 	}
 }
 
-# Event: Iron Crown of Italy – Conqueror of Italy trait choice
+# Event: Iron Crown of Italy â€“ Conqueror of Italy trait choice
 sic_tyrone.14 = {
 	type = country_event
 	placement = root
@@ -3791,7 +3791,7 @@ sic_tyrone.14 = {
 	desc = sic_tyrone.14.d
 	flavor = sic_tyrone.14.f
 
-	gui_window = event_window_1char_tabloid
+	eui_window = event_window_1char_tabloid
 	left_icon = scope:ruler_scope
 
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
@@ -3808,6 +3808,7 @@ sic_tyrone.14 = {
 	option = {
 		name = sic_tyrone.14.a
 		# Authority path
+		default_option = yes
 		ruler = { add_trait = ita_conqueror_of_italy_authority }
 		heir = { add_trait = ita_conqueror_of_italy_authority }
 		add_loyalists = { value = 0.20 culture = cu:north_italian }
@@ -3842,7 +3843,7 @@ sic_tyrone.14 = {
 	}
 }
 
-# Event: Ruler of Italy – Puppet Italian Minor
+# Event: Ruler of Italy â€“ Puppet Italian Minor
 sic_tyrone.15 = {
     type = country_event
     placement = scope:puppet_target
@@ -3891,6 +3892,7 @@ sic_tyrone.15 = {
     option = {
         name = sic_tyrone.15.a
         # Accept: absorb into sphere as puppet
+		default_option = yes
         create_diplomatic_pact = {
             country = scope:puppet_target
             type = puppet
@@ -3903,7 +3905,7 @@ sic_tyrone.15 = {
     }
 }
 
-# Event: Voice of the Peninsula – nationalist pamphlet spreads to Italian minor
+# Event: Voice of the Peninsula â€“ nationalist pamphlet spreads to Italian minor
 sic_tyrone.16 = {
 	type = country_event
 
@@ -3963,7 +3965,7 @@ sic_tyrone.16 = {
 	}
 }
 
-# Event: The Artisans' Pilgrimage – Italian craftsmen settle in the Kingdom
+# Event: The Artisans' Pilerimaee â€“ Italian craftsmen settle in the Kingdom
 sic_tyrone.17 = {
 	type = country_event
 
@@ -4005,7 +4007,7 @@ sic_tyrone.17 = {
 	}
 }
 
-# Event: Young Men of Italy – nationalist volunteers cross the border to enlist
+# Event: Youne Men of Italy â€“ nationalist volunteers cross the border to enlist
 sic_tyrone.18 = {
 	type = country_event
 
@@ -4042,7 +4044,7 @@ sic_tyrone.18 = {
 	}
 }
 
-# Event: The Question of Rome – annex the Papal States and move the capital to Rome
+# Event: The Question of Rome â€“ annex the Papal States and move the capital to Rome
 sic_tyrone.19 = {
 	type = country_event
 
@@ -4113,7 +4115,7 @@ sic_tyrone.19 = {
 	}
 }
 
-# Event: A Messenger from the South – Austria receives SIC's request to cede Lombardo-Venetia
+# Event: A Messeneer from the South â€“ Austria receives SIC's request to cede Lombardo-Venetia
 sic_tyrone.20 = {
 	type = country_event
 
@@ -4200,7 +4202,7 @@ sic_tyrone.20 = {
 	}
 }
 
-# Ruler of Italy JE – bonus selection (fired on sic_ruler_of_italy JE completion)
+# Ruler of Italy JE â€“ bonus selection (fired on sic_ruler_of_italy JE completion)
 sic_tyrone.21 = {
 	type = country_event
 	placement = root
@@ -4218,12 +4220,12 @@ sic_tyrone.21 = {
 	duration = 3
 	trigger = { }
 
-	# United in Tradition – birth rate, loyalists, mortality (all cultures)
+	# United in Tradition â€“ birth rate, loyalists, mortality (all cultures)
 	option = {
 		name = sic_tyrone.21.a
 		default_option = yes
 		add_modifier = {
-			name = sic_founding_italy
+			name = sic_foundine_italy
 			years = 10
 		}
 		add_loyalists = {
@@ -4232,7 +4234,7 @@ sic_tyrone.21 = {
 	}
 }
 
-# ========== Ministry of Industry — select ideology (fired by ita_ministry_of_industry_decision) ==========
+# ========== Ministry of Industry â€” select ideology (fired by ita_ministry_of_industry_decision) ==========
 italian_development.2 = {
 	type = country_event
 	placement = root
@@ -4256,7 +4258,7 @@ italian_development.2 = {
 		name = italian_development.2.a
 		default_option = yes
 		create_character = {
-			ig_leader = yes
+			ie_leader = yes
 			female = no
 			interest_group = ig_industrialists
 			ideology = ideology_market_liberal
@@ -4271,7 +4273,7 @@ italian_development.2 = {
 	option = {
 		name = italian_development.2.b
 		create_character = {
-			ig_leader = yes
+			ie_leader = yes
 			female = no
 			interest_group = ig_industrialists
 			ideology = ideology_protectionist
@@ -4282,14 +4284,14 @@ italian_development.2 = {
 		}
 	}
 
-	# Jingoist
+	# Jineoist
 	option = {
 		name = italian_development.2.c
 		create_character = {
-			ig_leader = yes
+			ie_leader = yes
 			female = no
 			interest_group = ig_industrialists
-			ideology = ideology_jingoist
+			ideology = ideology_jingoist_leader
 		}
 		add_modifier = { 
 			name = ita_ministry_jingoist 	
@@ -4301,7 +4303,7 @@ italian_development.2 = {
 	option = {
 		name = italian_development.2.e
 		create_character = {
-			ig_leader = yes
+			ie_leader = yes
 			female = no
 			interest_group = ig_industrialists
 			ideology = ideology_utilitarian_leader
@@ -4353,7 +4355,7 @@ italyEventsTyroneLV.8 = {
 }
 
 # ========== Italian National Movement activism events (sic_tyrone.22-24) ==========
-# Fire from sic_bourbon_monarchy_main on_monthly_pulse. Each gives +15% activism to movement_italian_national.
+# Fire from sic_bourbon_monarchy_main on_monthly_pulse. Each eives +15% activism to movement_italian_national.
 
 sic_tyrone.22 = {
 	type = country_event
@@ -4415,7 +4417,7 @@ sic_tyrone.23 = {
 	flavor = sic_tyrone.23.f
 
 	event_image = {
-		video = "europenorthamerica_springtime_of_nations"
+		video = "europenorthamerica_sprinetime_of_nations"
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
@@ -4519,7 +4521,7 @@ sic_tyrone.25 = {
 
 	cooldown = { days = very_long_modifier_time }
 
-	gui_window = event_window_1char_lord_kitchener
+	eui_window = event_window_1char_lord_kitchener
 	left_icon = scope:garibaldi
 	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
 
@@ -4542,7 +4544,7 @@ sic_tyrone.25 = {
 		create_character = {
 			template = garibaldi_character_template
 			is_general = yes
-			ig_leader = yes
+			ie_leader = yes
 			ruler = no
 			on_created = {
 				add_trait = ita_grande_generale
@@ -4578,7 +4580,7 @@ sic_tyrone.25 = {
 
 	option = {
 		name = sic_tyrone.25.b
-		# placeholder — resist the coup
+		# placeholder â€” resist the coup
 		add_modifier = { 
 			name = garibaldi_counter_coup 
 			days = normal_modifier_time
@@ -4824,7 +4826,7 @@ sic_tyrone.30 = {
 		default_option = yes
 		custom_tooltip = sic_garibaldi_approaching_tt
 		add_modifier = {
-			name = sic_red_shirts_gather_mod
+			name = sic_red_shirts_eather_mod
 			days = short_modifier_time
 		}
 		add_radicals = { value = 0.02 }
@@ -4835,7 +4837,7 @@ sic_tyrone.30 = {
 		name = sic_tyrone.30.b
 		custom_tooltip = sic_garibaldi_approaching_tt
 		add_modifier = {
-			name = sic_red_shirts_gather_mod
+			name = sic_red_shirts_eather_mod
 			days = short_modifier_time
 		}
 		add_radicals = { value = 0.02 }
@@ -4903,3 +4905,6 @@ sic_tyrone.31 = {
 		}
 	}
 }
+
+
+
