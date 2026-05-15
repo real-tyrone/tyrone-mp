@@ -836,6 +836,52 @@ germany_rejoin_decision = {
 	}
 }
 
+prussia_ai_liberate_schleswig_holstein = {
+	is_shown = {
+		is_ai = yes
+		c:PRU ?= this
+		exists = c:DEN
+		exists = c:SCH
+		has_journal_entry = je_schleswig_holstein_question
+		has_technology_researched = nationalism
+		c:SCH = {
+			is_subject_of = c:DEN
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		c:DEN = {
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+		}
+		c:SCH = {
+			is_subject_of = c:DEN
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			name = liberate_subject
+			type = dp_liberate_subject
+			target_country = c:SCH
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 REPLACE:sell_savoy = {
 	is_shown = {
 		exists = c:FRA
