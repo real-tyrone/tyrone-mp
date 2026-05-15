@@ -221,6 +221,45 @@ REPLACE:decision_restore_kingdom_of_brazil = {
 	}
 }
 
+decision_merge_chinese_subjects = {
+	is_shown = {
+		exists = c:CHI
+		exists = c:TPG
+		c:CHI = {
+			is_subject_of = ROOT
+		}
+		c:TPG = {
+			is_subject_of = ROOT
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:CHI = {
+			is_subject_of = ROOT
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		c:TPG = {
+			is_subject_of = ROOT
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	when_taken = {
+		c:CHI = {
+			annex_with_incorporation = c:TPG
+			add_liberty_desire = -50
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 failsafe_italy_naples = {
 	is_shown = {
 		hidden_trigger = {
@@ -2615,6 +2654,7 @@ belgium_unl_ai_return_bas_congo = {
 	}
 
 	when_taken = {
+		set_variable = belgium_core_congo_claims_only_var
 		s:STATE_BAS_CONGO = {
 			random_scope_state = {
 				limit = {
@@ -2789,6 +2829,219 @@ por_ai_return_north_angola = {
 			}
 		}
 		annex = scope:por_north_angola_return_country_scope
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+por_ai_consolidate_angola_split_states = {
+	is_shown = {
+		is_ai = yes
+		c:POR ?= this
+		s:STATE_NORTH_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		s:STATE_SOUTH_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		s:STATE_EAST_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		OR = {
+			s:STATE_NORTH_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = { is_ai = yes }
+				}
+			}
+			s:STATE_SOUTH_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = { is_ai = yes }
+				}
+			}
+			s:STATE_EAST_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = { is_ai = yes }
+				}
+			}
+		}
+	}
+
+	possible = {
+		s:STATE_NORTH_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		s:STATE_SOUTH_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		s:STATE_EAST_ANGOLA = {
+			NOT = {
+				any_scope_state = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+			any_scope_state = {
+				is_split_state = yes
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		OR = {
+			s:STATE_NORTH_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+			}
+			s:STATE_SOUTH_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+			}
+			s:STATE_EAST_ANGOLA = {
+				any_scope_state = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_NORTH_ANGOLA = {
+			every_scope_state = {
+				limit = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+				set_state_owner = ROOT
+			}
+		}
+		s:STATE_SOUTH_ANGOLA = {
+			every_scope_state = {
+				limit = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+				set_state_owner = ROOT
+			}
+		}
+		s:STATE_EAST_ANGOLA = {
+			every_scope_state = {
+				limit = {
+					is_split_state = yes
+					NOT = { owner = ROOT }
+					owner = {
+						is_ai = yes
+					}
+				}
+				set_state_owner = ROOT
+			}
+		}
 	}
 
 	ai_chance = {
