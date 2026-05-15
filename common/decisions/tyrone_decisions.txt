@@ -1085,15 +1085,14 @@ bic_ai_annex_assam_arakan_decentralized = {
 				has_technology_researched = civilizing_mission
 			}
 		}
-		any_country = {
-			NOT = { this = ROOT }
-			is_country_type = decentralized
-			any_scope_state = {
+		any_decentralized_country = {
+			capital = {
 				OR = {
 					state_region = s:STATE_ASSAM
 					state_region = s:STATE_ARAKAN
 				}
 			}
+			is_adjacent_to_country = root
 		}
 	}
 
@@ -1104,15 +1103,14 @@ bic_ai_annex_assam_arakan_decentralized = {
 				has_technology_researched = civilizing_mission
 			}
 		}
-		any_country = {
-			NOT = { this = ROOT }
-			is_country_type = decentralized
-			any_scope_state = {
+		any_decentralized_country = {
+			capital = {
 				OR = {
 					state_region = s:STATE_ASSAM
 					state_region = s:STATE_ARAKAN
 				}
 			}
+			is_adjacent_to_country = root
 		}
 	}
 
@@ -1121,7 +1119,7 @@ bic_ai_annex_assam_arakan_decentralized = {
 			limit = {
 				NOT = { this = ROOT }
 				is_country_type = decentralized
-				any_scope_state = {
+				capital = {
 					OR = {
 						state_region = s:STATE_ASSAM
 						state_region = s:STATE_ARAKAN
@@ -1606,7 +1604,7 @@ bic_ai_return_claimed_border_states = {
 			NOT = { has_truce_with = ROOT }
 			army_power_projection < ROOT.army_power_projection
 			is_adjacent_to_country = c:BIC
-			any_scope_state = {
+			any_state_in_indian_frontier = {
 				NOT = { owner = ROOT }
 				state_region = {
 					has_claim_by = ROOT
@@ -1626,7 +1624,7 @@ bic_ai_return_claimed_border_states = {
 				NOT = { has_truce_with = ROOT }
 				army_power_projection < ROOT.army_power_projection
 				is_adjacent_to_country = c:BIC
-				any_scope_state = {
+				any_state_in_indian_frontier = {
 					NOT = { owner = ROOT }
 					state_region = {
 						has_claim_by = ROOT
@@ -1634,7 +1632,7 @@ bic_ai_return_claimed_border_states = {
 				}
 			}
 			save_scope_as = bic_return_target_country_scope
-			random_scope_state = {
+			any_state_in_indian_frontier = {
 				limit = {
 					NOT = { owner = ROOT }
 					state_region = {
@@ -2434,7 +2432,6 @@ spa_establish_spanish_guinea = {
 			c:SPA ?= this
 			c:IBE ?= this
 		}
-		owns_entire_state_region = STATE_AL_RIF
 		owns_entire_state_region = STATE_WEST_SAHARA
 		NOR = {
 			has_law = law_type:law_no_colonial_affairs
@@ -2448,7 +2445,6 @@ spa_establish_spanish_guinea = {
 			c:SPA ?= this
 			c:IBE ?= this
 		}
-		owns_entire_state_region = STATE_AL_RIF
 		owns_entire_state_region = STATE_WEST_SAHARA
 		NOR = {
 			has_law = law_type:law_no_colonial_affairs
@@ -2792,11 +2788,7 @@ por_ai_return_north_angola = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:por_north_angola_return_country_scope
-			target_state = scope:por_north_angola_return_state_scope
-		}
+		annex = scope:por_north_angola_return_country_scope
 	}
 
 	ai_chance = {
@@ -4199,9 +4191,10 @@ african_colonial_ai_return_claimed_border_states = {
 				}
 			}
 			save_scope_as = african_colonial_return_target_country_scope
-			random_scope_state = {
+			any_state = {
 				limit = {
 					NOT = { owner = ROOT }
+					owner = african_colonial_return_target_country_scope
 					state_region = {
 						has_claim_by = ROOT
 						has_claim_by = scope:african_colonial_return_overlord_scope
@@ -4214,6 +4207,503 @@ african_colonial_ai_return_claimed_border_states = {
 			type = dp_return_state
 			target_country = scope:african_colonial_return_target_country_scope
 			target_state = scope:african_colonial_return_target_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+african_colonial_overlord_ai_return_claimed_border_states = {
+	is_shown = {
+		is_ai = yes
+		has_global_variable = berlin_conference_ended
+		is_subject = no
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_subject_or_below = {
+			is_country_type = colonial
+			is_subject = yes
+			capital = {
+				is_in_geographic_region = geographic_region_africa
+			}
+			OR = {
+				has_law = law_type:law_colonial_administration
+				has_modifier = colonial_administration
+			}
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			any_country = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject = no
+				is_adjacent_to_country = PREV
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					has_claim_by = ROOT
+				}
+			}
+		}
+	}
+
+	possible = {
+		has_global_variable = berlin_conference_ended
+		is_subject = no
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_subject_or_below = {
+			is_country_type = colonial
+			is_subject = yes
+			capital = {
+				is_in_geographic_region = geographic_region_africa
+			}
+			OR = {
+				has_law = law_type:law_colonial_administration
+				has_modifier = colonial_administration
+			}
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			any_country = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject = no
+				is_adjacent_to_country = PREV
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					has_claim_by = ROOT
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		random_subject_or_below = {
+			limit = {
+				is_country_type = colonial
+				is_subject = yes
+				capital = {
+					is_in_geographic_region = geographic_region_africa
+				}
+				OR = {
+					has_law = law_type:law_colonial_administration
+					has_modifier = colonial_administration
+				}
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				any_country = {
+					NOT = { this = ROOT }
+					is_country_type = unrecognized
+					is_subject = no
+					is_adjacent_to_country = PREV
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					army_power_projection < ROOT.army_power_projection
+					any_scope_state = {
+						NOT = { owner = ROOT }
+						has_claim_by = ROOT
+					}
+				}
+			}
+			save_scope_as = african_colonial_overlord_return_subject_scope
+		}
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject = no
+				is_adjacent_to_country = scope:african_colonial_overlord_return_subject_scope
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					has_claim_by = ROOT
+				}
+			}
+			save_scope_as = african_colonial_overlord_return_target_country_scope
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner = scope:african_colonial_overlord_return_target_country_scope
+					has_claim_by = ROOT
+				}
+				save_scope_as = african_colonial_overlord_return_target_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:african_colonial_overlord_return_target_country_scope
+			target_state = scope:african_colonial_overlord_return_target_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+african_colonial_annex_unrecognized_puppet = {
+	is_shown = {
+		is_subject = no
+		any_subject_or_below = {
+			is_country_type = colonial
+			capital = {
+				is_in_geographic_region = geographic_region_africa
+			}
+			OR = {
+				has_law = law_type:law_colonial_administration
+				has_modifier = colonial_administration
+			}
+			any_country = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject_type = subject_type_puppet
+				is_subject_of = ROOT
+				capital = {
+					is_in_geographic_region = geographic_region_africa
+				}
+				OR = {
+					AND = {
+						PREV = {
+							capital.region = sr:region_east_africa
+							capital = {
+								state_region = {
+									NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+								}
+							}
+						}
+						capital.region = sr:region_east_africa
+						capital = {
+							state_region = {
+								NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+							}
+						}
+					}
+					AND = {
+						PREV = {
+							capital = {
+								state_region = {
+									is_in_geographic_region = geographic_region_ethiopia_old
+								}
+							}
+						}
+						capital = {
+							state_region = {
+								is_in_geographic_region = geographic_region_ethiopia_old
+							}
+						}
+					}
+					AND = {
+						PREV = {
+							NOT = { capital.region = sr:region_east_africa }
+						}
+						OR = {
+							AND = {
+								PREV = { capital.region = sr:region_west_africa }
+								capital.region = sr:region_west_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_equatorial_africa }
+								capital.region = sr:region_equatorial_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_southern_africa }
+								capital.region = sr:region_southern_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_north_africa }
+								capital.region = sr:region_north_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_nile_basin }
+								capital.region = sr:region_nile_basin
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_subject = no
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_subject_or_below = {
+			is_country_type = colonial
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			capital = {
+				is_in_geographic_region = geographic_region_africa
+			}
+			OR = {
+				has_law = law_type:law_colonial_administration
+				has_modifier = colonial_administration
+			}
+			any_country = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject_type = subject_type_puppet
+				is_subject_of = ROOT
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				capital = {
+					is_in_geographic_region = geographic_region_africa
+				}
+				OR = {
+					AND = {
+						PREV = {
+							capital.region = sr:region_east_africa
+							capital = {
+								state_region = {
+									NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+								}
+							}
+						}
+						capital.region = sr:region_east_africa
+						capital = {
+							state_region = {
+								NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+							}
+						}
+					}
+					AND = {
+						PREV = {
+							capital = {
+								state_region = {
+									is_in_geographic_region = geographic_region_ethiopia_old
+								}
+							}
+						}
+						capital = {
+							state_region = {
+								is_in_geographic_region = geographic_region_ethiopia_old
+							}
+						}
+					}
+					AND = {
+						PREV = {
+							NOT = { capital.region = sr:region_east_africa }
+						}
+						OR = {
+							AND = {
+								PREV = { capital.region = sr:region_west_africa }
+								capital.region = sr:region_west_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_equatorial_africa }
+								capital.region = sr:region_equatorial_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_southern_africa }
+								capital.region = sr:region_southern_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_north_africa }
+								capital.region = sr:region_north_africa
+							}
+							AND = {
+								PREV = { capital.region = sr:region_nile_basin }
+								capital.region = sr:region_nile_basin
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		random_subject_or_below = {
+			limit = {
+				is_country_type = colonial
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				capital = {
+					is_in_geographic_region = geographic_region_africa
+				}
+				OR = {
+					has_law = law_type:law_colonial_administration
+					has_modifier = colonial_administration
+				}
+				any_country = {
+					NOT = { this = ROOT }
+					is_country_type = unrecognized
+					is_subject_type = subject_type_puppet
+					is_subject_of = ROOT
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					capital = {
+						is_in_geographic_region = geographic_region_africa
+					}
+					OR = {
+						AND = {
+							PREV = {
+								capital.region = sr:region_east_africa
+								capital = {
+									state_region = {
+										NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+									}
+								}
+							}
+							capital.region = sr:region_east_africa
+							capital = {
+								state_region = {
+									NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+								}
+							}
+						}
+						AND = {
+							PREV = {
+								capital = {
+									state_region = {
+										is_in_geographic_region = geographic_region_ethiopia_old
+									}
+								}
+							}
+							capital = {
+								state_region = {
+									is_in_geographic_region = geographic_region_ethiopia_old
+								}
+							}
+						}
+						AND = {
+							PREV = {
+								NOT = { capital.region = sr:region_east_africa }
+							}
+							OR = {
+								AND = {
+									PREV = { capital.region = sr:region_west_africa }
+									capital.region = sr:region_west_africa
+								}
+								AND = {
+									PREV = { capital.region = sr:region_equatorial_africa }
+									capital.region = sr:region_equatorial_africa
+								}
+								AND = {
+									PREV = { capital.region = sr:region_southern_africa }
+									capital.region = sr:region_southern_africa
+								}
+								AND = {
+									PREV = { capital.region = sr:region_north_africa }
+									capital.region = sr:region_north_africa
+								}
+								AND = {
+									PREV = { capital.region = sr:region_nile_basin }
+									capital.region = sr:region_nile_basin
+								}
+							}
+						}
+					}
+				}
+			}
+			save_scope_as = african_colonial_puppet_annex_subject_scope
+		}
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				is_country_type = unrecognized
+				is_subject_type = subject_type_puppet
+				is_subject_of = ROOT
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				capital = {
+					is_in_geographic_region = geographic_region_africa
+				}
+				OR = {
+					AND = {
+						scope:african_colonial_puppet_annex_subject_scope = {
+							capital.region = sr:region_east_africa
+							capital = {
+								state_region = {
+									NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+								}
+							}
+						}
+						capital.region = sr:region_east_africa
+						capital = {
+							state_region = {
+								NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+							}
+						}
+					}
+					AND = {
+						scope:african_colonial_puppet_annex_subject_scope = {
+							capital = {
+								state_region = {
+									is_in_geographic_region = geographic_region_ethiopia_old
+								}
+							}
+						}
+						capital = {
+							state_region = {
+								is_in_geographic_region = geographic_region_ethiopia_old
+							}
+						}
+					}
+					AND = {
+						scope:african_colonial_puppet_annex_subject_scope = {
+							NOT = { capital.region = sr:region_east_africa }
+						}
+						OR = {
+							AND = {
+								scope:african_colonial_puppet_annex_subject_scope = { capital.region = sr:region_west_africa }
+								capital.region = sr:region_west_africa
+							}
+							AND = {
+								scope:african_colonial_puppet_annex_subject_scope = { capital.region = sr:region_equatorial_africa }
+								capital.region = sr:region_equatorial_africa
+							}
+							AND = {
+								scope:african_colonial_puppet_annex_subject_scope = { capital.region = sr:region_southern_africa }
+								capital.region = sr:region_southern_africa
+							}
+							AND = {
+								scope:african_colonial_puppet_annex_subject_scope = { capital.region = sr:region_north_africa }
+								capital.region = sr:region_north_africa
+							}
+							AND = {
+								scope:african_colonial_puppet_annex_subject_scope = { capital.region = sr:region_nile_basin }
+								capital.region = sr:region_nile_basin
+							}
+						}
+					}
+				}
+			}
+			save_scope_as = african_colonial_puppet_annex_target_scope
+		}
+		scope:african_colonial_puppet_annex_subject_scope = {
+			annex = scope:african_colonial_puppet_annex_target_scope
 		}
 	}
 
