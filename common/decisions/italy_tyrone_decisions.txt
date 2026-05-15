@@ -26,6 +26,86 @@ ita_lateran_concordat_decision = {
 	}
 }
 
+ita_eritrea_purchase_decision = {
+	is_shown = {
+		c:ITA ?= this
+		has_global_variable = berlin_conference_ended
+		NOT = { has_global_variable = italy_eritrea_purchase_in_progress }
+		NOT = { owns_entire_state_region = STATE_ERITREA }
+		s:STATE_ERITREA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+			}
+		}
+	}
+
+	possible = {
+		gdp > 50000000
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		s:STATE_ERITREA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					relations:root >= relations_threshold:cordial
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		set_global_variable = italy_eritrea_purchase_in_progress
+		set_variable = italy_eritrea_purchase_buyer
+		s:STATE_ERITREA = {
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner = {
+						relations:root >= relations_threshold:cordial
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_war_with = ROOT }
+					}
+				}
+				owner = {
+					trigger_event = {
+						id = italy_eritrea_purchase.1
+						days = 0
+						popup = yes
+					}
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = { gold_reserves > 15000000 }
+			add = 10
+		}
+		if = {
+			limit = {
+				net_fixed_income > 100000
+				gold_reserves > 0
+			}
+			add = 10
+		}
+		if = {
+			limit = {
+				OR = {
+					is_diplomatic_play_committed_participant = yes
+					is_at_war = yes
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
 # Lombardy-Venetia requests to be downgraded from crown land / personal union to protectorate.
 # Visible when Austria is weakened: lost the Brothers' War, became the Dual Monarchy, or Hungary no longer exists.
 # Fires an event on Austria â€” Austria chooses to accept or refuse.
@@ -159,6 +239,108 @@ ita_ai_annex_independent_lmv = {
 		create_diplomatic_play = {
 			target_country = c:LMV
 			type = dp_annex_war
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+ita_ai_return_independent_north_italian_states = {
+	is_shown = {
+		is_ai = yes
+		c:ITA ?= this
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { c:LMV ?= this }
+			country_has_primary_culture = cu:north_italian
+			is_subject = no
+			NOT = { is_country_type = decentralized }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				state_region = {
+					is_homeland = cu:north_italian
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { c:LMV ?= this }
+			country_has_primary_culture = cu:north_italian
+			is_subject = no
+			NOT = { is_country_type = decentralized }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				state_region = {
+					is_homeland = cu:north_italian
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				NOT = { c:LMV ?= this }
+				country_has_primary_culture = cu:north_italian
+				is_subject = no
+				NOT = { is_country_type = decentralized }
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					state_region = {
+						is_homeland = cu:north_italian
+					}
+				}
+			}
+			save_scope_as = ita_return_north_italian_target_country_scope
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					state_region = {
+						is_homeland = cu:north_italian
+					}
+				}
+				save_scope_as = ita_return_north_italian_target_state_scope
+			}
+		}
+		scope:ita_return_north_italian_target_state_scope.state_region = {
+			add_claim = ROOT
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:ita_return_north_italian_target_country_scope
+			target_state = scope:ita_return_north_italian_target_state_scope
 		}
 	}
 

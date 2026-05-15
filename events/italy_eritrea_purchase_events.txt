@@ -1,0 +1,139 @@
+namespace = italy_eritrea_purchase
+
+italy_eritrea_purchase.1 = {
+	type = country_event
+
+	title = italy_eritrea_purchase.1.t
+	desc = italy_eritrea_purchase.1.d
+	flavor = italy_eritrea_purchase.1.f
+
+	event_image = {
+		video = "africa_city_center"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	duration = 3
+
+	immediate = {
+		save_scope_as = italy_eritrea_owner_scope
+		random_country = {
+			limit = {
+				has_variable = italy_eritrea_purchase_buyer
+			}
+			save_scope_as = italy_eritrea_buyer_scope
+		}
+	}
+
+	option = {
+		name = italy_eritrea_purchase.1.a
+		trigger = {
+			exists = scope:italy_eritrea_buyer_scope
+		}
+		scope:italy_eritrea_buyer_scope = {
+			trigger_event = {
+				id = italy_eritrea_purchase.2
+				days = 0
+				popup = yes
+			}
+		}
+		add_modifier = {
+			name = suez_sale
+			months = 12
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	option = {
+		name = italy_eritrea_purchase.1.b
+		default_option = yes
+		trigger = {
+			exists = scope:italy_eritrea_buyer_scope
+		}
+		scope:italy_eritrea_buyer_scope = {
+			trigger_event = {
+				id = italy_eritrea_purchase.3
+				days = 0
+				popup = yes
+			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+italy_eritrea_purchase.2 = {
+	type = country_event
+
+	title = italy_eritrea_purchase.2.t
+	desc = italy_eritrea_purchase.2.d
+	flavor = italy_eritrea_purchase.2.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	duration = 3
+
+	option = {
+		name = italy_eritrea_purchase.2.a
+		s:STATE_ERITREA = {
+			every_scope_state = {
+				limit = {
+					owner = scope:italy_eritrea_owner_scope
+				}
+				set_state_owner = ROOT
+			}
+		}
+		change_relations = {
+			country = scope:italy_eritrea_owner_scope
+			value = 20
+		}
+		add_modifier = {
+			name = suez_purchase
+			months = 12
+		}
+		remove_variable = italy_eritrea_purchase_buyer
+		remove_global_variable = italy_eritrea_purchase_in_progress
+	}
+}
+
+italy_eritrea_purchase.3 = {
+	type = country_event
+
+	title = italy_eritrea_purchase.3.t
+	desc = italy_eritrea_purchase.3.d
+	flavor = italy_eritrea_purchase.3.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	duration = 3
+
+	option = {
+		name = italy_eritrea_purchase.3.a
+		change_relations = {
+			country = scope:italy_eritrea_owner_scope
+			value = -20
+		}
+		s:STATE_ERITREA = {
+			add_claim = ROOT
+		}
+		remove_variable = italy_eritrea_purchase_buyer
+		remove_global_variable = italy_eritrea_purchase_in_progress
+	}
+}
