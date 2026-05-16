@@ -1998,6 +1998,54 @@ usa_ai_improve_russia_relations_for_alaska = {
 	}
 }
 
+usa_alaskan_gold_rush_decision = {
+	is_shown = {
+		c:USA ?= this
+		NOT = { has_variable = usa_alaskan_gold_rush_decision_taken }
+		OR = {
+			owns_entire_state_region = STATE_ALASKA
+			any_subject_or_below = {
+				owns_entire_state_region = STATE_ALASKA
+			}
+		}
+	}
+
+	possible = {
+		OR = {
+			owns_entire_state_region = STATE_ALASKA
+			any_subject_or_below = {
+				owns_entire_state_region = STATE_ALASKA
+			}
+		}
+	}
+
+	when_taken = {
+		set_variable = usa_alaskan_gold_rush_decision_taken
+		if = {
+			limit = {
+				c:ALK ?= {
+					is_subject_of = ROOT
+					owns_entire_state_region = STATE_ALASKA
+				}
+			}
+			annex = c:ALK
+		}
+		s:STATE_ALASKA = {
+			random_scope_state = {
+				force_resource_discovery = building_gold_field
+				add_modifier = {
+					name = state_gold_rush
+					days = normal_modifier_time
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 gbr_ai_improve_usa_relations_for_oregon = {
 	is_shown = {
 		is_ai = yes
@@ -2525,6 +2573,9 @@ spa_claim_west_sahara_and_al_rif = {
 				NOT = { has_claim_by = ROOT }
 			}
 		}
+		NOT = {
+			has_variable = west_sahara_claim_spain
+		}
 	}
 
 	possible = {
@@ -2543,6 +2594,7 @@ spa_claim_west_sahara_and_al_rif = {
 	}
 
 	when_taken = {
+		set_variable = west_sahara_claim_spain
 		s:STATE_WEST_SAHARA = {
 			if = {
 				limit = {
@@ -3326,12 +3378,24 @@ brz_ai_return_brazilian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3374,12 +3438,24 @@ brz_ai_return_brazilian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3416,12 +3492,24 @@ brz_ai_return_brazilian_states = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
-				is_subject = no
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
-				army_power_projection < ROOT.army_power_projection
+				OR = {
+					AND = {
+						is_subject = no
+						army_power_projection < ROOT.army_power_projection
+					}
+					AND = {
+						is_subject = yes
+						NOT = { is_subject_of = ROOT }
+						is_adjacent_to_country = ROOT
+						overlord = {
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+				}
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					OR = {
@@ -3517,12 +3605,24 @@ peu_ai_return_peruvian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3547,12 +3647,24 @@ peu_ai_return_peruvian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3571,12 +3683,24 @@ peu_ai_return_peruvian_states = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
-				is_subject = no
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
-				army_power_projection < ROOT.army_power_projection
+				OR = {
+					AND = {
+						is_subject = no
+						army_power_projection < ROOT.army_power_projection
+					}
+					AND = {
+						is_subject = yes
+						NOT = { is_subject_of = ROOT }
+						is_adjacent_to_country = ROOT
+						overlord = {
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+				}
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					OR = {
@@ -3636,12 +3760,24 @@ bol_ai_return_bolivian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3677,12 +3813,24 @@ bol_ai_return_bolivian_states = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			is_subject = no
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
-			army_power_projection < ROOT.army_power_projection
+			OR = {
+				AND = {
+					is_subject = no
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+					is_adjacent_to_country = ROOT
+					overlord = {
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				OR = {
@@ -3712,12 +3860,24 @@ bol_ai_return_bolivian_states = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
-				is_subject = no
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
-				army_power_projection < ROOT.army_power_projection
+				OR = {
+					AND = {
+						is_subject = no
+						army_power_projection < ROOT.army_power_projection
+					}
+					AND = {
+						is_subject = yes
+						NOT = { is_subject_of = ROOT }
+						is_adjacent_to_country = ROOT
+						overlord = {
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+				}
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					OR = {
@@ -3813,11 +3973,23 @@ bol_ai_return_alto_paraguay_split_state = {
 				NOT = { owner = ROOT }
 				owner = {
 					NOT = { is_country_type = decentralized }
-					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
 					NOT = { has_truce_with = ROOT }
-					army_power_projection < ROOT.army_power_projection
+					OR = {
+						AND = {
+							is_subject = no
+							army_power_projection < ROOT.army_power_projection
+						}
+						AND = {
+							is_subject = yes
+							NOT = { is_subject_of = ROOT }
+							is_adjacent_to_country = ROOT
+							overlord = {
+								army_power_projection < ROOT.army_power_projection
+							}
+						}
+					}
 				}
 			}
 		}
@@ -3847,11 +4019,23 @@ bol_ai_return_alto_paraguay_split_state = {
 				NOT = { owner = ROOT }
 				owner = {
 					NOT = { is_country_type = decentralized }
-					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
 					NOT = { has_truce_with = ROOT }
-					army_power_projection < ROOT.army_power_projection
+					OR = {
+						AND = {
+							is_subject = no
+							army_power_projection < ROOT.army_power_projection
+						}
+						AND = {
+							is_subject = yes
+							NOT = { is_subject_of = ROOT }
+							is_adjacent_to_country = ROOT
+							overlord = {
+								army_power_projection < ROOT.army_power_projection
+							}
+						}
+					}
 				}
 			}
 		}
@@ -3865,11 +4049,23 @@ bol_ai_return_alto_paraguay_split_state = {
 					NOT = { owner = ROOT }
 					owner = {
 						NOT = { is_country_type = decentralized }
-						is_subject = no
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
 						NOT = { has_truce_with = ROOT }
-						army_power_projection < ROOT.army_power_projection
+						OR = {
+							AND = {
+								is_subject = no
+								army_power_projection < ROOT.army_power_projection
+							}
+							AND = {
+								is_subject = yes
+								NOT = { is_subject_of = ROOT }
+								is_adjacent_to_country = ROOT
+								overlord = {
+									army_power_projection < ROOT.army_power_projection
+								}
+							}
+						}
 					}
 				}
 				save_scope_as = bol_alto_paraguay_return_state_scope
