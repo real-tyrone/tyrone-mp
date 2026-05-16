@@ -1154,20 +1154,19 @@ bic_ai_annex_assam_arakan_decentralized = {
 	}
 
 	when_taken = {
-		random_country = {
+		every_state = {
 			limit = {
-				NOT = { this = ROOT }
-				is_country_type = decentralized
-				capital = {
-					OR = {
-						state_region = s:STATE_ASSAM
-						state_region = s:STATE_ARAKAN
-					}
+				OR = {
+					state_region = s:STATE_ASSAM
+					state_region = s:STATE_ARAKAN
+					state_region = s:STATE_MANDALAY
+				}
+				owner = {
+					is_country_type = decentralized
 				}
 			}
-			save_scope_as = bic_assam_arakan_decentralized_annex_scope
+			set_state_owner = root
 		}
-		annex = scope:bic_assam_arakan_decentralized_annex_scope
 	}
 
 	ai_chance = {
@@ -1724,12 +1723,29 @@ bic_ai_return_claimed_border_states = {
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
+			NOT = {
+				ROOT = { is_subject_of = THIS }
+			}
+			is_country_type = unrecognized
 			army_power_projection < ROOT.army_power_projection
-			is_adjacent_to_country = c:BIC
+			is_adjacent_to_country = ROOT
 			any_scope_state = {
 				NOT = { owner = ROOT }
-				state_region = {
-					has_claim_by = ROOT
+				OR = {
+					AND = {
+						OR = {
+							region = sr:region_north_india
+							region = sr:region_south_india
+							state_region = s:STATE_QUETTA
+							state_region = s:STATE_BALUCHISTAN
+							state_region = s:STATE_PASHTUNISTAN
+							state_region = s:STATE_KASHMIR
+						}
+						state_region = {
+							has_claim_by = ROOT
+						}
+					}
+					is_in_geographic_region = geographic_region_burma
 				}
 			}
 		}
@@ -1751,12 +1767,29 @@ bic_ai_return_claimed_border_states = {
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
+			NOT = {
+				ROOT = { is_subject_of = THIS }
+			}
+			is_country_type = unrecognized
 			army_power_projection < ROOT.army_power_projection
-			is_adjacent_to_country = c:BIC
-			any_state_in_indian_frontier = {
+			is_adjacent_to_country = ROOT
+			any_scope_state = {
 				NOT = { owner = ROOT }
-				state_region = {
-					has_claim_by = ROOT
+				OR = {
+					AND = {
+						OR = {
+							region = sr:region_north_india
+							region = sr:region_south_india
+							state_region = s:STATE_QUETTA
+							state_region = s:STATE_BALUCHISTAN
+							state_region = s:STATE_PASHTUNISTAN
+							state_region = s:STATE_KASHMIR
+						}
+						state_region = {
+							has_claim_by = ROOT
+						}
+					}
+					is_in_geographic_region = geographic_region_burma
 				}
 			}
 		}
@@ -1771,30 +1804,102 @@ bic_ai_return_claimed_border_states = {
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
+				NOT = {
+					ROOT = { is_subject_of = THIS }
+				}
+				is_country_type = unrecognized
 				army_power_projection < ROOT.army_power_projection
-				is_adjacent_to_country = c:BIC
-				any_state_in_indian_frontier = {
+				is_adjacent_to_country = ROOT
+				any_scope_state = {
 					NOT = { owner = ROOT }
-					state_region = {
-						has_claim_by = ROOT
+					OR = {
+						AND = {
+							OR = {
+								region = sr:region_north_india
+								region = sr:region_south_india
+								state_region = s:STATE_QUETTA
+								state_region = s:STATE_BALUCHISTAN
+								state_region = s:STATE_PASHTUNISTAN
+								state_region = s:STATE_KASHMIR
+							}
+							state_region = {
+								has_claim_by = ROOT
+							}
+						}
+						is_in_geographic_region = geographic_region_burma
 					}
 				}
 			}
 			save_scope_as = bic_return_target_country_scope
-			any_state_in_indian_frontier = {
+			random_scope_state = {
 				limit = {
 					NOT = { owner = ROOT }
-					state_region = {
-						has_claim_by = ROOT
+					OR = {
+						AND = {
+							OR = {
+								region = sr:region_north_india
+								region = sr:region_south_india
+								state_region = s:STATE_QUETTA
+								state_region = s:STATE_BALUCHISTAN
+								state_region = s:STATE_PASHTUNISTAN
+								state_region = s:STATE_KASHMIR
+							}
+							state_region = {
+								has_claim_by = ROOT
+							}
+						}
+						is_in_geographic_region = geographic_region_burma
 					}
 				}
 				save_scope_as = bic_return_target_state_scope
+			}
+		}
+		scope:bic_return_target_state_scope = {
+			state_region = {
+				if = {
+					limit = {
+						NOT = { has_claim_by = ROOT }
+					}
+					add_claim = ROOT
+				}
 			}
 		}
 		create_diplomatic_play = {
 			type = dp_return_state
 			target_country = scope:bic_return_target_country_scope
 			target_state = scope:bic_return_target_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+phi_ai_annex_maguindanao = {
+	is_shown = {
+		is_ai = yes
+		c:PHI ?= this
+		exists = c:MGD
+		has_technology_researched = nationalism
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:MGD ?= {
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+		}
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			target_country = c:MGD
+			type = dp_annex_war
 		}
 	}
 
@@ -1967,6 +2072,31 @@ usa_annex_independent_csa = {
 			type = dp_annex_war
 		}
 		change_infamy = -50
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+usa_ai_trigger_hawaii_annexation = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		has_technology_researched = civilizing_mission
+		NOT = { has_variable = usa_ai_triggered_hawaii_annexation }
+	}
+
+	possible = {
+		has_technology_researched = civilizing_mission
+		NOT = { has_variable = usa_ai_triggered_hawaii_annexation }
+	}
+
+	when_taken = {
+		set_variable = usa_ai_triggered_hawaii_annexation
+		trigger_event = {
+			id = hawaii_events.4
+		}
 	}
 
 	ai_chance = {
@@ -2632,9 +2762,63 @@ spa_claim_west_sahara_and_al_rif = {
 	}
 }
 
+spa_ai_return_al_rif = {
+	is_shown = {
+		is_ai = yes
+		c:SPA ?= this
+		exists = c:MOR
+		has_global_variable = berlin_conference_ended
+		s:STATE_AL_RIF = {
+			has_claim_by = ROOT
+			any_scope_state = {
+				owner = c:MOR
+			}
+		}
+	}
+
+	possible = {
+		has_global_variable = berlin_conference_ended
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		s:STATE_AL_RIF = {
+			has_claim_by = ROOT
+			any_scope_state = {
+				owner = c:MOR
+			}
+		}
+		c:MOR ?= {
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+		}
+	}
+
+	when_taken = {
+		s:STATE_AL_RIF = {
+			random_scope_state = {
+				limit = {
+					owner = c:MOR
+				}
+				save_scope_as = spa_al_rif_return_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = c:MOR
+			target_state = scope:spa_al_rif_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 spa_establish_spanish_guinea = {
 	is_shown = {
 		has_global_variable = berlin_conference_ended
+		has_game_rule = historical_africa_berlin_enabled
 		OR = {
 			c:SPA ?= this
 			c:IBE ?= this
@@ -2779,6 +2963,26 @@ allow_monopoly_subject_remove = {
 	}
 }
 
+belgium_ai_switch_to_colonial_exploitation = {
+	is_shown = {
+		is_ai = yes
+		c:BEL ?= this
+		has_law = law_type:law_colonial_resettlement
+	}
+
+	possible = {
+		has_law = law_type:law_colonial_resettlement
+	}
+
+	when_taken = {
+		activate_law = law_type:law_colonial_exploitation
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 belgium_unl_ai_return_bas_congo = {
 	is_shown = {
 		is_ai = yes
@@ -2786,6 +2990,7 @@ belgium_unl_ai_return_bas_congo = {
 			c:BEL ?= this
 			c:UNL ?= this
 		}
+		has_game_rule = historical_africa_berlin_enabled
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -2847,6 +3052,7 @@ belgium_unl_ai_return_bas_congo = {
 gbr_ai_return_kenya = {
 	is_shown = {
 		is_ai = yes
+		has_game_rule = historical_africa_berlin_enabled
 		c:GBR ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -3371,6 +3577,28 @@ tri_enact_frontier_colonization_after_berlin = {
 	}
 }
 
+eth_ai_enact_frontier_colonization_after_berlin = {
+	is_shown = {
+		is_ai = yes
+		c:ETH ?= this
+		has_global_variable = berlin_conference_ended
+		has_law = law_type:law_no_colonial_affairs
+	}
+
+	possible = {
+		has_global_variable = berlin_conference_ended
+		has_law = law_type:law_no_colonial_affairs
+	}
+
+	when_taken = {
+		activate_law = law_type:law_frontier_colonization
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 tri_ai_claim_libya_if_fezzan_absent = {
 	is_shown = {
 		is_ai = yes
@@ -3411,6 +3639,46 @@ tri_ai_claim_libya_if_fezzan_absent = {
 			}
 		}
 		set_variable = tri_claimed_libya_if_fezzan_absent_var
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+tri_overlord_annex_fezzan_into_tripoli = {
+	is_shown = {
+		has_technology_researched = nationalism
+		exists = c:TRI
+		exists = c:FZN
+		c:TRI ?= {
+			is_subject_of = ROOT
+		}
+		c:FZN ?= {
+			is_ai = yes
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:TRI ?= {
+			is_subject_of = ROOT
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		c:FZN ?= {
+			is_ai = yes
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	when_taken = {
+		c:TRI = {
+			annex = c:FZN
+		}
 	}
 
 	ai_chance = {
