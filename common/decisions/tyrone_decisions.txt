@@ -1977,7 +1977,10 @@ usa_annex_independent_csa = {
 usa_ai_improve_russia_relations_for_alaska = {
 	is_shown = {
 		is_ai = yes
-		c:USA ?= this
+		OR = {
+			c:USA ?= this
+			c:GAC ?= this
+		}
 		has_journal_entry = je_alaska
 		NOT = { has_variable = usa_ai_improved_russia_relations_for_alaska }
 	}
@@ -2000,7 +2003,10 @@ usa_ai_improve_russia_relations_for_alaska = {
 
 usa_alaskan_gold_rush_decision = {
 	is_shown = {
-		c:USA ?= this
+		OR = {
+			c:USA ?= this
+			c:GAC ?= this
+		}
 		NOT = { has_variable = usa_alaskan_gold_rush_decision_taken }
 		OR = {
 			owns_entire_state_region = STATE_ALASKA
@@ -3358,6 +3364,53 @@ tri_enact_frontier_colonization_after_berlin = {
 
 	when_taken = {
 		activate_law = law_type:law_frontier_colonization
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+tri_ai_claim_libya_if_fezzan_absent = {
+	is_shown = {
+		is_ai = yes
+		c:TRI ?= this
+		NOT = { exists = c:FZN }
+		NOT = { has_variable = tri_claimed_libya_if_fezzan_absent_var }
+		OR = {
+			s:STATE_TRIPOLI = { NOT = { has_claim_by = ROOT } }
+			s:STATE_LIBYA = { NOT = { has_claim_by = ROOT } }
+			s:STATE_LIBYAN_DESERT = { NOT = { has_claim_by = ROOT } }
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		c:TRI ?= this
+		NOT = { exists = c:FZN }
+		NOT = { has_variable = tri_claimed_libya_if_fezzan_absent_var }
+	}
+
+	when_taken = {
+		s:STATE_TRIPOLI = {
+			if = {
+				limit = { NOT = { has_claim_by = ROOT } }
+				add_claim = ROOT
+			}
+		}
+		s:STATE_LIBYA = {
+			if = {
+				limit = { NOT = { has_claim_by = ROOT } }
+				add_claim = ROOT
+			}
+		}
+		s:STATE_LIBYAN_DESERT = {
+			if = {
+				limit = { NOT = { has_claim_by = ROOT } }
+				add_claim = ROOT
+			}
+		}
+		set_variable = tri_claimed_libya_if_fezzan_absent_var
 	}
 
 	ai_chance = {
