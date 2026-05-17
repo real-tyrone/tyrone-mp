@@ -1,0 +1,663 @@
+namespace = crimean_war
+
+crimean_war.1 = {
+	type = country_event
+	placement = root
+	title = crimean_war.1.t
+	desc = crimean_war.1.d
+	flavor = crimean_war.1.f
+	duration = 3
+	event_image = { video = "middleeast_courtroom_upheaval" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = { c:FRA ?= this }
+
+	immediate = {
+		save_scope_as = france_scope
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.1.a
+		default_option = yes
+		ai_chance = { base = 90 }
+		set_variable = crimean_war_ottoman_side
+		je:je_crimean_war ?= { add_involved_country = ROOT }
+		add_involvement = {
+			strategic_region = sr:region_balkans
+			value = 2500
+		}
+		add_modifier = { name = crimean_holy_places_policy days = long_modifier_time }
+		ig:ig_devout ?= {
+			add_modifier = { name = crimean_holy_places_devout days = long_modifier_time }
+		}
+		add_loyalists = {
+			value = 0.10
+			religion = rel:catholic
+		}
+		c:RUS ?= {
+			change_relations = { country = ROOT value = -50 }
+		}
+		c:TUR ?= {
+			change_relations = { country = ROOT value = 50 }
+		}
+		if = {
+			limit = {
+				can_create_treaty = {
+					first_country = ROOT
+					second_country = c:TUR
+					is_draft = no
+					binding_period = { years = 5 }
+					articles_to_create = {
+						{
+							article = defensive_pact
+						}
+					}
+				}
+			}
+			create_treaty = {
+				first_country = ROOT
+				second_country = c:TUR
+				is_draft = no
+				binding_period = { years = 5 }
+				articles_to_create = {
+					{
+						article = defensive_pact
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = crimean_war.1.b
+		ai_chance = { base = 10 }
+		ig:ig_devout ?= {
+			add_modifier = { name = crimean_holy_places_refused_devout days = normal_modifier_time }
+		}
+		c:RUS ?= {
+			change_relations = { country = ROOT value = 20 }
+		}
+	}
+}
+
+crimean_war.2 = {
+	type = country_event
+	placement = root
+	title = crimean_war.2.t
+	desc = crimean_war.2.d
+	flavor = crimean_war.2.f
+	duration = 3
+	event_image = { video = "europenorthamerica_political_extremism" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = { c:GBR ?= this }
+
+	immediate = {
+		save_scope_as = britain_scope
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.2.a
+		default_option = yes
+		ai_chance = { base = 90 }
+		set_variable = crimean_war_ottoman_side
+		je:je_crimean_war ?= { add_involved_country = ROOT }
+		add_involvement = {
+			strategic_region = sr:region_balkans
+			value = 2500
+		}
+		c:TUR ?= {
+			change_relations = { country = ROOT value = 50 }
+		}
+		if = {
+			limit = {
+				can_create_treaty = {
+					first_country = ROOT
+					second_country = c:TUR
+					is_draft = no
+					binding_period = { years = 5 }
+					articles_to_create = {
+						{
+							article = defensive_pact
+						}
+					}
+				}
+			}
+			create_treaty = {
+				first_country = ROOT
+				second_country = c:TUR
+				is_draft = no
+				binding_period = { years = 5 }
+				articles_to_create = {
+					{
+						article = defensive_pact
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = crimean_war.2.b
+		ai_chance = { base = 10 }
+		add_modifier = { name = crimean_british_isolation days = long_modifier_time }
+	}
+}
+
+crimean_war.3 = {
+	type = country_event
+	placement = root
+	title = crimean_war.3.t
+	desc = crimean_war.3.d
+	flavor = crimean_war.3.f
+	duration = 3
+	event_image = { video = "ep1_clandestine_meeting" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = { c:AUS ?= this }
+
+	immediate = {
+		save_scope_as = austria_scope
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.3.a
+		ai_chance = { base = 15 }
+		set_variable = crimean_war_russian_side
+		set_variable = crimean_war_austria_sides_with_russia
+		je:je_crimean_war ?= { add_involved_country = ROOT }
+		c:RUS ?= { change_relations = { country = ROOT value = 30 } }
+		c:TUR ?= { change_relations = { country = ROOT value = -30 } }
+	}
+
+	option = {
+		name = crimean_war.3.b
+		default_option = yes
+		ai_chance = { base = 75 }
+		set_variable = crimean_war_neutral
+	}
+
+	option = {
+		name = crimean_war.3.c
+		ai_chance = { base = 10 }
+		set_variable = crimean_war_ottoman_side
+		set_variable = crimean_war_austria_opposes_russia
+		je:je_crimean_war ?= { add_involved_country = ROOT }
+		c:RUS ?= { change_relations = { country = ROOT value = -50 } }
+		c:TUR ?= { change_relations = { country = ROOT value = 30 } }
+	}
+}
+
+crimean_war.4 = {
+	type = country_event
+	placement = root
+	title = crimean_war.4.t
+	desc = crimean_war.4.d
+	flavor = crimean_war.4.f
+	duration = 3
+	event_image = { video = "europenorthamerica_before_the_battle" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	trigger = {
+		c:TUR ?= this
+		exists = c:RUS
+		NOT = { has_global_variable = crimean_war_ottoman_victory }
+		NOT = { has_global_variable = crimean_war_russian_victory }
+		NOT = { any_diplomatic_play = { is_diplomatic_play_type = dp_crimean_war } }
+		NOT = { has_war_with = c:RUS }
+	}
+
+	immediate = {
+		save_scope_as = ottoman_scope
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:FRA ?= { save_scope_as = france_scope }
+		c:GBR ?= { save_scope_as = britain_scope }
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.4.a
+		default_option = yes
+		c:RUS ?= {
+			create_diplomatic_play = {
+				name = crimean_war
+				type = dp_crimean_war
+				target_country = c:TUR
+			}
+		}
+		hidden_effect = {
+			random_diplomatic_play = {
+				limit = { is_diplomatic_play_type = dp_crimean_war }
+				add_war_goal = {
+					holder = c:TUR
+					target_country = c:RUS
+					type = crimean_war_wargoal
+					primary_demand = yes
+				}
+				if = {
+					limit = { c:FRA ?= { has_variable = crimean_war_ottoman_side } }
+					add_target_backers = { c:FRA }
+				}
+				if = {
+					limit = { c:GBR ?= { has_variable = crimean_war_ottoman_side } }
+					add_target_backers = { c:GBR }
+				}
+				if = {
+					limit = { c:AUS ?= { has_variable = crimean_war_ottoman_side } }
+					add_target_backers = { c:AUS }
+				}
+				if = {
+					limit = { c:AUS ?= { has_variable = crimean_war_russian_side } }
+					add_initiator_backers = { c:AUS }
+				}
+			}
+		}
+	}
+}
+
+crimean_war.5 = {
+	type = country_event
+	placement = root
+	title = crimean_war.5.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_global_variable = crimean_war_ottoman_victory }
+				desc = crimean_war.5.d_ottoman
+			}
+			triggered_desc = {
+				trigger = { has_global_variable = crimean_war_russian_victory }
+				desc = crimean_war.5.d_russian
+			}
+		}
+	}
+	flavor = crimean_war.5.f
+	duration = 3
+	event_image = { video = "middleeast_upperclass_party" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	trigger = {
+		OR = {
+			is_involved_in_journal_entry = je_crimean_war
+			has_variable = crimean_war_ottoman_side
+			has_variable = crimean_war_russian_side
+			has_variable = crimean_war_neutral
+			c:TUR ?= this
+			c:RUS ?= this
+			c:WAL ?= this
+			c:MOL ?= this
+		}
+	}
+
+	immediate = {
+		save_scope_as = recipient_scope
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:FRA ?= { save_scope_as = france_scope }
+		c:GBR ?= { save_scope_as = britain_scope }
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+		c:SER ?= { save_scope_as = serbia_scope }
+		c:BOS ?= { save_scope_as = bosnia_scope }
+		s:STATE_MOLDAVIA = {
+			random_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:TUR ?= this
+							is_subject_of = c:TUR
+							top_overlord ?= { c:TUR ?= this }
+						}
+					}
+				}
+				owner = { save_scope_as = moldavia_owner_scope }
+			}
+		}
+	}
+
+	option = {
+		name = crimean_war.5.a
+		default_option = yes
+		if = {
+			limit = {
+				NOT = { has_global_variable = crimean_war_settlement_processed }
+			}
+			set_global_variable = crimean_war_settlement_processed
+			if = {
+				limit = { has_global_variable = crimean_war_ottoman_victory }
+				if = {
+					limit = { exists = s:STATE_KARS.region_state:RUS }
+					transfer_state = { STATE = s:STATE_KARS GIVER = c:RUS TAKER = c:TUR }
+				}
+				if = {
+					limit = {
+						exists = scope:moldavia_owner_scope
+						OR = {
+							p:xB0E0A0 = { owner = c:RUS }
+							p:x6BF7B8 = { owner = c:RUS }
+							p:x712161 = { owner = c:RUS }
+						}
+					}
+					s:STATE_BESSARABIA = {
+						set_owner_of_provinces = {
+							country = scope:moldavia_owner_scope
+							provinces = { xB0E0A0 x6BF7B8 x712161 }
+						}
+					}
+				}
+				if = {
+					limit = {
+						exists = scope:moldavia_owner_scope
+						p:x50F5CB = {
+							owner = c:RUS
+						}
+					}
+					s:STATE_DOBRUDJA = {
+						set_owner_of_provinces = {
+							country = scope:moldavia_owner_scope
+							provinces = { x50F5CB }
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { has_global_variable = crimean_war_russian_victory }
+				if = {
+					limit = { exists = s:STATE_KARS.region_state:TUR }
+					transfer_state = { STATE = s:STATE_KARS GIVER = c:TUR TAKER = c:RUS }
+				}
+				if = {
+					limit = {
+						exists = c:ROM
+						c:ROM = { is_subject = yes }
+					}
+					c:RUS ?= { transfer_subject = c:ROM }
+				}
+				else = {
+					if = {
+						limit = {
+							exists = c:WAL
+							c:WAL = { is_subject = yes }
+						}
+						c:RUS ?= { transfer_subject = c:WAL }
+					}
+					else_if = {
+						limit = {
+							NOT = { exists = c:WAL }
+							exists = s:STATE_WALLACHIA.region_state:TUR
+						}
+						transfer_state = { STATE = s:STATE_WALLACHIA GIVER = c:TUR TAKER = c:RUS }
+					}
+					if = {
+						limit = {
+							exists = c:MOL
+							c:MOL = { is_subject = yes }
+						}
+						c:RUS ?= { transfer_subject = c:MOL }
+					}
+					else_if = {
+						limit = {
+							NOT = { exists = c:MOL }
+							exists = s:STATE_MOLDAVIA.region_state:TUR
+						}
+						transfer_state = { STATE = s:STATE_MOLDAVIA GIVER = c:TUR TAKER = c:RUS }
+					}
+				}
+			}
+			every_country = {
+				limit = {
+					country_rank = rank_value:great_power
+					OR = {
+						has_variable = crimean_war_ottoman_side
+						has_variable = crimean_war_russian_side
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							AND = {
+								has_global_variable = crimean_war_ottoman_victory
+								has_variable = crimean_war_ottoman_side
+							}
+							AND = {
+								has_global_variable = crimean_war_russian_victory
+								has_variable = crimean_war_russian_side
+							}
+						}
+					}
+					add_modifier = { name = crimean_war_victor days = long_modifier_time is_decaying = yes }
+				}
+				else = {
+					add_modifier = { name = crimean_war_loser days = long_modifier_time is_decaying = yes }
+				}
+			}
+			if = {
+				limit = {
+					has_global_variable = crimean_war_ottoman_victory
+					exists = c:RUS
+				}
+				c:RUS ?= {
+					trigger_event = { id = crimean_war.8 days = 7 popup = yes }
+				}
+			}
+			if = {
+				limit = {
+					exists = c:SER
+					c:SER = { is_subject = yes }
+				}
+				c:SER = { make_independent = yes }
+			}
+			else_if = {
+				limit = {
+					NOT = { exists = c:SER }
+					exists = s:STATE_WESTERN_SERBIA.region_state:TUR
+				}
+				create_country = {
+					tag = SER
+					origin = c:TUR
+					state = s:STATE_WESTERN_SERBIA.region_state:TUR
+				}
+			}
+			if = {
+				limit = {
+					has_global_variable = crimean_war_russian_victory
+					c:AUS ?= { has_variable = crimean_war_austria_sides_with_russia }
+					NOT = { exists = c:BOS }
+					exists = s:STATE_BOSNIA.region_state:TUR
+				}
+				create_country = {
+					tag = BOS
+					origin = c:AUS
+					state = s:STATE_BOSNIA.region_state:TUR
+					on_created = {
+						c:AUS ?= {
+							create_diplomatic_pact = {
+								country = PREV
+								type = protectorate
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_global_variable = crimean_war_russian_victory
+					c:AUS ?= { has_variable = crimean_war_austria_sides_with_russia }
+					exists = c:BOS
+				}
+				c:AUS ?= {
+					create_diplomatic_pact = {
+						country = c:BOS
+						type = protectorate
+					}
+				}
+			}
+			if = {
+				limit = {
+					NOT = { exists = c:ROM }
+					exists = c:WAL
+				}
+				c:WAL ?= {
+					c:MOL ?= { change_relations = { country = PREV value = 30 } }
+					trigger_event = { id = romania.2 popup = yes }
+				}
+			}
+			every_country = {
+				limit = {
+					OR = {
+						has_variable = crimean_war_ottoman_side
+						has_variable = crimean_war_russian_side
+						has_variable = crimean_war_neutral
+						has_variable = crimean_war_austria_sides_with_russia
+						has_variable = crimean_war_austria_opposes_russia
+					}
+				}
+				remove_variable = crimean_war_ottoman_side
+				remove_variable = crimean_war_russian_side
+				remove_variable = crimean_war_neutral
+				remove_variable = crimean_war_austria_sides_with_russia
+				remove_variable = crimean_war_austria_opposes_russia
+			}
+		}
+	}
+}
+
+crimean_war.8 = {
+	type = country_event
+	placement = root
+	title = crimean_war.8.t
+	desc = crimean_war.8.d
+	flavor = crimean_war.8.f
+	duration = 3
+	event_image = { video = "europenorthamerica_political_extremism" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	trigger = {
+		c:RUS ?= this
+		has_global_variable = crimean_war_ottoman_victory
+	}
+
+	immediate = {
+		save_scope_as = russia_scope
+		c:TUR ?= { save_scope_as = ottoman_scope }
+	}
+
+	option = {
+		name = crimean_war.8.a
+		default_option = yes
+		ruler ?= {
+			if = {
+				limit = {
+					has_ideology = ideology:ideology_traditionalist
+				}
+				add_modifier = { name = crimean_war_traditionalist_ruler_discredited days = long_modifier_time is_decaying = yes }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					any_political_movement = {
+						is_political_movement_type = movement_modernizer
+					}
+				}
+			}
+			create_political_movement = { type = movement_modernizer }
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+			set_strategy = ai_strategy_industrial_expansion
+			set_strategy = ai_strategy_great_reforms
+		}
+	}
+}
+
+crimean_war.6 = {
+	type = country_event
+	placement = root
+	title = crimean_war.6.t
+	desc = crimean_war.6.d
+	flavor = crimean_war.6.f
+	duration = 3
+	event_image = { video = "ip3_angry_mob_raiding_minorities" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	immediate = {
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:FRA ?= { save_scope_as = france_scope }
+		c:GBR ?= { save_scope_as = britain_scope }
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.6.a
+		default_option = yes
+	}
+}
+
+crimean_war.7 = {
+	type = country_event
+	placement = root
+	title = crimean_war.7.t
+	desc = crimean_war.7.d
+	flavor = crimean_war.7.f
+	duration = 3
+	event_image = { video = "middleeast_courtroom_upheaval" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		exists = c:RUS
+		exists = c:TUR
+	}
+
+	immediate = {
+		c:RUS ?= { save_scope_as = russia_scope }
+		c:TUR ?= { save_scope_as = ottoman_scope }
+		c:FRA ?= { save_scope_as = france_scope }
+		c:GBR ?= { save_scope_as = britain_scope }
+		c:AUS ?= { save_scope_as = austria_scope }
+		c:WAL ?= { save_scope_as = wallachia_scope }
+		c:MOL ?= { save_scope_as = moldavia_scope }
+	}
+
+	option = {
+		name = crimean_war.7.a
+		default_option = yes
+		if = {
+			limit = {
+				NOT = { has_global_variable = crimean_war_russian_intent_declared }
+			}
+			set_global_variable = crimean_war_russian_intent_declared
+			c:TUR ?= {
+				trigger_event = { id = crimean_war.4 days = 180 }
+			}
+		}
+	}
+}
