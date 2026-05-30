@@ -8,7 +8,7 @@
 	weight = 10000
 
 	immediate = {
-		c:DEI = {
+		c:DEI ?= {
 			save_scope_as = east_indies_scope
 		}
 		ROOT = { save_scope_as = east_indies_overlord_scope }
@@ -18,6 +18,7 @@
 	}
 
 	complete = {
+		exists = c:DEI
         any_state = {
             filter = {
 				region = sr:region_indonesia
@@ -64,7 +65,7 @@
 	fail = {
 		OR = {
 			NOT = { exists = c:DEI }
-			c:DEI = {
+			c:DEI ?= {
 				NOT = { is_subject_of = ROOT }
 			}
 		}
@@ -101,7 +102,7 @@ je_path_of_east_indies = {
 
 	possible = {
 		OR = {
-			c:DEI = {
+			c:DEI ?= {
 				is_subject_of = ROOT
 			}
 			c:IDN ?= {
@@ -120,7 +121,7 @@ je_path_of_east_indies = {
 
 	immediate = {
 		c:NET = { save_scope_as = netherlands_scope }
-		c:DEI = { save_scope_as = dei_scope }
+		c:DEI ?= { save_scope_as = dei_scope }
 		trigger_event ={
 			id = dei_events.3
 		}
@@ -129,7 +130,7 @@ je_path_of_east_indies = {
 	complete = {
 		OR = {
 			AND = {
-				c:DEI = {
+				c:DEI ?= {
 					is_subject_of = ROOT
 					is_subject_type = subject_type_colony
 					liberty_desire < 25
@@ -137,7 +138,7 @@ je_path_of_east_indies = {
 				has_technology_researched = civilizing_mission
 			}
 			AND = {
-				c:DEI = {
+				c:DEI ?= {
 					is_subject_of = ROOT
 					is_subject_type = subject_type_chartered_company
 					liberty_desire < 25
@@ -191,7 +192,7 @@ REPLACE:je_reform_indies = {
 	should_be_pinned_by_default_involved = yes
 
 	immediate = {
-		c:DEI = {
+		c:DEI ?= {
 			save_scope_as = east_indies_scope
 		}
 		c:NET = {
@@ -234,9 +235,11 @@ REPLACE:je_reform_indies = {
 	complete = {
 		custom_tooltip = {
 			text = dei_gdp_reached_50_tt
-      	 	c:DEI.gdp > c:DEI.var:dei_gdp_goal
+			c:DEI ?= {
+				gdp > var:dei_gdp_goal
+			}
 		}
-		c:DEI = {
+		c:DEI ?= {
 			OR = {
 				has_law_or_variant = law_type:law_free_trade
 				has_law_or_variant = law_type:law_mercantilism
@@ -254,7 +257,7 @@ REPLACE:je_reform_indies = {
 	custom_on_completion_header = je_reform_indies_on_complete_header
 
 	on_complete = {
-		c:DEI = { trigger_event = { id = dei_events.5 } }
+		c:DEI ?= { trigger_event = { id = dei_events.5 } }
 	}
 
 	event_outcome_completed_desc = {
@@ -266,9 +269,11 @@ REPLACE:je_reform_indies = {
 	fail = {
 		custom_tooltip = {
 			text = dei_gdp_reached_50_tt
-      	 	c:DEI.gdp > c:DEI.var:dei_gdp_goal
+			c:DEI ?= {
+				gdp > var:dei_gdp_goal
+			}
 		}
-		c:DEI = {
+		c:DEI ?= {
 			OR = {
 				has_law_or_variant = law_type:law_free_trade
 				has_law_or_variant = law_type:law_mercantilism
@@ -289,13 +294,13 @@ REPLACE:je_reform_indies = {
 	custom_on_failure_header = je_reform_indies_on_fail_header
 
 	on_fail = {
-		c:DEI = { trigger_event = { id = dei_events.6 } }
+		c:DEI ?= { trigger_event = { id = dei_events.6 } }
 	}
 
 
 	invalid = {
 		OR = {
-			c:DEI = {
+			c:DEI ?= {
 				is_subject = no
 			}
 			NOT = {

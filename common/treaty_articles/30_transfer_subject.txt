@@ -197,9 +197,25 @@
 			}
 			else_if = {
 				limit = { NOT = { exists = scope:is_treaty_active } }
-				add = {
-					desc = "DIPLOMATIC_ACCEPTANCE_TRADE_SUBJECT_REJECT"
-					value = -300
+				if = {
+					limit = {
+						exists = scope:article.input_country
+						scope:article.input_country = {
+							scope:target_country = {
+								is_adjacent_to_country = prev
+							}
+						}
+					}
+					add = {
+						desc = "DIPLOMATIC_ACCEPTANCE_ADJACENT_TRANSFER"
+						value = 20
+					}
+				}
+				else = {
+					add = {
+						desc = "DIPLOMATIC_ACCEPTANCE_TRADE_SUBJECT_REJECT"
+						value = -300
+					}
 				}
 			}
 		}

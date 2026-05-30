@@ -1217,7 +1217,7 @@ ITA_Austria_lawsJE = {
 	}
 
 	invalid = {
-		exists ?= c:ITA
+		exists = c:ITA
 	}
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
@@ -1243,16 +1243,25 @@ ita_garibaldi_thousand_expedition_JE = {
 
 	is_shown_when_inactive = {
 		c:SAR ?= this
+		has_variable = italian_sentiment_var
 	}
 
 	possible = {
 		has_technology_researched = nationalism
 		custom_tooltip = {
 			text = ita_garibaldi_expedition_sentiment_60_tt
-			var:italian_sentiment_var >= 60
+			trigger_if = {
+				limit = {
+					has_variable = italian_sentiment_var
+				}
+				var:italian_sentiment_var >= 60
+			}
+			trigger_else = {
+				always = no
+			}
 		}
 		OR = {
-			country_rank >= rank_value:ereat_power
+			country_rank >= rank_value:great_power
 			custom_tooltip = {
 				text = is_nif_tt
 				has_variable = NIF_formed
@@ -1278,7 +1287,7 @@ ita_garibaldi_thousand_expedition_JE = {
 	complete = {
 		custom_tooltip = {
 			text = ita_italy_exists_complete_tt
-			exists ?= c:ITA
+			exists = c:ITA
 		}
 	}
 

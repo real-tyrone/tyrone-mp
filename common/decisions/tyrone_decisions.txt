@@ -327,7 +327,7 @@ decision_dutch_dei = {
 	}
 
 	when_taken = {
-		c:DEI = {
+		c:DEI ?= {
 			if = {
 				limit = {
 					NOT = { is_subject_type = subject_type_colony }
@@ -3064,7 +3064,9 @@ kuk_ai_return_claimed_borderlands = {
 				has_claim_by = ROOT
 				NOT = { owner = ROOT }
 				OR = {
-					region = sr:region_south_germany
+					state_region = {
+						is_in_geographic_region = geographic_region_south_germany_old
+					}
 					region = sr:region_balkans
 				}
 			}
@@ -3100,7 +3102,9 @@ kuk_ai_return_claimed_borderlands = {
 				has_claim_by = ROOT
 				NOT = { owner = ROOT }
 				OR = {
-					region = sr:region_south_germany
+					state_region = {
+						is_in_geographic_region = geographic_region_south_germany_old
+					}
 					region = sr:region_balkans
 				}
 			}
@@ -3130,7 +3134,9 @@ kuk_ai_return_claimed_borderlands = {
 					has_claim_by = ROOT
 					NOT = { owner = ROOT }
 					OR = {
-						region = sr:region_south_germany
+						state_region = {
+							is_in_geographic_region = geographic_region_south_germany_old
+						}
 						region = sr:region_balkans
 					}
 				}
@@ -3141,7 +3147,9 @@ kuk_ai_return_claimed_borderlands = {
 					has_claim_by = ROOT
 					NOT = { owner = ROOT }
 					OR = {
-						region = sr:region_south_germany
+						state_region = {
+							is_in_geographic_region = geographic_region_south_germany_old
+						}
 						region = sr:region_balkans
 					}
 				}
@@ -3167,7 +3175,9 @@ kuk_ai_return_claimed_borderlands = {
 							has_claim_by = ROOT
 							NOT = { this = scope:kuk_return_claims_primary_state_scope }
 							OR = {
-								region = sr:region_south_germany
+								state_region = {
+									is_in_geographic_region = geographic_region_south_germany_old
+								}
 								region = sr:region_balkans
 							}
 						}
@@ -4033,7 +4043,7 @@ bic_ai_protectorate_himalayan_minor = {
 		any_country = {
 			OR = {
 				c:NEP ?= this
-				c:SKM ?= this
+				c:SIK ?= this
 				c:BHU ?= this
 			}
 			is_subject = no
@@ -4057,7 +4067,7 @@ bic_ai_protectorate_himalayan_minor = {
 		any_country = {
 			OR = {
 				c:NEP ?= this
-				c:SKM ?= this
+				c:SIK ?= this
 				c:BHU ?= this
 			}
 			is_subject = no
@@ -4074,7 +4084,7 @@ bic_ai_protectorate_himalayan_minor = {
 			limit = {
 				OR = {
 					c:NEP ?= this
-					c:SKM ?= this
+					c:SIK ?= this
 					c:BHU ?= this
 				}
 				is_subject = no
@@ -4392,10 +4402,8 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 				is_country_type = unrecognized
 			}
 			army_power_projection < ROOT.army_power_projection
-			is_adjacent_to_country = ROOT
 			any_scope_state = {
 				NOT = { owner = ROOT }
-				ROOT = { is_adjacent_to_state = PREV }
 				AND = {
 					OR = {
 						state_region = s:STATE_NORTH_ANGOLA
@@ -4435,10 +4443,8 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 				is_country_type = unrecognized
 			}
 			army_power_projection < ROOT.army_power_projection
-			is_adjacent_to_country = ROOT
 			any_scope_state = {
 				NOT = { owner = ROOT }
-				ROOT = { is_adjacent_to_state = PREV }
 				AND = {
 					OR = {
 						state_region = s:STATE_NORTH_ANGOLA
@@ -4471,10 +4477,8 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 					country_rank = rank_value:insignificant_power
 				}
 				army_power_projection < ROOT.army_power_projection
-				is_adjacent_to_country = ROOT
 				any_scope_state = {
 					NOT = { owner = ROOT }
-					ROOT = { is_adjacent_to_state = PREV }
 					AND = {
 						OR = {
 							state_region = s:STATE_NORTH_ANGOLA
@@ -4492,7 +4496,6 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 			random_scope_state = {
 				limit = {
 					NOT = { owner = ROOT }
-					ROOT = { is_adjacent_to_state = PREV }
 					AND = {
 						OR = {
 							state_region = s:STATE_NORTH_ANGOLA
@@ -6147,6 +6150,189 @@ fra_ai_return_tug_algerian_state = {
 
 	ai_chance = {
 		value = 1000
+	}
+}
+
+fra_ai_return_waddai_bornu_claim = {
+	is_shown = {
+		c:FRA ?= this
+		is_ai = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		OR = {
+			c:WAD ?= {
+				is_subject = no
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+				OR = {
+					is_adjacent_to_country = ROOT
+					ROOT = {
+						any_subject_or_below = {
+							c:WAD = { is_adjacent_to_country = PREV }
+						}
+					}
+				}
+			}
+			c:BOR ?= {
+				is_subject = no
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+				OR = {
+					is_adjacent_to_country = ROOT
+					ROOT = {
+						any_subject_or_below = {
+							c:BOR = { is_adjacent_to_country = PREV }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		OR = {
+			c:WAD ?= {
+				is_subject = no
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+				OR = {
+					is_adjacent_to_country = ROOT
+					ROOT = {
+						any_subject_or_below = {
+							c:WAD = { is_adjacent_to_country = PREV }
+						}
+					}
+				}
+			}
+			c:BOR ?= {
+				is_subject = no
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+				OR = {
+					is_adjacent_to_country = ROOT
+					ROOT = {
+						any_subject_or_below = {
+							c:BOR = { is_adjacent_to_country = PREV }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				c:WAD ?= {
+					is_subject = no
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					any_scope_state = {
+						has_claim_by = ROOT
+					}
+					OR = {
+						is_adjacent_to_country = ROOT
+						ROOT = {
+							any_subject_or_below = {
+								c:WAD = { is_adjacent_to_country = PREV }
+							}
+						}
+					}
+				}
+			}
+			c:WAD = {
+				random_scope_state = {
+					limit = {
+						has_claim_by = ROOT
+					}
+					save_scope_as = fra_waddai_bornu_return_target_state_scope
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:fra_waddai_bornu_return_target_state_scope
+				}
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = c:WAD
+					target_state = scope:fra_waddai_bornu_return_target_state_scope
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				c:BOR ?= {
+					is_subject = no
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					any_scope_state = {
+						has_claim_by = ROOT
+					}
+					OR = {
+						is_adjacent_to_country = ROOT
+						ROOT = {
+							any_subject_or_below = {
+								c:BOR = { is_adjacent_to_country = PREV }
+							}
+						}
+					}
+				}
+			}
+			c:BOR = {
+				random_scope_state = {
+					limit = {
+						has_claim_by = ROOT
+					}
+					save_scope_as = fra_waddai_bornu_return_target_state_scope
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:fra_waddai_bornu_return_target_state_scope
+				}
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = c:BOR
+					target_state = scope:fra_waddai_bornu_return_target_state_scope
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
 	}
 }
 
@@ -10157,10 +10343,16 @@ african_colonial_ai_return_claimed_border_states = {
 				save_scope_as = african_colonial_return_target_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:african_colonial_return_target_country_scope
-			target_state = scope:african_colonial_return_target_state_scope
+		if = {
+			limit = {
+				exists = scope:african_colonial_return_target_country_scope
+				exists = scope:african_colonial_return_target_state_scope
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:african_colonial_return_target_country_scope
+				target_state = scope:african_colonial_return_target_state_scope
+			}
 		}
 	}
 
@@ -10292,39 +10484,50 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			}
 			save_scope_as = african_colonial_overlord_return_subject_scope
 		}
-		random_country = {
+		if = {
 			limit = {
-				NOT = { this = ROOT }
-				OR = {
-					is_country_type = unrecognized
-					country_rank = rank_value:insignificant_power
-				}
-				is_subject = no
-				is_adjacent_to_country = scope:african_colonial_overlord_return_subject_scope
-				is_at_war = no
-				is_diplomatic_play_committed_participant = no
-				NOT = { has_truce_with = ROOT }
-				NOT = { has_war_with = ROOT }
-				army_power_projection < ROOT.army_power_projection
-				any_scope_state = {
-					NOT = { owner = ROOT }
-					has_claim_by = ROOT
-				}
+				exists = scope:african_colonial_overlord_return_subject_scope
 			}
-			save_scope_as = african_colonial_overlord_return_target_country_scope
-			random_scope_state = {
+			random_country = {
 				limit = {
-					NOT = { owner = ROOT }
-					owner = scope:african_colonial_overlord_return_target_country_scope
-					has_claim_by = ROOT
+					NOT = { this = ROOT }
+					OR = {
+						is_country_type = unrecognized
+						country_rank = rank_value:insignificant_power
+					}
+					is_subject = no
+					is_adjacent_to_country = scope:african_colonial_overlord_return_subject_scope
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					army_power_projection < ROOT.army_power_projection
+					any_scope_state = {
+						NOT = { owner = ROOT }
+						has_claim_by = ROOT
+					}
 				}
-				save_scope_as = african_colonial_overlord_return_target_state_scope
+				save_scope_as = african_colonial_overlord_return_target_country_scope
+				random_scope_state = {
+					limit = {
+						NOT = { owner = ROOT }
+						owner = scope:african_colonial_overlord_return_target_country_scope
+						has_claim_by = ROOT
+					}
+					save_scope_as = african_colonial_overlord_return_target_state_scope
+				}
 			}
-		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:african_colonial_overlord_return_target_country_scope
-			target_state = scope:african_colonial_overlord_return_target_state_scope
+			if = {
+				limit = {
+					exists = scope:african_colonial_overlord_return_target_country_scope
+					exists = scope:african_colonial_overlord_return_target_state_scope
+				}
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = scope:african_colonial_overlord_return_target_country_scope
+					target_state = scope:african_colonial_overlord_return_target_state_scope
+				}
+			}
 		}
 	}
 
@@ -11026,4 +11229,3 @@ mad_annex_madagascar_minor = {
 		value = 100
 	}
 }
-
