@@ -1,4 +1,4 @@
-namespace = crimean_war
+﻿namespace = crimean_war
 
 crimean_war.1 = {
 	type = country_event
@@ -246,12 +246,6 @@ crimean_war.4 = {
 		hidden_effect = {
 			random_diplomatic_play = {
 				limit = { is_diplomatic_play_type = dp_crimean_war }
-				add_war_goal = {
-					holder = c:TUR
-					target_country = c:RUS
-					type = crimean_war_wargoal
-					primary_demand = yes
-				}
 				if = {
 					limit = { c:FRA ?= { has_variable = crimean_war_ottoman_side } }
 					add_target_backers = { c:FRA }
@@ -319,6 +313,24 @@ crimean_war.5 = {
 		c:MOL ?= { save_scope_as = moldavia_scope }
 		c:SER ?= { save_scope_as = serbia_scope }
 		c:BOS ?= { save_scope_as = bosnia_scope }
+		if = {
+			limit = {
+				exists = c:WAL
+				c:WAL = {
+					is_subject_of = c:TUR
+					NOT = { is_subject_type = subject_type_protectorate }
+				}
+			}
+			c:WAL ?= {
+				remove_subject_diplomatic_pact = yes
+			}
+			c:TUR ?= {
+				create_diplomatic_pact = {
+					country = c:WAL
+					type = protectorate
+				}
+			}
+		}
 		s:STATE_MOLDAVIA = {
 			random_scope_state = {
 				limit = {
@@ -351,6 +363,22 @@ crimean_war.5 = {
 				}
 				if = {
 					limit = {
+						exists = c:MOL
+						OR = {
+							p:xB0E0A0 = { owner = c:RUS }
+							p:x6BF7B8 = { owner = c:RUS }
+							p:x712161 = { owner = c:RUS }
+						}
+					}
+					s:STATE_BESSARABIA = {
+						set_owner_of_provinces = {
+							country = c:MOL
+							provinces = { xB0E0A0 x6BF7B8 x712161 }
+						}
+					}
+				}
+				else_if = {
+					limit = {
 						exists = scope:moldavia_owner_scope
 						OR = {
 							p:xB0E0A0 = { owner = c:RUS }
@@ -366,6 +394,20 @@ crimean_war.5 = {
 					}
 				}
 				if = {
+					limit = {
+						exists = c:MOL
+						p:x50F5CB = {
+							owner = c:RUS
+						}
+					}
+					s:STATE_DOBRUDJA = {
+						set_owner_of_provinces = {
+							country = c:MOL
+							provinces = { x50F5CB }
+						}
+					}
+				}
+				else_if = {
 					limit = {
 						exists = scope:moldavia_owner_scope
 						p:x50F5CB = {
@@ -389,7 +431,7 @@ crimean_war.5 = {
 				if = {
 					limit = {
 						exists = c:ROM
-						c:ROM = { is_subject = yes }
+						c:ROM = { is_subject_of = c:TUR }
 					}
 					c:RUS ?= { transfer_subject = c:ROM }
 				}
@@ -424,12 +466,42 @@ crimean_war.5 = {
 					}
 				}
 			}
+			if = {
+				limit = {
+					exists = c:WAL
+					exists = c:MOL
+					c:WAL = {
+						ruler ?= {
+							is_character_alive = yes
+							NOT = { c:MOL.ruler ?= this }
+						}
+					}
+					c:MOL = {
+						ruler ?= {
+							is_character_alive = yes
+						}
+					}
+				}
+				c:WAL = {
+					ruler = { save_scope_as = wallachia_ruler_for_moldavia_succession }
+				}
+				c:MOL = {
+					set_heir = scope:wallachia_ruler_for_moldavia_succession
+					ruler = {
+						kill_character = { hidden = yes }
+					}
+				}
+			}
 			every_country = {
 				limit = {
 					country_rank = rank_value:great_power
 					OR = {
 						has_variable = crimean_war_ottoman_side
 						has_variable = crimean_war_russian_side
+					}
+					OR = {
+						has_truce_with = c:RUS
+						has_truce_with = c:TUR
 					}
 				}
 				if = {
@@ -462,6 +534,7 @@ crimean_war.5 = {
 			}
 			if = {
 				limit = {
+					has_global_variable = crimean_war_russian_victory
 					exists = c:SER
 					c:SER = { is_subject = yes }
 				}
@@ -469,6 +542,7 @@ crimean_war.5 = {
 			}
 			else_if = {
 				limit = {
+					has_global_variable = crimean_war_russian_victory
 					NOT = { exists = c:SER }
 					exists = s:STATE_WESTERN_SERBIA.region_state:TUR
 				}

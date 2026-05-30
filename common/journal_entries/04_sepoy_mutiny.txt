@@ -2,7 +2,6 @@
 	icon = "gfx/interface/icons/event_icons/event_protest.dds"
 
 	group = je_group_global_international_situations
-	should_be_pinned_by_default_involved = yes
 
 	should_be_involved = {
 		c:BIC ?= this
@@ -27,21 +26,6 @@
 			set_global_variable = { name = bengal_presidency_stability value = "scope:journal_entry.scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" }
 			set_global_variable = { name = bombay_presidency_stability value = "scope:journal_entry.scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" }
 			set_global_variable = { name = madras_presidency_stability value = "scope:journal_entry.scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" }
-			sr:region_north_india = {
-				save_scope_as = bengal_sr_scope
-			}
-			sr:region_south_india = {
-				save_scope_as = bombay_sr_scope
-			}
-			sr:region_south_india = {
-				save_scope_as = madras_sr_scope
-			}
-			sr:region_north_india = {
-				save_scope_as = punjab_sr_scope
-			}
-			sr:region_north_india = {
-				save_scope_as = central_india_sr_scope
-			}
 			set_variable = {
 				name = sepoy_mutiny_timer_var
 				value = 0
@@ -61,7 +45,15 @@
 					text = je_avert_sepoy_mutiny_tt_1
 					has_variable = consolidated_colonial_rule
 				}
+				OR = {
 				average_sol >= 10
+					c:GBR = {
+						institution_investment_level = {
+							institution = institution_colonial_affairs
+							value >= 4
+						}
+					}
+				}
 				radical_fraction = {
 					value <= 0.10
 				}
@@ -91,7 +83,6 @@
 				}
 			}
 		}
-	}
 
 	timeout = 9000
 
@@ -439,7 +430,11 @@
 	}
 
 	weight = 100
-	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+
+	can_revolution_inherit = yes
 }
 
 je_sepoy_mutiny = {
@@ -607,9 +602,6 @@ je_sepoy_mutiny = {
 							OR = {
 								region = sr:region_north_india
 								region = sr:region_south_india
-								region = sr:region_south_india
-								region = sr:region_north_india
-								region = sr:region_north_india
 							}
 						}
 					}
@@ -631,6 +623,7 @@ je_sepoy_mutiny = {
     }
 
 	weight = 100
-	should_be_pinned_by_default_uninvolved_or_context = yes
-}
 
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+}

@@ -1,5 +1,5 @@
-je_divided_monarchists = {
-	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
+﻿je_divided_monarchists = {
+	icon = "gfx/interface/icons/event_icons/bicorne_hat.dds"
 
 	group = je_group_france_divided_monarchists
 
@@ -36,7 +36,7 @@ je_divided_monarchists = {
 	scripted_progress_bar = divided_monarchists_bonapartist_progress_bar
 
 	complete = {
-		has_law_or_variant = law_type:law_monarchy
+		country_has_monarchy_law = yes
 		custom_tooltip = {
 			text = je_divided_monarchists_02_tt
 			has_variable = one_true_french_dynasty #Can only ever complete upon finishing the Cement the Rightful Dynasty journal entry.
@@ -273,7 +273,6 @@ je_divided_monarchists = {
 	}
 
 	on_fail = {
-		set_global_variable = peoples_springtime_happening
 		trigger_event = { id = french_pretenders.6 popup = yes }
 		if = {
 			limit = {
@@ -285,8 +284,9 @@ je_divided_monarchists = {
 	}
 
 	invalid = {
-		NOT = { #Previous "Stamp Out Monarchism" requirement is deprecated - this can now come back from the dead properly upon restoring the monarchy.
-			has_law_or_variant = law_type:law_monarchy
+		NOT = {
+			#Previous "Stamp Out Monarchism" requirement is deprecated - this can now come back from the dead properly upon restoring the monarchy.
+			country_has_monarchy_law = yes
 		}
 	}
 	
@@ -303,6 +303,7 @@ je_divided_monarchists = {
 
 	weight = 100
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -426,7 +427,7 @@ je_cement_the_rightful_dynasty = {
 
 	fail = {
 		OR = {
-			NOT = { has_law_or_variant = law_type:law_monarchy }
+			NOT = { country_has_monarchy_law = yes }
 			custom_tooltip = {
 				text = je_divided_monarchists_02_fail_tt
 				OR = {
@@ -494,7 +495,7 @@ je_cement_the_rightful_dynasty = {
 			}
 			remove_variable = bonapartist_restoration_var
 		}
-		je:je_divided_monarchists = {
+		je:je_divided_monarchists ?= {
 			add_progress = { value = -300 name = divided_monarchists_bonapartist_progress_bar }
 			add_progress = { value = -300 name = divided_monarchists_legitimist_progress_bar }
 			add_progress = { value = -300 name = divided_monarchists_orleanist_progress_bar }
@@ -554,6 +555,6 @@ je_cement_the_rightful_dynasty = {
 
 	weight = 100
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
-

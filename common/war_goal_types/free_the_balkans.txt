@@ -1,0 +1,71 @@
+﻿free_the_balkans_wargoal = {
+	icon = "gfx/interface/icons/war_goals/independence.dds"
+
+	kind = humiliation
+
+	settings = {
+		require_target_be_part_of_war
+		validate_conflicts_war_goals_all
+	}
+
+	execution_priority = 18
+
+	contestion_type = control_any_target_incorporated_state
+
+	target_type = country
+
+	possible = {
+		always = no
+	}
+
+	valid = {
+	}
+
+	maneuvers = {
+		value = 0
+		add = {
+			desc = "MANEUVERS_BASE_VALUE"
+			value = 20
+		}
+	}
+
+	infamy = {
+		value = 0
+	}
+
+	on_enforced = {
+		if = {
+			limit = {
+				c:RUS ?= root
+				scope:target_country = {
+					c:TUR ?= this
+				}
+			}
+			ROOT = {
+				set_variable = { name = free_the_balkans_winner days = 30 }
+			}
+			ROOT = {
+				trigger_event = { id = eastern_question_russia.2 popup = yes }
+			}
+			scope:target_country = {
+				trigger_event = { id = eastern_question_russia.3 popup = yes }
+				every_subject_or_below = {
+					limit = {
+						capital.region = sr:region_balkans
+					}
+					trigger_event = { id = eastern_question_russia.3 popup = yes }
+				}
+			}
+			custom_tooltip = {
+				text = free_the_balkans_wargoal_tt
+				ROOT = {
+					free_the_balkans_settlement_effect = yes
+				}
+			}
+		}
+	}
+
+	ai = {
+		is_significant_demand = yes
+	}
+}

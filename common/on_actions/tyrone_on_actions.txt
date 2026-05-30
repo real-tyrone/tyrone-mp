@@ -21,6 +21,16 @@
         austria_integrate.2
     }
     effect = {
+		if = {
+			limit = {
+				c:FRA ?= this
+				has_law_or_variant = law_type:law_monarchy
+				is_at_war = no
+				NOT = { has_variable = france_alsace_lorraine_republic_event_fired }
+				NOT = { owns_entire_state_region = STATE_ALSACE_LORRAINE }
+			}
+			trigger_event = { id = empire_of_france.10 popup = yes }
+		}
 		if = { # Berlin Conference
 			limit = {
 				NOT = { has_global_variable = berlin_conference_happening }
@@ -87,6 +97,12 @@ on_yearly_pulse_country = {
                 limit = {
                     is_ai = yes
                     NOT = {
+                        OR = {
+                        c:UCA ?= this 
+                        c:CHI ?= this 
+                        }
+                    }
+                    NOT = {
                         has_variable = tyrone_ai_buff_yearly_cooldown
                     }
                 }
@@ -101,6 +117,11 @@ on_yearly_pulse_country = {
             every_country = {
                 limit = {
                     is_ai = yes
+                    NOT = {
+                        any_overlord_or_above = {
+                            is_player = yes
+                        }
+                    }
                     NOT = {
                         has_modifier = ai_budget_buff
                     }
@@ -118,6 +139,21 @@ on_yearly_pulse_country = {
                 }
 				add_modifier = {
 					name = ai_law_passing_buff
+				}
+            }
+            every_country = {
+                limit = {
+                    is_ai = yes
+                    pop_type_percent_country = {
+                        pop_type = peasants
+                        percent < 0.10
+                    }
+                    NOT = {
+                        has_modifier = ai_low_peasant_birthrate_buff
+                    }
+                }
+				add_modifier = {
+					name = ai_low_peasant_birthrate_buff
 				}
             }
             every_country = {
@@ -271,8 +307,30 @@ on_yearly_pulse_country = {
             }
             every_country = {
                 limit = {
+                    has_modifier = ai_low_peasant_birthrate_buff
+                    OR = {
+                        is_ai = no
+                        pop_type_percent_country = {
+                            pop_type = peasants
+                            percent >= 0.10
+                        }
+                    }
+                }
+				remove_modifier = ai_low_peasant_birthrate_buff
+            }
+            every_country = {
+                limit = {
                     is_ai = no
                     has_modifier = ai_budget_buff
+                }
+				remove_modifier = ai_budget_buff
+            }
+            every_country = {
+                limit = {
+                    has_modifier = ai_budget_buff
+                    any_overlord_or_above = {
+                        is_player = yes
+                    }
                 }
 				remove_modifier = ai_budget_buff
             }
@@ -329,6 +387,27 @@ on_yearly_pulse_country = {
                 }
 				remove_modifier = ai_law_passing_buff
             }
+            every_country = {
+                limit = {
+                    has_modifier = ai_low_peasant_birthrate_buff
+                }
+				remove_modifier = ai_low_peasant_birthrate_buff
+            }
+        }
+		every_country = {
+			limit = {
+				is_ai = yes
+				net_total_income < 0
+				scaled_debt >= 0.10
+				institution_investment_level = {
+					institution = institution_social_security
+					value >= 2
+				}
+			}
+			change_institution_investment_level = {
+				institution = institution_social_security
+				investment = -1
+			}
         }
 		every_country = {
 			limit = { 
@@ -413,12 +492,19 @@ on_yearly_pulse_country = {
 
     events = {
         portugaliza.1
+        dei_events.7
         regency.99
     }
 }
 
 on_country_formed = {
 	effect = {
+		if = {
+			limit = {
+				c:LAO ?= ROOT
+			}
+			trigger_event = { id = formation.1 popup = yes }
+		}
 		if = {
 			limit = {
 				c:UNSA ?= ROOT
@@ -430,7 +516,248 @@ on_country_formed = {
                 add_homeland = cu:south_andean
             }
 		}
-    }
+        if = {
+            limit = {
+                c:AST ?= ROOT
+            }
+            trigger_event = { id = can_aus.7 popup = yes}
+        }
+        else_if = {
+			limit = {
+				c:PLT ?= THIS
+				was_formed_from = PRG
+				has_variable = patino_paraguay_var
+			}
+			add_primary_culture = cu:guarani
+		}
+		else_if = {
+			limit = {
+				c:UBD ?= ROOT
+			}
+			trigger_event = { id = formation.2 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:BYZ ?= ROOT
+			}
+			trigger_event = { id = formation.3 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:IBE ?= ROOT
+				NOT = { is_involved_in_journal_entry = je_iberia } # No double events
+			}
+			trigger_event = { id = formation.5 popup = yes }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					c:BRZ ?= ROOT
+					c:USA ?= ROOT
+					c:SAF ?= ROOT
+				}
+			}
+			trigger_event = { id = formation.6 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:KUK ?= ROOT
+			}
+			trigger_event = { id = formation.7 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:ARA ?= ROOT
+			}
+			trigger_event = { id = formation.8 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:YUG ?= ROOT
+			}
+			trigger_event = { id = formation.9 popup = yes }
+
+			if = {
+				limit = {
+					NOT = { was_formed_from = BUL }
+				}
+				remove_primary_culture = cu:bulgarian
+			}
+		}
+		else_if = {
+			limit = {
+				c:SCA ?= ROOT
+			}
+			trigger_event = { id = formation.10 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:MAL ?= ROOT
+			}
+			trigger_event = { id = formation.11 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:TRH ?= ROOT
+			}
+			trigger_event = { id = formation.12 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:IDN ?= ROOT
+			}
+			trigger_event = { id = formation.13 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:BHT ?= ROOT
+			}
+			trigger_event = { id = formation.14 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:YEM ?= ROOT
+			}
+			trigger_event = { id = formation.15 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:KAZ ?= ROOT
+			}
+			trigger_event = { id = formation.16 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:HRE ?= ROOT
+			}
+			trigger_event = { id = formation.18 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:UNL ?= ROOT
+			}
+			trigger_event = { id = formation.19 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:RHN ?= ROOT
+			}
+			trigger_event = { id = formation.20 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:CLI ?= ROOT
+			}
+			trigger_event = { id = formation.21 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:GER ?= ROOT
+			}
+			trigger_event = { id = german_unification.4 popup = yes }
+			if = {
+				limit = {
+					any_scope_state = {
+						state_region = {
+							OR = {
+								is_homeland = cu:hungarian
+								is_homeland = cu:romanian
+								AND = {
+									is_homeland = cu:croat
+									NOT = {
+										s:STATE_ISTRIA ?= this
+									}
+								}
+								AND = {
+									is_homeland = cu:north_italian
+									NOR = {
+										s:STATE_ISTRIA ?= this
+										s:STATE_SOUTH_TYROL ?= this
+									}
+								}
+							}
+						}
+					}
+				}
+				trigger_event = { id = austria_germany.1 days = 7 popup = yes }
+			}
+		}
+		else_if = {
+			limit = {
+				c:ITA ?= ROOT
+			}
+			trigger_event = { id = italian_unification.1 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:AFG ?= ROOT
+				has_journal_entry = je_unify_afghanistan
+			}
+			if = {
+				limit = {
+					was_formed_from = KUN
+				}
+				add_primary_culture = cu:uzbek
+			}
+			if = {
+				limit = {
+					was_formed_from = MAI
+				}
+				add_primary_culture = cu:uzbek
+				add_primary_culture = cu:turkmen
+			}
+			if = {
+				limit = {
+					was_formed_from = KAF
+				}
+				add_primary_culture = cu:kho
+			}
+			trigger_event = { id = gg_afghanistan.4 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:FSA ?= ROOT
+			}
+			trigger_event = { id = fsa_events.1 popup = yes }
+		}
+		else_if = {
+			limit = {
+				c:GAL ?= ROOT
+			}
+			trigger_event = { id = galicia_formation.1 popup = yes }
+		}
+		else = {
+			trigger_event = { id = formation.17 popup = yes }
+		}
+
+		if = {
+			limit = {
+				c:CHI ?= this
+				has_journal_entry = je_reunify_china
+			}
+			set_global_variable = { name = chinese_central_government value = ROOT }
+		}
+
+		if = {
+			limit = {
+				c:IBE ?= this
+				has_variable_list = spain_accepted_cultures
+			}
+			every_in_list = {
+				variable = spain_accepted_cultures
+				if = {
+					limit = {
+						NOT = {
+							is_primary_culture_of = ROOT
+						}
+					}
+					ROOT = {
+						add_primary_culture = prev
+					}
+				}
+			}
+		}
+	}
 }
 
 # DEI - Economic Transition Event

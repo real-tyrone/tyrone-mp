@@ -1,0 +1,234 @@
+﻿free_the_balkans_release_subject_effect = {
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = puppet }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = puppet } }
+	}
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = vassal }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = vassal } }
+	}
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = protectorate }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = protectorate } }
+	}
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = tributary }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = tributary } }
+	}
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = personal_union }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = personal_union } }
+	}
+	if = {
+		limit = {
+			has_diplomatic_pact = { who = c:TUR type = crown_land }
+		}
+		c:TUR = { remove_diplomatic_pact = { country = PREV type = crown_land } }
+	}
+}
+
+free_the_balkans_settlement_effect = {
+	set_global_variable = eastern_crisis_ottoman_defeat
+
+	s:STATE_BESSARABIA = {
+		every_scope_state = {
+			limit = {
+				owner = {
+					OR = {
+						c:TUR ?= this
+						is_subject_of = c:TUR
+					}
+				}
+			}
+			set_state_owner = ROOT
+		}
+	}
+	s:STATE_KARS = {
+		every_scope_state = {
+			limit = {
+				owner = {
+					OR = {
+						c:TUR ?= this
+						is_subject_of = c:TUR
+					}
+				}
+			}
+			set_state_owner = ROOT
+		}
+	}
+
+	c:TUR ?= {
+		every_subject_or_below = {
+			limit = {
+				capital.region = sr:region_balkans
+			}
+			free_the_balkans_release_subject_effect = yes
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = { exists = c:BUL }
+			exists = s:STATE_BULGARIA.region_state:TUR
+		}
+		create_country = {
+			origin = ROOT
+			tag = BUL
+			state = s:STATE_BULGARIA.region_state:TUR
+		}
+	}
+	else_if = {
+		limit = {
+			NOT = { exists = c:BUL }
+			exists = s:STATE_NORTHERN_THRACE.region_state:TUR
+		}
+		create_country = {
+			origin = ROOT
+			tag = BUL
+			state = s:STATE_NORTHERN_THRACE.region_state:TUR
+		}
+	}
+
+	if = {
+		limit = {
+			exists = c:BUL
+		}
+		s:STATE_BULGARIA = {
+			every_scope_state = {
+				limit = {
+					NOT = { c:BUL ?= owner }
+				}
+				set_state_owner = c:BUL
+			}
+		}
+		s:STATE_NORTHERN_THRACE = {
+			every_scope_state = {
+				limit = {
+					NOT = { c:BUL ?= owner }
+				}
+				set_state_owner = c:BUL
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = c:GRE
+		}
+		s:STATE_THESSALIA = {
+			every_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:TUR ?= this
+							is_subject_of = c:TUR
+						}
+					}
+				}
+				set_state_owner = c:GRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			exists = c:SER
+		}
+		s:STATE_EASTERN_SERBIA = {
+			every_scope_state = {
+				limit = {
+					c:TUR ?= owner
+				}
+				set_state_owner = c:SER
+			}
+		}
+	}
+	if = {
+		limit = {
+			exists = c:MON
+		}
+		s:STATE_MONTENEGRO = {
+			every_scope_state = {
+				limit = {
+					c:TUR ?= owner
+				}
+				set_state_owner = c:MON
+			}
+		}
+	}
+	if = {
+		limit = {
+			exists = c:ROM
+		}
+		s:STATE_DOBRUDJA = {
+			every_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:TUR ?= this
+							is_subject_of = c:TUR
+						}
+					}
+				}
+				set_state_owner = c:ROM
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			exists = c:WAL
+		}
+		s:STATE_DOBRUDJA = {
+			every_scope_state = {
+				limit = {
+					c:TUR ?= owner
+				}
+				set_state_owner = c:WAL
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = c:ROM
+			p:x50F5CB = {
+				OR = {
+					owner = c:TUR
+					owner = c:MOL
+				}
+			}
+		}
+		s:STATE_DOBRUDJA = {
+			set_owner_of_provinces = {
+				country = c:ROM
+				provinces = { x50F5CB }
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			exists = c:WAL
+			p:x50F5CB = {
+				OR = {
+					owner = c:TUR
+					owner = c:MOL
+				}
+			}
+		}
+		s:STATE_DOBRUDJA = {
+			set_owner_of_provinces = {
+				country = c:WAL
+				provinces = { x50F5CB }
+			}
+		}
+	}
+}

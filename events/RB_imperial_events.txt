@@ -29,22 +29,21 @@ imperial_events.2 = {
 	option = {
 		name = imperial_events.2.a
 		c:GBR = {
-			annex_with_incorporation = c:CAN
-			annex_with_incorporation = c:AST
-			annex_with_incorporation = c:SAF
-			annex_with_incorporation = c:HBC
-			annex_with_incorporation = c:QUE
-			annex_with_incorporation = c:BHT
-			annex_with_incorporation = c:ONT
-			annex_with_incorporation = c:NVS
-			annex_with_incorporation = c:NBS
-			annex_with_incorporation = c:ORG
-			annex_with_incorporation = c:WAS
-			annex_with_incorporation = c:KAU
-			annex_with_incorporation = c:SAS
-			annex_with_incorporation = c:TAS
-			annex_with_incorporation = c:NSW
-			annex_with_incorporation = c:UNT
+			every_country = {
+				limit = {
+					is_subject_of = c:GBR
+					OR = {
+						c:SAF ?= this
+						country_has_primary_culture = cu:australian
+						country_has_primary_culture = cu:anglo_canadian
+						country_has_primary_culture = cu:franco_canadian
+					}
+				}
+				save_temporary_scope_as = imperial_federation_annex_target
+				c:GBR = {
+					annex = scope:imperial_federation_annex_target
+				}
+			}
 			add_primary_culture = cu:anglo_canadian
 			add_primary_culture = cu:franco_canadian
 			add_primary_culture = cu:scottish
@@ -67,4 +66,52 @@ imperial_events.2 = {
 	}
 }
 
-# imperial_events.3 retired — new JE has no timeout
+# imperial_events.3
+
+imperial_events.3 = {
+	type = country_event
+
+	title = imperial_events.3.t
+	desc = imperial_events.3.d
+	flavor = imperial_events.3.f
+
+
+	duration = 3
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/imperial_federation.dds"
+
+
+	immediate = {
+		set_global_variable = british_commonwealth_formed
+	}
+
+	option = {
+		name = imperial_events.3.a
+		show_as_tooltip = {
+			custom_tooltip = {
+				text = great_game_power_bloc_tt
+			}
+			add_modifier = {
+				name = commonwealth_common_market
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					c:GBR ?= this
+				}
+				power_bloc = {
+					add_modifier = {
+						name = commonwealth_common_market
+					}
+				}	
+			}
+		}
+	}
+}

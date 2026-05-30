@@ -914,3 +914,57 @@ empire_of_france.9 = {
 		trigger_event = french_pretenders.7
     }
 }
+
+empire_of_france.10 = {
+    type = country_event
+    placement = root
+
+    title = empire_of_france.10.t
+    desc = empire_of_france.10.d
+    flavor = empire_of_france.10.f
+
+    event_image = {
+        video = "votp_barricade"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+    duration = 3
+
+    trigger = {
+        c:FRA ?= this
+        has_law_or_variant = law_type:law_monarchy
+        is_at_war = no
+        NOT = { has_variable = france_alsace_lorraine_republic_event_fired }
+        NOT = { owns_entire_state_region = STATE_ALSACE_LORRAINE }
+    }
+
+    immediate = {
+        set_variable = france_alsace_lorraine_republic_event_fired
+        activate_law = law_type:law_parliamentary_republic
+    }
+
+    option = {
+        name = empire_of_france.10.a
+        default_option = yes
+        ai_chance = { base = 90 }
+    }
+
+    option = {
+        name = empire_of_france.10.b
+        hidden = yes
+        trigger = {
+            is_ai = yes
+            any_interest_group_in_government = {
+                leader = {
+                    has_ideology = ideology:ideology_legitimist
+                }
+            }
+        }
+        ai_chance = { base = 10 }
+        activate_law = law_type:law_monarchy
+        add_radicals = { value = 0.05 }
+    }
+}

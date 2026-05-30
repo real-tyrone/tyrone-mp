@@ -6,41 +6,6 @@ GLOBAL = {
 	add_contextless_journal_entry = je_company_equity
   	add_contextless_journal_entry = je_reform_indies
 
-	every_country = {
-		limit = {
-			navy_size >= 1
-		}
-		add_supply_ships = {
-			value = 1
-			add = navy_size
-			if = {
-				limit = {
-					any_scope_building = {
-						is_building_type = building_shipyard
-					}
-				}
-				every_scope_building = {
-					limit = {
-						is_building_type = building_shipyard
-					}
-					add = 10
-				}
-			}
-			multiply = 8
-		}
-	}
-
-	every_country = { # Mercantile ideology
-		limit = {
-			OR = {
-				has_law_or_variant = law_type:law_traditionalism
-				has_law_or_variant = law_type:law_isolationism
-			}
-		}
-		ig:ig_petty_bourgeoisie = {
-			add_ideology = ideology_mercantile
-		}
-	}
 
 	every_country = {
 		limit = { NOT = { has_law_or_variant = law_type:law_slavery_banned } }
@@ -82,6 +47,18 @@ GLOBAL = {
 			add_journal_entry = {
 				type = je_spanish_american_independence
 			}
+		}
+	}
+
+	every_country = { # Mercantile ideology
+		limit = {
+			OR = {
+				has_law_or_variant = law_type:law_traditionalism
+				has_law_or_variant = law_type:law_isolationism
+			}
+		}
+		ig:ig_petty_bourgeoisie = {
+			add_ideology = ideology_mercantile
 		}
 	}
 
@@ -247,6 +224,37 @@ GLOBAL = {
 			multiply = -0.2
 		}
 	}	
+
+	c:USA ?= {
+		add_involvement = {
+			strategic_region = sr:region_pacific_coast
+			value = 250
+		}
+	}
+
+	every_country = {
+		limit = {
+			navy_size >= 1
+		}
+		add_supply_ships = {
+			value = 1
+			add = navy_size
+			if = {
+				limit = {
+					any_scope_building = {
+						is_building_type = building_shipyard
+					}
+				}
+				every_scope_building = {
+					limit = {
+						is_building_type = building_shipyard
+					}
+					add = 10
+				}
+			}
+			multiply = 8
+		}
+	}
 
 	# Starting debts - commented out for now until we can do more budget balancing
 	# We'll bring this back in a later version

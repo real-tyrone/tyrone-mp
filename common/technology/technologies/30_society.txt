@@ -359,7 +359,7 @@ empiricism = {
 
 	modifier = {
 		country_influence_mult = 0.25
-		country_diplomatic_play_maneuvers_add = 10
+		country_diplomatic_play_maneuvers_mult = 0.25
 		country_institution_schools_max_investment_add = 1
 		state_education_access_wealth_add = 0.005
 	}
@@ -568,11 +568,11 @@ central_archives = {
 					AND = {
 						OR = {
 							is_in_geographic_region = geographic_region_south_america
-							is_in_geographic_region = geographic_region_central_america
+							is_in_geographic_region = geographic_region_central_america_old
 						}
 						country_rank <= rank_value:major_power
 					}
-					is_country_type = colonial
+					country_is_colonial_or_company = yes
 					is_country_type = unrecognized
 				}
 				NAND = {
@@ -661,7 +661,7 @@ psychiatry = {
 
 	modifier = {
 		country_influence_mult = 0.25
-		country_diplomatic_play_maneuvers_add = 10
+		country_diplomatic_play_maneuvers_mult = 0.25
 		state_bureaucracy_population_base_cost_factor_mult = -0.05
 		country_infamy_decay_mult = 0.2
 	}
@@ -712,17 +712,6 @@ nationalism = {
 		international_relations
 	}
 
-	on_researched = {
-		if = {
-			limit = {
-				NOT = { has_variable = nationalism_researched }
-			}
-			custom_tooltip = {
-				text = unlock_national_agitation_tt
-				set_variable = nationalism_researched
-			}
-		}
-	}
 	ai_weight = {
 		value = 2 # Important in general
 
@@ -734,7 +723,7 @@ nationalism = {
 					country_has_primary_culture = cu:south_german
 				}
 			}
-			add = 2	# 4
+			add = 4
 		}
 
 		if = {
@@ -743,8 +732,10 @@ nationalism = {
 					country_has_primary_culture = cu:north_italian
 					country_has_primary_culture = cu:south_italian
 				}
+				any_country = {
+					has_journal_entry = je_risorgimento
+				}
 			}
-			add = 100000
 			multiply = 4
 		}
 
@@ -1004,7 +995,18 @@ civilizing_mission = {
 
 	ai_weight = {
 		value = 1
-
+		if = {
+			limit = {
+				AND = {
+					OR = {
+						country_has_primary_culture = cu:english
+						country_has_primary_culture = cu:scottish
+					}
+					has_technology_researched = quinine
+				}
+			}
+			add = 1000
+		}
 		# Important for colonizers
 		if = {
 			limit = {
@@ -1147,10 +1149,60 @@ corporatism = {
 		}
 		if = {
 			limit = {
-				NOT = {
-					any_political_movement = {
-						is_political_movement_type = movement_corporatist
+				OR = {
+					country_has_primary_culture = cu:spanish # I am in Spain...
+					country_has_primary_culture = cu:catalan # ...without the S
+					country_has_primary_culture = cu:basque # ...without the A
+				}
+			}
+			custom_tooltip = {
+				text = carlist_amended_tt
+				every_character = {
+					limit = {
+						has_ideology = ideology:ideology_carlist
+						OR = {
+							owner ?= ROOT
+							home_country ?= ROOT
+						}
 					}
+					set_ideology = ideology:ideology_carlist_2
+				}
+				every_political_movement = {
+					limit = {
+						has_core_ideology = ideology:ideology_carlist_movement
+					}
+					set_core_ideology = ideology_carlist_movement_2
+					}
+				every_interest_group = {
+					limit = {
+						has_ideology = ideology:ideology_carlist_ig
+					}
+					remove_ideology = ideology_carlist_ig
+					add_ideology = ideology_carlist_ig_2
+				}
+			}
+		}
+		if = {
+			limit = {
+				country_has_primary_culture = cu:portuguese
+			}
+			custom_tooltip = {
+				text = miguelist_amended_tt
+				every_character = {
+					limit = {
+						has_ideology = ideology:ideology_miguelist
+						OR = {
+							owner ?= ROOT
+							home_country ?= ROOT
+						}
+					}
+					set_ideology = ideology:ideology_miguelist_2
+				}
+				every_political_movement = {
+					limit = {
+						has_core_ideology = ideology:ideology_miguelist_movement
+					}
+					set_core_ideology = ideology_miguelist_movement_2
 				}
 			}
 			create_political_movement = { type = movement_corporatist }
@@ -1295,7 +1347,7 @@ philosophical_pragmatism = {
 
 	modifier = {
 		country_influence_mult = 0.25
-		country_diplomatic_play_maneuvers_add = 10
+		country_diplomatic_play_maneuvers_mult = 0.25
 		state_bureaucracy_population_base_cost_factor_mult = -0.05
 		country_infamy_decay_mult = 0.2
 		state_literacy_growth_add = 0.0001
@@ -1525,7 +1577,7 @@ psychoanalysis = {
 
 	modifier = {
 		country_influence_mult = 0.25
-		country_diplomatic_play_maneuvers_add = 10
+		country_diplomatic_play_maneuvers_mult = 0.25
 		state_bureaucracy_population_base_cost_factor_mult = -0.05
 		country_infamy_decay_mult = 0.2
 		state_literacy_growth_add = 0.0002
@@ -1584,6 +1636,7 @@ multilateral_alliances = {
 
 	modifier = {
 		country_infamy_generation_mult = -0.25
+		country_diplomatic_play_maneuvers_mult = 0.5
 		country_allow_multiple_alliances_bool = yes
 	}
 
@@ -1715,7 +1768,7 @@ behaviorism = {
 
 	modifier = {
 		country_influence_mult = 0.5
-		country_diplomatic_play_maneuvers_add = 20
+		country_diplomatic_play_maneuvers_mult = 0.5
 		state_bureaucracy_population_base_cost_factor_mult = -0.05
 		country_infamy_decay_mult = 0.2
 	}
@@ -1747,4 +1800,3 @@ paved_roads = {
 		value = 2 # Important for those nice-looking roads!
 	}
 }
-

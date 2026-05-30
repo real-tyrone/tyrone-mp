@@ -17,7 +17,7 @@ ita_lateran_concordat_decision = {
 		add_modifier = {
 			name = ita_lateran_concordat
 			years = 5
-			decaying = yes
+			is_decaying = yes
 		}
 	}
 
@@ -31,10 +31,17 @@ ita_eritrea_purchase_decision = {
 		c:ITA ?= this
 		has_global_variable = berlin_conference_ended
 		NOT = { has_global_variable = italy_eritrea_purchase_in_progress }
+		NOT = { has_variable = italy_eritrea_purchase_decision_taken }
 		NOT = { owns_entire_state_region = STATE_ERITREA }
 		s:STATE_ERITREA = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
+				owner = {
+					OR = {
+						this ?= c:EGY
+						is_country_type = recognized
+					}
+				}
 			}
 		}
 	}
@@ -47,7 +54,10 @@ ita_eritrea_purchase_decision = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
-					relations:root >= relations_threshold:cordial
+					OR = {
+						this ?= c:EGY
+						is_country_type = recognized
+					}
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
 					NOT = { has_war_with = ROOT }
@@ -59,12 +69,16 @@ ita_eritrea_purchase_decision = {
 	when_taken = {
 		set_global_variable = italy_eritrea_purchase_in_progress
 		set_variable = italy_eritrea_purchase_buyer
+		set_variable = italy_eritrea_purchase_decision_taken
 		s:STATE_ERITREA = {
 			random_scope_state = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
-						relations:root >= relations_threshold:cordial
+						OR = {
+							this ?= c:EGY
+							is_country_type = recognized
+						}
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
 						NOT = { has_war_with = ROOT }
@@ -146,10 +160,11 @@ ita_ai_transfer_lmv_from_austria = {
 	is_shown = {
 		is_ai = yes
 		c:ITA ?= this
-		exists = c:AUS
 		exists = c:LMV
-		exists = c:PRU
-		NOT = { has_variable = ita_ai_transfer_lmv_from_austria_started }
+		OR = {
+			exists = c:AUS
+			exists = c:KUK
+		}
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -157,13 +172,22 @@ ita_ai_transfer_lmv_from_austria = {
 				civil_war_progress > 0
 			}
 		}
-		NOT = { has_war_with = c:AUS }
-		c:AUS = {
-			has_war_with = c:PRU
-			army_power_projection < ROOT.army_power_projection
+		OR = {
+			c:AUS ?= {
+				is_at_war = yes
+				army_power_projection < ROOT.army_power_projection
+				NOT = { has_war_with = ROOT }
+			}
+			c:KUK ?= {
+				is_at_war = yes
+				army_power_projection < ROOT.army_power_projection
+			}
 		}
 		c:LMV = {
+			OR = {
 			is_subject_of = c:AUS
+				is_subject_of = c:KUK
+			}
 			NOT = { is_subject_of = ROOT }
 		}
 	}
@@ -176,21 +200,31 @@ ita_ai_transfer_lmv_from_austria = {
 				civil_war_progress > 0
 			}
 		}
-		NOT = { has_war_with = c:AUS }
-		c:AUS = {
-			has_war_with = c:PRU
-			army_power_projection < ROOT.army_power_projection
+		OR = {
+			c:AUS ?= {
+				is_at_war = yes
+				army_power_projection < ROOT.army_power_projection
+				NOT = { has_war_with = ROOT }
+				NOT = { has_truce_with = ROOT }
+			}
+			c:KUK ?= {
+				is_at_war = yes
+				army_power_projection < ROOT.army_power_projection
+				NOT = { has_war_with = ROOT }
+				NOT = { has_truce_with = ROOT }
+			}
 		}
 		c:LMV = {
+			OR = {
 			is_subject_of = c:AUS
+				is_subject_of = c:KUK
+			}
 			NOT = { is_subject_of = ROOT }
 		}
 	}
 
 	when_taken = {
-		set_variable = ita_ai_transfer_lmv_from_austria_started
 		create_diplomatic_play = {
-			name = transfer_subject
 			type = dp_transfer_subject
 			target_country = c:LMV
 		}
@@ -262,14 +296,14 @@ ita_ai_return_independent_north_italian_states = {
 				civil_war_progress > 0
 			}
 		}
+		NOT = {
+			exists = c:LMV
+		}
 		any_country = {
 			NOT = { this = ROOT }
 			NOT = { c:LMV ?= this }
-			country_has_primary_culture = cu:north_italian
 			is_subject = no
 			NOT = { is_country_type = decentralized }
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			army_power_projection < ROOT.army_power_projection
 			any_scope_state = {
@@ -292,11 +326,8 @@ ita_ai_return_independent_north_italian_states = {
 		any_country = {
 			NOT = { this = ROOT }
 			NOT = { c:LMV ?= this }
-			country_has_primary_culture = cu:north_italian
 			is_subject = no
 			NOT = { is_country_type = decentralized }
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			army_power_projection < ROOT.army_power_projection
 			any_scope_state = {
@@ -353,6 +384,189 @@ ita_ai_return_independent_north_italian_states = {
 	}
 }
 
+ita_ai_return_lombardy_venetia_no_lmv = {
+	is_shown = {
+		is_ai = yes
+		c:ITA ?= this
+		NOT = { exists = c:LMV }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		OR = {
+			NOT = { owns_entire_state_region = STATE_LOMBARDY }
+			NOT = { owns_entire_state_region = STATE_VENETIA }
+		}
+		OR = {
+			s:STATE_LOMBARDY = {
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					state_region = s:STATE_LOMBARDY
+					owner = {
+						NOT = { is_country_type = decentralized }
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+						NOT = { ROOT = { is_subject_of = THIS } }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+			s:STATE_VENETIA = {
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					state_region = s:STATE_VENETIA
+					owner = {
+						NOT = { is_country_type = decentralized }
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+						NOT = { ROOT = { is_subject_of = THIS } }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		NOT = { exists = c:LMV }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		OR = {
+			NOT = { owns_entire_state_region = STATE_LOMBARDY }
+			NOT = { owns_entire_state_region = STATE_VENETIA }
+		}
+		OR = {
+			s:STATE_LOMBARDY = {
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					state_region = s:STATE_LOMBARDY
+					owner = {
+						NOT = { is_country_type = decentralized }
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+						NOT = { ROOT = { is_subject_of = THIS } }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+			s:STATE_VENETIA = {
+				any_scope_state = {
+					NOT = { owner = ROOT }
+					state_region = s:STATE_VENETIA
+					owner = {
+						NOT = { is_country_type = decentralized }
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+						NOT = { ROOT = { is_subject_of = THIS } }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				NOT = { owns_entire_state_region = STATE_LOMBARDY }
+				s:STATE_LOMBARDY = {
+					any_scope_state = {
+						NOT = { owner = ROOT }
+						state_region = s:STATE_LOMBARDY
+						owner = {
+							NOT = { is_country_type = decentralized }
+							is_at_war = no
+							is_diplomatic_play_committed_participant = no
+							NOT = { has_truce_with = ROOT }
+							NOT = { ROOT = { is_subject_of = THIS } }
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+				}
+			}
+			s:STATE_LOMBARDY = {
+				random_scope_state = {
+					limit = {
+						NOT = { owner = ROOT }
+						state_region = s:STATE_LOMBARDY
+						owner = {
+							NOT = { is_country_type = decentralized }
+							is_at_war = no
+							is_diplomatic_play_committed_participant = no
+							NOT = { has_truce_with = ROOT }
+							NOT = { ROOT = { is_subject_of = THIS } }
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+					save_scope_as = ita_lombardy_venetia_return_state_scope
+					owner = { save_scope_as = ita_lombardy_venetia_return_country_scope }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { owns_entire_state_region = STATE_VENETIA }
+				s:STATE_VENETIA = {
+					any_scope_state = {
+						NOT = { owner = ROOT }
+						state_region = s:STATE_VENETIA
+						owner = {
+							NOT = { is_country_type = decentralized }
+							is_at_war = no
+							is_diplomatic_play_committed_participant = no
+							NOT = { has_truce_with = ROOT }
+							NOT = { ROOT = { is_subject_of = THIS } }
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+				}
+			}
+			s:STATE_VENETIA = {
+				random_scope_state = {
+					limit = {
+						NOT = { owner = ROOT }
+						state_region = s:STATE_VENETIA
+						owner = {
+							NOT = { is_country_type = decentralized }
+							is_at_war = no
+							is_diplomatic_play_committed_participant = no
+							NOT = { has_truce_with = ROOT }
+							NOT = { ROOT = { is_subject_of = THIS } }
+							army_power_projection < ROOT.army_power_projection
+						}
+					}
+					save_scope_as = ita_lombardy_venetia_return_state_scope
+					owner = { save_scope_as = ita_lombardy_venetia_return_country_scope }
+				}
+			}
+		}
+		scope:ita_lombardy_venetia_return_state_scope.state_region = {
+			add_claim = ROOT
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:ita_lombardy_venetia_return_country_scope
+			target_state = scope:ita_lombardy_venetia_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 ita_annex_lmv_subject_decision = {
 	is_shown = {
 		c:ITA ?= this
@@ -377,6 +591,61 @@ ita_annex_lmv_subject_decision = {
 		set_variable = ita_annexed_lmv_subject
 		ROOT = {
 			annex_with_incorporation = c:LMV
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+ita_return_dalmatia_decision = {
+	is_shown = {
+		c:ITA ?= this
+		exists = c:ki_DLM
+		c:ki_DLM = {
+			is_subject = no
+		}
+		s:STATE_DALMATIA = {
+			any_scope_state = {
+				owner = c:ki_DLM
+				has_claim_by = ROOT
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:ki_DLM = {
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+		}
+		s:STATE_DALMATIA = {
+			any_scope_state = {
+				owner = c:ki_DLM
+				has_claim_by = ROOT
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_DALMATIA = {
+			random_scope_state = {
+				limit = {
+					owner = c:ki_DLM
+					has_claim_by = ROOT
+				}
+				save_scope_as = ita_dalmatia_return_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = c:ki_DLM
+			target_state = scope:ita_dalmatia_return_state_scope
 		}
 	}
 
@@ -603,7 +872,7 @@ ita_irredentism_holy_city_decision = {
 		add_journal_entry = { type = Italian_Irredentism_holy_city }
 	}
 
-	ai_chance = { value = 5 }
+	ai_chance = { value = -10 }
 }
 
 ita_irredentism_mediterranean_decision = {

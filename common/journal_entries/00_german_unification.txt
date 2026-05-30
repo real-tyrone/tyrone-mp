@@ -107,6 +107,7 @@
 	}
 
 	weight = 1000
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -156,7 +157,7 @@ je_german_unification_idea = {
 		hidden_effect = {
 			if = {
 				limit = {
-					any_country = {
+					any_country_in_german_confederation = {
 						country_rank >= rank_value:great_power
 						OR = {
 							AND = {
@@ -170,7 +171,7 @@ je_german_unification_idea = {
 						}
 					}
 				}
-				random_country = {
+				random_country_in_german_confederation = {
 					limit = {
 						country_rank >= rank_value:great_power
 						OR = {
@@ -189,7 +190,7 @@ je_german_unification_idea = {
 			}
 			else_if = {
 				limit = {
-					any_country = {
+					any_country_in_german_confederation = {
 						country_rank >= rank_value:great_power
 						OR = {
 							country_has_primary_culture = cu:north_german
@@ -197,7 +198,7 @@ je_german_unification_idea = {
 						}
 					}
 				}
-				random_country = {
+				random_country_in_german_confederation = {
 					limit = {
 						country_rank >= rank_value:great_power
 						OR = {
@@ -210,7 +211,7 @@ je_german_unification_idea = {
 			}
 			else_if = {
 				limit = {
-					any_country = {
+					any_country_in_german_confederation = {
 						country_rank >= rank_value:major_power
 						OR = {
 							AND = {
@@ -224,7 +225,7 @@ je_german_unification_idea = {
 						}
 					}
 				}
-				random_country = {
+				random_country_in_german_confederation = {
 					limit = {
 						country_rank >= rank_value:major_power
 						OR = {
@@ -243,7 +244,7 @@ je_german_unification_idea = {
 			}
 			else_if = {
 				limit = {
-					any_country = {
+					any_country_in_german_confederation = {
 						country_rank >= rank_value:major_power
 						OR = {
 							country_has_primary_culture = cu:north_german
@@ -251,7 +252,7 @@ je_german_unification_idea = {
 						}
 					}
 				}
-				random_country = {
+				random_country_in_german_confederation = {
 					limit = {
 						country_rank >= rank_value:major_power
 						OR = {
@@ -277,6 +278,7 @@ je_german_unification_idea = {
 	}
 
 	weight = 1000
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -298,7 +300,7 @@ je_north_german_unification = {
 		custom_tooltip = {
 			text = je_german_unification_sole_candidate_trigger_desc
 			NOT = {
-				any_country = {
+				any_country_in_german_confederation = {
 					NOT = { this = root }
 					is_unification_candidate = GER
 				}
@@ -414,6 +416,7 @@ je_north_german_unification = {
 	}
 
 	weight = 1000
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -435,7 +438,7 @@ je_south_german_unification = {
 		custom_tooltip = {
 			text = je_german_unification_sole_candidate_trigger_desc
 			NOT = {
-				any_country = {
+				any_country_in_german_confederation = {
 					NOT = { this = root }
 					is_unification_candidate = GER
 				}
@@ -500,6 +503,7 @@ je_south_german_unification = {
 	}
 
 	weight = 1000
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -523,6 +527,52 @@ je_german_unification = {
 		c:AUS ?= {
             save_scope_as = austria_scope
         }		
+		if = {
+			limit = {
+				c:NGF ?= this
+				is_ai = yes
+				has_technology_researched = pan-nationalism
+			}
+			trigger_event = { id = german_unification.4 popup = yes }
+			hidden_effect = {
+				every_country = {
+					if = {
+						limit = {
+							NOT = {
+								c:GER ?= this
+							}
+						}
+						every_country = {
+							limit = {
+								country_rank < rank_value:great_power
+								OR = {
+									country_has_primary_culture = cu:north_german
+									country_has_primary_culture = cu:south_german
+								}
+								NOR = {
+									THIS = ROOT
+									THIS = c:AUS
+									THIS = c:LUX
+									THIS = c:TRS
+									THIS = c:BNT
+									is_subject_type = subject_type_colony
+									is_subject_type = subject_type_dominion
+									is_subject_type = subject_type_chartered_company
+									is_subject_type = subject_type_crown_land
+								}
+							}
+
+							if = {
+								limit = {
+									is_ai = yes
+								}
+								root = { annex_with_incorporation = prev }
+							}
+						}
+					}
+				}
+			}
+		}		
 	}
 
 	possible = {

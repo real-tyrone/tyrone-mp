@@ -37,9 +37,6 @@ eastern_question_austria.1 = {
 			c:RUS ?= {
 				is_diplomatic_play_enemy_of = c:TUR
 			}
-			c:UKR ?= {
-				is_diplomatic_play_enemy_of = c:TUR
-			}
 			has_diplomatic_pact = {
 				who = c:TUR
 				type = rivalry
@@ -60,10 +57,7 @@ eastern_question_austria.1 = {
 			limit = {
 				is_political_lobby_type = lobby_anti_country
 				target = {
-					OR = {
 						c:RUS ?= this
-						c:UKR ?= this
-					}
 				}
 			}
 			save_scope_as = relevant_lobby
@@ -456,6 +450,118 @@ eastern_question_austria.2 = {
 	}
 }
 
+eastern_question_austria.3 = {
+	type = country_event
+	placement = root
+
+	title = eastern_question_austria.3.t
+	desc = eastern_question_austria.3.d
+	flavor = eastern_question_austria.3.f
+
+	dlc = dlc014
+	duration = 3
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		OR = {
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+		NOT = { owns_entire_state_region = STATE_BOSNIA }
+		NOT = {
+			any_subject_or_below = {
+				owns_entire_state_region = STATE_BOSNIA
+			}
+		}
+		c:TUR ?= {
+			OR = {
+				owns_entire_state_region = STATE_BOSNIA
+				any_subject_or_below = {
+					owns_entire_state_region = STATE_BOSNIA
+				}
+			}
+		}
+		any_diplomatic_play = {
+			is_diplomatic_play_type = dp_free_the_balkans
+			initiator = c:RUS
+			target = c:TUR
+		}
+	}
+
+	immediate = {
+		random_diplomatic_play = {
+			limit = {
+				is_diplomatic_play_type = dp_free_the_balkans
+				initiator = c:RUS
+				target = c:TUR
+			}
+			save_scope_as = free_the_balkans_play_scope
+		}
+	}
+
+	option = {
+		name = eastern_question_austria.3.a
+		default_option = yes
+		ai_chance = {
+			base = 80
+		}
+		s:STATE_BOSNIA = {
+			add_claim = ROOT
+		}
+		scope:free_the_balkans_play_scope = {
+			if = {
+				limit = {
+					c:AUS ?= root
+				}
+				add_initiator_backers = { c:AUS }
+				if = {
+					limit = {
+						exists = s:STATE_BOSNIA.region_state:TUR
+					}
+					add_war_goal = {
+						holder = c:AUS
+						type = return_state
+						target_state = s:STATE_BOSNIA.region_state:TUR
+						primary_demand = yes
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					c:KUK ?= root
+				}
+				add_initiator_backers = { c:KUK }
+				if = {
+					limit = {
+						exists = s:STATE_BOSNIA.region_state:TUR
+					}
+					add_war_goal = {
+						holder = c:KUK
+						type = return_state
+						target_state = s:STATE_BOSNIA.region_state:TUR
+						primary_demand = yes
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = eastern_question_austria.3.b
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
 namespace = eastern_question_russia
 
 eastern_question_russia.1 = {
@@ -621,3 +727,123 @@ eastern_question_russia.1 = {
 	}
 }
 
+eastern_question_russia.2 = {
+	type = country_event
+	placement = root
+
+	title = eastern_question_russia.2.t
+	desc = eastern_question_russia.2.d
+	flavor = eastern_question_russia.2.f
+
+	dlc = dlc014
+	duration = 3
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# Fired by the Free the Balkans wargoal.
+	}
+
+	immediate = {
+		ROOT = {
+			save_scope_as = russia_scope
+		}
+		c:TUR ?= {
+			save_scope_as = ottoman_scope
+		}
+		c:BUL ?= {
+			save_scope_as = bulgaria_scope
+		}
+		c:WAL ?= {
+			save_scope_as = wallachia_scope
+		}
+		c:MOL ?= {
+			save_scope_as = moldavia_scope
+		}
+		c:GRE ?= {
+			save_scope_as = greece_scope
+		}
+		c:SER ?= {
+			save_scope_as = serbia_scope
+		}
+		c:MON ?= {
+			save_scope_as = montenegro_scope
+		}
+	}
+
+	option = {
+		name = eastern_question_russia.2.a
+		default_option = yes
+		custom_tooltip = {
+			text = free_the_balkans_settlement_effect_tt
+		}
+	}
+}
+
+eastern_question_russia.3 = {
+	type = country_event
+	placement = root
+
+	title = eastern_question_russia.3.t
+	desc = eastern_question_russia.3.d
+	flavor = eastern_question_russia.3.f
+
+	dlc = dlc014
+	duration = 3
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# Fired by the Free the Balkans wargoal.
+	}
+
+	immediate = {
+		random_country = {
+			limit = {
+				has_variable = free_the_balkans_winner
+			}
+			save_scope_as = russia_scope
+		}
+		c:TUR ?= {
+			save_scope_as = ottoman_scope
+		}
+		c:BUL ?= {
+			save_scope_as = bulgaria_scope
+		}
+		c:WAL ?= {
+			save_scope_as = wallachia_scope
+		}
+		c:MOL ?= {
+			save_scope_as = moldavia_scope
+		}
+		c:GRE ?= {
+			save_scope_as = greece_scope
+		}
+		c:SER ?= {
+			save_scope_as = serbia_scope
+		}
+		c:MON ?= {
+			save_scope_as = montenegro_scope
+		}
+	}
+
+	option = {
+		name = eastern_question_russia.3.a
+		default_option = yes
+		custom_tooltip = {
+			text = free_the_balkans_settlement_effect_tt
+		}
+	}
+}

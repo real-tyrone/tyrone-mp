@@ -95,7 +95,9 @@ je_spanish_american_war = {
 		}
 	}
 
-	timeout = 5475
+	scripted_button = je_spanish_american_war_start_button
+
+	timeout = 7300
 
 	immediate = {
 		c:SPA = {
@@ -138,6 +140,9 @@ je_spanish_american_war = {
 		custom_tooltip = {
 			text = je_saw_american_victory_subjects_tt
 			OR = {
+				c:USA = {
+					has_variable = saw_scripted_war_victory
+				}
 				NOT = {
 					c:SPA = {
 						any_subject_or_below = {
@@ -184,6 +189,33 @@ je_spanish_american_war = {
 	on_complete = {
 		c:USA ?= {
 			add_modifier = { name = saw_american_victory years = 10 }
+			if = {
+				limit = { has_variable = saw_scripted_war_victory }
+				remove_variable = saw_scripted_war_victory
+			}
+			if = {
+				limit = {
+					exists = c:CUB
+					c:CUB = { is_subject_of = c:SPA }
+				}
+				c:CUB = {
+					make_independent = yes
+				}
+			}
+			if = {
+				limit = {
+					exists = c:PHI
+					c:PHI = { is_subject_of = c:SPA }
+				}
+				transfer_subject = c:PHI
+			}
+			if = {
+				limit = {
+					exists = c:PCO
+					c:PCO = { is_subject_of = c:SPA }
+				}
+				annex = c:PCO
+			}
 		}
 		c:SPA ?= {
 			add_modifier = { name = saw_spanish_defeat years = 10 }

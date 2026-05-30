@@ -1,0 +1,178 @@
+﻿je_eastern_question_russia_free_balkans_button = {
+	name = "je_eastern_question_russia_free_balkans_button"
+	desc = "je_eastern_question_russia_free_balkans_button_desc"
+
+	visible = {
+		c:RUS ?= THIS
+		has_journal_entry = je_eastern_question_russia
+	}
+
+	possible = {
+		hidden_trigger = {
+			exists = c:TUR
+			c:TUR = {
+				is_involved_in_journal_entry = je_great_eastern_crisis
+			}
+		}
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:TUR = {
+			army_power_projection < ROOT.army_power_projection
+		}
+		NOT = { has_truce_with = c:TUR }
+	}
+
+	effect = {
+		create_diplomatic_play = {
+			name = free_the_balkans
+			type = dp_free_the_balkans
+			target_country = c:TUR
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					exists = c:AUS
+					c:AUS ?= {
+						NOT = { owns_entire_state_region = STATE_BOSNIA }
+						NOT = {
+							any_subject_or_below = {
+								owns_entire_state_region = STATE_BOSNIA
+							}
+						}
+					}
+					c:TUR ?= {
+						OR = {
+							owns_entire_state_region = STATE_BOSNIA
+							any_subject_or_below = {
+								owns_entire_state_region = STATE_BOSNIA
+							}
+						}
+					}
+				}
+				c:AUS = {
+					trigger_event = { id = eastern_question_austria.3 popup = yes }
+				}
+			}
+			else_if = {
+				limit = {
+					NOT = { exists = c:AUS }
+					exists = c:KUK
+					c:KUK ?= {
+						NOT = { owns_entire_state_region = STATE_BOSNIA }
+						NOT = {
+							any_subject_or_below = {
+								owns_entire_state_region = STATE_BOSNIA
+							}
+						}
+					}
+					c:TUR ?= {
+						OR = {
+							owns_entire_state_region = STATE_BOSNIA
+							any_subject_or_below = {
+								owns_entire_state_region = STATE_BOSNIA
+							}
+						}
+					}
+				}
+				c:KUK = {
+					trigger_event = { id = eastern_question_austria.3 popup = yes }
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+REPLACE:je_unite_the_principalities_button = {
+	name = "je_unite_the_principalities_button"
+	desc = "je_unite_the_principalities_button_desc"
+
+	visible = { always = yes }
+
+	ai_chance = {
+		value = 100
+	}
+
+	possible = {
+		NOT = {
+			any_overlord_or_above ?= {
+				country_has_primary_culture = cu:romanian
+			}
+		}
+		OR = {
+			AND = {
+				has_technology_researched = nationalism
+				is_subject = no
+			}			
+			AND = {
+				custom_tooltip = {
+					text = je_unite_the_principalities_friend_with_all_great_powers_tt
+					NOT = {
+						any_country = {
+							country_rank >= rank_value:great_power
+							NOT = { has_war_with = ROOT }
+							has_interest_marker_in_region = ROOT.capital.region
+							relations:root < 0
+						}
+					}
+				}
+				custom_tooltip = {
+					text = je_unite_the_principalities_amicable_or_better_relations_tt
+					NOR = {
+						has_variable = romania_unification_in_motion
+						has_variable = ROM_united_principality
+					}
+					OR = {
+						is_subject_type = subject_type_protectorate
+						is_subject_type = subject_type_dominion
+						is_subject_type = subject_type_tributary
+						is_subject = no
+					}
+					any_country = {
+						NOT = { this = ROOT }
+						country_has_primary_culture = cu:romanian
+						relations:root >= 25
+						OR = {
+							AND = {
+								exists = top_overlord
+								OR = {
+									is_subject_type = subject_type_protectorate
+									is_subject_type = subject_type_dominion
+									is_subject_type = subject_type_tributary
+								}
+								top_overlord = {
+									THIS = root.top_overlord
+								}
+							}
+							is_subject = no
+						}
+						NOR = {
+							c:AUS ?= this
+							c:KUK ?= this
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	effect = {
+		if = {
+			limit = {
+				is_subject = yes
+				exists = top_overlord
+			}
+			set_variable = romania_subject
+        	top_overlord = {
+        		trigger_event = {
+	        		id = romania.1
+	        	}
+	        }
+	    }
+	    trigger_event = { id = romania.2 }
+	}
+}

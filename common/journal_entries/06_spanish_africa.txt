@@ -2,6 +2,7 @@
 	group = je_group_historical_content
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	weight = 5000
 
@@ -9,7 +10,7 @@
 		has_technology_researched = colonization
 		OR = {
 			c:SPA ?= this
-			was_formed_from = SPA
+			c:IBE ?= this
 		}
 	}
 
@@ -89,10 +90,15 @@
 						country_or_subject_owns_entire_state_region = STATE_WEST_SAHARA
 					}
 				}
+				set_variable = {
+					name = spanish_africa_2_firing_from_je
+					days = 90
+				}
 				trigger_event = spanish_africa.2
 			}
 			else_if = {
 				limit = {
+					NOT = {
 					any_state_in_subsaharan_africa = {
 						custom_tooltip = {
 							text = owned_by_root_or_a_colonial_subject_tt
@@ -108,6 +114,11 @@
 						}
 						count >= 3
 					}
+				}
+				}
+				set_variable = {
+					name = spanish_africa_3_firing_from_je
+					days = 90
 				}
 				trigger_event = spanish_africa.3
 			}
@@ -128,6 +139,10 @@
 							}
 						}
 					}
+				}
+				set_variable = {
+					name = spanish_africa_4_firing_from_je
+					days = 90
 				}
 				trigger_event = spanish_africa.4
 			}
@@ -159,6 +174,7 @@ je_western_saharan_conquest = { #2nd in chain, western sahara after al-rif
 	group = je_group_historical_content
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	weight = 10000
 
@@ -193,18 +209,26 @@ je_western_saharan_conquest = { #2nd in chain, western sahara after al-rif
 		if = {
 			limit = {
 				NOT = {
-					any_subject_or_below = {
-						any_scope_state = {
+					any_state_in_subsaharan_africa = {
+						custom_tooltip = {
+							text = owned_by_root_or_a_colonial_subject_tt
+							owner = {
 							OR = {
-								region = sr:region_west_africa
-								region = sr:region_west_africa
-								region = sr:region_equatorial_africa
+									this = ROOT
+									AND = {
+										country_is_colonial_or_company = yes
+										is_subject_of = ROOT
+									}
+								}
 							}
 						}
-						is_subject_type = subject_type_colony
 						count >= 3
 					}
 				}
+			}
+			set_variable = {
+				name = spanish_africa_3_firing_from_je
+				days = 90
 			}
 			trigger_event = spanish_africa.3
 		}
@@ -225,6 +249,10 @@ je_western_saharan_conquest = { #2nd in chain, western sahara after al-rif
 						}
 					}
 				}
+			}
+			set_variable = {
+				name = spanish_africa_4_firing_from_je
+				days = 90
 			}
 			trigger_event = spanish_africa.4
 		}
@@ -252,6 +280,7 @@ je_guinean_conquest = { #3rd in chain, equatorial africa
 	group = je_group_historical_content
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	weight = 10000
 
@@ -316,6 +345,10 @@ je_guinean_conquest = { #3rd in chain, equatorial africa
 					}
 				}
 			}
+			set_variable = {
+				name = spanish_africa_4_firing_from_je
+				days = 90
+			}
 			trigger_event = spanish_africa.4
 		}
 		else = {
@@ -339,6 +372,7 @@ je_moroccan_conquest = { #4th in chain, whole of morocco
 	group = je_group_historical_content
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
+		
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	weight = 10000
 
@@ -394,4 +428,3 @@ je_moroccan_conquest = { #4th in chain, whole of morocco
 		}
 	}
 }
-

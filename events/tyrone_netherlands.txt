@@ -13,10 +13,7 @@ dei_events.1 = {
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
 
 	immediate = {
-		c:NET = { save_scope_as = netherlands_scope }
-
 		c:DEI = { save_scope_as = dei_scope }
-
 	}
 
 	duration = 1
@@ -26,7 +23,7 @@ dei_events.1 = {
 		if = {
 			limit = {
 				exists = c:DEI
-				C:DEI = {
+				c:DEI = {
 					is_subject_of = ROOT
 				}
 			}
@@ -47,9 +44,27 @@ dei_events.1 = {
 				add_liberty_desire = -75
 			}
 		}
-		add_modifier = {
-			name = consolidated_dei
-			days = long_modifier_time
+		c:DEI = {
+			every_subject_or_below = {
+				limit = {
+					capital.region = sr:region_indonesia
+				}
+				c:DEI = {
+					annex = prev
+				}
+			}
+		}
+		every_subject_or_below = {
+			limit = {
+				capital.region = sr:region_indonesia
+				is_subject_of = ROOT
+				NOT = {
+					this = c:DEI
+				}
+			}
+			c:DEI = {
+				annex = prev
+			}
 		}
 	}
 }
@@ -134,10 +149,12 @@ dei_events.3 = {
 				culture = cu:dutch
 			}
 		}
+		ai_chance = {
+			base = 80
+		}
 	}
 	option = { # Reform the VOC
 		name = dei_events.3.b
-		default_option = yes
 		c:DEI = {
 			if = {
 				limit = {
@@ -151,13 +168,15 @@ dei_events.3 = {
 			name = VOC_reformed_modifier
 			days = very_long_modifier_time
 		}
+		ai_chance = {
+			base = 10
+		}
 		company:company_nhm = {
 			add_owned_country = c:DEI #links the country to this company
 		}
 	}
 	option = { # Push for liberal reform
 		name = dei_events.3.c
-		default_option = yes
 		c:DEI = {
 			activate_law = law_type:law_slavery_banned
 			add_modifier = {
@@ -167,6 +186,16 @@ dei_events.3 = {
 			add_loyalists = {
 				value = medium_radicals
 			}
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				set_strategy = ai_strategy_egalitarian_agenda 
+				set_strategy = ai_strategy_progressive_agenda 
+			}
+		}
+		ai_chance = {
+			base = 10
 		}
 	}
 }
@@ -479,6 +508,45 @@ dei_events.6 = {
 				}
 			}
 		}
+	}
+}
+
+# DEI breaks from the Netherlands after losing West Java
+dei_events.7 = {
+	type = country_event
+	placement = ROOT
+
+	title = dei_events.7.t
+	desc = dei_events.7.d
+	flavor = dei_events.7.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	duration = 3
+
+	trigger = {
+		c:DEI ?= this
+		is_subject = yes
+		c:NET ?= overlord
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = { owns_entire_state_region = STATE_WEST_JAVA }
+	}
+
+	immediate = {
+		c:NET = { save_scope_as = netherlands_scope }
+		make_independent = yes
+	}
+
+	option = {
+		name = dei_events.7.a
+		default_option = yes
 	}
 }
 

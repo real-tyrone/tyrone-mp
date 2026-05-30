@@ -1,4 +1,4 @@
-namespace = economic_reform
+﻿namespace = economic_reform
 
 economic_reform.1 = {
 	type = country_event
@@ -1049,5 +1049,65 @@ spain_guide.1 = {
 	option = {
 		name = spain_guide.1.b
 		play_as = scope:carlist_scope
+	}
+}
+
+namespace = belgian_consolidation
+
+belgian_consolidation.1 = {
+	type = country_event
+
+	title = belgian_consolidation.1.t
+	desc = belgian_consolidation.1.d
+	flavor = belgian_consolidation.1.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
+	duration = 3
+
+	trigger = {
+		exists = c:BEL
+		relations:c:BEL >= relations_threshold:amicable
+	}
+
+	option = {
+		name = belgian_consolidation.1.a
+		default_option = yes
+		ai_chance = { base = 100 }
+		change_relations = { country = c:BEL value = 20 }
+		c:BEL = {
+			remove_variable = bel_low_countries_consolidation_request_pending
+		}
+		s:STATE_FLANDERS = {
+			every_scope_state = {
+				limit = {
+					owner = ROOT
+				}
+				set_state_owner = c:BEL
+			}
+		}
+		s:STATE_WALLONIA = {
+			every_scope_state = {
+				limit = {
+					owner = ROOT
+				}
+				set_state_owner = c:BEL
+			}
+		}
+	}
+
+	option = {
+		name = belgian_consolidation.1.b
+		ai_chance = { base = 0 }
+		change_relations = { country = c:BEL value = -20 }
+		c:BEL = {
+			remove_variable = bel_low_countries_consolidation_request_pending
+		}
 	}
 }

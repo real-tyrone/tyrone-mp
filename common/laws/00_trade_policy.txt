@@ -83,6 +83,14 @@ law_protectionism = {
 			}
 			add = 1000
 		}
+
+		if = {
+			limit = {
+				has_journal_entry = je_meiji_imperial_marriage
+				has_law_or_variant = law_type:law_free_trade
+			}
+			add = 10000 # Top priority for Imperial Marriage JE is to enact this law
+		}
 	}
 }
 
@@ -127,6 +135,8 @@ law_free_trade = {
 	modifier = {
 		state_subvention_export_add = 0.50
 		state_subvention_import_add = 0.50
+		state_tariff_import_add = 0.2
+		state_tariff_export_add = 0.2
 		state_trade_advantage_mult = 0.50
 		state_capitalists_investment_pool_efficiency_mult = 0.1
 		country_leverage_resistance_mult = -0.25
@@ -162,13 +172,26 @@ law_isolationism = {
 	}
 
 	is_visible = {
-		NAND = {
+		NOR = {
+			AND = {
 			any_primary_culture = {
 				has_discrimination_trait = heritage_han
 			}
 			any_scope_state = {
 				state_region = s:STATE_GUANGDONG
 				is_largest_state_in_region = yes
+			}
+		}
+			AND = {
+				any_primary_culture = {
+					cu:japanese = this
+				}
+				s:STATE_KYUSHU ?= {
+					any_scope_state = {
+						owner ?= ROOT
+						is_largest_state_in_region = yes
+					}
+				}
 			}
 		}
 	}
@@ -180,8 +203,6 @@ law_isolationism = {
 
 		country_leverage_resistance_mult = 1.0
 		country_support_separatism_resistance_mult = 0.5
-
-		country_max_declared_interests_mult = -0.5
 
 		country_disallow_trade_bool = yes
 	}
@@ -243,9 +264,8 @@ law_canton_system = {
 
 		country_leverage_resistance_mult = 0.75
 
-		country_max_declared_interests_mult = -0.33
-
 		country_disallow_trade_outside_canton_bool = yes
+		state_trade_center_max_limit_add = 50
 	}
 
 	ai_will_do = {
@@ -270,6 +290,7 @@ law_canton_system = {
 	}
 }
 
+# Special isolationism variant for Japan, allows TCs to be built only in Dejima
 law_sakoku = {
 	group = lawgroup_trade_policy
 	parent = law_isolationism # Inherits ideological stances from parent
@@ -316,6 +337,19 @@ law_sakoku = {
 					has_ideology = ideology:ideology_vanguardist
 				}
 			}
+		}
+	}
+
+	on_activate = {
+		if = {
+			limit = {
+				has_game_started = yes
+				NOT = {
+					has_law = law_type:law_closed_borders
+				}
+			}
+			custom_tooltip = internal_controls_strengthened_tt
+			activate_law = law_type:law_closed_borders
 		}
 	}
 

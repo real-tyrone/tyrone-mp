@@ -11,9 +11,10 @@
 		c:DEI = {
 			save_scope_as = east_indies_scope
 		}
-		c:NET = {
-			save_scope_as = netherlands_scope
+		ROOT = { save_scope_as = east_indies_overlord_scope }
 		}
+
+	possible = {
 	}
 
 	complete = {
@@ -26,36 +27,31 @@
 						state_region = s:STATE_LUZON
 						state_region = s:STATE_VISAYAS
 						state_region = s:STATE_MINDANAO		
+						AND = {
 						state_region = s:STATE_SUNDA_ISLANDS			
+						NOT = { owner = c:POR }
 					}			
 				}
             }
-			custom_tooltip = {
-				text = completely_owned_by_this_country_or_subjects_tt
-				OR = {
-					owner = ROOT
-					owner = {
-						is_subject_of = ROOT
 					}
+			OR = {
+				owner = c:DEI
 					owner = {
-						is_country_type = decentralized
+					is_subject_of = c:DEI
 					}
+				trigger_if = {
+					limit = {
+						exists = c:DEI.top_overlord
 				}
-				NOT = {
-					this.state_region = {
-						any_scope_state = {
+					OR = {
+						owner = c:DEI.top_overlord
 							owner = {
-								NOR = {
-									this = ROOT
-									is_subject_of = ROOT
-									is_country_type = decentralized
-								}
+							is_subject_of = c:DEI.top_overlord
 							}
 						}
 					}
 				}
-			}
-            percent = 1
+			percent >= 0.80
         }
 	}
 
@@ -66,6 +62,12 @@
 	}
 
 	fail = {
+		OR = {
+			NOT = { exists = c:DEI }
+			c:DEI = {
+				NOT = { is_subject_of = ROOT }
+			}
+		}
 	}
 
     event_outcome_completed_desc = {

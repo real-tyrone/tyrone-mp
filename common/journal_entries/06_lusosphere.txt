@@ -8,7 +8,13 @@
 
 	is_shown_when_inactive = {
         has_dlc_feature = ip4_content
+		OR = {
 		c:POR ?= this
+			AND = {
+				c:IBE ?= this
+				was_formed_from = POR
+			}
+		}
 		exists = c:BRZ
 	}
 
@@ -28,10 +34,7 @@
 				}
 				custom_tooltip = {
 					text = has_completed_uk_je_tt
-					c:BRZ ?= {
-						is_subject_of = ROOT
-						is_subject_type = subject_type_personal_union
-					}
+					has_variable = completed_uk_var
 				}
 			}
 			trigger_if = {
@@ -68,7 +71,6 @@
 	}
 
 	possible = {
-		is_subject = no
 		has_interest_marker_in_region = sr:region_brazil
 		"relations(c:BRZ)" > 10
 	}
@@ -87,11 +89,29 @@
 				exists = scope:brazil_scope
 			}
 			has_variable = failed_uk_var
+			AND = {
+				custom_tooltip = {
+					text = portugal_formation_uk_je_tt
+					NOT = {
+						c:POR ?= this
+					}
+				}
+				custom_tooltip = {
+					text = iberia_formation_uk_je_tt
+					AND = {
+						NOT = {
+							c:IBE ?= this
+						}
+						was_formed_from = POR
+					}
+				}
+			}	
 		}
 	}
 
 	weight = 5000
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -107,7 +127,7 @@ je_portugal_united_kingdom = {
 			triggered_desc = {
 				desc = portugal_ruler_is_ruler_tt
 				trigger = {
-					c:BRZ.ruler ?= c:POR.ruler
+					c:BRZ.ruler ?= ROOT.ruler
 				}
 			}
 			triggered_desc = {
@@ -115,7 +135,7 @@ je_portugal_united_kingdom = {
 				trigger = {
 					has_dlc_feature = rp1_content
 					exists = c:BRZ.heir
-					c:BRZ.heir ?= c:POR.ruler
+					c:BRZ.heir ?= ROOT.ruler
 					c:BRZ.var:pedropoints <= 5
 				}
 			}
@@ -124,7 +144,7 @@ je_portugal_united_kingdom = {
 				trigger = {
 					has_dlc_feature = rp1_content
 					exists = c:BRZ.heir
-					c:BRZ.heir ?= c:POR.ruler
+					c:BRZ.heir ?= ROOT.ruler
 					c:BRZ.var:pedropoints > 5
 				}
 			}
@@ -133,14 +153,14 @@ je_portugal_united_kingdom = {
 				trigger = {
 					NOT = { has_dlc_feature = rp1_content }
 					exists = c:BRZ.heir
-					c:BRZ.heir ?= c:POR.ruler
+					c:BRZ.heir ?= ROOT.ruler
 				}
 			}
 			triggered_desc = {
 				desc = portugal_ruler_not_in_line_tt
 				trigger = {
 					NOT = {
-						c:BRZ.heir ?= c:POR.ruler
+						c:BRZ.heir ?= ROOT.ruler
 					}
 				}
 			}
@@ -163,15 +183,25 @@ je_portugal_united_kingdom = {
 
 	complete = {
 		c:BRZ ?= {
+			has_law = law_type:law_monarchy
 			has_diplomatic_pact = {
 				who = ROOT
 				type = personal_union
 				is_initiator = no
 			}
+			trigger_if = {
+				limit = {
+					has_dlc_feature = rp1_content
+				}
+				NOT = {
+					has_journal_entry = je_pedro_brazil
+				}
+			}
 		}
 	}
 
 	on_complete = {
+		set_variable = { name = completed_uk_var days = short_modifier_time }
 		trigger_event = {
 			id = lusofonia.3
 		}
@@ -181,14 +211,13 @@ je_portugal_united_kingdom = {
     fail = {
 		OR = {
 			NOT = { has_law = law_type:law_monarchy }
-			c:BRZ ?= { NOT = { has_law = law_type:law_monarchy } }
 			NOT = { has_journal_entry = je_portugal_and_brazil }
-		}
-    }
-
-	invalid = {
+			AND = {
+				c:BRZ ?= { NOT = { has_law = law_type:law_monarchy } }
+				custom_tooltip = {
+					text = por_not_restoring_union_tt
 		NOT = {
-			exists = c:BRZ
+						has_variable = por_seeking_restore_union_var
 		}
 	}
 
@@ -282,5 +311,6 @@ je_portugal_brazil_reversal = {
 
 	weight = 5000
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }

@@ -23,9 +23,39 @@
 
 	is_shown_in_lobby = { c:GBR = THIS }
 
-	possible = { c:GBR ?= { has_variable = gbr_commonwealth_path } }
+	invalid = { 
+		OR = {
+			has_global_variable = imperial_federation_var
+			c:GBR = { has_variable = chose_fed_path }
+			NOT = { exists = c:GBR } 
+		}
+	}
 
-	invalid = { NOT = { exists = c:GBR } }
+	on_invalid = {
+		if = {
+			limit = {
+				c:GBR = exists
+				c:GBR = {
+					has_variable = chose_fed_path
+				}
+			}
+			add_contextless_journal_entry = je_imperial_federation
+		}
+	}
+
+	on_complete = {
+		set_global_variable = british_commonwealth_var
+	}
+
+	on_complete_all_involved = {
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			change_subject_type = subject_type_commonwealth_member
+		}
+		trigger_event = { id = imperial_events.3 popup = yes }
+	}
 
 	immediate = {
 		c:GBR = { save_scope_as = gbr_scope }
@@ -58,6 +88,17 @@
 
 	on_monthly_pulse = {
 		effect = {
+			every_country = {
+				limit = {
+					is_involved_in_journal_entry = je_british_commonwealth
+					NOT = { c:GBR ?= this }
+					is_subject = no
+				}
+				scope:journal_entry = {
+					remove_involved_country = PREV
+				}
+			}
+
 			# --- CAN bar thresholds ---
 			if = {
 				limit = {
@@ -242,12 +283,16 @@
 		}
 	}
 
+	fail = {
+	}
+
 	scripted_progress_bar = bar_can_commonwealth
 	scripted_progress_bar = bar_ast_commonwealth
 	scripted_progress_bar = bar_saf_commonwealth
 	scripted_progress_bar = bar_ire_commonwealth
 
 	weight = 500
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
 }
 

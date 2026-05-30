@@ -22,7 +22,7 @@
         }
     }
     immediate = {
-        c:CHI = {
+        c:CHI ?= {
             save_scope_as = china_scope
         }
         s:STATE_AMUR = {
@@ -37,9 +37,6 @@
         s:STATE_ALTAI = {
             add_claim = c:RUS
         }
-        s:STATE_TUVA = {
-            add_claim = c:RUS
-        }
         s:STATE_KIRGHIZIA = {
             add_claim = c:RUS
         }
@@ -49,11 +46,9 @@
         owns_entire_state_region = STATE_OUTER_MANCHURIA
         owns_entire_state_region = STATE_JETISY
         owns_entire_state_region = STATE_ALTAI
-        owns_entire_state_region = STATE_TUVA
         OR = {
             owns_entire_state_region = STATE_KIRGHIZIA
-            any_country = {
-                is_subject_of = c:RUS
+            any_subject_or_below = {
                 owns_entire_state_region = STATE_KIRGHIZIA
             }
         }
@@ -77,6 +72,7 @@
     }
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -87,13 +83,13 @@ je_caucasian_war = {
 
     immediate = {
         set_global_variable = caucasian_war_happened
-        c:CIR = {
+        c:CIR ?= {
             save_scope_as = circassia_scope
         }
-        c:CHC = {
+        c:CHC ?= {
             save_scope_as = imamate_scope
         }
-        c:RUS = {
+        c:RUS ?= {
             save_scope_as = russia_scope
         }
         every_scope_state = {
@@ -265,14 +261,7 @@ je_caucasian_war = {
         set_global_variable = caucasus_failure_var
         trigger_event = { id = caucasuswar_end.4 days = 0 }
         hidden_effect = {
-            every_state = {
-                limit = {
-                    OR = {
-                        state_region = s:STATE_KUBAN
-                        state_region = s:STATE_NORTH_CAUCASUS
-                        state_region = s:STATE_DAGESTAN
-                    }
-                }
+            every_state_in_caucasus_old = {
                 remove_modifier = caucasus_war_attacker
             }
         }
@@ -326,6 +315,7 @@ je_caucasian_war = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -374,7 +364,7 @@ je_circassian_expulsions = {
     complete = {
         any_scope_state = {
             filter = {
-                region = sr:region_greater_persia
+                is_in_geographic_region = geographic_region_caucasus_old
             }
             custom_tooltip = {
                 text = circassians_below_5_percent
@@ -421,7 +411,7 @@ je_circassian_expulsions = {
                 }
                 random_scope_state = {
                     limit = {
-                        region = sr:region_greater_persia
+                        is_in_geographic_region = geographic_region_caucasus_old
                         any_scope_pop = {
                             culture = cu:circassian
                         }
@@ -533,6 +523,7 @@ je_circassian_expulsions = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -546,7 +537,7 @@ je_caucasian_war_circassia = {
 	}
 
     immediate = {
-         c:RUS = {
+         c:RUS ?= {
             save_scope_as = russia_scope
         }
         s:STATE_KUBAN = {
@@ -559,7 +550,7 @@ je_caucasian_war_circassia = {
             triggered_desc = {
                 desc = caucasian_war_milyutin_loc
                 trigger = {
-                    c:RUS = {
+                    c:RUS ?= {
                         has_variable = milyutin_memorandum_accepted
                     }
                 }
@@ -568,7 +559,7 @@ je_caucasian_war_circassia = {
                 desc = caucasian_war_escalated_loc
                 trigger = {
                     OR = {
-                        c:RUS = {
+                        c:RUS ?= {
                             has_variable = escalated_caucasian_war
                         }
                         NAND = {
@@ -637,6 +628,7 @@ je_caucasian_war_circassia = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -650,7 +642,7 @@ je_caucasian_war_imamate = {
 	}
 
     immediate = {
-        c:RUS = {
+        c:RUS ?= {
             save_scope_as = russia_scope
         }
         s:STATE_NORTH_CAUCASUS = {
@@ -668,7 +660,7 @@ je_caucasian_war_imamate = {
             triggered_desc = {
                 desc = caucasian_war_milyutin_loc
                 trigger = {
-                    c:RUS = {
+                    c:RUS ?= {
                         has_variable = milyutin_memorandum_accepted
                     }
                 }
@@ -677,7 +669,7 @@ je_caucasian_war_imamate = {
                 desc = caucasian_war_escalated_loc
                 trigger = {
                     OR = {
-                        c:RUS = {
+                        c:RUS ?= {
                             has_variable = escalated_caucasian_war
                         }
                         NAND = {
@@ -742,6 +734,7 @@ je_caucasian_war_imamate = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -760,7 +753,7 @@ je_pacify_the_steppes = {
     }
 
     immediate = {
-        c:RUS = {
+        c:RUS ?= {
             save_scope_as = russia_scope
         }
         random_character_in_void = {
@@ -940,6 +933,7 @@ je_pacify_the_steppes = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -949,10 +943,10 @@ je_the_last_kazakh_khan = {
     group = je_group_russia_expansion
 
     immediate = {
-        c:RUS = {
+        c:RUS ?= {
             save_scope_as = russia_scope
         }
-        c:KAZ = {
+        c:KAZ ?= {
             save_scope_as = khanate_scope
             ruler = {
                 save_scope_as = kenesary_scope
@@ -968,7 +962,7 @@ je_the_last_kazakh_khan = {
                     exists = c:KAZ
                 }
             }
-            c:KAZ = {
+            c:KAZ ?= {
                 is_subject_of = c:RUS
             }
         }
@@ -990,7 +984,7 @@ je_the_last_kazakh_khan = {
     fail = {
         AND = {
             has_truce_with = c:KAZ
-            c:KAZ = {
+            c:KAZ ?= {
                 NOT = {
                     is_subject_of = ROOT
                 }
@@ -1004,6 +998,7 @@ je_the_last_kazakh_khan = {
 
     weight = 100
 
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -1053,7 +1048,7 @@ je_conquest_of_central_asia = {
             limit = {
                 exists = c:TRM
             }
-            c:TRM = {
+            c:TRM ?= {
                 save_scope_as = turkmenia_scope
             }
         }
@@ -1102,6 +1097,7 @@ je_conquest_of_central_asia = {
     }
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -1173,6 +1169,7 @@ je_great_reformer = { # Note - Alexander II certainly would not have called thes
 	progressbar = yes
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -1190,6 +1187,7 @@ je_great_reforms_serfdom = {
         OR = {
             has_law_or_variant = law_type:law_tenant_farmers
             has_law_or_variant = law_type:law_commercialized_agriculture
+	        has_law_or_variant = law_type:law_peasant_proprietorship
         }
         NOT = {
             has_law_or_variant = law_type:law_traditionalism
@@ -1213,9 +1211,20 @@ je_great_reforms_serfdom = {
             set_variable = je_great_reforms_serfdom_complete
             change_variable = { name = great_reforms_var add = 1 }
         }
+		add_modifier = {
+			name = modifier_russian_industrialization
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		add_modifier = {
+			name = modifier_russian_emancipation
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
     }
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -1301,9 +1310,15 @@ je_great_reforms_military = {
             set_variable = je_great_reforms_military_complete
             change_variable = { name = great_reforms_var add = 1 }
         }
+		add_modifier = {
+			name = modifier_ottoman_army_modernization
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
     }
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
@@ -1345,9 +1360,14 @@ je_great_reforms_bureaucratic = {
             set_variable = je_great_reforms_bureaucratic_complete
             change_variable = { name = great_reforms_var add = 1 }
         }
+		add_modifier = {
+			name = modifier_russian_bureaucratic_reform
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
     }
 
     weight = 1000
+    	
     should_be_pinned_by_default_uninvolved_or_context = yes
 }
-

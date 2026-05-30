@@ -63,6 +63,7 @@ dp_oriental_crisis = {
 	add_infamy_for_starting_initiator_wargoals = no
 	initiator_can_add_war_goals = no
 	target_can_add_war_goals = no
+	mirror_war_goal = yes
 
 	texture = "gfx/interface/icons/war_goals/conquer_state.dds"
 
@@ -86,8 +87,55 @@ dp_crimean_war = {
 	add_infamy_for_starting_initiator_wargoals = no
 	initiator_can_add_war_goals = no
 	target_can_add_war_goals = no
+	mirror_war_goal = yes
 
 	texture = "gfx/interface/icons/war_goals/humiliation.dds"
+
+	selectable_in_lens = {
+		always = no
+	}
+
+	possible = {}
+
+	on_weekly_pulse = {}
+
+	on_war_begins = {}
+
+	on_war_end = {}
+}
+
+dp_spanish_american_war = {
+	war_goal = spanish_american_war_wargoal
+
+	requires_interest_marker = no
+	add_infamy_for_starting_initiator_wargoals = no
+	initiator_can_add_war_goals = no
+	target_can_add_war_goals = no
+
+	texture = "gfx/interface/icons/war_goals/humiliation.dds"
+
+	selectable_in_lens = {
+		always = no
+	}
+
+	possible = {}
+
+	on_weekly_pulse = {}
+
+	on_war_begins = {}
+
+	on_war_end = {}
+}
+
+dp_free_the_balkans = {
+	war_goal = free_the_balkans_wargoal
+
+	requires_interest_marker = no
+	add_infamy_for_starting_initiator_wargoals = no
+	initiator_can_add_war_goals = no
+	target_can_add_war_goals = no
+
+	texture = "gfx/interface/icons/war_goals/independence.dds"
 
 	selectable_in_lens = {
 		always = no
@@ -219,6 +267,108 @@ REPLACE:dp_unify_india = {
 					custom_tooltip = {
 						text = indian_primary_culture_tt
 						has_indian_primary_culture = yes
+					}
+				}
+			}
+		}
+	}
+
+	on_weekly_pulse = {}
+
+	on_war_begins = {}
+
+	on_war_end = {}
+}
+
+REPLACE:dp_unify_china = {
+	war_goal = annex_country
+
+	texture = "gfx/interface/icons/war_goals/annex_country.dds"
+
+	selectable_in_lens = {
+		OR = {
+			is_ai = yes
+			has_journal_entry = je_reunify_china
+			has_journal_entry = je_warlord_china
+			global_var:chinese_central_government ?= THIS
+			c:CHI ?= this
+		}
+	}
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		OR = {
+			is_ai = yes
+			has_journal_entry = je_reunify_china
+			has_journal_entry = je_warlord_china
+			global_var:chinese_central_government ?= THIS
+			c:CHI ?= this
+		}
+
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			OR = {
+				has_journal_entry = je_reunify_china
+				has_journal_entry = je_warlord_china
+				global_var:chinese_central_government ?= THIS
+				country_has_primary_culture = cu:han
+				country_has_primary_culture = cu:manchu
+			}
+		}
+	}
+
+	on_weekly_pulse = {}
+
+	on_war_begins = {}
+
+	on_war_end = {}
+}
+
+dp_unify_indonesia = {
+	war_goal = annex_country
+
+	texture = "gfx/interface/icons/war_goals/annex_country.dds"
+
+	selectable_in_lens = {
+		capital.region = sr:region_indonesia
+		OR = {
+			can_form_nation = IDN
+			c:IDN ?= this
+		}
+	}
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		capital.region = sr:region_indonesia
+		has_technology_researched = nationalism
+		OR = {
+			can_form_nation = IDN
+			c:IDN ?= this
+		}
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			capital.region = sr:region_indonesia
+			OR = {
+				can_form_nation = IDN
+				capital = {
+					OR = {
+						state_region = s:STATE_ACEH
+						state_region = s:STATE_CENTRAL_JAVA
+						state_region = s:STATE_EAST_BORNEO
+						state_region = s:STATE_EAST_JAVA
+						state_region = s:STATE_MALAYA
+						state_region = s:STATE_MOLUCCAS
+						state_region = s:STATE_CELEBES
+						state_region = s:STATE_NORTH_BORNEO
+						state_region = s:STATE_NORTH_SUMATRA
+						state_region = s:STATE_SOUTH_SUMATRA
+						state_region = s:STATE_SUNDA_ISLANDS
+						state_region = s:STATE_WEST_BORNEO
+						state_region = s:STATE_WESTERN_NEW_GUINEA
+						state_region = s:STATE_WEST_JAVA
 					}
 				}
 			}

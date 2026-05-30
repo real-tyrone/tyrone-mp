@@ -1,4 +1,11 @@
-﻿# ROOT is the leader of the power bloc.
+﻿tyrone_late_founding_mandates = {
+	add = year
+	subtract = 1836
+	divide = 3
+	floor = yes
+}
+
+# ROOT is the leader of the power bloc.
 # scope:target is the target country.
 # scope:has_interest is whether the power bloc has interest on the target country.
 # scope:has_capital_interest is whether the power bloc has interest on the capital of the target country.
@@ -20,7 +27,7 @@ power_bloc_leverage_gain = {
 			}
 		}
 		add = {
-			value = 100	# 300
+			value = 300
 			desc = POWER_BLOC_LEVERAGE_GAIN_FROM_MEMBERSHIP
 		}
 	}
@@ -339,6 +346,24 @@ power_bloc_great_power_non_leader_members = {
 	}
 }
 
+commonwealth_modifier = {
+	power_bloc = {
+		if = {
+			limit = {
+				NOT = {
+					power_bloc ?= {
+						has_identity = identity:identity_trade_league
+					}
+				}
+				has_global_variable = british_commonwealth_formed
+			}
+			add_power_bloc_modifier = {
+				name = commonwealth_common_market
+			}
+		}
+	}
+}
+
 power_bloc_mandate_progress_per_great_power_member = {
 	value = modifier:power_bloc_mandate_progress_per_great_power_member_add
 	multiply = {
@@ -487,7 +512,7 @@ power_bloc_mandate_progress_by_rank = {
 			tyrone_late_founding_mandates >= 1
 			NOT = {
 				any_power_bloc_member = {
-					tenure_in_current_power_bloc_weeks > 2
+					tenure_in_current_power_bloc_weeks > 4
 				}
 			}
 		}
@@ -1212,7 +1237,7 @@ ai_accept_join_request_score_treaties = {
 		### Base bonus: sovereign empires should be happy to have more subjects
 		add = {
 			desc = "[GetPowerBlocIdentity('identity_sovereign_empire').GetName]"
-			value = 50	# 25
+			value = 25
 		}
 	}
 	### Ideological Union

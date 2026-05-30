@@ -46,13 +46,23 @@ je_imperial_federation = {
 		c:GBR ?= THIS
 	}
 
-	possible = {
-		c:GBR ?= { has_variable = gbr_imperial_federation_path }
-	}
-
 	invalid = {
 		OR = {
+			has_global_variable = british_commonwealth_var
+			c:GBR = { has_variable = chose_commonwealth_path }
 			NOT = { exists = c:GBR }
+		}
+	}
+
+	on_invalid = {
+		if = {
+			limit = {
+				c:GBR = exists
+				c:GBR = {
+					has_variable = chose_commonwealth_path
+				}
+			}
+			add_contextless_journal_entry = je_british_commonwealth
 		}
 	}
 
@@ -68,6 +78,17 @@ je_imperial_federation = {
 
 	on_monthly_pulse = {
 		effect = {
+			every_country = {
+				limit = {
+					is_involved_in_journal_entry = je_imperial_federation
+					NOT = { c:GBR ?= this }
+					is_subject = no
+				}
+				scope:journal_entry = {
+					remove_involved_country = PREV
+				}
+			}
+
 				if = {
 					limit = {
 						NOT = { has_global_variable = fed_milestone_10 }
@@ -183,9 +204,13 @@ je_imperial_federation = {
 		}
 	}
 
+	fail = {
+	}
+
 	scripted_progress_bar = bar_federation_progress
 
 	weight = 500
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
 }
 

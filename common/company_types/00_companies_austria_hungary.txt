@@ -8,16 +8,26 @@ company_skoda = {
 	preferred_headquarters = { STATE_BOHEMIA }
 
 	building_types = {
+		building_steel_mill
 		building_motor_industry
+		building_artillery_foundry
 	}
 
 	extension_building_types = {
 		building_automotive_industry
-		building_steel_mill
-		building_artillery_foundry
 		building_coal_mine
 	}
 
+	possible_prestige_goods = {
+		prestige_good_generic_steel
+	}
+
+	prestige_goods_trigger = {
+		custom_tooltip = {
+			text = je_prestige_goods_steel_complete_tt
+			has_variable = prestige_good_generic_steel_var
+		}
+	}
 
 	potential = {
 		has_interest_marker_in_region = sr:region_central_europe
@@ -32,11 +42,16 @@ company_skoda = {
 	}
 
 	possible = {
+		has_technology_researched = shell_gun
 		any_scope_state = {
 			state_region = s:STATE_BOHEMIA
 			is_incorporated = yes
 			any_scope_building = {
-				is_building_type = building_motor_industry
+				OR = {
+					is_building_type = building_steel_mill
+					is_building_type = building_arms_industry
+					is_building_type = building_artillery_foundry
+				}
 				level >= 5
 			}
 		}
@@ -95,14 +110,12 @@ company_mav = {
 	preferred_headquarters = { STATE_CENTRAL_HUNGARY }
 
 	building_types = {
-		building_coal_mine	# new
+		building_motor_industry
 		building_tooling_workshop
 	}
 
 	extension_building_types = {
 		building_automotive_industry
-		building_motor_industry
-		building_steel_mill
 	}
 
 	possible_prestige_goods = {
@@ -121,31 +134,24 @@ company_mav = {
 	}
 
 	attainable = {
-	}
-
-	possible = {
-		has_technology_researched = railways
-		OR = {
-			any_subject_or_below = {
+		hidden_trigger = { # Hide attainable if it's always fulfilled by possible
 				any_scope_state = {
 					state_region = s:STATE_CENTRAL_HUNGARY
-					is_incorporated = yes
-					any_scope_building = {
-						is_building_type = building_tooling_workshop
-						level >= 5
 					}
 				}
 			}
+
+	possible = {
+		has_technology_researched = railways
 			any_scope_state = {
 				state_region = s:STATE_CENTRAL_HUNGARY
 				is_incorporated = yes
 				any_scope_building = {
-					is_building_type = building_tooling_workshop
+				is_building_type = building_motor_industry
 					level >= 5
 				}
 			}
 		}
-	}
 
 	prosperity_modifier = {
 		building_railway_throughput_add = 0.1
@@ -184,8 +190,8 @@ company_manfred_weiss = {
 
 	building_types = {
 		building_steel_mill
-		building_automotive_industry
 		building_munition_plant
+		building_automotive_industry
 	}
 
 	extension_building_types = {
@@ -208,20 +214,15 @@ company_manfred_weiss = {
 	}
 
 	attainable = {
-	}
-
-	possible = {
-		OR = {
-			any_subject_or_below = {
+		hidden_trigger = { # Hide attainable if it's always fulfilled by possible
 				any_scope_state = {
 					state_region = s:STATE_CENTRAL_HUNGARY
-					is_incorporated = yes
-					any_scope_building = {
-						is_building_type = building_steel_mill
-						level >= 5
 					}
 				}
 			}
+
+	possible = {
+		has_technology_researched = bessemer_process	# open_hearth_process
 			any_scope_state = {
 				state_region = s:STATE_CENTRAL_HUNGARY
 				is_incorporated = yes
@@ -231,7 +232,6 @@ company_manfred_weiss = {
 				}
 			}
 		}
-	}
 
 	prosperity_modifier = {
 		unit_offense_mult = 0.1	# 0.05
@@ -427,4 +427,3 @@ company_oevg = {
 		value = 3 # Higher base value for flavored companies
 	}
 }
-
