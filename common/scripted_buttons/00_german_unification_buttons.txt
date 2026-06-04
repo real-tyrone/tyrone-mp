@@ -1,0 +1,49 @@
+﻿je_north_german_south_german_claims_button = {
+	name = "je_north_german_south_german_claims_button"
+	desc = "je_north_german_south_german_claims_button_desc"
+
+	visible = {
+		has_journal_entry = je_german_unification
+		c:NGF ?= this
+		exists = c:SGF
+		NOT = { has_variable = claimed_south_german_states }
+	}
+
+	possible = {
+		exists = c:SGF
+		NOT = { has_variable = claimed_south_german_states }
+	}
+
+	effect = {
+		trigger_event = { id = germany_rework.7 popup = yes }
+	}
+}
+
+je_north_german_finalize_unification_button = {
+	name = "je_north_german_finalize_unification_button"
+	desc = "je_north_german_finalize_unification_button_desc"
+
+	visible = {
+		has_journal_entry = je_german_unification
+		c:NGF ?= this
+		exists = c:SGF
+		NOT = { exists = c:AUS }
+	}
+
+	possible = {
+		exists = c:SGF
+		NOT = { exists = c:AUS }
+		owns_entire_state_region = STATE_BAVARIA
+		owns_entire_state_region = STATE_WURTTEMBERG
+		owns_entire_state_region = STATE_BADEN
+		owns_entire_state_region = STATE_FRANCONIA
+	}
+
+	effect = {
+		c:SGF = {
+			change_tag = AUS
+		}
+		set_global_variable = ngf_defeated_sgf
+		trigger_event = { id = german_unification.4 popup = yes }
+	}
+}

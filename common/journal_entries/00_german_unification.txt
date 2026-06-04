@@ -288,21 +288,28 @@ je_north_german_unification = {
 	group = je_group_german_unification
 
 	complete = {
-		custom_tooltip = {
-			has_global_variable = schleswig_holstein_question_solved
-			text = je_schleswig_holstein_question_solved_trigger_desc
-		}
-		hidden_trigger = {
-			has_variable = je_unification_progress
-		}
-		has_technology_researched = nationalism
-		is_unification_candidate = GER
-		custom_tooltip = {
-			text = je_german_unification_sole_candidate_trigger_desc
-			NOT = {
-				any_country_in_german_confederation = {
-					NOT = { this = root }
-					is_unification_candidate = GER
+			custom_tooltip = {
+				has_global_variable = schleswig_holstein_question_solved
+				text = je_schleswig_holstein_question_solved_trigger_desc
+			}
+			hidden_trigger = {
+				has_variable = je_unification_progress
+			}
+			has_technology_researched = nationalism
+			is_unification_candidate = GER
+			OR = {
+				custom_tooltip = {
+					text = south_germany_exists_tt
+					exists = c:SGF
+				}
+				custom_tooltip = {
+					text = je_german_unification_sole_candidate_trigger_desc
+					NOT = {
+						any_country_in_german_confederation = {
+							NOT = { this = root }
+							is_unification_candidate = GER
+						}
+					}
 				}
 			}
 		}
@@ -383,11 +390,11 @@ je_north_german_unification = {
 									country_has_primary_culture = cu:south_german
 								}
 								NOR = {
-									THIS = ROOT
-									THIS = c:AUS
-									THIS = c:LUX
-									THIS = c:TRS
-									THIS = c:BNT
+									this = root
+									c:AUS ?= this
+									c:LUX ?= this
+									c:TRS ?= this
+									c:BNT ?= this
 									is_subject_type = subject_type_colony
 									is_subject_type = subject_type_dominion
 									is_subject_type = subject_type_chartered_company
@@ -435,15 +442,22 @@ je_south_german_unification = {
 		}
 		has_technology_researched = nationalism
 		is_unification_candidate = GER
-		custom_tooltip = {
-			text = je_german_unification_sole_candidate_trigger_desc
-			NOT = {
-				any_country_in_german_confederation = {
-					NOT = { this = root }
-					is_unification_candidate = GER
+		OR = {
+			custom_tooltip = {
+				text = south_germany_exists_tt
+				exists = c:SGF
+			}
+			custom_tooltip = {
+				text = je_german_unification_sole_candidate_trigger_desc
+				NOT = {
+					any_country_in_german_confederation = {
+						NOT = { this = root }
+						is_unification_candidate = GER
+					}
 				}
 			}
 		}
+
 	}
 
 	fail = {
@@ -510,6 +524,10 @@ je_south_german_unification = {
 je_german_unification = {
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
 
+	scripted_button = je_north_german_south_german_claims_button
+	scripted_button = je_north_german_finalize_unification_button
+
+
 	group = je_group_german_unification
 
 	is_shown_in_lobby = {
@@ -527,7 +545,7 @@ je_german_unification = {
 		c:AUS ?= {
             save_scope_as = austria_scope
         }		
-		if = {
+		if = {			
 			limit = {
 				c:NGF ?= this
 				is_ai = yes
@@ -550,11 +568,11 @@ je_german_unification = {
 									country_has_primary_culture = cu:south_german
 								}
 								NOR = {
-									THIS = ROOT
-									THIS = c:AUS
-									THIS = c:LUX
-									THIS = c:TRS
-									THIS = c:BNT
+									this = root
+									c:AUS ?= this
+									c:LUX ?= this
+									c:TRS ?= this
+									c:BNT ?= this
 									is_subject_type = subject_type_colony
 									is_subject_type = subject_type_dominion
 									is_subject_type = subject_type_chartered_company
@@ -572,6 +590,13 @@ je_german_unification = {
 					}
 				}
 			}
+		}
+		if = {
+			limit = {
+				c:NGF ?= this
+				exists = c:SGF
+			}
+        	trigger_event = { id = germany_rework.2 } 
 		}		
 	}
 
@@ -598,6 +623,10 @@ je_german_unification = {
 					}
 				}
 				OR = {
+					custom_tooltip = {
+						text = south_germany_not_exists_tt
+						NOT = { exists = c:SGF }
+					}
 					has_technology_researched = pan-nationalism
 					owns_entire_state_region = STATE_ALSACE_LORRAINE
 				}
@@ -628,11 +657,11 @@ je_german_unification = {
 								country_has_primary_culture = cu:south_german
 							}
 							NOR = {
-								THIS = ROOT
-								THIS = c:AUS
-								THIS = c:LUX
-								THIS = c:TRS
-								THIS = c:BNT
+								this = root
+								c:AUS ?= this
+								c:LUX ?= this
+								c:TRS ?= this
+								c:BNT ?= this
 								is_subject_type = subject_type_colony
 								is_subject_type = subject_type_dominion
 								is_subject_type = subject_type_chartered_company
@@ -777,6 +806,10 @@ je_crown_in_the_gutter = {
 			custom_tooltip = {
 				text = je_prussian_unification_fail_tt
 				has_variable = je_unification_fail
+			}
+			custom_tooltip = {
+				text = south_germany_exists_tt
+				exists = c:SGF
 			}
 		}
 	}

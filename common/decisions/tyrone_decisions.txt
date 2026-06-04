@@ -36,6 +36,80 @@
 	}
 }
 
+net_integrate_indonesia_decision = {
+	is_shown = {
+		OR = {
+			c:NET ?= this
+			c:UNL ?= this
+		}
+		any_scope_state = {
+			is_in_geographic_region = geographic_region_indonesia
+			is_incorporated = no
+			NOT = { has_modifier = integrating_indonesia }
+		}
+	}
+
+	possible = {
+		any_scope_state = {
+			is_in_geographic_region = geographic_region_indonesia
+			is_incorporated = yes
+		}
+		any_scope_state = {
+			is_in_geographic_region = geographic_region_indonesia
+			is_incorporated = no
+			NOT = { has_modifier = integrating_indonesia }
+		}
+	}
+
+	when_taken = {
+		every_scope_state = {
+			limit = {
+				is_in_geographic_region = geographic_region_indonesia
+				is_incorporated = no
+				NOT = { has_modifier = integrating_indonesia }
+			}
+			add_modifier = {
+				name = integrating_indonesia
+				days = long_modifier_time
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+tyrone_apply_malaria_downgrade_decision = {
+	is_shown = {
+		is_player = yes
+		has_game_rule = severe_malaria_downgraded
+		NOT = { has_global_variable = malaria_downgraded }
+	}
+
+	possible = {
+		has_game_rule = severe_malaria_downgraded
+		NOT = { has_global_variable = malaria_downgraded }
+	}
+
+	when_taken = {
+		every_state = {
+			limit = {
+				has_state_trait = state_trait_severe_malaria
+			}
+			state_region = {
+				remove_state_trait = state_trait_severe_malaria
+				add_state_trait = state_trait_malaria
+			}
+		}
+		set_global_variable = malaria_downgraded
+	}
+
+	ai_chance = {
+		value = 0
+	}
+}
+
 
 bulgaria_romania_proclaim_empire = {
 	is_shown = {
@@ -8792,7 +8866,6 @@ bol_ai_return_bolivian_states = {
 						state_region = s:STATE_JUJUY
 						NOT = { owner = c:ARG }
 					}
-					state_region = s:STATE_TARAPACA
 					AND = {
 					state_region = s:STATE_ANTOFAGASTA
 						NOT = { owner = c:CHL }
@@ -8849,7 +8922,6 @@ bol_ai_return_bolivian_states = {
 						state_region = s:STATE_JUJUY
 						NOT = { owner = c:ARG }
 					}
-					state_region = s:STATE_TARAPACA
 					AND = {
 					state_region = s:STATE_ANTOFAGASTA
 						NOT = { owner = c:CHL }
@@ -8900,7 +8972,6 @@ bol_ai_return_bolivian_states = {
 							state_region = s:STATE_JUJUY
 							NOT = { owner = c:ARG }
 						}
-						state_region = s:STATE_TARAPACA
 						AND = {
 						state_region = s:STATE_ANTOFAGASTA
 							NOT = { owner = c:CHL }
@@ -8928,7 +8999,6 @@ bol_ai_return_bolivian_states = {
 							state_region = s:STATE_JUJUY
 							NOT = { owner = c:ARG }
 						}
-						state_region = s:STATE_TARAPACA
 						AND = {
 						state_region = s:STATE_ANTOFAGASTA
 							NOT = { owner = c:CHL }
