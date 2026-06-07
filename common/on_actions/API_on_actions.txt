@@ -308,13 +308,8 @@ API_on_weekly = {
             set_local_variable = {
                 name  = index
                 value = {
-                    if = {
-                        limit = {
-                            is_player = no
-                        }
-                        add    = global_country_ranking
-                        modulo = 4
-                    }
+                    add    = global_country_ranking
+                    modulo = 4
                 }
             }
             switch = {
@@ -391,7 +386,9 @@ API_on_weekly = {
 }
 API_on_weekly_driver = {
     effect = {
-        random_country = { # Delays don't work if current scope is null??
+        ordered_country = { # Delays don't work if current scope is null.
+            order_by = global_country_ranking
+            max = 1
             trigger_event = {
                 on_action = API_on_weekly
             }

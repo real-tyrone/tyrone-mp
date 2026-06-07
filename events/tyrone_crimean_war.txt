@@ -165,7 +165,12 @@ crimean_war.3 = {
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
-	trigger = { c:AUS ?= this }
+	trigger = {
+		OR = {
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+	}
 
 	immediate = {
 		save_scope_as = austria_scope
@@ -229,6 +234,7 @@ crimean_war.4 = {
 		c:FRA ?= { save_scope_as = france_scope }
 		c:GBR ?= { save_scope_as = britain_scope }
 		c:AUS ?= { save_scope_as = austria_scope }
+		c:KUK ?= { save_scope_as = austria_scope }
 		c:WAL ?= { save_scope_as = wallachia_scope }
 		c:MOL ?= { save_scope_as = moldavia_scope }
 	}
@@ -259,8 +265,16 @@ crimean_war.4 = {
 					add_target_backers = { c:AUS }
 				}
 				if = {
+					limit = { c:KUK ?= { has_variable = crimean_war_ottoman_side } }
+					add_target_backers = { c:KUK }
+				}
+				if = {
 					limit = { c:AUS ?= { has_variable = crimean_war_russian_side } }
 					add_initiator_backers = { c:AUS }
+				}
+				if = {
+					limit = { c:KUK ?= { has_variable = crimean_war_russian_side } }
+					add_initiator_backers = { c:KUK }
 				}
 			}
 		}
@@ -309,6 +323,7 @@ crimean_war.5 = {
 		c:FRA ?= { save_scope_as = france_scope }
 		c:GBR ?= { save_scope_as = britain_scope }
 		c:AUS ?= { save_scope_as = austria_scope }
+		c:KUK ?= { save_scope_as = austria_scope }
 		c:WAL ?= { save_scope_as = wallachia_scope }
 		c:MOL ?= { save_scope_as = moldavia_scope }
 		c:SER ?= { save_scope_as = serbia_scope }
@@ -588,6 +603,40 @@ crimean_war.5 = {
 			}
 			if = {
 				limit = {
+					has_global_variable = crimean_war_russian_victory
+					c:KUK ?= { has_variable = crimean_war_austria_sides_with_russia }
+					NOT = { exists = c:BOS }
+					exists = s:STATE_BOSNIA.region_state:TUR
+				}
+				create_country = {
+					tag = BOS
+					origin = c:KUK
+					state = s:STATE_BOSNIA.region_state:TUR
+					on_created = {
+						c:KUK ?= {
+							create_diplomatic_pact = {
+								country = PREV
+								type = protectorate
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_global_variable = crimean_war_russian_victory
+					c:KUK ?= { has_variable = crimean_war_austria_sides_with_russia }
+					exists = c:BOS
+				}
+				c:KUK ?= {
+					create_diplomatic_pact = {
+						country = c:BOS
+						type = protectorate
+					}
+				}
+			}
+			if = {
+				limit = {
 					NOT = { exists = c:ROM }
 					exists = c:WAL
 				}
@@ -685,6 +734,7 @@ crimean_war.6 = {
 		c:FRA ?= { save_scope_as = france_scope }
 		c:GBR ?= { save_scope_as = britain_scope }
 		c:AUS ?= { save_scope_as = austria_scope }
+		c:KUK ?= { save_scope_as = austria_scope }
 		c:WAL ?= { save_scope_as = wallachia_scope }
 		c:MOL ?= { save_scope_as = moldavia_scope }
 	}
@@ -717,6 +767,7 @@ crimean_war.7 = {
 		c:FRA ?= { save_scope_as = france_scope }
 		c:GBR ?= { save_scope_as = britain_scope }
 		c:AUS ?= { save_scope_as = austria_scope }
+		c:KUK ?= { save_scope_as = austria_scope }
 		c:WAL ?= { save_scope_as = wallachia_scope }
 		c:MOL ?= { save_scope_as = moldavia_scope }
 	}

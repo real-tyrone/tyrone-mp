@@ -6610,6 +6610,48 @@ spa_ai_return_al_rif = {
 	}
 }
 
+spa_annex_moroccan_west_sahara_and_al_rif = {
+	is_shown = {
+		c:SPA ?= this
+		c:MOR ?= {
+			is_subject_of = ROOT
+		}
+		OR = {
+			exists = s:STATE_WEST_SAHARA.region_state:MOR
+			exists = s:STATE_AL_RIF.region_state:MOR
+		}
+	}
+
+	possible = {
+		c:MOR ?= {
+			is_subject_of = ROOT
+		}
+		OR = {
+			exists = s:STATE_WEST_SAHARA.region_state:MOR
+			exists = s:STATE_AL_RIF.region_state:MOR
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				exists = s:STATE_WEST_SAHARA.region_state:MOR
+			}
+			transfer_state = { STATE = s:STATE_WEST_SAHARA GIVER = c:MOR TAKER = ROOT }
+		}
+		if = {
+			limit = {
+				exists = s:STATE_AL_RIF.region_state:MOR
+			}
+			transfer_state = { STATE = s:STATE_AL_RIF GIVER = c:MOR TAKER = ROOT }
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 spa_establish_spanish_guinea = {
 	is_shown = {
 		has_global_variable = berlin_conference_ended
