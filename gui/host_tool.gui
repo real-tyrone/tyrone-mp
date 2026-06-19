@@ -1,5 +1,5 @@
 @host_tool_width = 1440
-@host_tool_height = 820
+@host_tool_height = 920
 @host_tool_sidebar_width = 300
 @host_tool_column_width = 320
 @host_tool_column_height = 510
@@ -83,6 +83,43 @@ types host_tool_types {
 		}
 	}
 
+	type host_tool_prestige_country_row = button {
+		size = { 292 40 }
+		using = default_button
+		visible = "[Country.IsValid]"
+		tooltipwidget = { FancyTooltip_Country = {} }
+		onmousehierarchyenter = "[AccessHighlightManager.HighlightCountry(Country.Self)]"
+		onmousehierarchyleave = "[AccessHighlightManager.RemoveHighlight]"
+		block "country_onclick" {}
+		block "country_down" {}
+
+		small_flag = {
+			size = { 36 24 }
+			parentanchor = left|vcenter
+			position = { 8 0 }
+			datacontext = "[Country.Self]"
+		}
+
+		textbox = {
+			raw_text = "[Country.GetName]"
+			size = { 170 30 }
+			position = { 54 0 }
+			parentanchor = left|vcenter
+			align = left|nobaseline
+			elide = right
+			using = fontsize_medium
+		}
+
+		textbox = {
+			raw_text = "[Country.GetPrestige|0v]"
+			size = { 56 30 }
+			position = { 224 0 }
+			parentanchor = left|vcenter
+			align = right|nobaseline
+			using = fontsize_medium
+		}
+	}
+
 	type host_tool_region_row = button {
 		size = { 292 40 }
 		using = default_button
@@ -113,10 +150,17 @@ types host_tool_types {
 		block "state_onclick" {}
 		block "state_down" {}
 
+		small_flag = {
+			size = { 36 24 }
+			parentanchor = left|vcenter
+			position = { 8 0 }
+			datacontext = "[State.GetOwner]"
+		}
+
 		textbox = {
 			raw_text = "[State.GetName]"
-			size = { 266 30 }
-			position = { 14 0 }
+			size = { 228 30 }
+			position = { 54 0 }
 			parentanchor = left|vcenter
 			align = left|nobaseline
 			elide = right
@@ -149,6 +193,14 @@ types host_tool_types {
 		parentanchor = hcenter
 		block "confirm_text" { text = "" }
 		block "confirm_gui" {}
+	}
+
+	type host_tool_digit_button = button {
+		using = default_button
+		size = { 92 32 }
+		using = fontsize_medium
+		block "digit_text" { text = "" }
+		block "digit_gui" {}
 	}
 }
 
@@ -190,7 +242,7 @@ window = {
 
 	container = {
 		position = { 28 96 }
-		size = { @host_tool_sidebar_width 700 }
+		size = { @host_tool_sidebar_width 800 }
 		background = {
 			alpha = 0.32
 			using = entry_bg_fancy_dark
@@ -222,6 +274,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -236,6 +293,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -250,6 +312,11 @@ window = {
 					onclick = "[GetVariableSystem.Set('host_tool_tab_states', 'true')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -264,6 +331,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
 					onclick = "[GetVariableSystem.Set('host_tool_tab_release_subject', 'true')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -278,6 +350,106 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Set('host_tool_tab_make_subject', 'true')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
+				}
+			}
+
+			host_tool_tab_button = {
+				blockoverride "tab_text" { text = "host_tool_tab_prestige_check" }
+				blockoverride "tab_onclick" {
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_transfer_host')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_money')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Set('host_tool_tab_prestige_check', 'true')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
+				}
+			}
+
+			host_tool_tab_button = {
+				blockoverride "tab_text" { text = "host_tool_tab_penalty" }
+				blockoverride "tab_onclick" {
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_transfer_host')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_money')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Set('host_tool_tab_penalty', 'true')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
+				}
+			}
+
+			host_tool_tab_button = {
+				blockoverride "tab_text" { text = "host_tool_tab_pop_tools" }
+				blockoverride "tab_onclick" {
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_transfer_host')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_money')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Set('host_tool_tab_pop_tools', 'true')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
+				}
+			}
+
+			host_tool_tab_button = {
+				blockoverride "tab_text" { text = "host_tool_tab_state_pop_tools" }
+				blockoverride "tab_onclick" {
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_transfer_host')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_money')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Set('host_tool_tab_state_pop_tools', 'true')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
+				}
+			}
+
+			host_tool_tab_button = {
+				blockoverride "tab_text" { text = "host_tool_tab_remove_truce" }
+				blockoverride "tab_onclick" {
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_transfer_host')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_money')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Set('host_tool_tab_remove_truce', 'true')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -292,6 +464,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_states')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Set('host_tool_tab_wars', 'true')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
@@ -307,6 +484,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_release_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Set('host_tool_tab_incorporate_state', 'true')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_unincorporate_state')]"
 				}
@@ -322,6 +504,11 @@ window = {
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_make_subject')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_wars')]"
 					onclick = "[GetVariableSystem.Clear('host_tool_tab_incorporate_state')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_prestige_check')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_penalty')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_state_pop_tools')]"
+					onclick = "[GetVariableSystem.Clear('host_tool_tab_remove_truce')]"
 					onclick = "[GetVariableSystem.Set('host_tool_tab_unincorporate_state', 'true')]"
 				}
 			}
@@ -454,7 +641,7 @@ window = {
 					}
 
 					container = {
-						size = { 330 250 }
+						size = { 330 500 }
 						background = { alpha = 0.35 using = entry_bg_fancy_dark }
 						flowcontainer = {
 							direction = vertical
@@ -463,8 +650,167 @@ window = {
 							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_money_amounts" } }
 							textbox = {
 								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').IsSet]"
-								raw_text = "$host_tool_selected_country$ #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.GetName]#!"
+								raw_text = "Selected: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.GetName]#!"
 								using = fontsize_medium
+							}
+
+							container = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').IsSet]"
+								size = { 300 54 }
+								background = {
+									using = text_edit_bg
+									alpha = 0.75
+								}
+
+								icon = {
+									parentanchor = left|vcenter
+									position = { 10 0 }
+									size = { 34 34 }
+									texture = "gfx/interface/icons/generic_icons/money.dds"
+								}
+
+								textbox = {
+									parentanchor = left|vcenter
+									position = { 54 0 }
+									size = { 232 34 }
+									align = right|nobaseline
+									using = fontsize_large
+									raw_text = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_money_amount').GetValue|K+]"
+								}
+							}
+
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').IsSet]"
+								direction = vertical
+								spacing = 4
+
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_1" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_2" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_3" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]"
+										}
+									}
+								}
+
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_4" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_5" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_6" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]"
+										}
+									}
+								}
+
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_7" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_8" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_9" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]"
+										}
+									}
+								}
+
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_clear_amount" }
+										datacontext = "[GetScriptedGui('host_tool_clear_money_amount')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_digit_0" }
+										datacontext = "[GetScriptedGui('host_tool_append_money_digit')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]"
+										}
+									}
+									host_tool_digit_button = {
+										blockoverride "digit_text" { text = "host_tool_reset_amount" }
+										datacontext = "[GetScriptedGui('host_tool_reset_money_amount')]"
+										blockoverride "digit_gui" {
+											enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+											tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+											onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+										}
+									}
+								}
 							}
 
 							flowcontainer = {
@@ -475,28 +821,28 @@ window = {
 									using = default_button_primary_action
 									size = { 96 38 }
 									text = "host_tool_add_100k"
-									datacontext = "[GetScriptedGui('host_tool_confirm_add_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
 								}
 								button = {
 									using = default_button_primary_action
 									size = { 96 38 }
 									text = "host_tool_add_1m"
-									datacontext = "[GetScriptedGui('host_tool_confirm_add_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
 								}
 								button = {
 									using = default_button_primary_action
 									size = { 96 38 }
 									text = "host_tool_add_5m"
-									datacontext = "[GetScriptedGui('host_tool_confirm_add_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)1')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
 								}
 							}
 
@@ -508,28 +854,389 @@ window = {
 									using = default_button
 									size = { 96 38 }
 									text = "host_tool_remove_100k"
-									datacontext = "[GetScriptedGui('host_tool_confirm_remove_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)100000')).End)]"
 								}
 								button = {
 									using = default_button
 									size = { 96 38 }
 									text = "host_tool_remove_1m"
-									datacontext = "[GetScriptedGui('host_tool_confirm_remove_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)1000000')).End)]"
 								}
 								button = {
 									using = default_button
 									size = { 96 38 }
 									text = "host_tool_remove_5m"
-									datacontext = "[GetScriptedGui('host_tool_confirm_remove_money')]"
-									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
-									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
-									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									datacontext = "[GetScriptedGui('host_tool_change_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('up', MakeScopeValue('(CFixedPoint)0')).AddScope('amount', MakeScopeValue('(CFixedPoint)5000000')).End)]"
+								}
+							}
+
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').IsSet]"
+								direction = horizontal
+								spacing = 8
+								button = {
+									using = default_button
+									size = { 96 38 }
+									text = "host_tool_reset_amount"
+									datacontext = "[GetScriptedGui('host_tool_reset_money_amount')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+								}
+								button = {
+									using = default_button_primary_action
+									size = { 96 38 }
+									text = "host_tool_add_custom"
+									datacontext = "[GetScriptedGui('host_tool_confirm_add_custom_money')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+								}
+								button = {
+									using = default_button
+									size = { 96 38 }
+									text = "host_tool_remove_custom"
+									datacontext = "[GetScriptedGui('host_tool_confirm_remove_custom_money')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_player_country').GetCountry.MakeScope).End)]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetVariableSystem.Exists('host_tool_tab_pop_tools')]"
+				direction = vertical
+				spacing = 10
+
+				host_tool_section_title = { blockoverride "title_text" { text = "host_tool_pop_tools_title" } }
+				host_tool_section_desc = { blockoverride "desc_text" { text = "host_tool_pop_tools_desc" } }
+
+				flowcontainer = {
+					direction = horizontal
+					spacing = 14
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_show_player_countries" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_player_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_pop_country').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[ObjectsEqual(Country.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					container = {
+						size = { 330 500 }
+						background = { alpha = 0.35 using = entry_bg_fancy_dark }
+						flowcontainer = {
+							direction = vertical
+							spacing = 10
+							margin = { 12 12 }
+							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_pop_amounts" } }
+							textbox = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').IsSet]"
+								raw_text = "Selected: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.GetName]#!"
+								using = fontsize_medium
+								size = { 296 28 }
+								elide = right
+							}
+
+							container = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').IsSet]"
+								size = { 300 54 }
+								background = { using = text_edit_bg alpha = 0.75 }
+
+								icon = {
+									parentanchor = left|vcenter
+									position = { 10 0 }
+									size = { 34 34 }
+									texture = "gfx/interface/icons/notification_icons/pops.dds"
+								}
+
+								textbox = {
+									parentanchor = left|vcenter
+									position = { 54 0 }
+									size = { 232 34 }
+									align = right|nobaseline
+									using = fontsize_large
+									raw_text = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_pop_amount').GetValue|0v]%"
+								}
+							}
+
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').IsSet]"
+								direction = vertical
+								spacing = 4
+
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_1" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_2" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_3" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" } }
+								}
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_4" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_5" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_6" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" } }
+								}
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_7" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_8" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_9" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" } }
+								}
+								flowcontainer = {
+									direction = horizontal
+									spacing = 8
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_clear_amount" } datacontext = "[GetScriptedGui('host_tool_clear_pop_amount')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_0" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" } }
+									host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_reset_amount" } datacontext = "[GetScriptedGui('host_tool_reset_pop_amount')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" } }
+								}
+							}
+
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').IsSet]"
+								direction = horizontal
+								spacing = 8
+								button = {
+									using = default_button_primary_action
+									size = { 142 38 }
+									text = "host_tool_add_loyalists"
+									datacontext = "[GetScriptedGui('host_tool_confirm_add_loyalists')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+								}
+								button = {
+									using = default_button
+									size = { 142 38 }
+									text = "host_tool_add_radicals"
+									datacontext = "[GetScriptedGui('host_tool_confirm_add_radicals')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_pop_country').GetCountry.MakeScope).End)]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetVariableSystem.Exists('host_tool_tab_state_pop_tools')]"
+				direction = vertical
+				spacing = 10
+
+				host_tool_section_title = { blockoverride "title_text" { text = "host_tool_state_pop_tools_title" } }
+				host_tool_section_desc = { blockoverride "desc_text" { text = "host_tool_state_pop_tools_desc" } }
+
+				flowcontainer = {
+					direction = horizontal
+					spacing = 14
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_show_strategic_regions" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_strategic_regions')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_region_row = {
+													datacontext = "[Scope.GetStrategicRegion]"
+													blockoverride "region_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_strategic_region').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('strategic_region', StrategicRegion.MakeScope).End)]"
+													}
+													blockoverride "region_down" {
+														down = "[ObjectsEqual(StrategicRegion.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_strategic_region').GetStrategicRegion.MakeScope)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_show_region_states" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_region_states')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_state_row = {
+													datacontext = "[Scope.GetState]"
+													blockoverride "state_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_region_state').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', State.MakeScope).End)]"
+													}
+													blockoverride "state_down" {
+														down = "[ObjectsEqual(State.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					container = {
+						size = { 330 500 }
+						background = { alpha = 0.35 using = entry_bg_fancy_dark }
+						flowcontainer = {
+							direction = vertical
+							spacing = 10
+							margin = { 12 12 }
+							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_pop_amounts" } }
+							textbox = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								raw_text = "Selected: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.GetName]#!"
+								using = fontsize_medium
+								size = { 296 28 }
+								elide = right
+							}
+
+							container = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								size = { 300 54 }
+								background = { using = text_edit_bg alpha = 0.75 }
+
+								icon = {
+									parentanchor = left|vcenter
+									position = { 10 0 }
+									size = { 34 34 }
+									texture = "gfx/interface/icons/notification_icons/pops.dds"
+								}
+
+								textbox = {
+									parentanchor = left|vcenter
+									position = { 54 0 }
+									size = { 232 34 }
+									align = right|nobaseline
+									using = fontsize_large
+									raw_text = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_pop_amount').GetValue|0v]%"
+								}
+							}
+
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								direction = horizontal
+								spacing = 8
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_clear_amount" } datacontext = "[GetScriptedGui('host_tool_clear_pop_amount')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_0" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)0')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_reset_amount" } datacontext = "[GetScriptedGui('host_tool_reset_pop_amount')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]" } }
+							}
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								direction = horizontal
+								spacing = 8
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_1" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)1')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_2" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)2')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_3" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)3')).End)]" } }
+							}
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								direction = horizontal
+								spacing = 8
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_4" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)4')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_5" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)5')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_6" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)6')).End)]" } }
+							}
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								direction = horizontal
+								spacing = 8
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_7" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)7')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_8" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)8')).End)]" } }
+								host_tool_digit_button = { blockoverride "digit_text" { text = "host_tool_digit_9" } datacontext = "[GetScriptedGui('host_tool_append_pop_digit')]" blockoverride "digit_gui" { enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('digit', MakeScopeValue('(CFixedPoint)9')).End)]" } }
+							}
+							flowcontainer = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').IsSet]"
+								direction = horizontal
+								spacing = 8
+								button = {
+									using = default_button_primary_action
+									size = { 142 38 }
+									text = "host_tool_add_loyalists"
+									datacontext = "[GetScriptedGui('host_tool_confirm_add_loyalists_state')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
+								}
+								button = {
+									using = default_button
+									size = { 142 38 }
+									text = "host_tool_add_radicals"
+									datacontext = "[GetScriptedGui('host_tool_confirm_add_radicals_state')]"
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('state', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_region_state').GetState.MakeScope).End)]"
 								}
 							}
 						}
@@ -1108,6 +1815,468 @@ window = {
 													datacontext = "[Scope.GetState]"
 													blockoverride "state_onclick" {
 														onclick = "[GetScriptedGui('host_tool_confirm_unincorporate_state').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_unincorporation_country').GetCountry.MakeScope).AddScope('state', State.MakeScope).End)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetVariableSystem.Exists('host_tool_tab_prestige_check')]"
+				direction = vertical
+				spacing = 10
+
+				host_tool_section_title = { blockoverride "title_text" { text = "host_tool_prestige_check_title" } }
+				host_tool_section_desc = { blockoverride "desc_text" { text = "host_tool_prestige_check_desc" } }
+
+				flowcontainer = {
+					direction = horizontal
+					spacing = 14
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_prestige_left_column" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_player_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_prestige_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_toggle_prestige_left_country').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[GetScriptedGui('host_tool_is_prestige_left_selected').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					container = {
+						size = { 330 510 }
+						background = {
+							alpha = 0.35
+							using = entry_bg_fancy_dark
+						}
+
+						flowcontainer = {
+							direction = vertical
+							spacing = 14
+							margin = { 16 16 }
+
+							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_prestige_summary" } }
+
+							container = {
+								size = { 298 58 }
+								background = {
+									using = text_edit_bg
+									alpha = 0.55
+								}
+
+								textbox = {
+									position = { 12 8 }
+									size = { 120 24 }
+									align = left|nobaseline
+									using = fontsize_medium
+									text = "host_tool_prestige_left_total"
+								}
+								textbox = {
+									position = { 150 8 }
+									size = { 132 24 }
+									align = right|nobaseline
+									using = fontsize_large
+									raw_text = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_prestige_left_total').GetValue|0v]"
+								}
+							}
+
+							container = {
+								size = { 298 58 }
+								background = {
+									using = text_edit_bg
+									alpha = 0.55
+								}
+
+								textbox = {
+									position = { 12 8 }
+									size = { 120 24 }
+									align = left|nobaseline
+									using = fontsize_medium
+									text = "host_tool_prestige_right_total"
+								}
+								textbox = {
+									position = { 150 8 }
+									size = { 132 24 }
+									align = right|nobaseline
+									using = fontsize_large
+									raw_text = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_prestige_right_total').GetValue|0v]"
+								}
+							}
+
+							container = {
+								size = { 298 96 }
+								background = {
+									alpha = 0.45
+									using = entry_bg_fancy_dark
+								}
+
+								textbox = {
+									visible = "[GetScriptedGui('host_tool_prestige_left_over_double').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+									position = { 14 14 }
+									size = { 270 68 }
+									align = hcenter|vcenter
+									using = fontsize_medium
+									multiline = yes
+									text = "host_tool_prestige_warning_left"
+								}
+
+								textbox = {
+									visible = "[GetScriptedGui('host_tool_prestige_right_over_double').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+									position = { 14 14 }
+									size = { 270 68 }
+									align = hcenter|vcenter
+									using = fontsize_medium
+									multiline = yes
+									text = "host_tool_prestige_warning_right"
+								}
+
+								textbox = {
+									visible = "[And(Not(GetScriptedGui('host_tool_prestige_left_over_double').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)), Not(GetScriptedGui('host_tool_prestige_right_over_double').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)))]"
+									position = { 14 14 }
+									size = { 270 68 }
+									align = hcenter|vcenter
+									using = fontsize_medium
+									multiline = yes
+									text = "host_tool_prestige_balanced"
+								}
+							}
+
+							button = {
+								using = default_button
+								size = { 268 42 }
+								parentanchor = hcenter
+								text = "host_tool_prestige_clear"
+								datacontext = "[GetScriptedGui('host_tool_clear_prestige_gui')]"
+								enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+								tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+								onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).End)]"
+							}
+						}
+					}
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_prestige_right_column" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_player_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_prestige_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_toggle_prestige_right_country').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[GetScriptedGui('host_tool_is_prestige_right_selected').IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetVariableSystem.Exists('host_tool_tab_penalty')]"
+				direction = vertical
+				spacing = 10
+
+				host_tool_section_title = { blockoverride "title_text" { text = "host_tool_penalty_title" } }
+				host_tool_section_desc = { blockoverride "desc_text" { text = "host_tool_penalty_desc" } }
+
+				flowcontainer = {
+					direction = horizontal
+					spacing = 14
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_show_player_countries" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_player_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_penalty_country').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[ObjectsEqual(Country.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					container = {
+						size = { 330 510 }
+						background = {
+							alpha = 0.35
+							using = entry_bg_fancy_dark
+						}
+
+						flowcontainer = {
+							direction = vertical
+							spacing = 12
+							margin = { 16 16 }
+
+							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_penalty_levels" } }
+
+							textbox = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								size = { 296 34 }
+								raw_text = "Selected: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.GetName]#!"
+								using = fontsize_medium
+								align = left|nobaseline
+								elide = right
+							}
+
+							textbox = {
+								visible = "[Not(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet)]"
+								size = { 296 64 }
+								text = "host_tool_penalty_select_country"
+								using = fontsize_medium
+								align = hcenter|vcenter
+								multiline = yes
+							}
+
+							host_tool_confirm_button = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								blockoverride "confirm_text" { text = "host_tool_apply_penalty_1" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_apply_penalty')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)1')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)1')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)1')).End)]"
+								}
+							}
+
+							host_tool_confirm_button = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								blockoverride "confirm_text" { text = "host_tool_apply_penalty_2" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_apply_penalty')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)2')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)2')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)2')).End)]"
+								}
+							}
+
+							host_tool_confirm_button = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								blockoverride "confirm_text" { text = "host_tool_apply_penalty_3" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_apply_penalty')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)3')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)3')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)3')).End)]"
+								}
+							}
+
+							host_tool_confirm_button = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								blockoverride "confirm_text" { text = "host_tool_apply_penalty_4" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_apply_penalty')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)4')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)4')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)4')).End)]"
+								}
+							}
+
+							host_tool_confirm_button = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').IsSet]"
+								blockoverride "confirm_text" { text = "host_tool_apply_penalty_5" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_apply_penalty')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)5')).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)5')).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_penalty_country').GetCountry.MakeScope).AddScope('level', MakeScopeValue('(CFixedPoint)5')).End)]"
+								}
+							}
+						}
+					}
+				}
+			}
+
+			flowcontainer = {
+				visible = "[GetVariableSystem.Exists('host_tool_tab_remove_truce')]"
+				direction = vertical
+				spacing = 10
+
+				host_tool_section_title = { blockoverride "title_text" { text = "host_tool_remove_truce_title" } }
+				host_tool_section_desc = { blockoverride "desc_text" { text = "host_tool_remove_truce_desc" } }
+
+				flowcontainer = {
+					direction = horizontal
+					spacing = 14
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_truce_first_country" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_truce_country_a').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[ObjectsEqual(Country.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').GetCountry.MakeScope)]"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					container = {
+						size = { 330 510 }
+						background = {
+							alpha = 0.35
+							using = entry_bg_fancy_dark
+						}
+
+						flowcontainer = {
+							direction = vertical
+							spacing = 14
+							margin = { 16 16 }
+
+							host_tool_column_label = { blockoverride "label_text" { text = "host_tool_confirm_remove_truce_button" } }
+
+							textbox = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').IsSet]"
+								size = { 296 32 }
+								raw_text = "A: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').GetCountry.GetName]#!"
+								using = fontsize_medium
+								align = left|nobaseline
+								elide = right
+							}
+
+							textbox = {
+								visible = "[GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').IsSet]"
+								size = { 296 32 }
+								raw_text = "B: #v [GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').GetCountry.GetName]#!"
+								using = fontsize_medium
+								align = left|nobaseline
+								elide = right
+							}
+
+							host_tool_confirm_button = {
+								visible = "[And(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').IsSet, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').IsSet)]"
+								blockoverride "confirm_text" { text = "host_tool_confirm_remove_truce_button" }
+								datacontext = "[GetScriptedGui('host_tool_confirm_remove_truce')]"
+								blockoverride "confirm_gui" {
+									enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target_a', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').GetCountry.MakeScope).AddScope('target_b', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').GetCountry.MakeScope).End)]"
+									tooltip = "[ScriptedGui.BuildTooltip(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target_a', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').GetCountry.MakeScope).AddScope('target_b', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').GetCountry.MakeScope).End)]"
+									onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target_a', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_a').GetCountry.MakeScope).AddScope('target_b', GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').GetCountry.MakeScope).End)]"
+								}
+							}
+						}
+					}
+
+					host_tool_list_column = {
+						blockoverride "column_content" {
+							flowcontainer = {
+								direction = vertical
+								spacing = 8
+								margin = { 12 12 }
+								host_tool_column_label = { blockoverride "label_text" { text = "host_tool_truce_second_country" } }
+								scrollarea = {
+									size = { 296 430 }
+									scrollbarpolicy_horizontal = always_off
+									scrollbar_vertical = { using = vertical_scrollbar }
+									scrollwidget = {
+										dynamicgridbox = {
+											datamodel = "[GetGlobalList('host_tool_countries')]"
+											datamodel_wrap = 1
+											flipdirection = yes
+											minimumsize = { 292 900 }
+											item = {
+												host_tool_country_row = {
+													datacontext = "[Scope.GetCountry]"
+													blockoverride "country_onclick" {
+														onclick = "[GetScriptedGui('host_tool_select_truce_country_b').Execute(GuiScope.SetRoot(GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope).AddScope('target', Country.MakeScope).End)]"
+													}
+													blockoverride "country_down" {
+														down = "[ObjectsEqual(Country.MakeScope, GetMetaPlayer.GetPlayedOrObservedCountry.MakeScope.Var('host_tool_selected_truce_country_b').GetCountry.MakeScope)]"
 													}
 												}
 											}

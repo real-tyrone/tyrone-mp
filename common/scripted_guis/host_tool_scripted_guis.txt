@@ -263,6 +263,242 @@ host_tool_select_player_country = {
 			name = host_tool_selected_player_country
 			value = scope:target
 		}
+		if = {
+			limit = {
+				NOT = { has_variable = host_tool_money_amount }
+			}
+			set_variable = {
+				name = host_tool_money_amount
+				value = 100000
+			}
+		}
+	}
+}
+
+host_tool_change_money_amount = {
+	scope = country
+	saved_scopes = { up amount }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		scope:amount > 0
+	}
+
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_variable = host_tool_money_amount }
+			}
+			set_variable = {
+				name = host_tool_money_amount
+				value = 0
+			}
+		}
+		if = {
+			limit = {
+				scope:up = 1
+			}
+			change_variable = {
+				name = host_tool_money_amount
+				add = scope:amount
+			}
+		}
+		else_if = {
+			limit = {
+				var:host_tool_money_amount >= scope:amount
+			}
+			change_variable = {
+				name = host_tool_money_amount
+				subtract = scope:amount
+			}
+		}
+		else = {
+			set_variable = {
+				name = host_tool_money_amount
+				value = 0
+			}
+		}
+	}
+}
+
+host_tool_reset_money_amount = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_money_amount
+			value = 100000
+		}
+	}
+}
+
+host_tool_clear_money_amount = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_money_amount
+			value = 0
+		}
+	}
+}
+
+host_tool_append_money_digit = {
+	scope = country
+	saved_scopes = { digit }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		scope:digit >= 0
+		scope:digit <= 9
+		trigger_if = {
+			limit = {
+				has_variable = host_tool_money_amount
+			}
+			var:host_tool_money_amount < 10000000000
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_variable = host_tool_money_amount }
+			}
+			set_variable = {
+				name = host_tool_money_amount
+				value = 0
+			}
+		}
+		change_variable = {
+			name = host_tool_money_amount
+			multiply = 10
+		}
+		change_variable = {
+			name = host_tool_money_amount
+			add = scope:digit
+		}
+	}
+}
+
+host_tool_select_pop_country = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			host_tool_is_player_country = yes
+		}
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_selected_pop_country
+			value = scope:target
+		}
+		if = {
+			limit = {
+				NOT = { has_variable = host_tool_pop_amount }
+			}
+			set_variable = {
+				name = host_tool_pop_amount
+				value = 1
+			}
+		}
+	}
+}
+
+host_tool_reset_pop_amount = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_pop_amount
+			value = 1
+		}
+	}
+}
+
+host_tool_clear_pop_amount = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_pop_amount
+			value = 0
+		}
+	}
+}
+
+host_tool_append_pop_digit = {
+	scope = country
+	saved_scopes = { digit }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		scope:digit >= 0
+		scope:digit <= 9
+		trigger_if = {
+			limit = {
+				has_variable = host_tool_pop_amount
+			}
+			OR = {
+				var:host_tool_pop_amount < 10
+				AND = {
+					var:host_tool_pop_amount = 10
+					scope:digit = 0
+				}
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_variable = host_tool_pop_amount }
+			}
+			set_variable = {
+				name = host_tool_pop_amount
+				value = 0
+			}
+		}
+		change_variable = {
+			name = host_tool_pop_amount
+			multiply = 10
+		}
+		change_variable = {
+			name = host_tool_pop_amount
+			add = scope:digit
+		}
 	}
 }
 
@@ -470,6 +706,233 @@ host_tool_select_unincorporation_country = {
 	}
 }
 
+host_tool_select_penalty_country = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			host_tool_is_player_country = yes
+		}
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_selected_penalty_country
+			value = scope:target
+		}
+	}
+}
+
+host_tool_select_truce_country_a = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			NOT = { is_country_type = decentralized }
+		}
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_selected_truce_country_a
+			value = scope:target
+		}
+	}
+}
+
+host_tool_select_truce_country_b = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			NOT = { is_country_type = decentralized }
+		}
+	}
+
+	effect = {
+		set_variable = {
+			name = host_tool_selected_truce_country_b
+			value = scope:target
+		}
+	}
+}
+
+host_tool_toggle_prestige_left_country = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			host_tool_is_player_country = yes
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				is_target_in_global_variable_list = {
+					name = host_tool_prestige_left_countries
+					target = scope:target
+				}
+			}
+			remove_list_global_variable = {
+				name = host_tool_prestige_left_countries
+				target = scope:target
+			}
+		}
+		else = {
+			remove_list_global_variable = {
+				name = host_tool_prestige_right_countries
+				target = scope:target
+			}
+			add_to_global_variable_list = {
+				name = host_tool_prestige_left_countries
+				target = scope:target
+			}
+		}
+		host_tool_recalculate_prestige_check = yes
+	}
+}
+
+host_tool_toggle_prestige_right_country = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			host_tool_is_player_country = yes
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				is_target_in_global_variable_list = {
+					name = host_tool_prestige_right_countries
+					target = scope:target
+				}
+			}
+			remove_list_global_variable = {
+				name = host_tool_prestige_right_countries
+				target = scope:target
+			}
+		}
+		else = {
+			remove_list_global_variable = {
+				name = host_tool_prestige_left_countries
+				target = scope:target
+			}
+			add_to_global_variable_list = {
+				name = host_tool_prestige_right_countries
+				target = scope:target
+			}
+		}
+		host_tool_recalculate_prestige_check = yes
+	}
+}
+
+host_tool_clear_prestige_gui = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	effect = {
+		host_tool_clear_prestige_check = yes
+	}
+}
+
+host_tool_is_prestige_left_selected = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		is_target_in_global_variable_list = {
+			name = host_tool_prestige_left_countries
+			target = scope:target
+		}
+	}
+}
+
+host_tool_is_prestige_right_selected = {
+	scope = country
+	saved_scopes = { target }
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		is_target_in_global_variable_list = {
+			name = host_tool_prestige_right_countries
+			target = scope:target
+		}
+	}
+}
+
+host_tool_prestige_left_over_double = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		has_variable = host_tool_prestige_left_total
+		has_variable = host_tool_prestige_right_double
+		var:host_tool_prestige_left_total > var:host_tool_prestige_right_double
+	}
+}
+
+host_tool_prestige_right_over_double = {
+	scope = country
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		has_variable = host_tool_prestige_right_total
+		has_variable = host_tool_prestige_left_double
+		var:host_tool_prestige_right_total > var:host_tool_prestige_left_double
+	}
+}
+
 host_tool_confirm_transfer_host = {
 	scope = country
 	saved_scopes = { target }
@@ -531,6 +994,50 @@ host_tool_confirm_remove_money = {
 
 	effect = {
 		host_tool_remove_money_from_target = yes
+	}
+}
+
+host_tool_confirm_add_custom_money = {
+	scope = country
+	saved_scopes = { target }
+	confirm_title = host_tool_confirm_add_money_title
+	confirm_text = host_tool_confirm_add_custom_money_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = { host_tool_is_player_country = yes }
+		has_variable = host_tool_money_amount
+		var:host_tool_money_amount > 0
+	}
+
+	effect = {
+		host_tool_add_custom_money_to_target = yes
+	}
+}
+
+host_tool_confirm_remove_custom_money = {
+	scope = country
+	saved_scopes = { target }
+	confirm_title = host_tool_confirm_remove_money_title
+	confirm_text = host_tool_confirm_remove_custom_money_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = { host_tool_is_player_country = yes }
+		has_variable = host_tool_money_amount
+		var:host_tool_money_amount > 0
+	}
+
+	effect = {
+		host_tool_remove_custom_money_from_target = yes
 	}
 }
 
@@ -836,5 +1343,144 @@ host_tool_confirm_unincorporate_state = {
 
 	effect = {
 		host_tool_unincorporate_state_target = yes
+	}
+}
+
+host_tool_confirm_apply_penalty = {
+	scope = country
+	saved_scopes = { target level }
+	confirm_title = host_tool_confirm_apply_penalty_title
+	confirm_text = host_tool_confirm_apply_penalty_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = {
+			host_tool_is_player_country = yes
+		}
+		scope:level >= 1
+		scope:level <= 5
+	}
+
+	effect = {
+		host_tool_apply_penalty_to_target = yes
+	}
+}
+
+host_tool_confirm_add_loyalists = {
+	scope = country
+	saved_scopes = { target }
+	confirm_title = host_tool_confirm_add_loyalists_title
+	confirm_text = host_tool_confirm_add_loyalists_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = { host_tool_is_player_country = yes }
+		has_variable = host_tool_pop_amount
+		var:host_tool_pop_amount > 0
+		var:host_tool_pop_amount <= 100
+	}
+
+	effect = {
+		host_tool_add_loyalists_to_target = yes
+	}
+}
+
+host_tool_confirm_add_radicals = {
+	scope = country
+	saved_scopes = { target }
+	confirm_title = host_tool_confirm_add_radicals_title
+	confirm_text = host_tool_confirm_add_radicals_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target
+		scope:target = { host_tool_is_player_country = yes }
+		has_variable = host_tool_pop_amount
+		var:host_tool_pop_amount > 0
+		var:host_tool_pop_amount <= 100
+	}
+
+	effect = {
+		host_tool_add_radicals_to_target = yes
+	}
+}
+
+host_tool_confirm_add_loyalists_state = {
+	scope = country
+	saved_scopes = { state }
+	confirm_title = host_tool_confirm_add_loyalists_state_title
+	confirm_text = host_tool_confirm_add_loyalists_state_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:state
+		has_variable = host_tool_pop_amount
+		var:host_tool_pop_amount > 0
+		var:host_tool_pop_amount <= 100
+	}
+
+	effect = {
+		host_tool_add_loyalists_to_state = yes
+	}
+}
+
+host_tool_confirm_add_radicals_state = {
+	scope = country
+	saved_scopes = { state }
+	confirm_title = host_tool_confirm_add_radicals_state_title
+	confirm_text = host_tool_confirm_add_radicals_state_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:state
+		has_variable = host_tool_pop_amount
+		var:host_tool_pop_amount > 0
+		var:host_tool_pop_amount <= 100
+	}
+
+	effect = {
+		host_tool_add_radicals_to_state = yes
+	}
+}
+
+host_tool_confirm_remove_truce = {
+	scope = country
+	saved_scopes = { target_a target_b }
+	confirm_title = host_tool_confirm_remove_truce_title
+	confirm_text = host_tool_confirm_remove_truce_text
+
+	is_shown = {
+		host_tool_is_current_host = yes
+	}
+
+	is_valid = {
+		exists = scope:target_a
+		exists = scope:target_b
+		NOT = { scope:target_a = scope:target_b }
+		OR = {
+			scope:target_a = { has_truce_with = scope:target_b }
+			scope:target_b = { has_truce_with = scope:target_a }
+		}
+	}
+
+	effect = {
+		host_tool_remove_truce_between_targets = yes
 	}
 }
