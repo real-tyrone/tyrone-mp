@@ -1,0 +1,921 @@
+host_tool_clear_runtime_selections = {
+	clear_global_variable_list ?= host_tool_player_countries
+	clear_global_variable_list ?= host_tool_countries
+	clear_global_variable_list ?= host_tool_subject_overlords
+	clear_global_variable_list ?= host_tool_subjects
+	clear_global_variable_list ?= host_tool_strategic_regions
+	clear_global_variable_list ?= host_tool_region_states
+	clear_global_variable_list ?= host_tool_region_countries
+	clear_global_variable_list ?= host_tool_region_capital_countries
+	clear_global_variable_list ?= host_tool_country_wars
+	clear_global_variable_list ?= host_tool_incorporable_states
+	clear_global_variable_list ?= host_tool_unincorporable_states
+	clear_global_variable_list ?= host_tool_prestige_left_countries
+	clear_global_variable_list ?= host_tool_prestige_right_countries
+	remove_variable = host_tool_selected_section
+	remove_variable = host_tool_selected_amount
+	remove_variable = host_tool_money_amount
+	remove_variable = host_tool_prestige_left_total
+	remove_variable = host_tool_prestige_right_total
+	remove_variable = host_tool_prestige_left_double
+	remove_variable = host_tool_prestige_right_double
+	remove_variable = host_tool_pending_action
+	remove_variable = host_tool_selected_player_country
+	remove_variable = host_tool_selected_strategic_region
+	remove_variable = host_tool_selected_region_state
+	remove_variable = host_tool_selected_region_country
+	remove_variable = host_tool_selected_subject_overlord
+	remove_variable = host_tool_selected_subject
+	remove_variable = host_tool_selected_subject_type
+	remove_variable = host_tool_selected_war_country
+	remove_variable = host_tool_selected_war
+	remove_variable = host_tool_selected_incorporation_country
+	remove_variable = host_tool_selected_unincorporation_country
+	remove_variable = host_tool_selected_penalty_country
+	remove_variable = host_tool_selected_pop_country
+	remove_variable = host_tool_pop_amount
+	remove_variable = host_tool_pop_scaled_amount
+	remove_variable = host_tool_selected_truce_country_a
+	remove_variable = host_tool_selected_truce_country_b
+}
+
+host_tool_refresh_runtime_lists = {
+	clear_global_variable_list ?= host_tool_player_countries
+	clear_global_variable_list ?= host_tool_countries
+	clear_global_variable_list ?= host_tool_subject_overlords
+	clear_global_variable_list ?= host_tool_strategic_regions
+	clear_global_variable_list ?= host_tool_incorporable_states
+	clear_global_variable_list ?= host_tool_unincorporable_states
+	remove_variable = host_tool_selected_incorporation_country
+	remove_variable = host_tool_selected_unincorporation_country
+	make_strategic_region_list = yes
+	save_scope_as = host_tool_host
+
+	every_country = {
+		limit = {
+			host_tool_is_player_country = yes
+		}
+		root = {
+			add_to_global_variable_list = {
+				name = host_tool_player_countries
+				target = prev
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			NOT = { is_country_type = decentralized }
+		}
+		root = {
+			add_to_global_variable_list = {
+				name = host_tool_countries
+				target = prev
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			host_tool_is_gp_or_major = yes
+			host_tool_has_subjects = yes
+		}
+		root = {
+			add_to_global_variable_list = {
+				name = host_tool_subject_overlords
+				target = prev
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			NOT = { is_country_type = decentralized }
+		}
+		every_scope_state = {
+			limit = {
+				state_region = {
+					is_state_region_land = yes
+				}
+			}
+			state_region = {
+				region = {
+					save_temporary_scope_as = host_tool_iter_region
+					if = {
+						limit = {
+							scope:host_tool_host = {
+								NOT = {
+									is_target_in_global_variable_list = {
+										name = host_tool_strategic_regions
+										target = scope:host_tool_iter_region
+									}
+								}
+							}
+						}
+						scope:host_tool_host = {
+							add_to_global_variable_list = {
+								name = host_tool_strategic_regions
+								target = scope:host_tool_iter_region
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	host_tool_recalculate_prestige_check = yes
+}
+
+host_tool_clear_prestige_check = {
+	clear_global_variable_list ?= host_tool_prestige_left_countries
+	clear_global_variable_list ?= host_tool_prestige_right_countries
+	host_tool_recalculate_prestige_check = yes
+}
+
+host_tool_recalculate_prestige_check = {
+	set_variable = {
+		name = host_tool_prestige_left_total
+		value = 0
+	}
+	set_variable = {
+		name = host_tool_prestige_right_total
+		value = 0
+	}
+	save_scope_as = host_tool_host
+
+	every_in_global_list = {
+		variable = host_tool_prestige_left_countries
+		save_temporary_scope_as = host_tool_prestige_country
+		scope:host_tool_host = {
+			change_variable = {
+				name = host_tool_prestige_left_total
+				add = scope:host_tool_prestige_country.prestige
+			}
+		}
+	}
+
+	every_in_global_list = {
+		variable = host_tool_prestige_right_countries
+		save_temporary_scope_as = host_tool_prestige_country
+		scope:host_tool_host = {
+			change_variable = {
+				name = host_tool_prestige_right_total
+				add = scope:host_tool_prestige_country.prestige
+			}
+		}
+	}
+
+	set_variable = {
+		name = host_tool_prestige_left_double
+		value = var:host_tool_prestige_left_total
+	}
+	change_variable = {
+		name = host_tool_prestige_left_double
+		multiply = 2
+	}
+	set_variable = {
+		name = host_tool_prestige_right_double
+		value = var:host_tool_prestige_right_total
+	}
+	change_variable = {
+		name = host_tool_prestige_right_double
+		multiply = 2
+	}
+}
+
+host_tool_build_states_and_countries_in_region = {
+	clear_global_variable_list ?= host_tool_region_states
+	clear_global_variable_list ?= host_tool_region_countries
+	clear_global_variable_list ?= host_tool_region_capital_countries
+	remove_variable = host_tool_selected_region_state
+	remove_variable = host_tool_selected_region_country
+	remove_variable = host_tool_selected_war_country
+	remove_variable = host_tool_selected_war
+	save_scope_as = host_tool_host
+
+	every_country = {
+		limit = {
+			NOT = { is_country_type = decentralized }
+		}
+		every_scope_state = {
+			limit = {
+				state_region = {
+					region = scope:strategic_region
+				}
+			}
+			save_temporary_scope_as = host_tool_iter_state
+			scope:host_tool_host = {
+				add_to_global_variable_list = {
+					name = host_tool_region_states
+					target = scope:host_tool_iter_state
+				}
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			NOT = { is_country_type = decentralized }
+			any_scope_state = {
+				state_region = {
+					region = scope:strategic_region
+				}
+			}
+		}
+		save_temporary_scope_as = host_tool_iter_country
+		if = {
+			limit = {
+				scope:host_tool_host = {
+					NOT = {
+						is_target_in_global_variable_list = {
+							name = host_tool_region_countries
+							target = scope:host_tool_iter_country
+						}
+					}
+				}
+			}
+			scope:host_tool_host = {
+				add_to_global_variable_list = {
+					name = host_tool_region_countries
+					target = scope:host_tool_iter_country
+				}
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			NOT = { is_country_type = decentralized }
+			capital = {
+				region = scope:strategic_region
+			}
+		}
+		save_temporary_scope_as = host_tool_iter_country
+		scope:host_tool_host = {
+			add_to_global_variable_list = {
+				name = host_tool_region_capital_countries
+				target = scope:host_tool_iter_country
+			}
+		}
+	}
+}
+
+host_tool_build_subjects_of_overlord = {
+	clear_global_variable_list ?= host_tool_subjects
+	remove_variable = host_tool_selected_subject
+
+	scope:overlord = {
+		every_subject_or_below = {
+			root = {
+				add_to_global_variable_list = {
+					name = host_tool_subjects
+					target = prev
+				}
+			}
+		}
+	}
+}
+
+host_tool_build_wars_of_country = {
+	clear_global_variable_list ?= host_tool_country_wars
+	remove_variable = host_tool_selected_war
+
+	scope:target = {
+		every_scope_war = {
+			root = {
+				add_to_global_variable_list = {
+					name = host_tool_country_wars
+					target = prev
+				}
+			}
+		}
+	}
+}
+
+host_tool_build_incorporable_states_of_country = {
+	clear_global_variable_list ?= host_tool_incorporable_states
+
+	scope:target = {
+		every_scope_state = {
+			limit = {
+				is_incorporated = no
+			}
+			root = {
+				add_to_global_variable_list = {
+					name = host_tool_incorporable_states
+					target = prev
+				}
+			}
+		}
+	}
+}
+
+host_tool_build_unincorporable_states_of_country = {
+	clear_global_variable_list ?= host_tool_unincorporable_states
+
+	scope:target = {
+		every_scope_state = {
+			limit = {
+				is_incorporated = yes
+			}
+			root = {
+				add_to_global_variable_list = {
+					name = host_tool_unincorporable_states
+					target = prev
+				}
+			}
+		}
+	}
+}
+
+host_tool_assign_initial_host_from_game_rule = {
+	every_country = {
+		limit = {
+			has_variable = host_tool_current_host
+		}
+		remove_variable = host_tool_current_host
+	}
+
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_gbr }
+		c:GBR ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_fra }
+		c:FRA ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_pru }
+		c:PRU ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_aus }
+		c:AUS ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_rus }
+		c:RUS ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_usa }
+		c:USA ?= { set_variable = host_tool_current_host }
+	}
+	if = {
+		limit = { has_game_rule = host_tool_initial_host_tur }
+		c:TUR ?= { set_variable = host_tool_current_host }
+	}
+}
+
+host_tool_grant_host_tool = {
+	every_country = {
+		limit = {
+			has_variable = host_tool_current_host
+		}
+		remove_variable = host_tool_current_host
+		host_tool_clear_runtime_selections = yes
+	}
+
+	set_variable = host_tool_current_host
+	host_tool_refresh_runtime_lists = yes
+
+	if = {
+		limit = {
+			NOT = { has_journal_entry = je_host_tool }
+		}
+		add_journal_entry = {
+			type = je_host_tool
+		}
+	}
+}
+
+host_tool_broadcast_transfer_host = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_transfer_host_notification
+	}
+}
+
+host_tool_broadcast_money_added = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_money_added_notification
+	}
+}
+
+host_tool_broadcast_money_removed = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_money_removed_notification
+	}
+}
+
+host_tool_broadcast_state_transferred = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_state_transferred_notification
+	}
+}
+
+host_tool_broadcast_subject_released = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_subject_released_notification
+	}
+}
+
+host_tool_broadcast_subject_created = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_subject_created_notification
+	}
+}
+
+host_tool_broadcast_war_white_peace = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_war_white_peace_notification
+	}
+}
+
+host_tool_broadcast_war_capitulation = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_war_capitulation_notification
+	}
+}
+
+host_tool_broadcast_state_incorporated = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_state_incorporated_notification
+	}
+}
+
+host_tool_broadcast_state_unincorporated = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_state_unincorporated_notification
+	}
+}
+
+host_tool_broadcast_penalty_applied = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_penalty_applied_notification
+	}
+}
+
+host_tool_broadcast_loyalists_added = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_loyalists_added_notification
+	}
+}
+
+host_tool_broadcast_radicals_added = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_radicals_added_notification
+	}
+}
+
+host_tool_broadcast_state_loyalists_added = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_state_loyalists_added_notification
+	}
+}
+
+host_tool_broadcast_state_radicals_added = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_state_radicals_added_notification
+	}
+}
+
+host_tool_broadcast_truce_removed = {
+	every_country = {
+		limit = { is_player = yes }
+		post_notification = host_tool_truce_removed_notification
+	}
+}
+
+host_tool_remove_penalty_modifiers_from_target = {
+	scope:target = {
+		remove_modifier = host_tool_penalty_1
+		remove_modifier = host_tool_penalty_2
+		remove_modifier = host_tool_penalty_3
+		remove_modifier = host_tool_penalty_4
+		remove_modifier = host_tool_penalty_5
+	}
+}
+
+host_tool_transfer_host_tool_to_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	scope:target = {
+		host_tool_grant_host_tool = yes
+	}
+	host_tool_broadcast_transfer_host = yes
+}
+
+host_tool_add_money_to_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_treasury = scope:amount
+	}
+	save_scope_value_as = {
+		name = host_tool_amount
+		value = scope:amount
+	}
+	host_tool_broadcast_money_added = yes
+}
+
+host_tool_remove_money_from_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_treasury = {
+			value = scope:amount
+			multiply = -1
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_amount
+		value = scope:amount
+	}
+	host_tool_broadcast_money_removed = yes
+}
+
+host_tool_add_custom_money_to_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_treasury = root.var:host_tool_money_amount
+	}
+	save_scope_value_as = {
+		name = host_tool_amount
+		value = var:host_tool_money_amount
+	}
+	host_tool_broadcast_money_added = yes
+}
+
+host_tool_remove_custom_money_from_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_treasury = {
+			value = root.var:host_tool_money_amount
+			multiply = -1
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_amount
+		value = var:host_tool_money_amount
+	}
+	host_tool_broadcast_money_removed = yes
+}
+
+host_tool_transfer_state_to_target = {
+	save_scope_as = host_tool_actor
+	scope:state = {
+		save_scope_as = host_tool_state
+		owner = {
+			save_scope_as = host_tool_previous_owner
+		}
+		set_state_owner = scope:target
+	}
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	host_tool_broadcast_state_transferred = yes
+}
+
+host_tool_release_subject_target = {
+	save_scope_as = host_tool_actor
+	scope:subject = {
+		save_scope_as = host_tool_subject
+		top_overlord ?= {
+			save_scope_as = host_tool_overlord
+		}
+		make_independent = yes
+	}
+	host_tool_broadcast_subject_released = yes
+}
+
+host_tool_make_target_subject_of_overlord = {
+	host_tool_make_target_protectorate_of_overlord = yes
+}
+
+host_tool_make_target_protectorate_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = protectorate
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_make_target_dominion_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = dominion
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_make_target_puppet_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = puppet
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_make_target_tributary_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = tributary
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_make_target_vassal_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = vassal
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_make_target_personal_union_of_overlord = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_subject
+	}
+	scope:overlord = {
+		save_scope_as = host_tool_overlord
+		create_diplomatic_pact = {
+			country = scope:target
+			type = personal_union
+		}
+	}
+	host_tool_broadcast_subject_created = yes
+}
+
+host_tool_force_white_peace_pressure = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	scope:war = {
+		save_scope_as = host_tool_war
+		add_war_war_support = {
+			target = scope:target
+			value = -200
+		}
+	}
+	host_tool_broadcast_war_white_peace = yes
+}
+
+host_tool_force_country_capitulation = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	scope:war = {
+		save_scope_as = host_tool_war
+		add_war_war_support = {
+			target = scope:target
+			value = -200
+		}
+	}
+	host_tool_broadcast_war_capitulation = yes
+}
+
+host_tool_incorporate_state_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	scope:state = {
+		save_scope_as = host_tool_state
+		set_state_type = incorporated
+	}
+	host_tool_build_incorporable_states_of_country = yes
+	host_tool_broadcast_state_incorporated = yes
+}
+
+host_tool_unincorporate_state_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	scope:state = {
+		save_scope_as = host_tool_state
+		set_state_type = unincorporated
+	}
+	host_tool_build_unincorporable_states_of_country = yes
+	host_tool_broadcast_state_unincorporated = yes
+}
+
+host_tool_apply_penalty_to_target = {
+	save_scope_as = host_tool_actor
+	scope:target = {
+		save_scope_as = host_tool_target
+	}
+	save_scope_value_as = {
+		name = host_tool_penalty_level
+		value = scope:level
+	}
+	host_tool_remove_penalty_modifiers_from_target = yes
+
+	scope:target = {
+		if = {
+			limit = { scope:level = 1 }
+			add_modifier = {
+				name = host_tool_penalty_1
+				days = 1825
+			}
+		}
+		else_if = {
+			limit = { scope:level = 2 }
+			add_modifier = {
+				name = host_tool_penalty_2
+				days = 1825
+			}
+		}
+		else_if = {
+			limit = { scope:level = 3 }
+			add_modifier = {
+				name = host_tool_penalty_3
+				days = 1825
+			}
+		}
+		else_if = {
+			limit = { scope:level = 4 }
+			add_modifier = {
+				name = host_tool_penalty_4
+				days = 1825
+			}
+		}
+		else_if = {
+			limit = { scope:level = 5 }
+			add_modifier = {
+				name = host_tool_penalty_5
+				days = 1825
+			}
+		}
+	}
+
+	host_tool_broadcast_penalty_applied = yes
+}
+
+host_tool_add_loyalists_to_target = {
+	save_scope_as = host_tool_actor
+	set_variable = {
+		name = host_tool_pop_scaled_amount
+		value = var:host_tool_pop_amount
+	}
+	change_variable = {
+		name = host_tool_pop_scaled_amount
+		divide = 100
+	}
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_loyalists = {
+			value = root.var:host_tool_pop_scaled_amount
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_pop_amount_value
+		value = var:host_tool_pop_amount
+	}
+	host_tool_broadcast_loyalists_added = yes
+}
+
+host_tool_add_radicals_to_target = {
+	save_scope_as = host_tool_actor
+	set_variable = {
+		name = host_tool_pop_scaled_amount
+		value = var:host_tool_pop_amount
+	}
+	change_variable = {
+		name = host_tool_pop_scaled_amount
+		divide = 100
+	}
+	scope:target = {
+		save_scope_as = host_tool_target
+		add_radicals = {
+			value = root.var:host_tool_pop_scaled_amount
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_pop_amount_value
+		value = var:host_tool_pop_amount
+	}
+	host_tool_broadcast_radicals_added = yes
+}
+
+host_tool_add_loyalists_to_state = {
+	save_scope_as = host_tool_actor
+	set_variable = {
+		name = host_tool_pop_scaled_amount
+		value = var:host_tool_pop_amount
+	}
+	change_variable = {
+		name = host_tool_pop_scaled_amount
+		divide = 100
+	}
+	scope:state = {
+		save_scope_as = host_tool_state
+		owner = {
+			save_scope_as = host_tool_target
+		}
+		add_loyalists_in_state = {
+			value = root.var:host_tool_pop_scaled_amount
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_pop_amount_value
+		value = var:host_tool_pop_amount
+	}
+	host_tool_broadcast_state_loyalists_added = yes
+}
+
+host_tool_add_radicals_to_state = {
+	save_scope_as = host_tool_actor
+	set_variable = {
+		name = host_tool_pop_scaled_amount
+		value = var:host_tool_pop_amount
+	}
+	change_variable = {
+		name = host_tool_pop_scaled_amount
+		divide = 100
+	}
+	scope:state = {
+		save_scope_as = host_tool_state
+		owner = {
+			save_scope_as = host_tool_target
+		}
+		add_radicals_in_state = {
+			value = root.var:host_tool_pop_scaled_amount
+		}
+	}
+	save_scope_value_as = {
+		name = host_tool_pop_amount_value
+		value = var:host_tool_pop_amount
+	}
+	host_tool_broadcast_state_radicals_added = yes
+}
+
+host_tool_remove_truce_between_targets = {
+	save_scope_as = host_tool_actor
+	scope:target_a = {
+		save_scope_as = host_tool_target_a
+		end_truce = scope:target_b
+	}
+	scope:target_b = {
+		save_scope_as = host_tool_target_b
+		end_truce = scope:target_a
+	}
+	host_tool_broadcast_truce_removed = yes
+}
