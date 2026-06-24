@@ -1,0 +1,99 @@
+je_tyrone_prussian_german_question = {
+	icon = "gfx/interface/icons/event_icons/german_confederation.dds"
+
+	group = je_group_german_unification
+
+	is_shown_in_lobby = {
+		OR = {
+			country_has_primary_culture = cu:north_german
+			country_has_primary_culture = cu:south_german
+		}
+		NOT = { c:AUS ?= this }
+	}
+
+	is_shown_when_inactive = {
+		any_country_in_german_confederation = {
+			this = root
+		}
+		NOT = { c:AUS ?= this }
+	}
+
+	possible = {
+		any_country_in_german_confederation = {
+			this = root
+		}
+		NOT = { c:AUS ?= this }
+	}
+
+	immediate = {
+		if = {
+			limit = { c:PRU ?= this }
+			tyrone_refresh_prussian_confederation_construction = yes
+			trigger_event = {
+				id = tyrone_germany.1
+				popup = yes
+			}
+		}
+		else_if = {
+			limit = {
+				is_ai = yes
+				exists = c:PRU
+				is_in_same_power_bloc = c:PRU
+				c:PRU = { is_power_bloc_leader = yes }
+			}
+			scope:journal_entry = {
+				add_modifier = {
+					name = tyrone_prussian_confederation_principality
+				}
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = { c:PRU ?= this }
+				tyrone_refresh_prussian_confederation_construction = yes
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = je_tyrone_prussian_german_question_complete_tt
+			c:GER ?= this
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = tyrone_germany.2
+			popup = yes
+		}
+		remove_variable = tyrone_german_principalities_construction
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_tyrone_prussian_german_question_status_prussia
+				trigger = { c:PRU ?= this }
+			}
+			triggered_desc = {
+				desc = je_tyrone_prussian_german_question_status_principality
+				trigger = { always = yes }
+			}
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = event_effects_tyrone_germany.2_tt
+			}
+		}
+	}
+
+	weight = 1100
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
