@@ -1,0 +1,132 @@
+non_aggression_pact = {
+	kind = mutual
+	cost = 50
+
+	relations_progress_per_day = 0.5
+	relations_improvement_max = 60
+
+	icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/defensive_pact_treaties.dds"
+
+	flags = {
+		can_be_renegotiated
+		friendly
+	}
+
+	usage_limit = once_per_treaty
+
+	mutual_exclusions = {
+		non_aggression_pact
+	}
+
+	possible = {
+		scope:other_country = {
+			save_temporary_scope_as = target_country
+		}
+	}
+
+	requirement_to_maintain = {
+		trigger = {
+			scope:first_country = {
+				NOT = { has_subject_relation_with = scope:second_country }
+			}
+		}
+	}
+
+	can_ratify = {
+		scope:first_country = {
+			NOT = {
+				custom_description = {
+					text = has_treaty_non_aggression_pact_with_trigger
+					subject = this
+					object = scope:second_country
+
+					any_scope_treaty = {
+						binds = scope:second_country
+						hidden_trigger = {
+							OR = {
+								scope:treaty = {
+									is_renegotiation = no
+								}
+								scope:treaty.amended_treaty != this
+							}
+						}
+						any_scope_article = {
+							has_type = non_aggression_pact
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_withdrawal = {
+		scope:withdrawing_country = {
+			create_bidirectional_truce = {
+				country = scope:non_withdrawing_country
+				months = 3
+			}
+		}
+	}
+
+	on_break = {
+		scope:withdrawing_country = {
+			change_relations = {
+				country = scope:non_withdrawing_country
+				value = -50
+			}
+			change_infamy = {
+				value = 50
+			}
+		}
+	}
+
+	ai = {
+		treaty_categories = {
+			military_defense
+		}
+
+		evaluation_chance = {
+			value = 0.1
+		}
+
+		proposal_weight = {
+			value = 1
+		}
+
+		article_ai_usage = {
+			offer
+		}
+
+		inherent_accept_score = {
+			value = 0
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_BASE_ADDITIONAL"
+				value = -100
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = antagonistic
+						}
+						has_attitude = {
+							who = scope:other_country
+							attitude = belligerent
+						}
+						has_attitude = {
+							who = scope:other_country
+							attitude = domineering
+						}
+					}
+				}
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+					value = -100
+				}
+			}
+		}
+	}
+}

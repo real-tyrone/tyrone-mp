@@ -170,3 +170,51 @@ country_has_interest_marker_in_africa = {
 		has_interest_marker_in_region = sr:region_east_africa
     }
 }
+# Root = Country
+# $TARGET$ = Country
+# Checks for a Non-Aggression Pact between either country or their top overlords.
+tyrone_has_non_aggression_pact_with_country_family = {
+	$TARGET$ = {
+		save_temporary_scope_as = tyrone_nap_target_country
+		top_overlord ?= {
+			save_temporary_scope_as = tyrone_nap_target_overlord
+		}
+	}
+
+	OR = {
+		any_scope_treaty = {
+			binds = scope:tyrone_nap_target_country
+			any_scope_article = {
+				has_type = non_aggression_pact
+			}
+		}
+		AND = {
+			exists = scope:tyrone_nap_target_overlord
+			any_scope_treaty = {
+				binds = scope:tyrone_nap_target_overlord
+				any_scope_article = {
+					has_type = non_aggression_pact
+				}
+			}
+		}
+		top_overlord ?= {
+			any_scope_treaty = {
+				binds = scope:tyrone_nap_target_country
+				any_scope_article = {
+					has_type = non_aggression_pact
+				}
+			}
+		}
+		top_overlord ?= {
+			AND = {
+				exists = scope:tyrone_nap_target_overlord
+				any_scope_treaty = {
+					binds = scope:tyrone_nap_target_overlord
+					any_scope_article = {
+						has_type = non_aggression_pact
+					}
+				}
+			}
+		}
+	}
+}
