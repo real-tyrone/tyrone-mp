@@ -1,0 +1,113 @@
+namespace = transfer_fleet
+
+transfer_fleet.1 = {
+	type = country_event
+
+	event_image = { video = "unspecific_naval_battle" }
+	duration = 3
+	placement = ROOT
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	title = transfer_fleet.1.t
+	desc = transfer_fleet.1.d
+	flavor = transfer_fleet.1.f
+
+	immediate = {
+		clear_saved_scope = transfer_fleet_formation_1
+		clear_saved_scope = transfer_fleet_formation_2
+		clear_saved_scope = transfer_fleet_formation_3
+		clear_saved_scope = transfer_fleet_formation_4
+		clear_saved_scope = transfer_fleet_formation_5
+		clear_saved_scope = transfer_fleet_next_formation
+
+		ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 0 save_scope_as = transfer_fleet_formation_1 }
+		if = { limit = { any_scope_fleet = { count >= 2 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 1 save_scope_as = transfer_fleet_formation_2 } }
+		if = { limit = { any_scope_fleet = { count >= 3 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 2 save_scope_as = transfer_fleet_formation_3 } }
+		if = { limit = { any_scope_fleet = { count >= 4 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 3 save_scope_as = transfer_fleet_formation_4 } }
+		if = { limit = { any_scope_fleet = { count >= 5 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 4 save_scope_as = transfer_fleet_formation_5 } }
+		if = { limit = { any_scope_fleet = { count >= 6 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 5 save_scope_as = transfer_fleet_next_formation } }
+	}
+
+	option = { name = transfer_fleet.1.a trigger = { exists = scope:transfer_fleet_formation_1 } scope:transfer_fleet_formation_1 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.b trigger = { exists = scope:transfer_fleet_formation_2 } scope:transfer_fleet_formation_2 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.c trigger = { exists = scope:transfer_fleet_formation_3 } scope:transfer_fleet_formation_3 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.d_option trigger = { exists = scope:transfer_fleet_formation_4 } scope:transfer_fleet_formation_4 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.e trigger = { exists = scope:transfer_fleet_formation_5 } scope:transfer_fleet_formation_5 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.next trigger = { exists = scope:transfer_fleet_next_formation } ROOT = { trigger_event = { id = transfer_fleet.2 days = 0 popup = yes } } }
+	option = { name = transfer_fleet.cancel default_option = yes }
+}
+
+transfer_fleet.2 = {
+	type = country_event
+
+	event_image = { video = "unspecific_naval_battle" }
+	duration = 3
+	placement = ROOT
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	title = transfer_fleet.1.t
+	desc = transfer_fleet.1.d
+	flavor = transfer_fleet.1.f
+
+	immediate = {
+		clear_saved_scope = transfer_fleet_formation_1
+		clear_saved_scope = transfer_fleet_formation_2
+		clear_saved_scope = transfer_fleet_formation_3
+		clear_saved_scope = transfer_fleet_formation_4
+		clear_saved_scope = transfer_fleet_formation_5
+		clear_saved_scope = transfer_fleet_next_formation
+
+		if = { limit = { any_scope_fleet = { count >= 6 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 5 save_scope_as = transfer_fleet_formation_1 } }
+		if = { limit = { any_scope_fleet = { count >= 7 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 6 save_scope_as = transfer_fleet_formation_2 } }
+		if = { limit = { any_scope_fleet = { count >= 8 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 7 save_scope_as = transfer_fleet_formation_3 } }
+		if = { limit = { any_scope_fleet = { count >= 9 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 8 save_scope_as = transfer_fleet_formation_4 } }
+		if = { limit = { any_scope_fleet = { count >= 10 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 9 save_scope_as = transfer_fleet_formation_5 } }
+		if = { limit = { any_scope_fleet = { count >= 11 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 10 save_scope_as = transfer_fleet_next_formation } }
+	}
+
+	option = { name = transfer_fleet.1.a trigger = { exists = scope:transfer_fleet_formation_1 } scope:transfer_fleet_formation_1 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.b trigger = { exists = scope:transfer_fleet_formation_2 } scope:transfer_fleet_formation_2 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.c trigger = { exists = scope:transfer_fleet_formation_3 } scope:transfer_fleet_formation_3 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.d_option trigger = { exists = scope:transfer_fleet_formation_4 } scope:transfer_fleet_formation_4 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.e trigger = { exists = scope:transfer_fleet_formation_5 } scope:transfer_fleet_formation_5 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.next trigger = { exists = scope:transfer_fleet_next_formation } ROOT = { trigger_event = { id = transfer_fleet.3 days = 0 popup = yes } } }
+	option = { name = transfer_fleet.cancel default_option = yes }
+}
+
+transfer_fleet.3 = {
+	type = country_event
+
+	event_image = { video = "unspecific_naval_battle" }
+	duration = 3
+	placement = ROOT
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	title = transfer_fleet.1.t
+	desc = transfer_fleet.1.d
+	flavor = transfer_fleet.1.f
+
+	immediate = {
+		clear_saved_scope = transfer_fleet_formation_1
+		clear_saved_scope = transfer_fleet_formation_2
+		clear_saved_scope = transfer_fleet_formation_3
+		clear_saved_scope = transfer_fleet_formation_4
+		clear_saved_scope = transfer_fleet_formation_5
+		clear_saved_scope = transfer_fleet_next_formation
+
+		if = { limit = { any_scope_fleet = { count >= 11 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 10 save_scope_as = transfer_fleet_formation_1 } }
+		if = { limit = { any_scope_fleet = { count >= 12 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 11 save_scope_as = transfer_fleet_formation_2 } }
+		if = { limit = { any_scope_fleet = { count >= 13 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 12 save_scope_as = transfer_fleet_formation_3 } }
+		if = { limit = { any_scope_fleet = { count >= 14 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 13 save_scope_as = transfer_fleet_formation_4 } }
+		if = { limit = { any_scope_fleet = { count >= 15 num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } } ordered_scope_fleet = { limit = { num_ships > 0 NOT = { any_scope_ship = { is_in_battle = yes } } } order_by = { add = num_ships } position = 14 save_scope_as = transfer_fleet_formation_5 } }
+	}
+
+	option = { name = transfer_fleet.1.a trigger = { exists = scope:transfer_fleet_formation_1 } scope:transfer_fleet_formation_1 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.b trigger = { exists = scope:transfer_fleet_formation_2 } scope:transfer_fleet_formation_2 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.c trigger = { exists = scope:transfer_fleet_formation_3 } scope:transfer_fleet_formation_3 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.d_option trigger = { exists = scope:transfer_fleet_formation_4 } scope:transfer_fleet_formation_4 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.1.e trigger = { exists = scope:transfer_fleet_formation_5 } scope:transfer_fleet_formation_5 = { every_scope_ship = { set_ship_owner_multiple = scope:transfer_fleet_recipient } } }
+	option = { name = transfer_fleet.cancel default_option = yes }
+}

@@ -1,0 +1,73 @@
+transfer_fleet_action = {
+	groups = {
+		general
+	}
+
+	requires_approval = no
+	should_notify_third_parties = no
+	show_effect_in_tooltip = yes
+
+	texture = "gfx/interface/icons/diplomatic_treaties_articles_icons/ship_transfer_treaties.dds"
+
+	selectable = {
+		is_ai = no
+		NOT = { is_country_type = decentralized }
+		is_revolutionary = no
+		any_scope_fleet = {
+			num_ships > 0
+			NOT = {
+				any_scope_ship = {
+					is_in_battle = yes
+				}
+			}
+		}
+	}
+
+	potential = {
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+			is_revolutionary = no
+			has_port_country = yes
+		}
+	}
+
+	possible = {
+		is_ai = no
+		any_scope_fleet = {
+			num_ships > 0
+			NOT = {
+				any_scope_ship = {
+					is_in_battle = yes
+				}
+			}
+		}
+		scope:target_country = {
+			has_port_country = yes
+		}
+	}
+
+	accept_effect = {
+		scope:target_country = {
+			save_scope_as = transfer_fleet_recipient
+		}
+		trigger_event = {
+			id = transfer_fleet.1
+			days = 0
+			popup = yes
+		}
+	}
+
+	ai = {
+		evaluation_chance = {
+			value = 0
+		}
+
+		propose_score = {
+			value = 0
+		}
+
+		will_propose = {
+			always = no
+		}
+	}
+}
