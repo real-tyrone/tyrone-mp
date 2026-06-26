@@ -1,0 +1,84 @@
+# Expected root scope: country. Run once when the Great Game starts.
+# tyrone_gg_leaning ranges from -100 (Britain) to +100 (Russia).
+
+tyrone_gg_initialize_regional_leanings = {
+	clear_global_variable_list = tyrone_gg_countries_persia
+	clear_global_variable_list = tyrone_gg_countries_afghanistan
+	clear_global_variable_list = tyrone_gg_countries_ottoman
+	clear_global_variable_list = tyrone_gg_countries_arabia
+	clear_global_variable_list = tyrone_gg_countries_kazakhstan
+	clear_global_variable_list = tyrone_gg_countries_pakistan
+	clear_global_variable_list = tyrone_gg_countries_mongolia
+
+	every_country = {
+		remove_variable = tyrone_gg_leaning
+		remove_variable = tyrone_gg_leaning_assigned
+		remove_variable = tyrone_gg_area_persia
+		remove_variable = tyrone_gg_area_afghanistan
+		remove_variable = tyrone_gg_area_ottoman
+		remove_variable = tyrone_gg_area_arabia
+		remove_variable = tyrone_gg_area_kazakhstan
+		remove_variable = tyrone_gg_area_pakistan
+		remove_variable = tyrone_gg_area_mongolia
+
+		if = {
+			limit = {
+				is_subject = no
+				OR = {
+					tyrone_gg_capital_in_persia = yes
+					tyrone_gg_capital_in_afghanistan = yes
+					tyrone_gg_capital_in_ottoman_frontier = yes
+					tyrone_gg_capital_in_arabia = yes
+					tyrone_gg_capital_in_kazakhstan = yes
+					tyrone_gg_capital_in_pakistan = yes
+					tyrone_gg_capital_in_mongolia = yes
+				}
+			}
+
+			set_variable = tyrone_gg_leaning_assigned
+
+			if = {
+				limit = { tyrone_gg_capital_in_persia = yes }
+				set_variable = tyrone_gg_area_persia
+				set_variable = { name = tyrone_gg_leaning value = 0 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_persia target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_afghanistan = yes }
+				set_variable = tyrone_gg_area_afghanistan
+				set_variable = { name = tyrone_gg_leaning value = -25 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_afghanistan target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_ottoman_frontier = yes }
+				set_variable = tyrone_gg_area_ottoman
+				set_variable = { name = tyrone_gg_leaning value = -20 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_ottoman target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_arabia = yes }
+				set_variable = tyrone_gg_area_arabia
+				set_variable = { name = tyrone_gg_leaning value = -35 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_arabia target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_kazakhstan = yes }
+				set_variable = tyrone_gg_area_kazakhstan
+				set_variable = { name = tyrone_gg_leaning value = 50 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_kazakhstan target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_pakistan = yes }
+				set_variable = tyrone_gg_area_pakistan
+				set_variable = { name = tyrone_gg_leaning value = -50 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_pakistan target = this }
+			}
+			else_if = {
+				limit = { tyrone_gg_capital_in_mongolia = yes }
+				set_variable = tyrone_gg_area_mongolia
+				set_variable = { name = tyrone_gg_leaning value = 20 }
+				add_to_global_variable_list = { name = tyrone_gg_countries_mongolia target = this }
+			}
+		}
+	}
+}

@@ -61,7 +61,7 @@ types tyrone_great_game_types {
 
 	type tyrone_great_game_region_button = button {
 		using = default_button
-		alpha = 0.50
+		alpha = 0
 		alwaystransparent = no
 
 		blockoverride "sound" {
@@ -90,6 +90,51 @@ types tyrone_great_game_types {
 
 		block "region_onclick" {
 			onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_unused')]"
+		}
+	}
+
+	type tyrone_great_game_country_list = flowcontainer {
+		direction = vertical
+		position = { 12 58 }
+		size = { 226 536 }
+		spacing = 3
+
+		block "country_list_visible" {
+			visible = no
+		}
+
+		block "country_list_datamodel" {
+			datamodel = "[GetGlobalList('tyrone_gg_countries_persia')]"
+		}
+
+		item = {
+			flowcontainer = {
+				visible = "[Scope.GetCountry.IsValid]"
+				datacontext = "[Scope.GetCountry]"
+				direction = horizontal
+				size = { 226 30 }
+				spacing = 7
+
+				background = {
+					using = default_background
+					alpha = 0.45
+				}
+
+				small_flag = {
+					parentanchor = left|vcenter
+					size = { 32 22 }
+					margin_left = 6
+				}
+
+				textbox = {
+					parentanchor = vcenter
+					layoutpolicy_horizontal = expanding
+					margin_right = 6
+					align = left|nobaseline
+					using = elide_fontsize_min
+					text = "[Country.GetNameNoFlag]"
+				}
+			}
 		}
 	}
 }
@@ -127,9 +172,71 @@ window = {
 	}
 
 	widget = {
+		name = "tyrone_great_game_area_countries"
+		parentanchor = left|vcenter
+		position = { 18 12 }
+		size = { 250 620 }
+
+		background = {
+			using = entry_bg_fancy_dark
+			alpha = 0.82
+		}
+
+		textbox = {
+			position = { 12 14 }
+			size = { 226 26 }
+			using = fontsize_large
+			text = "tyrone_great_game_area_countries_header"
+		}
+
+		textbox = {
+			position = { 12 48 }
+			size = { 226 48 }
+			using = fontsize_small
+			text = "tyrone_great_game_area_countries_prompt"
+			visible = "[Not(GetVariableSystem.Exists('tyrone_gg_any_selected'))]"
+		}
+
+		textbox = { position = { 12 48 } size = { 226 48 } using = fontsize_small text = "tyrone_great_game_area_countries_untracked" visible = "[GetVariableSystem.Exists('tyrone_gg_selected_ugyuristan')]" }
+		textbox = { position = { 12 48 } size = { 226 48 } using = fontsize_small text = "tyrone_great_game_area_countries_untracked" visible = "[GetVariableSystem.Exists('tyrone_gg_selected_tibet')]" }
+		textbox = { position = { 12 48 } size = { 226 48 } using = fontsize_small text = "tyrone_great_game_area_countries_untracked" visible = "[GetVariableSystem.Exists('tyrone_gg_selected_china')]" }
+		textbox = { position = { 12 48 } size = { 226 48 } using = fontsize_small text = "tyrone_great_game_area_countries_untracked" visible = "[GetVariableSystem.Exists('tyrone_gg_selected_india')]" }
+		textbox = { position = { 12 48 } size = { 226 48 } using = fontsize_small text = "tyrone_great_game_area_countries_untracked" visible = "[GetVariableSystem.Exists('tyrone_gg_selected_burma')]" }
+
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_persia')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_persia')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_afghanistan')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_afghanistan')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_ottoman')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_ottoman')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_arabia')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_arabia')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_kazakhstan')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_kazakhstan')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_pakistan')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_pakistan')]" }
+		}
+		tyrone_great_game_country_list = {
+			blockoverride "country_list_visible" { visible = "[GetVariableSystem.Exists('tyrone_gg_selected_mongolia')]" }
+			blockoverride "country_list_datamodel" { datamodel = "[GetGlobalList('tyrone_gg_countries_mongolia')]" }
+		}
+	}
+
+	widget = {
 		name = "tyrone_great_game_map_surface"
 		parentanchor = hcenter|vcenter
-		position = { 0 12 }
+		position = { 120 12 }
 		size = { @tyrone_gg_map_view_width @tyrone_gg_map_view_height }
 		alwaystransparent = no
 
@@ -744,8 +851,77 @@ window = {
 
 		# UGYURISTAN button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 600 245 } }
-			blockoverride "region_size" { size = { 145 115 } }
+			blockoverride "region_position" { position = { 500 180 } }
+			blockoverride "region_size" { size = { 110 60 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_ugyuristan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_ugyuristan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_ugyuristan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_ugyuristan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 530 150 } }
+			blockoverride "region_size" { size = { 92 35 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_ugyuristan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_ugyuristan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_ugyuristan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_ugyuristan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 550 130 } }
+			blockoverride "region_size" { size = { 50 25 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_ugyuristan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_ugyuristan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_ugyuristan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_ugyuristan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 572 110 } }
+			blockoverride "region_size" { size = { 13 30 } }
 			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_ugyuristan" }
 			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_ugyuristan', 'true')]" }
 			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_ugyuristan')]" }
@@ -768,8 +944,8 @@ window = {
 
 		# TIBET button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 675 360 } }
-			blockoverride "region_size" { size = { 125 80 } }
+			blockoverride "region_position" { position = { 520 235 } }
+			blockoverride "region_size" { size = { 80 45 } }
 			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_tibet" }
 			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_tibet', 'true')]" }
 			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_tibet')]" }
@@ -790,10 +966,79 @@ window = {
 			}
 		}
 
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 560 260 } }
+			blockoverride "region_size" { size = { 100 40 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_tibet" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_tibet', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_tibet')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_tibet', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 585 250 } }
+			blockoverride "region_size" { size = { 30 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_tibet" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_tibet', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_tibet')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_tibet', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 550 260 } }
+			blockoverride "region_size" { size = { 30 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_tibet" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_tibet', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_tibet')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_tibet', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}	
+
 		# CHINA button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 720 250 } }
-			blockoverride "region_size" { size = { 220 180 } }
+			blockoverride "region_position" { position = { 650 180 } }
+			blockoverride "region_size" { size = { 160 160 } }
 			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
 			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
 			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
@@ -813,6 +1058,142 @@ window = {
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
 			}
 		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 780 80 } }
+			blockoverride "region_size" { size = { 100 100 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 740 150 } }
+			blockoverride "region_size" { size = { 140 40 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 740 150 } }
+			blockoverride "region_size" { size = { 140 40 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 605 180 } }
+			blockoverride "region_size" { size = { 50 80 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 590 230 } }
+			blockoverride "region_size" { size = { 30 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 725 330 } }
+			blockoverride "region_size" { size = { 20 40 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_china" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_china', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_china')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_china', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
 
 		# OTTOMAN button
 		tyrone_great_game_region_button = {
@@ -834,6 +1215,30 @@ window = {
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		# BURMA button
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 610 295 } }
+			blockoverride "region_size" { size = { 60 90 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_burma" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_burma', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_burma')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_burma', 'true')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
 			}
 		}
@@ -1042,8 +1447,77 @@ window = {
 
 		# PAKISTAN button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 665 455 } }
-			blockoverride "region_size" { size = { 125 110 } }
+			blockoverride "region_position" { position = { 470 230 } }
+			blockoverride "region_size" { size = { 50 56 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_pakistan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_pakistan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_pakistan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_pakistan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 440 260 } }
+			blockoverride "region_size" { size = { 45 45 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_pakistan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_pakistan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_pakistan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_pakistan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 410 285 } }
+			blockoverride "region_size" { size = { 60 35 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_pakistan" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_pakistan', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_pakistan')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_pakistan', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 440 310 } }
+			blockoverride "region_size" { size = { 30 20 } }
 			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_pakistan" }
 			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_pakistan', 'true')]" }
 			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_pakistan')]" }
@@ -1066,8 +1540,8 @@ window = {
 
 		# INDIA button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 760 455 } }
-			blockoverride "region_size" { size = { 190 150 } }
+			blockoverride "region_position" { position = { 480 350 } }
+			blockoverride "region_size" { size = { 100 30 } }
 			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
 			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
 			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
@@ -1088,13 +1562,12 @@ window = {
 			}
 		}
 
-		# BURMA button
 		tyrone_great_game_region_button = {
-			blockoverride "region_position" { position = { 840 405 } }
-			blockoverride "region_size" { size = { 130 105 } }
-			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_burma" }
-			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_burma', 'true')]" }
-			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_burma')]" }
+			blockoverride "region_position" { position = { 490 380 } }
+			blockoverride "region_size" { size = { 50 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
 			blockoverride "region_onclick" {
 				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
@@ -1106,11 +1579,151 @@ window = {
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
-				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_india')]"
-				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_burma', 'true')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
 				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
 			}
 		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 500 410 } }
+			blockoverride "region_size" { size = { 40 40 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 480 280 } }
+			blockoverride "region_size" { size = { 80 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 530 370 } }
+			blockoverride "region_size" { size = { 20 20 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 460 325 } }
+			blockoverride "region_size" { size = { 30 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 525 435 } }
+			blockoverride "region_size" { size = { 30 30 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
+
+		tyrone_great_game_region_button = {
+			blockoverride "region_position" { position = { 470 300 } }
+			blockoverride "region_size" { size = { 140 50 } }
+			blockoverride "region_tooltip" { tooltip = "tyrone_great_game_area_india" }
+			blockoverride "region_hover_enter" { onmousehierarchyenter = "[GetVariableSystem.Set('tyrone_gg_hover_india', 'true')]" }
+			blockoverride "region_hover_leave" { onmousehierarchyleave = "[GetVariableSystem.Clear('tyrone_gg_hover_india')]" }
+			blockoverride "region_onclick" {
+				onclick = "[GetVariableSystem.Set('tyrone_gg_any_selected', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_kazakhstan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_mongolia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ugyuristan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_tibet')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_china')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_ottoman')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_persia')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_afghanistan')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_pakistan')]"
+				onclick = "[GetVariableSystem.Set('tyrone_gg_selected_india', 'true')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_burma')]"
+				onclick = "[GetVariableSystem.Clear('tyrone_gg_selected_arabia')]"
+			}
+		}
+
 
 		# ARABIA button
 		tyrone_great_game_region_button = {
