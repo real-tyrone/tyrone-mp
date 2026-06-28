@@ -105,11 +105,20 @@ GDPGR_calculate_rolling_gdp_growth = {
             subtract = var:GDPGR_gdp_month_$MONTH$
         }
     }
-    set_variable = {
-        name  = GDPGR_rolling_gdp_growth_rate 
-        value = {
-            add      = var:GDPGR_rolling_difference
-            divide   = gdp
+    if = {
+        limit = { gdp > 0 }
+        set_variable = {
+            name  = GDPGR_rolling_gdp_growth_rate 
+            value = {
+                add      = var:GDPGR_rolling_difference
+                divide   = gdp
+            }
+        }
+    }
+    else = {
+        set_variable = {
+            name  = GDPGR_rolling_gdp_growth_rate
+            value = 0
         }
     }
 }
@@ -213,12 +222,21 @@ GDPGR_update_past_month_stats = {
             subtract = local_var:gdp_old
         }
     }
-    set_variable = {
-        name     = GDPGR_past_month_rate
-        value    = {
-            add      = local_var:gdp_new
-            subtract = local_var:gdp_old
-            divide   = local_var:gdp_old
+    if = {
+        limit = { local_var:gdp_old > 0 }
+        set_variable = {
+            name     = GDPGR_past_month_rate
+            value    = {
+                add      = local_var:gdp_new
+                subtract = local_var:gdp_old
+                divide   = local_var:gdp_old
+            }
+        }
+    }
+    else = {
+        set_variable = {
+            name  = GDPGR_past_month_rate
+            value = 0
         }
     }
 }
