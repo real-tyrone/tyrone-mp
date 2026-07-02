@@ -1,0 +1,54 @@
+assign_company = {
+	groups = { overlord }
+
+	requires_approval = no
+	should_notify_third_parties = no
+	show_effect_in_tooltip = yes
+	show_confirmation_box = no
+
+	texture = "gfx/interface/icons/diplomatic_action_icons/chartered_company_15.dds"
+	confirmation_sound = "event:/SFX/UI/MapInteraction/SubjectInteractions/diplomatic_action_subjects_04_appoint_governor_benign"
+
+	selectable = {
+		has_game_rule = assign_company_diplomatic_action_enabled
+	}
+
+	potential = {
+		scope:target_country = {
+			is_subject_of = ROOT
+			is_subject_type = subject_type_chartered_company
+			NOT = { is_diplomatic_play_enemy_of = ROOT }
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = assign_company_cooldown_tt
+			NOT = { has_variable = assign_company_cooldown }
+		}
+		any_company = {
+			always = yes
+		}
+		scope:target_country = {
+			is_revolutionary = no
+		}
+	}
+
+	accept_effect = {
+		save_scope_as = assign_company_overlord
+		scope:target_country = {
+			save_scope_as = assign_company_subject
+		}
+		set_variable = {
+			name = assign_company_cooldown
+			days = 1825
+		}
+		trigger_event = { id = assign_company.1 popup = yes }
+	}
+
+	ai = {
+		evaluation_chance = {
+			value = 0
+		}
+	}
+}
