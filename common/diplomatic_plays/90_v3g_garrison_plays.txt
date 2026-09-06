@@ -1,0 +1,93 @@
+﻿dp_v3g_expel_garrison = {
+	war_goal = v3g_expel_garrison
+	texture = "gfx/interface/icons/war_goals/humiliation_garrison.dds"
+	selectable_in_lens = { always = yes }
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+
+		OR = {
+			any_scope_treaty = {
+				binds = scope:target_country
+				any_scope_article = {
+					OR = {
+						has_type = v3g_garrison_rights
+						has_type = v3g_forced_garrison_rights
+					}
+					source_country = root
+					target_country = scope:target_country
+				}
+			}
+			AND = {
+				is_subject_of = scope:target_country
+				scope:target_country = {
+					has_diplomatic_pact = {
+						who = root
+						type = v3g_subject_garrison
+					}
+				}
+			}
+		}
+
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+		}
+	}
+
+	ai_acceptance_max = 90
+	on_weekly_pulse = {}
+	on_war_begins = {}
+	on_war_end = {}
+}
+
+dp_v3g_force_garrison = {
+	war_goal = v3g_force_garrison
+	texture = "gfx/interface/icons/diplomatic_action_icons/enforce_military_access_garrison.dds"
+	selectable_in_lens = { always = yes }
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		has_technology_researched = international_relations
+
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+		}
+
+		custom_tooltip = {
+			text = V3G_DUPLICATE_GARRISON_RIGHTS
+			NOT = {
+				scope:target_country = {
+					any_scope_treaty = {
+						binds = root
+						any_scope_article = {
+							OR = {
+								has_type = v3g_garrison_rights
+								has_type = v3g_forced_garrison_rights
+							}
+							source_country = scope:target_country
+							target_country = root
+						}
+					}
+				}
+			}
+		}
+
+		custom_tooltip = {
+			text = V3G_GARRISON_EXPULSION_COOLDOWN
+			NOT = {
+				scope:target_country = {
+					any_diplomatic_catalyst = {
+						is_diplomatic_catalyst_type = catalyst_v3g_garrison_expelled
+						target = root
+					}
+				}
+			}
+		}
+	}
+
+	ai_acceptance_max = 90
+	on_weekly_pulse = {}
+	on_war_begins = {}
+	on_war_end = {}
+}

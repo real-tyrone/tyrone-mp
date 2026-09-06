@@ -1,0 +1,45 @@
+﻿exile_pool_culling_on_action = {
+    trigger = {
+        # 时间门控: 每3个月运行一次
+        OR = {
+            is_month = 1
+            is_month = 4
+            is_month = 7
+            is_month = 10
+        }
+        any_character_in_exile_pool = {
+            count > {
+                value = exile_pool_max_size
+                add = 10
+            }
+        }
+    }
+    effect = {
+        save_temporary_scope_value_as = {
+            name = exile_pool_size
+            value = {
+                add = 0
+                every_character_in_exile_pool = {
+                    add = 1
+                }
+            }
+        }
+        ordered_character_in_exile_pool = {
+            limit = {
+                is_historical = no
+            }
+            alternative_limit = {
+                NOT = { has_variable = exile_pool_culling_immunity }
+            }
+            order_by = {
+                value = popularity
+                multiply = -1
+            }
+            max = {
+                add = scope:exile_pool_size
+                subtract = exile_pool_max_size
+            }
+            retire_character = yes
+        }
+    }
+}

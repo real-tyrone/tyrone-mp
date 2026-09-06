@@ -1,0 +1,222 @@
+﻿v3g_garrison_rights = {
+	kind = directed
+	cost = 25
+
+	relations_progress_per_day = 0.25
+	relations_improvement_max = 20
+
+	max_target_involvement = 1500
+	target_involvement_applies_to = source_country
+
+	icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/military_access_treaties_garrison.dds"
+
+	flags = {
+		# Foreign HQ stationing is hardcoded to own/allied HQs in 1.13.9.
+		# This supplies that engine-level eligibility without using the vanilla alliance article.
+		is_alliance
+		is_military_access
+		can_be_enforced
+		can_be_renegotiated
+		friendly
+	}
+
+	maintenance_paid_by = target_country
+	usage_limit = once_per_side
+
+	visible = { always = yes }
+
+	possible = {
+		custom_tooltip = {
+			text = V3G_GARRISON_REQUIRES_INTERNATIONAL_RELATIONS
+			has_technology_researched = international_relations
+		}
+		custom_tooltip = {
+			text = V3G_GARRISON_REQUIRES_CENTRALIZED_COUNTRIES
+			NOT = { is_country_type = decentralized }
+			scope:other_country = {
+				NOT = { is_country_type = decentralized }
+			}
+		}
+	}
+
+	can_ratify = {
+		custom_tooltip = {
+			text = V3G_GARRISON_EXPULSION_COOLDOWN
+			NOT = {
+				scope:source_country = {
+					any_diplomatic_catalyst = {
+						is_diplomatic_catalyst_type = catalyst_v3g_garrison_expelled
+						target = scope:target_country
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = V3G_DUPLICATE_GARRISON_RIGHTS
+			NOT = {
+				scope:source_country = {
+					any_scope_treaty = {
+						binds = scope:target_country
+						any_scope_article = {
+							OR = {
+								has_type = v3g_garrison_rights
+								has_type = v3g_forced_garrison_rights
+							}
+							source_country = scope:source_country
+							target_country = scope:target_country
+						}
+					}
+				}
+			}
+		}
+	}
+
+	can_withdraw = {
+		always = yes
+	}
+
+	on_entry_into_force = {}
+
+	on_enforced = {}
+
+	on_withdrawal = {}
+
+	on_break = {
+		scope:withdrawing_country = {
+			change_relations = {
+				country = scope:non_withdrawing_country
+				value = -10
+			}
+		}
+	}
+
+	ai = {
+		treaty_categories = {
+			military
+		}
+
+		article_ai_usage = {
+			request
+		}
+
+		evaluation_chance = {
+			value = 0.05
+		}
+
+		inherent_accept_score = {
+			value = -20
+
+			if = {
+				limit = {
+					"relations(scope:target_country)" >= relations_threshold:amicable
+				}
+				add = 30
+			}
+
+			if = {
+				limit = {
+					scope:source_country = {
+						any_scope_state = {
+							turmoil > 0.15
+						}
+					}
+				}
+				add = 20
+			}
+
+			if = {
+				limit = {
+					scope:source_country = {
+						is_subject_of = scope:target_country
+					}
+				}
+				add = 100
+			}
+
+			if = {
+				limit = {
+					scope:source_country = {
+						has_attitude = {
+							who = scope:target_country
+							attitude = antagonistic
+						}
+					}
+				}
+				add = -1000
+			}
+		}
+
+		wargoal_score_multiplier = {
+			value = 1
+		}
+	}
+
+	wargoal = {
+		execution_priority = 21
+		contestion_type = control_any_target_country_state
+
+		maneuvers = {
+			value = 10
+		}
+
+		infamy = {
+			value = 2
+			add = {
+				value = scope:target_country.total_population
+				divide = 10000000
+				max = 8
+			}
+			min = 2
+			max = 10
+		}
+	}
+}
+
+v3g_forced_garrison_rights = {
+	kind = directed
+	cost = 0
+
+	max_target_involvement = 1500
+	target_involvement_applies_to = source_country
+
+	icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/military_access_treaties_garrison.dds"
+
+	flags = {
+		is_alliance
+		is_military_access
+		friendly
+	}
+
+	maintenance_paid_by = target_country
+	usage_limit = once_per_side
+
+	visible = { always = yes }
+	possible = { always = yes }
+	can_ratify = { always = yes }
+
+	can_withdraw = {
+		scope:withdrawing_country = scope:target_country
+	}
+
+	on_entry_into_force = {}
+
+	on_enforced = {}
+	on_withdrawal = {}
+
+	on_break = {
+		scope:withdrawing_country = {
+			change_relations = {
+				country = scope:non_withdrawing_country
+				value = -10
+			}
+		}
+	}
+
+	ai = {
+		treaty_categories = { military }
+		article_ai_usage = { none }
+		evaluation_chance = { value = 0 }
+		inherent_accept_score = { value = -1000 }
+		wargoal_score_multiplier = { value = 1 }
+	}
+}

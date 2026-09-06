@@ -79,14 +79,82 @@ tyrone_downgrade_severe_malaria_on_start = {
 	}
 }
 
+tyrone_apply_large_population_nation_nerf_on_start = {
+	effect = {
+		if = {
+			limit = {
+				has_game_rule = large_population_nation_nerf_enabled
+			}
+			every_country = {
+				limit = {
+					OR = {
+						c:CHI ?= this
+						c:BIC ?= this
+					}
+					NOT = { has_modifier = large_population_nation_modifier }
+				}
+				add_modifier = {
+					name = large_population_nation_modifier
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_game_rule = large_population_nation_nerf_disabled
+			}
+			every_country = {
+				limit = {
+					OR = {
+						c:CHI ?= this
+						c:BIC ?= this
+					}
+					has_modifier = large_population_nation_modifier
+				}
+				remove_modifier = large_population_nation_modifier
+			}
+		}
+	}
+}
+
+tyrone_apply_large_population_nation_nerf_yearly = {
+	effect = {
+		if = {
+			limit = {
+				OR = {
+					c:CHI ?= this
+					c:BIC ?= this
+				}
+				has_game_rule = large_population_nation_nerf_enabled
+				NOT = { has_modifier = large_population_nation_modifier }
+			}
+			add_modifier = {
+				name = large_population_nation_modifier
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					c:CHI ?= this
+					c:BIC ?= this
+				}
+				has_game_rule = large_population_nation_nerf_disabled
+				has_modifier = large_population_nation_modifier
+			}
+			remove_modifier = large_population_nation_modifier
+		}
+	}
+}
+
 on_game_started = {
 	on_actions = {
 		tyrone_downgrade_severe_malaria_on_start
+		tyrone_apply_large_population_nation_nerf_on_start
 	}
 }
 
 on_yearly_pulse_country = {
     on_actions = {
+		tyrone_apply_large_population_nation_nerf_yearly
     }
 
     effect = {

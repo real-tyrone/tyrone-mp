@@ -102,6 +102,10 @@ brazilian_uk_flag_trigger = {
 
 japan_monarchist_rising_trigger = {
     coa_def_monarchy_flag_trigger = yes
+    NOR = {
+        has_law = law_type:law_bakufu
+        has_variable = shogunate_supreme
+    }
     OR = {
         has_law_or_variant = law_type:law_oligarchy
         coa_autocracy_trigger = yes
@@ -181,46 +185,37 @@ tyrone_has_non_aggression_pact_with_country_family = {
 		}
 	}
 
-	AND = {
-		NOT = {
-			$TARGET$ = {
-				top_overlord ?= {
-					this = root
+	OR = {
+		any_scope_treaty = {
+			binds = scope:tyrone_nap_target_country
+			any_scope_article = {
+				has_type = non_aggression_pact
+			}
+		}
+		AND = {
+			exists = scope:tyrone_nap_target_overlord
+			any_scope_treaty = {
+				binds = scope:tyrone_nap_target_overlord
+				any_scope_article = {
+					has_type = non_aggression_pact
 				}
 			}
 		}
-		OR = {
+		top_overlord ?= {
 			any_scope_treaty = {
 				binds = scope:tyrone_nap_target_country
 				any_scope_article = {
 					has_type = non_aggression_pact
 				}
 			}
+		}
+		top_overlord ?= {
 			AND = {
 				exists = scope:tyrone_nap_target_overlord
 				any_scope_treaty = {
 					binds = scope:tyrone_nap_target_overlord
 					any_scope_article = {
 						has_type = non_aggression_pact
-					}
-				}
-			}
-			top_overlord ?= {
-				any_scope_treaty = {
-					binds = scope:tyrone_nap_target_country
-					any_scope_article = {
-						has_type = non_aggression_pact
-					}
-				}
-			}
-			top_overlord ?= {
-				AND = {
-					exists = scope:tyrone_nap_target_overlord
-					any_scope_treaty = {
-						binds = scope:tyrone_nap_target_overlord
-						any_scope_article = {
-							has_type = non_aggression_pact
-						}
 					}
 				}
 			}

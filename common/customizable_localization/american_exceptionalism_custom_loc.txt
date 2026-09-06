@@ -123,21 +123,13 @@ ae_flotilla_checkbox = {
 	type = country
 	text = {
 		trigger = {
-			any_country = {
-				navy_size > root.navy_size
-				count >= 3
-			}
+			"num_ships_of_group(ship_group:ship_group_capital_ships)" < 100
 		}
 		localization_key = italy_irredentism_unticked
 	}
 	text = {
 		trigger = {
-			NOT = {
-				any_country = {
-					navy_size > root.navy_size
-					count >= 3
-				}
-			}
+			"num_ships_of_group(ship_group:ship_group_capital_ships)" >= 100
 		}
 		localization_key = italy_irredentism_ticked
 	}
@@ -147,12 +139,17 @@ ae_trench_infantry_checkbox = {
 	type = country
 	text = {
 		trigger = {
-			NOT = {
-				has_technology_researched = trench_works
-				army_size >= 100
-				country_army_unit_type_fraction = {
-					target = unit_type:combat_unit_type_trench_infantry
-					value >= 0.5
+			OR = {
+				NOT = { has_technology_researched = trench_works }
+				army_size < 100
+				AND = {
+					has_technology_researched = trench_works
+					NOT = {
+						country_army_unit_type_fraction = {
+							target = unit_type:combat_unit_type_trench_infantry
+							value >= 0.5
+						}
+					}
 				}
 			}
 		}

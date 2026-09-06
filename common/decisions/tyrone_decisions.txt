@@ -80,6 +80,62 @@ net_integrate_indonesia_decision = {
 	}
 }
 
+jap_ai_imperial_marriage_break_netherlands_treaties = {
+	is_shown = {
+		is_ai = yes
+		c:JAP ?= this
+		exists = c:NET
+		has_journal_entry = je_meiji_imperial_marriage
+		OR = {
+			any_scope_treaty = {
+				binds = c:NET
+			}
+			AND = {
+				NOT = { has_law_or_variant = law_type:law_closed_borders }
+				enacting_any_law = no
+			}
+		}
+	}
+
+	possible = {
+		c:JAP ?= this
+		exists = c:NET
+		has_journal_entry = je_meiji_imperial_marriage
+		OR = {
+			any_scope_treaty = {
+				binds = c:NET
+			}
+			AND = {
+				NOT = { has_law_or_variant = law_type:law_closed_borders }
+				enacting_any_law = no
+			}
+		}
+	}
+
+	when_taken = {
+		every_scope_treaty = {
+			limit = {
+				binds = c:NET
+			}
+			withdraw = {
+				country = ROOT
+				apply_break_penalties = yes
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_law_or_variant = law_type:law_closed_borders }
+				enacting_any_law = no
+			}
+			start_enactment = law_type:law_closed_borders
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
 tyrone_apply_malaria_downgrade_decision = {
 	is_shown = {
 		is_player = yes
@@ -416,6 +472,33 @@ decision_dutch_dei = {
 	}
 }
 
+dei_research_civilizing_mission_from_overlord = {
+	is_shown = {
+		c:DEI ?= this
+		is_subject = yes
+		NOT = { has_technology_researched = civilizing_mission }
+		overlord = {
+			has_technology_researched = civilizing_mission
+		}
+	}
+
+	possible = {
+		is_subject = yes
+		NOT = { has_technology_researched = civilizing_mission }
+		overlord = {
+			has_technology_researched = civilizing_mission
+		}
+	}
+
+	when_taken = {
+		add_technology_researched = civilizing_mission
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 commonwealth_equal_partner_upgrade = {
 	is_shown = {
 		is_ai = yes
@@ -612,6 +695,8 @@ decision_china_unify_manchuria = {
 		aggressive_diplomatic_plays_permitted = yes
 		c:MCH = {
 			is_subject = no
+			is_secessionist = no
+			is_adjacent_to_country = ROOT
 			army_power_projection < ROOT.army_power_projection			
 			NOT = { has_truce_with = ROOT }
 			NOT = { has_war_with = ROOT }
@@ -1071,6 +1156,58 @@ REPLACE:aus_organise_trialism = {
 	}
 }
 
+aus_return_independent_croatian_states = {
+	is_shown = {
+		c:AUS ?= this
+		exists = c:CRO
+		c:CRO ?= {
+			is_subject = no
+			any_scope_state = {
+				has_claim_by = ROOT
+			}
+		}
+	}
+
+	possible = {
+		c:AUS ?= this
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:CRO ?= {
+			NOT = { is_country_type = decentralized }
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			any_scope_state = {
+				has_claim_by = ROOT
+			}
+		}
+	}
+
+	when_taken = {
+		c:CRO = {
+			random_scope_state = {
+				limit = {
+					has_claim_by = ROOT
+				}
+				save_scope_as = aus_croatia_return_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = c:CRO
+			target_state = scope:aus_croatia_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
 REPLACE:aus_integrate_crown_lands_decision = {
 	is_shown = {
 		c:AUS ?= this
@@ -1439,8 +1576,8 @@ germany_ai_declare_niger_interest_from_claims = {
 
 germany_annex_caprivi_strip = {
 	is_shown = {
-		c:GER ?= this
-		NOT = { has_variable = germany_annexed_caprivi_strip }
+		has_variable = claimed_namibia_var
+		NOT = { has_variable = annexed_caprivi_strip_var }
 		country_or_subject_owns_entire_state_region = STATE_HEREROLAND
 		country_or_subject_owns_entire_state_region = STATE_NAMAQUALAND
 		OR = {
@@ -1453,13 +1590,14 @@ germany_annex_caprivi_strip = {
 	}
 
 	possible = {
-		NOT = { has_variable = germany_annexed_caprivi_strip }
+		has_variable = claimed_namibia_var
+		NOT = { has_variable = annexed_caprivi_strip_var }
 		country_or_subject_owns_entire_state_region = STATE_HEREROLAND
 		country_or_subject_owns_entire_state_region = STATE_NAMAQUALAND
 	}
 
 	when_taken = {
-		set_variable = germany_annexed_caprivi_strip
+		set_variable = annexed_caprivi_strip_var
 		if = {
 			limit = {
 				any_subject_or_below = {
@@ -1470,59 +1608,16 @@ germany_annex_caprivi_strip = {
 				limit = {
 					capital.region = sr:region_southern_africa
 				}
-				save_scope_as = germany_caprivi_strip_recipient_scope
+				save_scope_as = caprivi_strip_recipient_scope
 			}
 		}
 		else = {
-			save_scope_as = germany_caprivi_strip_recipient_scope
+			save_scope_as = caprivi_strip_recipient_scope
 		}
 		s:STATE_BOTSWANA = {
 			set_owner_of_provinces = {
-				country = scope:germany_caprivi_strip_recipient_scope
+				country = scope:caprivi_strip_recipient_scope
 				provinces = { x773A13 x4401C5 x3D4350 x6001D0 x0DDFB8 }
-			}
-		}
-	}
-
-	ai_chance = {
-		value = 100
-	}
-}
-
-tyrone_ai_build_trade_center_for_shortages = {
-	is_shown = {
-		is_ai = yes
-		NOT = { is_country_type = decentralized }
-		market_capital = {
-			owner = ROOT
-		}
-		market_goods_has_goods_shortage = yes
-	}
-
-	possible = {
-		is_ai = yes
-		NOT = { is_country_type = decentralized }
-		market_capital = {
-			owner = ROOT
-		}
-		market_goods_has_goods_shortage = yes
-	}
-
-	when_taken = {
-		market_capital = {
-			if = {
-				limit = {
-					any_scope_building = {
-						is_building_type = building_trade_center
-						level >= 10
-					}
-				}
-			}
-			else = {
-				create_building = {
-					building = building_trade_center
-					level = 10
-				}
 			}
 		}
 	}
@@ -1534,12 +1629,12 @@ tyrone_ai_build_trade_center_for_shortages = {
 
 ger_consolidate_south_west_africa = {
 	is_shown = {
-		c:GER ?= this
+		has_variable = claimed_namibia_var
 		exists = c:GBR
 		exists = c:SAF
 		has_global_variable = berlin_conference_ended
-		NOT = { has_variable = ger_south_west_africa_request_pending }
-		NOT = { has_variable = ger_south_west_africa_consolidation_requested }
+		NOT = { has_variable = namibia_south_west_africa_request_pending }
+		NOT = { has_variable = namibia_south_west_africa_consolidation_requested }
 		c:GBR = { relations:root >= relations_threshold:neutral }
 		c:SAF = { relations:root >= relations_threshold:neutral }
 		s:STATE_HEREROLAND = {
@@ -1599,11 +1694,12 @@ ger_consolidate_south_west_africa = {
 	}
 
 	possible = {
+		has_variable = claimed_namibia_var
 		exists = c:GBR
 		exists = c:SAF
 		has_global_variable = berlin_conference_ended
-		NOT = { has_variable = ger_south_west_africa_request_pending }
-		NOT = { has_variable = ger_south_west_africa_consolidation_requested }
+		NOT = { has_variable = namibia_south_west_africa_request_pending }
+		NOT = { has_variable = namibia_south_west_africa_consolidation_requested }
 		c:GBR = { relations:root >= relations_threshold:neutral }
 		c:SAF = { relations:root >= relations_threshold:neutral }
 		s:STATE_HEREROLAND = {
@@ -1663,8 +1759,8 @@ ger_consolidate_south_west_africa = {
 	}
 
 	when_taken = {
-		set_variable = ger_south_west_africa_request_pending
-		set_variable = ger_south_west_africa_consolidation_requested
+		set_variable = namibia_south_west_africa_request_pending
+		set_variable = namibia_south_west_africa_consolidation_requested
 		c:GBR = {
 			trigger_event = { id = berlin_conference.5 popup = yes }
 		}
@@ -1718,6 +1814,72 @@ saf_consolidate_botswana = {
 		set_variable = saf_botswana_consolidation_requested
 		c:GBR = {
 			trigger_event = { id = berlin_conference.6 popup = yes }
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+saf_reduce_botswana_malaria = {
+	is_shown = {
+		c:SAF ?= this
+		has_global_variable = berlin_conference_ended
+		has_claim = s:STATE_BOTSWANA
+		s:STATE_BOTSWANA = {
+			has_state_trait = state_trait_severe_malaria
+		}
+	}
+
+	possible = {
+		has_global_variable = berlin_conference_ended
+		has_claim = s:STATE_BOTSWANA
+		s:STATE_BOTSWANA = {
+			has_state_trait = state_trait_severe_malaria
+		}
+	}
+
+	when_taken = {
+		s:STATE_BOTSWANA = {
+			remove_state_trait = state_trait_severe_malaria
+			add_state_trait = state_trait_malaria
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+saf_incorporate_southern_africa_states = {
+	is_shown = {
+		c:SAF ?= this
+		has_global_variable = berlin_conference_ended
+		any_scope_state = {
+			owner = ROOT
+			region = sr:region_southern_africa
+			is_incorporated = no
+		}
+	}
+
+	possible = {
+		has_global_variable = berlin_conference_ended
+		any_scope_state = {
+			owner = ROOT
+			region = sr:region_southern_africa
+			is_incorporated = no
+		}
+	}
+
+	when_taken = {
+		every_scope_state = {
+			limit = {
+				owner = ROOT
+				region = sr:region_southern_africa
+				is_incorporated = no
+			}
+			set_state_type = incorporated
 		}
 	}
 
@@ -2677,6 +2839,72 @@ gbr_ai_transfer_india_persia_states_to_bic = {
 				}
 			}
 			set_state_owner = c:BIC
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+gbr_transfer_greater_persia_to_persia = {
+	is_shown = {
+		c:GBR ?= this
+		c:PER ?= {
+			exists = yes
+			is_subject_of = ROOT
+		}
+		any_scope_state = {
+			region = sr:region_greater_persia
+			state_region = {
+				NOT = { is_homeland = cu:pashtun }
+			}
+			NOT = { owner = c:PER }
+			owner = {
+				OR = {
+					this = ROOT
+					is_subject_of = ROOT
+				}
+			}
+		}
+	}
+
+	possible = {
+		c:PER ?= {
+			exists = yes
+			is_subject_of = ROOT
+		}
+		any_scope_state = {
+			region = sr:region_greater_persia
+			state_region = {
+				NOT = { is_homeland = cu:pashtun }
+			}
+			NOT = { owner = c:PER }
+			owner = {
+				OR = {
+					this = ROOT
+					is_subject_of = ROOT
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		every_state = {
+			limit = {
+				region = sr:region_greater_persia
+				state_region = {
+					NOT = { is_homeland = cu:pashtun }
+				}
+				NOT = { owner = c:PER }
+				owner = {
+					OR = {
+						this = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			set_state_owner = c:PER
 		}
 	}
 
@@ -3764,6 +3992,325 @@ idn_ai_unify_indonesian_neighbors = {
 	}
 }
 
+afg_ai_unify_afghan_neighbors = {
+	is_shown = {
+		is_ai = yes
+		NOT = { exists = c:AFG }
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		has_journal_entry = je_unify_afghanistan
+		aggressive_diplomatic_plays_permitted = yes
+		infamy <= 50
+		can_form_nation = AFG
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			is_subject = no
+			is_adjacent_to_country = ROOT
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			can_form_nation = AFG
+		}
+	}
+
+	possible = {
+		NOT = { exists = c:AFG }
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		has_journal_entry = je_unify_afghanistan
+		aggressive_diplomatic_plays_permitted = yes
+		infamy <= 50
+		can_form_nation = AFG
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			is_subject = no
+			is_adjacent_to_country = ROOT
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			can_form_nation = AFG
+		}
+	}
+
+	when_taken = {
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				NOT = { is_country_type = decentralized }
+				aggressive_diplomatic_plays_permitted = yes
+				is_subject = no
+				is_adjacent_to_country = ROOT
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				can_form_nation = AFG
+			}
+			save_scope_as = afg_unify_afghanistan_target_scope
+		}
+		create_diplomatic_play = {
+			type = dp_unify_afghanistan
+			target_country = scope:afg_unify_afghanistan_target_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
+eth_ai_unify_ethiopian_neighbors = {
+	is_shown = {
+		is_ai = yes
+		NOT = { exists = c:ETH }
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		has_journal_entry = je_age_of_princes
+		aggressive_diplomatic_plays_permitted = yes
+		infamy <= 50
+		can_form_nation = ETH
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			is_subject = no
+			is_adjacent_to_country = ROOT
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			can_form_nation = ETH
+		}
+	}
+
+	possible = {
+		NOT = { exists = c:ETH }
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		has_journal_entry = je_age_of_princes
+		aggressive_diplomatic_plays_permitted = yes
+		infamy <= 50
+		can_form_nation = ETH
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			aggressive_diplomatic_plays_permitted = yes
+			is_subject = no
+			is_adjacent_to_country = ROOT
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+			can_form_nation = ETH
+		}
+	}
+
+	when_taken = {
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				NOT = { is_country_type = decentralized }
+				aggressive_diplomatic_plays_permitted = yes
+				is_subject = no
+				is_adjacent_to_country = ROOT
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				army_power_projection < ROOT.army_power_projection
+				can_form_nation = ETH
+			}
+			save_scope_as = eth_unify_ethiopia_target_scope
+		}
+		create_diplomatic_play = {
+			type = dp_unify_ethiopia
+			target_country = scope:eth_unify_ethiopia_target_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
+eth_ai_conquer_aussa_gonder_split = {
+	is_shown = {
+		is_ai = yes
+		NOT = { exists = c:ETH }
+		exists = c:AWS
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		can_form_nation = ETH
+		has_journal_entry = je_age_of_princes
+		s:STATE_GONDER = {
+			any_scope_state = {
+				owner = c:AWS
+			}
+		}
+		c:AWS ?= {
+			army_power_projection < ROOT.army_power_projection
+		}
+	}
+
+	possible = {
+		NOT = { exists = c:ETH }
+		exists = c:AWS
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		can_form_nation = ETH
+		aggressive_diplomatic_plays_permitted = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_GONDER = {
+			any_scope_state = {
+				owner = c:AWS
+			}
+		}
+		c:AWS ?= {
+			NOT = { is_country_type = decentralized }
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+		}
+	}
+
+	when_taken = {
+		s:STATE_GONDER = {
+			random_scope_state = {
+				limit = {
+					owner = c:AWS
+				}
+				save_scope_as = eth_aussa_gonder_conquer_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_conquer_state
+			target_country = c:AWS
+			target_state = scope:eth_aussa_gonder_conquer_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
+eth_ai_return_amhara_from_unrecognized = {
+	is_shown = {
+		is_ai = yes
+		c:ETH ?= this
+		s:STATE_AMHARA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner ?= {
+					is_country_type = unrecognized
+					NOT = { is_country_type = decentralized }
+				}
+			}
+		}
+	}
+
+	possible = {
+		c:ETH ?= this
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_AMHARA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner ?= {
+					is_country_type = unrecognized
+					NOT = { is_country_type = decentralized }
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_AMHARA = {
+			if = {
+				limit = {
+					NOT = {
+						any_scope_state = {
+							has_claim_by = ROOT
+						}
+					}
+				}
+				add_claim = ROOT
+			}
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner ?= {
+						is_country_type = unrecognized
+						NOT = { is_country_type = decentralized }
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+						NOT = { has_war_with = ROOT }
+					}
+				}
+				save_scope_as = eth_amhara_return_state_scope
+				owner = { save_scope_as = eth_amhara_return_country_scope }
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = scope:eth_amhara_return_country_scope
+			target_state = scope:eth_amhara_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
 chinese_warlord_ai_unify_chinese_neighbors = {
 	is_shown = {
 		is_ai = yes
@@ -3853,8 +4400,6 @@ bic_ai_return_claimed_border_states = {
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			NOT = {
 				ROOT = { is_subject_of = THIS }
@@ -3908,8 +4453,6 @@ bic_ai_return_claimed_border_states = {
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			NOT = {
 				ROOT = { is_subject_of = THIS }
@@ -3957,8 +4500,6 @@ bic_ai_return_claimed_border_states = {
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
-				is_at_war = no
-				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
 				NOT = {
 					ROOT = { is_subject_of = THIS }
@@ -4450,8 +4991,6 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			NOT = {
 				ROOT = { is_subject_of = THIS }
@@ -4491,8 +5030,6 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			NOT = {
 				ROOT = { is_subject_of = THIS }
@@ -4525,8 +5062,6 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
-				is_at_war = no
-				is_diplomatic_play_committed_participant = no
 				NOT = { has_truce_with = ROOT }
 				NOT = {
 					ROOT = { is_subject_of = THIS }
@@ -4935,6 +5470,162 @@ usa_annex_independent_csa = {
 	}
 }
 
+usa_ai_declare_japan_interest_after_california = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		exists = c:JAP
+		owns_entire_state_region = STATE_CALIFORNIA
+		NOT = { has_interest_marker_in_region = sr:region_northeast_asia }
+		c:JAP ?= {
+			has_law = law_type:law_sakoku
+		}
+	}
+
+	possible = {
+		exists = c:JAP
+		owns_entire_state_region = STATE_CALIFORNIA
+		NOT = { has_interest_marker_in_region = sr:region_northeast_asia }
+		c:JAP ?= {
+			has_law = law_type:law_sakoku
+		}
+	}
+
+	when_taken = {
+		add_involvement = {
+			strategic_region = sr:region_northeast_asia
+			value = 2500
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
+usa_ai_open_japanese_market_after_california = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		exists = c:JAP
+		owns_entire_state_region = STATE_CALIFORNIA
+		c:JAP ?= {
+			has_law = law_type:law_sakoku
+		}
+	}
+
+	possible = {
+		exists = c:JAP
+		owns_entire_state_region = STATE_CALIFORNIA
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		NOT = { has_law_or_variant = law_type:law_isolationism }
+		NOT = { is_subject_of = c:JAP }
+		has_interest_marker_in_region = sr:region_northeast_asia
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		c:JAP ?= {
+			NOT = { is_country_type = decentralized }
+			NOT = { is_subject_of = ROOT }
+			has_law = law_type:law_sakoku
+			is_junior_in_customs_union = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+		}
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			type = dp_open_market
+			target_country = c:JAP
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
+usa_ai_return_texas_from_texas = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		exists = c:TEX
+		c:TEX ?= {
+			relations:ROOT < 0
+		}
+		s:STATE_TEXAS = {
+			any_scope_state = {
+				owner = c:TEX
+			}
+		}
+	}
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		c:TEX ?= {
+			NOT = { is_country_type = decentralized }
+			NOT = { is_subject_of = ROOT }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			relations:ROOT < 0
+		}
+		s:STATE_TEXAS = {
+			any_scope_state = {
+				owner = c:TEX
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_TEXAS = {
+			if = {
+				limit = {
+					NOT = {
+						any_scope_state = {
+							has_claim_by = ROOT
+						}
+					}
+				}
+				add_claim = ROOT
+			}
+			random_scope_state = {
+				limit = {
+					owner = c:TEX
+				}
+				save_scope_as = usa_texas_return_state_scope
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_return_state
+			target_country = c:TEX
+			target_state = scope:usa_texas_return_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 1000
+	}
+}
+
 fra_annex_independent_occ = {
 	is_shown = {
 		c:FRA ?= this
@@ -5079,6 +5770,43 @@ usa_alaskan_gold_rush_decision = {
 	}
 }
 
+usa_admit_hawaii_state_decision = {
+	is_shown = {
+		OR = {
+			c:USA ?= this
+			c:GAC ?= this
+		}
+		NOT = { has_variable = usa_admit_hawaii_state_decision_taken }
+		country_or_subject_owns_entire_state_region = STATE_HAWAIIAN_ISLANDS
+	}
+
+	possible = {
+		owns_entire_state_region = STATE_HAWAIIAN_ISLANDS
+		has_law_or_variant = law_type:law_multicultural
+		s:STATE_HAWAIIAN_ISLANDS = {
+			any_scope_state = {
+				owner = ROOT
+				is_incorporated = no
+			}
+		}
+	}
+
+	when_taken = {
+		set_variable = usa_admit_hawaii_state_decision_taken
+		random_state = {
+			limit = {
+				state_region = s:STATE_HAWAIIAN_ISLANDS
+				owner = ROOT
+			}
+			set_state_type = incorporated
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 usa_claim_idaho_decision = {
 	is_shown = {
 		c:USA ?= this
@@ -5099,6 +5827,41 @@ usa_claim_idaho_decision = {
 
 	when_taken = {
 		s:STATE_IDAHO = { add_claim = ROOT }
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+usa_transfer_newfoundland_to_canada = {
+	is_shown = {
+		OR = {
+			c:USA ?= this
+			c:GAC ?= this
+		}
+		exists = c:CAN
+		c:CAN = {
+			is_subject_of = ROOT
+		}
+	}
+
+	possible = {
+		exists = c:CAN
+		c:CAN = {
+			is_subject_of = ROOT
+		}
+		has_technology_researched = pan-nationalism
+	}
+
+	when_taken = {
+		random_state = {
+			limit = {
+				state_region = s:STATE_NEWFOUNDLAND
+			}
+			set_state_owner = c:CAN
+		}
+		annex = c:CAN
 	}
 
 	ai_chance = {
@@ -5224,6 +5987,52 @@ mex_ai_annex_altai_after_nationalism = {
 	}
 }
 
+usa_ai_annex_collapsed_mexico = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		exists = c:MEX
+		c:MEX ?= {
+			country_rank = rank_value:insignificant_power
+			num_states < 10
+		}
+	}
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		aggressive_diplomatic_plays_permitted = yes
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		c:MEX ?= {
+			NOT = { is_country_type = decentralized }
+			is_subject = no
+			country_rank = rank_value:insignificant_power
+			num_states < 10
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			army_power_projection < ROOT.army_power_projection
+		}
+	}
+
+	when_taken = {
+		create_diplomatic_play = {
+			type = dp_annex_war
+			target_country = c:MEX
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 usa_ai_return_mexican_central_america_states = {
 	is_shown = {
 		is_ai = yes
@@ -5281,66 +6090,6 @@ usa_ai_return_mexican_central_america_states = {
 				}
 			}
 			set_state_owner = c:MEX
-		}
-	}
-
-	ai_chance = {
-		value = 100
-	}
-}
-
-usa_conquer_sonora_after_baja = {
-	is_shown = {
-		c:USA ?= this
-		owns_entire_state_region = STATE_BAJA_CALIFORNIA
-		NOT = { owns_entire_state_region = STATE_SONORA }
-		NOT = { has_variable = usa_conquer_sonora_after_baja_started }
-	}
-
-	possible = {
-		is_at_war = no
-		is_diplomatic_play_committed_participant = no
-		aggressive_diplomatic_plays_permitted = yes
-		owns_entire_state_region = STATE_BAJA_CALIFORNIA
-		NOT = { owns_entire_state_region = STATE_SONORA }
-		s:STATE_SONORA = {
-			any_scope_state = {
-				NOT = { owner = ROOT }
-				owner = {
-					NOT = { is_country_type = decentralized }
-					is_at_war = no
-					is_diplomatic_play_committed_participant = no
-					NOT = { has_truce_with = ROOT }
-					NOT = { is_subject_of = ROOT }
-				}
-			}
-		}
-	}
-
-	when_taken = {
-		set_variable = usa_conquer_sonora_after_baja_started
-		s:STATE_SONORA = {
-			random_scope_state = {
-				limit = {
-					NOT = { owner = ROOT }
-					owner = {
-						NOT = { is_country_type = decentralized }
-						is_at_war = no
-						is_diplomatic_play_committed_participant = no
-						NOT = { has_truce_with = ROOT }
-						NOT = { is_subject_of = ROOT }
-					}
-				}
-				save_scope_as = usa_sonora_conquest_state_scope
-				owner = {
-					save_scope_as = usa_sonora_conquest_country_scope
-				}
-			}
-		}
-		create_diplomatic_play = {
-			type = dp_conquer_state
-			target_country = scope:usa_sonora_conquest_country_scope
-			target_state = scope:usa_sonora_conquest_state_scope
 		}
 	}
 
@@ -5762,6 +6511,48 @@ claims_on_algeria = {
 	}
 }
 
+rus_transfer_dobrudja_to_bulgaria = {
+	is_shown = {
+		c:RUS ?= this
+		exists = c:BUL
+		is_in_power_bloc = yes
+		c:BUL = {
+			is_in_same_power_bloc = ROOT
+		}
+		s:STATE_DOBRUDJA = {
+			any_scope_state = {
+				owner = ROOT
+			}
+		}
+	}
+
+	possible = {
+		c:BUL = {
+			is_in_same_power_bloc = ROOT
+		}
+		s:STATE_DOBRUDJA = {
+			any_scope_state = {
+				owner = ROOT
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_DOBRUDJA = {
+			every_scope_state = {
+				limit = {
+					owner = ROOT
+				}
+				set_state_owner = c:BUL
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 rus_annex_central_asian_unrecognized = {
 	is_shown = {
 		c:RUS ?= this
@@ -5829,6 +6620,77 @@ rus_annex_central_asian_unrecognized = {
 		create_diplomatic_play = {
 			type = dp_annex_war
 			target_country = scope:rus_central_asia_annex_target_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+rus_ai_annex_adjacent_central_asian_insignificant = {
+	is_shown = {
+		is_ai = yes
+		c:RUS ?= this
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			capital = { region = sr:region_central_asia }
+			is_adjacent_to_country = ROOT
+			country_rank <= rank_value:insignificant_power
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_country = {
+			NOT = { this = ROOT }
+			NOT = { is_country_type = decentralized }
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			capital = { region = sr:region_central_asia }
+			is_adjacent_to_country = ROOT
+			country_rank <= rank_value:insignificant_power
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+		}
+	}
+
+	when_taken = {
+		random_country = {
+			limit = {
+				NOT = { this = ROOT }
+				NOT = { is_country_type = decentralized }
+				is_subject = no
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				capital = { region = sr:region_central_asia }
+				is_adjacent_to_country = ROOT
+				country_rank <= rank_value:insignificant_power
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+			}
+			save_scope_as = rus_adjacent_central_asia_annex_target_scope
+		}
+		create_diplomatic_play = {
+			type = dp_annex_war
+			target_country = scope:rus_adjacent_central_asia_annex_target_scope
 		}
 	}
 
@@ -6878,9 +7740,7 @@ belgium_unl_ai_return_bas_congo = {
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		s:STATE_BAS_CONGO = {
-			any_scope_state = {
 			has_claim_by = ROOT
-			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
@@ -6896,11 +7756,8 @@ belgium_unl_ai_return_bas_congo = {
 	possible = {
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
-		has_technology_researched = civilizing_mission
 		s:STATE_BAS_CONGO = {
-			any_scope_state = {
 			has_claim_by = ROOT
-			}
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
@@ -6945,6 +7802,7 @@ belgium_unl_ai_return_bas_congo = {
 
 return_claimed_madagascar_state = {
 	is_shown = {
+		is_ai = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -6956,6 +7814,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						is_subject = no
 						OR = {
 							is_country_type = unrecognized
 							country_rank = rank_value:insignificant_power
@@ -6973,6 +7832,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						is_subject = no
 						OR = {
 							is_country_type = unrecognized
 							country_rank = rank_value:insignificant_power
@@ -6999,6 +7859,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						is_subject = no
 						OR = {
 							is_country_type = unrecognized
 							country_rank = rank_value:insignificant_power
@@ -7016,6 +7877,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						is_subject = no
 						OR = {
 							is_country_type = unrecognized
 							country_rank = rank_value:insignificant_power
@@ -7033,6 +7895,7 @@ return_claimed_madagascar_state = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
+				is_subject = no
 				OR = {
 					is_country_type = unrecognized
 					country_rank = rank_value:insignificant_power
@@ -7505,6 +8368,7 @@ por_request_angola_consolidation = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
+			NOT = { is_subject_of = ROOT }
 			relations:root >= relations_threshold:cordial
 			OR = {
 				any_scope_state = {
@@ -7544,6 +8408,7 @@ por_request_angola_consolidation = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
+			NOT = { is_subject_of = ROOT }
 			relations:root >= relations_threshold:cordial
 			OR = {
 				any_scope_state = {
@@ -7571,6 +8436,7 @@ por_request_angola_consolidation = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
+				NOT = { is_subject_of = ROOT }
 				relations:root >= relations_threshold:cordial
 				OR = {
 					any_scope_state = {
@@ -7605,9 +8471,45 @@ por_request_mozambique_consolidation = {
 		c:POR ?= this
 		has_global_variable = berlin_conference_ended
 		OR = {
-			s:STATE_MOCAMBIQUE = { any_scope_state = { owner = ROOT } }
-			s:STATE_ZAMBEZIA = { any_scope_state = { owner = ROOT } }
-			s:STATE_LOURENCO_MARQUES = { any_scope_state = { owner = ROOT } }
+			s:STATE_MOCAMBIQUE = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
+			s:STATE_ZAMBEZIA = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
+			s:STATE_LOURENCO_MARQUES = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
 		}
 		NOT = {
 			OR = {
@@ -7618,7 +8520,8 @@ por_request_mozambique_consolidation = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			relations:root >= relations_threshold:cordial
+			NOT = { is_subject_of = ROOT }
+			relations:root >= relations_threshold:neutral
 			OR = {
 				any_scope_state = {
 					OR = {
@@ -7643,9 +8546,45 @@ por_request_mozambique_consolidation = {
 	possible = {
 		has_global_variable = berlin_conference_ended
 		OR = {
-			s:STATE_MOCAMBIQUE = { any_scope_state = { owner = ROOT } }
-			s:STATE_ZAMBEZIA = { any_scope_state = { owner = ROOT } }
-			s:STATE_LOURENCO_MARQUES = { any_scope_state = { owner = ROOT } }
+			s:STATE_MOCAMBIQUE = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
+			s:STATE_ZAMBEZIA = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
+			s:STATE_LOURENCO_MARQUES = {
+				any_scope_state = {
+					owner = {
+						OR = {
+							this = ROOT
+							AND = {
+								is_subject_of = ROOT
+								country_is_colonial_or_company = yes
+							}
+						}
+					}
+				}
+			}
 		}
 		NOT = {
 			OR = {
@@ -7656,7 +8595,8 @@ por_request_mozambique_consolidation = {
 		}
 		any_country = {
 			NOT = { this = ROOT }
-			relations:root >= relations_threshold:cordial
+			NOT = { is_subject_of = ROOT }
+			relations:root >= relations_threshold:neutral
 			OR = {
 				any_scope_state = {
 					OR = {
@@ -7683,7 +8623,8 @@ por_request_mozambique_consolidation = {
 		random_country = {
 			limit = {
 				NOT = { this = ROOT }
-				relations:root >= relations_threshold:cordial
+				NOT = { is_subject_of = ROOT }
+				relations:root >= relations_threshold:neutral
 				OR = {
 					any_scope_state = {
 						OR = {
@@ -8041,12 +8982,18 @@ tri_annex_libyan_unrecognized = {
 			}
 			save_scope_as = tri_annex_target_scope
 		}
-		create_diplomatic_play = {
-			target_country = scope:tri_annex_target_scope
-			type = dp_annex_war
-			if = {
-				limit = { exists = ROOT.top_overlord }
+		if = {
+			limit = { exists = ROOT.top_overlord }
+			create_diplomatic_play = {
+				target_country = scope:tri_annex_target_scope
+				type = dp_annex_war
 				add_initiator_backers = { ROOT.top_overlord }
+			}
+		}
+		else = {
+			create_diplomatic_play = {
+				target_country = scope:tri_annex_target_scope
+				type = dp_annex_war
 			}
 		}
 	}
@@ -8226,7 +9173,16 @@ brz_ai_return_brazilian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:CLM }
-						NOT = { owner = c:BOL }
+						OR = {
+							NOT = { owner = c:BOL }
+							s:STATE_AMAZONAS = {
+								NOT = {
+									any_scope_state = {
+										owner = ROOT
+									}
+								}
+							}
+						}
 					}
 					state_region = s:STATE_GOIAS
 					AND = {
@@ -8287,7 +9243,16 @@ brz_ai_return_brazilian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:CLM }
-						NOT = { owner = c:BOL }
+						OR = {
+							NOT = { owner = c:BOL }
+							s:STATE_AMAZONAS = {
+								NOT = {
+									any_scope_state = {
+										owner = ROOT
+									}
+								}
+							}
+						}
 					}
 					state_region = s:STATE_GOIAS
 					AND = {
@@ -8342,7 +9307,16 @@ brz_ai_return_brazilian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:CLM }
-							NOT = { owner = c:BOL }
+							OR = {
+								NOT = { owner = c:BOL }
+								s:STATE_AMAZONAS = {
+									NOT = {
+										any_scope_state = {
+											owner = ROOT
+										}
+									}
+								}
+							}
 						}
 						state_region = s:STATE_GOIAS
 						AND = {
@@ -8374,7 +9348,16 @@ brz_ai_return_brazilian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:CLM }
-							NOT = { owner = c:BOL }
+							OR = {
+								NOT = { owner = c:BOL }
+								s:STATE_AMAZONAS = {
+									NOT = {
+										any_scope_state = {
+											owner = ROOT
+										}
+									}
+								}
+							}
 						}
 						state_region = s:STATE_GOIAS
 						AND = {
@@ -8491,6 +9474,92 @@ brz_ai_annex_acre_insignificant_power = {
 		create_diplomatic_play = {
 			type = dp_annex_war
 			target_country = scope:brz_acre_annex_target_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+brz_ai_annex_amazonas_insignificant_power = {
+	is_shown = {
+		is_ai = yes
+		c:BRZ ?= this
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_AMAZONAS = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					country_rank = rank_value:insignificant_power
+					NOT = { is_country_type = decentralized }
+					is_subject = no
+					capital = {
+						state_region = s:STATE_AMAZONAS
+					}
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_AMAZONAS = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					country_rank = rank_value:insignificant_power
+					NOT = { is_country_type = decentralized }
+					is_subject = no
+					capital = {
+						state_region = s:STATE_AMAZONAS
+					}
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_AMAZONAS = {
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner = {
+						country_rank = rank_value:insignificant_power
+						NOT = { is_country_type = decentralized }
+						is_subject = no
+						capital = {
+							state_region = s:STATE_AMAZONAS
+						}
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+				owner = { save_scope_as = brz_amazonas_annex_target_scope }
+			}
+		}
+		create_diplomatic_play = {
+			type = dp_annex_war
+			target_country = scope:brz_amazonas_annex_target_scope
 		}
 	}
 
@@ -8900,6 +9969,7 @@ bol_ai_return_bolivian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:BRZ }
+						NOT = { owner = c:CLM }
 					}
 					AND = {
 						state_region = s:STATE_ACRE
@@ -8956,6 +10026,7 @@ bol_ai_return_bolivian_states = {
 					AND = {
 						state_region = s:STATE_AMAZONAS
 						NOT = { owner = c:BRZ }
+						NOT = { owner = c:CLM }
 					}
 					AND = {
 						state_region = s:STATE_ACRE
@@ -9006,6 +10077,7 @@ bol_ai_return_bolivian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:BRZ }
+							NOT = { owner = c:CLM }
 						}
 						AND = {
 							state_region = s:STATE_ACRE
@@ -9033,6 +10105,7 @@ bol_ai_return_bolivian_states = {
 						AND = {
 							state_region = s:STATE_AMAZONAS
 							NOT = { owner = c:BRZ }
+							NOT = { owner = c:CLM }
 						}
 						AND = {
 							state_region = s:STATE_ACRE
@@ -9448,6 +10521,41 @@ arg_ai_return_argentine_states = {
 			type = dp_return_state
 			target_country = scope:arg_return_target_country_scope
 			target_state = scope:arg_return_target_state_scope
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+arg_claim_falklands_decision = {
+	is_shown = {
+		c:ARG ?= this
+		has_technology_researched = nationalism
+		s:STATE_SOUTH_ATLANTIC_ISLANDS = {
+			NOT = {
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+			}
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		s:STATE_SOUTH_ATLANTIC_ISLANDS = {
+			NOT = {
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_SOUTH_ATLANTIC_ISLANDS = {
+			add_claim = ROOT
 		}
 	}
 
@@ -10222,6 +11330,82 @@ afs_consolidate_core_states = {
 				NOT = { owner = ROOT }
 			}
 			set_state_owner = c:AFS
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+congo_free_state_merge_subjects = {
+	is_shown = {
+		exists = c:AFS
+		any_subject_or_below = {
+			c:AFS ?= this
+		}
+		any_subject_or_below = {
+			NOT = { c:AFS ?= this }
+			any_scope_state = {
+				OR = {
+					state_region = s:STATE_BAS_CONGO
+					state_region = s:STATE_KASAI
+					state_region = s:STATE_EQUATEUR
+					state_region = s:STATE_CONGO_ORIENTALE
+					state_region = s:STATE_KATANGA
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		exists = c:AFS
+		any_subject_or_below = {
+			c:AFS ?= this
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		any_subject_or_below = {
+			NOT = { c:AFS ?= this }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			any_scope_state = {
+				OR = {
+					state_region = s:STATE_BAS_CONGO
+					state_region = s:STATE_KASAI
+					state_region = s:STATE_EQUATEUR
+					state_region = s:STATE_CONGO_ORIENTALE
+					state_region = s:STATE_KATANGA
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		every_subject_or_below = {
+			limit = {
+				NOT = { c:AFS ?= this }
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				any_scope_state = {
+					OR = {
+						state_region = s:STATE_BAS_CONGO
+						state_region = s:STATE_KASAI
+						state_region = s:STATE_EQUATEUR
+						state_region = s:STATE_CONGO_ORIENTALE
+						state_region = s:STATE_KATANGA
+					}
+				}
+			}
+			save_scope_as = congo_free_state_merge_target_scope
+			c:AFS = {
+				transfer_subject = scope:congo_free_state_merge_target_scope
+			}
+			c:AFS = {
+				annex = scope:congo_free_state_merge_target_scope
+			}
 		}
 	}
 
@@ -11050,6 +12234,7 @@ ai_delete_universities_construction_when_overbuilt = {
 
 ai_delete_all_barracks = {
 	is_shown = {
+		always = no
 		is_ai = yes
 		in_default = yes
 		any_scope_state = {
@@ -11058,6 +12243,7 @@ ai_delete_all_barracks = {
 	}
 
 	possible = {
+		always = no
 		is_ai = yes
 		in_default = yes
 		any_scope_state = {
@@ -11066,17 +12252,7 @@ ai_delete_all_barracks = {
 	}
 
 	when_taken = {
-		every_scope_state = {
-			limit = {
-				has_building = building_barrack
-			}
-			while = {
-				limit = {
-					has_building = building_barrack
-				}
-				remove_building = building_barrack
-			}
-		}
+		# Disabled: deleting barracks directly can leave dead military formations in saves.
 	}
 
 	ai_chance = {
@@ -11092,7 +12268,6 @@ low_sol_delete_government_buildings_build_port = {
 			any_scope_state = {
 				OR = {
 					has_building = building_government_administration
-					has_building = building_barrack
 					has_building = building_naval_administration
 					has_building = building_port
 					has_building = building_university
@@ -11117,7 +12292,6 @@ low_sol_delete_government_buildings_build_port = {
 			any_scope_state = {
 				OR = {
 					has_building = building_government_administration
-					has_building = building_barrack
 					has_building = building_naval_administration
 					has_building = building_port
 					has_building = building_university
@@ -11141,7 +12315,6 @@ low_sol_delete_government_buildings_build_port = {
 			limit = {
 				OR = {
 					has_building = building_government_administration
-					has_building = building_barrack
 					has_building = building_naval_administration
 					has_building = building_port
 					has_building = building_university
@@ -11157,12 +12330,6 @@ low_sol_delete_government_buildings_build_port = {
 					has_building = building_government_administration
 				}
 				remove_building = building_government_administration
-			}
-			while = {
-				limit = {
-					has_building = building_barrack
-				}
-				remove_building = building_barrack
 			}
 			while = {
 				limit = {

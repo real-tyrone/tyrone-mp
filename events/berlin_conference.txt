@@ -109,17 +109,25 @@ berlin_conference.5 = {
 
 	trigger = {
 		c:GBR ?= this
-		exists = c:GER
 		exists = c:SAF
+		any_country = {
+			has_variable = namibia_south_west_africa_request_pending
+		}
 	}
 
 	option = {
 		name = berlin_conference.5.a
 		default_option = yes
 		ai_chance = { base = 100 }
-		change_relations = { country = c:GER value = 20 }
-		c:GER = {
-			remove_variable = ger_south_west_africa_request_pending
+		random_country = {
+			limit = {
+				has_variable = namibia_south_west_africa_request_pending
+			}
+			save_scope_as = south_west_africa_claimant_scope
+		}
+		change_relations = { country = scope:south_west_africa_claimant_scope value = 20 }
+		scope:south_west_africa_claimant_scope = {
+			remove_variable = namibia_south_west_africa_request_pending
 			if = {
 				limit = {
 					any_subject_or_below = {
@@ -138,22 +146,22 @@ berlin_conference.5 = {
 							any_scope_state = { state_region = s:STATE_NAMAQUALAND }
 						}
 					}
-					save_scope_as = ger_south_west_africa_target_scope
+					save_scope_as = south_west_africa_target_scope
 				}
 			}
 			else = {
-				save_scope_as = ger_south_west_africa_target_scope
+				save_scope_as = south_west_africa_target_scope
 			}
 		}
 		s:STATE_HEREROLAND = {
 			every_scope_state = {
 				limit = {
-					OR = {
+				OR = {
 						owner = c:GBR
 						owner = c:SAF
 					}
 				}
-				set_state_owner = scope:ger_south_west_africa_target_scope
+				set_state_owner = scope:south_west_africa_target_scope
 			}
 		}
 		s:STATE_NAMAQUALAND = {
@@ -164,7 +172,7 @@ berlin_conference.5 = {
 						owner = c:SAF
 					}
 				}
-				set_state_owner = scope:ger_south_west_africa_target_scope
+				set_state_owner = scope:south_west_africa_target_scope
 			}
 			create_state = {
 				country = c:SAF
@@ -176,9 +184,15 @@ berlin_conference.5 = {
 	option = {
 		name = berlin_conference.5.b
 		ai_chance = { base = 0 }
-		change_relations = { country = c:GER value = -20 }
-		c:GER = {
-			remove_variable = ger_south_west_africa_request_pending
+		random_country = {
+			limit = {
+				has_variable = namibia_south_west_africa_request_pending
+			}
+			save_scope_as = south_west_africa_claimant_scope
+		}
+		change_relations = { country = scope:south_west_africa_claimant_scope value = -20 }
+		scope:south_west_africa_claimant_scope = {
+			remove_variable = namibia_south_west_africa_request_pending
 		}
 	}
 }

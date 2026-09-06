@@ -4,17 +4,30 @@
 	group = je_group_foreign_affairs
 
 	is_shown_when_inactive = {
-		has_variable = suez_survey_complete
 		country_rank >= rank_value:major_power
-		any_scope_state = {
-			state_region = s:STATE_SINAI
-		}
-		any_neighbouring_state = {
-			OR = {
-				state_region = s:STATE_LOWER_EGYPT
-				state_region = s:STATE_UPPER_EGYPT
-				state_region = s:STATE_MIDDLE_EGYPT
-				state_region = s:STATE_SINAI
+		OR = {
+			AND = {
+				any_scope_state = {
+					state_region = s:STATE_SINAI
+				}
+				any_neighbouring_state = {
+					OR = {
+						state_region = s:STATE_LOWER_EGYPT
+						state_region = s:STATE_UPPER_EGYPT
+						state_region = s:STATE_MIDDLE_EGYPT
+						state_region = s:STATE_SINAI
+					}
+				}
+			}
+			s:STATE_SINAI = {
+				any_scope_state = {
+					owner = {
+						is_subject_of = root
+					}
+					any_scope_building = {
+						is_building_type = building_suez_canal
+					}
+				}
 			}
 		}
 		NOT = { c:TUR ?= THIS }
@@ -24,7 +37,12 @@
 	possible = {
 		s:STATE_SINAI = {
 			any_scope_state = {
-				owner = root
+				owner = {
+					OR = {
+						THIS = root
+						is_subject_of = root
+					}
+				}
 				any_scope_building = {
 					is_building_type = building_suez_canal
 				}
@@ -124,7 +142,12 @@
 		NOT = {
 			s:STATE_SINAI = {
 				any_scope_state = {
-					owner = root
+					owner = {
+						OR = {
+							THIS = root
+							is_subject_of = root
+						}
+					}
 				}
 			}
 		}

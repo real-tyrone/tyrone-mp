@@ -1,0 +1,226 @@
+﻿v3g_expel_garrison = {
+	icon = "gfx/interface/icons/war_goals/humiliation_garrison.dds"
+
+	kind = custom
+
+	settings = {
+		require_target_be_part_of_war
+		validate_conflicts_war_goals_all
+	}
+
+	execution_priority = 22
+	contestion_type = control_own_capital
+	target_type = country
+
+	possible = {
+		OR = {
+			any_scope_treaty = {
+				binds = scope:target_country
+				any_scope_article = {
+					OR = {
+						has_type = v3g_garrison_rights
+						has_type = v3g_forced_garrison_rights
+					}
+					source_country = root
+					target_country = scope:target_country
+				}
+			}
+			AND = {
+				is_subject_of = scope:target_country
+				scope:target_country = {
+					has_diplomatic_pact = {
+						who = root
+						type = v3g_subject_garrison
+					}
+				}
+			}
+		}
+	}
+
+	valid = {
+		OR = {
+			any_scope_treaty = {
+				binds = scope:target_country
+				any_scope_article = {
+					OR = {
+						has_type = v3g_garrison_rights
+						has_type = v3g_forced_garrison_rights
+					}
+					source_country = root
+					target_country = scope:target_country
+				}
+			}
+			AND = {
+				is_subject_of = scope:target_country
+				scope:target_country = {
+					has_diplomatic_pact = {
+						who = root
+						type = v3g_subject_garrison
+					}
+				}
+			}
+		}
+	}
+
+	maneuvers = {
+		value = 10
+	}
+
+	infamy = {
+		value = 0
+	}
+
+	on_enforced = {
+		if = {
+			limit = {
+				scope:target_country = {
+					has_diplomatic_pact = {
+						who = root
+						type = v3g_subject_garrison
+					}
+				}
+			}
+			scope:target_country = {
+				remove_diplomatic_pact = {
+					country = root
+					type = v3g_subject_garrison
+				}
+			}
+		}
+
+		every_scope_treaty = {
+			limit = {
+				binds = scope:target_country
+				any_scope_article = {
+					OR = {
+						has_type = v3g_garrison_rights
+						has_type = v3g_forced_garrison_rights
+					}
+					source_country = root
+					target_country = scope:target_country
+				}
+			}
+			withdraw = {
+				country = scope:target_country
+			}
+		}
+
+		create_diplomatic_catalyst = {
+			type = catalyst_v3g_garrison_expelled
+			target = scope:target_country
+		}
+	}
+
+	ai = {
+		is_significant_demand = no
+	}
+}
+
+v3g_force_garrison = {
+	icon = "gfx/interface/icons/diplomatic_action_icons/enforce_military_access_garrison.dds"
+
+	kind = custom
+	target_type = country
+
+	settings = {
+		require_target_be_part_of_war
+		validate_conflicts_war_goals_all
+	}
+
+	execution_priority = 21
+	contestion_type = control_any_target_country_state
+
+	possible = {
+		NOT = { is_country_type = decentralized }
+		has_technology_researched = international_relations
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+		}
+		NOT = {
+			scope:target_country = {
+				any_scope_treaty = {
+					binds = root
+					any_scope_article = {
+						OR = {
+							has_type = v3g_garrison_rights
+							has_type = v3g_forced_garrison_rights
+						}
+						source_country = scope:target_country
+						target_country = root
+					}
+				}
+			}
+		}
+		NOT = {
+			scope:target_country = {
+				any_diplomatic_catalyst = {
+					is_diplomatic_catalyst_type = catalyst_v3g_garrison_expelled
+					target = root
+				}
+			}
+		}
+	}
+
+	valid = {
+		NOT = { is_country_type = decentralized }
+		scope:target_country = {
+			NOT = { is_country_type = decentralized }
+		}
+		NOT = {
+			scope:target_country = {
+				any_scope_treaty = {
+					binds = root
+					any_scope_article = {
+						OR = {
+							has_type = v3g_garrison_rights
+							has_type = v3g_forced_garrison_rights
+						}
+						source_country = scope:target_country
+						target_country = root
+					}
+				}
+			}
+		}
+		NOT = {
+			scope:target_country = {
+				any_diplomatic_catalyst = {
+					is_diplomatic_catalyst_type = catalyst_v3g_garrison_expelled
+					target = root
+				}
+			}
+		}
+	}
+
+	maneuvers = { value = 10 }
+
+	infamy = {
+		value = 2
+		add = {
+			value = scope:target_country.total_population
+			divide = 10000000
+			max = 8
+		}
+		min = 2
+		max = 10
+	}
+
+	on_enforced = {
+		create_treaty = {
+			first_country = root
+			second_country = scope:target_country
+			is_draft = no
+			binding_period = { years = 10 }
+			articles_to_create = {
+				{
+					article = v3g_forced_garrison_rights
+					source_country = scope:target_country
+					target_country = root
+				}
+			}
+		}
+	}
+
+	ai = {
+		is_significant_demand = yes
+	}
+}

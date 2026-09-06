@@ -1,0 +1,113 @@
+﻿v3g_subject_garrison = {
+	groups = {
+		overlord
+	}
+
+	requires_approval = no
+	show_in_lens = yes
+	should_notify_third_parties = yes
+	show_effect_in_tooltip = yes
+
+	texture = "gfx/interface/icons/diplomatic_action_icons/enforce_military_access_garrison.dds"
+
+	selectable = { always = yes }
+	potential = { always = yes }
+
+	possible = {
+		custom_tooltip = {
+			text = V3G_GARRISON_EXPULSION_COOLDOWN
+			NOT = {
+				scope:target_country = {
+					any_diplomatic_catalyst = {
+						is_diplomatic_catalyst_type = catalyst_v3g_garrison_expelled
+						target = root
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = V3G_SUBJECT_GARRISON_REQUIRES_SUBJECT
+			scope:target_country = {
+				is_subject_of = root
+			}
+		}
+		custom_tooltip = {
+			text = V3G_GARRISON_REQUIRES_CENTRALIZED_COUNTRIES
+			NOT = { is_country_type = decentralized }
+			scope:target_country = {
+				NOT = { is_country_type = decentralized }
+			}
+		}
+		NOT = {
+			has_diplomatic_pact = {
+				who = scope:target_country
+				type = v3g_subject_garrison
+			}
+		}
+	}
+
+	accept_effect = {
+		v3g_ensure_subject_garrison_treaty = yes
+	}
+
+	pact = {
+		cost = 0
+		forced_duration = 0
+		maintenance_paid_by = first_country
+		military_access = yes
+
+		actor_can_break = {
+			always = yes
+		}
+
+		target_can_break = {
+			always = no
+		}
+
+		requirement_to_maintain = {
+			trigger = {
+				scope:target_country = {
+					is_subject_of = root
+				}
+			}
+		}
+
+		# Migrates existing saves and restores the engine-level HQ permission if needed.
+		monthly_effect = {
+			v3g_ensure_subject_garrison_treaty = yes
+		}
+
+		manual_break_effect = {
+			v3g_remove_subject_garrison_treaty = yes
+		}
+
+		auto_break_effect = {
+			v3g_remove_subject_garrison_treaty = yes
+		}
+	}
+
+	ai = {
+		evaluation_chance = {
+			value = 0.1
+		}
+
+		will_propose = {
+			scope:target_country = {
+				OR = {
+					any_scope_state = {
+						turmoil > 0.1
+					}
+					liberty_desire > 50
+				}
+			}
+		}
+
+		will_break = {
+			always = no
+		}
+
+		propose_score = {
+			value = 10
+		}
+	}
+}

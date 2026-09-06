@@ -1,0 +1,58 @@
+v3g_ensure_subject_garrison_treaty = {
+	if = {
+		limit = {
+			exists = scope:target_country
+			scope:target_country = {
+				is_subject_of = root
+			}
+			NOT = {
+				any_scope_treaty = {
+					binds = scope:target_country
+					any_scope_article = {
+						OR = {
+							has_type = v3g_garrison_rights
+							has_type = v3g_forced_garrison_rights
+						}
+						source_country = scope:target_country
+						target_country = root
+					}
+				}
+			}
+		}
+
+		create_treaty = {
+			first_country = root
+			second_country = scope:target_country
+			is_draft = no
+			binding_period = { days = 0 }
+			articles_to_create = {
+				{
+					article = v3g_garrison_rights
+					source_country = scope:target_country
+					target_country = root
+				}
+			}
+		}
+	}
+}
+
+v3g_remove_subject_garrison_treaty = {
+	if = {
+		limit = {
+			exists = scope:target_country
+		}
+		every_scope_treaty = {
+			limit = {
+				binds = scope:target_country
+				any_scope_article = {
+					has_type = v3g_garrison_rights
+					source_country = scope:target_country
+					target_country = root
+				}
+			}
+			withdraw = {
+				country = root
+			}
+		}
+	}
+}
