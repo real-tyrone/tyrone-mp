@@ -158,6 +158,8 @@ lmv_request_protectorate_decision = {
 
 ita_ai_transfer_lmv_from_austria = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:ITA ?= this
 		exists = c:LMV
@@ -174,16 +176,19 @@ ita_ai_transfer_lmv_from_austria = {
 		}
 		OR = {
 			c:AUS ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_at_war = yes
 				army_power_projection < ROOT.army_power_projection
 				NOT = { has_war_with = ROOT }
 			}
 			c:KUK ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_at_war = yes
 				army_power_projection < ROOT.army_power_projection
 			}
 		}
 		c:LMV = {
+			tyrone_ai_attack_country_allowed = yes
 			OR = {
 			is_subject_of = c:AUS
 				is_subject_of = c:KUK
@@ -193,6 +198,8 @@ ita_ai_transfer_lmv_from_austria = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -202,12 +209,14 @@ ita_ai_transfer_lmv_from_austria = {
 		}
 		OR = {
 			c:AUS ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_at_war = yes
 				army_power_projection < ROOT.army_power_projection
 				NOT = { has_war_with = ROOT }
 				NOT = { has_truce_with = ROOT }
 			}
 			c:KUK ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_at_war = yes
 				army_power_projection < ROOT.army_power_projection
 				NOT = { has_war_with = ROOT }
@@ -215,6 +224,7 @@ ita_ai_transfer_lmv_from_austria = {
 			}
 		}
 		c:LMV = {
+			tyrone_ai_attack_country_allowed = yes
 			OR = {
 			is_subject_of = c:AUS
 				is_subject_of = c:KUK
@@ -224,9 +234,15 @@ ita_ai_transfer_lmv_from_austria = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_transfer_subject
-			target_country = c:LMV
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:LMV = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_transfer_subject
+				target_country = c:LMV
+			}
 		}
 	}
 
@@ -237,6 +253,8 @@ ita_ai_transfer_lmv_from_austria = {
 
 ita_ai_annex_independent_lmv = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:ITA ?= this
 		exists = c:LMV
@@ -248,6 +266,7 @@ ita_ai_annex_independent_lmv = {
 			}
 		}
 		c:LMV = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -257,6 +276,8 @@ ita_ai_annex_independent_lmv = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -265,6 +286,7 @@ ita_ai_annex_independent_lmv = {
 			}
 		}
 		c:LMV = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -274,9 +296,15 @@ ita_ai_annex_independent_lmv = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			target_country = c:LMV
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:LMV = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:LMV
+				type = dp_annex_war
+			}
 		}
 	}
 
@@ -287,6 +315,7 @@ ita_ai_annex_independent_lmv = {
 
 ita_ai_return_independent_north_italian_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:ITA ?= this
 		is_at_war = no
@@ -300,6 +329,7 @@ ita_ai_return_independent_north_italian_states = {
 			exists = c:LMV
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { c:LMV ?= this }
 			is_subject = no
@@ -316,6 +346,7 @@ ita_ai_return_independent_north_italian_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -324,6 +355,7 @@ ita_ai_return_independent_north_italian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { c:LMV ?= this }
 			is_subject = no
@@ -342,6 +374,7 @@ ita_ai_return_independent_north_italian_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { c:LMV ?= this }
 				country_has_primary_culture = cu:north_italian
@@ -372,10 +405,16 @@ ita_ai_return_independent_north_italian_states = {
 		scope:ita_return_north_italian_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:ita_return_north_italian_target_country_scope
-			target_state = scope:ita_return_north_italian_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:ita_return_north_italian_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:ita_return_north_italian_target_country_scope
+				target_state = scope:ita_return_north_italian_target_state_scope
+			}
 		}
 	}
 
@@ -386,6 +425,7 @@ ita_ai_return_independent_north_italian_states = {
 
 ita_ai_return_lombardy_venetia_no_lmv = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:ITA ?= this
 		NOT = { exists = c:LMV }
@@ -406,6 +446,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 					NOT = { owner = ROOT }
 					state_region = s:STATE_LOMBARDY
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -420,6 +461,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 					NOT = { owner = ROOT }
 					state_region = s:STATE_VENETIA
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -433,6 +475,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { exists = c:LMV }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -451,6 +494,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 					NOT = { owner = ROOT }
 					state_region = s:STATE_LOMBARDY
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -465,6 +509,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 					NOT = { owner = ROOT }
 					state_region = s:STATE_VENETIA
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -486,6 +531,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 						NOT = { owner = ROOT }
 						state_region = s:STATE_LOMBARDY
 						owner = {
+							tyrone_ai_attack_country_allowed = yes
 							NOT = { is_country_type = decentralized }
 							is_at_war = no
 							is_diplomatic_play_committed_participant = no
@@ -502,6 +548,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 						NOT = { owner = ROOT }
 						state_region = s:STATE_LOMBARDY
 						owner = {
+							tyrone_ai_attack_country_allowed = yes
 							NOT = { is_country_type = decentralized }
 							is_at_war = no
 							is_diplomatic_play_committed_participant = no
@@ -523,6 +570,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 						NOT = { owner = ROOT }
 						state_region = s:STATE_VENETIA
 						owner = {
+							tyrone_ai_attack_country_allowed = yes
 							NOT = { is_country_type = decentralized }
 							is_at_war = no
 							is_diplomatic_play_committed_participant = no
@@ -539,6 +587,7 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 						NOT = { owner = ROOT }
 						state_region = s:STATE_VENETIA
 						owner = {
+							tyrone_ai_attack_country_allowed = yes
 							NOT = { is_country_type = decentralized }
 							is_at_war = no
 							is_diplomatic_play_committed_participant = no
@@ -555,10 +604,16 @@ ita_ai_return_lombardy_venetia_no_lmv = {
 		scope:ita_lombardy_venetia_return_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:ita_lombardy_venetia_return_country_scope
-			target_state = scope:ita_lombardy_venetia_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:ita_lombardy_venetia_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:ita_lombardy_venetia_return_country_scope
+				target_state = scope:ita_lombardy_venetia_return_state_scope
+			}
 		}
 	}
 
@@ -601,9 +656,12 @@ ita_annex_lmv_subject_decision = {
 
 ita_return_dalmatia_decision = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ki_DLM ?= { tyrone_ai_attack_country_allowed = yes }
 		c:ITA ?= this
 		exists = c:ki_DLM
 		c:ki_DLM = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 		}
 		s:STATE_DALMATIA = {
@@ -615,9 +673,12 @@ ita_return_dalmatia_decision = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ki_DLM ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:ki_DLM = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -642,10 +703,16 @@ ita_return_dalmatia_decision = {
 				save_scope_as = ita_dalmatia_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:ki_DLM
-			target_state = scope:ita_dalmatia_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:ki_DLM = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:ki_DLM
+				target_state = scope:ita_dalmatia_return_state_scope
+			}
 		}
 	}
 

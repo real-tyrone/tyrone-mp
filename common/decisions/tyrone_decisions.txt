@@ -683,17 +683,22 @@ decision_merge_chinese_subjects = {
 
 decision_china_unify_manchuria = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MCH ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:CHI ?= this
 		exists = c:MCH
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MCH ?= { tyrone_ai_attack_country_allowed = yes }
 		is_subject = no
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
 		c:MCH = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_secessionist = no
 			is_adjacent_to_country = ROOT
@@ -704,9 +709,15 @@ decision_china_unify_manchuria = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_unify_china
-			target_country = c:MCH
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:MCH = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_china
+				target_country = c:MCH
+			}
 		}
 	}
 
@@ -1123,9 +1134,12 @@ REPLACE:aus_organise_trialism = {
 
 aus_return_independent_croatian_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:CRO ?= { tyrone_ai_attack_country_allowed = yes }
 		c:AUS ?= this
 		exists = c:CRO
 		c:CRO ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			any_scope_state = {
 				has_claim_by = ROOT
@@ -1134,12 +1148,15 @@ aus_return_independent_croatian_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:CRO ?= { tyrone_ai_attack_country_allowed = yes }
 		c:AUS ?= this
 		NOT = { is_country_type = decentralized }
 		aggressive_diplomatic_plays_permitted = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:CRO ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -1161,10 +1178,16 @@ aus_return_independent_croatian_states = {
 				save_scope_as = aus_croatia_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:CRO
-			target_state = scope:aus_croatia_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:CRO = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:CRO
+				target_state = scope:aus_croatia_return_state_scope
+			}
 		}
 	}
 
@@ -1855,6 +1878,7 @@ saf_incorporate_southern_africa_states = {
 
 ger_ai_return_zanzibar_claim = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:GER ?= this
 		is_at_war = no
@@ -1871,6 +1895,7 @@ ger_ai_return_zanzibar_claim = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					NOT = { is_country_type = decentralized }
 					NOT = { has_truce_with = ROOT }
@@ -1889,6 +1914,7 @@ ger_ai_return_zanzibar_claim = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -1903,6 +1929,7 @@ ger_ai_return_zanzibar_claim = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					NOT = { is_country_type = decentralized }
 					NOT = { has_truce_with = ROOT }
@@ -1926,6 +1953,7 @@ ger_ai_return_zanzibar_claim = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						NOT = { is_country_type = decentralized }
 						NOT = { has_truce_with = ROOT }
@@ -1958,10 +1986,16 @@ ger_ai_return_zanzibar_claim = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:ger_zanzibar_return_country_scope
-			target_state = scope:ger_zanzibar_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:ger_zanzibar_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:ger_zanzibar_return_country_scope
+				target_state = scope:ger_zanzibar_return_state_scope
+			}
 		}
 	}
 
@@ -1972,6 +2006,8 @@ ger_ai_return_zanzibar_claim = {
 
 recognized_ai_return_ashanti_togo = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ASH ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		country_rank > rank_value:unrecognized_regional_power
 		is_at_war = no
@@ -1996,6 +2032,7 @@ recognized_ai_return_ashanti_togo = {
 			}
 		}
 		c:ASH ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
@@ -2004,6 +2041,8 @@ recognized_ai_return_ashanti_togo = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ASH ?= { tyrone_ai_attack_country_allowed = yes }
 		country_rank > rank_value:unrecognized_regional_power
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -2027,6 +2066,7 @@ recognized_ai_return_ashanti_togo = {
 			}
 		}
 		c:ASH ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
@@ -2054,10 +2094,16 @@ recognized_ai_return_ashanti_togo = {
 				save_scope_as = ashanti_togo_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:ASH
-			target_state = scope:ashanti_togo_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:ASH = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:ASH
+				target_state = scope:ashanti_togo_return_state_scope
+			}
 		}
 	}
 
@@ -2068,6 +2114,7 @@ recognized_ai_return_ashanti_togo = {
 
 ita_ai_return_ethiopian_claim_after_berlin = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
@@ -2085,6 +2132,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2105,6 +2153,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2125,6 +2174,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2145,6 +2195,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						is_subject = no
 						NOT = { is_country_type = decentralized }
@@ -2161,6 +2212,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -2177,6 +2229,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2197,6 +2250,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2217,6 +2271,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_adjacent_to_country = ROOT
 						is_country_type = unrecognized
 						is_subject = no
@@ -2237,6 +2292,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						is_subject = no
 						NOT = { is_country_type = decentralized }
@@ -2262,6 +2318,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					any_scope_state = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2281,6 +2338,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					limit = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2307,6 +2365,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					any_scope_state = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2326,6 +2385,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					limit = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2352,6 +2412,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					any_scope_state = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2371,6 +2432,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					limit = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_adjacent_to_country = ROOT
 							is_country_type = unrecognized
 							is_subject = no
@@ -2397,6 +2459,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					any_scope_state = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_country_type = unrecognized
 							is_subject = no
 							NOT = { is_country_type = decentralized }
@@ -2415,6 +2478,7 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 					limit = {
 						NOT = { owner = ROOT }
 						owner ?= {
+							tyrone_ai_attack_country_allowed = yes
 							is_country_type = unrecognized
 							is_subject = no
 							NOT = { is_country_type = decentralized }
@@ -2431,10 +2495,16 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:ita_ethiopia_return_country_scope
-			target_state = scope:ita_ethiopia_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:ita_ethiopia_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:ita_ethiopia_return_country_scope
+				target_state = scope:ita_ethiopia_return_state_scope
+			}
 		}
 	}
 
@@ -2445,6 +2515,8 @@ ita_ai_return_ethiopian_claim_after_berlin = {
 
 prussia_ai_liberate_schleswig_holstein = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:SCH ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:PRU ?= this
 		exists = c:DEN
@@ -2452,11 +2524,14 @@ prussia_ai_liberate_schleswig_holstein = {
 		has_journal_entry = je_schleswig_holstein_question
 		has_technology_researched = nationalism
 		c:SCH = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject_of = c:DEN
 		}
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:SCH ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -2465,12 +2540,14 @@ prussia_ai_liberate_schleswig_holstein = {
 			}
 		}
 		c:DEN = {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
 			army_power_projection < ROOT.army_power_projection
 		}
 		c:SCH = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject_of = c:DEN
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -2478,10 +2555,16 @@ prussia_ai_liberate_schleswig_holstein = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			name = liberate_subject
-			type = dp_liberate_subject
-			target_country = c:SCH
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:SCH = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				name = liberate_subject
+				type = dp_liberate_subject
+				target_country = c:SCH
+			}
 		}
 	}
 
@@ -2934,6 +3017,7 @@ annex_south_sudan_decision = {
 
 egypt_ai_return_darfur = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:EGY ?= this
 		has_technology_researched = nationalism
@@ -2949,6 +3033,7 @@ egypt_ai_return_darfur = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_subject = no
 					is_at_war = no
@@ -2961,6 +3046,7 @@ egypt_ai_return_darfur = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_technology_researched = nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -2974,6 +3060,7 @@ egypt_ai_return_darfur = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_subject = no
 					is_at_war = no
@@ -2992,6 +3079,7 @@ egypt_ai_return_darfur = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_subject = no
 						is_at_war = no
@@ -3006,10 +3094,16 @@ egypt_ai_return_darfur = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:egypt_darfur_return_country_scope
-			target_state = scope:egypt_darfur_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:egypt_darfur_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:egypt_darfur_return_country_scope
+				target_state = scope:egypt_darfur_return_state_scope
+			}
 		}
 	}
 
@@ -3020,6 +3114,7 @@ egypt_ai_return_darfur = {
 
 ottoman_ai_return_darfur = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:TUR ?= this
 		has_technology_researched = nationalism
@@ -3038,6 +3133,7 @@ ottoman_ai_return_darfur = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_subject = no
 					is_at_war = no
@@ -3050,6 +3146,7 @@ ottoman_ai_return_darfur = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_technology_researched = nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -3066,6 +3163,7 @@ ottoman_ai_return_darfur = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_subject = no
 					is_at_war = no
@@ -3083,6 +3181,7 @@ ottoman_ai_return_darfur = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_subject = no
 						is_at_war = no
@@ -3097,10 +3196,16 @@ ottoman_ai_return_darfur = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:ottoman_darfur_return_country_scope
-			target_state = scope:ottoman_darfur_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:ottoman_darfur_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:ottoman_darfur_return_country_scope
+				target_state = scope:ottoman_darfur_return_state_scope
+			}
 		}
 	}
 
@@ -3111,12 +3216,15 @@ ottoman_ai_return_darfur = {
 
 ottoman_reclaim_egyptian_claims = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:EGY ?= { tyrone_ai_attack_country_allowed = yes }
 		c:TUR ?= this
 		exists = c:EGY
 		has_technology_researched = civilizing_mission
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:EGY = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -3128,6 +3236,8 @@ ottoman_reclaim_egyptian_claims = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:EGY ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = civilizing_mission
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -3137,6 +3247,7 @@ ottoman_reclaim_egyptian_claims = {
 			}
 		}
 		c:EGY = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -3156,10 +3267,16 @@ ottoman_reclaim_egyptian_claims = {
 				save_scope_as = ottoman_egypt_primary_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:EGY
-			target_state = scope:ottoman_egypt_primary_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:EGY = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:EGY
+				target_state = scope:ottoman_egypt_primary_return_state_scope
+			}
 		}
 		hidden_effect = {
 			random_diplomatic_play = {
@@ -3196,11 +3313,13 @@ ottoman_reclaim_egyptian_claims = {
 
 kuk_ai_return_claimed_borderlands = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:KUK ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_player = no
@@ -3231,6 +3350,7 @@ kuk_ai_return_claimed_borderlands = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -3239,6 +3359,7 @@ kuk_ai_return_claimed_borderlands = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_player = no
@@ -3271,6 +3392,7 @@ kuk_ai_return_claimed_borderlands = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_player = no
@@ -3313,10 +3435,16 @@ kuk_ai_return_claimed_borderlands = {
 				save_scope_as = kuk_return_claims_primary_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:kuk_return_claims_target_scope
-			target_state = scope:kuk_return_claims_primary_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:kuk_return_claims_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:kuk_return_claims_target_scope
+				target_state = scope:kuk_return_claims_primary_state_scope
+			}
 		}
 		hidden_effect = {
 			random_diplomatic_play = {
@@ -3359,6 +3487,8 @@ kuk_ai_return_claimed_borderlands = {
 
 ottoman_ai_annex_bulgaria_crimean_victory = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BUL ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:TUR ?= this
 		has_global_variable = crimean_war_ottoman_victory
@@ -3373,6 +3503,7 @@ ottoman_ai_annex_bulgaria_crimean_victory = {
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:BUL = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -3381,6 +3512,8 @@ ottoman_ai_annex_bulgaria_crimean_victory = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BUL ?= { tyrone_ai_attack_country_allowed = yes }
 		has_global_variable = crimean_war_ottoman_victory
 		NOT = { has_variable = ottoman_ai_annexed_bulgaria_crimean_victory }
 		NOT = { has_global_variable = eastern_crisis_ottoman_defeat }
@@ -3397,6 +3530,7 @@ ottoman_ai_annex_bulgaria_crimean_victory = {
 			}
 		}
 		c:BUL = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -3406,9 +3540,15 @@ ottoman_ai_annex_bulgaria_crimean_victory = {
 
 	when_taken = {
 		set_variable = ottoman_ai_annexed_bulgaria_crimean_victory
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = c:BUL
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:BUL = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = c:BUL
+			}
 		}
 	}
 
@@ -3419,6 +3559,8 @@ ottoman_ai_annex_bulgaria_crimean_victory = {
 
 ottoman_ai_annex_hedjaz_subject = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:HDJ ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:TUR ?= this
 		exists = c:HDJ
@@ -3427,6 +3569,7 @@ ottoman_ai_annex_hedjaz_subject = {
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
 		c:HDJ = {
+			tyrone_ai_attack_country_allowed = yes
 			is_direct_subject_of = ROOT
 			is_subject_type = subject_type_puppet
 			liberty_desire < 25
@@ -3436,6 +3579,8 @@ ottoman_ai_annex_hedjaz_subject = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:HDJ ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = civilizing_mission
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -3446,6 +3591,7 @@ ottoman_ai_annex_hedjaz_subject = {
 			}
 		}
 		c:HDJ = {
+			tyrone_ai_attack_country_allowed = yes
 			is_direct_subject_of = ROOT
 			is_subject_type = subject_type_puppet
 			liberty_desire < 25
@@ -3455,9 +3601,15 @@ ottoman_ai_annex_hedjaz_subject = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_annex_subject
-			target_country = c:HDJ
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:HDJ = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_subject
+				target_country = c:HDJ
+			}
 		}
 	}
 
@@ -3468,6 +3620,8 @@ ottoman_ai_annex_hedjaz_subject = {
 
 ottoman_ai_annex_zaydi_yemen = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ZAI ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:TUR ?= this
 		exists = c:ZAI
@@ -3478,6 +3632,7 @@ ottoman_ai_annex_zaydi_yemen = {
 			state_region = s:STATE_YEMEN
 		}
 		c:ZAI = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -3489,6 +3644,8 @@ ottoman_ai_annex_zaydi_yemen = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ZAI ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -3501,6 +3658,7 @@ ottoman_ai_annex_zaydi_yemen = {
 			state_region = s:STATE_YEMEN
 		}
 		c:ZAI = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -3512,9 +3670,15 @@ ottoman_ai_annex_zaydi_yemen = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = c:ZAI
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:ZAI = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = c:ZAI
+			}
 		}
 	}
 
@@ -3525,6 +3689,7 @@ ottoman_ai_annex_zaydi_yemen = {
 
 persia_ai_return_sistan = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:PER ?= this
 		has_technology_researched = nationalism
@@ -3540,6 +3705,7 @@ persia_ai_return_sistan = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -3551,6 +3717,7 @@ persia_ai_return_sistan = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_technology_researched = nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -3564,6 +3731,7 @@ persia_ai_return_sistan = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -3581,6 +3749,7 @@ persia_ai_return_sistan = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						is_subject = no
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -3594,10 +3763,16 @@ persia_ai_return_sistan = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:persia_sistan_return_country_scope
-			target_state = scope:persia_sistan_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:persia_sistan_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:persia_sistan_return_country_scope
+				target_state = scope:persia_sistan_return_state_scope
+			}
 		}
 	}
 
@@ -3608,6 +3783,7 @@ persia_ai_return_sistan = {
 
 bht_ai_unify_indian_neighbors = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		NOT = { exists = c:BIC }
 		NOT = { exists = c:BHT }
@@ -3625,6 +3801,7 @@ bht_ai_unify_indian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3646,6 +3823,7 @@ bht_ai_unify_indian_neighbors = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { exists = c:BIC }
 		NOT = { exists = c:BHT }
 		NOT = { is_country_type = decentralized }
@@ -3662,6 +3840,7 @@ bht_ai_unify_indian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3685,6 +3864,7 @@ bht_ai_unify_indian_neighbors = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				aggressive_diplomatic_plays_permitted = yes
@@ -3705,9 +3885,15 @@ bht_ai_unify_indian_neighbors = {
 			}
 			save_scope_as = bht_unify_india_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_unify_india
-			target_country = scope:bht_unify_india_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bht_unify_india_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_india
+				target_country = scope:bht_unify_india_target_scope
+			}
 		}
 	}
 
@@ -3718,6 +3904,7 @@ bht_ai_unify_indian_neighbors = {
 
 idn_ai_unify_indonesian_neighbors = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		NOT = { exists = c:DEI }
 		NOT = { exists = c:IDN }
@@ -3736,6 +3923,7 @@ idn_ai_unify_indonesian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3769,6 +3957,7 @@ idn_ai_unify_indonesian_neighbors = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { exists = c:DEI }
 		NOT = { exists = c:IDN }
 		NOT = { is_country_type = decentralized }
@@ -3786,6 +3975,7 @@ idn_ai_unify_indonesian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -3820,6 +4010,7 @@ idn_ai_unify_indonesian_neighbors = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -3851,9 +4042,15 @@ idn_ai_unify_indonesian_neighbors = {
 			}
 			save_scope_as = idn_unify_indonesia_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_unify_indonesia
-			target_country = scope:idn_unify_indonesia_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:idn_unify_indonesia_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_indonesia
+				target_country = scope:idn_unify_indonesia_target_scope
+			}
 		}
 	}
 
@@ -3864,6 +4061,7 @@ idn_ai_unify_indonesian_neighbors = {
 
 afg_ai_unify_afghan_neighbors = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		NOT = { exists = c:AFG }
 		NOT = { is_country_type = decentralized }
@@ -3880,6 +4078,7 @@ afg_ai_unify_afghan_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3893,6 +4092,7 @@ afg_ai_unify_afghan_neighbors = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { exists = c:AFG }
 		NOT = { is_country_type = decentralized }
 		is_subject = no
@@ -3908,6 +4108,7 @@ afg_ai_unify_afghan_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3923,6 +4124,7 @@ afg_ai_unify_afghan_neighbors = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				aggressive_diplomatic_plays_permitted = yes
@@ -3935,9 +4137,15 @@ afg_ai_unify_afghan_neighbors = {
 			}
 			save_scope_as = afg_unify_afghanistan_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_unify_afghanistan
-			target_country = scope:afg_unify_afghanistan_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:afg_unify_afghanistan_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_afghanistan
+				target_country = scope:afg_unify_afghanistan_target_scope
+			}
 		}
 	}
 
@@ -3948,6 +4156,7 @@ afg_ai_unify_afghan_neighbors = {
 
 eth_ai_unify_ethiopian_neighbors = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		NOT = { exists = c:ETH }
 		NOT = { is_country_type = decentralized }
@@ -3964,6 +4173,7 @@ eth_ai_unify_ethiopian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -3977,6 +4187,7 @@ eth_ai_unify_ethiopian_neighbors = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { exists = c:ETH }
 		NOT = { is_country_type = decentralized }
 		is_subject = no
@@ -3992,6 +4203,7 @@ eth_ai_unify_ethiopian_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			aggressive_diplomatic_plays_permitted = yes
@@ -4007,6 +4219,7 @@ eth_ai_unify_ethiopian_neighbors = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				aggressive_diplomatic_plays_permitted = yes
@@ -4019,9 +4232,15 @@ eth_ai_unify_ethiopian_neighbors = {
 			}
 			save_scope_as = eth_unify_ethiopia_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_unify_ethiopia
-			target_country = scope:eth_unify_ethiopia_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:eth_unify_ethiopia_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_ethiopia
+				target_country = scope:eth_unify_ethiopia_target_scope
+			}
 		}
 	}
 
@@ -4032,6 +4251,8 @@ eth_ai_unify_ethiopian_neighbors = {
 
 eth_ai_conquer_aussa_gonder_split = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:AWS ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		NOT = { exists = c:ETH }
 		exists = c:AWS
@@ -4045,11 +4266,14 @@ eth_ai_conquer_aussa_gonder_split = {
 			}
 		}
 		c:AWS ?= {
+			tyrone_ai_attack_country_allowed = yes
 			army_power_projection < ROOT.army_power_projection
 		}
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:AWS ?= { tyrone_ai_attack_country_allowed = yes }
 		NOT = { exists = c:ETH }
 		exists = c:AWS
 		NOT = { is_country_type = decentralized }
@@ -4069,6 +4293,7 @@ eth_ai_conquer_aussa_gonder_split = {
 			}
 		}
 		c:AWS ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -4088,10 +4313,16 @@ eth_ai_conquer_aussa_gonder_split = {
 				save_scope_as = eth_aussa_gonder_conquer_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_conquer_state
-			target_country = c:AWS
-			target_state = scope:eth_aussa_gonder_conquer_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:AWS = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_conquer_state
+				target_country = c:AWS
+				target_state = scope:eth_aussa_gonder_conquer_state_scope
+			}
 		}
 	}
 
@@ -4102,12 +4333,14 @@ eth_ai_conquer_aussa_gonder_split = {
 
 eth_ai_return_amhara_from_unrecognized = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:ETH ?= this
 		s:STATE_AMHARA = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					NOT = { is_country_type = decentralized }
 				}
@@ -4116,6 +4349,7 @@ eth_ai_return_amhara_from_unrecognized = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		c:ETH ?= this
 		NOT = { is_country_type = decentralized }
 		aggressive_diplomatic_plays_permitted = yes
@@ -4130,6 +4364,7 @@ eth_ai_return_amhara_from_unrecognized = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					NOT = { is_country_type = decentralized }
 					is_at_war = no
@@ -4157,6 +4392,7 @@ eth_ai_return_amhara_from_unrecognized = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
@@ -4169,10 +4405,16 @@ eth_ai_return_amhara_from_unrecognized = {
 				owner = { save_scope_as = eth_amhara_return_country_scope }
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:eth_amhara_return_country_scope
-			target_state = scope:eth_amhara_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:eth_amhara_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:eth_amhara_return_country_scope
+				target_state = scope:eth_amhara_return_state_scope
+			}
 		}
 	}
 
@@ -4183,6 +4425,7 @@ eth_ai_return_amhara_from_unrecognized = {
 
 chinese_warlord_ai_unify_chinese_neighbors = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 			country_has_primary_culture = cu:han
@@ -4192,6 +4435,7 @@ chinese_warlord_ai_unify_chinese_neighbors = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		NOT = { is_country_type = decentralized }
 		is_subject = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -4204,6 +4448,7 @@ chinese_warlord_ai_unify_chinese_neighbors = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -4224,6 +4469,7 @@ chinese_warlord_ai_unify_chinese_neighbors = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -4241,9 +4487,15 @@ chinese_warlord_ai_unify_chinese_neighbors = {
 			}
 			save_scope_as = chinese_warlord_unify_china_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_unify_china
-			target_country = scope:chinese_warlord_unify_china_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:chinese_warlord_unify_china_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_unify_china
+				target_country = scope:chinese_warlord_unify_china_target_scope
+			}
 		}
 	}
 
@@ -4254,6 +4506,7 @@ chinese_warlord_ai_unify_chinese_neighbors = {
 
 bic_ai_return_claimed_border_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 		c:BIC ?= this
@@ -4267,6 +4520,7 @@ bic_ai_return_claimed_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -4312,6 +4566,7 @@ bic_ai_return_claimed_border_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -4320,6 +4575,7 @@ bic_ai_return_claimed_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -4367,6 +4623,7 @@ bic_ai_return_claimed_border_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -4466,9 +4723,15 @@ bic_ai_return_claimed_border_states = {
 					}
 		}
 			}
-			create_diplomatic_play = {
-				type = dp_make_protectorate
-				target_country = scope:bic_return_target_country_scope
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:bic_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					type = dp_make_protectorate
+					target_country = scope:bic_return_target_country_scope
+				}
 			}
 		}
 		else = {
@@ -4486,10 +4749,16 @@ bic_ai_return_claimed_border_states = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:bic_return_target_country_scope
-			target_state = scope:bic_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bic_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:bic_return_target_country_scope
+				target_state = scope:bic_return_target_state_scope
+			}
 		}
 	}
 	}
@@ -4501,6 +4770,7 @@ bic_ai_return_claimed_border_states = {
 
 bic_ai_protectorate_himalayan_minor = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:BIC ?= this
 		is_at_war = no
@@ -4511,6 +4781,7 @@ bic_ai_protectorate_himalayan_minor = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			OR = {
 				c:NEP ?= this
 				c:SIK ?= this
@@ -4526,6 +4797,7 @@ bic_ai_protectorate_himalayan_minor = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -4535,6 +4807,7 @@ bic_ai_protectorate_himalayan_minor = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			OR = {
 				c:NEP ?= this
 				c:SIK ?= this
@@ -4552,6 +4825,7 @@ bic_ai_protectorate_himalayan_minor = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				OR = {
 					c:NEP ?= this
 					c:SIK ?= this
@@ -4566,9 +4840,15 @@ bic_ai_protectorate_himalayan_minor = {
 			}
 			save_scope_as = bic_himalayan_protectorate_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_make_protectorate
-			target_country = scope:bic_himalayan_protectorate_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bic_himalayan_protectorate_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_make_protectorate
+				target_country = scope:bic_himalayan_protectorate_target_scope
+			}
 		}
 	}
 
@@ -4579,6 +4859,8 @@ bic_ai_protectorate_himalayan_minor = {
 
 rus_ai_protectorate_tuva = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:RUS ?= this
 		exists = c:TUV
@@ -4590,6 +4872,7 @@ rus_ai_protectorate_tuva = {
 			}
 		}
 		c:TUV = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -4599,6 +4882,8 @@ rus_ai_protectorate_tuva = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -4608,6 +4893,7 @@ rus_ai_protectorate_tuva = {
 			}
 		}
 		c:TUV = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -4617,9 +4903,15 @@ rus_ai_protectorate_tuva = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_make_protectorate
-			target_country = c:TUV
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:TUV = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_make_protectorate
+				target_country = c:TUV
+			}
 		}
 	}
 
@@ -4630,6 +4922,7 @@ rus_ai_protectorate_tuva = {
 
 bic_ai_conquer_isolated_northern_baluchistan = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:BIC ?= this
 		is_at_war = no
@@ -4645,6 +4938,7 @@ bic_ai_conquer_isolated_northern_baluchistan = {
 				is_isolated_from_market = yes
 				ROOT = { is_adjacent_to_state = PREV }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -4657,6 +4951,7 @@ bic_ai_conquer_isolated_northern_baluchistan = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -4671,6 +4966,7 @@ bic_ai_conquer_isolated_northern_baluchistan = {
 				is_isolated_from_market = yes
 				ROOT = { is_adjacent_to_state = PREV }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -4690,6 +4986,7 @@ bic_ai_conquer_isolated_northern_baluchistan = {
 					is_isolated_from_market = yes
 					ROOT = { is_adjacent_to_state = PREV }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -4704,10 +5001,16 @@ bic_ai_conquer_isolated_northern_baluchistan = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_conquer_state
-			target_country = scope:bic_northern_baluchistan_conquest_country_scope
-			target_state = scope:bic_northern_baluchistan_conquest_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bic_northern_baluchistan_conquest_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_conquer_state
+				target_country = scope:bic_northern_baluchistan_conquest_country_scope
+				target_state = scope:bic_northern_baluchistan_conquest_state_scope
+			}
 		}
 	}
 
@@ -4743,13 +5046,16 @@ dutch_indonesia_adopt_javan_culture = {
 
 dei_make_indonesian_protectorate = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:DEI ?= this
 		c:NET ?= {
+			tyrone_ai_attack_country_allowed = yes
 			has_journal_entry = je_consolidate_east_indies
 		}
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_country_type = unrecognized
 			is_subject = no
@@ -4775,6 +5081,7 @@ dei_make_indonesian_protectorate = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -4783,6 +5090,7 @@ dei_make_indonesian_protectorate = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_country_type = unrecognized
 			is_subject = no
@@ -4810,6 +5118,7 @@ dei_make_indonesian_protectorate = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_country_type = unrecognized
 				is_subject = no
@@ -4834,9 +5143,28 @@ dei_make_indonesian_protectorate = {
 			}
 			save_scope_as = dei_protectorate_target_country_scope
 		}
-		create_diplomatic_play = {
-			type = dp_make_protectorate
-			target_country = scope:dei_protectorate_target_country_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:dei_protectorate_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			if = {
+				limit = {
+					exists = c:NET
+					is_subject_of = c:NET
+				}
+				create_diplomatic_play = {
+					type = dp_make_protectorate
+					target_country = scope:dei_protectorate_target_country_scope
+					add_initiator_backers = { c:NET }
+				}
+			}
+			else = {
+				create_diplomatic_play = {
+					type = dp_make_protectorate
+					target_country = scope:dei_protectorate_target_country_scope
+				}
+			}
 		}
 	}
 
@@ -4847,6 +5175,7 @@ dei_make_indonesian_protectorate = {
 
 por_ai_return_claimed_mozambique_angola_border_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:POR ?= this
 		has_global_variable = berlin_conference_ended
@@ -4858,6 +5187,7 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -4888,6 +5218,7 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -4897,6 +5228,7 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -4929,6 +5261,7 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -4989,10 +5322,16 @@ por_ai_return_claimed_mozambique_angola_border_states = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:por_mozambique_angola_return_target_country_scope
-			target_state = scope:por_mozambique_angola_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:por_mozambique_angola_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:por_mozambique_angola_return_target_country_scope
+				target_state = scope:por_mozambique_angola_return_target_state_scope
+			}
 		}
 	}
 
@@ -5081,24 +5420,35 @@ por_activate_portuguese_colonialism = {
 
 phi_ai_annex_maguindanao = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MGD ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:PHI ?= this
 		exists = c:MGD
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MGD ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:MGD ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			NOT = { has_truce_with = ROOT }
 		}
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			target_country = c:MGD
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:MGD = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:MGD
+				type = dp_annex_war
+			}
 		}
 	}
 
@@ -5109,24 +5459,35 @@ phi_ai_annex_maguindanao = {
 
 phi_ai_annex_sulu = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:SUL ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:PHI ?= this
 		exists = c:SUL
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:SUL ?= { tyrone_ai_attack_country_allowed = yes }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 		c:SUL ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			NOT = { has_truce_with = ROOT }
 		}
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			target_country = c:SUL
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:SUL = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:SUL
+				type = dp_annex_war
+			}
 		}
 	}
 
@@ -5301,11 +5662,15 @@ canada_ai_enact_frontier_colonization = {
 
 usa_annex_independent_csa = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:CSA ?= { tyrone_ai_attack_country_allowed = yes }
 		c:USA ?= this
 		exists = c:CSA
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:CSA ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = pan-nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -5318,6 +5683,7 @@ usa_annex_independent_csa = {
 			}
 		}
 		c:CSA ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -5328,9 +5694,15 @@ usa_annex_independent_csa = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			target_country = c:CSA
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:CSA = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:CSA
+				type = dp_annex_war
+			}
 		}
 		change_infamy = -50
 	}
@@ -5375,16 +5747,21 @@ usa_ai_declare_japan_interest_after_california = {
 
 usa_ai_open_japanese_market_after_california = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:JAP ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:USA ?= this
 		exists = c:JAP
 		owns_entire_state_region = STATE_CALIFORNIA
 		c:JAP ?= {
+			tyrone_ai_attack_country_allowed = yes
 			has_law = law_type:law_sakoku
 		}
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:JAP ?= { tyrone_ai_attack_country_allowed = yes }
 		exists = c:JAP
 		owns_entire_state_region = STATE_CALIFORNIA
 		NOT = { is_country_type = decentralized }
@@ -5400,6 +5777,7 @@ usa_ai_open_japanese_market_after_california = {
 			}
 		}
 		c:JAP ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			NOT = { is_subject_of = ROOT }
 			has_law = law_type:law_sakoku
@@ -5413,9 +5791,15 @@ usa_ai_open_japanese_market_after_california = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_open_market
-			target_country = c:JAP
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:JAP = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_open_market
+				target_country = c:JAP
+			}
 		}
 	}
 
@@ -5426,10 +5810,13 @@ usa_ai_open_japanese_market_after_california = {
 
 usa_ai_return_texas_from_texas = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TEX ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:USA ?= this
 		exists = c:TEX
 		c:TEX ?= {
+			tyrone_ai_attack_country_allowed = yes
 			relations:ROOT < 0
 		}
 		s:STATE_TEXAS = {
@@ -5440,6 +5827,8 @@ usa_ai_return_texas_from_texas = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TEX ?= { tyrone_ai_attack_country_allowed = yes }
 		NOT = { is_country_type = decentralized }
 		aggressive_diplomatic_plays_permitted = yes
 		is_at_war = no
@@ -5450,6 +5839,7 @@ usa_ai_return_texas_from_texas = {
 			}
 		}
 		c:TEX ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			NOT = { is_subject_of = ROOT }
 			is_at_war = no
@@ -5484,10 +5874,16 @@ usa_ai_return_texas_from_texas = {
 				save_scope_as = usa_texas_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:TEX
-			target_state = scope:usa_texas_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:TEX = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:TEX
+				target_state = scope:usa_texas_return_state_scope
+			}
 		}
 	}
 
@@ -5498,11 +5894,15 @@ usa_ai_return_texas_from_texas = {
 
 fra_annex_independent_occ = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:OCC ?= { tyrone_ai_attack_country_allowed = yes }
 		c:FRA ?= this
 		exists = c:OCC
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:OCC ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = pan-nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -5515,6 +5915,7 @@ fra_annex_independent_occ = {
 			}
 		}
 		c:OCC ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -5525,9 +5926,15 @@ fra_annex_independent_occ = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			target_country = c:OCC
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:OCC = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:OCC
+				type = dp_annex_war
+			}
 		}
 		change_infamy = -50
 	}
@@ -5810,12 +6217,15 @@ gbr_ai_improve_usa_relations_for_oregon = {
 
 mex_ai_annex_altai_after_nationalism = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ALT ?= { tyrone_ai_attack_country_allowed = yes }
 		c:MEX ?= this
 		exists = c:ALT
 		has_technology_researched = nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:ALT = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -5826,6 +6236,8 @@ mex_ai_annex_altai_after_nationalism = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:ALT ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = nationalism
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -5836,6 +6248,7 @@ mex_ai_annex_altai_after_nationalism = {
 			}
 		}
 		c:ALT = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			is_at_war = no
@@ -5846,9 +6259,15 @@ mex_ai_annex_altai_after_nationalism = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = c:ALT
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:ALT = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = c:ALT
+			}
 		}
 	}
 
@@ -5859,16 +6278,21 @@ mex_ai_annex_altai_after_nationalism = {
 
 usa_ai_annex_collapsed_mexico = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MEX ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:USA ?= this
 		exists = c:MEX
 		c:MEX ?= {
+			tyrone_ai_attack_country_allowed = yes
 			country_rank = rank_value:insignificant_power
 			num_states < 10
 		}
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:MEX ?= { tyrone_ai_attack_country_allowed = yes }
 		NOT = { is_country_type = decentralized }
 		aggressive_diplomatic_plays_permitted = yes
 		is_at_war = no
@@ -5879,6 +6303,7 @@ usa_ai_annex_collapsed_mexico = {
 			}
 		}
 		c:MEX ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_country_type = decentralized }
 			is_subject = no
 			country_rank = rank_value:insignificant_power
@@ -5892,9 +6317,15 @@ usa_ai_annex_collapsed_mexico = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = c:MEX
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:MEX = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = c:MEX
+			}
 		}
 	}
 
@@ -6425,9 +6856,11 @@ rus_transfer_dobrudja_to_bulgaria = {
 
 rus_annex_central_asian_unrecognized = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:RUS ?= this
 		has_journal_entry = je_conquest_of_central_asia
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6443,6 +6876,7 @@ rus_annex_central_asian_unrecognized = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -6452,6 +6886,7 @@ rus_annex_central_asian_unrecognized = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6471,6 +6906,7 @@ rus_annex_central_asian_unrecognized = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -6487,9 +6923,15 @@ rus_annex_central_asian_unrecognized = {
 			}
 			save_scope_as = rus_central_asia_annex_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:rus_central_asia_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:rus_central_asia_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:rus_central_asia_annex_target_scope
+			}
 		}
 	}
 
@@ -6500,12 +6942,14 @@ rus_annex_central_asian_unrecognized = {
 
 rus_ai_annex_adjacent_central_asian_insignificant = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:RUS ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6520,6 +6964,7 @@ rus_ai_annex_adjacent_central_asian_insignificant = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -6529,6 +6974,7 @@ rus_ai_annex_adjacent_central_asian_insignificant = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6545,6 +6991,7 @@ rus_ai_annex_adjacent_central_asian_insignificant = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -6558,9 +7005,15 @@ rus_ai_annex_adjacent_central_asian_insignificant = {
 			}
 			save_scope_as = rus_adjacent_central_asia_annex_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:rus_adjacent_central_asia_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:rus_adjacent_central_asia_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:rus_adjacent_central_asia_annex_target_scope
+			}
 		}
 	}
 
@@ -6571,12 +7024,15 @@ rus_ai_annex_adjacent_central_asian_insignificant = {
 
 rus_ai_return_persian_central_asian_claims = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:PER ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:RUS ?= this
 		exists = c:PER
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:PER = {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
@@ -6590,6 +7046,8 @@ rus_ai_return_persian_central_asian_claims = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:PER ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -6599,6 +7057,7 @@ rus_ai_return_persian_central_asian_claims = {
 			}
 		}
 		c:PER = {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
@@ -6622,10 +7081,16 @@ rus_ai_return_persian_central_asian_claims = {
 				save_scope_as = rus_persian_central_asia_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:PER
-			target_state = scope:rus_persian_central_asia_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:PER = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:PER
+				target_state = scope:rus_persian_central_asia_return_state_scope
+			}
 		}
 	}
 
@@ -6636,8 +7101,10 @@ rus_ai_return_persian_central_asian_claims = {
 
 rus_annex_siberian_caucasian_minor_powers = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:RUS ?= this
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6657,6 +7124,7 @@ rus_annex_siberian_caucasian_minor_powers = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -6666,6 +7134,7 @@ rus_annex_siberian_caucasian_minor_powers = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_subject = no
@@ -6689,6 +7158,7 @@ rus_annex_siberian_caucasian_minor_powers = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_subject = no
@@ -6709,9 +7179,15 @@ rus_annex_siberian_caucasian_minor_powers = {
 			}
 			save_scope_as = rus_siberian_caucasian_annex_target_scope
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:rus_siberian_caucasian_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:rus_siberian_caucasian_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:rus_siberian_caucasian_annex_target_scope
+			}
 		}
 	}
 
@@ -6722,6 +7198,8 @@ rus_annex_siberian_caucasian_minor_powers = {
 
 net_annex_belgian_congo_after_flanders = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:KON ?= { tyrone_ai_attack_country_allowed = yes }
 		c:NET ?= this
 		exists = c:KON
 		has_technology_researched = civilizing_mission
@@ -6729,6 +7207,7 @@ net_annex_belgian_congo_after_flanders = {
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:KON = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -6741,6 +7220,8 @@ net_annex_belgian_congo_after_flanders = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:KON ?= { tyrone_ai_attack_country_allowed = yes }
 		has_technology_researched = civilizing_mission
 		owns_entire_state_region = STATE_FLANDERS
 		is_at_war = no
@@ -6751,6 +7232,7 @@ net_annex_belgian_congo_after_flanders = {
 			}
 		}
 		c:KON = {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = no
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -6774,9 +7256,15 @@ net_annex_belgian_congo_after_flanders = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = c:KON
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:KON = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = c:KON
+			}
 		}
 	}
 
@@ -6787,10 +7275,12 @@ net_annex_belgian_congo_after_flanders = {
 
 fra_return_algerian_state = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:FRA ?= this
 		is_ai = yes
 		has_journal_entry = je_conquest_of_algeria
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			any_scope_state = {
@@ -6805,10 +7295,12 @@ fra_return_algerian_state = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_journal_entry = je_conquest_of_algeria
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -6828,6 +7320,7 @@ fra_return_algerian_state = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
@@ -6867,10 +7360,16 @@ fra_return_algerian_state = {
 				add_claim = ROOT
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:fra_algeria_return_target_country_scope
-			target_state = scope:fra_algeria_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:fra_algeria_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:fra_algeria_return_target_country_scope
+				target_state = scope:fra_algeria_return_target_state_scope
+			}
 		}
 	}
 
@@ -6881,6 +7380,8 @@ fra_return_algerian_state = {
 
 fra_ai_return_tug_algerian_state = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUG ?= { tyrone_ai_attack_country_allowed = yes }
 		c:FRA ?= this
 		is_ai = yes
 		exists = c:TUG
@@ -6888,6 +7389,7 @@ fra_ai_return_tug_algerian_state = {
 		owns_entire_state_region = STATE_ALGIERS 
 		owns_entire_state_region = STATE_CONSTANTINE 
 		c:TUG = {
+			tyrone_ai_attack_country_allowed = yes
 			any_scope_state = {
 				state_region = s:STATE_EAST_SAHARA
 			}
@@ -6895,6 +7397,8 @@ fra_ai_return_tug_algerian_state = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUG ?= { tyrone_ai_attack_country_allowed = yes }
 		exists = c:TUG
 		owns_entire_state_region = STATE_ORAN
 		owns_entire_state_region = STATE_ALGIERS 
@@ -6902,6 +7406,7 @@ fra_ai_return_tug_algerian_state = {
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:TUG = {
+			tyrone_ai_attack_country_allowed = yes
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			NOT = { has_truce_with = ROOT }
@@ -6932,10 +7437,16 @@ fra_ai_return_tug_algerian_state = {
 				add_claim = ROOT
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = c:TUG
-			target_state = scope:fra_tug_algeria_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:TUG = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:TUG
+				target_state = scope:fra_tug_algeria_return_state_scope
+			}
 		}
 	}
 
@@ -6946,12 +7457,16 @@ fra_ai_return_tug_algerian_state = {
 
 fra_ai_return_waddai_bornu_claim = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BOR ?= { tyrone_ai_attack_country_allowed = yes }
+		c:WAD ?= { tyrone_ai_attack_country_allowed = yes }
 		c:FRA ?= this
 		is_ai = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		OR = {
 			c:WAD ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -6964,12 +7479,15 @@ fra_ai_return_waddai_bornu_claim = {
 					is_adjacent_to_country = ROOT
 					ROOT = {
 						any_subject_or_below = {
-							c:WAD = { is_adjacent_to_country = PREV }
+							tyrone_ai_attack_country_allowed = yes
+							c:WAD = {
+								tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 						}
 					}
 				}
 			}
 			c:BOR ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -6982,7 +7500,9 @@ fra_ai_return_waddai_bornu_claim = {
 					is_adjacent_to_country = ROOT
 					ROOT = {
 						any_subject_or_below = {
-							c:BOR = { is_adjacent_to_country = PREV }
+							tyrone_ai_attack_country_allowed = yes
+							c:BOR = {
+								tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 						}
 					}
 				}
@@ -6991,6 +7511,9 @@ fra_ai_return_waddai_bornu_claim = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BOR ?= { tyrone_ai_attack_country_allowed = yes }
+		c:WAD ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -7001,6 +7524,7 @@ fra_ai_return_waddai_bornu_claim = {
 		}
 		OR = {
 			c:WAD ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -7013,12 +7537,15 @@ fra_ai_return_waddai_bornu_claim = {
 					is_adjacent_to_country = ROOT
 					ROOT = {
 						any_subject_or_below = {
-							c:WAD = { is_adjacent_to_country = PREV }
+							tyrone_ai_attack_country_allowed = yes
+							c:WAD = {
+								tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 						}
 					}
 				}
 			}
 			c:BOR ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -7031,7 +7558,9 @@ fra_ai_return_waddai_bornu_claim = {
 					is_adjacent_to_country = ROOT
 					ROOT = {
 						any_subject_or_below = {
-							c:BOR = { is_adjacent_to_country = PREV }
+							tyrone_ai_attack_country_allowed = yes
+							c:BOR = {
+								tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 						}
 					}
 				}
@@ -7043,6 +7572,7 @@ fra_ai_return_waddai_bornu_claim = {
 		if = {
 			limit = {
 				c:WAD ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -7055,7 +7585,9 @@ fra_ai_return_waddai_bornu_claim = {
 						is_adjacent_to_country = ROOT
 						ROOT = {
 							any_subject_or_below = {
-								c:WAD = { is_adjacent_to_country = PREV }
+								tyrone_ai_attack_country_allowed = yes
+								c:WAD = {
+									tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 							}
 						}
 					}
@@ -7073,16 +7605,23 @@ fra_ai_return_waddai_bornu_claim = {
 				limit = {
 					exists = scope:fra_waddai_bornu_return_target_state_scope
 				}
-				create_diplomatic_play = {
-					type = dp_return_state
-					target_country = c:WAD
-					target_state = scope:fra_waddai_bornu_return_target_state_scope
+				if = {
+					limit = {
+						tyrone_ai_attack_country_allowed = yes
+						c:WAD = { tyrone_ai_attack_country_allowed = yes }
+					}
+					create_diplomatic_play = {
+						type = dp_return_state
+						target_country = c:WAD
+						target_state = scope:fra_waddai_bornu_return_target_state_scope
+					}
 				}
 			}
 		}
 		else_if = {
 			limit = {
 				c:BOR ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -7095,7 +7634,9 @@ fra_ai_return_waddai_bornu_claim = {
 						is_adjacent_to_country = ROOT
 						ROOT = {
 							any_subject_or_below = {
-								c:BOR = { is_adjacent_to_country = PREV }
+								tyrone_ai_attack_country_allowed = yes
+								c:BOR = {
+									tyrone_ai_attack_country_allowed = yes is_adjacent_to_country = PREV }
 							}
 						}
 					}
@@ -7113,10 +7654,16 @@ fra_ai_return_waddai_bornu_claim = {
 				limit = {
 					exists = scope:fra_waddai_bornu_return_target_state_scope
 				}
-				create_diplomatic_play = {
-					type = dp_return_state
-					target_country = c:BOR
-					target_state = scope:fra_waddai_bornu_return_target_state_scope
+				if = {
+					limit = {
+						tyrone_ai_attack_country_allowed = yes
+						c:BOR = { tyrone_ai_attack_country_allowed = yes }
+					}
+					create_diplomatic_play = {
+						type = dp_return_state
+						target_country = c:BOR
+						target_state = scope:fra_waddai_bornu_return_target_state_scope
+					}
 				}
 			}
 		}
@@ -7239,6 +7786,7 @@ spa_claim_west_sahara_and_al_rif = {
 
 spa_ai_return_al_rif = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:SPA ?= this
 		has_global_variable = berlin_conference_ended
@@ -7252,6 +7800,7 @@ spa_ai_return_al_rif = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -7262,6 +7811,7 @@ spa_ai_return_al_rif = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					OR = {
 						AND = {
@@ -7290,6 +7840,7 @@ spa_ai_return_al_rif = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						OR = {
 							AND = {
@@ -7315,10 +7866,16 @@ spa_ai_return_al_rif = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:spa_al_rif_return_country_scope
-			target_state = scope:spa_al_rif_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:spa_al_rif_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:spa_al_rif_return_country_scope
+				target_state = scope:spa_al_rif_return_state_scope
+			}
 		}
 	}
 
@@ -7601,6 +8158,7 @@ bel_request_flanders_wallonia_consolidation = {
 
 belgium_unl_ai_return_bas_congo = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 			c:BEL ?= this
@@ -7614,6 +8172,7 @@ belgium_unl_ai_return_bas_congo = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -7624,6 +8183,7 @@ belgium_unl_ai_return_bas_congo = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		s:STATE_BAS_CONGO = {
@@ -7631,6 +8191,7 @@ belgium_unl_ai_return_bas_congo = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -7646,6 +8207,7 @@ belgium_unl_ai_return_bas_congo = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -7658,10 +8220,16 @@ belgium_unl_ai_return_bas_congo = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:belgium_bas_congo_return_country_scope
-			target_state = scope:belgium_bas_congo_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:belgium_bas_congo_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:belgium_bas_congo_return_country_scope
+				target_state = scope:belgium_bas_congo_return_state_scope
+			}
 		}
 	}
 
@@ -7672,6 +8240,7 @@ belgium_unl_ai_return_bas_congo = {
 
 return_claimed_madagascar_state = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
@@ -7684,6 +8253,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_subject = no
 						OR = {
 							is_country_type = unrecognized
@@ -7702,6 +8272,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_subject = no
 						OR = {
 							is_country_type = unrecognized
@@ -7717,6 +8288,7 @@ return_claimed_madagascar_state = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -7729,6 +8301,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_subject = no
 						OR = {
 							is_country_type = unrecognized
@@ -7747,6 +8320,7 @@ return_claimed_madagascar_state = {
 				any_scope_state = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_subject = no
 						OR = {
 							is_country_type = unrecognized
@@ -7764,6 +8338,7 @@ return_claimed_madagascar_state = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_subject = no
 				OR = {
@@ -7793,10 +8368,16 @@ return_claimed_madagascar_state = {
 				save_scope_as = madagascar_return_state_scope
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:madagascar_return_country_scope
-			target_state = scope:madagascar_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:madagascar_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:madagascar_return_country_scope
+				target_state = scope:madagascar_return_state_scope
+			}
 		}
 		hidden_effect = {
 			random_diplomatic_play = {
@@ -7837,6 +8418,7 @@ return_claimed_madagascar_state = {
 
 gbr_ai_return_kenya = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		has_game_rule = historical_africa_berlin_enabled
 		has_global_variable = berlin_conference_ended
@@ -7850,6 +8432,7 @@ gbr_ai_return_kenya = {
 			any_scope_state = {
 				NOT = { owner = c:GBR }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					is_subject = no
 					is_at_war = no
@@ -7862,6 +8445,7 @@ gbr_ai_return_kenya = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -7872,6 +8456,7 @@ gbr_ai_return_kenya = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
 					is_subject = no
 					is_at_war = no
@@ -7889,6 +8474,7 @@ gbr_ai_return_kenya = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner ?= {
+						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
 						is_subject = no
 						is_at_war = no
@@ -7903,10 +8489,16 @@ gbr_ai_return_kenya = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:gbr_kenya_return_country_scope
-			target_state = scope:gbr_kenya_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:gbr_kenya_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:gbr_kenya_return_country_scope
+				target_state = scope:gbr_kenya_return_state_scope
+			}
 		}
 	}
 
@@ -8008,6 +8600,9 @@ por_ai_return_north_angola = {
 
 italy_ai_annex_independent_tripolitania = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LBY ?= { tyrone_ai_attack_country_allowed = yes }
+		c:TRI ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:ITA ?= this
 		OR = {
@@ -8023,6 +8618,7 @@ italy_ai_annex_independent_tripolitania = {
 		}
 		OR = {
 		c:TRI ?= {
+			tyrone_ai_attack_country_allowed = yes
 				OR = {
 					is_subject = no
 					AND = {
@@ -8038,6 +8634,7 @@ italy_ai_annex_independent_tripolitania = {
 				army_power_projection < ROOT.army_power_projection
 			}
 			c:LBY ?= {
+				tyrone_ai_attack_country_allowed = yes
 				OR = {
 			is_subject = no
 					AND = {
@@ -8056,6 +8653,9 @@ italy_ai_annex_independent_tripolitania = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:LBY ?= { tyrone_ai_attack_country_allowed = yes }
+		c:TRI ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -8065,6 +8665,7 @@ italy_ai_annex_independent_tripolitania = {
 		}
 		OR = {
 		c:TRI ?= {
+			tyrone_ai_attack_country_allowed = yes
 				OR = {
 					is_subject = no
 					AND = {
@@ -8080,6 +8681,7 @@ italy_ai_annex_independent_tripolitania = {
 				army_power_projection < ROOT.army_power_projection
 			}
 			c:LBY ?= {
+				tyrone_ai_attack_country_allowed = yes
 				OR = {
 			is_subject = no
 					AND = {
@@ -8101,6 +8703,7 @@ italy_ai_annex_independent_tripolitania = {
 		if = {
 			limit = {
 				c:TRI ?= {
+					tyrone_ai_attack_country_allowed = yes
 					OR = {
 						is_subject = no
 						AND = {
@@ -8116,14 +8719,21 @@ italy_ai_annex_independent_tripolitania = {
 					army_power_projection < ROOT.army_power_projection
 				}
 			}
-		create_diplomatic_play = {
-			target_country = c:TRI
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:TRI = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = c:TRI
+				type = dp_annex_war
+			}
 		}
 	}
 		else_if = {
 			limit = {
 				c:LBY ?= {
+					tyrone_ai_attack_country_allowed = yes
 					OR = {
 						is_subject = no
 						AND = {
@@ -8139,9 +8749,15 @@ italy_ai_annex_independent_tripolitania = {
 					army_power_projection < ROOT.army_power_projection
 				}
 			}
-			create_diplomatic_play = {
-				target_country = c:LBY
-				type = dp_annex_war
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					c:LBY = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = c:LBY
+					type = dp_annex_war
+				}
 			}
 		}
 	}
@@ -8153,6 +8769,8 @@ italy_ai_annex_independent_tripolitania = {
 
 france_ai_protectorate_or_transfer_tunisia = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUN ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:FRA ?= this
 		has_global_variable = berlin_conference_ended
@@ -8165,6 +8783,7 @@ france_ai_protectorate_or_transfer_tunisia = {
 			}
 		}
 		c:TUN ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_subject_of = ROOT }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -8189,6 +8808,8 @@ france_ai_protectorate_or_transfer_tunisia = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:TUN ?= { tyrone_ai_attack_country_allowed = yes }
 		has_global_variable = berlin_conference_ended
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -8198,6 +8819,7 @@ france_ai_protectorate_or_transfer_tunisia = {
 			}
 		}
 		c:TUN ?= {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { is_subject_of = ROOT }
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
@@ -8225,20 +8847,28 @@ france_ai_protectorate_or_transfer_tunisia = {
 		if = {
 			limit = {
 				c:TUN ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					NOT = { has_truce_with = ROOT }
 					NOT = { has_war_with = ROOT }
 					army_power_projection < ROOT.army_power_projection
 				}
 			}
-			create_diplomatic_play = {
-				target_country = c:TUN
-				type = dp_make_protectorate
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					c:TUN = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = c:TUN
+					type = dp_make_protectorate
+				}
 			}
 		}
 		else_if = {
 			limit = {
 				c:TUN ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = yes
 					NOT = { is_subject_of = ROOT }
 					is_at_war = no
@@ -8251,9 +8881,15 @@ france_ai_protectorate_or_transfer_tunisia = {
 					}
 				}
 			}
-			create_diplomatic_play = {
-				target_country = c:TUN
-				type = dp_transfer_subject
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					c:TUN = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = c:TUN
+					type = dp_transfer_subject
+				}
 			}
 		}
 	}
@@ -8265,10 +8901,12 @@ france_ai_protectorate_or_transfer_tunisia = {
 
 tri_annex_libyan_unrecognized = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:TRI ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_country_type = unrecognized
 			is_subject = no
@@ -8287,6 +8925,7 @@ tri_annex_libyan_unrecognized = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		trigger_if = {
@@ -8298,6 +8937,7 @@ tri_annex_libyan_unrecognized = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_country_type = unrecognized
 			is_subject = no
@@ -8318,6 +8958,7 @@ tri_annex_libyan_unrecognized = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_country_type = unrecognized
 				is_subject = no
@@ -8337,16 +8978,28 @@ tri_annex_libyan_unrecognized = {
 		}
 		if = {
 			limit = { exists = ROOT.top_overlord }
-			create_diplomatic_play = {
-				target_country = scope:tri_annex_target_scope
-				type = dp_annex_war
-				add_initiator_backers = { ROOT.top_overlord }
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:tri_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = scope:tri_annex_target_scope
+					type = dp_annex_war
+					add_initiator_backers = { ROOT.top_overlord }
+				}
 			}
 		}
 		else = {
-			create_diplomatic_play = {
-				target_country = scope:tri_annex_target_scope
-				type = dp_annex_war
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:tri_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = scope:tri_annex_target_scope
+					type = dp_annex_war
+				}
 			}
 		}
 	}
@@ -8488,6 +9141,7 @@ tri_ai_claim_libya_if_fezzan_absent = {
 
 brz_ai_return_brazilian_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:BRZ ?= this
 		is_at_war = no
@@ -8498,6 +9152,7 @@ brz_ai_return_brazilian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -8560,6 +9215,7 @@ brz_ai_return_brazilian_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -8568,6 +9224,7 @@ brz_ai_return_brazilian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -8632,6 +9289,7 @@ brz_ai_return_brazilian_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
@@ -8737,10 +9395,16 @@ brz_ai_return_brazilian_states = {
 		scope:brz_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:brz_return_target_country_scope
-			target_state = scope:brz_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:brz_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:brz_return_target_country_scope
+				target_state = scope:brz_return_target_state_scope
+			}
 		}
 	}
 
@@ -8751,6 +9415,7 @@ brz_ai_return_brazilian_states = {
 
 brz_ai_annex_acre_insignificant_power = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:BRZ ?= this
 		is_at_war = no
@@ -8764,6 +9429,7 @@ brz_ai_annex_acre_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 					NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8779,6 +9445,7 @@ brz_ai_annex_acre_insignificant_power = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -8790,6 +9457,7 @@ brz_ai_annex_acre_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 			NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8810,6 +9478,7 @@ brz_ai_annex_acre_insignificant_power = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						country_rank = rank_value:insignificant_power
 						NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8824,9 +9493,15 @@ brz_ai_annex_acre_insignificant_power = {
 				owner = { save_scope_as = brz_acre_annex_target_scope }
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:brz_acre_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:brz_acre_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:brz_acre_annex_target_scope
+			}
 		}
 	}
 
@@ -8836,6 +9511,7 @@ brz_ai_annex_acre_insignificant_power = {
 }
 ecu_ai_annex_pastaza_insignificant_power = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:ECU ?= this
 		is_at_war = no
@@ -8849,6 +9525,7 @@ ecu_ai_annex_pastaza_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 					NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8864,6 +9541,7 @@ ecu_ai_annex_pastaza_insignificant_power = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -8875,6 +9553,7 @@ ecu_ai_annex_pastaza_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 			NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8895,6 +9574,7 @@ ecu_ai_annex_pastaza_insignificant_power = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						country_rank = rank_value:insignificant_power
 						NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8909,9 +9589,15 @@ ecu_ai_annex_pastaza_insignificant_power = {
 				owner = { save_scope_as = brz_acre_annex_target_scope }
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:brz_acre_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:brz_acre_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:brz_acre_annex_target_scope
+			}
 		}
 	}
 
@@ -8921,6 +9607,7 @@ ecu_ai_annex_pastaza_insignificant_power = {
 }
 brz_ai_annex_amazonas_insignificant_power = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:BRZ ?= this
 		is_at_war = no
@@ -8934,6 +9621,7 @@ brz_ai_annex_amazonas_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 					NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8949,6 +9637,7 @@ brz_ai_annex_amazonas_insignificant_power = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -8960,6 +9649,7 @@ brz_ai_annex_amazonas_insignificant_power = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					country_rank = rank_value:insignificant_power
 					NOT = { is_country_type = decentralized }
 					is_subject = no
@@ -8980,6 +9670,7 @@ brz_ai_annex_amazonas_insignificant_power = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						country_rank = rank_value:insignificant_power
 						NOT = { is_country_type = decentralized }
 						is_subject = no
@@ -8994,9 +9685,15 @@ brz_ai_annex_amazonas_insignificant_power = {
 				owner = { save_scope_as = brz_amazonas_annex_target_scope }
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_annex_war
-			target_country = scope:brz_amazonas_annex_target_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:brz_amazonas_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_annex_war
+				target_country = scope:brz_amazonas_annex_target_scope
+			}
 		}
 	}
 
@@ -9007,6 +9704,7 @@ brz_ai_annex_amazonas_insignificant_power = {
 
 jap_ai_attack_formosa = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:JAP ?= this
 		has_journal_entry = je_sino_japanese_wars
@@ -9016,6 +9714,7 @@ jap_ai_attack_formosa = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					AND = {
 						army_power_projection < ROOT.army_power_projection
 						naval_power_projection < ROOT.naval_power_projection
@@ -9026,6 +9725,7 @@ jap_ai_attack_formosa = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		c:JAP ?= this
 		has_journal_entry = je_sino_japanese_wars
 		has_variable = taiwan_question_var
@@ -9041,6 +9741,7 @@ jap_ai_attack_formosa = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
 					NOT = { has_truce_with = ROOT }
@@ -9060,6 +9761,7 @@ jap_ai_attack_formosa = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
 						NOT = { has_truce_with = ROOT }
@@ -9084,17 +9786,29 @@ jap_ai_attack_formosa = {
 					}
 				}
 			}
-			create_diplomatic_play = {
-				type = dp_return_state
-				target_country = scope:jap_formosa_target_country_scope
-				target_state = scope:jap_formosa_target_state_scope
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:jap_formosa_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = scope:jap_formosa_target_country_scope
+					target_state = scope:jap_formosa_target_state_scope
+				}
 			}
 		}
 		else = {
-			create_diplomatic_play = {
-				type = dp_conquer_state
-				target_country = scope:jap_formosa_target_country_scope
-				target_state = scope:jap_formosa_target_state_scope
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:jap_formosa_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					type = dp_conquer_state
+					target_country = scope:jap_formosa_target_country_scope
+					target_state = scope:jap_formosa_target_state_scope
+				}
 			}
 		}
 	}
@@ -9106,18 +9820,23 @@ jap_ai_attack_formosa = {
 
 jap_ai_transfer_korea = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:KOR ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		c:JAP ?= this
 		has_journal_entry = je_sino_japanese_wars
 		has_variable = korean_question_var
 		exists = c:KOR
 		c:KOR ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = yes
 			NOT = { is_subject_of = ROOT }
 		}
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:KOR ?= { tyrone_ai_attack_country_allowed = yes }
 		c:JAP ?= this
 		has_journal_entry = je_sino_japanese_wars
 		has_variable = korean_question_var
@@ -9129,6 +9848,7 @@ jap_ai_transfer_korea = {
 			}
 		}
 		c:KOR ?= {
+			tyrone_ai_attack_country_allowed = yes
 			is_subject = yes
 			NOT = { is_subject_of = ROOT }
 			overlord = {
@@ -9143,9 +9863,15 @@ jap_ai_transfer_korea = {
 	}
 
 	when_taken = {
-		create_diplomatic_play = {
-			type = dp_transfer_subject
-			target_country = c:KOR
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:KOR = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_transfer_subject
+				target_country = c:KOR
+			}
 		}
 	}
 
@@ -9192,6 +9918,7 @@ brz_ai_improve_colombia_amazonas_relations = {
 
 peu_ai_return_peruvian_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 			c:PEU ?= this
@@ -9205,6 +9932,7 @@ peu_ai_return_peruvian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -9240,6 +9968,7 @@ peu_ai_return_peruvian_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9248,6 +9977,7 @@ peu_ai_return_peruvian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -9287,6 +10017,7 @@ peu_ai_return_peruvian_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
@@ -9342,10 +10073,16 @@ peu_ai_return_peruvian_states = {
 		scope:peu_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:peu_return_target_country_scope
-			target_state = scope:peu_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:peu_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:peu_return_target_country_scope
+				target_state = scope:peu_return_target_state_scope
+			}
 		}
 	}
 
@@ -9356,6 +10093,7 @@ peu_ai_return_peruvian_states = {
 
 bol_ai_return_bolivian_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 			c:BOL ?= this
@@ -9369,6 +10107,7 @@ bol_ai_return_bolivian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -9418,6 +10157,7 @@ bol_ai_return_bolivian_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9426,6 +10166,7 @@ bol_ai_return_bolivian_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			is_at_war = no
@@ -9477,6 +10218,7 @@ bol_ai_return_bolivian_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				is_at_war = no
@@ -9556,10 +10298,16 @@ bol_ai_return_bolivian_states = {
 		scope:bol_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:bol_return_target_country_scope
-			target_state = scope:bol_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bol_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:bol_return_target_country_scope
+				target_state = scope:bol_return_target_state_scope
+			}
 		}
 	}
 
@@ -9570,6 +10318,7 @@ bol_ai_return_bolivian_states = {
 
 bol_ai_return_alto_paraguay_split_state = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		OR = {
 			c:BOL ?= this
@@ -9597,6 +10346,7 @@ bol_ai_return_alto_paraguay_split_state = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -9622,6 +10372,7 @@ bol_ai_return_alto_paraguay_split_state = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9644,6 +10395,7 @@ bol_ai_return_alto_paraguay_split_state = {
 			any_scope_state = {
 				NOT = { owner = ROOT }
 				owner = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { is_country_type = decentralized }
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -9675,6 +10427,7 @@ bol_ai_return_alto_paraguay_split_state = {
 				limit = {
 					NOT = { owner = ROOT }
 					owner = {
+						tyrone_ai_attack_country_allowed = yes
 						NOT = { is_country_type = decentralized }
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
@@ -9702,10 +10455,16 @@ bol_ai_return_alto_paraguay_split_state = {
 				}
 			}
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:bol_alto_paraguay_return_country_scope
-			target_state = scope:bol_alto_paraguay_return_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:bol_alto_paraguay_return_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:bol_alto_paraguay_return_country_scope
+				target_state = scope:bol_alto_paraguay_return_state_scope
+			}
 		}
 	}
 
@@ -9716,6 +10475,7 @@ bol_ai_return_alto_paraguay_split_state = {
 
 vnz_ai_return_venezuelan_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:VNZ ?= this
 		is_at_war = no
@@ -9726,6 +10486,7 @@ vnz_ai_return_venezuelan_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -9746,6 +10507,7 @@ vnz_ai_return_venezuelan_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9754,6 +10516,7 @@ vnz_ai_return_venezuelan_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -9776,6 +10539,7 @@ vnz_ai_return_venezuelan_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_subject = no
 				NOT = { is_country_type = decentralized }
@@ -9811,10 +10575,16 @@ vnz_ai_return_venezuelan_states = {
 		scope:vnz_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:vnz_return_target_country_scope
-			target_state = scope:vnz_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:vnz_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:vnz_return_target_country_scope
+				target_state = scope:vnz_return_target_state_scope
+			}
 		}
 	}
 
@@ -9825,6 +10595,7 @@ vnz_ai_return_venezuelan_states = {
 
 arg_ai_return_argentine_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:ARG ?= this
 		is_at_war = no
@@ -9835,6 +10606,7 @@ arg_ai_return_argentine_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -9864,6 +10636,7 @@ arg_ai_return_argentine_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9872,6 +10645,7 @@ arg_ai_return_argentine_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -9903,6 +10677,7 @@ arg_ai_return_argentine_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_subject = no
 				NOT = { is_country_type = decentralized }
@@ -9954,10 +10729,16 @@ arg_ai_return_argentine_states = {
 		scope:arg_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:arg_return_target_country_scope
-			target_state = scope:arg_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:arg_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:arg_return_target_country_scope
+				target_state = scope:arg_return_target_state_scope
+			}
 		}
 	}
 
@@ -10003,6 +10784,7 @@ arg_claim_falklands_decision = {
 
 chl_ai_return_chilean_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:CHL ?= this
 		is_at_war = no
@@ -10013,6 +10795,7 @@ chl_ai_return_chilean_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -10035,6 +10818,7 @@ chl_ai_return_chilean_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -10043,6 +10827,7 @@ chl_ai_return_chilean_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			is_subject = no
 			NOT = { is_country_type = decentralized }
@@ -10067,6 +10852,7 @@ chl_ai_return_chilean_states = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				is_subject = no
 				NOT = { is_country_type = decentralized }
@@ -10104,10 +10890,16 @@ chl_ai_return_chilean_states = {
 		scope:chl_return_target_state_scope.state_region = {
 			add_claim = ROOT
 		}
-		create_diplomatic_play = {
-			type = dp_return_state
-			target_country = scope:chl_return_target_country_scope
-			target_state = scope:chl_return_target_state_scope
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:chl_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:chl_return_target_country_scope
+				target_state = scope:chl_return_target_state_scope
+			}
 		}
 	}
 
@@ -10188,6 +10980,7 @@ nej_ai_annex_african_nejd_owner = {
 
 saf_ai_annex_southern_africa_unrecognized = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:SAF ?= this
 		is_ai = yes
 		is_at_war = no
@@ -10198,6 +10991,7 @@ saf_ai_annex_southern_africa_unrecognized = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			OR = {
 				is_country_type = unrecognized
@@ -10217,6 +11011,7 @@ saf_ai_annex_southern_africa_unrecognized = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -10225,6 +11020,7 @@ saf_ai_annex_southern_africa_unrecognized = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			OR = {
 				is_country_type = unrecognized
@@ -10246,6 +11042,7 @@ saf_ai_annex_southern_africa_unrecognized = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				OR = {
 					is_country_type = unrecognized
@@ -10264,9 +11061,15 @@ saf_ai_annex_southern_africa_unrecognized = {
 			}
 			save_scope_as = saf_annex_target_scope
 		}
-		create_diplomatic_play = {
-			target_country = scope:saf_annex_target_scope
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:saf_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = scope:saf_annex_target_scope
+				type = dp_annex_war
+			}
 		}
 	}
 
@@ -10672,6 +11475,9 @@ congo_free_state_merge_subjects = {
 
 afs_annex_rwanda_burundi = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BRD ?= { tyrone_ai_attack_country_allowed = yes }
+		c:RWD ?= { tyrone_ai_attack_country_allowed = yes }
 		c:AFS ?= this
 		owns_entire_state_region = STATE_CONGO_ORIENTALE
 		NOT = {
@@ -10695,6 +11501,9 @@ afs_annex_rwanda_burundi = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:BRD ?= { tyrone_ai_attack_country_allowed = yes }
+		c:RWD ?= { tyrone_ai_attack_country_allowed = yes }
 		c:AFS ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -10715,6 +11524,7 @@ afs_annex_rwanda_burundi = {
 		}
 		OR = {
 			c:RWD ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -10722,6 +11532,7 @@ afs_annex_rwanda_burundi = {
 				NOT = { has_war_with = ROOT }
 			}
 			c:BRD ?= {
+				tyrone_ai_attack_country_allowed = yes
 				is_subject = no
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
@@ -10735,6 +11546,7 @@ afs_annex_rwanda_burundi = {
 		if = {
 			limit = {
 				c:RWD ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -10742,14 +11554,21 @@ afs_annex_rwanda_burundi = {
 					NOT = { has_war_with = ROOT }
 				}
 			}
-			create_diplomatic_play = {
-				target_country = c:RWD
-				type = dp_annex_war
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					c:RWD = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = c:RWD
+					type = dp_annex_war
+				}
 			}
 		}
 		else_if = {
 			limit = {
 				c:BRD ?= {
+					tyrone_ai_attack_country_allowed = yes
 					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
@@ -10757,9 +11576,15 @@ afs_annex_rwanda_burundi = {
 					NOT = { has_war_with = ROOT }
 				}
 			}
-			create_diplomatic_play = {
-				target_country = c:BRD
-				type = dp_annex_war
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					c:BRD = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					target_country = c:BRD
+					type = dp_annex_war
+				}
 			}
 		}
 	}
@@ -10771,6 +11596,7 @@ afs_annex_rwanda_burundi = {
 
 african_colonial_ai_return_claimed_border_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		has_global_variable = berlin_conference_ended
 		is_country_type = colonial
@@ -10790,6 +11616,7 @@ african_colonial_ai_return_claimed_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			OR = {
 			is_country_type = unrecognized
@@ -10823,6 +11650,7 @@ african_colonial_ai_return_claimed_border_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_country_type = colonial
 		is_subject = yes
@@ -10841,6 +11669,7 @@ african_colonial_ai_return_claimed_border_states = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			OR = {
 			is_country_type = unrecognized
@@ -10879,6 +11708,7 @@ african_colonial_ai_return_claimed_border_states = {
 		}
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				OR = {
 				is_country_type = unrecognized
@@ -10924,10 +11754,16 @@ african_colonial_ai_return_claimed_border_states = {
 				exists = scope:african_colonial_return_target_country_scope
 				exists = scope:african_colonial_return_target_state_scope
 			}
-			create_diplomatic_play = {
-				type = dp_return_state
-				target_country = scope:african_colonial_return_target_country_scope
-				target_state = scope:african_colonial_return_target_state_scope
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:african_colonial_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = scope:african_colonial_return_target_country_scope
+					target_state = scope:african_colonial_return_target_state_scope
+				}
 			}
 		}
 	}
@@ -10939,6 +11775,7 @@ african_colonial_ai_return_claimed_border_states = {
 
 african_colonial_overlord_ai_return_claimed_border_states = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		has_global_variable = berlin_conference_ended
 		is_subject = no
@@ -10950,6 +11787,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			}
 		}
 		any_subject_or_below = {
+			tyrone_ai_attack_country_allowed = yes
 			is_country_type = colonial
 			is_subject = yes
 			capital = {
@@ -10962,6 +11800,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			any_country = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				OR = {
 					is_country_type = unrecognized
@@ -10983,6 +11822,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		has_global_variable = berlin_conference_ended
 		is_subject = no
 		is_at_war = no
@@ -10993,6 +11833,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			}
 		}
 		any_subject_or_below = {
+			tyrone_ai_attack_country_allowed = yes
 			is_country_type = colonial
 			is_subject = yes
 			capital = {
@@ -11005,6 +11846,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			is_at_war = no
 			is_diplomatic_play_committed_participant = no
 			any_country = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				OR = {
 					is_country_type = unrecognized
@@ -11040,6 +11882,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 				is_at_war = no
 				is_diplomatic_play_committed_participant = no
 				any_country = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { this = ROOT }
 					OR = {
 						is_country_type = unrecognized
@@ -11066,6 +11909,7 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 			}
 			random_country = {
 				limit = {
+					tyrone_ai_attack_country_allowed = yes
 					NOT = { this = ROOT }
 					OR = {
 						is_country_type = unrecognized
@@ -11098,10 +11942,16 @@ african_colonial_overlord_ai_return_claimed_border_states = {
 					exists = scope:african_colonial_overlord_return_target_country_scope
 					exists = scope:african_colonial_overlord_return_target_state_scope
 				}
-				create_diplomatic_play = {
-					type = dp_return_state
-					target_country = scope:african_colonial_overlord_return_target_country_scope
-					target_state = scope:african_colonial_overlord_return_target_state_scope
+				if = {
+					limit = {
+						tyrone_ai_attack_country_allowed = yes
+						scope:african_colonial_overlord_return_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+					}
+					create_diplomatic_play = {
+						type = dp_return_state
+						target_country = scope:african_colonial_overlord_return_target_country_scope
+						target_state = scope:african_colonial_overlord_return_target_state_scope
+					}
 				}
 			}
 		}
@@ -11709,11 +12559,13 @@ saf_research_malaria_prevention_from_gbr = {
 
 mad_annex_madagascar_minor = {
 	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
 		c:MAD ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			NOT = { is_subject_type = subject_type_puppet }
@@ -11732,6 +12584,7 @@ mad_annex_madagascar_minor = {
 	}
 
 	possible = {
+		tyrone_ai_attack_country_allowed = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		aggressive_diplomatic_plays_permitted = yes
@@ -11741,6 +12594,7 @@ mad_annex_madagascar_minor = {
 			}
 		}
 		any_country = {
+			tyrone_ai_attack_country_allowed = yes
 			NOT = { this = ROOT }
 			NOT = { is_country_type = decentralized }
 			NOT = { is_subject_type = subject_type_puppet }
@@ -11761,6 +12615,7 @@ mad_annex_madagascar_minor = {
 	when_taken = {
 		random_country = {
 			limit = {
+				tyrone_ai_attack_country_allowed = yes
 				NOT = { this = ROOT }
 				NOT = { is_country_type = decentralized }
 				NOT = { is_subject_type = subject_type_puppet }
@@ -11778,9 +12633,15 @@ mad_annex_madagascar_minor = {
 			}
 			save_scope_as = mad_annex_target_scope
 		}
-		create_diplomatic_play = {
-			target_country = scope:mad_annex_target_scope
-			type = dp_annex_war
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:mad_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				target_country = scope:mad_annex_target_scope
+				type = dp_annex_war
+			}
 		}
 	}
 
@@ -11966,6 +12827,7 @@ colonize_western_papua_decision = {
 
 idn_ai_return_claimed_indonesian_states = {
     is_shown = {
+    	tyrone_ai_attack_country_allowed = yes
         is_ai = yes
         c:IDN ?= this
         any_state = {
@@ -11973,6 +12835,7 @@ idn_ai_return_claimed_indonesian_states = {
             has_claim_by = ROOT
             NOT = { owner = ROOT }
             owner = {
+            	tyrone_ai_attack_country_allowed = yes
                 is_subject = no
                 NOT = { is_country_type = decentralized }
                 is_at_war = no
@@ -11984,6 +12847,7 @@ idn_ai_return_claimed_indonesian_states = {
     }
 
     possible = {
+    	tyrone_ai_attack_country_allowed = yes
         is_ai = yes
         c:IDN ?= this
         is_at_war = no
@@ -11996,6 +12860,7 @@ idn_ai_return_claimed_indonesian_states = {
             has_claim_by = ROOT
             NOT = { owner = ROOT }
             owner = {
+            	tyrone_ai_attack_country_allowed = yes
                 is_subject = no
                 NOT = { is_country_type = decentralized }
                 is_at_war = no
@@ -12013,6 +12878,7 @@ idn_ai_return_claimed_indonesian_states = {
                 has_claim_by = ROOT
                 NOT = { owner = ROOT }
                 owner = {
+                	tyrone_ai_attack_country_allowed = yes
                     is_subject = no
                     NOT = { is_country_type = decentralized }
                     is_at_war = no
@@ -12024,10 +12890,16 @@ idn_ai_return_claimed_indonesian_states = {
             save_scope_as = idn_return_claimed_state_scope
             owner = { save_scope_as = idn_return_claimed_country_scope }
         }
-        create_diplomatic_play = {
-            type = dp_return_state
-            target_country = scope:idn_return_claimed_country_scope
-            target_state = scope:idn_return_claimed_state_scope
+        if = {
+        	limit = {
+        		tyrone_ai_attack_country_allowed = yes
+        		scope:idn_return_claimed_country_scope = { tyrone_ai_attack_country_allowed = yes }
+        	}
+        	create_diplomatic_play = {
+	            type = dp_return_state
+	            target_country = scope:idn_return_claimed_country_scope
+	            target_state = scope:idn_return_claimed_state_scope
+	        }
         }
     }
 
