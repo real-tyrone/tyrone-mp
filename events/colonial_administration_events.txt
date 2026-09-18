@@ -1,4 +1,4 @@
-﻿namespace = colonial_administration_events
+namespace = colonial_administration_events
 
 colonial_administration_events.1 = {
 	type = country_event
@@ -24,15 +24,27 @@ colonial_administration_events.1 = {
 	}
 
 	immediate = {
-		random_subject_or_below = {
-			limit = {
-				has_variable = newly_formed_colonial_nation_var
+		if = {
+			limit = { exists = scope:existing_british_colonial_subject }
+			scope:existing_british_colonial_subject = {
+				save_scope_as = newly_formed_colonial_nation_scope
+				capital = {
+					save_scope_as = newly_formed_colonial_nation_capital_scope
+					region = { save_scope_as = newly_formed_colonial_nation_region_scope }
+				}
 			}
-			save_scope_as = newly_formed_colonial_nation_scope
-			capital = {
-				save_scope_as = newly_formed_colonial_nation_capital_scope
-				region = {
-					save_scope_as = newly_formed_colonial_nation_region_scope
+		}
+		else = {
+			random_subject_or_below = {
+				limit = {
+					has_variable = newly_formed_colonial_nation_var
+				}
+				save_scope_as = newly_formed_colonial_nation_scope
+				capital = {
+					save_scope_as = newly_formed_colonial_nation_capital_scope
+					region = {
+						save_scope_as = newly_formed_colonial_nation_region_scope
+					}
 				}
 			}
 		}
@@ -47,31 +59,42 @@ colonial_administration_events.1 = {
 	option = {
 		name = colonial_administration_events.1.a
 		default_option = yes
-		create_diplomatic_pact = {
-			country = scope:newly_formed_colonial_nation_scope
-			type = chartered_company
-		}
-		custom_tooltip = {
-			text = colonial_administration_events.1_tt_1
+		if = {
+			limit = { exists = scope:existing_british_colonial_subject }
 			scope:newly_formed_colonial_nation_scope = {
-				activate_law = law_type:law_colonial_administration
-				activate_law = law_type:law_oligarchy
-				activate_law = law_type:law_subjecthood
-				active_law:lawgroup_citizenship ?= { # Subjecthood
-					add_amendment = {
-						type = amendment_racialized_subjecthood
-						sponsor = PREV.ig:ig_armed_forces
+				change_subject_type = subject_type_chartered_company
+			}
+		}
+		else = {
+			create_diplomatic_pact = {
+				country = scope:newly_formed_colonial_nation_scope
+				type = chartered_company
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:existing_british_colonial_subject } }
+			custom_tooltip = {
+				text = colonial_administration_events.1_tt_1
+				scope:newly_formed_colonial_nation_scope = {
+					activate_law = law_type:law_colonial_administration
+					activate_law = law_type:law_oligarchy
+					activate_law = law_type:law_subjecthood
+					active_law:lawgroup_citizenship ?= { # Subjecthood
+						add_amendment = {
+							type = amendment_racialized_subjecthood
+							sponsor = PREV.ig:ig_armed_forces
+						}
 					}
+					activate_law = law_type:law_extraction_economy
+					activate_law = law_type:law_colonial_exploitation
+					activate_law = law_type:law_no_schools
+					activate_law = law_type:law_no_health_system
+					activate_law = law_type:law_censorship
+					activate_law = law_type:law_no_workers_rights
+					activate_law = law_type:law_child_labor_allowed
+					activate_law = law_type:law_no_social_security
+					activate_law = law_type:law_migration_controls
 				}
-				activate_law = law_type:law_extraction_economy
-				activate_law = law_type:law_colonial_exploitation
-				activate_law = law_type:law_no_schools
-				activate_law = law_type:law_no_health_system
-				activate_law = law_type:law_censorship
-				activate_law = law_type:law_no_workers_rights
-				activate_law = law_type:law_child_labor_allowed
-				activate_law = law_type:law_no_social_security
-				activate_law = law_type:law_migration_controls
 			}
 		}
 		scope:newly_formed_colonial_nation_scope = {
@@ -96,6 +119,7 @@ colonial_administration_events.1 = {
 			}
 			if = {
 				limit = {
+					NOT = { c:SIL ?= this }
 					capital = {
 						region = sr:region_west_africa
 					}
@@ -144,28 +168,31 @@ colonial_administration_events.1 = {
 				has_law_or_variant = law_type:law_freedom_of_conscience
 			}
 		}
-		custom_tooltip = {
-			text = colonial_administration_events.1_tt_2
-			scope:newly_formed_colonial_nation_scope = {
-				activate_law = law_type:law_colonial_administration
-				activate_law = law_type:law_oligarchy
-				activate_law = law_type:law_subjecthood
-				active_law:lawgroup_citizenship ?= { # Subjecthood
-					add_amendment = {
-						type = amendment_racialized_subjecthood
-						sponsor = PREV.ig:ig_armed_forces
+		if = {
+			limit = { NOT = { exists = scope:existing_british_colonial_subject } }
+			custom_tooltip = {
+				text = colonial_administration_events.1_tt_2
+				scope:newly_formed_colonial_nation_scope = {
+					activate_law = law_type:law_colonial_administration
+					activate_law = law_type:law_oligarchy
+					activate_law = law_type:law_subjecthood
+					active_law:lawgroup_citizenship ?= { # Subjecthood
+						add_amendment = {
+							type = amendment_racialized_subjecthood
+							sponsor = PREV.ig:ig_armed_forces
+						}
 					}
+					activate_law = law_type:law_extraction_economy
+					activate_law = law_type:law_colonial_exploitation
+					activate_law = law_type:law_state_religion
+					activate_law = law_type:law_religious_schools
+					activate_law = law_type:law_charitable_health_system
+					activate_law = law_type:law_censorship
+					activate_law = law_type:law_no_workers_rights
+					activate_law = law_type:law_child_labor_allowed
+					activate_law = law_type:law_no_social_security
+					activate_law = law_type:law_migration_controls
 				}
-				activate_law = law_type:law_extraction_economy
-				activate_law = law_type:law_colonial_exploitation
-				activate_law = law_type:law_state_religion
-				activate_law = law_type:law_religious_schools
-				activate_law = law_type:law_no_health_system
-				activate_law = law_type:law_censorship
-				activate_law = law_type:law_no_workers_rights
-				activate_law = law_type:law_child_labor_allowed
-				activate_law = law_type:law_no_social_security
-				activate_law = law_type:law_migration_controls
 			}
 		}
 		scope:newly_formed_colonial_nation_scope = {
@@ -184,6 +211,7 @@ colonial_administration_events.1 = {
 			}
 			if = {
 				limit = {
+					NOT = { c:SIL ?= this }
 					capital = {
 						region = sr:region_west_africa
 					}
@@ -227,27 +255,30 @@ colonial_administration_events.1 = {
 
 	option = {
 		name = colonial_administration_events.1.c
-		custom_tooltip = {
-			text = colonial_administration_events.1_tt_3
-			scope:newly_formed_colonial_nation_scope = {
-				activate_law = law_type:law_colonial_administration
-				activate_law = law_type:law_oligarchy
-				activate_law = law_type:law_subjecthood
-				active_law:lawgroup_citizenship ?= { # Subjecthood
-					add_amendment = {
-						type = amendment_racialized_subjecthood
-						sponsor = PREV.ig:ig_armed_forces
+		if = {
+			limit = { NOT = { exists = scope:existing_british_colonial_subject } }
+			custom_tooltip = {
+				text = colonial_administration_events.1_tt_3
+				scope:newly_formed_colonial_nation_scope = {
+					activate_law = law_type:law_colonial_administration
+					activate_law = law_type:law_oligarchy
+					activate_law = law_type:law_subjecthood
+					active_law:lawgroup_citizenship ?= { # Subjecthood
+						add_amendment = {
+							type = amendment_racialized_subjecthood
+							sponsor = PREV.ig:ig_armed_forces
+						}
 					}
+					activate_law = law_type:law_agrarianism
+					activate_law = law_type:law_colonial_resettlement
+					activate_law = law_type:law_no_schools
+					activate_law = law_type:law_no_health_system
+					activate_law = law_type:law_censorship
+					activate_law = law_type:law_no_workers_rights
+					activate_law = law_type:law_child_labor_allowed
+					activate_law = law_type:law_no_social_security
+					activate_law = law_type:law_migration_controls
 				}
-				activate_law = law_type:law_agrarianism
-				activate_law = law_type:law_colonial_resettlement
-				activate_law = law_type:law_no_schools
-				activate_law = law_type:law_no_health_system
-				activate_law = law_type:law_censorship
-				activate_law = law_type:law_no_workers_rights
-				activate_law = law_type:law_child_labor_allowed
-				activate_law = law_type:law_no_social_security
-				activate_law = law_type:law_migration_controls
 			}
 		}
 		scope:newly_formed_colonial_nation_scope = {
@@ -257,6 +288,7 @@ colonial_administration_events.1 = {
 			}
 			if = {
 				limit = {
+					NOT = { c:SIL ?= this }
 					capital = {
 						region = sr:region_west_africa
 					}
@@ -309,28 +341,31 @@ colonial_administration_events.1 = {
 			}
 		}
 		name = colonial_administration_events.1.e
-		custom_tooltip = {
-			text = colonial_administration_events.1_tt_4
-			scope:newly_formed_colonial_nation_scope = {
-				activate_law = law_type:law_colonial_administration
-				activate_law = law_type:law_autocracy
-				activate_law = law_type:law_subjecthood
-				active_law:lawgroup_citizenship ?= { # Subjecthood
-					add_amendment = {
-						type = amendment_racialized_subjecthood
-						sponsor = PREV.ig:ig_armed_forces
+		if = {
+			limit = { NOT = { exists = scope:existing_british_colonial_subject } }
+			custom_tooltip = {
+				text = colonial_administration_events.1_tt_4
+				scope:newly_formed_colonial_nation_scope = {
+					activate_law = law_type:law_colonial_administration
+					activate_law = law_type:law_autocracy
+					activate_law = law_type:law_subjecthood
+					active_law:lawgroup_citizenship ?= { # Subjecthood
+						add_amendment = {
+							type = amendment_racialized_subjecthood
+							sponsor = PREV.ig:ig_armed_forces
+						}
 					}
+					activate_law = law_type:law_extraction_economy
+					activate_law = law_type:law_colonial_exploitation
+					activate_law = law_type:law_no_schools
+					activate_law = law_type:law_no_health_system
+					activate_law = law_type:law_outlawed_dissent
+					activate_law = law_type:law_no_workers_rights
+					activate_law = law_type:law_child_labor_allowed
+					activate_law = law_type:law_no_social_security
+					activate_law = law_type:law_migration_controls
+					activate_law = law_type:law_slave_trade
 				}
-				activate_law = law_type:law_extraction_economy
-				activate_law = law_type:law_colonial_exploitation
-				activate_law = law_type:law_no_schools
-				activate_law = law_type:law_no_health_system
-				activate_law = law_type:law_outlawed_dissent
-				activate_law = law_type:law_no_workers_rights
-				activate_law = law_type:law_child_labor_allowed
-				activate_law = law_type:law_no_social_security
-				activate_law = law_type:law_migration_controls
-				activate_law = law_type:law_slave_trade
 			}
 		}
 		scope:newly_formed_colonial_nation_scope = {
@@ -340,6 +375,7 @@ colonial_administration_events.1 = {
 			}
 			if = {
 				limit = {
+					NOT = { c:SIL ?= this }
 					capital = {
 						region = sr:region_west_africa
 					}

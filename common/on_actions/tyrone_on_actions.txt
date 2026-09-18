@@ -169,10 +169,16 @@ on_yearly_pulse_country = {
                         OR = {
                         c:UCA ?= this 
                         c:CHI ?= this 
+						c:HAI? = this
                         }
                     }
                     NOT = {
                         has_variable = tyrone_ai_buff_yearly_cooldown
+                    }
+                    NOT = {
+                        any_scope_state = {
+                            is_isolated_from_market = yes
+                        }
                     }
                 }
 				set_variable = {
@@ -193,6 +199,13 @@ on_yearly_pulse_country = {
                     }
                     NOT = {
                         has_modifier = ai_budget_buff
+                    }
+                    NOT = {
+                        country_rank < rank_value:great_power
+                        OR = {
+                            country_has_primary_culture = cu:north_german
+                            country_has_primary_culture = cu:south_german
+                        }
                     }
                 }
 				add_modifier = {
@@ -397,8 +410,17 @@ on_yearly_pulse_country = {
             every_country = {
                 limit = {
                     has_modifier = ai_budget_buff
-                    any_overlord_or_above = {
-                        is_player = yes
+                    OR = {
+                        any_overlord_or_above = {
+                            is_player = yes
+                        }
+                        AND = {
+                            country_rank < rank_value:great_power
+                            OR = {
+                                country_has_primary_culture = cu:north_german
+                                country_has_primary_culture = cu:south_german
+                            }
+                        }
                     }
                 }
 				remove_modifier = ai_budget_buff
@@ -826,5 +848,84 @@ on_law_enactment_started = {
     }
 }
 
+# Track competing colonial projects, then offer consolidation after both finish.
+# ROOT is a state; the monthly check also covers colonies active in existing saves.
+on_colony_created = {
+    on_actions = { tyrone_african_colonial_split_check }
+}
 
+on_monthly_pulse_state = {
+    on_actions = { tyrone_african_colonial_split_check }
+}
 
+tyrone_african_colonial_split_check = {
+    trigger = {
+        is_in_geographic_region = geographic_region_africa
+        owner = {
+            country_is_colonial_or_company = yes
+            is_subject = yes
+        }
+        state_region = {
+            NOT = { has_variable = tyrone_colonial_split_offer_made }
+        }
+    }
+    effect = {
+        if = {
+            limit = {
+                is_under_colonization = yes
+                state_region = {
+                    any_scope_state = {
+                        NOT = { this = root }
+                        is_under_colonization = yes
+                        owner = {
+                            country_is_colonial_or_company = yes
+                            is_subject = yes
+                            NOT = { top_overlord = root.owner.top_overlord }
+                        }
+                    }
+                }
+            }
+            state_region = { set_variable = tyrone_competing_colonial_projects }
+        }
+        if = {
+            limit = {
+                state_region = {
+                    has_variable = tyrone_competing_colonial_projects
+                    any_scope_state = { count = 2 }
+                    NOT = {
+                        any_scope_state = {
+                            OR = {
+                                is_under_colonization = yes
+                                owner = { is_country_type = decentralized }
+                            }
+                        }
+                    }
+                    any_scope_state = {
+                        num_provinces > root.num_provinces
+                        owner = {
+                            country_is_colonial_or_company = yes
+                            is_subject = yes
+                            NOT = { top_overlord = root.owner.top_overlord }
+                        }
+                    }
+                }
+            }
+            save_scope_as = tyrone_split_smaller_state
+            owner = {
+                save_scope_as = tyrone_split_smaller_colony
+                top_overlord = { save_scope_as = tyrone_split_overlord }
+            }
+            state_region = {
+                random_scope_state = {
+                    limit = { num_provinces > root.num_provinces }
+                    save_scope_as = tyrone_split_larger_state
+                    owner = { save_scope_as = tyrone_split_larger_colony }
+                }
+                set_variable = tyrone_colonial_split_offer_made
+            }
+            scope:tyrone_split_overlord = {
+                trigger_event = { id = tyrone_colonial_split.1 popup = yes }
+            }
+        }
+    }
+}

@@ -8,8 +8,21 @@
 	}
 
 	possible = {
-		hidden_trigger = {
-			has_variable = death_of_kamehameha
+		OR = {
+			hidden_trigger = {
+				has_variable = death_of_kamehameha
+			}
+		}
+		any_country_in_north_america = {
+			NOT = {
+				is_subject = yes
+			}
+			relations:root >= 0
+			country_rank >= rank_value:great_power
+			any_scope_state = {
+				region = sr:region_pacific_coast
+				is_incorporated = yes
+			}
 		}
 	}
 
@@ -83,21 +96,19 @@ je_hawaiian_interest = { #JE for GPs so that they can see the situation is ongoi
 	scripted_button = intervene_in_hawaii_button
 
 	is_shown_when_inactive = {
-		has_interest_marker_in_region = sr:region_oceania
+		OR = {
+			has_interest_marker_in_region = sr:region_oceania
+			owns_entire_state_region = STATE_CALIFORNIA
+		}
 	}
 
 	possible = {
+		OR = {
+			has_interest_marker_in_region = sr:region_oceania
+			owns_entire_state_region = STATE_CALIFORNIA
+		}
 		has_technology_researched = civilizing_mission
 		country_rank = rank_value:great_power
-	}
-
-	is_progressing = {
-		custom_tooltip = {
-			text = influence_hawaii_tt
-			je:je_hawaiian_interest = {
-				has_modifier = influence_over_hawaii
-			}
-		}
 	}
 
 	on_monthly_pulse = {
@@ -115,6 +126,14 @@ je_hawaiian_interest = { #JE for GPs so that they can see the situation is ongoi
 			}
 		}
 	}
+	
+	is_progressing = {
+		custom_tooltip = {
+			text = influence_hawaii_tt
+			has_modifier = influence_over_hawaii
+		}
+	}
+
 
 	current_value = {
 		value = root.var:hawaii_var
@@ -146,11 +165,27 @@ je_hawaiian_interest = { #JE for GPs so that they can see the situation is ongoi
 	}
 
 	fail = {
+		OR = {
+			AND = {
+				NOT = { exists = c:HAW }
+				NOT = { country_or_subject_owns_entire_state_region = STATE_HAWAIIAN_ISLANDS }
+			}
+			custom_tooltip = {
+				text = hawaii_coup_happened_tt
+				NOT = { has_global_variable = gp_hawaii_interest }
+				has_global_variable = hawaiian_coup
+			}
+			custom_tooltip = {
+				text = hawaii_government_secured_tt
+				NOT = { has_global_variable = gp_hawaii_interest }
+				has_global_variable = hawaiian_je_success
+			}
+		}
 	}
 
 	invalid = {
-		NOT = {
-			c:HAW = exists
+		c:HAW ?= {
+			is_country_alive = no
 		}
 	}
 		

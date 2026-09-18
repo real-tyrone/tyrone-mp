@@ -230,3 +230,41 @@ tyrone_has_non_aggression_pact_with_country_family = {
 		}
 	}
 }
+
+# Saved scopes are supplied by tyrone_african_colonial_split_check.
+# Recheck ownership and province counts when the player finally answers.
+tyrone_colonial_split_transfer_valid = {
+    exists = scope:tyrone_split_smaller_state
+    exists = scope:tyrone_split_larger_state
+    exists = scope:tyrone_split_smaller_colony
+    exists = scope:tyrone_split_larger_colony
+    scope:tyrone_split_smaller_state = {
+        owner = scope:tyrone_split_smaller_colony
+        state_region = {
+            any_scope_state = { count = 2 }
+            NOT = {
+                any_scope_state = {
+                    OR = {
+                        is_under_colonization = yes
+                        owner = { is_country_type = decentralized }
+                    }
+                }
+            }
+        }
+    }
+    scope:tyrone_split_larger_state = {
+        owner = scope:tyrone_split_larger_colony
+        state_region = scope:tyrone_split_smaller_state.state_region
+        num_provinces > scope:tyrone_split_smaller_state.num_provinces
+    }
+    scope:tyrone_split_smaller_colony = {
+        country_is_colonial_or_company = yes
+        is_subject = yes
+        top_overlord = root
+    }
+    scope:tyrone_split_larger_colony = {
+        country_is_colonial_or_company = yes
+        is_subject = yes
+        NOT = { top_overlord = root }
+    }
+}
