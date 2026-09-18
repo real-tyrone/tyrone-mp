@@ -1,0 +1,79 @@
+# Industrial programme negotiation values, adapted from vanilla negotiation_values.txt.
+# IG scope: no active law, negotiation event scopes or promise variables required.
+tyr_gir_amenability = {
+	#runs in IG scope. owner is the county.
+	value = {
+		add = {
+			#legitimacy adds base value
+			desc = "amenability_base"
+			add = 50
+		}
+		add = {
+			#legitimacy adds base value
+			desc = "amenability_legitimacy"
+			add = owner.legitimacy
+			multiply = 0.35
+			add = 5
+		}
+		add = {
+			#clout removes
+			desc = "amenability_clout"
+			add = ig_clout
+			multiply = 100 #convert from percentage
+			subtract = 8 #IG smaller than this actually seeks to get bigger.
+			multiply = -1 #make negative
+			multiply = 4
+		}
+		add = {
+			#approval adds (can be negative)
+			desc = "amenability_approval"
+			add = ig_approval
+			multiply = 2.5
+		}
+		if = {
+			#ruler popularity
+			limit = {
+				exists = owner.ruler
+			}
+			add = {
+				desc = "amenability_ruler_popularity"
+				add = owner.ruler.popularity
+				multiply = 0.05
+			}
+		}
+		add = {
+			value = modifier:interest_group_amenability_add
+			desc = "amenability_ig_additional_adds"
+		}
+		add = {
+			value = owner.modifier:country_amenability_add
+			desc = "amenability_country_additional_adds"
+		}
+		round = 1
+		min = define:NPolitics|MIN_AMENABILITY
+		max = define:NPolitics|MAX_AMENABILITY
+	}
+}
+
+tyr_gir_amenability_level = {
+	#determines multipliers for negotiate effects based on tyr_gir_amenability. Less tyr_gir_amenability means more severe effects
+	if = {
+		#extra hard
+		limit = {
+			tyr_gir_amenability < 50
+		}
+		value = 4
+	}
+	else_if = {
+		limit = {
+			tyr_gir_amenability < 75
+		}
+		value = 2
+	}
+	else_if = {
+		limit = {
+			tyr_gir_amenability <= 100
+		}
+		value = 1
+	}
+}

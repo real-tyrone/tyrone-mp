@@ -1,0 +1,4232 @@
+﻿# tyr_gir_events
+namespace = tyr_gir
+
+tyr_gir.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.1.t
+	desc = tyr_gir.1.d
+	flavor = tyr_gir.1.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	trigger = {
+		c:GER ?= this
+		has_variable = tyr_gir_started
+		var:tyr_gir_zone = 0
+		NOT = {
+			has_variable = tyr_gir_region_open
+		}
+	}
+
+	immediate = {
+		set_variable = tyr_gir_region_open
+	}
+
+	option = {
+		name = tyr_gir.1.zone_1
+		trigger = {
+			owns_entire_state_region = STATE_RUHR
+			owns_entire_state_region = STATE_RHINELAND
+			owns_entire_state_region = STATE_NORTH_RHINE
+		}
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_zone
+			value = 1
+		}
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	option = {
+		name = tyr_gir.1.zone_2
+		trigger = {
+			owns_entire_state_region = STATE_SAXONY
+		}
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_zone
+			value = 2
+		}
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	option = {
+		name = tyr_gir.1.zone_3
+		trigger = {
+			owns_entire_state_region = STATE_BRANDENBURG
+		}
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_zone
+			value = 3
+		}
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	option = {
+		name = tyr_gir.1.zone_4
+		trigger = {
+			owns_entire_state_region = STATE_LOWER_SILESIA
+			owns_entire_state_region = STATE_UPPER_SILESIA
+		}
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_zone
+			value = 4
+		}
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	option = {
+		name = tyr_gir.1.zone_5
+		trigger = {
+			owns_entire_state_region = STATE_WESTPHALIA
+		}
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_zone
+			value = 5
+		}
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	option = {
+		name = tyr_gir.1.wait
+		default_option = yes
+		remove_variable = tyr_gir_region_open
+		set_variable = {
+			name = tyr_gir_region_wait
+			days = 90
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.2 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.2.t
+	desc = tyr_gir.2.d
+	flavor = tyr_gir.2.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		c:GER ?= this
+		has_variable = tyr_gir_started
+		NOT = {
+			has_variable = tyr_gir_active
+		}
+		NOT = {
+			has_variable = tyr_gir_offer_pending
+		}
+		NOT = {
+			has_variable = tyr_gir_result_pending
+		}
+		NOT = {
+			has_variable = tyr_gir_offer_gate
+		}
+	}
+
+	immediate = {
+		tyr_gir_capture_industrial_states = yes
+		tyr_gir_begin_action_cycle = yes
+		set_variable = {
+			name = tyr_gir_offer_gate
+			days = 1095
+		}
+		set_variable = tyr_gir_offer_pending
+		tyr_gir_prepare_offers = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_1
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_1 = yes
+				tyr_gir_can_plan_2 = yes
+				tyr_gir_can_plan_3 = yes
+				tyr_gir_can_plan_4 = yes
+				tyr_gir_can_plan_5 = yes
+				tyr_gir_can_plan_6 = yes
+				tyr_gir_can_plan_7 = yes
+			}
+		}
+		tyr_gir_assign_focus_1 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_2
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_8 = yes
+				tyr_gir_can_plan_9 = yes
+				tyr_gir_can_plan_10 = yes
+			}
+		}
+		tyr_gir_assign_focus_2 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_3
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_11 = yes
+				tyr_gir_can_plan_12 = yes
+				tyr_gir_can_plan_13 = yes
+			}
+		}
+		tyr_gir_assign_focus_3 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_4
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_14 = yes
+			}
+		}
+		tyr_gir_assign_focus_4 = yes
+	}
+
+	option = {
+		name = tyr_gir.defer
+		default_option = yes
+		remove_variable = tyr_gir_offer_pending
+		set_variable = tyr_gir_deferred_reopen
+		set_variable = {
+			name = tyr_gir_deferred
+			days = 30
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.9 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.9.t
+	desc = tyr_gir.9.d
+	flavor = tyr_gir.9.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	trigger = {
+		c:GER ?= this
+		has_variable = tyr_gir_started
+		NOT = {
+			has_variable = tyr_gir_active
+		}
+	}
+
+	immediate = {
+		set_variable = tyr_gir_offer_pending
+		tyr_gir_prepare_offers = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_1
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_1 = yes
+				tyr_gir_can_plan_2 = yes
+				tyr_gir_can_plan_3 = yes
+				tyr_gir_can_plan_4 = yes
+				tyr_gir_can_plan_5 = yes
+				tyr_gir_can_plan_6 = yes
+				tyr_gir_can_plan_7 = yes
+			}
+		}
+		tyr_gir_assign_focus_1 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_2
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_8 = yes
+				tyr_gir_can_plan_9 = yes
+				tyr_gir_can_plan_10 = yes
+			}
+		}
+		tyr_gir_assign_focus_2 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_3
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_11 = yes
+				tyr_gir_can_plan_12 = yes
+				tyr_gir_can_plan_13 = yes
+			}
+		}
+		tyr_gir_assign_focus_3 = yes
+	}
+
+	option = {
+		name = tyr_gir.choose_4
+		trigger = {
+			OR = {
+				tyr_gir_can_plan_14 = yes
+			}
+		}
+		tyr_gir_assign_focus_4 = yes
+	}
+
+	option = {
+		name = tyr_gir.defer
+		default_option = yes
+		remove_variable = tyr_gir_offer_pending
+		set_variable = tyr_gir_deferred_reopen
+		set_variable = {
+			name = tyr_gir_deferred
+			days = 30
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.11 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_pending_title
+	desc = tyr_gir.auto_pending_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_active
+				}
+			}
+			tyr_gir_assign_focus_1 = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.12 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_pending_title
+	desc = tyr_gir.auto_pending_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_active
+				}
+			}
+			tyr_gir_assign_focus_2 = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.13 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_pending_title
+	desc = tyr_gir.auto_pending_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_active
+				}
+			}
+			tyr_gir_assign_focus_3 = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.14 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_pending_title
+	desc = tyr_gir.auto_pending_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_active
+				}
+			}
+			tyr_gir_assign_focus_4 = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.3 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.3.t
+	desc = tyr_gir.3.d
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	trigger = {
+		c:GER ?= this
+		has_variable = tyr_gir_started
+	}
+
+	option = {
+		name = tyr_gir.3.a
+		default_option = yes
+		tyr_gir_appoint_successor = yes
+		tyr_gir_check_successor = yes
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.30 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.30.t
+	desc = tyr_gir.30.d
+	flavor = tyr_gir.30.f
+
+	event_image = {
+		video = "unspecific_gears_pistons"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	trigger = {
+		c:GER ?= this
+		has_variable = tyr_gir_started
+	}
+
+	option = {
+		name = tyr_gir.30.a
+		default_option = yes
+		remove_variable = tyr_gir_result_pending
+		trigger_event = {
+			id = tyr_gir.2
+			popup = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.40 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_pending_title
+	desc = tyr_gir.auto_redirect_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				has_variable = tyr_gir_active
+			}
+			tyr_gir_redirect_automatic = yes
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.20 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_assigned_title
+	desc = tyr_gir.auto_assigned_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir.21 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir.auto_unavailable_title
+	desc = tyr_gir.auto_unavailable_desc
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir.auto_confirm
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_active
+				}
+			}
+			trigger_event = {
+				id = tyr_gir.9
+				popup = yes
+			}
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+# tyr_gir_developments
+namespace = tyr_gir_de
+
+tyr_gir_de.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.1.t
+	desc = tyr_gir_de.1.d
+	flavor = tyr_gir_de.1.f
+
+	event_image = {
+		video = "ip4_mining_scene"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_1_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_1_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_1_cooldown
+			days = 1825
+		}
+		set_variable = tyr_gir_de_1_done
+	}
+
+	option = {
+		name = tyr_gir_de.1.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_1_pending
+			set_variable = {
+				name = tyr_gir_de_1_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_outside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_german_state = yes
+				NOT = {
+					tyr_gir_zone_state = yes
+				}
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_new_shafts
+				days = 1095
+			}
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_1
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.1.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_1_pending
+			set_variable = {
+				name = tyr_gir_de_1_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_outside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_german_state = yes
+				NOT = {
+					tyr_gir_zone_state = yes
+				}
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_intensive_blasting
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				any_scope_character = {
+					has_variable = tyr_gir_chancellor
+					is_character_alive = yes
+					has_trait = reckless
+				}
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.1.3
+		trigger = {
+			NOT = {
+				has_technology_researched = ammonium_nitrate_explosive
+			}
+			has_technology_researched = dynamite
+			has_technology_researched = improved_fertilizer
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_1_pending
+		}
+		add_technology_progress = {
+			technology = ammonium_nitrate_explosive
+			progress = 4000
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_1
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				any_scope_character = {
+					has_variable = tyr_gir_chancellor
+					is_character_alive = yes
+					has_trait = innovative
+				}
+			}
+		}
+	}
+}
+
+tyr_gir_de.2 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.2.t
+	desc = tyr_gir_de.2.d
+	flavor = tyr_gir_de.2.f
+
+	event_image = {
+		video = "europenorthamerica_russian_serfs"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_2_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_2_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_2_cooldown
+			days = 1825
+		}
+		set_variable = tyr_gir_de_2_done
+	}
+
+	option = {
+		name = tyr_gir_de.2.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_2_pending
+		}
+		add_journal_entry = {
+			type = je_tyr_gir_de_trial
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_2
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.2.2
+		trigger = {
+			NOT = {
+				has_technology_researched = threshing_machine
+			}
+			has_technology_researched = steam_donkey
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_2_pending
+		}
+		add_technology_progress = {
+			technology = threshing_machine
+			progress = 4000
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_2
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.2.3
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_2_pending
+			set_variable = {
+				name = tyr_gir_de_2_active
+				days = 1095
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_de_fertilizer_support
+				days = 1095
+			}
+			tyr_gir_de_refresh_fertilizer = yes
+		}
+		custom_tooltip = tyr_gir_de_fertilizer_support_tt
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_2
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.3 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.3.t
+	desc = tyr_gir_de.3.d
+	flavor = tyr_gir_de.3.f
+
+	event_image = {
+		video = "unspecific_gears_pistons"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_3_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_3_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_3_cooldown
+			days = 1825
+		}
+		set_variable = tyr_gir_de_3_done
+	}
+
+	option = {
+		name = tyr_gir_de.3.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_3_pending
+		}
+		add_journal_entry = {
+			type = je_tyr_gir_de_agriculture
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.3.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_3_pending
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.4 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.4.t
+	desc = tyr_gir_de.4.d
+	flavor = tyr_gir_de.4.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_4_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_4_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_4_cooldown
+			days = 1825
+		}
+		set_variable = tyr_gir_de_4_done
+	}
+
+	option = {
+		name = tyr_gir_de.4.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_4_pending
+			set_variable = {
+				name = tyr_gir_de_4_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_steel_guarantees
+				days = 1095
+			}
+		}
+		custom_tooltip = {
+			text = tyr_gir_de_permanent_cost_tt
+			hidden_effect = {
+				tyr_gir_ensure_permanent_expense = yes
+				set_variable = {
+					name = tyr_gir_cost_base
+					value = tyr_gir_permanent_cost_value
+				}
+				tyr_gir_add_expense = yes
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.4.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_4_pending
+			set_variable = {
+				name = tyr_gir_de_4_active
+				days = 1095
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_de_furnace_support
+				days = 1095
+			}
+			tyr_gir_de_refresh_furnace = yes
+		}
+		custom_tooltip = tyr_gir_de_furnace_support_tt
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_4
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.4.3
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_4_pending
+			set_variable = {
+				name = tyr_gir_de_4_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_private_steel_credit
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.5 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.5.t
+	desc = tyr_gir_de.5.d
+	flavor = tyr_gir_de.5.f
+
+	event_image = {
+		video = "ip4_university_lecture"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_5_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_5_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_5_cooldown
+			days = 1825
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.5.1
+		trigger = {
+			NOT = {
+				has_technology_researched = aniline
+			}
+			has_technology_researched = rubber_mastication
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_5_pending
+		}
+		add_technology_progress = {
+			technology = aniline
+			progress = 4000
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_5
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.5.2
+		trigger = {
+			NOT = {
+				has_technology_researched = rotary_valve_engine
+			}
+			has_technology_researched = watertube_boiler
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_5_pending
+		}
+		add_technology_progress = {
+			technology = rotary_valve_engine
+			progress = 4000
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_5
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.5.3
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_5_pending
+			set_variable = {
+				name = tyr_gir_de_5_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_technical_education
+				days = 1095
+			}
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_5
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.6 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.6.t
+	desc = tyr_gir_de.6.d
+	flavor = tyr_gir_de.6.f
+
+	event_image = {
+		video = "unspecific_sick_in_hospital"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_6_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_6_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_6_cooldown
+			days = 1825
+		}
+		random_scope_state = {
+			limit = {
+				tyr_gir_de_workshop_state = yes
+			}
+			save_scope_as = tyr_gir_de_state
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.6.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_6_pending
+			set_variable = {
+				name = tyr_gir_de_6_active
+				days = 1095
+			}
+		}
+		scope:tyr_gir_de_state ?= {
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_factory_inspections
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.6.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_6_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_6
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		scope:tyr_gir_de_state ?= {
+			add_radicals_in_state = {
+				pop_type = laborers
+				value = -0.05
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.6.3
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_6_pending
+		}
+		scope:tyr_gir_de_state ?= {
+			add_radicals_in_state = {
+				pop_type = laborers
+				value = 0.05
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.7 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.7.t
+	desc = tyr_gir_de.7.d
+	flavor = tyr_gir_de.7.f
+
+	event_image = {
+		video = "votp_realist_household"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_7_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_7_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_7_cooldown
+			days = 1825
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.7.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_7_pending
+			set_variable = {
+				name = tyr_gir_de_7_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_outside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_german_state = yes
+				NOT = {
+					tyr_gir_zone_state = yes
+				}
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_rural_settlement
+				days = 1095
+			}
+		}
+		ig:ig_landowners ?= {
+			add_modifier = {
+				name = tyr_gir_de_rural_approval
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.7.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_7_pending
+			set_variable = {
+				name = tyr_gir_de_7_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_urban_settlement
+				days = 1095
+			}
+		}
+		ig:ig_landowners ?= {
+			add_modifier = {
+				name = tyr_gir_de_rural_opposition
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.7.3
+		trigger = {
+			NOT = {
+				has_technology_researched = threshing_machine
+			}
+			has_technology_researched = steam_donkey
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_7_pending
+		}
+		add_technology_progress = {
+			technology = threshing_machine
+			progress = 4000
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_7
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.8 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.8.t
+	desc = tyr_gir_de.8.d
+	flavor = tyr_gir_de.8.f
+
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+
+	cooldown = {
+		days = 1825
+	}
+
+	trigger = {
+		tyr_gir_de_8_eligible = yes
+	}
+
+	cancellation_trigger = {
+		OR = {
+			has_variable = tyr_gir_ended
+			AND = {
+				NOT = {
+					has_journal_entry = je_tyr_gir_main
+				}
+			}
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_8_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_de_8_cooldown
+			days = 1825
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.8.1
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_8_pending
+			set_variable = {
+				name = tyr_gir_de_8_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_weapons_orders
+				days = 1095
+			}
+		}
+		custom_tooltip = {
+			text = tyr_gir_de_permanent_cost_tt
+			hidden_effect = {
+				tyr_gir_ensure_permanent_expense = yes
+				set_variable = {
+					name = tyr_gir_cost_base
+					value = tyr_gir_permanent_cost_value
+				}
+				tyr_gir_add_expense = yes
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.8.2
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_8_pending
+			set_variable = {
+				name = tyr_gir_de_8_active
+				days = 1095
+			}
+		}
+		custom_tooltip = tyr_gir_de_inside_effect_tt
+		every_scope_state = {
+			limit = {
+				tyr_gir_zone_state = yes
+			}
+			hidden_effect = {
+				root = {
+					add_to_variable_list = {
+						name = tyr_gir_de_targets
+						target = prev
+					}
+				}
+			}
+			add_modifier = {
+				name = tyr_gir_de_engine_orders
+				days = 1095
+			}
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_cost_8
+				multiplier = root.tyr_gir_expense_value
+				days = 1095
+			}
+		}
+		ig:ig_armed_forces ?= {
+			add_modifier = {
+				name = tyr_gir_de_staff_displeasure
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_de.8.3
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_de_8_pending
+			set_variable = {
+				name = tyr_gir_de_8_active
+				days = 1095
+			}
+		}
+		ig:ig_armed_forces ?= {
+			add_modifier = {
+				name = tyr_gir_de_staff_displeasure
+				days = 1095
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_gir_de.21 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.21.t
+	desc = tyr_gir_de.21.d
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir_de.21.a
+		default_option = yes
+	}
+}
+
+tyr_gir_de.22 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.22.t
+	desc = tyr_gir_de.22.d
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir_de.22.a
+		default_option = yes
+	}
+}
+
+tyr_gir_de.23 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.23.t
+	desc = tyr_gir_de.23.d
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir_de.23.a
+		default_option = yes
+	}
+}
+
+tyr_gir_de.24 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_de.24.t
+	desc = tyr_gir_de.24.d
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	option = {
+		name = tyr_gir_de.24.a
+		default_option = yes
+	}
+}
+# tyr_gir_chancellor_events
+namespace = tyr_gir_ch
+
+tyr_gir_ch.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.1.t
+	desc = tyr_gir_ch.1.d
+	flavor = tyr_gir_ch.1.f
+
+	event_image = {
+		video = "middleeast_engineer_blueprint"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_1_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_1_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_1_cooldown
+			days = 1095
+		}
+		je:je_tyr_gir_contract ?= {
+			save_scope_as = tyr_gir_ch_contract
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.1.a
+		trigger = {
+			has_variable = tyr_gir_active
+			exists = scope:tyr_gir_ch_contract
+		}
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_1_pending
+		}
+		custom_tooltip = {
+			text = tyr_gir_ch_orders_tt
+			hidden_effect = {
+				if = {
+					limit = {
+						NOT = {
+							has_variable = tyr_gir_ch_extra_orders
+						}
+					}
+					set_variable = {
+						name = tyr_gir_ch_extra_orders
+						value = 0
+					}
+				}
+				change_variable = {
+					name = tyr_gir_ch_extra_orders
+					add = 10
+				}
+				set_variable = {
+					name = tyr_gir_target
+					value = tyr_gir_new_target
+				}
+			}
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_1_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_1_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.1.b
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_1_pending
+		}
+		ai_chance = {
+			base = 5
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.2 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.2.t
+	desc = tyr_gir_ch.2.d
+	flavor = tyr_gir_ch.2.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_2_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_2_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_2_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.2.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_2_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_2_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_2_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.3 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.3.t
+	desc = tyr_gir_ch.3.d
+	flavor = tyr_gir_ch.3.f
+
+	event_image = {
+		video = "votp_conspiring"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_3_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_3_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_3_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.3.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_3_pending
+		}
+		scope:tyr_gir_ch_actor ?= {
+			interest_group ?= {
+				add_modifier = {
+					name = tyr_gir_ch_3_modifier
+					days = 365
+				}
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_3_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.4 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.4.t
+	desc = tyr_gir_ch.4.d
+	flavor = tyr_gir_ch.4.f
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_4_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_4_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_4_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.4.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_4_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_4_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_4_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.5 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.5.t
+	desc = tyr_gir_ch.5.d
+	flavor = tyr_gir_ch.5.f
+
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_5_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_5_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_5_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.5.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_5_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_5_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_5_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.6 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.6.t
+	desc = tyr_gir_ch.6.d
+	flavor = tyr_gir_ch.6.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_6_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_6_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_6_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.6.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_6_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_6_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_6_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.7 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.7.t
+	desc = tyr_gir_ch.7.d
+	flavor = tyr_gir_ch.7.f
+
+	event_image = {
+		video = "unspecific_ruler_speaking_to_people"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_7_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_7_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_7_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.7.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_7_pending
+		}
+		custom_tooltip = {
+			text = tyr_gir_ch_7_reward
+			hidden_effect = {
+				every_scope_state = {
+					limit = {
+						tyr_gir_zone_state = yes
+					}
+					add_loyalists_in_state = {
+						value = 0.02
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.8 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.8.t
+	desc = tyr_gir_ch.8.d
+	flavor = tyr_gir_ch.8.f
+
+	event_image = {
+		video = "unspecific_factory_closed"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_8_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_8_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_8_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.8.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_8_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_8_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_8_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.9 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.9.t
+	desc = tyr_gir_ch.9.d
+	flavor = tyr_gir_ch.9.f
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_9_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_9_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_9_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.9.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_9_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_9_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_9_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.10 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.10.t
+	desc = tyr_gir_ch.10.d
+	flavor = tyr_gir_ch.10.f
+
+	event_image = {
+		video = "votp_conspiring"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_10_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_10_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_10_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.10.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_10_pending
+		}
+		scope:tyr_gir_ch_actor ?= {
+			interest_group ?= {
+				add_modifier = {
+					name = tyr_gir_ch_10_modifier
+					days = 365
+				}
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_10_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.11 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.11.t
+	desc = tyr_gir_ch.11.d
+	flavor = tyr_gir_ch.11.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_11_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_11_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_11_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.11.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_11_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_11_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_11_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.12 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.12.t
+	desc = tyr_gir_ch.12.d
+	flavor = tyr_gir_ch.12.f
+
+	event_image = {
+		video = "votp_agitator_speaking"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_12_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_12_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_12_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.12.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_12_pending
+		}
+		custom_tooltip = {
+			text = tyr_gir_ch_12_reward
+			hidden_effect = {
+				every_scope_state = {
+					limit = {
+						tyr_gir_zone_state = yes
+					}
+					add_loyalists_in_state = {
+						pop_type = laborers
+						value = 0.02
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.13 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.13.t
+	desc = tyr_gir_ch.13.d
+	flavor = tyr_gir_ch.13.f
+
+	event_image = {
+		video = "europenorthamerica_russian_serfs"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_13_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_13_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_13_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.13.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_13_pending
+		}
+		ig:ig_landowners ?= {
+			add_modifier = {
+				name = tyr_gir_ch_13_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_13_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.14 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.14.t
+	desc = tyr_gir_ch.14.d
+	flavor = tyr_gir_ch.14.f
+
+	event_image = {
+		video = "europenorthamerica_before_the_battle"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_14_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_14_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_14_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.14.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_14_pending
+		}
+		ig:ig_armed_forces ?= {
+			add_modifier = {
+				name = tyr_gir_ch_14_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_14_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.15 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.15.t
+	desc = tyr_gir_ch.15.d
+	flavor = tyr_gir_ch.15.f
+
+	event_image = {
+		video = "unspecific_ruler_speaking_to_people"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_15_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_15_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_15_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.15.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_15_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_15_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_15_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.16 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.16.t
+	desc = tyr_gir_ch.16.d
+	flavor = tyr_gir_ch.16.f
+
+	event_image = {
+		video = "unspecific_gears_pistons"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	cooldown = {
+		days = 1095
+	}
+
+	trigger = {
+		tyr_gir_ch_16_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_16_pending
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_16_cooldown
+			days = 1095
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.16.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_16_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_16_modifier
+				days = 365
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gir_ch_16_active
+				days = 365
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = tyr_gir_ch.16.b
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_16_pending
+		}
+		ai_chance = {
+			base = 5
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.101 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.101.t
+	desc = tyr_gir_ch.101.d
+	flavor = tyr_gir_ch.101.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_101_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_101_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_101_done
+	}
+
+	option = {
+		name = tyr_gir_ch.101.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_101_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_101_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.102 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.102.t
+	desc = tyr_gir_ch.102.d
+	flavor = tyr_gir_ch.102.f
+
+	event_image = {
+		video = "unspecific_military_parade"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_102_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_102_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_102_done
+	}
+
+	option = {
+		name = tyr_gir_ch.102.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_102_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_102_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.103 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.103.t
+	desc = tyr_gir_ch.103.d
+	flavor = tyr_gir_ch.103.f
+
+	event_image = {
+		video = "middleeast_engineer_blueprint"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_103_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_103_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_103_done
+	}
+
+	option = {
+		name = tyr_gir_ch.103.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_103_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_103_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.104 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.104.t
+	desc = tyr_gir_ch.104.d
+	flavor = tyr_gir_ch.104.f
+
+	event_image = {
+		video = "unspecific_sick_in_hospital"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_104_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_104_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_104_done
+	}
+
+	option = {
+		name = tyr_gir_ch.104.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_104_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_104_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.105 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.105.t
+	desc = tyr_gir_ch.105.d
+	flavor = tyr_gir_ch.105.f
+
+	event_image = {
+		video = "unspecific_politicians_arguing"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_105_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_105_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_105_done
+	}
+
+	option = {
+		name = tyr_gir_ch.105.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_105_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_105_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.106 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.106.t
+	desc = tyr_gir_ch.106.d
+	flavor = tyr_gir_ch.106.f
+
+	event_image = {
+		video = "ip3_official_reading_dictate"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_106_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_106_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_106_done
+	}
+
+	option = {
+		name = tyr_gir_ch.106.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_106_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_106_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.107 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.107.t
+	desc = tyr_gir_ch.107.d
+	flavor = tyr_gir_ch.107.f
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_107_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_107_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_107_done
+	}
+
+	option = {
+		name = tyr_gir_ch.107.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_107_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_107_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.108 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.108.t
+	desc = tyr_gir_ch.108.d
+	flavor = tyr_gir_ch.108.f
+
+	event_image = {
+		video = "ip4_university_lecture"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_108_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_108_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_108_done
+	}
+
+	option = {
+		name = tyr_gir_ch.108.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_108_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_108_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.109 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.109.t
+	desc = tyr_gir_ch.109.d
+	flavor = tyr_gir_ch.109.f
+
+	event_image = {
+		video = "ip3_village_school"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_109_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_109_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_109_done
+	}
+
+	option = {
+		name = tyr_gir_ch.109.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_109_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_109_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+
+tyr_gir_ch.110 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_gir_ch.110.t
+	desc = tyr_gir_ch.110.d
+	flavor = tyr_gir_ch.110.f
+
+	event_image = {
+		video = "europenorthamerica_capitalists_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	duration = 3
+
+	cooldown = {
+		days = 36500
+	}
+
+	trigger = {
+		tyr_gir_ch_110_eligible = yes
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = tyr_gir_chancellor
+				is_character_alive = yes
+			}
+			save_scope_as = tyr_gir_ch_actor
+		}
+		set_variable = {
+			name = tyr_gir_de_global_cooldown
+			days = 180
+		}
+		set_variable = {
+			name = tyr_gir_de_open
+			days = 1095
+		}
+		set_variable = {
+			name = tyr_gir_ch_110_pending
+			days = 1095
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_gir_ch_exceptional_used
+				}
+			}
+			set_variable = {
+				name = tyr_gir_ch_exceptional_used
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_gir_ch_exceptional_used
+			add = 1
+		}
+		set_variable = {
+			name = tyr_gir_ch_exceptional_cooldown
+			days = 1095
+		}
+		set_variable = tyr_gir_ch_110_done
+	}
+
+	option = {
+		name = tyr_gir_ch.110.a
+		default_option = yes
+		hidden_effect = {
+			remove_variable = tyr_gir_de_open
+			remove_variable = tyr_gir_ch_110_pending
+		}
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_ch_110_modifier
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	cancellation_trigger = {
+		has_variable = tyr_gir_ended
+	}
+}
+# tyr_gcol_founding_events
+namespace = tyr_gcol_founding
+
+tyr_gcol_founding.1 = {
+	type = country_event
+	title = tyr_gcol_founding_maf_title
+	desc = tyr_gcol_founding_desc
+	flavor = tyr_gcol_founding_flavor
+
+	event_image = {
+		video = "votp_french_algeria"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+
+	trigger = {
+		tyr_gcol_has_maf = yes
+	}
+
+	option = {
+		name = tyr_gcol_charter_extraction
+		default_option = yes
+		c:MAF ?= {
+			add_modifier = {
+				name = resource_extraction_charter_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_missions
+		c:MAF ?= {
+			add_modifier = {
+				name = religious_missions_colonial_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_settlement
+		c:MAF ?= {
+			add_modifier = {
+				name = settlement_campaigns_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_profits
+		c:MAF ?= {
+			add_modifier = {
+				name = resource_extraction_colony_modifier
+			}
+		}
+	}
+}
+
+tyr_gcol_founding.2 = {
+	type = country_event
+	title = tyr_gcol_founding_dea_title
+	desc = tyr_gcol_founding_desc
+	flavor = tyr_gcol_founding_flavor
+
+	event_image = {
+		video = "votp_french_algeria"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+
+	trigger = {
+		tyr_gcol_has_dea = yes
+	}
+
+	option = {
+		name = tyr_gcol_charter_extraction
+		default_option = yes
+		c:DEA ?= {
+			add_modifier = {
+				name = resource_extraction_charter_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_missions
+		c:DEA ?= {
+			add_modifier = {
+				name = religious_missions_colonial_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_settlement
+		c:DEA ?= {
+			add_modifier = {
+				name = settlement_campaigns_modifier
+			}
+		}
+	}
+
+	option = {
+		name = tyr_gcol_charter_profits
+		c:DEA ?= {
+			add_modifier = {
+				name = resource_extraction_colony_modifier
+			}
+		}
+	}
+}
+# tyr_kk_events
+namespace = tyr_kk
+
+tyr_kk.1 = {
+	type = country_event
+
+	title = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = tyr_kk_state_victory
+				}
+				desc = tyr_kk_state_title
+			}
+			triggered_desc = {
+				trigger = {
+					always = yes
+				}
+				desc = tyr_kk_church_title
+			}
+		}
+	}
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = tyr_kk_state_victory
+				}
+				desc = tyr_kk_state_desc
+			}
+			triggered_desc = {
+				trigger = {
+					always = yes
+				}
+				desc = tyr_kk_church_desc
+			}
+		}
+	}
+
+	flavor = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_variable = tyr_kk_state_victory
+				}
+				desc = tyr_kk_state_flavor
+			}
+			triggered_desc = {
+				trigger = {
+					always = yes
+				}
+				desc = tyr_kk_church_flavor
+			}
+		}
+	}
+
+	event_image = {
+		video = "votp_monarch_holding_court"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	duration = 3
+
+	trigger = {
+		has_variable = tyr_kk_completed
+		NOT = {
+			has_variable = tyr_kk_reward_received
+		}
+	}
+
+	option = {
+		name = tyr_kk_settlement_option
+		default_option = yes
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_kk_reward_received
+				}
+			}
+			if = {
+				limit = {
+					has_variable = tyr_kk_state_victory
+				}
+				add_modifier = {
+					name = tyr_kk_state_supremacy
+				}
+			}
+			else = {
+				ig:ig_devout ?= {
+					set_ig_trait = ig_trait:ig_trait_be_fruitful_and_multiply
+					add_modifier = {
+						name = tyr_kk_clerical_influence
+					}
+				}
+				add_modifier = {
+					name = tyr_kk_religious_settlement
+				}
+			}
+			hidden_effect = {
+				set_variable = tyr_kk_reward_received
+			}
+		}
+	}
+}

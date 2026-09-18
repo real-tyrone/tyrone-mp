@@ -1,0 +1,237 @@
+tyr_gcol_create_maf_button = {
+	name = tyr_gcol_create_maf_button
+	desc = tyr_gcol_create_maf_desc
+
+	visible = {
+		OR = {
+			has_journal_entry = je_tyr_gcol_empire
+			has_journal_entry = je_tyr_gcol_administration
+		}
+		NOT = {
+			exists = c:MAF
+		}
+	}
+
+	possible = {
+		tyr_gcol_create_maf_possible = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = tyr_gcol_create_maf_effect_tt
+			hidden_effect = {
+				tyr_gcol_create_maf = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+tyr_gcol_create_dea_button = {
+	name = tyr_gcol_create_dea_button
+	desc = tyr_gcol_create_dea_desc
+
+	visible = {
+		OR = {
+			has_journal_entry = je_tyr_gcol_empire
+			has_journal_entry = je_tyr_gcol_administration
+		}
+		NOT = {
+			exists = c:DEA
+		}
+	}
+
+	possible = {
+		tyr_gcol_create_dea_possible = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = tyr_gcol_create_dea_effect_tt
+			hidden_effect = {
+				tyr_gcol_create_dea = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+}
+
+tyr_gcol_finish_button = {
+	name = tyr_gcol_finish_button
+	desc = tyr_gcol_finish_desc
+
+	visible = {
+		has_journal_entry = je_tyr_gcol_empire
+	}
+
+	possible = {
+		NOT = {
+			has_variable = tyr_gcol_finish_requested
+		}
+		NOT = {
+			has_variable = tyr_gcol_completed
+		}
+	}
+
+	effect = {
+		custom_tooltip = tyr_gcol_finish_reward_tt
+		if = {
+			limit = {
+				tyr_gcol_objectives_met > 0
+			}
+			show_as_tooltip = {
+				add_modifier = {
+					name = tyr_gcol_german_reward
+					multiplier = tyr_gcol_objectives_met
+					years = 15
+				}
+				if = {
+					limit = {
+						tyr_gcol_has_maf = yes
+					}
+					c:MAF = {
+						add_modifier = {
+							name = tyr_gcol_maf_reward
+							multiplier = root.tyr_gcol_objectives_met
+						}
+					}
+				}
+				if = {
+					limit = {
+						tyr_gcol_has_dea = yes
+					}
+					c:DEA = {
+						add_modifier = {
+							name = tyr_gcol_dea_reward
+							multiplier = root.tyr_gcol_objectives_met
+						}
+					}
+				}
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyr_gcol_final_score
+				value = tyr_gcol_objectives_met
+			}
+			set_variable = tyr_gcol_finish_requested
+		}
+	}
+
+	ai_chance = {
+		value = 0
+		if = {
+			limit = {
+				tyr_gcol_objectives_met >= 8
+			}
+			value = 10
+		}
+	}
+}
+
+tyr_gcol_transfer_button = {
+	name = tyr_gcol_transfer_button
+	desc = tyr_gcol_transfer_desc
+
+	cooldown = {
+		months = 3
+	}
+
+	visible = {
+		OR = {
+			has_journal_entry = je_tyr_gcol_empire
+			has_journal_entry = je_tyr_gcol_administration
+		}
+		OR = {
+			tyr_gcol_has_maf = yes
+			tyr_gcol_has_dea = yes
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		OR = {
+			AND = {
+				tyr_gcol_has_maf = yes
+				c:MAF ?= {
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+				OR = {
+					any_scope_state = {
+						tyr_gcol_african_state = yes
+						is_under_colonization = no
+						is_treaty_port = no
+						is_incorporated = no
+					}
+					any_subject_or_below = {
+						NOT = {
+							c:MAF ?= this
+						}
+						NOT = {
+							c:DEA ?= this
+						}
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						any_scope_state = {
+							tyr_gcol_african_state = yes
+							is_under_colonization = no
+							is_treaty_port = no
+						}
+					}
+				}
+			}
+			AND = {
+				tyr_gcol_has_dea = yes
+				c:DEA ?= {
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+				OR = {
+					any_scope_state = {
+						tyr_gcol_asian_state = yes
+						is_under_colonization = no
+						is_treaty_port = no
+						is_incorporated = no
+					}
+					any_subject_or_below = {
+						NOT = {
+							c:MAF ?= this
+						}
+						NOT = {
+							c:DEA ?= this
+						}
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						any_scope_state = {
+							tyr_gcol_asian_state = yes
+							is_under_colonization = no
+							is_treaty_port = no
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = tyr_gcol_transfer_tt
+			hidden_effect = {
+				tyr_gcol_transfer_states = yes
+				tyr_gcol_refresh_colonies = yes
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}

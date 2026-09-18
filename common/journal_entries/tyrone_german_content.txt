@@ -1,0 +1,1096 @@
+﻿# tyr_gir_journal
+je_tyr_gir_main = {
+	invalid = {
+		NOT = {
+			c:GER ?= this
+		}
+	}
+
+	on_invalid = {
+		custom_tooltip = {
+			text = tyr_gir_invalidation_tt
+			hidden_effect = {
+				tyr_gir_de_cleanup = yes
+				tyr_gir_clean_support = yes
+			}
+		}
+	}
+
+	event_outcome_invalidated_effect_desc = {
+		header = tyr_gir_invalidation_header
+		effect = {
+			custom_tooltip = tyr_gir_invalidation_tt
+		}
+	}
+
+	event_outcome_activated_effect_desc = {
+		header = tyr_gir_activation_header
+		effect = {
+			custom_tooltip = tyr_gir_activation_tt
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_journal_entry = je_tyr_gir_main
+					has_variable = tyr_gir_phase
+					has_variable = tyr_gir_zone
+					has_variable = tyr_gir_family
+					has_variable = tyr_gir_plan
+					has_variable = tyr_gir_current
+					has_variable = tyr_gir_target
+					has_variable = tyr_gir_interventions
+				}
+				desc = je_tyr_gir_main_status_active
+			}
+			desc = je_tyr_gir_main_status
+		}
+	}
+
+	icon = "gfx/interface/icons/event_icons/germany_industrial_rev.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		c:GER ?= root
+		NOT = {
+			has_variable = tyr_gir_ended
+		}
+	}
+
+	possible = {
+		c:GER ?= root
+		NOT = {
+			has_variable = tyr_gir_ended
+		}
+	}
+
+	immediate = {
+		custom_tooltip = {
+			text = tyr_gir_activation_tt
+			hidden_effect = {
+				set_variable = tyr_gir_started
+				tyr_gir_ensure_main_state = yes
+				tyr_gir_capture_industrial_states = yes
+				if = {
+					limit = {
+						NOT = {
+							any_scope_character = {
+								has_variable = tyr_gir_chancellor
+								is_character_alive = yes
+							}
+						}
+					}
+					if = {
+						limit = {
+							ig:ig_landowners ?= {
+								exists = leader
+							}
+						}
+						ig:ig_landowners = {
+							leader = {
+								set_variable = tyr_gir_chancellor
+							}
+						}
+					}
+					else = {
+						tyr_gir_appoint_successor = yes
+					}
+				}
+				tyr_gir_refresh_portrait = yes
+				tyr_gir_refresh_sector_1 = yes
+				tyr_gir_refresh_sector_2 = yes
+				tyr_gir_refresh_sector_3 = yes
+				tyr_gir_refresh_sector_4 = yes
+				if = {
+					limit = {
+						var:tyr_gir_zone ?= 0
+						NOT = {
+							has_variable = tyr_gir_region_open
+						}
+						NOT = {
+							has_variable = tyr_gir_region_wait
+						}
+					}
+					trigger_event = {
+						id = tyr_gir.1
+						popup = yes
+					}
+				}
+				set_variable = tyr_gir_modifiers_on_entry
+				if = {
+					limit = {
+						tyr_gir_total_expense > 0
+					}
+					je:je_tyr_gir_main ?= {
+						if = {
+							limit = {
+								has_modifier = tyr_gir_expense
+							}
+							remove_modifier = tyr_gir_expense
+						}
+						add_modifier = {
+							name = tyr_gir_expense
+							multiplier = root.tyr_gir_total_expense
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			tyr_gir_ensure_main_state = yes
+			tyr_gir_de_monthly = yes
+			tyr_gir_ensure_permanent_expense = yes
+			tyr_gir_capture_industrial_states = yes
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_gir_modifiers_on_entry
+					}
+				}
+				tyr_gir_migrate_entry_modifiers = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_scope_character = {
+							has_variable = tyr_gir_chancellor
+							is_character_alive = yes
+						}
+					}
+				}
+				tyr_gir_appoint_successor = yes
+			}
+			tyr_gir_refresh_portrait = yes
+			tyr_gir_check_successor = yes
+			if = {
+				limit = {
+					var:tyr_gir_zone = 0
+					NOT = {
+						has_variable = tyr_gir_region_open
+					}
+					NOT = {
+						has_variable = tyr_gir_region_wait
+					}
+				}
+				trigger_event = {
+					id = tyr_gir.1
+					popup = yes
+				}
+			}
+			if = {
+				limit = {
+					var:tyr_gir_zone > 0
+					NOT = {
+						has_variable = tyr_gir_active
+					}
+					NOT = {
+						has_variable = tyr_gir_offer_pending
+					}
+					NOT = {
+						has_variable = tyr_gir_deferred
+					}
+					NOT = {
+						has_variable = tyr_gir_deferred_reopen
+					}
+					NOT = {
+						has_variable = tyr_gir_result_pending
+					}
+					NOT = {
+						has_variable = tyr_gir_offer_gate
+					}
+				}
+				trigger_event = {
+					id = tyr_gir.2
+					popup = yes
+				}
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_deferred_reopen
+					NOT = {
+						has_variable = tyr_gir_deferred
+					}
+					NOT = {
+						has_variable = tyr_gir_active
+					}
+					NOT = {
+						has_variable = tyr_gir_offer_pending
+					}
+				}
+				remove_variable = tyr_gir_deferred_reopen
+				trigger_event = {
+					id = tyr_gir.9
+					popup = yes
+				}
+			}
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_gir_widgets.gui"
+		name = "widget_tyr_gir_chancellor"
+		container = "custom_widget_container_1"
+	}
+
+	scripted_button = tyr_gir_button_1_1
+	scripted_button = tyr_gir_button_1_2
+	scripted_button = tyr_gir_button_1_3
+	scripted_button = tyr_gir_button_1_4
+	scripted_button = tyr_gir_button_1_5
+	scripted_button = tyr_gir_button_1_6
+	scripted_button = tyr_gir_button_2_1
+	scripted_button = tyr_gir_button_2_2
+	scripted_button = tyr_gir_button_2_3
+	scripted_button = tyr_gir_button_2_4
+	scripted_button = tyr_gir_button_2_5
+	scripted_button = tyr_gir_button_2_6
+	scripted_button = tyr_gir_button_3_1
+	scripted_button = tyr_gir_button_3_2
+	scripted_button = tyr_gir_button_3_3
+	scripted_button = tyr_gir_button_3_4
+	scripted_button = tyr_gir_button_3_5
+	scripted_button = tyr_gir_button_3_6
+	scripted_button = tyr_gir_button_4_1
+	scripted_button = tyr_gir_button_4_2
+	scripted_button = tyr_gir_button_4_3
+	scripted_button = tyr_gir_button_4_4
+	scripted_button = tyr_gir_button_4_5
+	scripted_button = tyr_gir_button_4_6
+	weight = 150
+	transferable = no
+	can_revolution_inherit = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	complete = {
+		NOT = {
+			has_modifier = declared_bankruptcy
+		}
+		custom_tooltip = {
+			text = tyr_gir_finish_level_1_tt
+			tyr_gir_safe_level_1 >= 5
+		}
+		custom_tooltip = {
+			text = tyr_gir_finish_level_2_tt
+			tyr_gir_safe_level_2 >= 5
+		}
+		custom_tooltip = {
+			text = tyr_gir_finish_level_3_tt
+			tyr_gir_safe_level_3 >= 5
+		}
+		custom_tooltip = {
+			text = tyr_gir_finish_level_4_tt
+			tyr_gir_safe_level_4 >= 5
+		}
+	}
+
+	fail = {
+		has_modifier = declared_bankruptcy
+	}
+
+	timeout = 18250
+
+	on_complete = {
+		hidden_effect = {
+			tyr_gir_complete_programme = yes
+		}
+	}
+
+	on_fail = {
+		hidden_effect = {
+			tyr_gir_fail_programme = yes
+		}
+	}
+
+	on_timeout = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = declared_bankruptcy
+					}
+					tyr_gir_safe_level_1 >= 5
+					tyr_gir_safe_level_2 >= 5
+					tyr_gir_safe_level_3 >= 5
+					tyr_gir_safe_level_4 >= 5
+				}
+				tyr_gir_complete_programme = yes
+			}
+			else = {
+				tyr_gir_fail_programme = yes
+			}
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyr_gir_complete_header
+		effect = {
+			custom_tooltip = tyr_gir_complete_preview
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_101_done
+					NOT = {
+						has_variable = tyr_gir_ch_101_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_101_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_102_done
+					NOT = {
+						has_variable = tyr_gir_ch_102_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_102_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_103_done
+					NOT = {
+						has_variable = tyr_gir_ch_103_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_103_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_104_done
+					NOT = {
+						has_variable = tyr_gir_ch_104_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_104_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_105_done
+					NOT = {
+						has_variable = tyr_gir_ch_105_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_105_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_106_done
+					NOT = {
+						has_variable = tyr_gir_ch_106_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_106_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_107_done
+					NOT = {
+						has_variable = tyr_gir_ch_107_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_107_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_108_done
+					NOT = {
+						has_variable = tyr_gir_ch_108_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_108_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_109_done
+					NOT = {
+						has_variable = tyr_gir_ch_109_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_109_preview
+			}
+			if = {
+				limit = {
+					has_variable = tyr_gir_ch_110_done
+					NOT = {
+						has_variable = tyr_gir_ch_110_pending
+					}
+				}
+				custom_tooltip = tyr_gir_permanent_110_preview
+			}
+			custom_tooltip = tyr_gir_finish_costs_tt
+		}
+	}
+
+	event_outcome_failed_effect_desc = {
+		header = tyr_gir_failed_header
+		effect = {
+			custom_tooltip = tyr_gir_failure_preview
+			custom_tooltip = tyr_gir_finish_costs_tt
+		}
+	}
+
+	event_outcome_timeout_effect_desc = {
+		header = tyr_gir_timeout_header
+		effect = {
+			custom_tooltip = tyr_gir_failure_preview
+			custom_tooltip = tyr_gir_finish_costs_tt
+		}
+	}
+}
+
+
+je_tyr_gir_contract = {
+	event_outcome_activated_effect_desc = {
+		header = tyr_gir_activation_header
+		effect = {
+			custom_tooltip = tyr_gir_contract_activation_tt
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_journal_entry = je_tyr_gir_contract
+					has_variable = tyr_gir_plan
+					has_variable = tyr_gir_current
+					has_variable = tyr_gir_target
+					has_variable = tyr_gir_reward
+				}
+				desc = je_tyr_gir_contract_status_active
+			}
+			desc = je_tyr_gir_contract_status
+		}
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		always = no
+	}
+
+	timeout = 1095
+
+	on_timeout = {
+		custom_tooltip = {
+			text = tyr_gir_contract_resolution_tt
+			hidden_effect = {
+				if = {
+					limit = {
+						has_variable = tyr_gir_active
+						has_variable = tyr_gir_target
+						has_variable = tyr_gir_sector
+						has_journal_entry = je_tyr_gir_main
+					}
+					tyr_gir_resolve = yes
+				}
+			}
+		}
+	}
+
+	event_outcome_timeout_effect_desc = {
+		header = tyr_gir_contract_resolution_header
+		effect = {
+			custom_tooltip = tyr_gir_contract_resolution_tt
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			tyr_gir_recount = yes
+		}
+	}
+
+	transferable = no
+	can_revolution_inherit = yes
+	weight = 200
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	invalid = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+}
+# tyr_gir_agricultural_development
+je_tyr_gir_de_trial = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		always = no
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = tyr_gir_de_trial_complete_tt
+			tyr_gir_de_farms > 0
+			tyr_gir_de_fertilized_share >= 50
+		}
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				tyr_gir_gui_level_4 < 5
+			}
+			custom_tooltip = {
+				text = tyr_gir_de_agricultural_level_reward_tt
+				hidden_effect = {
+					change_variable = {
+						name = tyr_gir_level_4
+						add = 1
+					}
+					tyr_gir_refresh_sector_4 = yes
+				}
+			}
+		}
+		else = {
+			custom_tooltip = tyr_gir_de_agricultural_level_cap_tt
+		}
+		hidden_effect = {
+			trigger_event = {
+				id = tyr_gir_de.21
+				popup = yes
+			}
+		}
+	}
+
+	timeout = 365
+
+	on_timeout = {
+		trigger_event = {
+			id = tyr_gir_de.22
+			popup = yes
+		}
+	}
+
+	invalid = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+
+	on_invalid = {}
+
+	status_desc = je_tyr_gir_de_trial_status
+	transferable = no
+	can_revolution_inherit = no
+	weight = 180
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					tyr_gir_gui_level_4 < 5
+				}
+				desc = tyr_gir_de_agricultural_level_reward_tt
+			}
+			triggered_desc = {
+				desc = tyr_gir_de_agricultural_level_cap_tt
+			}
+		}
+	}
+}
+
+je_tyr_gir_de_agriculture = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		always = no
+	}
+
+	immediate = {
+		set_variable = {
+			name = tyr_gir_de_agriculture_months
+			value = 0
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = tyr_gir_de_agriculture_complete_tt
+			has_variable = tyr_gir_de_agriculture_months
+			tyr_gir_de_adoption_months >= 24
+		}
+	}
+
+	on_complete = {
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_agricultural_transformation
+			}
+		}
+		trigger_event = {
+			id = tyr_gir_de.23
+			popup = yes
+		}
+	}
+
+	timeout = 1825
+
+	on_timeout = {
+		trigger_event = {
+			id = tyr_gir_de.24
+			popup = yes
+		}
+	}
+
+	invalid = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+
+	on_invalid = {
+		remove_variable = tyr_gir_de_agriculture_months
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					tyr_gir_de_farm_target = yes
+				}
+				change_variable = {
+					name = tyr_gir_de_agriculture_months
+					add = 1
+				}
+			}
+			else_if = {
+				limit = {
+					var:tyr_gir_de_agriculture_months > 0
+				}
+				change_variable = {
+					name = tyr_gir_de_agriculture_months
+					subtract = 1
+				}
+			}
+		}
+	}
+
+	current_value = {
+		value = tyr_gir_de_adoption_months
+	}
+
+	goal_add_value = {
+		value = 24
+	}
+
+	status_desc = je_tyr_gir_de_agriculture_status
+	transferable = no
+	can_revolution_inherit = no
+	weight = 180
+}
+# tyr_gcol_journal
+je_tyr_gcol_empire = {
+	icon = "gfx/interface/icons/invention_icons/civilizing_mission.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		c:GER ?= root
+		NOT = {
+			has_variable = tyr_gcol_completed
+		}
+	}
+
+	possible = {
+		c:GER ?= root
+		NOT = {
+			has_variable = tyr_gcol_completed
+		}
+		has_technology_researched = civilizing_mission
+		OR = {
+			has_law_or_variant = law_type:law_colonial_exploitation
+			has_law_or_variant = law_type:law_colonial_resettlement
+		}
+	}
+
+	immediate = {
+		custom_tooltip = {
+			text = tyr_gcol_start_tt
+			hidden_effect = {
+				set_variable = tyr_gcol_started
+				tyr_gcol_refresh_colonies = yes
+				s:STATE_TOGO = {
+					save_scope_as = tyr_gcol_togo_scope
+				}
+				s:STATE_NORTH_CAMEROON = {
+					save_scope_as = tyr_gcol_north_cameroon_scope
+				}
+				s:STATE_SOUTH_CAMEROON = {
+					save_scope_as = tyr_gcol_south_cameroon_scope
+				}
+				s:STATE_ZANZIBAR = {
+					save_scope_as = tyr_gcol_zanzibar_scope
+				}
+				s:STATE_TANGANYIKA = {
+					save_scope_as = tyr_gcol_tanganyika_scope
+				}
+				s:STATE_LINDI = {
+					save_scope_as = tyr_gcol_lindi_scope
+				}
+				s:STATE_CONGO_ORIENTALE = {
+					save_scope_as = tyr_gcol_congo_orientale_scope
+				}
+				s:STATE_UBANGI_SHARI = {
+					save_scope_as = tyr_gcol_ubangi_shari_scope
+				}
+				s:STATE_EQUATEUR = {
+					save_scope_as = tyr_gcol_equateur_scope
+				}
+				s:STATE_MALAYA = {
+					save_scope_as = tyr_gcol_malaya_scope
+				}
+				s:STATE_NORTH_BORNEO = {
+					save_scope_as = tyr_gcol_north_borneo_scope
+				}
+				s:STATE_EASTERN_NEW_GUINEA = {
+					save_scope_as = tyr_gcol_eastern_new_guinea_scope
+				}
+				s:STATE_SOLOMON_ISLANDS = {
+					save_scope_as = tyr_gcol_solomon_islands_scope
+				}
+			}
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_gcol_subsidies.gui"
+		name = "widget_tyr_gcol_subsidies"
+		container = "custom_widget_container_3"
+	}
+
+	scripted_button = tyr_gcol_transfer_button
+	scripted_button = tyr_gcol_create_maf_button
+	scripted_button = tyr_gcol_create_dea_button
+	scripted_button = tyr_gcol_finish_button
+
+	on_monthly_pulse = {
+		effect = {
+			tyr_gcol_apply_subject_subsidies = yes
+			hidden_effect = {
+				s:STATE_TOGO = {
+					save_scope_as = tyr_gcol_togo_scope
+				}
+				s:STATE_NORTH_CAMEROON = {
+					save_scope_as = tyr_gcol_north_cameroon_scope
+				}
+				s:STATE_SOUTH_CAMEROON = {
+					save_scope_as = tyr_gcol_south_cameroon_scope
+				}
+				s:STATE_ZANZIBAR = {
+					save_scope_as = tyr_gcol_zanzibar_scope
+				}
+				s:STATE_TANGANYIKA = {
+					save_scope_as = tyr_gcol_tanganyika_scope
+				}
+				s:STATE_LINDI = {
+					save_scope_as = tyr_gcol_lindi_scope
+				}
+				s:STATE_CONGO_ORIENTALE = {
+					save_scope_as = tyr_gcol_congo_orientale_scope
+				}
+				s:STATE_UBANGI_SHARI = {
+					save_scope_as = tyr_gcol_ubangi_shari_scope
+				}
+				s:STATE_EQUATEUR = {
+					save_scope_as = tyr_gcol_equateur_scope
+				}
+				s:STATE_MALAYA = {
+					save_scope_as = tyr_gcol_malaya_scope
+				}
+				s:STATE_NORTH_BORNEO = {
+					save_scope_as = tyr_gcol_north_borneo_scope
+				}
+				s:STATE_EASTERN_NEW_GUINEA = {
+					save_scope_as = tyr_gcol_eastern_new_guinea_scope
+				}
+				s:STATE_SOLOMON_ISLANDS = {
+					save_scope_as = tyr_gcol_solomon_islands_scope
+				}
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = tyr_gcol_finish_condition
+			has_variable = tyr_gcol_finish_requested
+		}
+	}
+
+	on_complete = {
+		hidden_effect = {
+			set_variable = tyr_gcol_completed
+			remove_variable = tyr_gcol_finish_requested
+			if = {
+				limit = {
+					has_modifier = tyr_gcol_overseas_empire
+				}
+				remove_modifier = tyr_gcol_overseas_empire
+			}
+			add_journal_entry = {
+				type = je_tyr_gcol_administration
+			}
+			tyr_gcol_apply_colonial_rewards = yes
+		}
+	}
+
+	status_desc = je_tyr_gcol_empire_status
+	transferable = no
+	can_revolution_inherit = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 150
+}
+
+je_tyr_gcol_administration = {
+	icon = "gfx/interface/icons/invention_icons/civilizing_mission.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		always = no
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_variable = tyr_gcol_final_score
+				var:tyr_gcol_final_score > 0
+			}
+			je:je_tyr_gcol_administration ?= {
+				add_modifier = {
+					name = tyr_gcol_german_reward
+					multiplier = root.tyr_gcol_final_score_value
+					years = 15
+				}
+			}
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_gcol_subsidies.gui"
+		name = "widget_tyr_gcol_subsidies"
+		container = "custom_widget_container_3"
+	}
+
+	scripted_button = tyr_gcol_transfer_button
+	scripted_button = tyr_gcol_create_maf_button
+	scripted_button = tyr_gcol_create_dea_button
+
+	complete = {
+		always = no
+	}
+
+	status_desc = je_tyr_gcol_administration_status
+	transferable = no
+	can_revolution_inherit = no
+	weight = 140
+
+	on_monthly_pulse = {
+		effect = {
+			tyr_gcol_apply_subject_subsidies = yes
+		}
+	}
+}
+
+je_tyr_gcol_colonial_charter = {
+	icon = "gfx/interface/icons/invention_icons/civilizing_mission.dds"
+
+	is_shown_when_inactive = {
+		OR = {
+			c:MAF ?= root
+			c:DEA ?= root
+		}
+	}
+
+	possible = {
+		OR = {
+			has_variable = tyr_gcol_maf_colony
+			has_variable = tyr_gcol_dea_colony
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			tyr_gcol_initialize_subsidy_policy = yes
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = tyr_gcol_charter_dissolution_tt
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	on_complete = {
+		hidden_effect = {
+			tyr_gcol_dissolve_administration = yes
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = {
+						exists = c:GER
+						is_subject_of = c:GER
+					}
+					tyr_gcol_apply_subsidy_policy = yes
+				}
+			}
+		}
+	}
+
+	transferable = no
+	can_revolution_inherit = no
+	weight = 100
+}
+# tyr_kk_journal
+je_tyr_kk_kulturkampf = {
+	icon = "gfx/interface/icons/invention_icons/bureaucracy.dds"
+	group = je_group_germany_tyrone
+
+	is_shown_when_inactive = {
+		c:GER ?= root
+		NOT = {
+			has_variable = tyr_kk_completed
+		}
+	}
+
+	possible = {
+		any_scope_character = {
+			is_character_alive = yes
+			has_ideology = ideology:ideology_bismarck_paternalistic
+		}
+		has_technology_researched = philosophical_pragmatism
+	}
+
+	immediate = {
+		custom_tooltip = {
+			text = tyr_kk_start_tt
+			hidden_effect = {
+				random_scope_character = {
+					limit = {
+						is_character_alive = yes
+						has_ideology = ideology:ideology_bismarck_paternalistic
+					}
+					save_scope_as = tyr_kk_bismarck_scope
+				}
+				ig:ig_intelligentsia = {
+					save_scope_as = tyr_kk_intelligentsia_scope
+				}
+				ig:ig_devout = {
+					save_scope_as = tyr_kk_devout_scope
+				}
+				set_variable = {
+					name = tyr_kk_balance
+					value = 50
+				}
+			}
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_kk_widgets.gui"
+		name = "widget_tyr_kk_balance"
+		container = "custom_widget_container_1"
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					NOT = {
+						exists = scope:tyr_kk_bismarck_scope
+					}
+					any_scope_character = {
+						is_character_alive = yes
+						has_ideology = ideology:ideology_bismarck_paternalistic
+					}
+				}
+				random_scope_character = {
+					limit = {
+						is_character_alive = yes
+						has_ideology = ideology:ideology_bismarck_paternalistic
+					}
+					save_scope_as = tyr_kk_bismarck_scope
+				}
+			}
+			ig:ig_intelligentsia = {
+				save_scope_as = tyr_kk_intelligentsia_scope
+			}
+			ig:ig_devout = {
+				save_scope_as = tyr_kk_devout_scope
+			}
+			set_variable = {
+				name = tyr_kk_balance
+				value = tyr_kk_next_balance
+			}
+		}
+	}
+
+	complete = {
+		custom_tooltip = {
+			text = tyr_kk_complete_tt
+			OR = {
+				tyr_kk_balance <= 0
+				tyr_kk_balance >= 100
+			}
+		}
+	}
+
+	on_complete = {
+		hidden_effect = {
+			set_variable = tyr_kk_completed
+			if = {
+				limit = {
+					tyr_kk_balance >= 100
+				}
+				set_variable = tyr_kk_state_victory
+			}
+			trigger_event = {
+				id = tyr_kk.1
+				popup = yes
+			}
+		}
+	}
+
+	event_outcome_completed_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_kk_outcome_preview
+			}
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_journal_entry = je_tyr_kk_kulturkampf
+				}
+				desc = je_tyr_kk_kulturkampf_status_active
+			}
+			triggered_desc = {
+				trigger = {
+					always = yes
+				}
+				desc = je_tyr_kk_kulturkampf_status
+			}
+		}
+	}
+
+	transferable = no
+	can_revolution_inherit = no
+	weight = 145
+}

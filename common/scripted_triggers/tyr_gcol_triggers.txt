@@ -1,0 +1,174 @@
+tyr_gcol_african_state = {
+	OR = {
+		region = sr:region_north_africa
+		region = sr:region_west_africa
+		region = sr:region_equatorial_africa
+		region = sr:region_southern_africa
+		region = sr:region_east_africa
+		state_region = s:STATE_EGYPTIAN_DESERT
+		state_region = s:STATE_MIDDLE_EGYPT
+		state_region = s:STATE_UPPER_EGYPT
+		state_region = s:STATE_LOWER_EGYPT
+		state_region = s:STATE_DONGOLA
+		state_region = s:STATE_DARFUR
+		state_region = s:STATE_KORDOFAN
+		state_region = s:STATE_EQUATORIA
+		state_region = s:STATE_BLUE_NILE
+		state_region = s:STATE_MATRUH
+	}
+}
+
+tyr_gcol_asian_state = {
+	OR = {
+		region = sr:region_indochina
+		region = sr:region_indonesia
+		region = sr:region_oceania
+	}
+}
+
+tyr_gcol_has_maf = {
+	exists = c:MAF
+
+	c:MAF ?= {
+		is_subject_of = root
+	}
+}
+
+tyr_gcol_has_dea = {
+	exists = c:DEA
+
+	c:DEA ?= {
+		is_subject_of = root
+	}
+}
+
+tyr_gcol_objective_1 = {
+	tyr_gcol_has_maf = yes
+	tyr_gcol_has_dea = yes
+}
+
+tyr_gcol_objective_2 = {
+	tyr_gcol_has_maf = yes
+
+	c:MAF ?= {
+		owns_entire_state_region = STATE_TOGO
+		owns_entire_state_region = STATE_NORTH_CAMEROON
+		owns_entire_state_region = STATE_SOUTH_CAMEROON
+	}
+}
+
+tyr_gcol_objective_3 = {
+	tyr_gcol_has_maf = yes
+
+	c:MAF ?= {
+		owns_entire_state_region = STATE_ZANZIBAR
+		owns_entire_state_region = STATE_TANGANYIKA
+		owns_entire_state_region = STATE_LINDI
+	}
+}
+
+tyr_gcol_objective_4 = {
+	tyr_gcol_has_maf = yes
+
+	c:MAF ?= {
+		owns_entire_state_region = STATE_CONGO_ORIENTALE
+		owns_entire_state_region = STATE_UBANGI_SHARI
+		owns_entire_state_region = STATE_EQUATEUR
+	}
+}
+
+tyr_gcol_objective_5 = {
+	tyr_gcol_has_dea = yes
+
+	c:DEA ?= {
+		owns_entire_state_region = STATE_MALAYA
+		owns_entire_state_region = STATE_NORTH_BORNEO
+	}
+}
+
+tyr_gcol_objective_6 = {
+	tyr_gcol_has_dea = yes
+
+	c:DEA ?= {
+		owns_entire_state_region = STATE_EASTERN_NEW_GUINEA
+		owns_entire_state_region = STATE_SOLOMON_ISLANDS
+	}
+}
+
+tyr_gcol_objective_7 = {
+	tyr_gcol_has_maf = yes
+	tyr_gcol_maf_gdp >= 50000000
+}
+
+tyr_gcol_objective_8 = {
+	tyr_gcol_has_dea = yes
+	tyr_gcol_dea_gdp >= 50000000
+}
+
+tyr_gcol_objective_9 = {
+	tyr_gcol_has_maf = yes
+	tyr_gcol_maf_plantations >= 100
+}
+
+tyr_gcol_objective_10 = {
+	tyr_gcol_has_dea = yes
+	tyr_gcol_dea_rubber >= 50
+}
+
+tyr_gcol_create_maf_possible = {
+	c:GER ?= root
+
+	OR = {
+		has_journal_entry = je_tyr_gcol_empire
+		has_journal_entry = je_tyr_gcol_administration
+	}
+
+	NOT = {
+		exists = c:MAF
+	}
+
+	is_at_war = no
+	is_diplomatic_play_committed_participant = no
+
+	institution_investment_level = {
+		institution = institution_colonial_affairs
+		value >= 2
+	}
+
+	any_scope_state = {
+		tyr_gcol_african_state = yes
+		is_under_colonization = no
+		is_incorporated = no
+		is_treaty_port = no
+	}
+}
+
+tyr_gcol_create_dea_possible = {
+	c:GER ?= root
+
+	OR = {
+		has_journal_entry = je_tyr_gcol_empire
+		has_journal_entry = je_tyr_gcol_administration
+	}
+
+	NOT = {
+		exists = c:DEA
+	}
+
+	is_at_war = no
+	is_diplomatic_play_committed_participant = no
+
+	institution_investment_level = {
+		institution = institution_colonial_affairs
+		value >= 2
+	}
+
+	owns_entire_state_region = STATE_MALAYA
+
+	any_scope_state = {
+		state_region = s:STATE_MALAYA
+		is_under_colonization = no
+		is_incorporated = no
+		is_treaty_port = no
+	}
+}

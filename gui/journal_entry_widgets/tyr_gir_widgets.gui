@@ -1,0 +1,1326 @@
+# Centered slot insets
+# Aligned action cells
+# Industrial GUI visual polish
+# Dossier layout: vanilla components, inspired by Morgenrote's occupation panels.
+flowcontainer = {
+	name = "widget_tyr_gir_chancellor"
+	direction = vertical
+	ignoreinvisible = yes
+	spacing = 8
+
+	widget = {
+		name = "tyr_gir_dossier"
+		size = { 520 338 }
+		background = {
+			using = entry_bg
+		}
+		fixedgridbox = {
+			size = { 520 338 }
+			addcolumn = 520
+			addrow = 338
+			datamodel = "[JournalEntry.GetCountry.MakeScope.GetList('tyr_gir_portrait')]"
+			item = {
+				widget = {
+					size = { 520 338 }
+					datacontext = "[Scope.GetCharacter]"
+					widget = {
+						position = { 10 12 }
+						size = { 250 270 }
+						character_portrait_base = {
+							size = { 250 270 }
+							parentanchor = hcenter
+							blockoverride "show_hat" {
+								scissor = yes
+							}
+							blockoverride "portrait_texture" {
+								portrait_texture = "[Character.GetAnimatedPortrait('environment_standard_V1', 'camera_torso', 'idle', GetPortraitRenderSize(PdxGuiWidget.Self))]"
+							}
+							blockoverride "portrait_size" {
+								size = { 230 292 }
+							}
+							blockoverride "portrait_position" {
+								position = { 0 -4 }
+							}
+							blockoverride "portrait_frame" {
+								icon = {
+									texture = "gfx/interface/portraits/portrait_frame_torso_historical_no_info_link.dds"
+									size = { 100% 263 }
+									position = { 0 3 }
+									parentanchor = bottom|hcenter
+									using = naval_commander_color
+								}
+							}
+							blockoverride "portrait_icons" {}
+							blockoverride "highlight" {}
+						}
+					}
+					default_header_clean_faded = {
+						size = { 496 48 }
+						position = { 0 282 }
+						parentanchor = hcenter
+						blockoverride "text" {}
+						textbox = {
+							size = { 470 44 }
+							parentanchor = center
+							text = "[Character.GetFullNameNoFormatting]"
+							align = center
+							multiline = yes
+							elide = right
+							fontsize_min = 14
+							using = fontsize_large
+						}
+					}
+				}
+			}
+		}
+		flowcontainer = {
+			position = { 278 26 }
+			direction = vertical
+			spacing = 2
+			textbox = {
+				size = { 224 24 }
+				text = "tyr_gir_v2_phase"
+				align = center
+				multiline = yes
+				using = fontsize_medium
+				alpha = 0.8
+			}
+			textbox = {
+				size = { 224 42 }
+				text = "tyr_gir_gui_phase_value"
+				align = center
+				multiline = yes
+				using = fontsize_large
+			}
+			divider_decorative = {
+				size = { 224 8 }
+				alpha = 0.42
+			}
+			textbox = {
+				size = { 224 24 }
+				text = "tyr_gir_gui_family_label"
+				align = center
+				multiline = yes
+				using = fontsize_medium
+				alpha = 0.8
+			}
+			textbox = {
+				size = { 224 42 }
+				text = "tyr_gir_gui_family_value"
+				align = center
+				multiline = yes
+				using = fontsize_large
+			}
+			divider_decorative = {
+				size = { 224 8 }
+				alpha = 0.42
+			}
+			textbox = {
+				size = { 224 24 }
+				text = "tyr_gir_gui_zone_label"
+				align = center
+				multiline = yes
+				using = fontsize_medium
+				alpha = 0.8
+			}
+			textbox = {
+				size = { 224 42 }
+				text = "tyr_gir_gui_zone_value"
+				align = center
+				multiline = yes
+				using = fontsize_large
+			}
+			widget = {
+				size = { 1 8 }
+			}
+		}
+	}
+
+	flowcontainer = {
+		name = "tyr_gir_level_panel"
+		parentanchor = hcenter
+		direction = vertical
+		spacing = 4
+		margin = { 16 10 }
+		background = {
+			using = entry_bg
+		}
+		textbox = {
+			size = { 480 30 }
+			text = "tyr_gir_levels_title"
+			align = center
+			tooltip = "tyr_gir_levels_rules"
+		}
+		divider_decorative = {
+			size = { 480 6 }
+			alpha = 0.5
+		}
+		widget = {
+			name = "tyr_gir_level_row_1"
+			size = { 480 84 }
+			tooltip = "tyr_gir_levels_rules"
+			textbox = {
+				size = { 330 26 }
+				text = "tyr_gir_level_label_1"
+				align = left|nobaseline
+				using = fontsize_large
+			}
+			textbox = {
+				size = { 100 26 }
+				parentanchor = right
+				text = "tyr_gir_level_value_1"
+				align = right|nobaseline
+			}
+			green_progressbar_horizontal = {
+				position = { 24 45 }
+				size = { 432 18 }
+				blockoverride "values" {
+					min = 1
+					max = 5
+					value = "[FixedPointToFloat(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'))]"
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 0 30 }
+				tooltip = "tyr_gir_level_1_1_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'), '(CFixedPoint)1')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_1"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 108 30 }
+				tooltip = "tyr_gir_level_1_2_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'), '(CFixedPoint)2')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_2"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 216 30 }
+				tooltip = "tyr_gir_level_1_3_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'), '(CFixedPoint)3')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_3"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 324 30 }
+				tooltip = "tyr_gir_level_1_4_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'), '(CFixedPoint)4')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_4"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 432 30 }
+				tooltip = "tyr_gir_level_1_5_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_1'), '(CFixedPoint)5')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_5"
+					align = center
+					using = fontsize_medium
+				}
+			}
+		}
+		widget = {
+			name = "tyr_gir_level_row_2"
+			size = { 480 84 }
+			tooltip = "tyr_gir_levels_rules"
+			textbox = {
+				size = { 330 26 }
+				text = "tyr_gir_level_label_2"
+				align = left|nobaseline
+				using = fontsize_large
+			}
+			textbox = {
+				size = { 100 26 }
+				parentanchor = right
+				text = "tyr_gir_level_value_2"
+				align = right|nobaseline
+			}
+			green_progressbar_horizontal = {
+				position = { 24 45 }
+				size = { 432 18 }
+				blockoverride "values" {
+					min = 1
+					max = 5
+					value = "[FixedPointToFloat(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'))]"
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 0 30 }
+				tooltip = "tyr_gir_level_2_1_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'), '(CFixedPoint)1')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_1"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 108 30 }
+				tooltip = "tyr_gir_level_2_2_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'), '(CFixedPoint)2')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_2"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 216 30 }
+				tooltip = "tyr_gir_level_2_3_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'), '(CFixedPoint)3')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_3"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 324 30 }
+				tooltip = "tyr_gir_level_2_4_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'), '(CFixedPoint)4')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_4"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 432 30 }
+				tooltip = "tyr_gir_level_2_5_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_2'), '(CFixedPoint)5')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_5"
+					align = center
+					using = fontsize_medium
+				}
+			}
+		}
+		widget = {
+			name = "tyr_gir_level_row_3"
+			size = { 480 84 }
+			tooltip = "tyr_gir_levels_rules"
+			textbox = {
+				size = { 330 26 }
+				text = "tyr_gir_level_label_3"
+				align = left|nobaseline
+				using = fontsize_large
+			}
+			textbox = {
+				size = { 100 26 }
+				parentanchor = right
+				text = "tyr_gir_level_value_3"
+				align = right|nobaseline
+			}
+			green_progressbar_horizontal = {
+				position = { 24 45 }
+				size = { 432 18 }
+				blockoverride "values" {
+					min = 1
+					max = 5
+					value = "[FixedPointToFloat(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'))]"
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 0 30 }
+				tooltip = "tyr_gir_level_3_1_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'), '(CFixedPoint)1')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_1"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 108 30 }
+				tooltip = "tyr_gir_level_3_2_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'), '(CFixedPoint)2')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_2"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 216 30 }
+				tooltip = "tyr_gir_level_3_3_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'), '(CFixedPoint)3')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_3"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 324 30 }
+				tooltip = "tyr_gir_level_3_4_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'), '(CFixedPoint)4')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_4"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 432 30 }
+				tooltip = "tyr_gir_level_3_5_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_3'), '(CFixedPoint)5')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_5"
+					align = center
+					using = fontsize_medium
+				}
+			}
+		}
+		widget = {
+			name = "tyr_gir_level_row_4"
+			size = { 480 84 }
+			tooltip = "tyr_gir_levels_rules"
+			textbox = {
+				size = { 330 26 }
+				text = "tyr_gir_level_label_4"
+				align = left|nobaseline
+				using = fontsize_large
+			}
+			textbox = {
+				size = { 100 26 }
+				parentanchor = right
+				text = "tyr_gir_level_value_4"
+				align = right|nobaseline
+			}
+			green_progressbar_horizontal = {
+				position = { 24 45 }
+				size = { 432 18 }
+				blockoverride "values" {
+					min = 1
+					max = 5
+					value = "[FixedPointToFloat(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'))]"
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 0 30 }
+				tooltip = "tyr_gir_level_4_1_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'), '(CFixedPoint)1')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_1"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 108 30 }
+				tooltip = "tyr_gir_level_4_2_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'), '(CFixedPoint)2')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_2"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 216 30 }
+				tooltip = "tyr_gir_level_4_3_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'), '(CFixedPoint)3')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_3"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 324 30 }
+				tooltip = "tyr_gir_level_4_4_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'), '(CFixedPoint)4')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_4"
+					align = center
+					using = fontsize_medium
+				}
+			}
+			widget = {
+				size = { 48 48 }
+				position = { 432 30 }
+				tooltip = "tyr_gir_level_4_5_tt"
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					alpha = 0.4
+				}
+				icon = {
+					size = { 48 48 }
+					texture = "gfx/interface/progressbar/per_level_box_progressbar.png"
+					visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_level_4'), '(CFixedPoint)5')]"
+				}
+				textbox = {
+					size = { 48 24 }
+					position = { 0 12 }
+					text = "tyr_gir_rank_5"
+					align = center
+					using = fontsize_medium
+				}
+			}
+		}
+		textbox = {
+			size = { 480 24 }
+			text = "tyr_gir_levels_hint"
+			align = center
+			using = fontsize_medium
+		}
+	}
+
+	flowcontainer = {
+		name = "tyr_gir_dashboard"
+		parentanchor = hcenter
+		direction = vertical
+		ignoreinvisible = yes
+		spacing = 5
+		margin = { 16 12 }
+		background = {
+			using = dark_area
+		}
+		textbox = {
+			size = { 480 28 }
+			text = "tyr_gir_v2_assignment"
+			align = center
+			multiline = yes
+		}
+		divider_decorative = {
+			size = { 480 6 }
+			alpha = 0.5
+		}
+		flowcontainer = {
+			direction = vertical
+			spacing = 5
+			visible = "[GreaterThan_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_active'), '(CFixedPoint)0')]"
+			textbox = {
+				size = { 480 36 }
+				text = "tyr_gir_v2_building"
+				align = center
+				multiline = yes
+				using = fontsize_xl
+			}
+			textbox = {
+				size = { 480 26 }
+				text = "tyr_gir_v2_area"
+				align = center
+				multiline = yes
+			}
+			green_progressbar_horizontal = {
+				tooltip = "tyr_gir_sector_goal_tt"
+				size = { 480 32 }
+				blockoverride "values" {
+					min = 0
+					max = 1
+					value = "[FixedPointToFloat(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_progress'))]"
+				}
+				textbox = {
+					size = { 460 30 }
+					parentanchor = center
+					align = center
+					text = "tyr_gir_v2_progress"
+				}
+			}
+			textbox = {
+				size = { 480 28 }
+				text = "tyr_gir_v2_outcome"
+				align = center
+				multiline = yes
+				tooltip = "tyr_gir_gui_deadline_tt"
+			}
+			textbox = {
+				size = { 480 23 }
+				text = "tyr_gir_v2_deadline"
+				align = center
+				multiline = yes
+				using = fontsize_medium
+				alpha = 0.8
+			}
+		}
+		flowcontainer = {
+			direction = vertical
+			visible = "[Not(GreaterThan_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_active'), '(CFixedPoint)0'))]"
+			textbox = {
+				size = { 480 52 }
+				text = "tyr_gir_v2_idle"
+				align = center
+				multiline = yes
+			}
+		}
+	}
+
+	widget = {
+		size = { 520 58 }
+		background = {
+			using = entry_bg
+		}
+		icon = {
+			texture = "gfx/interface/dividers/divider_clean_vertical.dds"
+			position = { 260 9 }
+			size = { 2 40 }
+			alpha = 0.35
+		}
+		flowcontainer = {
+			position = { 12 3 }
+			direction = vertical
+			widget = {
+				size = { 240 23 }
+				tooltip = "tyr_gir_gui_expense_tt"
+				icon = {
+					size = { 18 18 }
+					position = { 20 2 }
+					texture = "gfx/interface/icons/topbar/income_power_icon.dds"
+					alpha = 0.85
+				}
+				textbox = {
+					size = { 240 23 }
+					text = "tyr_gir_v2_cost"
+					align = center
+					using = fontsize_medium
+					alpha = 0.85
+				}
+			}
+			textbox = {
+				size = { 240 29 }
+				text = "tyr_gir_v2_cost_value"
+				align = center
+				multiline = yes
+				tooltip = "tyr_gir_gui_expense_tt"
+			}
+		}
+		flowcontainer = {
+			position = { 270 3 }
+			direction = vertical
+			widget = {
+				size = { 238 23 }
+				tooltip = "tyr_gir_action_slots_tt"
+				icon = {
+					size = { 18 18 }
+					position = { 20 2 }
+					texture = "gfx/interface/icons/generic_icons/clock.dds"
+					alpha = 0.85
+				}
+				textbox = {
+					size = { 238 23 }
+					text = "tyr_gir_gui_cooldown_label"
+					align = center
+					using = fontsize_medium
+					alpha = 0.85
+				}
+			}
+			textbox = {
+				size = { 238 29 }
+				text = "tyr_gir_gui_cooldown_value"
+				align = center
+				multiline = yes
+			}
+		}
+	}
+
+	flowcontainer = {
+		name = "tyr_gir_actions_row"
+		direction = horizontal
+		parentanchor = hcenter
+		spacing = 14
+		margin = { 0 5 }
+		widget = {
+			name = "tyr_gir_action_slot_1"
+			size = { 48 48 }
+			tooltip = "tyr_gir_action_slots_tt"
+			background = {
+				using = entry_bg
+			}
+			widget = {
+				size = { 34 34 }
+				position = { 7 7 }
+				background = {
+					using = dark_area
+					alpha = 0.45
+				}
+			}
+			icon = {
+				texture = "gfx/interface/icons/generic_icons/checkmark.dds"
+				size = { 30 30 }
+				position = { 9 9 }
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_interventions'), '(CFixedPoint)1')]"
+			}
+		}
+		widget = {
+			name = "tyr_gir_action_slot_2"
+			size = { 48 48 }
+			tooltip = "tyr_gir_action_slots_tt"
+			background = {
+				using = entry_bg
+			}
+			widget = {
+				size = { 34 34 }
+				position = { 7 7 }
+				background = {
+					using = dark_area
+					alpha = 0.45
+				}
+			}
+			icon = {
+				texture = "gfx/interface/icons/generic_icons/checkmark.dds"
+				size = { 30 30 }
+				position = { 9 9 }
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_interventions'), '(CFixedPoint)2')]"
+			}
+		}
+		widget = {
+			name = "tyr_gir_action_slot_3"
+			size = { 48 48 }
+			tooltip = "tyr_gir_action_slots_tt"
+			background = {
+				using = entry_bg
+			}
+			widget = {
+				size = { 34 34 }
+				position = { 7 7 }
+				background = {
+					using = dark_area
+					alpha = 0.45
+				}
+			}
+			icon = {
+				texture = "gfx/interface/icons/generic_icons/checkmark.dds"
+				size = { 30 30 }
+				position = { 9 9 }
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.GetCountry.MakeScope.ScriptValue('tyr_gir_gui_interventions'), '(CFixedPoint)3')]"
+			}
+		}
+	}
+
+	textbox = {
+		size = { 520 26 }
+		text = "tyr_gir_actions_caption"
+		align = center
+		multiline = yes
+	}
+
+	textbox = {
+		size = { 520 25 }
+		text = "tyr_gir_gui_hint"
+		align = center
+		multiline = yes
+		using = fontsize_medium
+		alpha = 0.8
+	}
+
+	flowcontainer = {
+		name = "tyr_gir_de_menu"
+		direction = vertical
+		parentanchor = hcenter
+		spacing = 3
+		ignoreinvisible = yes
+		section_header_button = {
+			blockoverride "layout" {
+				size = { 512 38 }
+				parentanchor = hcenter
+			}
+			blockoverride "left_text" {
+				text = "tyr_gir_de_menu_title"
+			}
+			blockoverride "onclick" {
+				onclick = "[GetVariableSystem.Toggle('tyr_gir_de_menu_open')]"
+			}
+			blockoverride "onclick_showmore" {
+				visible = "[Not(GetVariableSystem.Exists('tyr_gir_de_menu_open'))]"
+			}
+			blockoverride "onclick_showless" {
+				visible = "[GetVariableSystem.Exists('tyr_gir_de_menu_open')]"
+			}
+		}
+		flowcontainer = {
+			direction = vertical
+			spacing = 2
+			margin = { 12 8 }
+			background = {
+				using = dark_area
+			}
+			visible = "[GetVariableSystem.Exists('tyr_gir_de_menu_open')]"
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_1_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_1_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_2_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_2_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_3_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_3_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_4_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_4_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_5_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_5_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_6_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_6_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_7_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_7_hover"
+			}
+			textbox = {
+				size = { 488 30 }
+				text = "tyr_gir_de_8_menu"
+				align = left|nobaseline
+				using = fontsize_medium
+				datacontext = "[JournalEntry.GetCountry]"
+				tooltip = "tyr_gir_de_8_hover"
+			}
+			flowcontainer = {
+				direction = vertical
+				ignoreinvisible = yes
+				section_header_button = {
+					blockoverride "layout" {
+						size = { 488 36 }
+					}
+					blockoverride "left_text" {
+						text = "tyr_gir_ch_minor_title"
+					}
+					blockoverride "onclick" {
+						onclick = "[GetVariableSystem.Toggle('tyr_gir_ch_minor_open')]"
+					}
+					blockoverride "onclick_showmore" {
+						visible = "[Not(GetVariableSystem.Exists('tyr_gir_ch_minor_open'))]"
+					}
+					blockoverride "onclick_showless" {
+						visible = "[GetVariableSystem.Exists('tyr_gir_ch_minor_open')]"
+					}
+				}
+				flowcontainer = {
+					direction = vertical
+					spacing = 2
+					visible = "[GetVariableSystem.Exists('tyr_gir_ch_minor_open')]"
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_1_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_1_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_2_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_2_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_3_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_3_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_4_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_4_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_5_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_5_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_6_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_6_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_7_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_7_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_8_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_8_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_9_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_9_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_10_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_10_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_11_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_11_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_12_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_12_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_13_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_13_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_14_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_14_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_15_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_15_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_16_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_16_hover"
+					}
+				}
+			}
+			flowcontainer = {
+				direction = vertical
+				ignoreinvisible = yes
+				section_header_button = {
+					blockoverride "layout" {
+						size = { 488 36 }
+					}
+					blockoverride "left_text" {
+						text = "tyr_gir_ch_exceptional_title"
+					}
+					blockoverride "onclick" {
+						onclick = "[GetVariableSystem.Toggle('tyr_gir_ch_exceptional_open')]"
+					}
+					blockoverride "onclick_showmore" {
+						visible = "[Not(GetVariableSystem.Exists('tyr_gir_ch_exceptional_open'))]"
+					}
+					blockoverride "onclick_showless" {
+						visible = "[GetVariableSystem.Exists('tyr_gir_ch_exceptional_open')]"
+					}
+				}
+				flowcontainer = {
+					direction = vertical
+					spacing = 2
+					visible = "[GetVariableSystem.Exists('tyr_gir_ch_exceptional_open')]"
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_101_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_101_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_102_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_102_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_103_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_103_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_104_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_104_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_105_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_105_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_106_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_106_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_107_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_107_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_108_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_108_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_109_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_109_hover"
+					}
+					textbox = {
+						size = { 488 30 }
+						text = "tyr_gir_ch_110_menu"
+						align = left|nobaseline
+						using = fontsize_medium
+						datacontext = "[JournalEntry.GetCountry]"
+						tooltip = "tyr_gir_ch_110_hover"
+					}
+				}
+			}
+		}
+	}
+}
+
+texticon = {
+	icon = tyr_gir_suppress
+
+	iconsize = {
+		offset = { 0 2 }
+		texture = "gfx/interface/icons/generic_icons/ig_suppress.dds"
+		fontsize = 20
+	}
+}
+
+texticon = {
+	icon = tyr_gir_bolster
+
+	iconsize = {
+		offset = { 0 2 }
+		texture = "gfx/interface/icons/generic_icons/ig_bolster.dds"
+		fontsize = 20
+	}
+}
