@@ -1,0 +1,209 @@
+widget = {
+	name = "widget_tyr_kk_balance"
+
+	size = { 488 238 }
+
+	parentanchor = hcenter
+	visible = "[GetScriptedGui('tyr_kk_active').IsValid(GuiScope.SetRoot(JournalEntry.GetCountry.MakeScope).End)]"
+	datacontext = "[JournalEntry.GetCountry]"
+
+	background = {
+		using = dark_area
+	}
+
+	background = {
+		using = frame_small
+	}
+
+	textbox = {
+		position = { 16 14 }
+		size = { 456 36 }
+		text = "tyr_kk_balance_title"
+		align = center|nobaseline
+		using = fontsize_medium
+	}
+
+	divider_decorative = {
+		position = { 36 55 }
+		size = { 416 8 }
+		alpha = 0.65
+	}
+
+	textbox = {
+		position = { 24 74 }
+		size = { 130 34 }
+		text = "tyr_kk_church_label"
+		align = left|nobaseline
+		using = fontsize_large
+	}
+
+	textbox = {
+		position = { 154 70 }
+		size = { 180 40 }
+		text = "tyr_kk_balance_value"
+		align = center|nobaseline
+		using = fontsize_large
+	}
+
+	textbox = {
+		position = { 334 74 }
+		size = { 130 34 }
+		text = "tyr_kk_state_label"
+		align = right|nobaseline
+		using = fontsize_large
+	}
+
+	widget = {
+		position = { 24 120 }
+		size = { 440 34 }
+		tooltip = "tyr_kk_monthly_tt"
+		# Colour follows monthly direction; the marker tracks the current balance.
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/progressbar/progressbar_empty.dds"
+			spriteType = Corneredtiled
+			spriteborder = {
+				4
+				4
+			}
+			texture_density = 2
+		}
+		icon = {
+			size = { 100% 100% }
+			visible = "[LessThan_float(FixedPointToFloat(Country.MakeScope.ScriptValue('tyr_kk_monthly_change')), '(float)0')]"
+			texture = "gfx/interface/progressbar/progressbar_bad.dds"
+			spriteType = Corneredtiled
+			spriteborder = {
+				4
+				4
+			}
+			texture_density = 2
+		}
+		icon = {
+			size = { 100% 100% }
+			visible = "[GreaterThan_float(FixedPointToFloat(Country.MakeScope.ScriptValue('tyr_kk_monthly_change')), '(float)0')]"
+			texture = "gfx/interface/progressbar/progressbar_default.dds"
+			spriteType = Corneredtiled
+			spriteborder = {
+				4
+				4
+			}
+			texture_density = 2
+		}
+		widget = {
+			size = { 100% 100% }
+			background = {
+				texture = "gfx/interface/progressbar/progressbar_frame.dds"
+				spriteType = Corneredstretched
+				spriteborder = {
+					6
+					6
+				}
+				texture_density = 2
+				margin = { 3 3 }
+			}
+		}
+		progressbar = {
+			size = { 100% 100% }
+			progresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+			noprogresstexture = "gfx/interface/icons/generic_icons/transparent.dds"
+			min = 0
+			max = 100
+			value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('tyr_kk_balance'))]"
+			direction = horizontal
+			skip_initial_animation = yes
+			animate_negative_changes = yes
+			using = progressbar_changed_animation
+			marker = {
+				widget = {
+					size = { 0 34 }
+					icon = {
+						size = { 3 42 }
+						position = { -1 -4 }
+						texture = "gfx/interface/progressbar/progressbar_gold_glow_line.dds"
+					}
+					icon = {
+						position = { 2 4 }
+						size = { 24 26 }
+						visible = "[GreaterThan_float(FixedPointToFloat(Country.MakeScope.ScriptValue('tyr_kk_monthly_change')), '(float)0')]"
+						using = tyr_kk_drift_arrow
+					}
+					icon = {
+						position = { -26 4 }
+						size = { 24 26 }
+						visible = "[LessThan_float(FixedPointToFloat(Country.MakeScope.ScriptValue('tyr_kk_monthly_change')), '(float)0')]"
+						mirror = horizontal
+						using = tyr_kk_drift_arrow
+					}
+				}
+			}
+		}
+	}
+
+	textbox = {
+		position = { 24 169 }
+		size = { 440 30 }
+		text = "tyr_kk_direction_value"
+		align = center|nobaseline
+		using = fontsize_large
+	}
+
+	textbox = {
+		position = { 24 204 }
+		size = { 440 28 }
+		text = "tyr_kk_monthly_value"
+		align = center|nobaseline
+		using = fontsize_medium
+		tooltip = "tyr_kk_monthly_tt"
+	}
+}
+
+template
+
+tyr_kk_drift_arrow {
+	texture = "gfx/interface/progressbar/progressbar_gold.dds"
+	shaderfile = "gfx/FX/pdxgui_repeat_texture.shader"
+
+	modify_texture = {
+		name = arrow_animation
+		texture = "gfx/interface/progressbar/progressbar_arrow.dds"
+		spriteType = Corneredtiled
+		spriteborder = {
+			0
+			0
+		}
+		texture_density = 6
+		translate_uv = {
+			0
+			0
+		}
+		blend_mode = alphamultiply
+	}
+
+	state = {
+		trigger_on_create = yes
+		name = arrow_animation_1
+		next = arrow_animation_2
+		duration = 1
+		modify_texture = {
+			name = arrow_animation
+			translate_uv = {
+				-1
+				0
+			}
+		}
+	}
+
+	state = {
+		name = arrow_animation_2
+		next = arrow_animation_1
+		duration = 0
+		modify_texture = {
+			name = arrow_animation
+			translate_uv = {
+				0
+				0
+			}
+		}
+	}
+}

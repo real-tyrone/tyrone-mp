@@ -1,0 +1,1006 @@
+# ROOT is Germany. Transfer eligible states from Germany and its subject hierarchy; exclude the receiving administrations.
+tyr_gcol_transfer_states = {
+	if = {
+		limit = {
+			c:GER ?= root
+			has_variable = tyr_gcol_started
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		if = {
+			limit = {
+				tyr_gcol_has_maf = yes
+				c:MAF ?= {
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+			}
+			every_scope_state = {
+				limit = {
+					tyr_gcol_african_state = yes
+					is_under_colonization = no
+					is_treaty_port = no
+					is_incorporated = no
+				}
+				state_region = {
+					save_scope_as = tyr_gcol_transfer_region
+				}
+				set_state_owner = c:MAF
+				c:MAF = {
+					every_scope_state = {
+						limit = {
+							state_region = scope:tyr_gcol_transfer_region
+						}
+						set_state_type = incorporated
+					}
+				}
+			}
+			every_subject_or_below = {
+				limit = {
+					NOT = {
+						c:MAF ?= this
+					}
+					NOT = {
+						c:DEA ?= this
+					}
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+				every_scope_state = {
+					limit = {
+						tyr_gcol_african_state = yes
+						is_under_colonization = no
+						is_treaty_port = no
+					}
+					state_region = {
+						save_scope_as = tyr_gcol_transfer_region
+					}
+					set_state_owner = c:MAF
+					c:MAF = {
+						every_scope_state = {
+							limit = {
+								state_region = scope:tyr_gcol_transfer_region
+							}
+							set_state_type = incorporated
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_gcol_has_dea = yes
+				c:DEA ?= {
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+			}
+			every_scope_state = {
+				limit = {
+					tyr_gcol_asian_state = yes
+					is_under_colonization = no
+					is_treaty_port = no
+					is_incorporated = no
+				}
+				state_region = {
+					save_scope_as = tyr_gcol_transfer_region
+				}
+				set_state_owner = c:DEA
+				c:DEA = {
+					every_scope_state = {
+						limit = {
+							state_region = scope:tyr_gcol_transfer_region
+						}
+						set_state_type = incorporated
+					}
+				}
+			}
+			every_subject_or_below = {
+				limit = {
+					NOT = {
+						c:MAF ?= this
+					}
+					NOT = {
+						c:DEA ?= this
+					}
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+				}
+				every_scope_state = {
+					limit = {
+						tyr_gcol_asian_state = yes
+						is_under_colonization = no
+						is_treaty_port = no
+					}
+					state_region = {
+						save_scope_as = tyr_gcol_transfer_region
+					}
+					set_state_owner = c:DEA
+					c:DEA = {
+						every_scope_state = {
+							limit = {
+								state_region = scope:tyr_gcol_transfer_region
+							}
+							set_state_type = incorporated
+						}
+					}
+				}
+			}
+		}
+	}
+
+	tyr_gcol_apply_subject_subsidies = yes
+}
+
+tyr_gcol_create_maf = {
+	random_scope_state = {
+		limit = {
+			tyr_gcol_african_state = yes
+			is_under_colonization = no
+			is_incorporated = no
+			is_treaty_port = no
+		}
+		save_scope_as = tyr_gcol_founding_state
+	}
+
+	create_country = {
+		tag = MAF
+		origin = root
+		state = scope:tyr_gcol_founding_state
+		on_created = {
+			set_variable = tyr_gcol_maf_colony
+			hidden_effect = {
+				activate_law = law_type:law_slave_trade
+				activate_law = law_type:law_militarized_police
+				activate_law = law_type:law_total_separation
+				add_modifier = {
+					name = tyr_gcol_colonial_acceptance
+				}
+				every_scope_state = {
+					set_state_type = incorporated
+				}
+			}
+			activate_law = law_type:law_frontier_colonization
+			activate_law = law_type:law_extraction_economy
+			activate_law = law_type:law_colonial_administration
+			activate_law = law_type:law_subjecthood
+		}
+	}
+
+	create_diplomatic_pact = {
+		country = c:MAF
+		type = colony
+	}
+
+	c:MAF = {
+		add_journal_entry = {
+			type = je_tyr_gcol_colonial_charter
+		}
+	}
+
+	tyr_gcol_refresh_colonies = yes
+
+	trigger_event = {
+		id = tyr_gcol_founding.1
+	}
+}
+
+tyr_gcol_create_dea = {
+	random_scope_state = {
+		limit = {
+			state_region = s:STATE_MALAYA
+		}
+		save_scope_as = tyr_gcol_founding_state
+	}
+
+	create_country = {
+		tag = DEA
+		origin = root
+		state = scope:tyr_gcol_founding_state
+		on_created = {
+			set_variable = tyr_gcol_dea_colony
+			hidden_effect = {
+				activate_law = law_type:law_slave_trade
+				activate_law = law_type:law_militarized_police
+				activate_law = law_type:law_total_separation
+				add_modifier = {
+					name = tyr_gcol_colonial_acceptance
+				}
+				every_scope_state = {
+					set_state_type = incorporated
+				}
+			}
+			activate_law = law_type:law_frontier_colonization
+			activate_law = law_type:law_extraction_economy
+			activate_law = law_type:law_colonial_administration
+			activate_law = law_type:law_subjecthood
+		}
+	}
+
+	create_diplomatic_pact = {
+		country = c:DEA
+		type = colony
+	}
+
+	c:DEA = {
+		add_journal_entry = {
+			type = je_tyr_gcol_colonial_charter
+		}
+	}
+
+	tyr_gcol_refresh_colonies = yes
+
+	trigger_event = {
+		id = tyr_gcol_founding.2
+	}
+}
+# Country scope: rewards use the completion snapshot, including colonies founded later.
+tyr_gcol_apply_colonial_rewards = {
+	if = {
+		limit = {
+			tyr_gcol_has_maf = yes
+		}
+		c:MAF = {
+			remove_modifier = tyr_gcol_colonial_estates
+		}
+		if = {
+			limit = {
+				has_variable = tyr_gcol_completed
+				tyr_gcol_final_score_value > 0
+				c:MAF ?= {
+					NOT = {
+						has_modifier = tyr_gcol_maf_reward
+					}
+				}
+			}
+			c:MAF = {
+				add_modifier = {
+					name = tyr_gcol_maf_reward
+					multiplier = root.tyr_gcol_final_score_value
+				}
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_gcol_has_dea = yes
+		}
+		c:DEA = {
+			remove_modifier = tyr_gcol_colonial_estates
+		}
+		if = {
+			limit = {
+				has_variable = tyr_gcol_completed
+				tyr_gcol_final_score_value > 0
+				c:DEA ?= {
+					NOT = {
+						has_modifier = tyr_gcol_dea_reward
+					}
+				}
+			}
+			c:DEA = {
+				add_modifier = {
+					name = tyr_gcol_dea_reward
+					multiplier = root.tyr_gcol_final_score_value
+				}
+			}
+		}
+	}
+}
+
+tyr_gcol_refresh_colonies = {
+	if = {
+		limit = {
+			tyr_gcol_has_maf = yes
+		}
+		set_variable = {
+			name = tyr_gcol_maf_country
+			value = c:MAF
+		}
+	}
+	else = {
+		remove_variable = tyr_gcol_maf_country
+	}
+
+	if = {
+		limit = {
+			tyr_gcol_has_dea = yes
+		}
+		set_variable = {
+			name = tyr_gcol_dea_country
+			value = c:DEA
+		}
+	}
+	else = {
+		remove_variable = tyr_gcol_dea_country
+	}
+
+	if = {
+		limit = {
+			tyr_gcol_has_maf = yes
+		}
+		c:MAF = {
+			if = {
+				limit = {
+					NOT = {
+						has_journal_entry = je_tyr_gcol_colonial_charter
+					}
+				}
+				add_journal_entry = {
+					type = je_tyr_gcol_colonial_charter
+				}
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_gcol_has_dea = yes
+		}
+		c:DEA = {
+			if = {
+				limit = {
+					NOT = {
+						has_journal_entry = je_tyr_gcol_colonial_charter
+					}
+				}
+				add_journal_entry = {
+					type = je_tyr_gcol_colonial_charter
+				}
+			}
+		}
+	}
+}
+
+tyr_gcol_apply_subsidy_policy = {
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_banana_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_banana_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_coal_mine
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_coal_mine
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_coffee_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_coffee_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_cotton_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_cotton_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_dye_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_dye_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_fishing_wharf
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_fishing_wharf
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_gold_mine
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_gold_mine
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_iron_mine
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_iron_mine
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_lead_mine
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_lead_mine
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_livestock_ranch
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_livestock_ranch
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_logging_camp
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_logging_camp
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_maize_farm
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_maize_farm
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_millet_farm
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_millet_farm
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_oil_rig
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_oil_rig
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_opium_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_opium_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_rice_farm
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_rice_farm
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_rubber_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_rubber_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_rye_farm
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_rye_farm
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_silk_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_silk_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_sugar_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_sugar_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_sulfur_mine
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_sulfur_mine
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_tea_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_tea_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_tobacco_plantation
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_tobacco_plantation
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_vineyard
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_vineyard
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_whaling_station
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_whaling_station
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+
+	if = {
+		limit = {
+			has_variable = tyr_gcol_subsidize_building_wheat_farm
+		}
+		every_scope_building = {
+			limit = {
+				is_building_type = building_wheat_farm
+				is_subsidized = no
+			}
+			set_subsidized = yes
+		}
+	}
+}
+
+tyr_gcol_initialize_subsidy_policy = {
+	if = {
+		limit = {
+			NOT = {
+				has_variable = tyr_gcol_subsidy_initialized
+			}
+		}
+		set_variable = tyr_gcol_subsidy_initialized
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_banana_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_banana_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_coal_mine
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_coal_mine
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_coffee_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_coffee_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_cotton_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_cotton_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_dye_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_dye_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_fishing_wharf
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_fishing_wharf
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_gold_mine
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_gold_mine
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_iron_mine
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_iron_mine
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_lead_mine
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_lead_mine
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_livestock_ranch
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_livestock_ranch
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_logging_camp
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_logging_camp
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_maize_farm
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_maize_farm
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_millet_farm
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_millet_farm
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_oil_rig
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_oil_rig
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_opium_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_opium_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_rice_farm
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_rice_farm
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_rubber_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_rubber_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_rye_farm
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_rye_farm
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_silk_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_silk_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_sugar_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_sugar_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_sulfur_mine
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_sulfur_mine
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_tea_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_tea_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_tobacco_plantation
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_tobacco_plantation
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_vineyard
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_vineyard
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_whaling_station
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_whaling_station
+		}
+		if = {
+			limit = {
+				any_scope_building = {
+					is_building_type = building_wheat_farm
+					is_subsidized = yes
+				}
+			}
+			set_variable = tyr_gcol_subsidize_building_wheat_farm
+		}
+	}
+}
+
+tyr_gcol_dissolve_administration = {
+	save_scope_as = tyr_gcol_old_administration
+	remove_modifier = tyr_gcol_maf_reward
+	remove_modifier = tyr_gcol_dea_reward
+	remove_modifier = tyr_gcol_colonial_acceptance
+
+	every_scope_state = {
+		limit = {
+			owner = scope:tyr_gcol_old_administration
+		}
+		save_scope_as = tyr_gcol_successor_capital
+		region = {
+			save_scope_as = tyr_gcol_successor_region
+		}
+		scope:tyr_gcol_old_administration = {
+			ordered_primary_culture = {
+				order_by = "root.culture_percent_country(this)"
+				position = 0
+				save_scope_as = tyr_gcol_successor_culture
+			}
+			random_scope_culture = {
+				limit = {
+					scope:tyr_gcol_successor_capital.state_region = {
+						is_homeland = prev
+					}
+				}
+				save_scope_as = tyr_gcol_successor_culture
+			}
+			create_dynamic_country = {
+				origin = scope:tyr_gcol_old_administration
+				country_type = unrecognized
+				tier = principality
+				culture = scope:tyr_gcol_successor_culture
+				capital = scope:tyr_gcol_successor_capital
+				cede_state_trigger = {
+					region = scope:tyr_gcol_successor_region
+				}
+				on_created = {
+					every_scope_state = {
+						set_state_type = incorporated
+					}
+				}
+			}
+		}
+	}
+}
+# German country scope. The active colonial journal maintains selected subsidy policies.
+tyr_gcol_apply_subject_subsidies = {
+	if = {
+		limit = {
+			tyr_gcol_has_maf = yes
+		}
+		c:MAF = {
+			tyr_gcol_apply_subsidy_policy = yes
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_gcol_has_dea = yes
+		}
+		c:DEA = {
+			tyr_gcol_apply_subsidy_policy = yes
+		}
+	}
+}

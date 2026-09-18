@@ -1,0 +1,31 @@
+# Root scope: country. Requires scope:journal_entry from an active Journal Entry.
+tyrone_refresh_prussian_confederation_construction = {
+	set_variable = {
+		name = tyrone_german_principalities_construction
+		value = 0
+	}
+
+	every_country_in_german_confederation = {
+		limit = {
+			NOR = {
+				this = root
+				c:AUS ?= this
+			}
+			is_country_type = recognized
+		}
+		root = {
+			change_variable = {
+				name = tyrone_german_principalities_construction
+				add = 5
+			}
+		}
+	}
+
+	scope:journal_entry = {
+		remove_modifier = tyrone_prussian_confederation_construction
+		add_modifier = {
+			name = tyrone_prussian_confederation_construction
+			multiplier = root.var:tyrone_german_principalities_construction
+		}
+	}
+}

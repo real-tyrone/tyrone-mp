@@ -1,0 +1,41 @@
+# Keep administration running after the objective JE has completed.
+on_monthly_pulse_country = {
+	on_actions = {
+		tyr_gcol_monthly
+	}
+}
+
+tyr_gcol_monthly = {
+	trigger = {
+		c:GER ?= root
+		has_variable = tyr_gcol_started
+	}
+
+	effect = {
+		tyr_gcol_refresh_colonies = yes
+		if = {
+			limit = {
+				has_variable = tyr_gcol_completed
+				NOT = {
+					has_journal_entry = je_tyr_gcol_administration
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_gcol_final_score
+					}
+				}
+				set_variable = {
+					name = tyr_gcol_final_score
+					value = tyr_gcol_objectives_met
+				}
+			}
+			remove_modifier = tyr_gcol_overseas_empire
+			add_journal_entry = {
+				type = je_tyr_gcol_administration
+			}
+		}
+		tyr_gcol_apply_colonial_rewards = yes
+	}
+}
