@@ -742,6 +742,48 @@ crimean_war.6 = {
 	option = {
 		name = crimean_war.6.a
 		default_option = yes
+		trigger = {
+			NOT = {
+				c:RUS ?= this 
+			}
+		}
+	}
+	option = {
+		name = crimean_war.6.b
+		default_option = yes
+		trigger = { c:RUS ?= this }
+		if = {
+			limit = {
+				c:RUS ?= root
+			}
+			add_radicals = {
+				value = 0.05
+			}
+			add_modifier = { name = crimean_war_loser days = long_modifier_time is_decaying = yes }
+
+			if = { #lose leverage
+				limit = {
+					exists = c:RUS.power_bloc
+				}
+				every_country = {
+					limit = {
+						capital.region = sr:region_balkans
+						country_has_state_religion = rel:orthodox
+					}
+					c:RUS.power_bloc ?= {
+						add_leverage = { target = PREV value = -250 }
+					}
+				}
+			}
+			every_country = {
+				limit = {
+					country_has_state_religion = rel:orthodox
+					capital.region = sr:region_balkans
+					NOT = { this = ROOT }
+				}
+				change_relations = { country = ROOT value = -25 }
+			}
+		}
 	}
 }
 
@@ -780,9 +822,38 @@ crimean_war.7 = {
 				NOT = { has_global_variable = crimean_war_russian_intent_declared }
 			}
 			set_global_variable = crimean_war_russian_intent_declared
-			c:TUR ?= {
-				trigger_event = { id = crimean_war.4 days = 180 }
+		}
+	}
+	option = {
+		name = crimean_war.7.b
+		default_option = yes
+		trigger = { c:RUS ?= this }
+		add_radicals = {
+			value = 0.10
+		}
+		set_global_variable = crimean_war_russian_intent_declined
+		every_country = {
+			limit = {
+				country_has_state_religion = rel:orthodox
+				capital.region = sr:region_balkans
+				NOT = { this = ROOT }
+			}
+			change_relations = { country = ROOT value = -50 }
+		}
+		if = { #lose leverage
+			limit = {
+				exists = c:RUS.power_bloc
+			}
+			every_country = {
+				limit = {
+					capital.region = sr:region_balkans
+					country_has_state_religion = rel:orthodox
+				}
+				c:RUS.power_bloc ?= {
+					add_leverage = { target = PREV value = -500 }
+				}
 			}
 		}
+		add_modifier = { name = crimean_war_loser days = very_long_modifier_time is_decaying = yes }
 	}
 }

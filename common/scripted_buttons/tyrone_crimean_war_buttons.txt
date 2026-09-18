@@ -1,0 +1,35 @@
+﻿je_crimean_war_begin_war_button = {
+    name = je_crimean_war_begin_war_button
+    desc = je_crimean_war_begin_war_button_desc
+
+    visible = {
+        c:RUS ?= this
+        is_involved_in_journal_entry = je_crimean_war
+        NOT = { has_global_variable = crimean_war_button_used }
+    }
+
+    possible = {
+        c:RUS ?= this
+        is_involved_in_journal_entry = je_crimean_war
+        exists = c:TUR
+        hidden_trigger = {
+        has_global_variable = crimean_war_russian_intent_declared
+        NOT = { has_global_variable = crimean_war_russian_intent_declined }
+        NOT = { has_global_variable = crimean_war_button_used }
+        NOT = { has_global_variable = crimean_war_ottoman_victory }
+        NOT = { has_global_variable = crimean_war_russian_victory }
+        NOT = { any_diplomatic_play = { is_diplomatic_play_type = dp_crimean_war } }            
+        }
+
+        NOT = { has_war_with = c:TUR }
+    }
+
+    effect = {
+        set_global_variable = crimean_war_button_used
+        c:TUR = {
+            trigger_event = { id = crimean_war.4 popup = yes }
+        }
+    }
+
+    ai_chance = { value = 5 }
+}
