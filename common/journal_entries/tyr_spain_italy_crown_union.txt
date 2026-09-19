@@ -1,21 +1,26 @@
 # Tyrone: a shared Spain–Italy dynastic contest and a post-contest union arc.
 
 je_tyr_spain_italy_dynastic_contest = {
+	group = je_group_global_international_situations
 	icon = "gfx/interface/icons/event_icons/event_political.dds"
 	scripted_progress_bar = tyr_spain_italy_dynastic_contest_bar
 
 	is_shown_when_inactive = {
 		exists = c:SPA
 		exists = c:ITA
-		c:SPA = {
-			ruler = { OR = { has_variable = house_bourbon has_variable = house_savoy } }
-		}
-		c:ITA = {
-			ruler = { OR = { has_variable = house_bourbon has_variable = house_savoy } }
-		}
+		this ?= c:ITA
+		this ?= c:SPA
 	}
 
 	possible = {
+		OR = {
+			c:SPA = {
+				has_technology_researched = pan-nationalism
+			}
+			c:ITA = {
+				has_technology_researched = pan-nationalism
+			}
+		}
 		c:SPA = { is_subject = no }
 		c:ITA = { is_subject = no }
 		c:SPA = {
@@ -31,7 +36,7 @@ je_tyr_spain_italy_dynastic_contest = {
 	should_be_involved = {
 		OR = { c:SPA = root c:ITA = root }
 	}
-	should_show_when_not_involved = { always = yes }
+	should_show_when_not_involved = { always = no }
 
 	immediate = {
 		set_variable = tyr_dynastic_contest_active
@@ -52,7 +57,7 @@ je_tyr_spain_italy_dynastic_contest = {
 
 	on_complete = {
 		if = {
-			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 0 } }
+			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 50 } }
 			c:SPA = {
 				set_variable = tyr_crown_union_winner
 			}
@@ -92,6 +97,7 @@ je_tyr_spain_italy_dynastic_contest = {
 }
 
 je_tyr_crown_union_consolidation = {
+	group = je_group_foreign_affairs
 	icon = "gfx/interface/icons/event_icons/event_political.dds"
 	scripted_progress_bar = tyr_crown_union_consolidation_bar
 
