@@ -1,0 +1,39 @@
+tyr_enforce_spain_italy_personal_union = {
+	is_shown = {
+		has_variable = tyr_crown_union_war_unlocked
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		OR = {
+			AND = {
+				this = c:SPA
+				c:ITA = { has_variable = tyr_crown_union_rejected }
+			}
+			AND = {
+				this = c:ITA
+				c:SPA = { has_variable = tyr_crown_union_rejected }
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = { this = c:SPA }
+			create_diplomatic_play = {
+				type = dp_tyrone_make_personal_union
+				target_country = c:ITA
+			}
+		}
+		else = {
+			create_diplomatic_play = {
+				type = dp_tyrone_make_personal_union
+				target_country = c:SPA
+			}
+		}
+	}
+
+	ai_chance = { value = 100 }
+}

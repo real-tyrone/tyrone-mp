@@ -1,0 +1,103 @@
+namespace = tyr_crown_union
+
+tyr_crown_union.1 = {
+	type = country_event
+	placement = root
+	title = tyr_crown_union.1.t
+	desc = tyr_crown_union.1.d
+	flavor = tyr_crown_union.1.f
+
+	immediate = {
+		if = {
+			limit = { c:SPA = { has_variable = tyr_crown_union_winner } }
+			c:SPA = { save_scope_as = tyr_crown_union_winner_scope }
+		}
+		if = {
+			limit = { c:ITA = { has_variable = tyr_crown_union_winner } }
+			c:ITA = { save_scope_as = tyr_crown_union_winner_scope }
+		}
+		ROOT = {
+			save_scope_as = tyr_crown_union_loser_scope
+		}
+	}
+
+	option = {
+		name = tyr_crown_union.1.a
+		default_option = yes
+		ai_chance = { base = 80 }
+		scope:tyr_crown_union_winner_scope = {
+			add_journal_entry = { type = je_tyr_crown_union_consolidation }
+			create_diplomatic_pact = { country = scope:tyr_crown_union_loser_scope type = personal_union }
+			
+		}
+
+		if = {
+			limit = { is_player = yes }
+			custom_tooltip = tyr_crown_union_accept_tt
+		}
+		else = {
+			custom_tooltip = tyr_crown_union_consolidation_tt
+		}
+	}
+
+	option = {
+		name = tyr_crown_union.1.b
+		ai_chance = { base = 20 }
+		custom_tooltip = tyr_crown_union_reject_tt
+		remove_diplomatic_pact = {
+			country = scope:tyr_crown_union_winner_scope
+			type = personal_union
+		}
+		set_variable = tyr_crown_union_rejected
+		scope:tyr_crown_union_winner_scope = {
+			set_variable = tyr_crown_union_war_unlocked
+			remove_variable = tyr_crown_union_winner
+		}
+		remove_variable = tyr_crown_union_loser
+	}
+}
+
+tyr_crown_union.2 = {
+	type = country_event
+	placement = root
+	title = tyr_crown_union.2.t
+	desc = tyr_crown_union.2.d
+	flavor = tyr_crown_union.2.f
+
+	immediate = {
+		if = {
+			limit = { c:SPA = { has_variable = tyr_crown_union_loser } }
+			c:SPA = { save_scope_as = tyr_crown_union_loser_scope }
+		}
+		if = {
+			limit = { c:ITA = { has_variable = tyr_crown_union_loser } }
+			c:ITA = { save_scope_as = tyr_crown_union_loser_scope }
+		}
+	}
+
+	option = {
+		name = tyr_crown_union.2.a
+		default_option = yes
+		add_modifier = { name = tyr_crown_union_benefit days = 1825 }
+		change_tag = MED
+		scope:tyr_crown_union_loser_scope = {
+			add_modifier = { name = tyr_crown_union_benefit days = 1825 }
+		}
+		if = {
+			limit = { scope:tyr_crown_union_loser_scope = { is_player = yes } }
+			custom_tooltip = tyr_crown_union_player_subject_tt
+		}
+		else = {
+			custom_tooltip = tyr_crown_union_ai_annex_tt
+			scope:tyr_crown_union_loser_scope = {
+				every_primary_culture = {
+					save_temporary_scope_as = tyr_crown_union_culture
+					ROOT = { add_primary_culture = scope:tyr_crown_union_culture }
+				}
+			}
+			annex_with_incorporation = scope:tyr_crown_union_loser_scope
+		}
+		remove_variable = tyr_crown_union_winner
+		scope:tyr_crown_union_loser_scope = { remove_variable = tyr_crown_union_loser tyr_crown_union_rejected }
+	}
+}

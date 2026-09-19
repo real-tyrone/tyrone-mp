@@ -1,0 +1,76 @@
+# Tyrone: shared dynastic contest between Spain and Italy.
+# The bar is centered at 50. Spain pulls left; Italy pulls right.
+tyr_spain_italy_dynastic_contest_bar = {
+	name = "tyr_spain_italy_dynastic_contest_bar_name"
+	desc = "tyr_spain_italy_dynastic_contest_bar_spain_desc"
+	second_desc = "tyr_spain_italy_dynastic_contest_bar_italy_desc"
+
+	double_sided_gold = yes
+	start_value = 50
+	min_value = 0
+	max_value = 100
+
+	monthly_progress = {
+		# Contextless JE bars must guard fixed country scopes. If either country
+		# has been annexed or is otherwise unavailable, the pulse does nothing.
+		c:SPA ?= {
+			c:ITA ?= {
+		# GDP: the monthly pull is proportional to the GDP difference.
+		if = {
+			limit = { c:SPA.gdp > c:ITA.gdp }
+			subtract = { desc = "tyr_spain_italy_contest_gdp_spain_tt" value = c:SPA.gdp subtract = c:ITA.gdp divide = 1000000 multiply = 0.25 }
+		}
+		if = {
+			limit = { c:ITA.gdp > c:SPA.gdp }
+			add = { desc = "tyr_spain_italy_contest_gdp_italy_tt" value = c:ITA.gdp subtract = c:SPA.gdp divide = 1000000 multiply = 0.25 }
+		}
+
+		# Army projection.
+		if = {
+			limit = { c:SPA.army_power_projection > c:ITA.army_power_projection }
+			subtract = { desc = "tyr_spain_italy_contest_army_spain_tt" value = c:SPA.army_power_projection subtract = c:ITA.army_power_projection divide = 100 multiply = 0.05 }
+		}
+		if = {
+			limit = { c:ITA.army_power_projection > c:SPA.army_power_projection }
+			add = { desc = "tyr_spain_italy_contest_army_italy_tt" value = c:ITA.army_power_projection subtract = c:SPA.army_power_projection divide = 100 multiply = 0.05 }
+		}
+
+		# Prestige.
+		if = {
+			limit = { c:SPA.prestige > c:ITA.prestige }
+			subtract = { desc = "tyr_spain_italy_contest_prestige_spain_tt" value = c:SPA.prestige subtract = c:ITA.prestige divide = 10 multiply = 0.05 }
+		}
+		if = {
+			limit = { c:ITA.prestige > c:SPA.prestige }
+			add = { desc = "tyr_spain_italy_contest_prestige_italy_tt" value = c:ITA.prestige subtract = c:SPA.prestige divide = 10 multiply = 0.05 }
+		}
+
+		# Navy projection.
+		if = {
+			limit = { c:SPA.naval_power_projection > c:ITA.naval_power_projection }
+			subtract = { desc = "tyr_spain_italy_contest_navy_spain_tt" value = c:SPA.naval_power_projection subtract = c:ITA.naval_power_projection divide = 100 multiply = 0.05 }
+		}
+		if = {
+			limit = { c:ITA.naval_power_projection > c:SPA.naval_power_projection }
+			add = { desc = "tyr_spain_italy_contest_navy_italy_tt" value = c:ITA.naval_power_projection subtract = c:SPA.naval_power_projection divide = 100 multiply = 0.05 }
+		}
+			}
+		}
+	}
+}
+
+tyr_crown_union_consolidation_bar = {
+	name = "tyr_crown_union_consolidation_bar_name"
+	desc = "tyr_crown_union_consolidation_bar_desc"
+	default_green = yes
+	start_value = 0
+	min_value = 0
+	max_value = 36
+
+	monthly_progress = {
+		add = {
+			desc = "tyr_crown_union_consolidation_bar_monthly_tt"
+			value = 1
+		}
+	}
+}

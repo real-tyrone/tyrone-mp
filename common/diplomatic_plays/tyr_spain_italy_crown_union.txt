@@ -1,0 +1,27 @@
+dp_tyrone_make_personal_union = {
+	requires_interest_marker = no
+	initiator_can_add_war_goals = no
+	target_can_add_war_goals = no
+	add_infamy_for_starting_initiator_wargoals = no
+	add_infamy_for_starting_target_wargoals = no
+
+	war_goal = tyr_make_personal_union
+	texture = "gfx/interface/icons/war_goals/make_dominion.dds"
+
+	selectable_in_lens = { always = no }
+	possible = { always = yes }
+
+	on_war_end = {
+		if = {
+			limit = { scope:target_country = { is_subject_of = root } }
+			add_journal_entry = { type = je_tyr_crown_union_consolidation }
+		}
+		else = {
+			remove_variable = tyr_crown_union_winner
+			scope:target_country = {
+				remove_variable = tyr_crown_union_loser tyr_crown_union_rejected
+			}
+		}
+		remove_variable = tyr_crown_union_war_unlocked
+	}
+}

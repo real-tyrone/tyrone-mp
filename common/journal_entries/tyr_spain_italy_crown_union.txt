@@ -1,0 +1,115 @@
+# Tyrone: a shared Spain–Italy dynastic contest and a post-contest union arc.
+
+je_tyr_spain_italy_dynastic_contest = {
+	icon = "gfx/interface/icons/event_icons/event_political.dds"
+	scripted_progress_bar = tyr_spain_italy_dynastic_contest_bar
+
+	is_shown_when_inactive = {
+		exists = c:SPA
+		exists = c:ITA
+		c:SPA = {
+			ruler = { OR = { has_variable = house_bourbon has_variable = house_savoy } }
+		}
+		c:ITA = {
+			ruler = { OR = { has_variable = house_bourbon has_variable = house_savoy } }
+		}
+	}
+
+	possible = {
+		c:SPA = { is_subject = no }
+		c:ITA = { is_subject = no }
+		c:SPA = {
+			ruler = {
+				OR = {
+					AND = { has_variable = house_bourbon c:ITA.ruler = { has_variable = house_bourbon } }
+					AND = { has_variable = house_savoy c:ITA.ruler = { has_variable = house_savoy } }
+				}
+			}
+		}
+	}
+
+	should_be_involved = {
+		OR = { c:SPA = root c:ITA = root }
+	}
+	should_show_when_not_involved = { always = yes }
+
+	immediate = {
+		set_variable = tyr_dynastic_contest_active
+	}
+
+	complete = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_spain_italy_spain_wins_contest_tt
+				scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 0 }
+			}
+			custom_tooltip = {
+				text = tyr_spain_italy_italy_wins_contest_tt
+				scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" >= 100 }
+			}
+		}
+	}
+
+	on_complete = {
+		if = {
+			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 0 } }
+			c:SPA = {
+				set_variable = tyr_crown_union_winner
+			}
+			c:ITA = {
+				set_variable = tyr_crown_union_loser
+				trigger_event = { id = tyr_crown_union.1 popup = yes }
+			}
+		}
+		else = {
+			c:ITA = {
+				set_variable = tyr_crown_union_winner
+			}
+			c:SPA = {
+				set_variable = tyr_crown_union_loser
+				trigger_event = { id = tyr_crown_union.1 popup = yes }
+			}
+		}
+		c:SPA ?= { remove_variable = tyr_dynastic_contest_active }
+	c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
+	}
+
+	invalid = {
+		OR = {
+			NOT = { exists = c:SPA }
+			NOT = { exists = c:ITA }
+		}
+	}
+
+	on_invalid = {
+		c:SPA ?= { remove_variable = tyr_dynastic_contest_active }
+		c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
+	}
+
+	weight = 5000
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+}
+
+je_tyr_crown_union_consolidation = {
+	icon = "gfx/interface/icons/event_icons/event_political.dds"
+	scripted_progress_bar = tyr_crown_union_consolidation_bar
+
+	complete = {
+		"scripted_bar_progress(tyr_crown_union_consolidation_bar)" >= 36
+	}
+
+	on_complete = {
+		trigger_event = { id = tyr_crown_union.2 popup = yes }
+	}
+
+	invalid = {
+		OR = {
+			NOT = { exists = c:SPA }
+			NOT = { exists = c:ITA }
+		}
+	}
+
+	weight = 5000
+	should_be_pinned_by_default_involved = yes
+}
