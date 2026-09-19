@@ -24,7 +24,8 @@ carlist_war.1 = {
 	}
 
     immediate = {
-		c:SPA.capital = {
+		tyr_resolve_spanish_content_effect = yes
+		scope:tyr_spanish_content_scope.capital = {
 			save_scope_as = capital_scope
 		}
 		c:SPC.ruler = {
@@ -48,7 +49,7 @@ carlist_war.1 = {
 		}
 		if = {
 			limit = {
-				c:SPA ?= this
+				tyr_spanish_content_country = yes
 			}
 			show_as_tooltip = {
 				add_modifier = {
@@ -66,7 +67,7 @@ carlist_war.1 = {
 
 	option = {
 		name = {
-			trigger = { c:SPA ?= this }
+			trigger = { tyr_spanish_content_country = yes }
 			text = carlist_war.1.a
 		}
 		name = {
@@ -87,7 +88,7 @@ carlist_war.1 = {
 					is_decaying = yes
 				}
 			}
-			c:SPA ?= {
+			scope:tyr_spanish_content_scope ?= {
 				add_modifier = {
 					name = galvanized_forces
 					multiplier = {
@@ -254,12 +255,12 @@ carlist_war.2 = {
 				}
 			}
 			create_political_movement = { type = movement_modernizer }
-		}
-		create_character = {
-			is_agitator = yes
-			female = no
-			interest_group = ig_landowners
-			ideology = ideology_modernizer_leader
+			create_character = {
+				is_agitator = yes
+				female = no
+				interest_group = ig_landowners
+				ideology = ideology_modernizer_leader
+			}
 		}
 		custom_tooltip = {
 			text = the_two_spains_tt
@@ -623,9 +624,10 @@ carlist_war.6 = {
 	icon = "gfx/interface/icons/event_icons/event_carlist_beret.dds"
 
     trigger = {
+		tyr_resolve_spanish_content_trigger = yes
 		has_dlc_feature = ip4_content
 		c:SPC ?= this
-		c:SPA ?= {
+		scope:tyr_spanish_content_scope ?= {
 			any_scope_state = {
 				OR = {
 					state_region = s:STATE_UPPER_ANDALUSIA
@@ -636,10 +638,11 @@ carlist_war.6 = {
 	}
 
 	immediate = {
+		tyr_resolve_spanish_content_effect = yes
 		s:STATE_UPPER_ANDALUSIA = {
 			random_scope_state = {
 				limit = {
-					owner = c:SPA
+					owner = scope:tyr_spanish_content_scope
 				}
 				save_scope_as = upper_andalusia_scope
 			}
@@ -647,7 +650,7 @@ carlist_war.6 = {
 		s:STATE_LOWER_ANDALUSIA = {
 			random_scope_state = {
 				limit = {
-					owner = c:SPA
+					owner = scope:tyr_spanish_content_scope
 				}
 				save_scope_as = lower_andalusia_scope
 			}
@@ -663,16 +666,24 @@ carlist_war.6 = {
 			days = short_modifier_time
 			multiplier = money_amount_multiplier_small	# money_amount_multiplier_medium 
 		}
-		s:STATE_UPPER_ANDALUSIA.region_state:SPA ?= {
+		s:STATE_UPPER_ANDALUSIA = {
+			every_scope_state = {
+				limit = { owner = scope:tyr_spanish_content_scope }
 			add_modifier = {
 				name = spa_carlist_terror
 				days = normal_modifier_time
 			}
+		
+			}
 		}
-		s:STATE_LOWER_ANDALUSIA.region_state:SPA ?= {
+		s:STATE_LOWER_ANDALUSIA = {
+			every_scope_state = {
+				limit = { owner = scope:tyr_spanish_content_scope }
 			add_modifier = {
 				name = spa_carlist_terror
 				days = normal_modifier_time
+			}
+		
 			}
 		}
 
@@ -716,7 +727,8 @@ carlist_war.7 = {
 	}
 
 	immediate = {
-		c:SPA ?= {
+		tyr_resolve_spanish_content_effect = yes
+		scope:tyr_spanish_content_scope ?= {
 			heir ?= {
 				save_scope_as = isabella_scope
 			}
