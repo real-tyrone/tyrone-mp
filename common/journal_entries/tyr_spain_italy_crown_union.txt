@@ -2,15 +2,18 @@
 
 je_tyr_spain_italy_dynastic_contest = {
 	group = je_group_global_international_situations
-	icon = "gfx/interface/icons/event_icons/event_political.dds"
+	icon = "gfx/interface/icons/invention_icons/rationalism.dds"
 	scripted_progress_bar = tyr_spain_italy_dynastic_contest_bar
 
 	is_shown_when_inactive = {
+		NOT = { has_global_variable = tyr_dynastic_contest_resolved }
 		exists = c:SPA
 		exists = c:ITA
 	}
 
 	possible = {
+		exists = c:SPA
+		exists = c:ITA
 		OR = {
 			c:SPA = {
 				has_technology_researched = pan-nationalism
@@ -21,11 +24,25 @@ je_tyr_spain_italy_dynastic_contest = {
 		}
 		c:SPA = { is_subject = no }
 		c:ITA = { is_subject = no }
-		c:SPA = {
-			ruler = {
-				OR = {
-					AND = { has_variable = house_bourbon c:ITA.ruler = { has_variable = house_bourbon } }
-					AND = { has_variable = house_savoy c:ITA.ruler = { has_variable = house_savoy } }
+		OR = {
+			AND = {
+				custom_tooltip = {
+					text = tyr_crown_union_spain_ruler_bourbon_tt
+					c:SPA.ruler = { has_variable = house_bourbon }
+				}
+				custom_tooltip = {
+					text = tyr_crown_union_italy_ruler_bourbon_tt
+					c:ITA.ruler = { has_variable = house_bourbon }
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = tyr_crown_union_spain_ruler_savoy_tt
+					c:SPA.ruler = { has_variable = house_savoy }
+				}
+				custom_tooltip = {
+					text = tyr_crown_union_italy_ruler_savoy_tt
+					c:ITA.ruler = { has_variable = house_savoy }
 				}
 			}
 		}
@@ -34,13 +51,20 @@ je_tyr_spain_italy_dynastic_contest = {
 	should_be_involved = {
 		OR = { c:SPA = root c:ITA = root }
 	}
-	should_show_when_not_involved = { always = no }
+	should_show_when_not_involved = {
+		OR = { this = c:SPA this = c:ITA }
+	}
 
-	immediate = {
+	# A contextless JE has no country root; this hook runs for each participant.
+	immediate_all_involved = {
 		set_variable = tyr_dynastic_contest_active
 	}
 
 	complete = {
+		exists = c:SPA
+		exists = c:ITA
+		c:SPA = { is_subject = no }
+		c:ITA = { is_subject = no }
 		OR = {
 			custom_tooltip = {
 				text = tyr_spain_italy_spain_wins_contest_tt
@@ -54,11 +78,11 @@ je_tyr_spain_italy_dynastic_contest = {
 	}
 
 	on_complete = {
+		set_global_variable = tyr_dynastic_contest_resolved
 		if = {
-			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 50 } }
+			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 0 } }
 			c:SPA = {
 				set_variable = tyr_crown_union_winner
-				add_journal_entry = { type = je_tyr_crown_union_consolidation }
 			}
 			c:ITA = {
 				set_variable = tyr_crown_union_loser
@@ -68,7 +92,6 @@ je_tyr_spain_italy_dynastic_contest = {
 		else = {
 			c:ITA = {
 				set_variable = tyr_crown_union_winner
-				add_journal_entry = { type = je_tyr_crown_union_consolidation }
 			}
 			c:SPA = {
 				set_variable = tyr_crown_union_loser
@@ -76,13 +99,15 @@ je_tyr_spain_italy_dynastic_contest = {
 			}
 		}
 		c:SPA ?= { remove_variable = tyr_dynastic_contest_active }
-	c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
+		c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
 	}
 
 	invalid = {
 		OR = {
 			NOT = { exists = c:SPA }
 			NOT = { exists = c:ITA }
+			c:SPA ?= { is_subject = yes }
+			c:ITA ?= { is_subject = yes }
 		}
 	}
 
@@ -101,8 +126,50 @@ je_tyr_crown_union_consolidation = {
 	icon = "gfx/interface/icons/event_icons/event_political.dds"
 	scripted_progress_bar = tyr_crown_union_consolidation_bar
 
+	is_shown_when_inactive = {
+		has_variable = tyr_crown_union_winner
+	}
+
+	possible = {
+		OR = {
+			AND = {
+				this = c:SPA
+				exists = c:ITA
+				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+			}
+			AND = {
+				this = c:ITA
+				exists = c:SPA
+				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+			}
+		}
+	}
+
+	immediate = {
+		remove_variable = tyr_crown_union_war_unlocked
+		if = {
+			limit = { this = c:SPA }
+			c:ITA = { remove_variable = tyr_crown_union_rejected }
+		}
+		else = {
+			c:SPA = { remove_variable = tyr_crown_union_rejected }
+		}
+	}
+
 	complete = {
-		"scripted_bar_progress(tyr_crown_union_consolidation_bar)" >= 36
+		OR = {
+			AND = {
+				this = c:SPA
+				exists = c:ITA
+				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+			}
+			AND = {
+				this = c:ITA
+				exists = c:SPA
+				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+			}
+		}
+		scope:journal_entry = { "scripted_bar_progress(tyr_crown_union_consolidation_bar)" >= 36 }
 	}
 
 	on_complete = {
@@ -110,12 +177,29 @@ je_tyr_crown_union_consolidation = {
 	}
 
 	invalid = {
-		OR = {
-			NOT = { exists = c:SPA }
-			NOT = { exists = c:ITA }
+		NOT = {
+			OR = {
+				AND = {
+					this = c:SPA
+					exists = c:ITA
+					c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+				}
+				AND = {
+					this = c:ITA
+					exists = c:SPA
+					c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
+				}
+			}
 		}
 	}
 
+	on_invalid = {
+		remove_variable = tyr_crown_union_winner
+		remove_variable = tyr_crown_union_war_unlocked
+		c:SPA ?= { remove_variable = tyr_crown_union_loser remove_variable = tyr_crown_union_rejected }
+		c:ITA ?= { remove_variable = tyr_crown_union_loser remove_variable = tyr_crown_union_rejected }
+	}
+
 	weight = 5000
-	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 }
