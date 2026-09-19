@@ -1,0 +1,77 @@
+# MED inherits national content only from the country that formed it.
+
+tyr_med_spanish_origin = {
+	exists = c:MED
+	c:MED ?= this
+	OR = {
+		has_variable = tyr_med_formed_by_spa
+		AND = {
+			NOT = { has_variable = tyr_med_formed_by_spa }
+			NOT = { has_variable = tyr_med_formed_by_ita }
+			was_formed_from = SPA
+		}
+	}
+}
+
+tyr_spanish_content_country = {
+	OR = {
+		c:SPA ?= this
+		tyr_med_spanish_origin = yes
+	}
+}
+
+tyr_med_italian_origin = {
+	exists = c:MED
+	c:MED ?= this
+	OR = {
+		has_variable = tyr_med_formed_by_ita
+		AND = {
+			NOT = { has_variable = tyr_med_formed_by_spa }
+			NOT = { has_variable = tyr_med_formed_by_ita }
+			was_formed_from = ITA
+		}
+	}
+}
+
+tyr_italian_content_country = {
+	OR = {
+		c:ITA ?= this
+		tyr_med_italian_origin = yes
+	}
+}
+
+# Resolves the national actor for trigger evaluation, including existing saves.
+tyr_resolve_spanish_content_trigger = {
+	trigger_if = {
+		limit = { exists = c:MED c:MED = { tyr_med_spanish_origin = yes } }
+		c:MED = { save_temporary_scope_as = tyr_spanish_content_scope }
+	}
+	trigger_else = {
+		c:SPA ?= { save_temporary_scope_as = tyr_spanish_content_scope }
+	}
+}
+
+tyr_spanish_content_exists = {
+	OR = {
+		exists = c:SPA
+		AND = { exists = c:MED c:MED = { tyr_med_spanish_origin = yes } }
+	}
+}
+
+# Resolves the national actor for trigger evaluation, including existing saves.
+tyr_resolve_italian_content_trigger = {
+	trigger_if = {
+		limit = { exists = c:MED c:MED = { tyr_med_italian_origin = yes } }
+		c:MED = { save_temporary_scope_as = tyr_italian_content_scope }
+	}
+	trigger_else = {
+		c:ITA ?= { save_temporary_scope_as = tyr_italian_content_scope }
+	}
+}
+
+tyr_italian_content_exists = {
+	OR = {
+		exists = c:ITA
+		AND = { exists = c:MED c:MED = { tyr_med_italian_origin = yes } }
+	}
+}

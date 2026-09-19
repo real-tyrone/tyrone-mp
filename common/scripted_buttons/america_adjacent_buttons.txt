@@ -53,22 +53,24 @@ je_spanish_american_war_start_button = {
 	}
 
 	possible = {
+		tyr_resolve_spanish_content_trigger = yes
 		hidden_trigger = {
-			exists = c:SPA
+			exists = scope:tyr_spanish_content_scope
 			exists = c:CUB
 		}
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		c:CUB = {
-			is_subject_of = c:SPA
+			is_subject_of = scope:tyr_spanish_content_scope
 		}
-		c:SPA = {
+		scope:tyr_spanish_content_scope = {
 			naval_power_projection < ROOT.naval_power_projection
 		}
-		NOT = { has_truce_with = c:SPA }
+		NOT = { has_truce_with = scope:tyr_spanish_content_scope }
 	}
 
 	effect = {
+		tyr_resolve_spanish_content_effect = yes
 		create_diplomatic_play = {
 			name = spanish_american_war
 			type = dp_spanish_american_war
@@ -77,7 +79,7 @@ je_spanish_american_war_start_button = {
 		hidden_effect = {
 			random_diplomatic_play = {
 				limit = { is_diplomatic_play_type = dp_spanish_american_war }
-				add_target_backers = { c:SPA }
+				add_target_backers = { scope:tyr_spanish_content_scope }
 			}
 		}
 	}
@@ -100,6 +102,7 @@ je_ostend_usa_rejects_button = {
 	}
 
 	possible = {
+		tyr_resolve_spanish_content_trigger = yes
 		hidden_trigger = {
 			NOT = { has_variable = ostend_usa_rejected }
 			NOT = {
@@ -107,13 +110,13 @@ je_ostend_usa_rejects_button = {
 					c:CUB = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 					c:PCO = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 				}
@@ -130,13 +133,13 @@ je_ostend_usa_rejects_button = {
 					c:CUB = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 					c:PCO = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 				}
@@ -154,7 +157,7 @@ je_ostend_usa_rejects_button = {
 		value = 0
 		if = {
 			limit = {
-				"relations(c:SPA)" < relations_threshold:cordial
+				"relations(scope:tyr_spanish_content_scope)" < relations_threshold:cordial
 			}
 			add = 100
 		}
@@ -166,12 +169,13 @@ je_ostend_spain_rejects_button = {
 	desc = "je_ostend_spain_rejects_button_desc"
 
 	visible = {
-		c:SPA ?= THIS
+		tyr_spanish_content_country = yes
 		is_involved_in_journal_entry = je_ostend_manifesto
 		NOT = { has_variable = ostend_spain_rejected }
 	}
 
 	possible = {
+		tyr_resolve_spanish_content_trigger = yes
 		hidden_trigger = {
 			NOT = { has_variable = ostend_spain_rejected }
 			NOT = {
@@ -179,13 +183,13 @@ je_ostend_spain_rejects_button = {
 					c:CUB = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 					c:PCO = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 				}
@@ -202,13 +206,13 @@ je_ostend_spain_rejects_button = {
 					c:CUB = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 					c:PCO = {
 						OR = {
 							is_subject_of = c:USA
-							NOT = { is_subject_of = c:SPA }
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 						}
 					}
 				}
@@ -258,8 +262,9 @@ je_ostend_offer_cuba_button = {
 	}
 
 	effect = {
+		tyr_resolve_spanish_content_effect = yes
 		set_variable = ostend_cuba_offer_made
-		c:SPA = { trigger_event = { id = ostend_manifesto.1 days = 7} }
+		scope:tyr_spanish_content_scope = { trigger_event = { id = ostend_manifesto.1 days = 7} }
 	}
 
 	ai_chance = {
@@ -299,8 +304,9 @@ je_ostend_offer_pco_button = {
 	}
 
 	effect = {
+		tyr_resolve_spanish_content_effect = yes
 		set_variable = ostend_pco_offer_made
-		c:SPA = { trigger_event = { id = ostend_manifesto.4 } }
+		scope:tyr_spanish_content_scope = { trigger_event = { id = ostend_manifesto.4 } }
 	}
 
 	ai_chance = {
@@ -346,7 +352,7 @@ je_ostend_cuba_liberation_button = {
 		value = 0
 		if = {
 			limit = {
-				"relations(c:SPA)" <= relations_threshold:cold
+				"relations(scope:tyr_spanish_content_scope)" <= relations_threshold:cold
 			}
 			add = 100
 		}
@@ -384,7 +390,7 @@ je_ostend_cuba_spain_button = {
 		value = 0
 		if = {
 			limit = {
-				"relations(c:SPA)" >= relations_threshold:cordial
+				"relations(scope:tyr_spanish_content_scope)" >= relations_threshold:cordial
 			}
 			add = 100
 		}
@@ -422,7 +428,7 @@ je_ostend_pco_liberation_button = {
 		value = 0
 		if = {
 			limit = {
-				"relations(c:SPA)" <= relations_threshold:cold
+				"relations(scope:tyr_spanish_content_scope)" <= relations_threshold:cold
 			}
 			add = 100
 		}
@@ -460,7 +466,7 @@ je_ostend_pco_spain_button = {
 		value = 0
 		if = {
 			limit = {
-				"relations(c:SPA)" >= relations_threshold:cordial
+				"relations(scope:tyr_spanish_content_scope)" >= relations_threshold:cordial
 			}
 			add = 100
 		}
@@ -477,19 +483,20 @@ je_ostend_conclude_negotiations_button = {
 	}
 
 	possible = {
+		tyr_resolve_spanish_content_trigger = yes
 		hidden_trigger = {
 			NOT = { has_variable = ostend_usa_negotiations_concluded }
 			OR = {
 				c:CUB = {
 					OR = {
 						is_subject_of = c:USA
-						NOT = { is_subject_of = c:SPA }
+						NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 					}
 				}
 				c:PCO = {
 					OR = {
 						is_subject_of = c:USA
-						NOT = { is_subject_of = c:SPA }
+						NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 					}
 				}
 			}
@@ -511,24 +518,25 @@ je_ostend_spa_conclude_negotiations_button = {
 	desc = "je_ostend_spa_conclude_negotiations_button_desc"
 
 	visible = {
-		c:SPA ?= THIS
+		tyr_spanish_content_country = yes
 		is_involved_in_journal_entry = je_ostend_manifesto
 	}
 
 	possible = {
+		tyr_resolve_spanish_content_trigger = yes
 		hidden_trigger = {
 			NOT = { has_variable = ostend_spa_negotiations_concluded }
 			OR = {
 				c:CUB = {
 					OR = {
 						is_subject_of = c:USA
-						NOT = { is_subject_of = c:SPA }
+						NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 					}
 				}
 				c:PCO = {
 					OR = {
 						is_subject_of = c:USA
-						NOT = { is_subject_of = c:SPA }
+						NOT = { is_subject_of = scope:tyr_spanish_content_scope }
 					}
 				}
 			}
