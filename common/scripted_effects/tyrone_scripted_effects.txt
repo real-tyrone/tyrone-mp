@@ -1,4 +1,103 @@
-﻿REPLACE:give_claims_on_germany = {
+﻿tyr_gcol_create_ki_ICH = {
+	if = {
+		limit = {
+			any_scope_state = {
+				region = sr:region_indochina
+			}
+		}
+		random_scope_state = {
+			limit = {
+				region = sr:region_indochina
+			}
+			save_scope_as = tyr_gcol_founding_state
+		}
+	}
+	else = {
+		random_country = {
+			limit = {
+				is_subject_of = ROOT
+				any_scope_state = {
+					region = sr:region_indochina
+				}
+			}
+			random_scope_state = {
+				limit = {
+					region = sr:region_indochina
+				}
+				save_scope_as = tyr_gcol_founding_state
+				set_state_owner = ROOT
+			}
+		}
+	}
+	every_scope_state = {
+		limit = {
+			region = sr:region_indochina
+		}
+		set_variable = state_to_cede
+	}
+	create_country = {
+		tag = ki_ICH
+		origin = root
+		state = scope:tyr_gcol_founding_state
+		on_created = {
+			set_variable = tyr_gcol_ki_ICH_colony
+			hidden_effect = {
+				activate_law = law_type:law_slave_trade
+				activate_law = law_type:law_militarized_police
+				activate_law = law_type:law_total_separation
+				every_scope_state = {
+					set_state_type = incorporated
+				}
+			}
+			cede_state_trigger = {
+				has_variable = state_to_cede
+			}
+			activate_law = law_type:law_frontier_colonization
+			activate_law = law_type:law_extraction_economy
+			activate_law = law_type:law_colonial_administration
+			activate_law = law_type:law_subjecthood
+		}
+	}
+
+	every_country = {
+		limit = {
+			NOT = { this = ROOT }
+			NOT = { this = c:ki_ICH }
+			is_subject_of = ROOT
+			capital = {
+				region = sr:region_indochina
+			}
+		}
+		c:ki_ICH = {
+			annex = prev
+		}
+		
+		c:ki_ICH = {
+			set_state_religion = root.religion
+			root = {
+				every_primary_culture = {
+					limit = {
+						NOT = { is_primary_culture_of = c:ki_ICH }
+					}
+					c:ki_ICH = {
+						add_primary_culture = prev
+					}
+				}
+			}
+		}
+	}
+
+	create_diplomatic_pact = {
+		country = c:ki_ICH
+		type = puppet
+	}
+
+	trigger_event = {
+		id = tyr_gcol_founding.3
+	}
+}
+
+REPLACE:give_claims_on_germany = {
 	every_state = {
 		limit = {
 			NOT = { owner = ROOT }
