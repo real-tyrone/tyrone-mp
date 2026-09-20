@@ -1,0 +1,189 @@
+# State scope. ROOT is the signatory receiving the enforcement event.
+# Keep these state groups aligned with berlin_conference.3.
+tyr_state_in_berlin_claim = {
+	OR = {
+		AND = {
+			owner = { has_variable = claimed_west_africa_var }
+			OR = {
+				state_region = s:STATE_GUINEA
+				state_region = s:STATE_WINDWARD_COAST
+				state_region = s:STATE_IVORY_COAST
+				state_region = s:STATE_DAHOMEY
+				state_region = s:STATE_MAURITANIA
+				state_region = s:STATE_INNER_MAURITANIA
+				state_region = s:STATE_TIMBUKTU
+				state_region = s:STATE_WESTERN_MALI
+				state_region = s:STATE_EASTERN_MALI
+				state_region = s:STATE_VOLTA
+				state_region = s:STATE_SENEGAL
+				state_region = s:STATE_OUTER_HAUSALAND
+				state_region = s:STATE_NIGER
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_equatorial_africa_var }
+			OR = {
+				state_region = s:STATE_CHAD
+				state_region = s:STATE_WADDAI
+				state_region = s:STATE_UBANGI_SHARI
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_liberia_var }
+			OR = {
+				state_region = s:STATE_LIBERIA
+				state_region = s:STATE_SIERRA_LEONE
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_morocco_var }
+			OR = {
+				state_region = s:STATE_INNER_MOROCCO
+				state_region = s:STATE_MARRAKECH
+				state_region = s:STATE_FEZ
+				state_region = s:STATE_AL_RIF
+				state_region = s:STATE_WEST_SAHARA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_togo_var }
+			OR = {
+				state_region = s:STATE_TOGO
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_niger_var }
+			OR = {
+				state_region = s:STATE_NIGER_DELTA
+				state_region = s:STATE_BENIN
+				state_region = s:STATE_YORUBA_STATES
+				state_region = s:STATE_HAUSALAND
+				state_region = s:STATE_EAST_HAUSALAND
+				state_region = s:STATE_NIGERIA
+				state_region = s:STATE_BORNU
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_gold_coast_var }
+			OR = {
+				state_region = s:STATE_GOLD_COAST
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_congo_var }
+			OR = {
+				state_region = s:STATE_BAS_CONGO
+				state_region = s:STATE_EQUATEUR
+				state_region = s:STATE_KASAI
+				state_region = s:STATE_KATANGA
+				state_region = s:STATE_CONGO_ORIENTALE
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_cameroon_var }
+			OR = {
+				state_region = s:STATE_NORTH_CAMEROON
+				state_region = s:STATE_SOUTH_CAMEROON
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_gabon_var }
+			OR = {
+				state_region = s:STATE_GABON
+				state_region = s:STATE_CONGO
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_south_africa_var }
+			OR = {
+				state_region = s:STATE_CAPE_COLONY
+				state_region = s:STATE_NORTHERN_CAPE
+				state_region = s:STATE_EASTERN_CAPE
+				state_region = s:STATE_ZULULAND
+				state_region = s:STATE_VRYSTAAT
+				state_region = s:STATE_TRANSVAAL
+				state_region = s:STATE_BOTSWANA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_zambezi_var }
+			OR = {
+				state_region = s:STATE_ZAMBEZI
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_angola_var }
+			OR = {
+				state_region = s:STATE_NORTH_ANGOLA
+				state_region = s:STATE_SOUTH_ANGOLA
+				state_region = s:STATE_EAST_ANGOLA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_namibia_var }
+			OR = {
+				state_region = s:STATE_HEREROLAND
+				state_region = s:STATE_NAMAQUALAND
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_zambia_var }
+			OR = {
+				state_region = s:STATE_ZAMBIA
+				state_region = s:STATE_KAZEMBE
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_east_africa_var }
+			OR = {
+				state_region = s:STATE_ZANZIBAR
+				state_region = s:STATE_LINDI
+				state_region = s:STATE_TANGANYIKA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_kenya_var }
+			OR = {
+				state_region = s:STATE_KENYA
+				state_region = s:STATE_RIFT_VALLEY
+				state_region = s:STATE_UGANDA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_madagascar_var }
+			OR = {
+				state_region = s:STATE_NORTH_MADAGASCAR
+				state_region = s:STATE_SOUTH_MADAGASCAR
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_ethiopia_var }
+			OR = {
+				state_region = s:STATE_SOMALILAND
+				state_region = s:STATE_OROMIA
+				state_region = s:STATE_AMHARA
+				state_region = s:STATE_GONDER
+				state_region = s:STATE_ERITREA
+			}
+		}
+		AND = {
+			owner = { has_variable = claimed_mozambique_var }
+			OR = {
+				state_region = s:STATE_MOCAMBIQUE
+				state_region = s:STATE_ZAMBEZIA
+				state_region = s:STATE_LOURENCO_MARQUES
+			}
+		}
+	}
+}
+
+# Active colonies only: established possessions and non-signatories are untouched.
+tyr_berlin_colonial_violation = {
+	is_under_colonization = yes
+	is_in_geographic_region = geographic_region_africa
+	NOT = { tyr_state_in_berlin_claim = yes }
+	NOT = { has_variable = tyr_berlin_colony_infamy_paid }
+	state_region = {
+		any_scope_state = { owner = { is_country_type = decentralized } }
+	}
+}

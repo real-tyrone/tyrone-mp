@@ -9,7 +9,7 @@
 		}
 		NOT = {
 			any_subject_or_below = {
-				has_variable = senegal_subject_var
+				tyr_west_african_administration = yes
 			}
 		}
 	}
@@ -20,7 +20,7 @@
 		any_scope_state = {
 			region = sr:region_west_africa
 			is_largest_state_in_region = yes
-			count >= 2
+			count >= 1
 		}
 
 		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
@@ -87,6 +87,7 @@
 				has_variable = state_to_cede
 			}
 			on_created = {
+				save_scope_as = newly_formed_colonial_administration_scope
 				set_variable = senegal_subject_var
 				set_variable = {
 					name = newly_formed_colonial_nation_var
@@ -103,8 +104,11 @@
 				every_state_region = {
 					limit = {
 						region = sr:region_west_africa
+						any_scope_state = {
+							has_claim_by = scope:overlord_country
+						}
 					}
-					add_claim = ROOT
+					add_claim = scope:newly_formed_colonial_administration_scope
 				}
 			}
 		}
@@ -146,7 +150,7 @@ je_colonial_administration_button_ethiopia = {
 				is_in_geographic_region = geographic_region_ethiopia_old
 			}
 			is_largest_state_in_region = yes
-			count >= 2
+			count >= 1
 		}
 
 		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
@@ -168,6 +172,7 @@ je_colonial_administration_button_ethiopia = {
 	}
 
 	effect = {
+		save_scope_as = overlord_country
 		if = {
 			limit = {
 				any_scope_state = {
@@ -214,6 +219,7 @@ je_colonial_administration_button_ethiopia = {
 				has_variable = state_to_cede
 			}
 			on_created = {
+				save_scope_as = newly_formed_colonial_administration_scope
 				set_variable = ethiopia_subject_var
 				set_variable = {
 					name = newly_formed_colonial_nation_var
@@ -227,18 +233,14 @@ je_colonial_administration_button_ethiopia = {
 				add_modifier = {
 					name = colonial_administration
 				}
-				every_state = {
+				every_state_region = {
 					limit = {
-						state_region = {
-							is_in_geographic_region = geographic_region_ethiopia_old
-						}
-						owner = {
-							is_country_type = decentralized
+						is_in_geographic_region = geographic_region_ethiopia_old
+						any_scope_state = {
+							has_claim_by = scope:overlord_country
 						}
 					}
-					state_region = {
-						add_claim = root
-					}
+					add_claim = scope:newly_formed_colonial_administration_scope
 				}
 			}
 		}
@@ -286,7 +288,7 @@ je_colonial_administration_button_zanj = {
 				}
 			}
 			is_largest_state_in_region = yes
-			count >= 2
+			count >= 1
 		}
 
 		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
@@ -373,6 +375,7 @@ je_colonial_administration_button_zanj = {
 				has_variable = state_to_cede
 			}
 			on_created = {
+				save_scope_as = newly_formed_colonial_administration_scope
 				set_variable = zanj_subject_var
 				set_variable = {
 					name = newly_formed_colonial_nation_var
@@ -392,8 +395,11 @@ je_colonial_administration_button_zanj = {
 							is_in_geographic_region = geographic_region_ethiopia_old
 						}
 						region = sr:region_east_africa
+						any_scope_state = {
+							has_claim_by = scope:overlord_country
+						}
 					}
-					add_claim = ROOT
+					add_claim = scope:newly_formed_colonial_administration_scope
 				}
 			}
 		}
@@ -444,7 +450,7 @@ je_colonial_administration_button_southern_africa = {
 		any_scope_state = {
 			region = sr:region_southern_africa
 			is_largest_state_in_region = yes
-			count >= 2
+			count >= 1
 		}
 
 		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
@@ -511,6 +517,7 @@ je_colonial_administration_button_southern_africa = {
 				has_variable = state_to_cede
 			}
 			on_created = {
+				save_scope_as = newly_formed_colonial_administration_scope
 				set_variable = southern_africa_subject_var
 				set_variable = {
 					name = newly_formed_colonial_nation_var
@@ -527,8 +534,11 @@ je_colonial_administration_button_southern_africa = {
 				every_state_region = {
 					limit = {
 						region = sr:region_southern_africa
+						any_scope_state = {
+							has_claim_by = scope:overlord_country
+						}
 					}
-					add_claim = ROOT
+					add_claim = scope:newly_formed_colonial_administration_scope
 				}
 			}
 		}
@@ -579,7 +589,7 @@ je_colonial_administration_button_congo = {
 		any_scope_state = {
 			region = sr:region_equatorial_africa
 			is_largest_state_in_region = yes
-			count >= 2
+			count >= 1
 		}
 
 		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
@@ -646,6 +656,7 @@ je_colonial_administration_button_congo = {
 				has_variable = state_to_cede
 			}
 			on_created = {
+				save_scope_as = newly_formed_colonial_administration_scope
 				set_variable = congo_subject_var
 				set_variable = {
 					name = newly_formed_colonial_nation_var
@@ -659,37 +670,52 @@ je_colonial_administration_button_congo = {
 				add_modifier = {
 					name = colonial_administration
 				}
+				every_state_region = {
+					limit = {
+						region = sr:region_equatorial_africa
+						any_scope_state = {
+							has_claim_by = scope:overlord_country
+						}
+					}
+					add_claim = scope:newly_formed_colonial_administration_scope
+				}
+				# Berlin Conference claims are tracked on the overlord by variable
+				# before they are always available as state-region claims.
 				if = {
 					limit = {
 						scope:overlord_country = {
-							has_variable = belgium_core_congo_claims_only_var
+							has_variable = claimed_congo_var
 						}
 					}
-					s:STATE_BAS_CONGO = {
-						add_claim = ROOT
-					}
-					s:STATE_KASAI = {
-						add_claim = ROOT
-					}
-					s:STATE_EQUATEUR = {
-						add_claim = ROOT
-					}
-					s:STATE_CONGO_ORIENTALE = {
-						add_claim = ROOT
-					}
-					s:STATE_KATANGA = {
-						add_claim = ROOT
-					}
-				}
-				else = {
-					every_state_region = {
-						limit = {
-							region = sr:region_equatorial_africa
-						}
-						add_claim = ROOT
-					}
+					s:STATE_BAS_CONGO = { add_claim = scope:newly_formed_colonial_administration_scope }
+					s:STATE_KASAI = { add_claim = scope:newly_formed_colonial_administration_scope }
+					s:STATE_EQUATEUR = { add_claim = scope:newly_formed_colonial_administration_scope }
+					s:STATE_CONGO_ORIENTALE = { add_claim = scope:newly_formed_colonial_administration_scope }
+					s:STATE_KATANGA = { add_claim = scope:newly_formed_colonial_administration_scope }
 				}
 			}
+		}
+		# Resolve the created country from its capital after creation; scopes saved
+		# inside on_created are not reliable targets for state-region effects.
+		scope:newly_formed_colonial_nation_capital_scope.owner ?= {
+			save_scope_as = congo_colonial_administration_scope
+		}
+		every_state_region = {
+			limit = {
+				region = sr:region_equatorial_africa
+				any_scope_state = {
+					has_claim_by = ROOT
+				}
+			}
+			add_claim = scope:congo_colonial_administration_scope
+		}
+		if = {
+			limit = { has_variable = claimed_congo_var }
+			s:STATE_BAS_CONGO = { add_claim = scope:congo_colonial_administration_scope }
+			s:STATE_KASAI = { add_claim = scope:congo_colonial_administration_scope }
+			s:STATE_EQUATEUR = { add_claim = scope:congo_colonial_administration_scope }
+			s:STATE_CONGO_ORIENTALE = { add_claim = scope:congo_colonial_administration_scope }
+			s:STATE_KATANGA = { add_claim = scope:congo_colonial_administration_scope }
 		}
 		hidden_effect = {
 			create_diplomatic_pact = {
@@ -713,7 +739,7 @@ je_colonial_administration_button_expand_senegal = {
 	visible = {
 		is_not_in_geographic_region = geographic_region_africa
 		any_subject_or_below = {
-			has_variable = senegal_subject_var
+			tyr_west_african_administration = yes
 		}
 	}
 
@@ -733,7 +759,7 @@ je_colonial_administration_button_expand_senegal = {
 			custom_tooltip = {
 				text = colonial_transfer_two_subjects_tt
 				any_subject_or_below = {
-					has_variable = senegal_subject_var
+					tyr_west_african_administration = yes
 					count >= 2
 				}
 			}
@@ -748,11 +774,17 @@ je_colonial_administration_button_expand_senegal = {
 		custom_tooltip = {
 			text = transfer_stuff_to_subject_tt
 		}
-		random_subject_or_below = {
-			limit = {
-				has_variable = senegal_subject_var
+		if = {
+			limit = { c:SIL ?= { tyr_west_african_administration = yes } c:GBR ?= this }
+			c:SIL = { save_scope_as = colonial_transfer_subject_scope }
+		}
+		else = {
+			random_subject_or_below = {
+				limit = {
+					tyr_west_african_administration = yes
+				}
+				save_scope_as = colonial_transfer_subject_scope
 			}
-			save_scope_as = colonial_transfer_subject_scope
 		}
 		if = {
 			limit = {
@@ -769,31 +801,12 @@ je_colonial_administration_button_expand_senegal = {
 				set_state_owner = scope:colonial_transfer_subject_scope
 			}
 		}
-		if = {
+		every_subject_or_below = {
 			limit = {
-				any_subject_or_below = {
-					has_variable = senegal_subject_var
-					count >= 2
-				}
+				tyr_west_african_administration = yes
+				NOT = { this = scope:colonial_transfer_subject_scope }
 			}
-			random_subject_or_below = {
-				limit = {
-					has_variable = senegal_subject_var
-				}
-				save_scope_as = senegal_subject_scope
-			}
-			random_subject_or_below = {
-				limit = {
-					has_variable = senegal_subject_var
-					NOT = {
-						this = scope:senegal_subject_scope
-					}
-				}
-				save_scope_as = senegal_subject_scope_2
-			}
-			scope:senegal_subject_scope = {
-				annex = scope:senegal_subject_scope_2
-			}
+			scope:colonial_transfer_subject_scope = { annex = PREV }
 		}
 	}
 }
@@ -916,6 +929,9 @@ je_colonial_administration_button_expand_zanj = {
 		OR = {
 			any_scope_state = {
 				region = sr:region_east_africa
+				state_region = {
+					NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+				}
 				is_under_colonization = no
 			}
 			custom_tooltip = {
@@ -946,13 +962,19 @@ je_colonial_administration_button_expand_zanj = {
 			limit = {
 				any_scope_state = {
 					region = sr:region_east_africa
+					state_region = {
+						NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+					}
 					is_under_colonization = no
 				}
 			}
-			every_scope_state = {
-				limit = {
-					region = sr:region_east_africa
-					is_under_colonization = no
+				every_scope_state = {
+					limit = {
+						region = sr:region_east_africa
+						state_region = {
+							NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+						}
+						is_under_colonization = no
 				}
 				set_state_owner = scope:colonial_transfer_subject_scope
 			}

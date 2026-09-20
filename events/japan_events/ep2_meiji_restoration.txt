@@ -317,6 +317,21 @@ ep2_meiji.3 = { # Imperial Marriage
 		scope:shogun_scope ?= {
 			set_variable = japan_imperial_marriage
 		}
+		random_political_movement = {
+			limit = {
+				is_political_movement_type = movement_meiji_restorationist
+			}
+			add_modifier = {
+				name = modifier_imperial_marriage_movement_modifier
+				days = short_modifier_time
+				is_decaying = yes
+			}
+		}
+		add_modifier = {
+			name = modifier_imperial_marriage
+			days = very_short_modifier_time
+			is_decaying = yes
+		}
 		add_journal_entry = { type = je_meiji_imperial_marriage }
 	}
 }
@@ -346,6 +361,9 @@ ep2_meiji.4 = { # Boshin War - Historical
 	}
 
 	immediate = {
+		# ROOT is the Emperor's country; Tokugawa loyalists are the revolters.
+		set_variable = satcho_alliance_rebellion
+		trigger_event = { id = tyrone_boshin.1 days = 14 popup = yes }
 		random_country = {
 			limit = {
 				civil_war_origin_country ?= ROOT
@@ -459,6 +477,8 @@ ep2_meiji.41 = { # Boshin War - Ahistorical
 				var:civil_war_type_var ?= movement_type:movement_meiji_restorationist
 			}
 			save_scope_as = imperial_court_scope
+			set_variable = satcho_alliance_rebellion
+			trigger_event = { id = tyrone_boshin.1 days = 14 popup = yes }
 			ordered_scope_state = {
 				limit = {
 					is_in_geographic_region = geographic_region_home_islands

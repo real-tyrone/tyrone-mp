@@ -1,0 +1,60 @@
+namespace = tyrone_boshin
+
+# Called for the imperial side by the historical and alternate Boshin War events.
+tyrone_boshin.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyrone_boshin.1.t
+	desc = tyrone_boshin.1.d
+	flavor = tyrone_boshin.1.f
+	duration = 3
+
+	event_image = { video = "ep2_japanese_artillery" }
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	immediate = {
+		# Transfer only portions not already held by the imperial side.
+		s:STATE_KYUSHU = {
+			every_scope_state = {
+				limit = { NOT = { owner = ROOT } }
+				set_state_owner = ROOT
+			}
+		}
+		s:STATE_CHUGOKU = {
+			every_scope_state = {
+				limit = { NOT = { owner = ROOT } }
+				set_state_owner = ROOT
+			}
+		}
+		# Re-select after transfers so merged states are incorporated as well.
+		every_scope_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_KYUSHU
+					state_region = s:STATE_CHUGOKU
+				}
+			}
+			set_state_type = incorporated
+		}
+	}
+
+	option = {
+		name = tyrone_boshin.1.a
+		default_option = yes
+		# Immediate has already transferred the states; show their resulting effects
+		# without the non-owner filter, and do not execute the effects again.
+		show_as_tooltip = {
+			s:STATE_KYUSHU = {
+				every_scope_state = {
+					set_state_owner = ROOT
+				}
+			}
+			s:STATE_CHUGOKU = {
+				every_scope_state = {
+					set_state_owner = ROOT
+				}
+			}
+		}
+	}
+}

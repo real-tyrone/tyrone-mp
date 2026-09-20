@@ -48,6 +48,77 @@ colonial_administration_events.1 = {
 				}
 			}
 		}
+		# The subject is fully initialized here, so inherited claims can be
+		# assigned reliably to the resolved colonial-administration scope.
+		if = {
+			limit = {
+				scope:newly_formed_colonial_nation_scope = { has_variable = senegal_subject_var }
+			}
+			every_state_region = {
+				limit = {
+					region = sr:region_west_africa
+					any_scope_state = { has_claim_by = ROOT }
+				}
+				add_claim = scope:newly_formed_colonial_nation_scope
+			}
+		}
+		else_if = {
+			limit = {
+				scope:newly_formed_colonial_nation_scope = { has_variable = ethiopia_subject_var }
+			}
+			every_state_region = {
+				limit = {
+					is_in_geographic_region = geographic_region_ethiopia_old
+					any_scope_state = { has_claim_by = ROOT }
+				}
+				add_claim = scope:newly_formed_colonial_nation_scope
+			}
+		}
+		else_if = {
+			limit = {
+				scope:newly_formed_colonial_nation_scope = { has_variable = zanj_subject_var }
+			}
+			every_state_region = {
+				limit = {
+					region = sr:region_east_africa
+					NOT = { is_in_geographic_region = geographic_region_ethiopia_old }
+					any_scope_state = { has_claim_by = ROOT }
+				}
+				add_claim = scope:newly_formed_colonial_nation_scope
+			}
+		}
+		else_if = {
+			limit = {
+				scope:newly_formed_colonial_nation_scope = { has_variable = southern_africa_subject_var }
+			}
+			every_state_region = {
+				limit = {
+					region = sr:region_southern_africa
+					any_scope_state = { has_claim_by = ROOT }
+				}
+				add_claim = scope:newly_formed_colonial_nation_scope
+			}
+		}
+		else_if = {
+			limit = {
+				scope:newly_formed_colonial_nation_scope = { has_variable = congo_subject_var }
+			}
+			every_state_region = {
+				limit = {
+					region = sr:region_equatorial_africa
+					any_scope_state = { has_claim_by = ROOT }
+				}
+				add_claim = scope:newly_formed_colonial_nation_scope
+			}
+			if = {
+				limit = { has_variable = claimed_congo_var }
+				s:STATE_BAS_CONGO = { add_claim = scope:newly_formed_colonial_nation_scope }
+				s:STATE_KASAI = { add_claim = scope:newly_formed_colonial_nation_scope }
+				s:STATE_EQUATEUR = { add_claim = scope:newly_formed_colonial_nation_scope }
+				s:STATE_CONGO_ORIENTALE = { add_claim = scope:newly_formed_colonial_nation_scope }
+				s:STATE_KATANGA = { add_claim = scope:newly_formed_colonial_nation_scope }
+			}
+		}
 		random_scope_pop = {
 			limit = {
 				has_state_religion = yes

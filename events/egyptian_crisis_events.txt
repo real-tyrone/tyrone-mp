@@ -192,6 +192,8 @@ egyptian_crisis_events.3 = {
 		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_SYRIA GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_LEBANON GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_PALESTINE GIVER = c:EGY TAKER = c:TUR }
+		transfer_state = { STATE = s:STATE_TRANSJORDAN GIVER = c:EGY TAKER = c:TUR }
 		c:TUR ?= { transfer_subject = c:HDJ }
 		add_liberty_desire = -50
 		set_global_variable = oriental_crisis_ottoman_victory
@@ -296,6 +298,7 @@ egyptian_crisis_events.5 = {
 
 	option = { # Enforce the terms of the Convention of London
 		name = egyptian_crisis_events.5.a
+		default_option = yes
 		transfer_state = { STATE = s:STATE_ADANA GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_ALEPPO GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
@@ -313,7 +316,6 @@ egyptian_crisis_events.5 = {
 	}
 	option = { # Punish the Egyptians for their defiance
 		name = egyptian_crisis_events.5.b
-		default_option = yes
 		transfer_state = { STATE = s:STATE_ADANA GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_ALEPPO GIVER = c:EGY TAKER = c:TUR }
 		transfer_state = { STATE = s:STATE_CRETE GIVER = c:EGY TAKER = c:TUR }
@@ -327,7 +329,7 @@ egyptian_crisis_events.5 = {
 			target_country = c:EGY
 		}
 		ai_chance = {
-			value = 20
+			value = 0
 		}
 	}
 }
@@ -459,3 +461,53 @@ egyptian_crisis_events.7 = {
 	}
 }
 
+
+egyptian_crisis_events.8 = {
+	type = country_event
+	placement = c:EGY.capital
+
+	title = egyptian_crisis_events.8.t
+	desc = egyptian_crisis_events.8.d
+	flavor = egyptian_crisis_events.8.f
+
+	event_image = {
+		video = "middleeast_courtroom_upheaval"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	trigger = {
+		exists = c:EGY
+		any_subject_or_below = {
+			this = c:EGY
+			is_subject_type = subject_type_puppet
+		}
+	}
+
+	option = {
+		name = egyptian_crisis_events.8.a
+		create_incident = {
+			country = c:EGY
+			value = 20
+		}
+		# Apply the journal's integration modifier to the newly annexed states.
+		c:EGY = {
+			every_scope_state = {
+				limit = { region = sr:region_nile_basin }
+				add_modifier = {
+					name = integrating_egypt
+					days = long_modifier_time
+				}
+			}
+		}
+		annex = c:EGY
+		ai_chance = { value = 25 }
+	}
+
+	option = {
+		name = egyptian_crisis_events.8.b
+		default_option = yes
+		custom_tooltip = egyptian_crisis_events.8.b.tt
+		ai_chance = { value = 75 }
+	}
+}

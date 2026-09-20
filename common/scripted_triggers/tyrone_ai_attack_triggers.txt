@@ -14,3 +14,25 @@ tyrone_ai_attack_country_allowed = {
         }
     }
 }
+
+# State scope; ROOT is Afghanistan taking the AI expansion decision.
+tyrone_afg_ai_expansion_target = {
+	OR = {
+		state_region = s:STATE_HERAT
+		state_region = s:STATE_NORTHERN_BALUCHISTAN
+		state_region = s:STATE_KABUL
+		state_region = s:STATE_BALKH
+	}
+	owner = {
+		tyrone_ai_attack_country_allowed = yes
+		NOT = { this = ROOT }
+		NOT = { is_country_type = decentralized }
+		is_subject = no
+		is_adjacent_to_country = ROOT
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = { has_truce_with = ROOT }
+		NOT = { has_war_with = ROOT }
+		army_power_projection < ROOT.army_power_projection
+	}
+}

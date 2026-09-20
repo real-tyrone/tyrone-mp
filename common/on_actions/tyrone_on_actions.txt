@@ -8,6 +8,7 @@
 		10 = meiji.6
     }
     events = {
+        berlin_colonial_enforcement.1
         springtime.1
         eiffel_tower.1
         company_events.1
@@ -19,8 +20,8 @@
         flag_events.2
         austria_integrate.1
         austria_integrate.2
-    }
-    effect = {
+	}
+	effect = {
 		if = {
 			limit = {
 				c:FRA ?= this
@@ -34,7 +35,7 @@
 		if = { # Berlin Conference
 			limit = {
 				NOT = { has_global_variable = berlin_conference_happening }
-				NOT = { has_global_variable = berlin_conference_ended }
+				NOT = { custom_tooltip = { text = berlin_conference_ended_tt has_global_variable = berlin_conference_ended } }
                 OR = {
                     has_law = law_type:law_colonial_resettlement
                     has_law = law_type:law_colonial_exploitation
@@ -199,13 +200,6 @@ on_yearly_pulse_country = {
                     }
                     NOT = {
                         has_modifier = ai_budget_buff
-                    }
-                    NOT = {
-                        country_rank < rank_value:great_power
-                        OR = {
-                            country_has_primary_culture = cu:north_german
-                            country_has_primary_culture = cu:south_german
-                        }
                     }
                 }
 				add_modifier = {
@@ -410,17 +404,8 @@ on_yearly_pulse_country = {
             every_country = {
                 limit = {
                     has_modifier = ai_budget_buff
-                    OR = {
-                        any_overlord_or_above = {
-                            is_player = yes
-                        }
-                        AND = {
-                            country_rank < rank_value:great_power
-                            OR = {
-                                country_has_primary_culture = cu:north_german
-                                country_has_primary_culture = cu:south_german
-                            }
-                        }
+                    any_overlord_or_above = {
+                        is_player = yes
                     }
                 }
 				remove_modifier = ai_budget_buff
@@ -859,28 +844,62 @@ on_monthly_pulse_state = {
 }
 
 tyrone_african_colonial_split_check = {
-    trigger = {
-        is_in_geographic_region = geographic_region_africa
-        owner = {
-            country_is_colonial_or_company = yes
-            is_subject = yes
-        }
+	trigger = {
+		is_in_geographic_region = geographic_region_africa
+		owner = {
+			OR = {
+				AND = {
+					country_is_colonial_or_company = yes
+					is_subject = yes
+				}
+				AND = {
+					is_subject = no
+					NOT = { is_country_type = decentralized }
+				}
+			}
+		}
         state_region = {
             NOT = { has_variable = tyrone_colonial_split_offer_made }
         }
     }
     effect = {
+		owner = {
+			if = {
+				limit = { is_subject = yes }
+				top_overlord = { save_scope_as = tyrone_split_current_controller }
+			}
+			else = {
+				save_scope_as = tyrone_split_current_controller
+			}
+		}
         if = {
             limit = {
                 is_under_colonization = yes
                 state_region = {
-                    any_scope_state = {
-                        NOT = { this = root }
-                        is_under_colonization = yes
-                        owner = {
-                            country_is_colonial_or_company = yes
-                            is_subject = yes
-                            NOT = { top_overlord = root.owner.top_overlord }
+					any_scope_state = {
+						NOT = { this = root }
+						is_under_colonization = yes
+						owner = {
+							OR = {
+								AND = {
+									country_is_colonial_or_company = yes
+									is_subject = yes
+								}
+								AND = {
+									is_subject = no
+									NOT = { is_country_type = decentralized }
+								}
+							}
+							OR = {
+								AND = {
+									is_subject = yes
+									NOT = { top_overlord = scope:tyrone_split_current_controller }
+								}
+								AND = {
+									is_subject = no
+									NOT = { this = scope:tyrone_split_current_controller }
+								}
+							}
                         }
                     }
                 }
@@ -900,21 +919,44 @@ tyrone_african_colonial_split_check = {
                             }
                         }
                     }
-                    any_scope_state = {
-                        num_provinces > root.num_provinces
-                        owner = {
-                            country_is_colonial_or_company = yes
-                            is_subject = yes
-                            NOT = { top_overlord = root.owner.top_overlord }
+					any_scope_state = {
+						num_provinces > root.num_provinces
+						owner = {
+							OR = {
+								AND = {
+									country_is_colonial_or_company = yes
+									is_subject = yes
+								}
+								AND = {
+									is_subject = no
+									NOT = { is_country_type = decentralized }
+								}
+							}
+							OR = {
+								AND = {
+									is_subject = yes
+									NOT = { top_overlord = scope:tyrone_split_current_controller }
+								}
+								AND = {
+									is_subject = no
+									NOT = { this = scope:tyrone_split_current_controller }
+								}
+							}
                         }
                     }
                 }
             }
-            save_scope_as = tyrone_split_smaller_state
-            owner = {
-                save_scope_as = tyrone_split_smaller_colony
-                top_overlord = { save_scope_as = tyrone_split_overlord }
-            }
+			save_scope_as = tyrone_split_smaller_state
+			owner = {
+				save_scope_as = tyrone_split_smaller_colony
+				if = {
+					limit = { is_subject = yes }
+					top_overlord = { save_scope_as = tyrone_split_overlord }
+				}
+				else = {
+					save_scope_as = tyrone_split_overlord
+				}
+			}
             state_region = {
                 random_scope_state = {
                     limit = { num_provinces > root.num_provinces }
@@ -928,4 +970,31 @@ tyrone_african_colonial_split_check = {
             }
         }
     }
+}
+
+# Keep existing saves and newly eligible AI countries up to date without a yearly wait.
+on_weekly_pulse_country = {
+	on_actions = { tyrone_sync_ai_budget_buff }
+}
+
+tyrone_sync_ai_budget_buff = {
+	effect = {
+		if = {
+			limit = {
+				has_game_rule = buff_ai_enabled
+				is_ai = yes
+				NOT = {
+					any_overlord_or_above = { is_player = yes }
+				}
+			}
+			if = {
+				limit = { NOT = { has_modifier = ai_budget_buff } }
+				add_modifier = { name = ai_budget_buff }
+			}
+		}
+		else_if = {
+			limit = { has_modifier = ai_budget_buff }
+			remove_modifier = ai_budget_buff
+		}
+	}
 }

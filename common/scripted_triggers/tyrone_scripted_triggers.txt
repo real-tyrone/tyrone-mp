@@ -257,14 +257,131 @@ tyrone_colonial_split_transfer_valid = {
         state_region = scope:tyrone_split_smaller_state.state_region
         num_provinces > scope:tyrone_split_smaller_state.num_provinces
     }
-    scope:tyrone_split_smaller_colony = {
-        country_is_colonial_or_company = yes
-        is_subject = yes
-        top_overlord = root
-    }
-    scope:tyrone_split_larger_colony = {
-        country_is_colonial_or_company = yes
-        is_subject = yes
-        NOT = { top_overlord = root }
-    }
+	scope:tyrone_split_smaller_colony = {
+		OR = {
+			AND = {
+				country_is_colonial_or_company = yes
+				is_subject = yes
+				top_overlord = root
+			}
+			AND = {
+				is_subject = no
+				NOT = { is_country_type = decentralized }
+				this = root
+			}
+		}
+	}
+	scope:tyrone_split_larger_colony = {
+		OR = {
+			AND = {
+				country_is_colonial_or_company = yes
+				is_subject = yes
+				NOT = { top_overlord = root }
+			}
+			AND = {
+				is_subject = no
+				NOT = { is_country_type = decentralized }
+				NOT = { this = root }
+			}
+		}
+	}
+}
+
+# True when one of the targeted backwards laws has a supported replacement.
+# Private Schools and Agrarianism are deliberately excluded.
+tyrone_has_available_backward_law_reform = {
+	OR = {
+		AND = {
+			has_law_or_variant = law_type:law_no_schools
+			"enactment_chance_for_law(law_type:law_religious_schools)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_no_schools
+			"enactment_chance_for_law(law_type:law_public_schools)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_peasant_levies
+			"enactment_chance_for_law(law_type:law_professional_army)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_peasant_levies
+			"enactment_chance_for_law(law_type:law_mass_conscription)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_hereditary_bureaucrats
+			"enactment_chance_for_law(law_type:law_appointed_bureaucrats)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_hereditary_bureaucrats
+			"enactment_chance_for_law(law_type:law_elected_bureaucrats)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_guild_system
+			"enactment_chance_for_law(law_type:law_combination_acts)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_guild_system
+			"enactment_chance_for_law(law_type:law_anti_strike_laws)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_guild_system
+			"enactment_chance_for_law(law_type:law_right_to_associate)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_guild_system
+			"enactment_chance_for_law(law_type:law_corporatized_unions)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_guild_system
+			"enactment_chance_for_law(law_type:law_factory_councils)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_interventionism)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_industry_banned)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_extraction_economy)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_laissez_faire)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_laissez_faire_subject)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_cooperative_ownership)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_command_economy)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_traditionalism
+			"enactment_chance_for_law(law_type:law_sic_agrarian_reform)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_serfdom
+			"enactment_chance_for_law(law_type:law_tenant_farmers)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_serfdom
+			"enactment_chance_for_law(law_type:law_commercialized_agriculture)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_serfdom
+			"enactment_chance_for_law(law_type:law_homesteading)" > 0
+		}
+		AND = {
+			has_law_or_variant = law_type:law_serfdom
+			"enactment_chance_for_law(law_type:law_collectivized_agriculture)" > 0
+		}
+	}
 }
