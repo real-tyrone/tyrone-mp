@@ -36,6 +36,52 @@
 	}
 }
 
+# After the Holy Alliance expires, AI Prussia leaves its defensive treaty with
+# Austria and adopts a dedicated strategy favoring a German leadership play.
+pru_ai_brothers_war_after_holy_alliance = {
+	is_shown = {
+		is_ai = yes
+		c:PRU ?= this
+		has_journal_entry = je_north_german_unification
+		NOT = { has_variable = pru_pursue_german_leadership }
+		exists = c:AUS
+		c:AUS = { is_unification_candidate = GER }
+		any_scope_treaty = {
+			binds = c:AUS
+			remaining_binding_period <= 0
+			any_scope_article = { has_type = defensive_pact }
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		c:PRU ?= this
+		has_journal_entry = je_north_german_unification
+		is_unification_candidate = GER
+		NOT = { has_variable = pru_pursue_german_leadership }
+		c:AUS = { is_unification_candidate = GER }
+		any_scope_treaty = {
+			binds = c:AUS
+			remaining_binding_period <= 0
+			any_scope_article = { has_type = defensive_pact }
+		}
+	}
+
+	when_taken = {
+		every_scope_treaty = {
+			limit = {
+				binds = c:AUS
+				remaining_binding_period <= 0
+				any_scope_article = { has_type = defensive_pact }
+			}
+			withdraw = { country = ROOT }
+		}
+		set_variable = pru_pursue_german_leadership
+	}
+
+	ai_chance = { value = 100 }
+}
+
 net_integrate_indonesia_decision = {
 	is_shown = {
 		OR = {
@@ -71,6 +117,38 @@ net_integrate_indonesia_decision = {
 			add_modifier = {
 				name = integrating_indonesia
 				days = long_modifier_time
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+byzantium_move_capital_to_constantinople = {
+	is_shown = {
+		c:BYZ ?= ROOT
+		NOT = { has_variable = moved_capital_to_constantinople }
+		NOT = {
+			capital = { state_region = s:STATE_EASTERN_THRACE }
+		}
+	}
+
+	possible = {
+		c:BYZ ?= ROOT
+		owns_entire_state_region = STATE_EASTERN_THRACE
+	}
+
+	when_taken = {
+		set_variable = moved_capital_to_constantinople
+		set_capital = STATE_EASTERN_THRACE
+		random_scope_state = {
+			limit = {
+				state_region = s:STATE_EASTERN_THRACE
+			}
+			add_modifier = {
+				name = modifier_restored_capital_to_constantinople
 			}
 		}
 	}
@@ -1848,7 +1926,7 @@ ger_ai_return_zanzibar_claim = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
-		c:GER ?= this
+		has_variable = claimed_east_africa_var
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -1883,6 +1961,7 @@ ger_ai_return_zanzibar_claim = {
 
 	possible = {
 		tyrone_ai_attack_country_allowed = yes
+		has_variable = claimed_east_africa_var
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -9723,6 +9802,170 @@ brz_ai_annex_acre_insignificant_power = {
 		value = 100
 	}
 }
+
+bol_enact_frontier_colonization_for_alto_paraguay = {
+	is_shown = {
+		c:BOL ?= this
+		enacting_any_law = no
+		NOT = { has_law_or_variant = law_type:law_frontier_colonization }
+		s:STATE_ALTO_PARAGUAY = {
+			any_scope_state = {
+				owner = ROOT
+			}
+		}
+	}
+
+	possible = {
+		c:BOL ?= this
+		enacting_any_law = no
+		NOT = { has_law_or_variant = law_type:law_frontier_colonization }
+		s:STATE_ALTO_PARAGUAY = {
+			any_scope_state = {
+				owner = ROOT
+			}
+		}
+	}
+
+	when_taken = {
+		start_enactment = law_type:law_frontier_colonization
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+chi_ai_annex_tarapaca_insignificant_power = {
+	is_shown = {
+		has_technology_researched = nationalism
+		tyrone_ai_attack_country_allowed = yes
+		is_ai = yes
+		c:CHI ?= this
+		owns_entire_state_region = STATE_ANTOFAGASTA
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_TARAPACA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					tyrone_ai_attack_country_allowed = yes
+					OR = {
+						c:PEU ?= this
+						AND = {
+							country_rank = rank_value:insignificant_power
+							capital = {
+								state_region = s:STATE_TARAPACA
+							}
+						}
+					}
+					NOT = { is_country_type = decentralized }
+					is_subject = no
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	possible = {
+		has_technology_researched = nationalism
+		tyrone_ai_attack_country_allowed = yes
+		owns_entire_state_region = STATE_ANTOFAGASTA
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		s:STATE_TARAPACA = {
+			any_scope_state = {
+				NOT = { owner = ROOT }
+				owner = {
+					tyrone_ai_attack_country_allowed = yes
+					OR = {
+						c:PEU ?= this
+						AND = {
+							country_rank = rank_value:insignificant_power
+							capital = {
+								state_region = s:STATE_TARAPACA
+							}
+						}
+					}
+					NOT = { is_country_type = decentralized }
+					is_subject = no
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		s:STATE_TARAPACA = {
+			random_scope_state = {
+				limit = {
+					NOT = { owner = ROOT }
+					owner = {
+						tyrone_ai_attack_country_allowed = yes
+						OR = {
+							c:PEU ?= this
+							AND = {
+								country_rank = rank_value:insignificant_power
+								capital = {
+									state_region = s:STATE_TARAPACA
+								}
+							}
+						}
+						NOT = { is_country_type = decentralized }
+						is_subject = no
+						is_at_war = no
+						is_diplomatic_play_committed_participant = no
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+				save_scope_as = chi_tarapaca_target_state_scope
+				owner = { save_scope_as = chi_tarapaca_annex_target_scope }
+			}
+		}
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:chi_tarapaca_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+				scope:chi_tarapaca_annex_target_scope = { c:PEU ?= this }
+			}
+			create_diplomatic_play = {
+				type = dp_conquer_state
+				target_country = scope:chi_tarapaca_annex_target_scope
+				target_state = scope:chi_tarapaca_target_state_scope
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					tyrone_ai_attack_country_allowed = yes
+					scope:chi_tarapaca_annex_target_scope = { tyrone_ai_attack_country_allowed = yes }
+				}
+				create_diplomatic_play = {
+					type = dp_annex_war
+					target_country = scope:chi_tarapaca_annex_target_scope
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 ecu_ai_annex_pastaza_insignificant_power = {
 	is_shown = {
 		has_technology_researched = nationalism
@@ -11823,6 +12066,52 @@ southern_african_subject_claim_zambia = {
 	ai_chance = { value = 100 }
 }
 
+
+bel_become_congo_free_state = {
+	is_shown = {
+		c:BEL ?= this
+		NOT = { exists = c:AFS }
+		capital = {
+			state_region = s:STATE_BAS_CONGO
+		}
+		NOT = {
+			any_scope_state = {
+				is_in_geographic_region = geographic_region_europe
+			}
+		}
+	}
+
+	possible = {
+		c:BEL ?= this
+		NOT = { exists = c:AFS }
+		capital = {
+			state_region = s:STATE_BAS_CONGO
+		}
+		NOT = {
+			any_scope_state = {
+				is_in_geographic_region = geographic_region_europe
+			}
+		}
+	}
+
+	when_taken = {
+		change_tag = AFS
+		add_technology_researched = malaria_prevention
+		activate_law = law_type:law_frontier_colonization
+		add_modifier = {
+			name = colonial_administration
+			days = -1
+		}
+		add_modifier = {
+			name = bel_congo_free_state_expansion_modifier
+			days = -1
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
 
 congo_free_state_merge_subjects = {
 	is_shown = {

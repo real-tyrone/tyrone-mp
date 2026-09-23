@@ -1,0 +1,52 @@
+# Selected by AI Prussia after it leaves the expired Holy Alliance.
+# Vanilla's ai_strategy_unify_germany uses aggression and wargoal_scores to
+# encourage leadership plays; this focused strategy strengthens those values.
+
+ai_strategy_prussian_german_leadership = {
+	icon = "gfx/interface/icons/ai_strategy_icons/unification.dds"
+	type = diplomatic
+
+	diplomatic_play_neutrality = { value = 0 }
+	diplomatic_play_boldness = { value = 100 }
+	recklessness = { value = 1 }
+
+	aggression = {
+		value = -2
+		if = {
+			limit = {
+				scope:target_country = {
+					OR = {
+						c:AUS ?= this
+						c:KUK ?= this
+					}
+					is_unification_candidate = GER
+				}
+			}
+			add = 50
+		}
+	}
+
+	wargoal_scores = {
+		unification_leadership = { value = 1000 }
+	}
+
+	secret_goal_scores = {
+		conquer = {
+			trigger = {
+				scope:target_country = { is_unification_candidate = GER }
+			}
+			score = { value = 1000 }
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		c:PRU ?= this
+		has_variable = pru_pursue_german_leadership
+		has_journal_entry = je_north_german_unification
+		is_subject = no
+		is_unification_candidate = GER
+	}
+
+	weight = { value = 10000 }
+}

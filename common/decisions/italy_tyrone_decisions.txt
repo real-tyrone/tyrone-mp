@@ -162,10 +162,8 @@ lmv_request_protectorate_decision = {
 ita_ai_transfer_lmv_from_austria = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
-		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_ai = yes
 		tyr_italian_content_country = yes
-		exists = c:LMV
 		OR = {
 			exists = c:AUS
 			exists = c:KUK
@@ -177,32 +175,66 @@ ita_ai_transfer_lmv_from_austria = {
 				civil_war_progress > 0
 			}
 		}
+		# Keep the original weak-Austria opportunity, and always open the
+		# decision while Austria is committed to a German leadership play.
 		OR = {
+			OR = {
+				c:AUS ?= {
+					tyrone_ai_attack_country_allowed = yes
+					is_at_war = yes
+					army_power_projection < ROOT.army_power_projection
+					NOT = { has_war_with = ROOT }
+				}
+				c:KUK ?= {
+					tyrone_ai_attack_country_allowed = yes
+					is_at_war = yes
+					army_power_projection < ROOT.army_power_projection
+					NOT = { has_war_with = ROOT }
+				}
+			}
+			any_diplomatic_play = {
+				is_diplomatic_play_type = dp_leadership_germany
+				OR = {
+					initiator = c:AUS
+					target = c:AUS
+					initiator = c:KUK
+					target = c:KUK
+				}
+			}
 			c:AUS ?= {
-				tyrone_ai_attack_country_allowed = yes
-				is_at_war = yes
-				army_power_projection < ROOT.army_power_projection
-				NOT = { has_war_with = ROOT }
+				any_scope_war = { has_war_goal = unification_leadership }
 			}
 			c:KUK ?= {
-				tyrone_ai_attack_country_allowed = yes
-				is_at_war = yes
-				army_power_projection < ROOT.army_power_projection
+				any_scope_war = { has_war_goal = unification_leadership }
 			}
 		}
-		c:LMV = {
-			tyrone_ai_attack_country_allowed = yes
-			OR = {
-			is_subject_of = c:AUS
-				is_subject_of = c:KUK
+		OR = {
+			c:LMV ?= {
+				tyrone_ai_attack_country_allowed = yes
+				OR = {
+					is_subject_of = c:AUS
+					is_subject_of = c:KUK
+				}
+				NOT = { is_subject_of = ROOT }
 			}
-			NOT = { is_subject_of = ROOT }
+			AND = {
+				NOT = { exists = c:LMV }
+				OR = {
+					c:AUS ?= {
+						owns_entire_state_region = STATE_LOMBARDY
+						owns_entire_state_region = STATE_VENETIA
+					}
+					c:KUK ?= {
+						owns_entire_state_region = STATE_LOMBARDY
+						owns_entire_state_region = STATE_VENETIA
+					}
+				}
+			}
 		}
 	}
 
 	possible = {
 		tyrone_ai_attack_country_allowed = yes
-		c:LMV ?= { tyrone_ai_attack_country_allowed = yes }
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		NOT = {
@@ -211,39 +243,89 @@ ita_ai_transfer_lmv_from_austria = {
 			}
 		}
 		OR = {
+			OR = {
+				c:AUS ?= {
+					tyrone_ai_attack_country_allowed = yes
+					is_at_war = yes
+					army_power_projection < ROOT.army_power_projection
+					NOT = { has_war_with = ROOT }
+					NOT = { has_truce_with = ROOT }
+				}
+				c:KUK ?= {
+					tyrone_ai_attack_country_allowed = yes
+					is_at_war = yes
+					army_power_projection < ROOT.army_power_projection
+					NOT = { has_war_with = ROOT }
+					NOT = { has_truce_with = ROOT }
+				}
+			}
+			any_diplomatic_play = {
+				is_diplomatic_play_type = dp_leadership_germany
+				OR = {
+					initiator = c:AUS
+					target = c:AUS
+					initiator = c:KUK
+					target = c:KUK
+				}
+			}
 			c:AUS ?= {
-				tyrone_ai_attack_country_allowed = yes
-				is_at_war = yes
-				army_power_projection < ROOT.army_power_projection
-				NOT = { has_war_with = ROOT }
-				NOT = { has_truce_with = ROOT }
+				any_scope_war = { has_war_goal = unification_leadership }
 			}
 			c:KUK ?= {
-				tyrone_ai_attack_country_allowed = yes
-				is_at_war = yes
-				army_power_projection < ROOT.army_power_projection
-				NOT = { has_war_with = ROOT }
-				NOT = { has_truce_with = ROOT }
+				any_scope_war = { has_war_goal = unification_leadership }
 			}
 		}
-		c:LMV = {
-			tyrone_ai_attack_country_allowed = yes
-			OR = {
-			is_subject_of = c:AUS
-				is_subject_of = c:KUK
+		OR = {
+			c:LMV ?= {
+				tyrone_ai_attack_country_allowed = yes
+				OR = {
+					is_subject_of = c:AUS
+					is_subject_of = c:KUK
+				}
+				NOT = { is_subject_of = ROOT }
 			}
-			NOT = { is_subject_of = ROOT }
+			AND = {
+				NOT = { exists = c:LMV }
+				OR = {
+					c:AUS ?= {
+						tyrone_ai_attack_country_allowed = yes
+						owns_entire_state_region = STATE_LOMBARDY
+						owns_entire_state_region = STATE_VENETIA
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
+					c:KUK ?= {
+						tyrone_ai_attack_country_allowed = yes
+						owns_entire_state_region = STATE_LOMBARDY
+						owns_entire_state_region = STATE_VENETIA
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+			}
 		}
 	}
 
 	when_taken = {
 		if = {
 			limit = {
-				tyrone_ai_attack_country_allowed = yes
-				c:LMV = { tyrone_ai_attack_country_allowed = yes }
+				exists = c:LMV
+				c:LMV = {
+					tyrone_ai_attack_country_allowed = yes
+					OR = {
+						is_subject_of = c:AUS
+						is_subject_of = c:KUK
+					}
+				}
 			}
 			create_diplomatic_play = {
 				type = dp_transfer_subject
+				target_country = c:LMV
+			}
+		}
+		else = {
+			create_diplomatic_play = {
+				type = dp_release_as_subject
 				target_country = c:LMV
 			}
 		}

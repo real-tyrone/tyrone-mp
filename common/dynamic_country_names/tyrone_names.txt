@@ -1,6 +1,37 @@
 ﻿
 INJECT:DEFAULT = {
 	dynamic_country_name = {
+		name = colonial_admin_madagascar
+		adjective = colonial_admin_madagascar_adj
+		use_overlord_prefix = yes
+
+		priority = 200
+
+		trigger = {
+			exists = scope:actor
+			scope:actor ?= {
+				is_subject = yes
+				any_scope_state = {
+					OR = {
+						state_region = s:STATE_NORTH_MADAGASCAR
+						state_region = s:STATE_SOUTH_MADAGASCAR
+					}
+				}
+				NOT = {
+					any_scope_state = {
+						NOT = {
+							OR = {
+								state_region = s:STATE_NORTH_MADAGASCAR
+								state_region = s:STATE_SOUTH_MADAGASCAR
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	dynamic_country_name = {
 		name = colonial_admin_angola
 		adjective = colonial_admin_angola_adj
 		use_overlord_prefix = yes
@@ -140,6 +171,43 @@ INJECT:DEFAULT = {
 				has_variable = ethiopia_subject_var
 			}
 		}
+	}
+}
+
+# Byzantium government names
+REPLACE_OR_CREATE:BYZ = {
+	dynamic_country_name = {
+		name = dyn_c_byz_theocracy
+		adjective = BYZ_ADJ
+		is_main_tag_only = yes
+		priority = 100
+		trigger = { coa_def_theocracy_flag_trigger = yes }
+	}
+	dynamic_country_name = {
+		name = dyn_c_byz_communist
+		adjective = BYZ_ADJ
+		is_main_tag_only = yes
+		priority = 100
+		trigger = { coa_def_communist_flag_trigger = yes }
+	}
+	dynamic_country_name = {
+		name = dyn_c_byz_empire
+		adjective = BYZ_ADJ
+		is_main_tag_only = yes
+		priority = 90
+		trigger = {
+			OR = {
+				coa_def_monarchy_flag_trigger = yes
+				coa_def_fascist_flag_trigger = yes
+			}
+		}
+	}
+	dynamic_country_name = {
+		name = dyn_c_byz_republic
+		adjective = BYZ_ADJ
+		is_main_tag_only = yes
+		priority = 80
+		trigger = { coa_def_republic_flag_trigger = yes }
 	}
 }
 
