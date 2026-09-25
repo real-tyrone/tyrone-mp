@@ -8685,28 +8685,39 @@ gbr_ai_return_kenya = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
-		has_game_rule = historical_africa_berlin_enabled
+		has_variable = claimed_kenya_var
 		custom_tooltip = {
 			text = berlin_conference_ended_tt
 			has_global_variable = berlin_conference_ended
 		}
-		c:GBR ?= this
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
 		s:STATE_KENYA = {
 			any_scope_state = {
-				has_claim_by = c:GBR
+				has_claim_by = ROOT
 			}
 			any_scope_state = {
-				NOT = { owner = c:GBR }
+				NOT = { owner = ROOT }
 				owner ?= {
 					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
-					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
-					NOT = { has_truce_with = c:GBR }
-					army_power_projection < c:GBR.army_power_projection
+					NOT = { has_truce_with = ROOT }
+					OR = {
+						AND = {
+							is_subject = no
+							army_power_projection < ROOT.army_power_projection
+						}
+						AND = {
+							is_subject = yes
+							top_overlord = {
+								tyrone_ai_attack_country_allowed = yes
+								NOT = { has_truce_with = ROOT }
+								army_power_projection < ROOT.army_power_projection
+							}
+						}
+					}
 				}
 			}
 		}
@@ -8729,11 +8740,23 @@ gbr_ai_return_kenya = {
 				owner ?= {
 					tyrone_ai_attack_country_allowed = yes
 					is_country_type = unrecognized
-					is_subject = no
 					is_at_war = no
 					is_diplomatic_play_committed_participant = no
 					NOT = { has_truce_with = ROOT }
-					army_power_projection < ROOT.army_power_projection
+					OR = {
+						AND = {
+							is_subject = no
+							army_power_projection < ROOT.army_power_projection
+						}
+						AND = {
+							is_subject = yes
+							top_overlord = {
+								tyrone_ai_attack_country_allowed = yes
+								NOT = { has_truce_with = ROOT }
+								army_power_projection < ROOT.army_power_projection
+							}
+						}
+					}
 				}
 			}
 		}
@@ -8747,11 +8770,23 @@ gbr_ai_return_kenya = {
 					owner ?= {
 						tyrone_ai_attack_country_allowed = yes
 						is_country_type = unrecognized
-						is_subject = no
 						is_at_war = no
 						is_diplomatic_play_committed_participant = no
 						NOT = { has_truce_with = ROOT }
-						army_power_projection < ROOT.army_power_projection
+						OR = {
+							AND = {
+								is_subject = no
+								army_power_projection < ROOT.army_power_projection
+							}
+							AND = {
+								is_subject = yes
+								top_overlord = {
+									tyrone_ai_attack_country_allowed = yes
+									NOT = { has_truce_with = ROOT }
+									army_power_projection < ROOT.army_power_projection
+								}
+							}
+						}
 					}
 				}
 				save_scope_as = gbr_kenya_return_state_scope
