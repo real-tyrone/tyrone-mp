@@ -87,10 +87,38 @@ non_aggression_pact = {
 
 		evaluation_chance = {
 			value = 0.1
+
+			add = {
+				value = country_rank
+				multiply = 0.025
+			}
 		}
 
 		proposal_weight = {
 			value = 1
+
+			if = {
+				limit = {
+					has_strategic_adjacency = scope:other_country
+				}
+				add = 2
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = cautious
+						}
+						has_attitude = {
+							who = scope:other_country
+							attitude = wary
+						}
+					}
+				}
+				add = 1
+			}
 		}
 
 		article_ai_usage = {
@@ -100,31 +128,135 @@ non_aggression_pact = {
 		inherent_accept_score = {
 			value = 0
 
+			# Set up the standard actor/target scopes used by diplomatic acceptance loc.
+			save_temporary_scope_as = target
+			scope:other_country = {
+				save_temporary_scope_as = actor
+			}
+
 			add = {
 				desc = "DIPLOMATIC_ACCEPTANCE_BASE_ADDITIONAL"
-				value = -100
+				value = -10
 			}
 
 			if = {
 				limit = {
-					OR = {
+					has_strategic_adjacency = scope:other_country
+				}
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_NEIGHBORS"
+					value = 15
+				}
+			}
+
+			if = {
+				limit = {
+					has_strategy = ai_strategy_armed_isolationism
+				}
+				add = {
+					desc = "DIPLOMATIC_ACCEPTANCE_ISOLATIONIST"
+					value = 15
+				}
+			}
+
+			# A stronger counterpart makes a promise of peace more valuable. Unlike a
+			# defensive pact, cap the bonus fairly low because no military aid is given.
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ARMY_STRENGTH"
+				value = "scope:other_country.ai_army_comparison(root)"
+				add = 0.5
+				multiply = 10
+				min = -20
+				max = 25
+			}
+
+			add = {
+				desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
+				if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = cooperative
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = conciliatory
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = genial
+							}
+						}
+					}
+					value = 25
+				}
+				else_if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = cautious
+						}
+					}
+					value = 20
+				}
+				else_if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = wary
+						}
+					}
+					value = 10
+				}
+				else_if = {
+					limit = {
+						has_attitude = {
+							who = scope:other_country
+							attitude = disinterested
+						}
+					}
+					value = -25
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_attitude = {
+								who = scope:other_country
+								attitude = belligerent
+							}
+							has_attitude = {
+								who = scope:other_country
+								attitude = domineering
+							}
+						}
+					}
+					value = -1000
+				}
+				else_if = {
+					limit = {
 						has_attitude = {
 							who = scope:other_country
 							attitude = antagonistic
 						}
-						has_attitude = {
-							who = scope:other_country
-							attitude = belligerent
-						}
-						has_attitude = {
-							who = scope:other_country
-							attitude = domineering
-						}
 					}
-				}
-				add = {
-					desc = "DIPLOMATIC_ACCEPTANCE_ATTITUDE"
 					value = -100
+				}
+			}
+		}
+
+		contextual_accept_score = {
+			if = {
+				limit = {
+					NOT = { exists = scope:is_treaty_active }
+					scope:treaty.binding_period >= 1825
+				}
+				subtract = {
+					desc = "DIPLOMATIC_ACCEPTANCE_BINDING_PERIOD"
+					value = scope:treaty.binding_period
+					divide = 3650
+					subtract = 25
+					max = 50
 				}
 			}
 		}
