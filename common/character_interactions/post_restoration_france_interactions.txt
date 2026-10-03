@@ -227,12 +227,12 @@ begin_reconquer_empire_napoleon = {
                 type = je_king_spain
             }
 			add_modifier = {
-			name = imperial_reconquests
-			days = long_modifier_time
+				name = imperial_reconquests
+				days = normal_modifier_time
 			}
 			add_modifier = {
-			name = grande_armee_return_modifier
-			days = long_modifier_time
+				name = grande_armee_return_modifier
+				days = normal_modifier_time
 			}
         }
 	}
@@ -266,7 +266,10 @@ reconquer_spain_napoleon = {
 	}
 
 	effect = {
-		c:FRA = { save_scope_as = france_scope }
+		c:FRA = { 
+			save_scope_as = france_scope 
+			change_infamy = 75
+		}
 		if = {
 			limit = {
 				exists = c:SPA
@@ -290,6 +293,7 @@ reconquer_spain_napoleon = {
 		set_variable = {
 			name = invaded_spain_var
 		}
+		
 	}
 }
 
@@ -320,6 +324,7 @@ reconquer_italy_napoleon = {
 			trigger_event ={
 				id = empire_of_france.3
 			}
+			change_infamy = 75
 		}
 	}
 }
@@ -328,6 +333,7 @@ coup_republic_napoleon = {
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 
 	potential = {
+		NOT = { has_variable = france_alsace_lorraine_republic_event_fired }
 		owner ?= scope:actor
 		owner ?= {
 			c:FRA = this
@@ -346,6 +352,7 @@ coup_republic_napoleon = {
 	}
 
 	possible = {
+		owner = { owns_entire_state_region = STATE_ALSACE_LORRAINE } 
 		custom_tooltip = {
   			text = bonapartist_support_or_legitimacy_tt
 			owner ?= {
