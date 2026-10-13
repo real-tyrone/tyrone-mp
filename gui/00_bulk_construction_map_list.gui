@@ -1,0 +1,256 @@
+﻿# Bulk Construction -- the whole mod's GUI, in one file.
+#
+# It redefines ONE vanilla type, build_building_map_list_panel (vanilla
+# gui/map_list_panel.gui:1091-1123), from our own file. No vanilla file is
+# overridden, so the patch-fragility surface is this ~35-line type rather
+# than 5,212 lines of copied panel.
+#
+# THE FILENAME IS LOAD-BEARING. The engine keeps the FIRST definition of a
+# type that it reads, and files are read in name order, so `00_` sorts ahead
+# of vanilla's `map_list_panel.gui` and wins. An identical earlier attempt
+# named `zz_bulk_construction_types.gui` sorted AFTER it and silently lost --
+# it parsed with no errors and the panel simply rendered vanilla's version.
+# Confirmed 2026-09-16 by launching both at once and labelling them
+# differently. This convention is also what the Community Mod Framework uses
+# (`00_MPM_building_browser_panel.gui`). Do not rename this file.
+#
+# @constants are file-scoped, so vanilla's @panel_width is not visible here.
+# Ours must stay equal to it (gui/map_list_panel.gui:3); asserted by
+# check_references.check_bc_panel_width_matches_vanilla.
+@bc_panel_width = 540
+
+types map_list_panel_types {
+	type build_building_map_list_panel = map_list_panel {
+		name = "build_building_map_list_panel"
+		datamodel_reuse_widgets = yes
+
+		blockoverride "headers" {
+			direction = vertical
+
+			construction_filters = {}
+			### BULK BUILD -- start ##################################
+			# Below the filters on purpose: this acts on whatever the filters
+			# above are currently showing, so it must read as their consequence.
+			#
+			# It builds by triggering the game's OWN + button
+			# (MapListOption.OnClick, gui/map_list_panel.gui:230) once per
+			# valid row, per level. Nothing here decides what may be built,
+			# what it costs, or who pays -- that is the whole no-cheat claim
+			# (docs/bulk-construction-spec.md section 1a), and it is why this
+			# iterates AccessValidOptions and never the Failed or Invalid
+			# lists.
+			#
+			# MEASURED 2026-09-16, and the reason it is safe to wire OnClick
+			# here at all: one PdxGuiTriggerAllAnimations press produced
+			# exactly one pass -- 123 firings against a panel reading
+			# "valid 123", in a single burst, with nothing before or after.
+			# The earlier trigger_on_create version fired 777 times unprompted
+			# across four panel rebuilds; see docs/engine-notes.md
+			# "visible does not gate widget creation".
+			flowcontainer = {
+				direction = vertical
+				parentanchor = hcenter
+				margin = { 10 4 }
+				spacing = 4
+
+				flowcontainer = {
+					direction = horizontal
+					parentanchor = hcenter
+					spacing = 6
+					# The selected level is marked with vanilla's own
+					# `highlighted_square_selection` template (gui/shared/selections.gui),
+					# used the same way vanilla marks a selected default_button at
+					# gui/building_browser_panel.gui:961-976. Templates are global,
+					# unlike @constants -- confirmed by vanilla `using =` it across
+					# 10+ files. This used to point at a hand-written
+					# `buttons/button_selected_frame.dds`, which does not exist in the
+					# game: no texture, no error.log line, no highlight. Guarded now by
+					# check_references.check_gui_textures_exist.
+
+					textbox = {
+						autoresize = yes
+						align = nobaseline
+						parentanchor = vcenter
+						text = "BC_LEVELS_LABEL"
+					}
+
+					button = {
+						size = { 52 28 }
+						using = default_button
+						text = "BC_LEVELS_1"
+						onclick = "[GetVariableSystem.Set('bc_levels', '1')]"
+
+						icon = {
+							visible = "[Not(Or(GetVariableSystem.HasValue('bc_levels', '5'), GetVariableSystem.HasValue('bc_levels', '10')))]"
+							using = highlighted_square_selection
+						}
+					}
+					button = {
+						size = { 52 28 }
+						using = default_button
+						text = "BC_LEVELS_5"
+						onclick = "[GetVariableSystem.Set('bc_levels', '5')]"
+
+						icon = {
+							visible = "[GetVariableSystem.HasValue('bc_levels', '5')]"
+							using = highlighted_square_selection
+						}
+					}
+					button = {
+						size = { 52 28 }
+						using = default_button
+						text = "BC_LEVELS_10"
+						onclick = "[GetVariableSystem.Set('bc_levels', '10')]"
+
+						icon = {
+							visible = "[GetVariableSystem.HasValue('bc_levels', '10')]"
+							using = highlighted_square_selection
+						}
+					}
+				}
+
+				# 500 wide, not the original 420: the translations run up to ~11%%
+				# longer than English (Russian and Polish are the worst), and this
+				# label has to fit a three-digit count too. Vanilla's own filter row
+				# above sets minimumsize 554 (@panel_width_plus_14), so 500 is
+				# comfortably inside the panel.
+				button = {
+					visible = "[Not(Or(GetVariableSystem.HasValue('bc_levels', '5'), GetVariableSystem.HasValue('bc_levels', '10')))]"
+					size = { 500 30 }
+					using = default_button
+					text = "BC_BUILD_BUTTON_1"
+					tooltip = "BC_BUILD_TOOLTIP_1"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_1')]"
+				}
+				button = {
+					visible = "[GetVariableSystem.HasValue('bc_levels', '5')]"
+					size = { 500 30 }
+					using = default_button
+					text = "BC_BUILD_BUTTON_5"
+					tooltip = "BC_BUILD_TOOLTIP_5"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_1')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_2')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_3')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_4')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_5')]"
+				}
+				button = {
+					visible = "[GetVariableSystem.HasValue('bc_levels', '10')]"
+					size = { 500 30 }
+					using = default_button
+					text = "BC_BUILD_BUTTON_10"
+					tooltip = "BC_BUILD_TOOLTIP_10"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_1')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_2')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_3')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_4')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_5')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_6')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_7')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_8')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_9')]"
+					onclick = "[PdxGuiTriggerAllAnimations('bc_build_10')]"
+				}
+			}
+
+			# The workers. One hidden row per valid option, each carrying one
+			# state per level. They do nothing until a button triggers a state
+			# by name -- there is deliberately no trigger_on_create anywhere.
+			#
+			# Each of these carried a mirrored bc_log_N state that counted the
+			# build calls into debug.log while the mechanism was unproven. That
+			# question is settled (docs/bulk-construction-spec.md section 4) and
+			# the instrumentation is gone, so the build we playtest is now
+			# byte-identical to the build that ships. To count again:
+			# `git show 17faaec -- bulk_construction/` has it.
+			widget = {
+				size = { 1 1 }
+
+				flowcontainer = {
+					direction = vertical
+					datamodel = "[MapListPanel.AccessValidOptions]"
+
+					item = {
+						widget = {
+							size = { 1 1 }
+
+							state = {
+								name = bc_build_1
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_2
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_3
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_4
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_5
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_6
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_7
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_8
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_9
+								on_start = "[MapListOption.OnClick]"
+							}
+
+							state = {
+								name = bc_build_10
+								on_start = "[MapListOption.OnClick]"
+							}
+						}
+					}
+				}
+			}
+			### BULK BUILD -- end ####################################
+
+			construction_headers_condensed = {
+				visible = "[Not(GetVariableSystem.Exists('construction_list_toggle_full_or_condensed'))]"
+			}
+			construction_headers_full = {
+				visible = "[GetVariableSystem.Exists('construction_list_toggle_full_or_condensed')]"
+			}
+		}
+
+		blockoverride "item" {
+			item = {
+				container = {
+					min_width = @bc_panel_width
+
+					construction_interaction_item_condensed = {
+						visible = "[Not(GetVariableSystem.Exists('construction_list_toggle_full_or_condensed'))]"
+					}
+
+					construction_interaction_item_full = {
+						visible = "[GetVariableSystem.Exists('construction_list_toggle_full_or_condensed')]"
+					}
+				}
+			}
+		}
+	}
+}
