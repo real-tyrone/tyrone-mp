@@ -1,0 +1,50 @@
+﻿# On-actions are additive lists; do not replace code-provided handlers.
+on_diplomatic_play_started = {
+	on_actions = {
+		tyr_am_play_started
+	}
+}
+
+tyr_am_play_started = {
+	effect = {
+		if = {
+			limit = {
+				has_global_variable = tyr_am_active
+				global_var:tyr_am_phase = 1
+				scope:initiator ?= {
+					tyr_am_main_power = yes
+				}
+				scope:target ?= {
+					tyr_am_present = yes
+				}
+				OR = {
+					is_diplomatic_play_type = dp_conquer_state
+					is_diplomatic_play_type = dp_return_state
+					is_diplomatic_play_type = dp_make_protectorate
+					is_diplomatic_play_type = dp_annex_subject
+					is_diplomatic_play_type = dp_reduce_autonomy
+				}
+			}
+			scope:initiator = {
+				tyr_am_penalize_aggression = yes
+			}
+		}
+	}
+}
+
+on_diplo_play_war_start = {
+	on_actions = {
+		tyr_am_war_started
+	}
+}
+
+tyr_am_war_started = {
+	effect = {
+		if = {
+			limit = {
+				has_global_variable = tyr_am_active
+			}
+			tyr_am_check_wars = yes
+		}
+	}
+}

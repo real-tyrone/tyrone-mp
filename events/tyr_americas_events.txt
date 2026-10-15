@@ -1,0 +1,1533 @@
+﻿namespace = tyr_americas
+namespace = brazil_guide
+
+brazil_guide.1 = {
+	type = country_event
+	placement = root
+	title = brazil_guide.1.t
+	desc = brazil_guide.1.d
+	flavor = brazil_guide.1.f
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+	duration = 3
+	option = {
+		name = brazil_guide.1.a
+		default_option = yes
+		custom_tooltip = brazil_guide_bloc_advice_tt
+		custom_tooltip = brazil_guide_reconquista_warning_tt
+	}
+}
+
+tyr_americas.13 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.13.t
+	desc = tyr_americas.13.d
+	flavor = tyr_americas.13.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.13.a
+		default_option = yes
+	}
+}
+
+tyr_americas.1 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.1.t
+	desc = tyr_americas.1.d
+	flavor = tyr_americas.1.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.1.a
+		default_option = yes
+		tyr_am_prepare_actor = yes
+		custom_tooltip = tyr_am_rules_tt
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.2 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.2.t
+	desc = tyr_americas.2.d
+	flavor = tyr_americas.2.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.2.a
+		default_option = yes
+		custom_tooltip = tyr_am_phase_change_tt
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.3 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.3.t
+	desc = tyr_americas.3.d
+	flavor = tyr_americas.3.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.3.a
+		default_option = yes
+		custom_tooltip = tyr_am_brazil_route_tt
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.10 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.10.t
+	desc = tyr_americas.10.d
+	flavor = tyr_americas.10.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		NOT = {
+			tyr_am_invitation_still_valid = yes
+		}
+	}
+	option = {
+		name = tyr_americas.10.a
+		trigger = {
+			tyr_am_invitation_still_valid = yes
+		}
+		join_power_bloc = scope:tyr_am_patron
+		remove_variable = tyr_am_invitation_pending
+		if = {
+			limit = {
+				c:BRZ ?= this
+			}
+			set_variable = tyr_am_brazil_locked
+		}
+		change_relations = {
+			country = scope:tyr_am_patron
+			value = 15
+		}
+		ai_chance = {
+			base = 70
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_invite_tier
+					var:tyr_am_offer_invite_tier = 2
+				}
+				add = 70
+			}
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_invite_tier
+					var:tyr_am_offer_invite_tier = 3
+				}
+				add = 140
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.10.b
+		default_option = yes
+		remove_variable = tyr_am_invitation_pending
+		change_relations = {
+			country = scope:tyr_am_patron
+			value = -10
+		}
+		ai_chance = {
+			base = 30
+		}
+	}
+}
+
+tyr_americas.11 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.11.t
+	desc = tyr_americas.11.d
+	flavor = tyr_americas.11.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		OR = {
+			NOT = {
+				tyr_am_active = yes
+			}
+			NOT = {
+				exists = scope:tyr_am_patron
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.11.a
+		trigger = {
+			can_create_treaty = {
+				first_country = root
+				second_country = scope:tyr_am_patron
+				is_draft = no
+				binding_period = {
+					years = 5
+				}
+				articles_to_create = {
+					{
+						article = foreign_investment_rights
+						source_country = root
+						target_country = scope:tyr_am_patron
+					}
+				}
+			}
+		}
+		create_treaty = {
+			first_country = root
+			second_country = scope:tyr_am_patron
+			is_draft = no
+			binding_period = {
+				years = 5
+			}
+			articles_to_create = {
+				{
+					article = foreign_investment_rights
+					source_country = root
+					target_country = scope:tyr_am_patron
+				}
+			}
+		}
+		ai_chance = {
+			base = 40
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_treaty_tier
+					var:tyr_am_offer_treaty_tier = 2
+				}
+				add = 40
+			}
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_treaty_tier
+					var:tyr_am_offer_treaty_tier = 3
+				}
+				add = 80
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.11.b
+		trigger = {
+			can_create_treaty = {
+				first_country = root
+				second_country = scope:tyr_am_patron
+				is_draft = no
+				binding_period = {
+					years = 5
+				}
+				articles_to_create = {
+					{
+						article = defensive_pact
+					}
+				}
+			}
+		}
+		create_treaty = {
+			first_country = root
+			second_country = scope:tyr_am_patron
+			is_draft = no
+			binding_period = {
+				years = 5
+			}
+			articles_to_create = {
+				{
+					article = defensive_pact
+				}
+			}
+		}
+		ai_chance = {
+			base = 35
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_treaty_tier
+					var:tyr_am_offer_treaty_tier = 2
+				}
+				add = 35
+			}
+			modifier = {
+				trigger = {
+					has_variable = tyr_am_offer_treaty_tier
+					var:tyr_am_offer_treaty_tier = 3
+				}
+				add = 70
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.11.c
+		default_option = yes
+		change_relations = {
+			country = scope:tyr_am_patron
+			value = -5
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+tyr_americas.12 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.12.t
+	desc = tyr_americas.12.d
+	flavor = tyr_americas.12.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		NOT = {
+			tyr_am_active = yes
+		}
+	}
+	option = {
+		name = tyr_americas.12.a
+		if = {
+			limit = { country_definition = cd:BRZ }
+			custom_tooltip = tyr_am_brazil_policy_war_lock_tt
+			hidden_effect = {
+				set_variable = tyr_am_brazil_policy_south_america_locked
+			}
+		}
+		set_variable = {
+			name = tyr_am_sponsor_choice
+			value = 1
+		}
+		ai_chance = {
+			base = 30
+		}
+	}
+	option = {
+		name = tyr_americas.12.b
+		if = {
+			limit = { country_definition = cd:BRZ }
+			custom_tooltip = tyr_am_brazil_policy_war_lock_tt
+			hidden_effect = {
+				set_variable = tyr_am_brazil_policy_south_america_locked
+			}
+		}
+		set_variable = {
+			name = tyr_am_sponsor_choice
+			value = 2
+		}
+		ai_chance = {
+			base = 30
+		}
+	}
+	option = {
+		name = tyr_americas.12.c
+		if = {
+			limit = { country_definition = cd:BRZ }
+			custom_tooltip = tyr_am_brazil_colossus_unlock_tt
+			hidden_effect = {
+				set_variable = can_have_ty_gp_var
+			}
+		}
+		default_option = yes
+		set_variable = {
+			name = tyr_am_sponsor_choice
+			value = 0
+		}
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+tyr_americas.20 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.20.t
+	desc = tyr_am_preview_event_20_desc
+	flavor = tyr_americas.20.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.20.a
+		trigger = {
+			exists = c:BRZ
+			c:BRZ = {
+				is_in_same_power_bloc = root
+			}
+		}
+		hidden_effect = {
+			tyr_am_reward_brazil = yes
+		}
+		show_as_tooltip = {
+			tyr_am_preview_final_settlement = yes
+		}
+		ai_chance = {
+			base = 65
+		}
+	}
+	option = {
+		name = tyr_americas.20.b
+		default_option = yes
+		custom_tooltip = tyr_am_settlement_preserved_tt
+		ai_chance = {
+			base = 35
+		}
+	}
+}
+
+tyr_americas.21 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.21.t
+	desc = tyr_am_preview_event_21_desc
+	flavor = tyr_americas.21.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.21.a
+		default_option = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.22 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.22.t
+	desc = tyr_americas.22.d
+	flavor = tyr_americas.22.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.22.a
+		default_option = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.23 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.23.t
+	desc = tyr_americas.23.d
+	flavor = tyr_americas.23.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.23.a
+		default_option = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.24 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.24.t
+	desc = tyr_am_preview_event_24_desc
+	flavor = tyr_americas.24.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.24.a
+		default_option = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.30 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.30.t
+	desc = tyr_americas.30.war_desc
+	flavor = tyr_americas.30.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	immediate = {
+		tyr_am_prepare_actor = yes
+	}
+	cancellation_trigger = {
+		NOT = {
+			tyr_am_war_event_valid = yes
+		}
+	}
+	option = {
+		name = tyr_americas.30.a
+		trigger = {
+			tyr_am_can_pay = yes
+			scope:tyr_am_target = {
+				NOT = {
+					this = root
+				}
+			}
+			NOT = {
+				has_war_with = scope:tyr_am_target
+			}
+		}
+		tyr_am_prepare_actor = yes
+		tyr_am_assist = yes
+		ai_chance = {
+			base = 40
+		}
+	}
+	option = {
+		name = tyr_americas.30.b
+		if = {
+			limit = {
+				has_modifier = tyr_am_pressure
+			}
+			remove_modifier = tyr_am_pressure
+		}
+		add_modifier = {
+			name = tyr_am_pressure
+			years = 1
+		}
+		scope:tyr_am_belligerent = {
+			if = {
+				limit = {
+					has_modifier = tyr_am_pressure
+				}
+				remove_modifier = tyr_am_pressure
+			}
+			add_modifier = {
+				name = tyr_am_pressure
+				years = 1
+			}
+		}
+		change_relations = {
+			country = scope:tyr_am_belligerent
+			value = -20
+		}
+		ai_chance = {
+			base = 30
+		}
+	}
+	option = {
+		name = tyr_americas.30.c
+		trigger = {
+			tyr_am_can_intervene = yes
+		}
+		custom_tooltip = tyr_am_join_american_war_tt
+		scope:tyr_am_war = {
+			join_war = {
+				target = root
+				side = scope:tyr_am_target
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = tyr_americas.30.d
+		trigger = {
+			tyr_am_war_event_valid = yes
+			trigger_if = {
+				limit = {
+					exists = scope:tyr_am_war
+				}
+				scope:tyr_am_war = {
+					exists = diplomatic_play
+					NOT = {
+						is_war_participant = root
+					}
+				}
+			}
+		}
+		custom_tooltip = tyr_am_demand_whitepeace_tt
+		save_scope_as = tyr_am_observer
+		scope:tyr_am_belligerent = {
+			trigger_event = {
+				id = tyr_americas.32
+				popup = yes
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = tyr_americas.30.e
+		default_option = yes
+		change_relations = {
+			country = scope:tyr_am_belligerent
+			value = 10
+		}
+		change_relations = {
+			country = scope:tyr_am_target
+			value = -15
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.31 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.31.t
+	desc = tyr_americas.31.d
+	flavor = tyr_americas.31.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	option = {
+		name = tyr_americas.31.a
+		default_option = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+tyr_americas.32 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.32.t
+	desc = tyr_americas.32.d
+	flavor = tyr_americas.32.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		OR = {
+			NOT = {
+				tyr_am_war_event_valid = yes
+			}
+			NOT = {
+				exists = scope:tyr_am_observer
+			}
+			trigger_if = {
+				limit = {
+					exists = scope:tyr_am_war
+				}
+				NOT = {
+					exists = scope:tyr_am_war.diplomatic_play
+				}
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.32.a
+		trigger = {
+			tyr_am_war_event_valid = yes
+			exists = scope:tyr_am_war.diplomatic_play
+		}
+		custom_tooltip = {
+			text = tyr_am_accept_whitepeace_tt
+			scope:tyr_am_war.diplomatic_play = {
+				end_play = yes
+			}
+		}
+		ai_chance = {
+			base = 40
+		}
+	}
+	option = {
+		name = tyr_americas.32.b
+		default_option = yes
+		change_relations = {
+			country = scope:tyr_am_observer
+			value = -20
+		}
+		custom_tooltip = tyr_am_refuse_whitepeace_tt
+		scope:tyr_am_observer = {
+			trigger_event = {
+				id = tyr_americas.33
+				popup = yes
+			}
+		}
+		ai_chance = {
+			base = 60
+		}
+	}
+}
+
+tyr_americas.40 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.40.t
+	desc = tyr_americas.40.d
+	flavor = tyr_americas.40.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		OR = {
+			NOT = {
+				tyr_am_active = yes
+			}
+			NOT = {
+				exists = c:BRZ
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.40.a
+		default_option = yes
+		trigger = {
+			tyr_am_federation_eligible = yes
+			c:BRZ = {
+				tyr_am_brazil_autonomous = yes
+			}
+		}
+		c:BRZ = {
+			annex = root
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = tyr_americas.40.b
+		trigger = {
+			NOT = {
+				AND = {
+					is_player = no
+					is_subject_of = c:BRZ
+					liberty_desire < 50
+				}
+			}
+		}
+		set_variable = {
+			name = tyr_am_federation_refused
+			years = 2
+		}
+		ai_chance = {
+			base = 75
+		}
+	}
+}
+
+tyr_americas.41 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.41.t
+	desc = tyr_americas.41.d
+	flavor = tyr_americas.41.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		OR = {
+			NOT = {
+				exists = c:BRZ
+			}
+			NOT = {
+				exists = scope:tyr_am_patron
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.41.a
+		trigger = {
+			exists = c:BRZ
+			c:BRZ = {
+				is_in_same_power_bloc = scope:tyr_am_patron
+			}
+			is_in_same_power_bloc = scope:tyr_am_patron
+			NOT = {
+				has_war_with = c:BRZ
+			}
+		}
+		c:BRZ = {
+			annex = root
+			if = {
+				limit = {
+					NOT = {
+						any_state_in_tyr_am_south_america = {
+							NOT = {
+								owner = c:BRZ
+							}
+						}
+					}
+				}
+				set_variable = tyr_am_unified_south_america
+			}
+		}
+		ai_chance = {
+			base = 35
+		}
+	}
+	option = {
+		name = tyr_americas.41.b
+		default_option = yes
+		ai_chance = {
+			base = 65
+		}
+	}
+}
+
+
+
+tyr_americas.60 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.60.t
+	desc = tyr_americas.60.d
+	flavor = tyr_americas.60.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+	trigger = {
+		is_player = no
+		tyr_am_active = yes
+		c:ARG = this
+		any_state_in_tyr_am_10 = {
+			owner = {
+				is_country_type = decentralized
+			}
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			is_player = yes
+			NOT = {
+				tyr_am_active = yes
+			}
+			NOT = {
+				c:ARG = this
+			}
+			NOT = {
+				any_state_in_tyr_am_10 = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.60.a
+		default_option = yes
+		trigger = {
+			is_player = no
+			tyr_am_active = yes
+			c:ARG = this
+			any_state_in_tyr_am_10 = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+		}
+		every_state_in_tyr_am_10 = {
+			limit = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+			set_state_owner = root
+		}
+		hidden_effect = {
+			tyr_am_update_control = yes
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = tyr_americas.60.b
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+tyr_americas.61 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.61.t
+	desc = tyr_americas.61.d
+	flavor = tyr_americas.61.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+	trigger = {
+		is_player = no
+		tyr_am_active = yes
+		c:CHL = this
+		any_state_in_tyr_am_9 = {
+			owner = {
+				is_country_type = decentralized
+			}
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			is_player = yes
+			NOT = {
+				tyr_am_active = yes
+			}
+			NOT = {
+				c:CHL = this
+			}
+			NOT = {
+				any_state_in_tyr_am_9 = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.61.a
+		default_option = yes
+		trigger = {
+			is_player = no
+			tyr_am_active = yes
+			c:CHL = this
+			any_state_in_tyr_am_9 = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+		}
+		every_state_in_tyr_am_9 = {
+			limit = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+			set_state_owner = root
+		}
+		hidden_effect = {
+			tyr_am_update_control = yes
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = tyr_americas.61.b
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+tyr_americas.62 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.62.t
+	desc = tyr_americas.62.d
+	flavor = tyr_americas.62.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+	trigger = {
+		is_player = no
+		tyr_am_active = yes
+		c:PRG = this
+		any_state_in_tyr_am_11 = {
+			owner = {
+				is_country_type = decentralized
+			}
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			is_player = yes
+			NOT = {
+				tyr_am_active = yes
+			}
+			NOT = {
+				c:PRG = this
+			}
+			NOT = {
+				any_state_in_tyr_am_11 = {
+					owner = {
+						is_country_type = decentralized
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = tyr_americas.62.a
+		default_option = yes
+		trigger = {
+			is_player = no
+			tyr_am_active = yes
+			c:PRG = this
+			any_state_in_tyr_am_11 = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+		}
+		every_state_in_tyr_am_11 = {
+			limit = {
+				owner = {
+					is_country_type = decentralized
+				}
+			}
+			set_state_owner = root
+		}
+		hidden_effect = {
+			tyr_am_update_control = yes
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = tyr_americas.62.b
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+tyr_americas.70 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.70.t
+	desc = tyr_am_preview_event_70_desc
+	flavor = tyr_americas.70.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	trigger = {
+		has_variable = tyr_am_victory_reward_pending
+	}
+	cancellation_trigger = {
+		NOT = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+	}
+	immediate = {
+		tyr_am_select_patria = yes
+	}
+	option = {
+		name = tyr_americas.70.a
+		default_option = yes
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+		custom_tooltip = {
+			text = tyr_americas.70.a_tt
+			tyr_am_settle_direct_annex = yes
+		}
+		add_modifier = {
+			name = tyr_am_reward_spain_annex
+		}
+		hidden_effect = {
+			set_variable = tyr_am_reconquista_settlement_completed
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 50
+		}
+	}
+	option = {
+		name = tyr_americas.70.b
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+			exists = c:BRZ
+			c:BRZ = {
+				is_in_same_power_bloc = root
+			}
+		}
+		custom_tooltip = {
+			text = tyr_americas.70.b_tt
+			tyr_am_settle_brazil_grant = yes
+		}
+		add_modifier = {
+			name = tyr_am_reward_spain_brazil
+		}
+		hidden_effect = {
+			set_variable = tyr_am_reconquista_settlement_completed
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = tyr_americas.70.c
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+			trigger_if = {
+				limit = {
+					exists = var:tyr_am_patria_recipient
+				}
+				var:tyr_am_patria_recipient = {
+					is_subject_of = root
+					exists = capital
+					capital = {
+						is_in_geographic_region = geographic_region_tyr_am_all
+					}
+				}
+				trigger_if = {
+					limit = {
+						exists = c:ki_PAG
+					}
+					var:tyr_am_patria_recipient = c:ki_PAG
+				}
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+		custom_tooltip = {
+			text = tyr_americas.70.c_tt
+			tyr_am_settle_patria = yes
+		}
+		add_modifier = {
+			name = tyr_am_reward_spain_patria
+		}
+		hidden_effect = {
+			set_variable = tyr_am_reconquista_settlement_completed
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = tyr_americas.70.viceroyalties
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+			has_journal_entry = je_reconquista
+			custom_tooltip = {
+				text = tyr_am_viceroyalties_available_tt
+				tyr_am_viceroyalty_available = {
+					AREA = new_spain
+					TAG = SC1
+				}
+				tyr_am_viceroyalty_available = {
+					AREA = new_grenada
+					TAG = SC2
+				}
+				tyr_am_viceroyalty_available = {
+					AREA = peru
+					TAG = SC3
+				}
+				tyr_am_viceroyalty_available = {
+					AREA = la_plata
+					TAG = SC4
+				}
+			}
+		}
+		custom_tooltip = {
+			text = tyr_americas.70.d_tt
+			tyr_am_settle_viceroyalties = yes
+		}
+		add_modifier = {
+			name = tyr_am_reward_spain_annex
+		}
+		hidden_effect = {
+			set_variable = tyr_am_reconquista_settlement_completed
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+tyr_americas.71 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.71.t
+	desc = tyr_am_preview_event_71_desc
+	flavor = tyr_americas.71.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	trigger = {
+		has_variable = tyr_am_victory_reward_pending
+	}
+	cancellation_trigger = {
+		NOT = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+	}
+	option = {
+		name = tyr_americas.71.a
+		default_option = yes
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+		custom_tooltip = {
+			text = tyr_americas.71.a_tt
+		}
+		add_modifier = {
+			name = tyr_am_reward_usa_migration
+		}
+		hidden_effect = {
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 50
+		}
+	}
+	option = {
+		name = tyr_americas.71.b
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+		custom_tooltip = {
+			text = tyr_americas.71.b_tt
+		}
+		add_modifier = {
+			name = tyr_am_reward_usa_workforce
+		}
+		hidden_effect = {
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = tyr_americas.71.c
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+		custom_tooltip = {
+			text = tyr_americas.71.c_tt
+		}
+		add_modifier = {
+			name = tyr_am_reward_usa_navy
+		}
+		hidden_effect = {
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+tyr_americas.72 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.72.t
+	desc = tyr_am_preview_event_72_desc
+	flavor = tyr_americas.72.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	trigger = {
+		has_variable = tyr_am_victory_reward_pending
+	}
+	cancellation_trigger = {
+		NOT = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+	}
+	option = {
+		name = tyr_americas.72.a
+		default_option = yes
+		trigger = {
+			has_variable = tyr_am_victory_reward_pending
+		}
+		custom_tooltip = {
+			text = tyr_americas.72.a_tt
+			tyr_am_settle_brazil_victory = yes
+		}
+		add_modifier = {
+			name = tyr_am_reward_brazil
+		}
+		hidden_effect = {
+			remove_variable = tyr_am_victory_reward_pending
+			remove_variable = tyr_am_patria_recipient
+		}
+		ai_chance = {
+			base = 50
+		}
+	}
+}
+
+tyr_americas.33 = {
+	type = country_event
+	placement = root
+	title = tyr_americas.33.t
+	desc = tyr_americas.33.d
+	flavor = tyr_americas.33.f
+	event_image = {
+		video = "unspecific_world_fair"
+	}
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	duration = 3
+	cancellation_trigger = {
+		NOT = {
+			tyr_am_war_event_valid = yes
+		}
+	}
+	option = {
+		name = tyr_americas.33.a
+		trigger = {
+			tyr_am_can_intervene = yes
+		}
+		custom_tooltip = tyr_am_join_american_war_tt
+		scope:tyr_am_war = {
+			join_war = {
+				target = root
+				side = scope:tyr_am_target
+			}
+		}
+		ai_chance = {
+			base = 60
+		}
+	}
+	option = {
+		name = tyr_americas.33.b
+		default_option = yes
+		ai_chance = {
+			base = 40
+		}
+	}
+}
+
+namespace = debug_reconquista
+
+debug_reconquista.1 = {
+	type = country_event
+	placement = root
+	title = debug_reconquista.1.t
+	desc = debug_reconquista.1.d
+	flavor = debug_reconquista.1.f
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	duration = 3
+	option = {
+		name = debug_reconquista.1.phase_1
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+		}
+		custom_tooltip = debug_reconquista_phase_1_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 1
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.phase_2
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+		}
+		custom_tooltip = debug_reconquista_phase_2_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 2
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.phase_3
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+		}
+		custom_tooltip = debug_reconquista_phase_3_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 3
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.win_usa
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+			exists = c:USA
+		}
+		custom_tooltip = debug_reconquista_win_usa_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 3
+			}
+			# Let the JE evaluate complete and run its real on_complete transaction.
+			set_global_variable = {
+				name = tyr_am_outcome
+				value = 2
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.win_brazil
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+			exists = c:BRZ
+		}
+		custom_tooltip = debug_reconquista_win_brazil_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 3
+			}
+			# Let the JE evaluate complete and run its real on_complete transaction.
+			set_global_variable = {
+				name = tyr_am_outcome
+				value = 3
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.win_spain
+		trigger = {
+			has_global_variable = tyr_am_active
+			has_global_variable = tyr_am_phase
+			has_global_variable = tyr_am_outcome
+			NOT = {
+				has_global_variable = tyr_am_finished
+			}
+			exists = global_var:tyr_am_spain
+		}
+		custom_tooltip = debug_reconquista_win_spain_tt
+		hidden_effect = {
+			tyr_am_debug_set_phase = {
+				PHASE = 3
+			}
+			# Let the JE evaluate complete and run its real on_complete transaction.
+			set_global_variable = {
+				name = tyr_am_outcome
+				value = 1
+			}
+		}
+	}
+	option = {
+		name = debug_reconquista.1.close
+		default_option = yes
+	}
+}

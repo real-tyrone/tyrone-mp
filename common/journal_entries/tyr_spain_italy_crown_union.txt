@@ -49,10 +49,10 @@ je_tyr_spain_italy_dynastic_contest = {
 	}
 
 	should_be_involved = {
-		OR = { c:SPA = root c:ITA = root }
+		OR = { AND = { exists = c:SPA c:SPA ?= root } AND = { exists = c:ITA c:ITA ?= root } }
 	}
 	should_show_when_not_involved = {
-		OR = { this = c:SPA this = c:ITA }
+		OR = { AND = { exists = c:SPA c:SPA ?= this } AND = { exists = c:ITA c:ITA ?= this } }
 	}
 
 	# A contextless JE has no country root; this hook runs for each participant.
@@ -133,12 +133,12 @@ je_tyr_crown_union_consolidation = {
 	possible = {
 		OR = {
 			AND = {
-				this = c:SPA
+				AND = { exists = c:SPA c:SPA ?= this }
 				exists = c:ITA
 				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
 			AND = {
-				this = c:ITA
+				AND = { exists = c:ITA c:ITA ?= this }
 				exists = c:SPA
 				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
@@ -148,7 +148,7 @@ je_tyr_crown_union_consolidation = {
 	immediate = {
 		remove_variable = tyr_crown_union_war_unlocked
 		if = {
-			limit = { this = c:SPA }
+			limit = { AND = { exists = c:SPA c:SPA ?= this } }
 			c:ITA = { remove_variable = tyr_crown_union_rejected }
 		}
 		else = {
@@ -159,12 +159,12 @@ je_tyr_crown_union_consolidation = {
 	complete = {
 		OR = {
 			AND = {
-				this = c:SPA
+				AND = { exists = c:SPA c:SPA ?= this }
 				exists = c:ITA
 				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
 			AND = {
-				this = c:ITA
+				AND = { exists = c:ITA c:ITA ?= this }
 				exists = c:SPA
 				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
@@ -180,12 +180,12 @@ je_tyr_crown_union_consolidation = {
 		NOT = {
 			OR = {
 				AND = {
-					this = c:SPA
+					AND = { exists = c:SPA c:SPA ?= this }
 					exists = c:ITA
 					c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 				}
 				AND = {
-					this = c:ITA
+					AND = { exists = c:ITA c:ITA ?= this }
 					exists = c:SPA
 					c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 				}
