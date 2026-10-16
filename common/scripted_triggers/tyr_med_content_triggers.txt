@@ -17,11 +17,6 @@ tyr_spanish_content_country = {
 	OR = {
 		c:SPA ?= this
 		tyr_med_spanish_origin = yes
-		AND = {
-			exists = c:IBE
-			c:IBE ?= this
-			was_formed_from = SPA
-		}
 	}
 }
 
@@ -48,15 +43,8 @@ tyr_italian_content_country = {
 # Resolves the national actor for trigger evaluation, including existing saves.
 tyr_resolve_spanish_content_trigger = {
 	trigger_if = {
-		limit = { exists = c:MED c:MED ?= { tyr_med_spanish_origin = yes } }
+		limit = { exists = c:MED c:MED = { tyr_med_spanish_origin = yes } }
 		c:MED = { save_temporary_scope_as = tyr_spanish_content_scope }
-	}
-	trigger_else_if = {
-		limit = {
-			exists = c:IBE
-			c:IBE ?= { tyr_spanish_content_country = yes }
-		}
-		c:IBE = { save_temporary_scope_as = tyr_spanish_content_scope }
 	}
 	trigger_else = {
 		c:SPA ?= { save_temporary_scope_as = tyr_spanish_content_scope }
@@ -66,18 +54,14 @@ tyr_resolve_spanish_content_trigger = {
 tyr_spanish_content_exists = {
 	OR = {
 		exists = c:SPA
-		AND = { exists = c:MED c:MED ?= { tyr_med_spanish_origin = yes } }
-		AND = {
-			exists = c:IBE
-			c:IBE ?= { tyr_spanish_content_country = yes }
-		}
+		AND = { exists = c:MED c:MED = { tyr_med_spanish_origin = yes } }
 	}
 }
 
 # Resolves the national actor for trigger evaluation, including existing saves.
 tyr_resolve_italian_content_trigger = {
 	trigger_if = {
-		limit = { exists = c:MED c:MED ?= { tyr_med_italian_origin = yes } }
+		limit = { exists = c:MED c:MED = { tyr_med_italian_origin = yes } }
 		c:MED = { save_temporary_scope_as = tyr_italian_content_scope }
 	}
 	trigger_else = {
@@ -88,6 +72,6 @@ tyr_resolve_italian_content_trigger = {
 tyr_italian_content_exists = {
 	OR = {
 		exists = c:ITA
-		AND = { exists = c:MED c:MED ?= { tyr_med_italian_origin = yes } }
+		AND = { exists = c:MED c:MED = { tyr_med_italian_origin = yes } }
 	}
 }
