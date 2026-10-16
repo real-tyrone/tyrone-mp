@@ -1,4 +1,4 @@
-﻿# World-level JE lifecycle. Provincial fractions are verified in vanilla colonial_claims_check.
+# World-level JE lifecycle. Provincial fractions are verified in vanilla colonial_claims_check.
 # AREA and COUNT parameters are constants taken from tyr_americas_regions.txt.
 tyr_am_resolve_actors = {
 	remove_global_variable = tyr_am_spain
@@ -43,6 +43,52 @@ tyr_am_initialize = {
 		value = 0
 	}
 	tyr_am_resolve_actors = yes
+	# Give eligible principal contestants a bloc when the contest begins.
+	c:BRZ ?= {
+		if = {
+			limit = {
+				is_in_power_bloc = no
+				is_subject = no
+				country_rank >= rank_value:major_power
+			}
+			create_power_bloc = {
+				name = "Carta de São Cristóvão"
+				map_color = { 8 89 54 }
+				identity = identity_sovereign_empire
+				principle = principle_vassalization_1
+			}
+		}
+	}
+	global_var:tyr_am_spain ?= {
+		if = {
+			limit = {
+				is_in_power_bloc = no
+				is_subject = no
+				country_rank >= rank_value:major_power
+			}
+			create_power_bloc = {
+				name = "Unión Real de las Españas"
+				map_color = { 216 168 36 }
+				identity = identity_sovereign_empire
+				principle = principle_vassalization_1
+			}
+		}
+	}
+	c:USA ?= {
+		if = {
+			limit = {
+				is_in_power_bloc = no
+				is_subject = no
+				country_rank >= rank_value:major_power
+			}
+			create_power_bloc = {
+				name = "The League of Free Nations"
+				map_color = { 10 32 79 }
+				identity = identity_trade_league
+				principle = principle_external_trade_1
+			}
+		}
+	}
 	set_global_variable = {
 		name = tyr_am_1_influence
 		value = 50

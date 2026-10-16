@@ -1,0 +1,29 @@
+tyrone_ems_dispatch = {
+	is_shown = {
+		c:NGF ?= this
+		NOT = { has_variable = tyrone_ems_dispatch_used }
+	}
+
+	possible = {
+		is_subject = no
+		aggressive_diplomatic_plays_permitted = yes
+		exists = c:FRA
+		NOT = { has_truce_with = c:FRA }
+		c:FRA ?= {
+			owns_entire_state_region = STATE_ALSACE_LORRAINE
+		}
+	}
+
+	when_taken = {
+		set_variable = tyrone_ems_dispatch_used
+		set_variable = tyrone_ems_dispatch_participant
+		c:FRA = { set_variable = tyrone_ems_dispatch_participant }
+		create_diplomatic_play = {
+			type = dp_tyrone_franco_prussian_war
+			target_country = c:FRA
+			target_state = s:STATE_ALSACE_LORRAINE.region_state:FRA
+		}
+	}
+
+	ai_chance = { value = 0 }
+}

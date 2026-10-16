@@ -1,4 +1,4 @@
-﻿on_monthly_pulse_country = {
+on_monthly_pulse_country = {
     on_actions = {
     }
     random_events = {
@@ -998,5 +998,176 @@ tyrone_sync_ai_budget_buff = {
 			limit = { has_modifier = ai_budget_buff }
 			remove_modifier = ai_budget_buff
 		}
+	}
+}
+
+# Consolidated from tyrone_komei_on_actions.txt
+# The global yearly pulse fires on the first day of the year.
+on_yearly_pulse = {
+	on_actions = { tyrone_komei_historical_death_check }
+}
+
+tyrone_komei_historical_death_check = {
+	effect = {
+		c:JAP ?= {
+			if = {
+				limit = {
+					game_date >= 1867.1.1
+					NOT = { has_variable = tyrone_komei_death_event_scheduled }
+					any_scope_character = { has_template = JAP_komei_yamato }
+				}
+				if = {
+					limit = { game_date < 1867.1.2 }
+					set_variable = tyrone_komei_death_event_scheduled
+					trigger_event = { id = tyrone_komei.1 days = 29 popup = yes }
+				}
+				else_if = {
+					# Catch up for existing campaigns already past the historical date.
+					limit = { game_date >= 1867.1.30 }
+					set_variable = tyrone_komei_death_event_scheduled
+					trigger_event = { id = tyrone_komei.1 popup = yes }
+				}
+			}
+		}
+	}
+}
+
+# Consolidated from tyrone_ninko_on_actions.txt
+# The global yearly pulse fires on the first day of the year.
+on_yearly_pulse = {
+	on_actions = { tyrone_ninko_historical_death_check }
+}
+
+tyrone_ninko_historical_death_check = {
+	effect = {
+		c:JAP ?= {
+			if = {
+				limit = {
+					game_date >= 1846.1.1
+					NOT = { has_variable = tyrone_ninko_death_event_scheduled }
+					any_scope_character = { has_template = JAP_ninko_yamato }
+				}
+				if = {
+					limit = { game_date < 1846.1.2 }
+					set_variable = tyrone_ninko_death_event_scheduled
+					trigger_event = { id = tyrone_ninko.1 days = 51 popup = yes }
+				}
+				else_if = {
+					# Catch up for existing campaigns already past the historical date.
+					limit = { game_date >= 1846.2.21 }
+					set_variable = tyrone_ninko_death_event_scheduled
+					trigger_event = { id = tyrone_ninko.1 popup = yes }
+				}
+			}
+		}
+	}
+}
+
+# Consolidated from tyr_americas_on_actions.txt
+# On-actions are additive lists; do not replace code-provided handlers.
+on_diplomatic_play_started = {
+	on_actions = {
+		tyr_am_play_started
+	}
+}
+
+tyr_am_play_started = {
+	effect = {
+		if = {
+			limit = {
+				has_global_variable = tyr_am_active
+				global_var:tyr_am_phase = 1
+				scope:initiator ?= {
+					tyr_am_main_power = yes
+				}
+				scope:target ?= {
+					tyr_am_present = yes
+				}
+				OR = {
+					is_diplomatic_play_type = dp_conquer_state
+					is_diplomatic_play_type = dp_return_state
+					is_diplomatic_play_type = dp_make_protectorate
+					is_diplomatic_play_type = dp_annex_subject
+					is_diplomatic_play_type = dp_reduce_autonomy
+				}
+			}
+			scope:initiator = {
+				tyr_am_penalize_aggression = yes
+			}
+		}
+	}
+}
+
+on_diplo_play_war_start = {
+	on_actions = {
+		tyr_am_war_started
+	}
+}
+
+tyr_am_war_started = {
+	effect = {
+		if = {
+			limit = {
+				has_global_variable = tyr_am_active
+			}
+			tyr_am_check_wars = yes
+		}
+	}
+}
+
+# Consolidated from tyr_gcol_on_actions.txt
+# Keep administration running after the objective JE has completed.
+on_monthly_pulse_country = {
+	on_actions = {
+		tyr_gcol_monthly
+	}
+}
+
+tyr_gcol_monthly = {
+	trigger = {
+		c:GER ?= root
+		has_variable = tyr_gcol_started
+	}
+
+	effect = {
+		tyr_gcol_refresh_colonies = yes
+		if = {
+			limit = {
+				has_variable = tyr_gcol_completed
+				NOT = {
+					has_journal_entry = je_tyr_gcol_administration
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_gcol_final_score
+					}
+				}
+				set_variable = {
+					name = tyr_gcol_final_score
+					value = tyr_gcol_objectives_met
+				}
+			}
+			remove_modifier = tyr_gcol_overseas_empire
+			add_journal_entry = {
+				type = je_tyr_gcol_administration
+			}
+		}
+		tyr_gcol_apply_colonial_rewards = yes
+	}
+}
+
+# Consolidated from tyr_kk_on_actions.txt
+# Kulturkampf activation is handled by the journal prerequisites. No unification timer.
+
+# Military technology imbalance update
+on_acquired_technology = {
+	on_actions = { tyrone_update_military_tech_imbalance }
+}
+
+tyrone_update_military_tech_imbalance = {
+	effect = {
+		tyrone_refresh_military_tech_imbalance = yes
 	}
 }

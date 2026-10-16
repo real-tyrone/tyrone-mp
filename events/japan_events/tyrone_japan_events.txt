@@ -1,0 +1,152 @@
+namespace = tyrone_boshin
+
+# Called for the imperial side by the historical and alternate Boshin War events.
+tyrone_boshin.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyrone_boshin.1.t
+	desc = tyrone_boshin.1.d
+	flavor = tyrone_boshin.1.f
+	duration = 3
+
+	event_image = { video = "ep2_japanese_artillery" }
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	immediate = {
+		# Transfer only portions not already held by the imperial side.
+		s:STATE_KYUSHU = {
+			every_scope_state = {
+				limit = { NOT = { owner = ROOT } }
+				set_state_owner = ROOT
+			}
+		}
+		s:STATE_CHUGOKU = {
+			every_scope_state = {
+				limit = { NOT = { owner = ROOT } }
+				set_state_owner = ROOT
+			}
+		}
+		# Re-select after transfers so merged states are incorporated as well.
+		every_scope_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_KYUSHU
+					state_region = s:STATE_CHUGOKU
+				}
+			}
+			set_state_type = incorporated
+		}
+	}
+
+	option = {
+		name = tyrone_boshin.1.a
+		default_option = yes
+		# Immediate has already transferred the states; show their resulting effects
+		# without the non-owner filter, and do not execute the effects again.
+		show_as_tooltip = {
+			s:STATE_KYUSHU = {
+				every_scope_state = {
+					set_state_owner = ROOT
+				}
+			}
+			s:STATE_CHUGOKU = {
+				every_scope_state = {
+					set_state_owner = ROOT
+				}
+			}
+		}
+	}
+}
+
+namespace = tyrone_komei
+
+tyrone_komei.1 = {
+	type = country_event
+	placement = root
+	duration = 3
+	title = tyrone_komei.1.t
+	desc = tyrone_komei.1.d
+	gui_window = event_window_1char_tabloid
+	left_icon = scope:tyrone_komei_scope
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	trigger = {
+		any_scope_character = { has_template = JAP_komei_yamato }
+		NOT = { has_variable = tyrone_komei_death_event_resolved }
+	}
+	cancellation_trigger = { NOT = { exists = scope:tyrone_komei_scope } }
+	immediate = {
+		set_variable = tyrone_komei_death_event_resolved
+		random_scope_character = {
+			limit = { has_template = JAP_komei_yamato }
+			save_scope_as = tyrone_komei_scope
+			# Keep him alive while the player is choosing an outcome.
+			set_character_immortal = yes
+		}
+	}
+	option = {
+		name = tyrone_komei.1.a
+		default_option = yes
+		ai_chance = { base = 100 }
+		scope:tyrone_komei_scope = {
+			hidden_effect = { set_character_immortal = no }
+			kill_character = yes
+		}
+	}
+	option = {
+		name = tyrone_komei.1.b
+		ai_chance = { base = 0 }
+		custom_tooltip = tyrone_komei_survives_tt
+		scope:tyrone_komei_scope = { add_trait = scarred }
+		hidden_effect = {
+			scope:tyrone_komei_scope = { set_character_immortal = no }
+		}
+	}
+}
+
+namespace = tyrone_ninko
+
+tyrone_ninko.1 = {
+	type = country_event
+	placement = root
+	duration = 3
+	title = tyrone_ninko.1.t
+	desc = tyrone_ninko.1.d
+	gui_window = event_window_1char_tabloid
+	left_icon = scope:tyrone_ninko_scope
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	trigger = {
+		any_scope_character = { has_template = JAP_ninko_yamato }
+		NOT = { has_variable = tyrone_ninko_death_event_resolved }
+	}
+	cancellation_trigger = { NOT = { exists = scope:tyrone_ninko_scope } }
+	immediate = {
+		set_variable = tyrone_ninko_death_event_resolved
+		random_scope_character = {
+			limit = { has_template = JAP_ninko_yamato }
+			save_scope_as = tyrone_ninko_scope
+			# Keep him alive while the player is choosing an outcome.
+			set_character_immortal = yes
+		}
+	}
+	option = {
+		name = tyrone_ninko.1.a
+		default_option = yes
+		ai_chance = { base = 100 }
+		scope:tyrone_ninko_scope = {
+			hidden_effect = { set_character_immortal = no }
+			kill_character = yes
+		}
+	}
+	option = {
+		name = tyrone_ninko.1.b
+		ai_chance = { base = 0 }
+		custom_tooltip = tyrone_ninko_survives_tt
+		# Survival leaves the Emperor subject to normal mortality.
+		hidden_effect = {
+			scope:tyrone_ninko_scope = { set_character_immortal = no }
+		}
+	}
+}

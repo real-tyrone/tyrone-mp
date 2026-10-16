@@ -1,0 +1,25 @@
+dp_tyrone_franco_prussian_war = {
+	war_goal = conquer_state
+	requires_interest_marker = no
+	texture = "gfx/interface/icons/war_goals/conquer_state.dds"
+
+	selectable_in_lens = { always = no }
+	possible = { aggressive_diplomatic_plays_permitted = yes }
+	ai_acceptance_max = 0
+
+	# Participant flags remain on the countries if NGF forms Germany during the war.
+	on_war_begins = {
+		every_country = {
+			limit = { has_variable = tyrone_ems_dispatch_participant }
+			add_modifier = { name = tyrone_franco_prussian_military_supplies }
+		}
+	}
+
+	on_war_end = {
+		every_country = {
+			limit = { has_variable = tyrone_ems_dispatch_participant }
+			remove_modifier = tyrone_franco_prussian_military_supplies
+			remove_variable = tyrone_ems_dispatch_participant
+		}
+	}
+}
