@@ -578,6 +578,101 @@ law_chi_national_resources_commission = {
 
 }
 
+law_chi_cooperative_ownership = {
+	group = lawgroup_economic_system
+	parent = law_cooperative_ownership
+	
+	icon = "gfx/interface/icons/law_icons/cooperative_ownership.dds"
+	
+	progressiveness = 100
+	
+	disallowing_laws = {
+		law_serfdom
+		law_women_in_the_fields
+	}
+
+	is_visible = { 
+		c:CHI ?= this
+	}
+	
+	unlocking_laws = {
+		law_council_republic	
+		law_corporate_state			
+	}
+	
+	on_activate = {		
+		custom_tooltip = {
+			text = enact_law_radical_leftist_economy_warning_desc
+		}	
+	}
+	
+	modifier = {
+		state_shopkeepers_investment_pool_efficiency_mult = 0.50 #0.25
+		state_farmers_investment_pool_efficiency_mult = 0.25
+		state_machinists_investment_pool_efficiency_mult = 0.50 
+		state_engineers_investment_pool_efficiency_mult = 0.50 
+		state_clerks_investment_pool_efficiency_mult = 0.5
+		country_private_construction_allocation_mult = 0.5
+		country_government_dividends_reinvestment_add = 1.0
+		building_company_worker_dividends_add = 0.75
+		country_free_charters_add = 2	# 1
+		country_max_companies_add = 1
+		building_group_bg_manufacturing_allowed_collectivization_add = 1.0
+		building_group_bg_mining_allowed_collectivization_add = 1.0
+		building_group_bg_extraction_allowed_collectivization_add = 1.0
+		building_group_bg_power_allowed_collectivization_add = 1.0
+		building_group_bg_private_infrastructure_allowed_collectivization_add = 1.0
+		building_group_bg_arts_allowed_collectivization_add = 1.0
+		building_group_bg_manufacturing_employee_mult = -0.15
+		building_group_bg_mining_employee_mult = -0.1
+		building_group_bg_service_employee_mult = -0.20
+		country_foreign_collectivization_bool = yes
+	}
+	
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+		
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+		
+		if = {
+			limit = { 
+				has_law_or_variant = law_type:law_council_republic
+			}
+			add = 400
+		}
+	}
+	
+	ai_impose_chance = {
+		value = 0
+		
+		if = {
+			limit = {
+				has_law = law_type:law_cooperative_ownership			
+			}
+			
+			add = base_impose_law_weight
+			multiply = 10.0
+		}
+			
+		if = {
+			limit = {
+				scope:target_country = {
+					c:BIC ?= this
+					OR = {	
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}	
+}
+
 law_extraction_economy = {
 	group = lawgroup_economic_system
 	
@@ -586,7 +681,7 @@ law_extraction_economy = {
 
 	is_visible = {
 		NOT = { c:BIC ?= this }
-		
+		NOT = { c:CHI ?= this }
 	}
 
 	disallowing_laws = {
@@ -786,13 +881,11 @@ law_laissez_faire = {
 		NOT = {
 			has_law = law_type:law_laissez_faire_plus
 		}
-	}
-
-	is_visible = {
 		NOT = {
 			c:CHI ?= this
 		}
 	}
+
 
 	progressiveness = 50
 	
@@ -1054,9 +1147,7 @@ law_command_economy = {
 	}
 
 	is_visible = {
-		NOT ={
-			c:CHI ?= this
-		}
+		NOT = { c:CHI ?= this }
 	}	
 
 	unlocking_technologies = {
