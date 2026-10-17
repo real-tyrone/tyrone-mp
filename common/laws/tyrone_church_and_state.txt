@@ -4,6 +4,42 @@
 		state_conversion_mult = 1
 		state_decree_cost_mult = -0.1
 	}
+
+	ai_impose_chance = {
+		value = 0
+
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_state_atheism
+				power_bloc ?= { has_identity = identity:identity_ideological_union }
+			}
+
+			add = base_impose_law_weight
+
+			# Atheist leaders of ideological unions want to spread the cult of reason
+			if = {
+				limit = { scope:target_country = { has_law_or_variant = law_type:law_total_separation } }
+				multiply = 0.5
+			}
+			else = {
+				multiply = 2
+			}
+		}
+
+		if = {
+			limit = {
+				scope:target_country = {
+					is_india_tag_trigger = yes
+					OR = {
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
 }
 
 law_chi_confucius = { 
@@ -15,7 +51,7 @@ law_chi_confucius = {
 	progressiveness = 0
 
 	is_visible = {
-		c:CHI ?= this
+		is_china_tag_trigger = yes
 	}
 
 	can_enact = {

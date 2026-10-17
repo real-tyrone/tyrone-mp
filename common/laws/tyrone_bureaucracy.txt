@@ -1,9 +1,13 @@
 ﻿INJECT:law_hereditary_bureaucrats = {
 	is_visible = {
 		NOR = {
-			c:AUS ?= this
-			c:CHI ?= this
-			AND = { exists = c:AUS is_subject_of = c:AUS }
+			is_india_tag_trigger = yes
+			c:AUS ?= this # For the Austrian Empire and its subjects
+			is_china_tag_trigger = yes # Disabled for China, as it has its own version of this law
+			AND = {
+				exists = c:AUS
+				is_subject_of = c:AUS
+			}
 		}
 	}
     modifier = {
@@ -26,7 +30,7 @@ law_chi_yinpriv = {
 	progressiveness = 0
 
 	is_visible = {
-		c:CHI ?= this
+		is_china_tag_trigger = yes
 	}
 
 	disallowing_laws = {
@@ -82,7 +86,8 @@ REPLACE:law_appointed_bureaucrats = {
 	progressiveness = 0
 	
 	is_visible = {
-		NOT = { c:CHI ?= this } 
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
 	}
 
 	modifier = {
@@ -142,7 +147,7 @@ law_chi_purchaseof_office = {
 	progressiveness = 0 
 
 	is_visible = { 
-		c:CHI ?= this
+		is_china_tag_trigger = yes
 	}
 
 	disallowing_laws = {
@@ -198,7 +203,8 @@ REPLACE:law_elected_bureaucrats = {
 	progressiveness = 50
 
 	is_visible = { 
-		NOT = { c:CHI ?= this }
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
 	}
 	
 	can_enact = {
@@ -240,4 +246,50 @@ INJECT:law_military_bureaucrats = {
 	modifier = {
 		building_training_rate_mult = 0.20
 	}
+}
+
+
+
+law_chi_cadres = { 
+	group = lawgroup_bureaucracy 
+	parent = law_elected_bureaucrats 
+
+	icon = "gfx/interface/icons/law_icons/law_chi_elected_bureaucrats.dds"
+
+	progressiveness = 0 
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+
+	can_enact = { 
+		has_law_or_variant = law_type:law_council_republic 
+	}
+
+	modifier = {
+		interest_group_ig_trade_unions_pol_str_mult = 0.25
+		country_bureaucracy_investment_cost_factor_mult = -0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.10
+		country_bureaucrats_pol_str_mult = 0.25
+		state_tax_capacity_mult = 0.50
+	}
+
+	on_enact = {
+		custom_tooltip = bureaucrats_pb_ig_shift_effect_tt
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_hereditary_bureaucrats
+			}
+			custom_tooltip = urban_aristocrats_int_ig_shift_effect_negative_tt
+		}
+	}
+
+	ai_enact_weight_modifier = { 
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
 }
