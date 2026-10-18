@@ -1,0 +1,60 @@
+scw_american_eligible = {
+
+	any_primary_culture = { has_discrimination_trait = language_hispanophone }
+	OR = {
+		OR = {
+			c:SPA ?= this
+			was_formed_from = SPA
+		}		
+		is_in_geographic_region = geographic_region_americas
+	}
+	is_revolutionary = no
+	is_secessionist = no
+	NOT = { is_country_type = colonial }
+	NOT = { has_variable = scw_running }
+
+}
+
+scw_member = {
+
+	scope:scw_sponsor = { has_variable = scw_running scw_valid_sponsor = yes }
+	scw_american_eligible = yes
+	is_in_same_power_bloc = scope:scw_sponsor
+	OR = { is_subject = no is_subject_of = scope:scw_sponsor }
+
+}
+
+scw_valid_sponsor = {
+
+	is_power_bloc_leader = yes
+	NOT = { has_variable = is_carlist_spain }
+	is_revolutionary = no
+	is_secessionist = no
+	trigger_if = {
+		limit = { has_variable = scw_bloc }
+		power_bloc = { this = prev.var:scw_bloc }
+	}
+
+}
+
+scw_federation_eligible = {
+
+
+	scope:scw_sponsor = { has_variable = scw_running is_power_bloc_leader = yes }
+	scw_american_eligible = yes
+	is_in_same_power_bloc = scope:scw_sponsor
+	OR = {
+		is_subject = no
+		is_subject_of = scope:scw_sponsor
+	}
+	is_at_war = no
+
+
+}
+
+scw_current_ballot = {
+	has_variable = scw_ballot
+	has_variable = scw_ballot_sponsor
+	var:scw_ballot_sponsor = { this = scope:scw_sponsor }
+	var:scw_ballot = scope:scw_sponsor.var:scw_congress_pending
+}

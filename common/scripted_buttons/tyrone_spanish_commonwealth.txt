@@ -1,0 +1,1427 @@
+scw_congress_button = {
+
+	name = scw_congress_button
+	desc = scw_congress_button_desc
+	visible = { has_variable = scw_running }
+	possible = {
+		custom_tooltip = {
+
+			text = scw_congress_progress_tt
+			var:scw_progress >= 25
+
+		}
+		custom_tooltip = {
+			text = scw_congress_cooldown_tt
+			NOT = { has_variable = scw_programme_cooldown }
+		}
+	}
+	effect = {
+		set_variable = { name = scw_programme_cooldown months = 24 }
+		trigger_event = { id = scw_events.6 popup = yes }
+	}
+	ai_chance = { value = 5 }
+
+}
+
+scw_gco_button = {
+
+
+
+
+
+
+
+
+
+
+	name = scw_gco_button
+	desc = scw_gco_button_desc
+	visible = {
+		has_variable = scw_running
+		NOT = { exists = c:GCO }
+	}
+	possible = {
+
+
+
+		custom_tooltip = {
+
+			text = scw_congress_progress_tt
+			var:scw_progress >= 25
+
+		}
+		custom_tooltip = {
+			text = scw_two_participants_tt
+			any_country = {
+				OR = {
+					c:CLM ?= this
+					c:VNZ ?= this
+					c:ECU ?= this
+				}
+				count >= 2
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:CLM }
+			trigger_if = {
+				limit = {
+					c:CLM = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_CLM_eligible_tt
+					c:CLM = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_CLM_ineligible_tt
+					c:CLM = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:VNZ }
+			trigger_if = {
+				limit = {
+					c:VNZ = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_VNZ_eligible_tt
+					c:VNZ = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_VNZ_ineligible_tt
+					c:VNZ = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:ECU }
+			trigger_if = {
+				limit = {
+					c:ECU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_ECU_eligible_tt
+					c:ECU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_ECU_ineligible_tt
+					c:ECU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+		custom_tooltip = {
+			text = scw_no_pending_congress_tt
+			NOT = { has_variable = scw_congress_pending }
+		}
+		custom_tooltip = {
+			text = scw_federation_button_delay_tt
+			NOT = { has_variable = scw_gco_button_delay }
+		}
+
+	}
+	effect = {
+		if = {
+			limit = {
+				has_variable = scw_congress_pending
+				var:scw_congress_pending = 1
+			}
+			custom_tooltip = scw_congress_already_pending_tt
+		}
+		else = {
+			save_scope_as = scw_sponsor
+			scw_clear_congress = yes
+			set_variable = { name = scw_voting_period days = 30 }
+			set_variable = { name = scw_gco_button_delay days = 30 }
+			set_variable = { name = scw_congress_pending value = 1 }
+			set_variable = { name = scw_congress_timeout months = 3 }
+			set_variable = { name = scw_expected_votes value = 0 }
+			if = {
+				limit = { exists = c:CLM }
+				c:CLM = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:VNZ }
+				c:VNZ = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:ECU }
+				c:ECU = { save_scope_as = scw_federal_leader }
+			}
+			set_variable = { name = scw_federal_leader value = scope:scw_federal_leader }
+			# First prepare every participant. No voting events may run during this pass.
+			every_country = {
+				limit = {
+					OR = {
+						c:CLM ?= this
+						c:VNZ ?= this
+						c:ECU ?= this
+					}
+				}
+				set_variable = { name = scw_ballot value = 1 }
+				set_variable = { name = scw_ballot_sponsor value = scope:scw_sponsor }
+				if = {
+					limit = { is_ai = yes }
+					set_variable = { name = scw_vote value = 1 }
+				}
+				else = {
+					set_variable = { name = scw_vote value = 0 }
+				}
+				scope:scw_sponsor = {
+					change_variable = { name = scw_expected_votes add = 1 }
+				}
+			}
+			# Every participant receives the event; AI consent is already guaranteed.
+			every_country = {
+				limit = {
+					OR = {
+						c:CLM ?= this
+						c:VNZ ?= this
+						c:ECU ?= this
+					}
+				}
+				trigger_event = { id = scw_events.20 popup = yes }
+			}
+			trigger_event = { id = scw_events.24 days = 30 }
+
+		}
+	}
+	ai_chance = { value = 1 }
+
+}
+
+scw_plt_button = {
+
+
+
+
+
+
+
+
+
+
+	name = scw_plt_button
+	desc = scw_plt_button_desc
+	visible = {
+		has_variable = scw_running
+		NOT = { exists = c:PLT }
+	}
+	possible = {
+
+
+
+		custom_tooltip = {
+
+			text = scw_congress_progress_tt
+			var:scw_progress >= 25
+
+		}
+		custom_tooltip = {
+			text = scw_two_participants_tt
+			any_country = {
+				OR = {
+					c:ARG ?= this
+					c:URU ?= this
+					c:PRG ?= this
+				}
+				count >= 2
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:ARG }
+			trigger_if = {
+				limit = {
+					c:ARG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_ARG_eligible_tt
+					c:ARG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_ARG_ineligible_tt
+					c:ARG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:URU }
+			trigger_if = {
+				limit = {
+					c:URU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_URU_eligible_tt
+					c:URU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_URU_ineligible_tt
+					c:URU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:PRG }
+			trigger_if = {
+				limit = {
+					c:PRG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_PRG_eligible_tt
+					c:PRG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_PRG_ineligible_tt
+					c:PRG = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+		custom_tooltip = {
+			text = scw_no_pending_congress_tt
+			NOT = { has_variable = scw_congress_pending }
+		}
+		custom_tooltip = {
+			text = scw_federation_button_delay_tt
+			NOT = { has_variable = scw_plt_button_delay }
+		}
+
+	}
+	effect = {
+		if = {
+			limit = {
+				has_variable = scw_congress_pending
+				var:scw_congress_pending = 2
+			}
+			custom_tooltip = scw_congress_already_pending_tt
+		}
+		else = {
+			save_scope_as = scw_sponsor
+			scw_clear_congress = yes
+			set_variable = { name = scw_voting_period days = 30 }
+			set_variable = { name = scw_plt_button_delay days = 30 }
+			set_variable = { name = scw_congress_pending value = 2 }
+			set_variable = { name = scw_congress_timeout months = 3 }
+			set_variable = { name = scw_expected_votes value = 0 }
+			if = {
+				limit = { exists = c:ARG }
+				c:ARG = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:URU }
+				c:URU = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:PRG }
+				c:PRG = { save_scope_as = scw_federal_leader }
+			}
+			set_variable = { name = scw_federal_leader value = scope:scw_federal_leader }
+			# First prepare every participant. No voting events may run during this pass.
+			every_country = {
+				limit = {
+					OR = {
+						c:ARG ?= this
+						c:URU ?= this
+						c:PRG ?= this
+					}
+				}
+				set_variable = { name = scw_ballot value = 2 }
+				set_variable = { name = scw_ballot_sponsor value = scope:scw_sponsor }
+				if = {
+					limit = { is_ai = yes }
+					set_variable = { name = scw_vote value = 1 }
+				}
+				else = {
+					set_variable = { name = scw_vote value = 0 }
+				}
+				scope:scw_sponsor = {
+					change_variable = { name = scw_expected_votes add = 1 }
+				}
+			}
+			# Every participant receives the event; AI consent is already guaranteed.
+			every_country = {
+				limit = {
+					OR = {
+						c:ARG ?= this
+						c:URU ?= this
+						c:PRG ?= this
+					}
+				}
+				trigger_event = { id = scw_events.20 popup = yes }
+			}
+			trigger_event = { id = scw_events.24 days = 30 }
+
+		}
+	}
+	ai_chance = { value = 1 }
+
+}
+
+scw_uca_button = {
+
+
+
+
+
+
+
+
+
+
+	name = scw_uca_button
+	desc = scw_uca_button_desc
+	visible = {
+		has_variable = scw_running
+		NOT = { exists = c:UCA }
+	}
+	possible = {
+
+
+
+		custom_tooltip = {
+
+			text = scw_congress_progress_tt
+			var:scw_progress >= 25
+
+		}
+		custom_tooltip = {
+			text = scw_two_participants_tt
+			any_country = {
+				OR = {
+					c:GUA ?= this
+					c:ELS ?= this
+					c:HON ?= this
+					c:NIC ?= this
+					c:COS ?= this
+				}
+				count >= 2
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:GUA }
+			trigger_if = {
+				limit = {
+					c:GUA = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_GUA_eligible_tt
+					c:GUA = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_GUA_ineligible_tt
+					c:GUA = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:ELS }
+			trigger_if = {
+				limit = {
+					c:ELS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_ELS_eligible_tt
+					c:ELS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_ELS_ineligible_tt
+					c:ELS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:HON }
+			trigger_if = {
+				limit = {
+					c:HON = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_HON_eligible_tt
+					c:HON = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_HON_ineligible_tt
+					c:HON = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:NIC }
+			trigger_if = {
+				limit = {
+					c:NIC = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_NIC_eligible_tt
+					c:NIC = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_NIC_ineligible_tt
+					c:NIC = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:COS }
+			trigger_if = {
+				limit = {
+					c:COS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_COS_eligible_tt
+					c:COS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_COS_ineligible_tt
+					c:COS = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+
+
+		custom_tooltip = {
+			text = scw_no_pending_congress_tt
+			NOT = { has_variable = scw_congress_pending }
+		}
+		custom_tooltip = {
+			text = scw_federation_button_delay_tt
+			NOT = { has_variable = scw_uca_button_delay }
+		}
+
+	}
+	effect = {
+		if = {
+			limit = {
+				has_variable = scw_congress_pending
+				var:scw_congress_pending = 3
+			}
+			custom_tooltip = scw_congress_already_pending_tt
+		}
+		else = {
+			save_scope_as = scw_sponsor
+			scw_clear_congress = yes
+			set_variable = { name = scw_voting_period days = 30 }
+			set_variable = { name = scw_uca_button_delay days = 30 }
+			set_variable = { name = scw_congress_pending value = 3 }
+			set_variable = { name = scw_congress_timeout months = 3 }
+			set_variable = { name = scw_expected_votes value = 0 }
+			if = {
+				limit = { exists = c:GUA }
+				c:GUA = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:ELS }
+				c:ELS = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:HON }
+				c:HON = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:NIC }
+				c:NIC = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:COS }
+				c:COS = { save_scope_as = scw_federal_leader }
+			}
+			set_variable = { name = scw_federal_leader value = scope:scw_federal_leader }
+			# First prepare every participant. No voting events may run during this pass.
+			every_country = {
+				limit = {
+					OR = {
+						c:GUA ?= this
+						c:ELS ?= this
+						c:HON ?= this
+						c:NIC ?= this
+						c:COS ?= this
+					}
+				}
+				set_variable = { name = scw_ballot value = 3 }
+				set_variable = { name = scw_ballot_sponsor value = scope:scw_sponsor }
+				if = {
+					limit = { is_ai = yes }
+					set_variable = { name = scw_vote value = 1 }
+				}
+				else = {
+					set_variable = { name = scw_vote value = 0 }
+				}
+				scope:scw_sponsor = {
+					change_variable = { name = scw_expected_votes add = 1 }
+				}
+			}
+			# Every participant receives the event; AI consent is already guaranteed.
+			every_country = {
+				limit = {
+					OR = {
+						c:GUA ?= this
+						c:ELS ?= this
+						c:HON ?= this
+						c:NIC ?= this
+						c:COS ?= this
+					}
+				}
+				trigger_event = { id = scw_events.20 popup = yes }
+			}
+			trigger_event = { id = scw_events.24 days = 30 }
+
+		}
+	}
+	ai_chance = { value = 1 }
+
+}
+
+scw_pbc_button = {
+
+
+
+
+
+
+
+
+
+
+	name = scw_pbc_button
+	desc = scw_pbc_button_desc
+	visible = {
+		has_variable = scw_running
+		NOT = { exists = c:PBC }
+	}
+	possible = {
+
+
+
+		custom_tooltip = {
+
+			text = scw_congress_progress_tt
+			var:scw_progress >= 25
+
+		}
+		custom_tooltip = {
+			text = scw_two_participants_tt
+			any_country = {
+				OR = {
+					c:PEU ?= this
+					c:BOL ?= this
+					c:NPU ?= this
+					c:SPU ?= this
+				}
+				count >= 2
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:PEU }
+			trigger_if = {
+				limit = {
+					c:PEU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_PEU_eligible_tt
+					c:PEU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_PEU_ineligible_tt
+					c:PEU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:BOL }
+			trigger_if = {
+				limit = {
+					c:BOL = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_BOL_eligible_tt
+					c:BOL = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_BOL_ineligible_tt
+					c:BOL = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:NPU }
+			trigger_if = {
+				limit = {
+					c:NPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_NPU_eligible_tt
+					c:NPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_NPU_ineligible_tt
+					c:NPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+		trigger_if = {
+			limit = { exists = c:SPU }
+			trigger_if = {
+				limit = {
+					c:SPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+				custom_tooltip = {
+					text = scw_participant_SPU_eligible_tt
+					c:SPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+			trigger_else = {
+				custom_tooltip = {
+					text = scw_participant_SPU_ineligible_tt
+					c:SPU = {
+						AND = {
+							is_in_same_power_bloc = ROOT
+							scw_american_eligible = yes
+							OR = {
+								is_subject = no
+								is_subject_of = ROOT
+							}
+							is_at_war = no
+							has_variable = scw_membership_months
+							var:scw_membership_months >= 12
+							relations:ROOT >= 50
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+
+		custom_tooltip = {
+			text = scw_no_pending_congress_tt
+			NOT = { has_variable = scw_congress_pending }
+		}
+		custom_tooltip = {
+			text = scw_federation_button_delay_tt
+			NOT = { has_variable = scw_pbc_button_delay }
+		}
+
+	}
+	effect = {
+		if = {
+			limit = {
+				has_variable = scw_congress_pending
+				var:scw_congress_pending = 4
+			}
+			custom_tooltip = scw_congress_already_pending_tt
+		}
+		else = {
+			save_scope_as = scw_sponsor
+			scw_clear_congress = yes
+			set_variable = { name = scw_voting_period days = 30 }
+			set_variable = { name = scw_pbc_button_delay days = 30 }
+			set_variable = { name = scw_congress_pending value = 4 }
+			set_variable = { name = scw_congress_timeout months = 3 }
+			set_variable = { name = scw_expected_votes value = 0 }
+			if = {
+				limit = { exists = c:PEU }
+				c:PEU = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:BOL }
+				c:BOL = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:NPU }
+				c:NPU = { save_scope_as = scw_federal_leader }
+			}
+			else_if = {
+				limit = { exists = c:SPU }
+				c:SPU = { save_scope_as = scw_federal_leader }
+			}
+			set_variable = { name = scw_federal_leader value = scope:scw_federal_leader }
+			# First prepare every participant. No voting events may run during this pass.
+			every_country = {
+				limit = {
+					OR = {
+						c:PEU ?= this
+						c:BOL ?= this
+						c:NPU ?= this
+						c:SPU ?= this
+					}
+				}
+				set_variable = { name = scw_ballot value = 4 }
+				set_variable = { name = scw_ballot_sponsor value = scope:scw_sponsor }
+				if = {
+					limit = { is_ai = yes }
+					set_variable = { name = scw_vote value = 1 }
+				}
+				else = {
+					set_variable = { name = scw_vote value = 0 }
+				}
+				scope:scw_sponsor = {
+					change_variable = { name = scw_expected_votes add = 1 }
+				}
+			}
+			# Every participant receives the event; AI consent is already guaranteed.
+			every_country = {
+				limit = {
+					OR = {
+						c:PEU ?= this
+						c:BOL ?= this
+						c:NPU ?= this
+						c:SPU ?= this
+					}
+				}
+				trigger_event = { id = scw_events.20 popup = yes }
+			}
+			trigger_event = { id = scw_events.24 days = 30 }
+
+		}
+	}
+	ai_chance = { value = 1 }
+
+}
+
+scw_los_altos_button = {
+	name = scw_los_altos_button
+	desc = scw_los_altos_button_desc
+	visible = {
+		has_variable = scw_running
+		exists = c:ALT
+		NOT = { has_variable = scw_los_altos_resolved }
+	}
+	possible = {
+		custom_tooltip = {
+			text = scw_los_altos_bloc_tt
+			c:ALT = { is_in_same_power_bloc = ROOT }
+		}
+		custom_tooltip = {
+			text = scw_los_altos_pending_tt
+			NOT = { has_variable = scw_los_altos_pending }
+		}
+	}
+	effect = {
+		hidden_effect = {
+			set_variable = scw_los_altos_pending
+			save_scope_as = scw_sponsor
+		}
+		trigger_event = { id = scw_events.25 popup = yes }
+	}
+	ai_chance = { value = 1 }
+}

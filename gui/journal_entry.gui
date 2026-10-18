@@ -479,7 +479,7 @@ types journal_entry_panel_types {
 
 							# Default Green
 							green_progressbar_horizontal = {
-								visible = "[ScriptedProgressBar.IsDefaultGreen]"
+								visible = "[And(ScriptedProgressBar.IsDefaultGreen, Not(Or(EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_regions_bar_desc')), Or(EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_institutions_bar_desc')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_consolidation_bar_desc'))))))]"
 								block "progressbar_size" {
 									size = { 504 30 }
 								}
@@ -503,6 +503,64 @@ types journal_entry_panel_types {
 									align = right|nobaseline
 									margin_right = 10
 									parentanchor = right|vcenter
+								}
+							}
+
+							green_progressbar_horizontal = {
+								visible = "[EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_regions_bar_desc'))]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+								tooltip = "scw_regions_bar_tooltip"
+								blockoverride "values" {
+									value = "[FixedPointToFloat(JournalEntry.GetTopScope.sCountry('scw_sponsor').MakeScope.Var('scw_regional_points').GetValue)]"
+									min = 0
+									max = 60
+								}
+								textbox = {
+									text = "scw_regions_bar_value"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
+								}
+							}
+							green_progressbar_horizontal = {
+								visible = "[EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_institutions_bar_desc'))]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+								tooltip = "scw_institutions_bar_tooltip"
+								blockoverride "values" {
+									value = "[FixedPointToFloat(JournalEntry.GetTopScope.sCountry('scw_sponsor').MakeScope.Var('scw_institutions').GetValue)]"
+									min = 0
+									max = 40
+								}
+								textbox = {
+									text = "scw_institutions_bar_value"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
+								}
+							}
+							green_progressbar_horizontal = {
+								visible = "[EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_consolidation_bar_desc'))]"
+								block "progressbar_size" {
+									size = { 504 30 }
+								}
+								tooltip = "scw_consolidation_bar_tooltip"
+								blockoverride "values" {
+									value = "[FixedPointToFloat(JournalEntry.GetTopScope.sCountry('scw_sponsor').MakeScope.Var('scw_progress').GetValue)]"
+									min = 0
+									max = 100
+								}
+								textbox = {
+									text = "scw_consolidation_bar_value"
+									autoresize = yes
+									align = nobaseline
+									margin_left = 10
+									parentanchor = vcenter
 								}
 							}
 

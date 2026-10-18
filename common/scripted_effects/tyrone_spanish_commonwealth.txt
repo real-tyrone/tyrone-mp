@@ -1,0 +1,651 @@
+scw_remove_membership = {
+	hidden_effect = {
+
+		remove_modifier = scw_members_0
+		remove_modifier = scw_members_1
+		remove_modifier = scw_members_2
+		remove_modifier = scw_members_3
+		remove_modifier = scw_members_4
+		remove_modifier = scw_development
+		remove_modifier = scw_scholarship
+		remove_modifier = scw_innovation
+		remove_modifier = scw_trade
+		remove_modifier = scw_migration
+		remove_modifier = scw_cooperation
+		remove_variable = scw_membership_months
+		remove_variable = scw_member_stage
+
+	}
+}
+
+scw_refresh_package = {
+	hidden_effect = {
+
+
+		if = {
+			limit = {
+				NOT = { scw_member = yes }
+			}
+			remove_modifier = scw_members_0
+			remove_modifier = scw_members_1
+			remove_modifier = scw_members_2
+			remove_modifier = scw_members_3
+			remove_modifier = scw_members_4
+			remove_variable = scw_member_stage
+		}
+		else_if = {
+			limit = {
+				NOT = { var:scw_member_stage ?= scope:scw_sponsor.var:scw_stage }
+			}
+			remove_modifier = scw_members_0
+			remove_modifier = scw_members_1
+			remove_modifier = scw_members_2
+			remove_modifier = scw_members_3
+			remove_modifier = scw_members_4
+			set_variable = { name = scw_member_stage value = scope:scw_sponsor.var:scw_stage }
+			if = {
+				limit = { var:scw_member_stage = 0 }
+				add_modifier = { name = scw_members_0 }
+			}
+			if = {
+				limit = { var:scw_member_stage = 1 }
+				add_modifier = { name = scw_members_1 }
+			}
+			if = {
+				limit = { var:scw_member_stage = 2 }
+				add_modifier = { name = scw_members_2 }
+			}
+			if = {
+				limit = { var:scw_member_stage = 3 }
+				add_modifier = { name = scw_members_3 }
+			}
+			if = {
+				limit = { var:scw_member_stage = 4 }
+				add_modifier = { name = scw_members_4 }
+			}
+		}
+
+	}
+}
+
+scw_pay_for_programme = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = scw_running }
+			add_modifier = {
+				name = scw_funding
+				multiplier = { value = gdp multiply = 0.0002 min = 2000 }
+				months = 24
+			}
+		}
+		else = {
+			add_modifier = {
+				name = scw_funding
+				multiplier = { value = gdp multiply = 0.0001 min = 1000 }
+				months = 24
+			}
+		}
+	}
+}
+
+scw_add_institutions = {
+	hidden_effect = {
+
+
+		set_variable = {
+			name = scw_institutions value = { value = var:scw_institutions add = $AMOUNT$ min = 0 max = 40 }
+		}
+
+
+	}
+}
+
+scw_programme_reward = {
+	hidden_effect = {
+
+
+		save_scope_as = scw_sponsor
+		scw_pay_for_programme = yes
+		scw_add_institutions = { AMOUNT = 2 }
+		add_modifier = { name = $MODIFIER$ months = 24 }
+		every_country = {
+			limit = { scw_member = yes }
+			add_modifier = { name = $MODIFIER$ months = 24 }
+		}
+
+
+	}
+}
+
+scw_measure_regions = {
+	hidden_effect = {
+
+		set_variable = { name = scw_regional_points value = 0 }
+		set_variable = { name = scw_regions value = 0 }
+		set_variable = { name = scw_region_points value = 0 }
+		if = {
+			limit = {
+				s:STATE_MEXICO = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_WESTERN_CUBA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_SANTO_DOMINGO = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = { var:scw_region_points > 0 }
+			change_variable = { name = scw_regions add = 1 }
+		}
+		change_variable = { name = scw_regional_points add = var:scw_region_points }
+		set_variable = { name = scw_region_points value = 0 }
+		if = {
+			limit = {
+				s:STATE_GUATEMALA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_HONDURAS = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_NICARAGUA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = { var:scw_region_points > 0 }
+			change_variable = { name = scw_regions add = 1 }
+		}
+		change_variable = { name = scw_regional_points add = var:scw_region_points }
+		set_variable = { name = scw_region_points value = 0 }
+		if = {
+			limit = {
+				s:STATE_CUNDINAMARCA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_MIRANDA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_ECUADOR = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = { var:scw_region_points > 0 }
+			change_variable = { name = scw_regions add = 1 }
+		}
+		change_variable = { name = scw_regional_points add = var:scw_region_points }
+		set_variable = { name = scw_region_points value = 0 }
+		if = {
+			limit = {
+				s:STATE_LIMA = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_LA_PAZ = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_POTOSI = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = { var:scw_region_points > 0 }
+			change_variable = { name = scw_regions add = 1 }
+		}
+		change_variable = { name = scw_regional_points add = var:scw_region_points }
+		set_variable = { name = scw_region_points value = 0 }
+		if = {
+			limit = {
+				s:STATE_BUENOS_AIRES = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_URUGUAY = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = {
+				s:STATE_BAJO_PARAGUAY = {
+					any_scope_state = {
+						owner = { scw_member = yes }
+					}
+				}
+			}
+			change_variable = { name = scw_region_points add = 5 }
+		}
+		if = {
+			limit = { var:scw_region_points > 0 }
+			change_variable = { name = scw_regions add = 1 }
+		}
+		change_variable = { name = scw_regional_points add = var:scw_region_points }
+		set_variable = {
+			name = scw_regional_points value = { value = var:scw_regional_points max = 60 }
+		}
+
+	}
+}
+
+scw_clear_congress = {
+	hidden_effect = {
+
+		save_scope_as = scw_sponsor
+		every_country = {
+			limit = {
+				has_variable = scw_ballot
+				OR = {
+					var:scw_ballot_sponsor ?= { this = scope:scw_sponsor }
+					AND = {
+						NOT = { has_variable = scw_ballot_sponsor }
+						is_in_same_power_bloc = scope:scw_sponsor
+					}
+				}
+			}
+			remove_variable = scw_ballot
+			remove_variable = scw_ballot_sponsor
+			remove_variable = scw_vote
+		}
+		remove_variable = scw_congress_pending
+		remove_variable = scw_congress_timeout
+		remove_variable = scw_federal_leader
+		remove_variable = scw_expected_votes
+		remove_variable = scw_actual_votes
+		remove_variable = scw_vote_wait
+		remove_variable = scw_voting_period
+
+	}
+}
+
+scw_end_commonwealth = {
+	hidden_effect = {
+
+
+		save_scope_as = scw_sponsor
+		var:scw_bloc ?= { remove_modifier = scw_common_market }
+		remove_modifier = scw_active_leadership
+		remove_modifier = scw_charter_leadership
+		scw_remove_membership = yes
+		every_country = {
+			limit = { has_variable = scw_membership_months }
+			scw_remove_membership = yes
+		}
+		scw_clear_congress = yes
+		remove_variable = scw_running
+
+
+	}
+}
+
+scw_resolve_congress = {
+
+
+
+	hidden_effect = {
+		save_scope_as = scw_sponsor
+
+
+		if = {
+			limit = {
+				has_variable = scw_congress_pending
+				NOT = { has_variable = scw_voting_period }
+			}
+			set_variable = { name = scw_actual_votes value = 0 }
+			every_country = {
+				limit = { scw_current_ballot = yes }
+				scope:scw_sponsor = {
+					change_variable = { name = scw_actual_votes add = 1 }
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						NOT = { has_variable = scw_congress_timeout }
+						NOT = { var:scw_actual_votes = var:scw_expected_votes }
+						NOT = { exists = var:scw_federal_leader }
+						any_country = {
+							scw_current_ballot = yes OR = {
+								var:scw_vote = -1 NOT = { scw_federation_eligible = yes }
+							}
+						}
+						AND = { var:scw_congress_pending = 1 exists = c:GCO }
+						AND = { var:scw_congress_pending = 2 exists = c:PLT }
+						AND = { var:scw_congress_pending = 3 exists = c:UCA }
+						AND = { var:scw_congress_pending = 4 exists = c:PBC }
+
+					}
+				}
+				trigger_event = { id = scw_events.23 popup = yes }
+				scw_clear_congress = yes
+			}
+			else_if = {
+				limit = {
+					NOT = {
+						any_country = { scw_current_ballot = yes var:scw_vote = 0 }
+					}
+				}
+				if = {
+					limit = {
+						any_country = { scw_current_ballot = yes var:scw_vote = 2 }
+					}
+					clear_variable_list = scw_treaty_recipients
+					every_country = {
+						limit = { scw_current_ballot = yes }
+						scope:scw_sponsor = {
+							add_to_variable_list = { name = scw_treaty_recipients target = prev }
+						}
+						add_modifier = { name = scw_cooperation months = 24 }
+					}
+					trigger_event = { id = scw_events.22 popup = yes }
+				}
+				else = {
+					var:scw_federal_leader = { save_scope_as = scw_federal_leader }
+					every_country = {
+						limit = {
+							scw_current_ballot = yes NOT = { this = scope:scw_federal_leader }
+						}
+						every_primary_culture = {
+							limit = {
+								NOT = { is_primary_culture_of = scope:scw_federal_leader }
+							}
+							scope:scw_federal_leader = { add_primary_culture = PREV }
+						}
+						scope:scw_federal_leader = { annex = PREV }
+					}
+					if = {
+						limit = { var:scw_congress_pending = 1 }
+						scope:scw_federal_leader = { change_tag = GCO }
+					}
+					if = {
+						limit = { var:scw_congress_pending = 2 }
+						scope:scw_federal_leader = { change_tag = PLT }
+					}
+					if = {
+						limit = { var:scw_congress_pending = 3 }
+						scope:scw_federal_leader = { change_tag = UCA }
+					}
+					if = {
+						limit = { var:scw_congress_pending = 4 }
+						scope:scw_federal_leader = { change_tag = PBC }
+					}
+
+					scope:scw_federal_leader = {
+						add_modifier = { name = scw_reconstruction months = 60 }
+					}
+					trigger_event = { id = scw_events.21 popup = yes }
+				}
+				scw_clear_congress = yes
+			}
+		}
+
+
+	}
+
+
+
+}
+
+scw_monthly_update = {
+	hidden_effect = {
+
+
+		save_scope_as = scw_sponsor
+		scw_resolve_congress = yes
+		scw_measure_regions = yes
+		if = {
+			limit = {
+				NOT = { has_variable = scw_completed }
+			}
+			if = {
+				limit = {
+					var:scw_regional_points >= 15 power_bloc = { current_cohesion_number >= 60 }
+					is_at_war = no
+				}
+				scw_add_institutions = { AMOUNT = 0.25 }
+			}
+			else_if = {
+				limit = {
+					power_bloc = { current_cohesion_number < 30 }
+				}
+				scw_add_institutions = { AMOUNT = -0.25 }
+			}
+			set_variable = {
+				name = scw_progress value = { value = var:scw_regional_points add = var:scw_institutions max = 100 }
+			}
+			set_variable = { name = scw_stage value = 0 }
+			if = {
+				limit = { var:scw_progress >= 25 }
+				set_variable = { name = scw_stage value = 1 }
+				if = {
+					limit = {
+						NOT = { has_variable = scw_milestone_1 }
+					}
+					set_variable = scw_milestone_1
+					trigger_event = { id = scw_events.2 popup = yes }
+				}
+			}
+			if = {
+				limit = { var:scw_progress >= 50 }
+				set_variable = { name = scw_stage value = 2 }
+				if = {
+					limit = {
+						NOT = { has_variable = scw_milestone_2 }
+					}
+					set_variable = scw_milestone_2
+					trigger_event = { id = scw_events.3 popup = yes }
+				}
+			}
+			if = {
+				limit = { var:scw_progress >= 75 }
+				set_variable = { name = scw_stage value = 3 }
+				if = {
+					limit = {
+						NOT = { has_variable = scw_milestone_3 }
+					}
+					set_variable = scw_milestone_3
+					trigger_event = { id = scw_events.4 popup = yes }
+				}
+			}
+
+		}
+		else = {
+			set_variable = { name = scw_progress value = 100 }
+			set_variable = { name = scw_stage value = 4 }
+		}
+		scw_refresh_package = yes
+		every_country = {
+			limit = { scw_member = yes }
+			if = {
+				limit = {
+					NOT = { has_variable = scw_membership_months }
+				}
+				set_variable = { name = scw_membership_months value = 0 }
+			}
+			change_variable = { name = scw_membership_months add = 1 }
+			scw_refresh_package = yes
+		}
+		every_country = {
+			limit = {
+				has_variable = scw_membership_months NOT = { scw_member = yes }
+			}
+			scw_remove_membership = yes
+		}
+		scope:journal_entry = {
+			set_bar_progress = { name = scw_regions_bar value = scope:scw_sponsor.var:scw_regional_points }
+			set_bar_progress = { name = scw_institutions_bar value = scope:scw_sponsor.var:scw_institutions }
+			set_bar_progress = { name = scw_consolidation_bar value = scope:scw_sponsor.var:scw_progress }
+		}
+
+
+	}
+}
+
+scw_initialize = {
+	hidden_effect = {
+
+
+		set_variable = scw_started
+		set_variable = scw_running
+		set_variable = { name = scw_institutions value = 0 }
+		set_variable = { name = scw_progress value = 0 }
+		set_variable = { name = scw_stage value = 0 }
+		set_variable = { name = scw_bloc value = power_bloc }
+		power_bloc = {
+			add_modifier = { name = scw_common_market }
+		}
+		add_modifier = { name = scw_active_leadership }
+		save_scope_as = scw_sponsor
+		scw_measure_regions = yes
+		scope:journal_entry = {
+			set_bar_progress = { name = scw_regions_bar value = scope:scw_sponsor.var:scw_regional_points }
+			set_bar_progress = { name = scw_institutions_bar value = scope:scw_sponsor.var:scw_institutions }
+			set_bar_progress = { name = scw_consolidation_bar value = scope:scw_sponsor.var:scw_progress }
+		}
+		scw_refresh_package = yes
+		every_country = {
+			limit = { scw_member = yes }
+			set_variable = { name = scw_membership_months value = 0 }
+			scw_refresh_package = yes
+		}
+		trigger_event = { id = scw_events.1 popup = yes }
+
+
+	}
+}
+
+scw_sync_journal = {
+	hidden_effect = {
+		every_country = {
+			limit = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_running
+				is_power_bloc_leader = yes
+			}
+			save_scope_as = scw_sponsor
+			scw_resolve_congress = yes
+			scw_measure_regions = yes
+			if = {
+				limit = { has_variable = scw_completed }
+				set_variable = { name = scw_progress value = 100 }
+			}
+			else = {
+				set_variable = {
+					name = scw_progress
+					value = {
+						value = var:scw_regional_points
+						add = var:scw_institutions
+						max = 100
+					}
+				}
+			}
+			scope:journal_entry = {
+				set_bar_progress = { name = scw_regions_bar value = scope:scw_sponsor.var:scw_regional_points }
+				set_bar_progress = { name = scw_institutions_bar value = scope:scw_sponsor.var:scw_institutions }
+				set_bar_progress = { name = scw_consolidation_bar value = scope:scw_sponsor.var:scw_progress }
+				every_scope_je_involved = {
+					limit = {
+						NOT = { this = scope:scw_sponsor }
+						OR = {
+							NOT = { is_in_same_power_bloc = scope:scw_sponsor }
+							NOT = { is_in_geographic_region = geographic_region_americas }
+						}
+					}
+					scope:journal_entry = { remove_involved_country = prev }
+				}
+			}
+			every_country = {
+				limit = {
+					is_in_geographic_region = geographic_region_americas
+					is_in_same_power_bloc = scope:scw_sponsor
+					NOT = { is_involved_in_journal_entry = $ENTRY$ }
+				}
+				scope:journal_entry = { add_involved_country = prev }
+			}
+		}
+	}
+}

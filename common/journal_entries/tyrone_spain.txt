@@ -1,0 +1,641 @@
+je_spain_napoleonic_reforms = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+	group = je_group_historical_content
+	is_shown_when_inactive = { tyr_spanish_content_country = yes }
+	possible = {
+		custom_tooltip = {
+			text = spain_napoleonic_bonaparte_king_tt
+			ruler = { has_variable = house_bonaparte }
+		}
+		has_law_or_variant = law_type:law_monarchy
+	}
+
+	# The restoration event adds the central entry, which opens both reform branches.
+	immediate = {
+		ruler = { add_trait = ambitious }
+		add_journal_entry = { type = je_spain_napoleonic_domestic_reforms }
+		add_journal_entry = { type = je_spain_napoleonic_military_reforms }
+	}
+	complete = {
+		custom_tooltip = {
+			text = je_spain_napoleonic_domestic_completed_tt
+			has_variable = spain_napoleonic_domestic_reforms_completed
+		}
+		custom_tooltip = {
+			text = je_spain_napoleonic_military_completed_tt
+			has_variable = spain_napoleonic_military_reforms_completed
+		}
+	}
+	on_complete = {
+		set_variable = spain_napoleonic_reforms_completed
+		trigger_event = { id = spain_napoleonic_reforms.11 popup = yes }
+	}
+	invalid = {
+	}
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_spain_napoleonic_domestic_reforms = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+	group = je_group_historical_content
+	is_shown_when_inactive = { has_journal_entry = je_spain_napoleonic_reforms }
+	possible = { has_journal_entry = je_spain_napoleonic_reforms }
+
+	# Attach to the journal entry so the bonus lasts only while it is active.
+	immediate = {
+		scope:journal_entry = { add_modifier = spain_napoleonic_domestic_active_modifier }
+	}
+
+	scripted_button = spain_napoleonic_schooling_button
+	scripted_button = spain_napoleonic_banking_button
+	scripted_button = spain_napoleonic_labor_button
+	scripted_button = spain_napoleonic_trade_button
+	scripted_button = spain_napoleonic_taxation_button
+
+	complete = {
+		custom_tooltip = {
+			text = spain_napoleonic_schooling_confirmed_tt
+			has_variable = spain_napoleonic_schooling_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_banking_confirmed_tt
+			has_variable = spain_napoleonic_banking_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_labor_confirmed_tt
+			has_variable = spain_napoleonic_labor_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_trade_confirmed_tt
+			has_variable = spain_napoleonic_trade_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_taxation_confirmed_tt
+			has_variable = spain_napoleonic_taxation_confirmed
+		}
+	}
+	on_complete = { set_variable = spain_napoleonic_domestic_reforms_completed }
+	invalid = {
+		OR = {
+			NOT = { has_law_or_variant = law_type:law_monarchy }
+			NOT = {
+				ruler = { has_variable = house_bonaparte }
+			}
+		}
+	}
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_spain_napoleonic_military_reforms = {
+	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
+	group = je_group_historical_content
+	is_shown_when_inactive = { has_journal_entry = je_spain_napoleonic_reforms }
+	possible = { has_journal_entry = je_spain_napoleonic_reforms }
+
+	# Attach to the journal entry so the bonus lasts only while it is active.
+	immediate = {
+		scope:journal_entry = { add_modifier = spain_napoleonic_military_active_modifier }
+	}
+
+	scripted_button = spain_napoleonic_conscription_button
+	scripted_button = spain_napoleonic_rifling_button
+	scripted_button = spain_napoleonic_machine_guns_button
+	scripted_button = spain_napoleonic_communications_button
+	scripted_button = spain_napoleonic_ironclads_button
+
+	complete = {
+		custom_tooltip = {
+			text = spain_napoleonic_conscription_confirmed_tt
+			has_variable = spain_napoleonic_conscription_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_rifling_confirmed_tt
+			has_variable = spain_napoleonic_rifling_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_machine_guns_confirmed_tt
+			has_variable = spain_napoleonic_machine_guns_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_communications_confirmed_tt
+			has_variable = spain_napoleonic_communications_confirmed
+		}
+		custom_tooltip = {
+			text = spain_napoleonic_ironclads_confirmed_tt
+			has_variable = spain_napoleonic_ironclads_confirmed
+		}
+	}
+	on_complete = { set_variable = spain_napoleonic_military_reforms_completed }
+	invalid = {
+		OR = {
+			NOT = { has_law_or_variant = law_type:law_monarchy }
+			NOT = {
+				ruler = { has_variable = house_bonaparte }
+			}
+		}
+	}
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_spanish_commonwealth = {
+	icon = "gfx/interface/icons/event_icons/spanish_commonwealth.dds"
+	group = je_group_global_international_situations
+	weight = 6000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	scripted_progress_bar = scw_regions_bar
+	scripted_progress_bar = scw_institutions_bar
+	scripted_progress_bar = scw_consolidation_bar
+	scripted_button = scw_congress_button
+	scripted_button = scw_gco_button
+	scripted_button = scw_plt_button
+	scripted_button = scw_uca_button
+	scripted_button = scw_pbc_button
+	scripted_button = scw_los_altos_button
+	on_monthly_pulse = {
+		effect = {
+			hidden_effect = {
+				every_country = {
+					limit = {
+						OR = {
+							c:SPA ?= this
+							was_formed_from = SPA
+						}
+						has_variable = scw_running
+					}
+					if = {
+						limit = { scw_valid_sponsor = yes }
+						if = {
+							limit = {
+								NOT = { has_variable = scw_started }
+							}
+							scw_initialize = yes
+						}
+						else = { scw_monthly_update = yes }
+					}
+				}
+			}
+			scw_sync_journal = { ENTRY = je_spanish_commonwealth }
+		}
+	}
+	fail = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+				}
+			}
+		}
+	}
+	on_fail = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+
+	is_shown_when_inactive = {
+		any_country = {
+			OR = {
+				c:SPA ?= this
+				was_formed_from = SPA
+			}
+			is_revolutionary = no
+			is_secessionist = no
+			NOT = { has_variable = is_carlist_spain }
+			NOT = { has_variable = scw_started }
+		}
+	}
+	possible = {
+		hidden_trigger = {
+			any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				country_rank = rank_value:great_power
+				is_power_bloc_leader = yes
+				is_at_war = no
+				NOT = { has_variable = scw_started }
+				NOT = { has_variable = is_carlist_spain }
+				is_revolutionary = no
+				is_secessionist = no
+				trigger_if = {
+					limit = { has_variable = scw_bloc }
+					power_bloc = { this = prev.var:scw_bloc }
+				}
+			}
+		}
+		custom_tooltip = {
+			text = scw_rank_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				country_rank = rank_value:great_power
+			}
+		}
+		custom_tooltip = {
+			text = scw_leader_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_power_bloc_leader = yes
+			}
+		}
+		custom_tooltip = {
+			text = scw_peace_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_at_war = no
+			}
+		}
+		custom_tooltip = {
+			text = scw_unstarted_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				NOT = { has_variable = scw_started }
+			}
+		}
+		custom_tooltip = {
+			text = scw_not_carlist_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				NOT = { has_variable = is_carlist_spain }
+			}
+		}
+	}
+	immediate = {
+
+		custom_tooltip = scw_market_activation_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_initialize = yes
+			}
+		}
+
+		scw_sync_journal = { ENTRY = je_spanish_commonwealth }
+	}
+	complete = {
+		hidden_trigger = {
+			any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_progress var:scw_progress >= 100
+				var:scw_regions >= 4
+				power_bloc = { current_cohesion_number >= 70 }
+				is_power_bloc_leader = yes
+			}
+		}
+		custom_tooltip = {
+			text = scw_progress_complete_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_progress var:scw_progress >= 100
+			}
+		}
+		custom_tooltip = {
+			text = scw_regions_complete_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				var:scw_regions >= 4
+			}
+		}
+		custom_tooltip = {
+			text = scw_cohesion_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				power_bloc = { current_cohesion_number >= 70 }
+			}
+		}
+		custom_tooltip = {
+			text = scw_leader_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_power_bloc_leader = yes
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor
+				set_variable = scw_completed
+				set_variable = { name = scw_stage value = 4 }
+				remove_modifier = scw_active_leadership
+				add_modifier = { name = scw_charter_leadership }
+				scw_refresh_package = yes
+				every_country = {
+					limit = { scw_member = yes }
+					scw_refresh_package = yes
+				}
+
+				trigger_event = { id = scw_events.5 popup = yes }
+			}
+		}
+	}
+
+	should_be_pinned_by_default_involved = yes
+	should_be_involved = {
+		OR = {
+			c:SPA ?= this
+			was_formed_from = SPA
+			AND = {
+				is_in_geographic_region = geographic_region_americas
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+					is_in_same_power_bloc = prev
+				}
+			}
+		}
+	}
+	should_show_when_not_involved = { scw_american_eligible = yes }
+}
+
+je_spanish_commonwealth_charter = {
+	icon = "gfx/interface/icons/event_icons/spanish_commonwealth.dds"
+	group = je_group_global_international_situations
+	weight = 6000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	scripted_progress_bar = scw_regions_bar
+	scripted_progress_bar = scw_institutions_bar
+	scripted_progress_bar = scw_consolidation_bar
+	scripted_button = scw_congress_button
+	scripted_button = scw_gco_button
+	scripted_button = scw_plt_button
+	scripted_button = scw_uca_button
+	scripted_button = scw_pbc_button
+	scripted_button = scw_los_altos_button
+	on_monthly_pulse = {
+		effect = {
+
+			hidden_effect = {
+				every_country = {
+					limit = {
+						OR = {
+							c:SPA ?= this
+							was_formed_from = SPA
+						}
+						has_variable = scw_running
+					}
+					if = {
+						limit = { scw_valid_sponsor = yes }
+						if = {
+							limit = {
+								NOT = { has_variable = scw_started }
+							}
+							scw_initialize = yes
+						}
+						else = { scw_monthly_update = yes }
+					}
+				}
+			}
+
+			scw_sync_journal = { ENTRY = je_spanish_commonwealth_charter }
+		}
+	}
+	fail = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+				}
+			}
+		}
+	}
+	on_fail = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+
+	is_shown_when_inactive = {
+		any_country = {
+			OR = {
+				c:SPA ?= this
+				was_formed_from = SPA
+			}
+			has_modifier = scw_charter_leadership
+		}
+	}
+	possible = {
+		hidden_trigger = {
+			any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_completed
+				has_variable = scw_running
+				is_power_bloc_leader = yes
+				NOT = { has_variable = is_carlist_spain }
+				is_revolutionary = no
+				is_secessionist = no
+				trigger_if = {
+					limit = { has_variable = scw_bloc }
+					power_bloc = { this = prev.var:scw_bloc }
+				}
+			}
+		}
+		custom_tooltip = {
+			text = scw_completed_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_completed
+			}
+		}
+		hidden_trigger = {
+		custom_tooltip = {
+			text = scw_running_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				has_variable = scw_running
+			}
+		}
+		custom_tooltip = {
+			text = scw_leader_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_power_bloc_leader = yes
+			}
+		}
+		custom_tooltip = {
+			text = scw_not_carlist_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				NOT = { has_variable = is_carlist_spain }
+			}
+		}
+		custom_tooltip = {
+			text = scw_not_revolutionary_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_revolutionary = no
+			}
+		}
+		custom_tooltip = {
+			text = scw_not_secessionist_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				is_secessionist = no
+			}
+		}
+		custom_tooltip = {
+			text = scw_original_bloc_tt any_country = {
+				OR = {
+					c:SPA ?= this
+					was_formed_from = SPA
+				}
+				trigger_if = {
+					limit = { has_variable = scw_bloc }
+					power_bloc = { this = prev.var:scw_bloc }
+				}
+			}
+		}			
+		}
+
+	}
+	invalid = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+				}
+			}
+		}
+	}
+	on_invalid = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+	immediate = {
+
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scope:journal_entry = {
+					set_bar_progress = { name = scw_regions_bar value = scope:scw_sponsor.var:scw_regional_points }
+					set_bar_progress = { name = scw_institutions_bar value = scope:scw_sponsor.var:scw_institutions }
+					set_bar_progress = { name = scw_consolidation_bar value = scope:scw_sponsor.var:scw_progress }
+				}
+			}
+		}
+
+		scw_sync_journal = { ENTRY = je_spanish_commonwealth_charter }
+	}
+	complete = {
+		always = no
+	}
+
+	should_be_pinned_by_default_involved = yes
+	should_be_involved = {
+		OR = {
+			c:SPA ?= this
+			was_formed_from = SPA
+			AND = {
+				is_in_geographic_region = geographic_region_americas
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+					is_in_same_power_bloc = prev
+				}
+			}
+		}
+	}
+	should_show_when_not_involved = { scw_american_eligible = yes }
+
+
+
+
+}
