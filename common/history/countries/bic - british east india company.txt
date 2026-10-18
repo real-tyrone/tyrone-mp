@@ -1,4 +1,4 @@
-﻿COUNTRIES = {
+COUNTRIES = {
 	c:BIC ?= {
 		ig:ig_industrialists ?= {
 			add_ruling_interest_group = yes
@@ -11,10 +11,11 @@
 		add_technology_researched = corporate_charters
 
 		activate_law = law_type:law_colonial_administration
+		activate_law = law_type:law_india_unaided_enterprise
 		activate_law = law_type:law_india_colonial_religious_neutrality
 		set_state_religion = rel:protestant
-		activate_law = law_type:law_tenant_farmers
-		activate_law = law_type:law_subjecthood # English & Anglo-Indian supremacy; no Indians served in the upper echelons of government
+		activate_law = law_type:law_commercialized_agriculture
+		activate_law = law_type:law_india_subjecthood # English & Anglo-Indian supremacy; no Indians served in the upper echelons of government
 		activate_law = law_type:law_company_exploitation
 		activate_law = law_type:law_censorship
 		activate_law = law_type:law_land_based_taxation
@@ -26,10 +27,55 @@
 		activate_law = law_type:law_hindu_caste_not_enforced
 		activate_law = law_type:law_combination_acts
 
+		activate_law = law_type:law_chartered_no_schools
+		set_variable = bic_patent_reliant_var
+		active_law:lawgroup_education_system ?= {
+			add_amendment = {
+				type = amendment_reliance_on_british_patents
+				sponsor = PREV.ig:ig_industrialists
+			}
+		}
+
+		active_law:lawgroup_caste_hegemony ?= {
+			add_amendment = {
+				type = amendment_informal_class_system
+				sponsor = PREV.ig:ig_landowners
+			}
+		}
+
+		active_law:lawgroup_land_reform ?= {
+			add_amendment = {
+				type = amendment_colonial_trading_privileges
+				sponsor = PREV.ig:ig_industrialists
+			}
+			add_amendment = {
+				type = amendment_plantation_labor_obligations
+				sponsor = PREV.ig:ig_landowners
+			}
+		}
+
+		active_law:lawgroup_india_chartered_obligations ?= {
+			add_amendment = {
+				type = amendment_british_manufacturing_monopoly
+				sponsor = PREV.ig:ig_industrialists
+			}
+			add_amendment = {
+				type = amendment_cotton_export_guarantees
+				sponsor = PREV.ig:ig_landowners
+			}
+		}
+
 		active_law:lawgroup_citizenship ?= { # Subjecthood
 			add_amendment = {
 				type = amendment_racialized_subjecthood
 				sponsor = PREV.ig:ig_industrialists
+			}
+		}
+
+		active_law:lawgroup_slavery ?= {
+			add_amendment = {
+				type = amendment_company_bonded_labor_guarantees
+				sponsor = PREV.ig:ig_landowners
 			}
 		}
 
@@ -98,4 +144,3 @@
 		}
 	}
 }
-
