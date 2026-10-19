@@ -1,0 +1,202 @@
+# Root: country. Shared British/Indian participants, including both Indian tags.
+tyrone_subcontinent_participant = {
+	OR = { c:GBR ?= this is_india_tag_trigger = yes }
+}
+
+# Root: none/country. The shared colonial premise must still exist.
+tyrone_subcontinent_empire_intact = {
+	exists = c:GBR
+	trigger_if = {
+		limit = { exists = c:GBR }
+		OR = {
+			AND = { exists = c:BIC c:BIC ?= { is_subject_of = c:GBR } }
+			AND = { exists = c:BHR c:BHR ?= { is_subject_of = c:GBR } }
+		}
+	}
+}
+
+# Root: country owning a state. Indirect subjects also count.
+tyrone_subcontinent_owner_in_sphere = {
+	OR = {
+		tyrone_subcontinent_participant = yes
+		any_overlord_or_above = {
+			filter = { tyrone_subcontinent_participant = yes }
+			count >= 1
+		}
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+# Territorial control OR direct subjects, using one compact diplomatic tooltip.
+tyrone_subcontinent_himalayas_controlled = {
+	scope:tyrone_subcontinent_india = {
+		OR = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_HIMALAYAS
+				country_or_subject_owns_entire_state_region = STATE_EASTERN_HIMALAYAS
+			}
+			AND = {
+				exists = c:GBR
+				c:GBR ?= {
+					country_or_subject_owns_entire_state_region = STATE_HIMALAYAS
+					country_or_subject_owns_entire_state_region = STATE_EASTERN_HIMALAYAS
+				}
+			}
+			custom_tooltip = {
+				text = tyrone_subcontinent_himalayas_subjects_tt
+				exists = c:GBR
+				exists = c:NEP
+				exists = c:BHU
+				exists = c:SIK
+				trigger_if = {
+					limit = { exists = c:GBR }
+					c:NEP ?= {
+						OR = {
+							is_subject_of = scope:tyrone_subcontinent_india
+							is_subject_of = c:GBR
+						}
+					}
+					c:BHU ?= {
+						OR = {
+							is_subject_of = scope:tyrone_subcontinent_india
+							is_subject_of = c:GBR
+						}
+					}
+					c:SIK ?= {
+						OR = {
+							is_subject_of = scope:tyrone_subcontinent_india
+							is_subject_of = c:GBR
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# Root: state region. Hide scope-dependent comparisons in the iterator filter.
+tyrone_subcontinent_region_controlled = {
+	any_scope_state = {
+		filter = {
+			owner = { NOT = { tyrone_subcontinent_owner_in_sphere = yes } }
+		}
+		count = 0
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+tyrone_subcontinent_punjab_controlled = {
+	scope:tyrone_subcontinent_india = {
+		OR = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_KASHMIR
+				country_or_subject_owns_entire_state_region = STATE_PUNJAB
+				country_or_subject_owns_entire_state_region = STATE_PASHTUNISTAN
+				country_or_subject_owns_entire_state_region = STATE_HILL_PUNJAB
+			}
+			c:GBR = {
+				country_or_subject_owns_entire_state_region = STATE_KASHMIR
+				country_or_subject_owns_entire_state_region = STATE_PUNJAB
+				country_or_subject_owns_entire_state_region = STATE_PASHTUNISTAN
+				country_or_subject_owns_entire_state_region = STATE_HILL_PUNJAB
+			}
+			AND = {
+				NOT = { exists = c:PAN }
+				NOT = { exists = c:SIN }
+
+			}
+		}
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+tyrone_subcontinent_sindh_controlled = {
+	scope:tyrone_subcontinent_india = {
+		OR = {
+			country_or_subject_owns_entire_state_region = STATE_SINDH
+			c:GBR = {
+				country_or_subject_owns_entire_state_region = STATE_SINDH
+			}
+		}
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+tyrone_subcontinent_western_frontier_controlled = {
+	scope:tyrone_subcontinent_india = {
+		OR = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_BALUCHISTAN
+				country_or_subject_owns_entire_state_region = STATE_QUETTA
+			}
+			c:GBR = {
+				country_or_subject_owns_entire_state_region = STATE_BALUCHISTAN
+				country_or_subject_owns_entire_state_region = STATE_QUETTA
+			}
+		}
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+tyrone_subcontinent_burma_controlled = {
+	scope:tyrone_subcontinent_india = {
+		OR = {
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_KACHIN
+				country_or_subject_owns_entire_state_region = STATE_SHAN_STATES
+				country_or_subject_owns_entire_state_region = STATE_MANDALAY
+				country_or_subject_owns_entire_state_region = STATE_PEGU
+				country_or_subject_owns_entire_state_region = STATE_ARAKAN
+			}
+			trigger_if = {
+				limit = {
+					exists = c:GBR
+					exists = c:BUR
+					scope:tyrone_subcontinent_india ?= { is_subject_of = c:GBR }
+				}
+				c:BUR ?= {
+					is_subject_of = c:GBR
+				}
+			}
+
+			trigger_if = {
+				limit = {
+					exists = scope:tyrone_subcontinent_india
+					exists = c:BUR
+				}
+				c:BUR ?= {
+					is_subject_of = scope:tyrone_subcontinent_india
+				}
+			}
+		}
+	}
+}
+
+# Root: none/country; requires scope:tyrone_subcontinent_india saved by the JE.
+tyrone_subcontinent_afghanistan_controlled = {
+	scope:tyrone_subcontinent_india = {
+		owns_entire_state_region = STATE_KABUL
+		NOT = {
+			OR = {
+				AND = {
+					c:RUS ?= {
+						country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+						country_or_subject_owns_entire_state_region = STATE_NORTHERN_BALUCHISTAN
+						country_or_subject_owns_entire_state_region = STATE_CENTRAL_HIGHLANDS
+						country_or_subject_owns_entire_state_region = STATE_HERAT
+						country_or_subject_owns_entire_state_region = STATE_BALKH
+					}
+				}
+				AND = {
+					c:PER ?= {
+						country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+						country_or_subject_owns_entire_state_region = STATE_NORTHERN_BALUCHISTAN
+						country_or_subject_owns_entire_state_region = STATE_CENTRAL_HIGHLANDS
+						country_or_subject_owns_entire_state_region = STATE_HERAT
+						country_or_subject_owns_entire_state_region = STATE_BALKH
+					}
+				}
+			}
+		}
+	}
+}

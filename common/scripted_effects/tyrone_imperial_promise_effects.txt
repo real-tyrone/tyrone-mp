@@ -1,0 +1,69 @@
+# Contextless JE scope: bind the same Indian country independently in each JE.
+tyrone_promise_bind_india = {
+	if = {
+		limit = { exists = c:BIC }
+		c:BIC = { save_scope_as = tyrone_promise_india }
+	}
+	else_if = {
+		limit = { exists = c:BHR }
+		c:BHR = { save_scope_as = tyrone_promise_india }
+	}
+}
+
+# Country scope. Remove this amendment only; preserve all sibling amendments.
+tyrone_promise_remove_naval_industry_restriction = {
+	if = {
+		limit = { any_active_law = { has_amendment = amendment_type:amendment_royal_navy_supremacy } }
+		random_active_law = {
+			limit = { has_amendment = amendment_type:amendment_royal_navy_supremacy }
+			random_scope_amendment = {
+				limit = { amendment_type:amendment_royal_navy_supremacy ?= this.type }
+				remove_amendment = yes
+			}
+		}
+	}
+	# Also end the law-enactment reapplication path if no amendment is active.
+	remove_variable = bic_naval_restricted_var
+}
+
+# Country scope. Remove this amendment only; preserve all sibling amendments.
+tyrone_promise_remove_plantation_labor_restriction = {
+	if = {
+		limit = { any_active_law = { has_amendment = amendment_type:amendment_plantation_labor_obligations } }
+		random_active_law = {
+			limit = { has_amendment = amendment_type:amendment_plantation_labor_obligations }
+			random_scope_amendment = {
+				limit = { amendment_type:amendment_plantation_labor_obligations ?= this.type }
+				remove_amendment = yes
+			}
+		}
+	}
+}
+
+# Country scope. Remove this amendment only; preserve all sibling amendments.
+tyrone_promise_remove_manufacturing_monopoly_restriction = {
+	if = {
+		limit = { any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly } }
+		random_active_law = {
+			limit = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly }
+			random_scope_amendment = {
+				limit = { amendment_type:amendment_british_manufacturing_monopoly ?= this.type }
+				remove_amendment = yes
+			}
+		}
+	}
+}
+
+# Country scope. Remove this amendment only; preserve all sibling amendments.
+tyrone_promise_remove_bonded_labor_restriction = {
+	if = {
+		limit = { any_active_law = { has_amendment = amendment_type:amendment_company_bonded_labor_guarantees } }
+		random_active_law = {
+			limit = { has_amendment = amendment_type:amendment_company_bonded_labor_guarantees }
+			random_scope_amendment = {
+				limit = { amendment_type:amendment_company_bonded_labor_guarantees ?= this.type }
+				remove_amendment = yes
+			}
+		}
+	}
+}
