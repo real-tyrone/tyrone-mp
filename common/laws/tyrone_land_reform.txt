@@ -1,4 +1,89 @@
-﻿REPLACE:law_collectivized_agriculture = {
+REPLACE:law_serfdom = {
+	# India must first remove the plantation labor amendment.
+	can_enact = {
+		OR = {
+			NOT = { is_india_tag_trigger = yes }
+			NOT = {
+				active_law:lawgroup_land_reform = {
+					has_amendment = amendment_type:amendment_plantation_labor_obligations
+				}
+			}
+		}
+	}
+
+	group = lawgroup_land_reform
+
+	icon = "gfx/interface/icons/law_icons/serfdom.dds"
+
+	progressiveness = -50
+
+	is_visible = {
+		NOR = {
+			c:AUS ?= this # Austria and the Danubian Principalities have manorialism instead
+			AND = {
+				exists = c:AUS
+				is_subject_of = c:AUS
+				OR = {
+					is_subject_type = subject_type_crown_land
+					is_subject_type = subject_type_personal_union
+				}
+				c:AUS ?= { has_law = law_type:law_manorialism }
+			}
+			country_has_primary_culture = cu:romanian
+		}
+	}
+
+	disallowing_laws = {
+		law_interventionism
+		law_laissez_faire
+		law_command_economy
+	}
+
+	on_enact = {
+		if = {
+			limit = {
+				OR = {
+					has_law_or_variant = law_type:law_commercialized_agriculture
+					has_law_or_variant = law_type:law_peasant_proprietorship
+				}
+			}
+			custom_tooltip = farmers_pb_ig_shift_effect_negative_tt
+		}
+		if = {
+			limit = {
+				OR = {
+					has_law_or_variant = law_type:law_commercialized_agriculture
+					has_law_or_variant = law_type:law_collectivized_agriculture
+				}
+			}
+			custom_tooltip = rural_laborers_tu_ig_shift_effect_negative_tt
+		}
+	}
+
+	modifier = {
+		interest_group_ig_landowners_pol_str_mult = 0.25
+		state_peasants_internal_migration_disallowed_bool = yes
+		state_peasants_mass_migration_disallowed_bool = yes
+		state_minimum_incorporated_subsistence_arable_land_add = 0.75
+		building_minimum_incorporated_subsistence_employment_add = 0.5
+	}
+
+	# AI should never try to bring back serfdom
+	ai_will_do = {
+		always = no
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+REPLACE:law_collectivized_agriculture = {
 	group = lawgroup_land_reform
 
 	icon = "gfx/interface/icons/law_icons/collectivized_agriculture.dds"
@@ -178,6 +263,18 @@ REPLACE:law_peasant_proprietorship = { # Homesteading for old world countries
 }
 
 REPLACE:law_homesteading = {
+	# India must first remove the plantation labor amendment.
+	can_enact = {
+		OR = {
+			NOT = { is_india_tag_trigger = yes }
+			NOT = {
+				active_law:lawgroup_land_reform = {
+					has_amendment = amendment_type:amendment_plantation_labor_obligations
+				}
+			}
+		}
+	}
+
 	group = lawgroup_land_reform
 	parent = law_peasant_proprietorship # Inherits ideological stances from parent
 

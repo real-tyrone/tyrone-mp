@@ -1,0 +1,52 @@
+# Deliberate replication of Victorian Century's post-Punjab annexation action.
+tyrone_subcontinent_punjab_annexation = {
+	name = tyrone_subcontinent_punjab_annexation
+	desc = tyrone_subcontinent_punjab_annexation_desc
+	visible = { tyrone_subcontinent_participant = yes }
+	possible = {
+		has_global_variable = tyrone_subcontinent_active_var
+		tyrone_subcontinent_empire_intact = yes
+		NOT = { exists = c:PAN }
+		NOT = { has_global_variable = tyrone_subcontinent_punjab_annexed_var }
+		OR = { exists = c:BIC exists = c:BHR }
+		OR = { exists = c:GAR exists = c:PTA exists = c:BHW }
+	}
+	ai_chance = { value = 100 }
+	effect = {
+		set_global_variable = tyrone_subcontinent_punjab_annexed_var
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = {
+			if = {
+				limit = { exists = c:GAR }
+				annex = c:GAR
+			}
+			if = {
+				limit = { exists = c:PTA }
+				annex = c:PTA
+			}
+			if = {
+				limit = { exists = c:BHW }
+				annex = c:BHW
+			}
+			}
+		}
+		else_if = {
+			limit = { exists = c:BHR }
+			c:BHR = {
+			if = {
+				limit = { exists = c:GAR }
+				annex = c:GAR
+			}
+			if = {
+				limit = { exists = c:PTA }
+				annex = c:PTA
+			}
+			if = {
+				limit = { exists = c:BHW }
+				annex = c:BHW
+			}
+			}
+		}
+	}
+}
