@@ -1,0 +1,243 @@
+﻿je_mandate_of_heaven = {
+	icon = "gfx/interface/icons/event_icons/Mandate_Heaven.dds"
+
+	group = je_group_internal_affairs
+	scripted_progress_bar = chi_centralisation_progress_bar
+
+	widget = {
+		gui = "gui/journal_entry_widgets/chi_mandate_progress_dropdowns.gui"
+		name = "chi_mandate_progress_dropdowns"
+		container = "custom_widget_container_4"
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/chi_mandate_subentries.gui"
+		name = "chi_mandate_subentries"
+		container = "custom_widget_container_1"
+	}
+
+	immediate = {
+		add_contextless_journal_entry = je_economic_direction
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					NOT = { has_law_or_variant = law_type:law_monarchy }
+					NOT = { has_variable = chi_mandate_monarchy_penalty_applied }
+				}
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = -3
+						name = chi_centralisation_progress_bar
+					}
+				}
+				set_variable = chi_mandate_monarchy_penalty_applied
+			}
+
+			if = {
+				limit = {
+					has_modifier = opium_wars_lost
+					NOT = { has_variable = chi_mandate_opium_wars_penalty_applied }
+				}
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = -1
+						name = chi_centralisation_progress_bar
+					}
+				}
+				set_variable = chi_mandate_opium_wars_penalty_applied
+			}
+
+			if = {
+				limit = {
+					exists = c:TPG
+					NOT = { has_variable = chi_mandate_taiping_penalty_applied }
+				}
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = -1
+						name = chi_centralisation_progress_bar
+					}
+				}
+				set_variable = chi_mandate_taiping_penalty_applied
+			}
+
+			if = {
+				limit = {
+					taking_loans = yes
+					NOT = { has_variable = chi_mandate_loan_penalty_cooldown }
+				}
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = -1
+						name = chi_centralisation_progress_bar
+					}
+				}
+				set_variable = {
+					name = chi_mandate_loan_penalty_cooldown
+					value = 1
+					days = 180
+				}
+			}
+
+			if = {
+				limit = {
+					any_civil_war = {
+						civil_war_progress > 0
+					}
+					NOT = { has_variable = chi_mandate_civil_war_penalty_active }
+				}
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = -1
+						name = chi_centralisation_progress_bar
+					}
+				}
+				set_variable = chi_mandate_civil_war_penalty_active
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						any_civil_war = {
+							civil_war_progress > 0
+						}
+					}
+					has_variable = chi_mandate_civil_war_penalty_active
+				}
+				remove_variable = chi_mandate_civil_war_penalty_active
+			}
+		}
+	}
+
+	complete = {
+		"scope:journal_entry.scripted_bar_progress(chi_centralisation_progress_bar)" >= 10
+	}
+
+	weight = 1000
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_economic_direction = {
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	group = je_group_internal_affairs
+
+	modifier = {
+		state_peasants_consumption_multiplier_add = 0.15
+	}
+
+	complete = {
+		OR = {
+			AND = {
+				relative_bureaucracy >= 0.25
+				NOT = { has_law_or_variant = law_type:law_chi_no_schools }
+				NOT = { has_law_or_variant = law_type:law_serfdom }
+				has_technology_researched = romanticism
+			}
+			AND = {
+				has_law_or_variant = law_type:law_local_police
+				has_technology_researched = romanticism
+				army_power_projection >= 15000
+			}
+		}
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				relative_bureaucracy >= 0.25
+				NOT = { has_law_or_variant = law_type:law_chi_no_schools }
+				NOT = { has_law_or_variant = law_type:law_serfdom }
+				has_technology_researched = romanticism
+			}
+			activate_law = law_type:law_chi_mixed_economic_policy
+			add_modifier = {
+				name = economic_direction_mixed_policy
+			}
+		}
+		else_if = {
+			limit = {
+				has_law_or_variant = law_type:law_local_police
+				has_technology_researched = romanticism
+				army_power_projection >= 15000
+			}
+			activate_law = law_type:law_chi_industry_banned
+			add_modifier = {
+				name = economic_direction_industry_banned
+			}
+		}
+	}
+
+	weight = 1000
+}
+
+je_confront_confucian_scholars = {
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	group = je_group_internal_affairs
+	scripted_button = chi_confucian_scholars_button
+
+	immediate = {
+		set_variable = {
+			name = chi_confucian_scholars_progress
+			value = 0
+		}
+	}
+
+	complete = {
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_variable = chi_confucian_scholars_end_isolation
+						has_variable = chi_confucian_scholars_evict_scholars
+					}
+					var:chi_confucian_scholars_progress < 96
+				}
+				change_variable = {
+					name = chi_confucian_scholars_progress
+					add = 1
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				has_variable = chi_confucian_scholars_end_isolation
+			}
+			activate_law = law_type:law_chi_religious_focus
+		}
+		if = {
+			limit = {
+				has_variable = chi_confucian_scholars_evict_scholars
+			}
+			activate_law = law_type:law_freedom_of_conscience
+			activate_law = law_type:law_chi_merchent_led
+		}
+	}
+
+	current_value = {
+		value = root.var:chi_confucian_scholars_progress
+	}
+
+	goal_add_value = {
+		value = 96
+	}
+
+	progressbar = yes
+
+	weight = 1000
+
+}
