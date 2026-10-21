@@ -1,0 +1,218 @@
+homeland_development_labour_program_button = {
+	name = homeland_development_labour_program_button
+	desc = homeland_development_labour_program_button_desc
+
+	visible = {
+		has_journal_entry = je_homeland_development
+	}
+
+	possible = {
+		OR = {
+			AND = {
+				NOT = { has_variable = homeland_labour_program_active }
+				authority >= 400
+				ig:ig_landowners ?= {
+					is_in_government = yes
+					ig_approval >= 5
+				}
+				ig:ig_industrialists ?= {
+					is_in_government = yes
+				}
+			}
+			AND = {
+				has_variable = homeland_labour_program_active
+				NOT = { has_variable = homeland_labour_program_cooldown }
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				NOT = { has_variable = homeland_labour_program_active }
+			}
+			change_authority = -400
+			set_variable = homeland_labour_program_active
+			set_variable = {
+				name = homeland_labour_program_cooldown
+				days = 730
+			}
+			add_modifier = homeland_labour_program_landowner_penalty
+			s:STATE_NORTHERN_MANCHURIA = {
+				if = {
+					limit = { owner = root }
+					add_modifier = homeland_labour_program
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = laborers
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = peasants
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = farmers
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = aristocrats
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = capitalists
+						value = 0.10
+					}
+				}
+			}
+			s:STATE_SOUTHERN_MANCHURIA = {
+				if = {
+					limit = { owner = root }
+					add_modifier = homeland_labour_program
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = laborers
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = peasants
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = farmers
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = aristocrats
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = capitalists
+						value = 0.10
+					}
+				}
+			}
+			s:STATE_OUTER_MANCHURIA = {
+				if = {
+					limit = { owner = root }
+					add_modifier = homeland_labour_program
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = laborers
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = peasants
+						value = 0.10
+					}
+					add_radicals_in_state = {
+						culture = cu:manchu
+						pop_type = farmers
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = aristocrats
+						value = 0.10
+					}
+					add_loyalists_in_state = {
+						culture = cu:manchu
+						pop_type = capitalists
+						value = 0.10
+					}
+				}
+			}
+			s:STATE_SHANDONG = {
+				if = {
+					limit = { owner = root }
+					add_modifier = homeland_labour_program
+				}
+			}
+		}
+		else = {
+			change_authority = 400
+			remove_variable = homeland_labour_program_active
+			remove_modifier = homeland_labour_program_landowner_penalty
+			s:STATE_NORTHERN_MANCHURIA = {
+				remove_modifier = homeland_labour_program
+			}
+			s:STATE_SOUTHERN_MANCHURIA = {
+				remove_modifier = homeland_labour_program
+			}
+			s:STATE_OUTER_MANCHURIA = {
+				remove_modifier = homeland_labour_program
+			}
+			s:STATE_SHANDONG = {
+				remove_modifier = homeland_labour_program
+			}
+		}
+	}
+}
+
+homeland_development_repose_assets_button = {
+	name = homeland_development_repose_assets_button
+	desc = homeland_development_repose_assets_button_desc
+
+	visible = {
+		has_journal_entry = je_homeland_development
+	}
+
+	possible = {
+		any_scope_state = {
+			owner = root
+			OR = {
+				region = sr:region_north_china
+				region = sr:region_south_china
+			}
+		}
+	}
+
+	effect = {
+		random_scope_state = {
+			limit = {
+				owner = root
+				OR = {
+					region = sr:region_north_china
+					region = sr:region_south_china
+				}
+			}
+			save_scope_as = homeland_repose_assets_state
+		}
+		set_variable = {
+			name = homeland_manor_house_levels
+			value = 0
+		}
+		scope:homeland_repose_assets_state = {
+			every_scope_building = {
+				limit = {
+					is_building_type = building_manor_house
+				}
+				save_scope_as = homeland_repose_manor_house
+				root = {
+					change_variable = {
+						name = homeland_manor_house_levels
+						add = scope:homeland_repose_manor_house.level
+					}
+				}
+			}
+			add_modifier = homeland_repose_assets
+			add_radicals_in_state = {
+				value = 0.10
+			}
+		}
+		add_treasury = {
+			value = var:homeland_manor_house_levels
+			multiply = 1000
+		}
+		remove_variable = homeland_manor_house_levels
+	}
+}
