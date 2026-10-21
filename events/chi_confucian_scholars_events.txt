@@ -42,3 +42,393 @@ chi_confucian_scholars.1 = {
 		}
 	}
 }
+
+chi_confucian_scholars.2 = {
+	type = country_event
+	placement = ROOT
+
+	title = chi_confucian_scholars.2.t
+	desc = chi_confucian_scholars.2.d
+	flavor = chi_confucian_scholars.2.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_variable = chi_confucian_scholars_followup_fired
+		has_variable = chi_confucian_scholars_end_isolation
+		ig:ig_devout ?= {
+			is_in_government = yes
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.2.a
+		default_option = yes
+		set_variable = chi_confucian_focus_amendment_active
+		change_variable = {
+			name = chi_confucian_scholars_progress
+			add = 25
+		}
+		active_law:lawgroup_education_system ?= {
+			add_amendment = {
+				type = amendment_confussion_focus
+				sponsor = PREV.ig:ig_devout
+			}
+		}
+		ig:ig_devout ?= {
+			leader = {
+				set_ideology = ideology:ideology_theocrat
+			}
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.2.b
+		add_modifier = {
+			name = chi_confucian_scholars_approval_penalty
+			years = 5
+			is_decaying = yes
+		}
+	}
+}
+
+chi_confucian_scholars.3 = {
+	type = country_event
+	placement = ROOT
+	cooldown = { years = 5 }
+
+	title = chi_confucian_scholars.3.t
+	desc = chi_confucian_scholars.3.d
+	flavor = chi_confucian_scholars.3.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_journal_entry = je_confront_confucian_scholars
+		OR = {
+			has_variable = chi_confucian_scholars_end_isolation
+			has_variable = chi_confucian_scholars_evict_scholars
+		}
+		var:chi_confucian_scholars_progress < 96
+	}
+
+	option = {
+		name = chi_confucian_scholars.3.a
+		default_option = yes
+		ig:ig_devout ?= {
+			add_modifier = {
+				name = chi_confucian_scholars_monthly_approval
+				years = 5
+				is_decaying = yes
+			}
+		}
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress <= 81
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = 15
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 96
+			}
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.3.b
+		add_modifier = {
+			name = chi_confucian_scholars_traditionalist_scholars
+			years = 5
+		}
+	}
+}
+
+chi_confucian_scholars.4 = {
+	type = country_event
+	placement = ROOT
+	cooldown = { years = 5 }
+
+	title = chi_confucian_scholars.4.t
+	desc = chi_confucian_scholars.4.d
+	flavor = chi_confucian_scholars.4.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_journal_entry = je_confront_confucian_scholars
+		has_variable = chi_confucian_scholars_evict_scholars
+		var:chi_confucian_scholars_progress < 96
+		ig:ig_devout ?= {
+			is_marginalized = no
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.4.a
+		custom_tooltip = chi_confucian_scholars.4.a_tt
+		trigger = {
+			ig:ig_devout ?= {
+				ig_approval >= 10
+			}
+		}
+		add_modifier = {
+			name = chi_confucian_scholars_protest_talks
+			years = 5
+		}
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress <= 76
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = 20
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 96
+			}
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.4.b
+		custom_tooltip = chi_confucian_scholars.4.b_tt
+		default_option = yes
+		add_modifier = {
+			name = chi_confucian_scholars_protest_concessions
+			years = 5
+		}
+		add_modifier = {
+			name = chi_confucian_scholars_concessions_mortality
+			years = 5
+			is_decaying = yes
+		}
+		active_law:lawgroup_education_system ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_amendment = amendment_type:amendment_confucian_concessions
+					}
+				}
+				add_amendment = {
+					type = amendment_confucian_concessions
+					sponsor = PREV.ig:ig_devout
+				}
+			}
+		}
+		every_scope_state = {
+			add_radicals_in_state = {
+				pop_type = clergymen
+				value = small_radicals
+			}
+		}
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress >= 5
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = -5
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 0
+			}
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.4.c
+		custom_tooltip = chi_confucian_scholars.4.c_tt
+		add_modifier = {
+			name = chi_confucian_scholars_spreading_protests_mortality
+			years = 5
+			is_decaying = yes
+		}
+		every_scope_state = {
+			add_radicals_in_state = {
+				pop_type = clergymen
+				value = very_large_radicals
+			}
+		}
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress <= 86
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = 10
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 96
+			}
+		}
+	}
+}
+
+chi_confucian_scholars.6 = {
+	type = country_event
+	placement = ROOT
+
+	title = chi_confucian_scholars.6.t
+	desc = chi_confucian_scholars.6.d
+	flavor = chi_confucian_scholars.6.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_variable = chi_confucian_manchu_customs_event_fired
+		has_journal_entry = je_confront_confucian_scholars
+		OR = {
+			has_variable = chi_confucian_scholars_end_isolation
+			has_variable = chi_confucian_scholars_evict_scholars
+		}
+		var:chi_confucian_scholars_progress >= 75
+	}
+
+	option = {
+		name = chi_confucian_scholars.6.a
+		default_option = yes
+		activate_law = law_type:law_chi_manchu_customs
+	}
+
+	option = {
+		name = chi_confucian_scholars.6.b
+		custom_tooltip = chi_confucian_scholars.6.b_tt
+		trigger = {
+			authority >= 350
+		}
+		change_authority = -350
+		add_modifier = {
+			name = chi_confucian_manchu_literacy
+			years = 10
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.6.c
+		custom_tooltip = chi_confucian_scholars.6.c_tt
+		every_scope_state = {
+			add_radicals_in_state = {
+				culture = cu:manchu
+				value = 0.10
+			}
+		}
+		add_modifier = {
+			name = chi_confucian_manchu_customs_rejection
+			years = 10
+			is_decaying = yes
+		}
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress >= 10
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = -10
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 0
+			}
+		}
+	}
+}
+
+chi_confucian_scholars.5 = {
+	type = country_event
+	placement = ROOT
+
+	title = chi_confucian_scholars.5.t
+	desc = chi_confucian_scholars.5.d
+	flavor = chi_confucian_scholars.5.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_variable = chi_confucian_western_practices_event_fired
+		has_variable = chi_confucian_scholars_evict_scholars
+		has_journal_entry = je_chinese_missions
+		var:chi_confucian_scholars_progress > 40
+	}
+
+	option = {
+		name = chi_confucian_scholars.5.a
+		default_option = yes
+		add_technology_researched = medical_degrees
+		add_technology_researched = empiricism
+		add_modifier = {
+			name = chi_confucian_western_medicine
+			years = 10
+			is_decaying = yes
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.5.b
+		add_technology_researched = intensive_agriculture
+		add_modifier = {
+			name = chi_confucian_western_agriculture
+			years = 10
+		}
+	}
+
+	option = {
+		name = chi_confucian_scholars.5.c
+		add_technology_researched = mass_communication
+		if = {
+			limit = {
+				var:chi_confucian_scholars_progress <= 56
+			}
+			change_variable = {
+				name = chi_confucian_scholars_progress
+				add = 40
+			}
+		}
+		else = {
+			set_variable = {
+				name = chi_confucian_scholars_progress
+				value = 96
+			}
+		}
+	}
+}
