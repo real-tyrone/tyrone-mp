@@ -81,6 +81,35 @@
 					days = 180
 				}
 			}
+			if = {
+				enacted_law = law_type:law_chi_mixed_economic_policy
+				NOT = { has_variable = chi_mandate_mixed_policy_penalty_applied }
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = 2
+						name = chi_centralisation_progress_bar
+					}
+				}
+				apply_modifier = {
+					name = chi_mandate_mixed_policy_penalty_applied
+					years = 15
+				}
+			}
+
+			if = {
+				enacted_law = law_type:law_chi_industry_banned
+				NOT = { has_variable = chi_mandate_industry_banned_penalty_applied }
+				je:je_mandate_of_heaven = {
+					add_progress = {
+						value = 1
+						name = chi_centralisation_progress_bar
+					}
+				}
+				apply_modifier = {
+					name = chi_mandate_industry_banned_penalty_applied
+					years = 15
+				}
+			}
 
 			if = {
 				limit = {
@@ -195,7 +224,42 @@ je_confront_confucian_scholars = {
 	}
 
 	on_monthly_pulse = {
+		random_events = {
+			10 = 0
+			1 = chi_confucian_scholars.3
+			1 = chi_confucian_scholars.4
+		}
 		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_variable = chi_confucian_scholars_end_isolation
+						has_variable = chi_confucian_scholars_evict_scholars
+					}
+					var:chi_confucian_scholars_progress >= 75
+					NOT = { has_variable = chi_confucian_manchu_customs_event_fired }
+				}
+				set_variable = chi_confucian_manchu_customs_event_fired
+				trigger_event = {
+					id = chi_confucian_scholars.6
+					popup = yes
+				}
+			}
+
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_evict_scholars
+					var:chi_confucian_scholars_progress > 40
+					has_journal_entry = je_chinese_missions
+					NOT = { has_variable = chi_confucian_western_practices_event_fired }
+				}
+				set_variable = chi_confucian_western_practices_event_fired
+				trigger_event = {
+					id = chi_confucian_scholars.5
+					popup = yes
+				}
+			}
+
 			if = {
 				limit = {
 					OR = {

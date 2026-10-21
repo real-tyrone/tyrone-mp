@@ -24,6 +24,40 @@
 	effect = {
 		if = {
 			limit = {
+				has_variable = chi_confucian_scholars_end_isolation
+				NOT = { has_variable = chi_confucian_scholars_followup_fired }
+				ig:ig_devout ?= {
+					is_in_government = yes
+				}
+			}
+			set_variable = chi_confucian_scholars_followup_fired
+			trigger_event = {
+				id = chi_confucian_scholars.2
+				popup = yes
+			}
+		}
+
+		if = {
+			limit = {
+				has_variable = chi_confucian_focus_amendment_active
+			}
+			active_law:lawgroup_education_system ?= {
+				if = {
+					limit = {
+						NOT = {
+							has_amendment = amendment_type:amendment_confussion_focus
+						}
+					}
+					add_amendment = {
+						type = amendment_confussion_focus
+						sponsor = PREV.ig:ig_devout
+					}
+				}
+			}
+		}
+
+		if = {
+			limit = {
 				c:FRA ?= this
 				has_law_or_variant = law_type:law_monarchy
 				is_at_war = no
