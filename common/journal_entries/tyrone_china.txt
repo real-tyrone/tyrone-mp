@@ -18,9 +18,15 @@
 
 	immediate = {
 		add_contextless_journal_entry = je_economic_direction
+		chi_mandate_update_centralisation_modifier = yes
 	}
 
 	on_monthly_pulse = {
+		random_events = {
+			21 = 0
+			2 = chi_mandate.1
+			1 = chi_mandate.2
+		}
 		effect = {
 			if = {
 				limit = {
@@ -138,11 +144,17 @@
 				}
 				remove_variable = chi_mandate_civil_war_penalty_active
 			}
+
+			chi_mandate_update_centralisation_modifier = yes
 		}
 	}
 
 	complete = {
 		"scope:journal_entry.scripted_bar_progress(chi_centralisation_progress_bar)" >= 10
+	}
+
+	on_complete = {
+		chi_mandate_update_centralisation_modifier = yes
 	}
 
 	weight = 1000
@@ -198,6 +210,69 @@ je_economic_direction = {
 			add_modifier = {
 				name = economic_direction_industry_banned
 			}
+		}
+		add_journal_entry = {
+			type = je_homeland_development
+		}
+	}
+
+	weight = 1000
+}
+
+je_homeland_development = {
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	group = je_group_internal_affairs
+	scripted_button = homeland_development_labour_program_button
+	scripted_button = homeland_development_repose_assets_button
+
+	immediate = {
+		trigger_event = {
+			id = homeland_development.1
+			popup = yes
+		}
+	}
+
+	weight = 1000
+}
+
+je_early_army_modernization = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	group = je_group_internal_affairs
+	scripted_button = chi_early_army_napoleonic_button
+	scripted_button = chi_early_army_rifling_button
+	scripted_button = chi_early_army_general_staff_button
+	scripted_button = chi_early_army_screw_frigates_button
+
+	is_shown = {
+		is_china_tag_trigger = yes
+	}
+
+	immediate = {
+		set_variable = {
+			name = chi_early_army_stages
+			value = 4
+		}
+		add_modifier = chi_early_army_stage_4
+		add_modifier = chi_early_army_line_artillery_penalty
+	}
+
+	complete = {
+		var:chi_early_army_stages <= 0
+	}
+
+	on_complete = {
+		if = {
+			limit = {
+				je:je_mandate_of_heaven = {
+					"scripted_bar_progress(chi_centralisation_progress_bar)" >= 5
+				}
+			}
+			set_variable = chi_early_army_early_law_unlocked
+		}
+		else = {
+			set_variable = chi_early_army_militia_law_unlocked
 		}
 	}
 
@@ -282,6 +357,10 @@ je_confront_confucian_scholars = {
 				has_variable = chi_confucian_scholars_end_isolation
 			}
 			activate_law = law_type:law_chi_religious_focus
+			ig:ig_devout ?= {
+				remove_ideology = ideology_chi_devout_traditionalist
+				add_ideology = ideology_chi_devout_scholar
+			}
 		}
 		if = {
 			limit = {
