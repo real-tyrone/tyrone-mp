@@ -1,0 +1,139 @@
+﻿# Country scope: called by either option of The Honorable Company.
+tyrone_company_self_rule_start = {
+	if = {
+		limit = {
+			is_india_tag_trigger = yes
+			NOT = { has_variable = tyrone_csr_started }
+		}
+		hidden_effect = {
+			set_variable = tyrone_csr_started
+			set_variable = { name = tyrone_csr_active days = tyrone_csr_reform_period }
+			set_variable = { name = tyrone_csr_reforms value = 0 }
+			save_scope_as = csr_india
+		}
+		add_contextless_journal_entry = je_tyrone_company_self_rule
+		add_contextless_journal_entry = je_tyrone_csr_police
+		add_contextless_journal_entry = je_tyrone_csr_army
+		add_contextless_journal_entry = je_tyrone_csr_tax
+	}
+}
+
+# Bind once to the country which opened this arc, never to its changing overlord.
+tyrone_csr_bind_india = {
+	if = {
+		limit = { NOT = { exists = scope:csr_india } }
+		random_country = {
+			limit = { OR = { has_variable = tyrone_csr_started has_variable = tyrone_cr_started } }
+			save_scope_as = csr_india
+		}
+	}
+}
+
+# Contextless JE scope: only India and its current direct overlord participate.
+tyrone_csr_refresh_involvement = {
+	scope:journal_entry = {
+		every_scope_je_involved = {
+			limit = {
+				NOR = {
+					scope:csr_india ?= this
+					scope:csr_india.overlord ?= this
+				}
+			}
+			scope:journal_entry = { remove_involved_country = prev }
+		}
+	}
+	scope:csr_india ?= {
+		if = {
+			limit = { NOT = { is_involved_in_journal_entry = $ENTRY$ } }
+			scope:journal_entry = { add_involved_country = prev }
+		}
+		overlord ?= {
+			if = {
+				limit = { NOT = { is_involved_in_journal_entry = $ENTRY$ } }
+				scope:journal_entry = { add_involved_country = prev }
+			}
+		}
+	}
+}
+
+# Country scope: native Crown-rule transition, without a mutiny or a new overlord.
+tyrone_csr_crown_rule = {
+	if = {
+		limit = { is_subject = yes }
+		if = {
+			limit = { is_subject_type = subject_type_chartered_company }
+			decrease_autonomy = yes
+		}
+		remove_variable = company_rule_enduring
+		set_variable = doctrine_of_lapse_ended
+		if = {
+			limit = { has_modifier = charter_act_repealed }
+			remove_modifier = charter_act_repealed
+		}
+		if = {
+			limit = { has_modifier = modifier_india_company_rule }
+			remove_modifier = modifier_india_company_rule
+		}
+		if = {
+			limit = { has_modifier = modifier_india_company_rule_upgraded }
+			remove_modifier = modifier_india_company_rule_upgraded
+		}
+		add_modifier = modifier_india_crown_rule
+		activate_law = law_type:law_india_crown_administration
+		if = {
+			limit = { NOT = { has_law = law_type:law_colonial_administration } }
+			activate_law = law_type:law_colonial_administration
+		}
+		activate_law = law_type:law_autocracy
+		if = {
+			limit = {
+				NOR = {
+					has_law = law_type:law_hindu_caste_enforced
+					has_law = law_type:law_hindu_caste_codified
+				}
+			}
+			activate_law = law_type:law_hindu_caste_codified
+		}
+		ig:ig_industrialists ?= {
+			set_interest_group_name = ig_government_of_india
+			remove_ideology = ideology_john_company
+			add_ideology = ideology_colonialist
+		}
+	}
+}
+
+# Country scope: resolve once, whether three reforms finish early or seven years expire.
+tyrone_csr_resolve = {
+	if = {
+		limit = { NOT = { has_variable = tyrone_csr_resolved } }
+		remove_variable = tyrone_csr_active
+		set_variable = tyrone_csr_resolved
+		if = {
+			limit = { var:tyrone_csr_reforms >= 1 }
+			set_variable = tyrone_csr_success
+			if = {
+				limit = { var:tyrone_csr_reforms >= 3 }
+				set_variable = tyrone_csr_bonus_pending
+				trigger_event = { id = tyrone_company_self_rule.4 popup = yes }
+			}
+			else = {
+				set_variable = tyrone_csr_route_pending
+				trigger_event = { id = tyrone_company_self_rule.5 popup = yes }
+			}
+		}
+		else = {
+			set_variable = tyrone_csr_failed
+			if = {
+				limit = { is_subject = yes }
+				tyrone_csr_crown_rule = yes
+				tyrone_cr_start = yes
+				trigger_event = { id = tyrone_company_self_rule.6 popup = yes }
+			}
+			else = {
+				add_contextless_journal_entry = je_tyrone_csr_independent_path
+				trigger_event = { id = tyrone_company_self_rule.7 popup = yes }
+			}
+		}
+	}
+}
+

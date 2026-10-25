@@ -1,0 +1,474 @@
+# Shared mineral surveys for Imperialism of Promise. All JE requirements and monthly checks remain inline.
+je_tyrone_promise_mining_rajputana = {
+	icon = "gfx/interface/icons/building_icons/lead_mine.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { tyrone_promise_is_actor = yes }
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_rajputana_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_rajputana_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		set_global_variable = tyrone_mining_rajputana_active
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_mining_rajputana
+		}
+	}
+	scripted_button = tyrone_mining_rajputana_survey_1
+	scripted_button = tyrone_mining_rajputana_survey_2
+	scripted_button = tyrone_mining_rajputana_survey_3
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_mining_rajputana
+			}
+			if = {
+				limit = {
+					has_global_variable = tyrone_promise_active_var
+					has_global_variable = tyrone_mining_rajputana_active
+					exists = scope:tyrone_promise_india
+					scope:tyrone_promise_india ?= { is_country_alive = yes }
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_rajputana_survey_1_started
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_1_queued }
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_1_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_rajputana_survey_1_payer
+							MODIFIER = tyrone_mining_rajputana_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_rajputana_survey_1_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.1 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_rajputana_survey_2_started
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_2_queued }
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_2_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_rajputana_survey_2_payer
+							MODIFIER = tyrone_mining_rajputana_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_rajputana_survey_2_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.2 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_rajputana_survey_3_started
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_3_queued }
+						NOT = { has_global_variable = tyrone_mining_rajputana_survey_3_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_rajputana_survey_3_payer
+							MODIFIER = tyrone_mining_rajputana_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_rajputana_survey_3_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.3 days = 0 popup = yes }
+					}
+				}
+			}
+		}
+	}
+	complete = {
+		custom_tooltip = {
+			text = tyrone_mining_surveys_complete_tt
+			has_global_variable = tyrone_mining_rajputana_survey_1_done
+			has_global_variable = tyrone_mining_rajputana_survey_2_done
+			has_global_variable = tyrone_mining_rajputana_survey_3_done
+		}
+	}
+	on_complete = {
+		set_global_variable = tyrone_mining_rajputana_finished
+		remove_global_variable = tyrone_mining_rajputana_active
+		remove_global_variable = tyrone_mining_rajputana_survey_1_payer
+		remove_global_variable = tyrone_mining_rajputana_survey_2_payer
+		remove_global_variable = tyrone_mining_rajputana_survey_3_payer
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	on_invalid = {
+		remove_global_variable = tyrone_mining_rajputana_active
+		remove_global_variable = tyrone_mining_rajputana_survey_1_payer
+		remove_global_variable = tyrone_mining_rajputana_survey_2_payer
+		remove_global_variable = tyrone_mining_rajputana_survey_3_payer
+	}
+	current_value = {
+		value = 0
+		if = { limit = { has_global_variable = tyrone_mining_rajputana_survey_1_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_rajputana_survey_2_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_rajputana_survey_3_done } add = 1 }
+	}
+	goal_add_value = { value = 3 }
+	progress_desc = tyrone_mining_progress
+	progressbar = yes
+	weight = 20
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_tyrone_promise_mining_orissa = {
+	icon = "gfx/interface/icons/building_icons/iron_mine.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { tyrone_promise_is_actor = yes }
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_orissa_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_orissa_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		set_global_variable = tyrone_mining_orissa_active
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_mining_orissa
+		}
+	}
+	scripted_button = tyrone_mining_orissa_survey_1
+	scripted_button = tyrone_mining_orissa_survey_2
+	scripted_button = tyrone_mining_orissa_survey_3
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_mining_orissa
+			}
+			if = {
+				limit = {
+					has_global_variable = tyrone_promise_active_var
+					has_global_variable = tyrone_mining_orissa_active
+					exists = scope:tyrone_promise_india
+					scope:tyrone_promise_india ?= { is_country_alive = yes }
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_orissa_survey_1_started
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_1_queued }
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_1_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_orissa_survey_1_payer
+							MODIFIER = tyrone_mining_orissa_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_orissa_survey_1_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.4 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_orissa_survey_2_started
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_2_queued }
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_2_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_orissa_survey_2_payer
+							MODIFIER = tyrone_mining_orissa_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_orissa_survey_2_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.5 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_orissa_survey_3_started
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_3_queued }
+						NOT = { has_global_variable = tyrone_mining_orissa_survey_3_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_orissa_survey_3_payer
+							MODIFIER = tyrone_mining_orissa_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_orissa_survey_3_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.6 days = 0 popup = yes }
+					}
+				}
+			}
+		}
+	}
+	complete = {
+		custom_tooltip = {
+			text = tyrone_mining_surveys_complete_tt
+			has_global_variable = tyrone_mining_orissa_survey_1_done
+			has_global_variable = tyrone_mining_orissa_survey_2_done
+			has_global_variable = tyrone_mining_orissa_survey_3_done
+		}
+	}
+	on_complete = {
+		set_global_variable = tyrone_mining_orissa_finished
+		remove_global_variable = tyrone_mining_orissa_active
+		remove_global_variable = tyrone_mining_orissa_survey_1_payer
+		remove_global_variable = tyrone_mining_orissa_survey_2_payer
+		remove_global_variable = tyrone_mining_orissa_survey_3_payer
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	on_invalid = {
+		remove_global_variable = tyrone_mining_orissa_active
+		remove_global_variable = tyrone_mining_orissa_survey_1_payer
+		remove_global_variable = tyrone_mining_orissa_survey_2_payer
+		remove_global_variable = tyrone_mining_orissa_survey_3_payer
+	}
+	current_value = {
+		value = 0
+		if = { limit = { has_global_variable = tyrone_mining_orissa_survey_1_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_orissa_survey_2_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_orissa_survey_3_done } add = 1 }
+	}
+	goal_add_value = { value = 3 }
+	progress_desc = tyrone_mining_progress
+	progressbar = yes
+	weight = 20
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_tyrone_promise_mining_bihar = {
+	icon = "gfx/interface/icons/building_icons/coal_mine.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { tyrone_promise_is_actor = yes }
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_bihar_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		NOT = { has_global_variable = tyrone_mining_bihar_finished }
+		tyrone_promise_india_exists = yes
+		OR = {
+			scope:tyrone_promise_india ?= { has_technology_researched = dynamite }
+			global_var:tyrone_promise_india_country ?= { has_technology_researched = dynamite }
+			AND = {
+				NOT = { exists = scope:tyrone_promise_india }
+				NOT = { has_global_variable = tyrone_promise_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = dynamite }
+					c:BHR ?= { has_technology_researched = dynamite }
+				}
+			}
+		}
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		set_global_variable = tyrone_mining_bihar_active
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_mining_bihar
+		}
+	}
+	scripted_button = tyrone_mining_bihar_survey_1
+	scripted_button = tyrone_mining_bihar_survey_2
+	scripted_button = tyrone_mining_bihar_survey_3
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_mining_bihar
+			}
+			if = {
+				limit = {
+					has_global_variable = tyrone_promise_active_var
+					has_global_variable = tyrone_mining_bihar_active
+					exists = scope:tyrone_promise_india
+					scope:tyrone_promise_india ?= { is_country_alive = yes }
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_bihar_survey_1_started
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_1_queued }
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_1_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_bihar_survey_1_payer
+							MODIFIER = tyrone_mining_bihar_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_bihar_survey_1_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.7 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_bihar_survey_2_started
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_2_queued }
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_2_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_bihar_survey_2_payer
+							MODIFIER = tyrone_mining_bihar_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_bihar_survey_2_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.8 days = 0 popup = yes }
+					}
+				}
+				if = {
+					limit = {
+						has_global_variable = tyrone_mining_bihar_survey_3_started
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_3_queued }
+						NOT = { has_global_variable = tyrone_mining_bihar_survey_3_done }
+						tyrone_india_portfolio_survey_finished = {
+							PAYER = tyrone_mining_bihar_survey_3_payer
+							MODIFIER = tyrone_mining_bihar_survey_cost
+						}
+					}
+					# Lock before dispatch; opening or closing the popup cannot repeat the discovery.
+					set_global_variable = tyrone_mining_bihar_survey_3_queued
+					scope:tyrone_promise_india ?= {
+						trigger_event = { id = tyrone_indian_mining.9 days = 0 popup = yes }
+					}
+				}
+			}
+		}
+	}
+	complete = {
+		custom_tooltip = {
+			text = tyrone_mining_surveys_complete_tt
+			has_global_variable = tyrone_mining_bihar_survey_1_done
+			has_global_variable = tyrone_mining_bihar_survey_2_done
+			has_global_variable = tyrone_mining_bihar_survey_3_done
+		}
+	}
+	on_complete = {
+		set_global_variable = tyrone_mining_bihar_finished
+		remove_global_variable = tyrone_mining_bihar_active
+		remove_global_variable = tyrone_mining_bihar_survey_1_payer
+		remove_global_variable = tyrone_mining_bihar_survey_2_payer
+		remove_global_variable = tyrone_mining_bihar_survey_3_payer
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	on_invalid = {
+		remove_global_variable = tyrone_mining_bihar_active
+		remove_global_variable = tyrone_mining_bihar_survey_1_payer
+		remove_global_variable = tyrone_mining_bihar_survey_2_payer
+		remove_global_variable = tyrone_mining_bihar_survey_3_payer
+	}
+	current_value = {
+		value = 0
+		if = { limit = { has_global_variable = tyrone_mining_bihar_survey_1_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_bihar_survey_2_done } add = 1 }
+		if = { limit = { has_global_variable = tyrone_mining_bihar_survey_3_done } add = 1 }
+	}
+	goal_add_value = { value = 3 }
+	progress_desc = tyrone_mining_progress
+	progressbar = yes
+	weight = 20
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}

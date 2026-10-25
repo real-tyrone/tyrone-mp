@@ -1,0 +1,32 @@
+# Indian country scope.
+tyrone_jewel_country_active = {
+	is_country_alive = yes
+	is_subject = yes
+	has_variable = tyrone_jewel_active
+}
+
+# Clicking country scope; csr_india is saved by the shared journal entry.
+tyrone_jewel_is_actor = {
+	exists = scope:csr_india
+	scope:csr_india ?= { tyrone_jewel_country_active = yes }
+	OR = {
+		scope:csr_india ?= this
+		scope:csr_india.overlord ?= this
+	}
+}
+
+# Event context. A change of overlord cancels an unsigned proposal.
+tyrone_jewel_negotiation_valid = {
+	exists = scope:csr_india
+	exists = scope:jewel_overlord
+	exists = scope:jewel_proposer
+	exists = scope:jewel_partner
+	scope:csr_india ?= {
+		tyrone_jewel_country_active = yes
+		overlord ?= scope:jewel_overlord
+		has_variable = tyrone_jewel_pending
+	}
+	scope:jewel_overlord ?= { is_country_alive = yes }
+	scope:jewel_proposer ?= { is_country_alive = yes }
+	scope:jewel_partner ?= { is_country_alive = yes }
+}

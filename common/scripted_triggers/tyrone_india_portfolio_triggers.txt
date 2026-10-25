@@ -1,0 +1,98 @@
+# Actor predicates run in country scope; existence predicates also support contextless JEs.
+
+tyrone_railways_india_exists = {
+	OR = {
+		scope:tyrone_railways_india ?= { is_country_alive = yes }
+		global_var:tyrone_railways_india_country ?= { is_country_alive = yes }
+		AND = {
+			NOT = { exists = scope:tyrone_railways_india }
+			NOT = { has_global_variable = tyrone_railways_india_country }
+			OR = { exists = c:BIC exists = c:BHR }
+		}
+	}
+}
+
+tyrone_railways_is_india = {
+	OR = {
+		scope:tyrone_railways_india ?= this
+		global_var:tyrone_railways_india_country ?= this
+		AND = {
+			NOT = { exists = scope:tyrone_railways_india }
+			NOT = { has_global_variable = tyrone_railways_india_country }
+			is_india_tag_trigger = yes
+		}
+	}
+}
+
+tyrone_railways_is_actor = {
+	OR = {
+		tyrone_railways_is_india = yes
+		scope:tyrone_railways_india.overlord ?= this
+		global_var:tyrone_railways_india_country ?= { overlord ?= root }
+		AND = {
+			NOT = { exists = scope:tyrone_railways_india }
+			NOT = { has_global_variable = tyrone_railways_india_country }
+			any_subject_or_below = {
+				is_india_tag_trigger = yes
+				is_subject_of = root
+			}
+		}
+	}
+}
+
+tyrone_promise_india_exists = {
+	OR = {
+		scope:tyrone_promise_india ?= { is_country_alive = yes }
+		global_var:tyrone_promise_india_country ?= { is_country_alive = yes }
+		AND = {
+			NOT = { exists = scope:tyrone_promise_india }
+			NOT = { has_global_variable = tyrone_promise_india_country }
+			OR = { exists = c:BIC exists = c:BHR }
+		}
+	}
+}
+
+tyrone_promise_is_india = {
+	OR = {
+		scope:tyrone_promise_india ?= this
+		global_var:tyrone_promise_india_country ?= this
+		AND = {
+			NOT = { exists = scope:tyrone_promise_india }
+			NOT = { has_global_variable = tyrone_promise_india_country }
+			is_india_tag_trigger = yes
+		}
+	}
+}
+
+tyrone_promise_is_actor = {
+	OR = {
+		tyrone_promise_is_india = yes
+		scope:tyrone_promise_india.overlord ?= this
+		global_var:tyrone_promise_india_country ?= { overlord ?= root }
+		AND = {
+			NOT = { exists = scope:tyrone_promise_india }
+			NOT = { has_global_variable = tyrone_promise_india_country }
+			any_subject_or_below = {
+				is_india_tag_trigger = yes
+				is_subject_of = root
+			}
+		}
+	}
+}
+
+# Remember the actual payer, not the current overlord.
+# Legacy saves without a payer pointer wait for any existing copy of that survey cost.
+tyrone_india_portfolio_survey_finished = {
+	trigger_if = {
+		limit = { exists = global_var:$PAYER$ }
+		global_var:$PAYER$ ?= {
+			OR = {
+				is_country_alive = no
+				NOT = { has_modifier = $MODIFIER$ }
+			}
+		}
+	}
+	trigger_else = {
+		NOT = { any_country = { has_modifier = $MODIFIER$ } }
+	}
+}

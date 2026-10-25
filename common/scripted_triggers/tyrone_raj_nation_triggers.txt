@@ -1,0 +1,64 @@
+﻿tyrone_raj_nation_can_continue = {
+	exists = scope:raj_scope
+	scope:raj_scope = {
+		is_country_alive = yes
+		has_variable = tyrone_raj_nation_active
+		NOR = {
+			has_variable = tyrone_unstable_raj_failed
+			has_journal_entry = je_sepoy_mutiny
+			has_variable = tyrone_raj_nation_done
+		}
+	}
+}
+
+tyrone_raj_nation_is_actor = {
+	OR = {
+		this = scope:raj_scope
+		AND = {
+			exists = scope:raj_scope.overlord
+			scope:raj_scope.overlord = this
+		}
+	}
+}
+
+tyrone_raj_nation_can_intervene = {
+	tyrone_raj_nation_can_continue = yes
+	tyrone_raj_nation_is_actor = yes
+	scope:raj_scope = {
+		NOT = {
+			has_variable = tyrone_raj_nation_intervention
+		}
+	}
+	scope:journal_entry = {
+		"scripted_bar_progress(tyrone_raj_nation_progress_bar)" > -60
+		"scripted_bar_progress(tyrone_raj_nation_progress_bar)" < 60
+	}
+}
+
+tyrone_raj_nation_is_india = {
+	this = scope:raj_scope
+}
+
+# Country scope: event recipient; no saved scopes required.
+tyrone_raj_nation_country_active = {
+	is_country_alive = yes
+	has_variable = tyrone_raj_nation_active
+	is_involved_in_journal_entry = je_tyrone_raj_nation
+	NOR = {
+		has_variable = tyrone_unstable_raj_failed
+		has_variable = tyrone_raj_nation_done
+		has_journal_entry = je_sepoy_mutiny
+	}
+}
+
+tyrone_raj_nation_can_receive_event = {
+	tyrone_raj_nation_country_active = yes
+	NOR = {
+		has_variable = tyrone_raj_nation_event_cooldown
+		has_variable = tyrone_raj_nation_event_pending
+	}
+	je:je_tyrone_raj_nation ?= {
+		"scripted_bar_progress(tyrone_raj_nation_progress_bar)" > -60
+		"scripted_bar_progress(tyrone_raj_nation_progress_bar)" < 60
+	}
+}

@@ -1,0 +1,181 @@
+﻿je_tyrone_raj_nation = {
+	icon = "gfx/interface/icons/invention_icons/political_agitation.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			is_india_tag_trigger = yes
+			any_subject_or_below = {
+				is_india_tag_trigger = yes
+				is_direct_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = {
+		OR = {
+			is_india_tag_trigger = yes
+			any_subject_or_below = {
+				is_india_tag_trigger = yes
+				is_direct_subject_of = root
+			}
+		}
+	}
+
+	scripted_button = tyrone_raj_nation_caste_initiative
+	scripted_button = tyrone_raj_nation_imperial_initiative
+	
+	scripted_progress_bar = tyrone_raj_nation_progress_bar
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_unstable_raj_widgets.gui"
+		name = "tyrone_raj_nation_portraits_widget"
+		container = "custom_widget_container_3"
+	}
+	immediate = {
+		tyrone_unstable_bind_india = yes
+		scope:raj_scope = {
+			set_variable = tyrone_raj_nation_started
+			set_variable = tyrone_raj_nation_active
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			tyrone_raj_nation_can_continue = yes
+		}
+		custom_tooltip = {
+			text = tyrone_raj_nation_goal_tt
+			scope:journal_entry = {
+				OR = {
+					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
+					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" >= 60
+				}
+			}
+		}
+	}
+	on_complete = {
+		if = {
+			limit = {
+				scope:journal_entry = {
+					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
+				}
+			}
+			scope:raj_scope = {
+				set_variable = {
+					name = tyrone_raj_nation_result
+					value = -1
+				}
+				activate_law = law_type:law_hindu_caste_codified
+				activate_law = law_type:law_chartered_hereditary_bureaucrats
+				set_variable = tyrone_raj_nation_done
+				trigger_event = {
+					id = tyrone_raj_nation.4
+					popup = yes
+				}
+			}
+		}
+		else = {
+			scope:raj_scope = {
+				set_variable = {
+					name = tyrone_raj_nation_result
+					value = 1
+				}
+				tyrone_raj_nation_remove_informal_classes = yes
+				set_variable = tyrone_raj_nation_done
+				trigger_event = {
+					id = tyrone_raj_nation.5
+					popup = yes
+				}
+			}
+		}
+		tyrone_raj_nation_end = yes
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_raj_nation_caste_outcome
+		effect = {
+			scope:raj_scope = {
+				activate_law = law_type:law_hindu_caste_codified
+				activate_law = law_type:law_chartered_hereditary_bureaucrats
+			}
+		}
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_raj_nation_imperial_outcome
+		effect = {
+			scope:raj_scope = {
+				tyrone_raj_nation_remove_informal_classes = yes
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = {
+				exists = scope:raj_scope
+			}
+			scope:raj_scope ?= {
+				OR = {
+					is_country_alive = no
+					has_variable = tyrone_unstable_raj_failed
+					has_journal_entry = je_sepoy_mutiny
+				}
+			}
+		}
+	}
+	on_invalid = {
+		tyrone_raj_nation_end = yes
+	}
+	on_weekly_pulse = {
+		effect = {
+			scope:journal_entry = {
+				every_scope_je_involved = {
+					limit = {
+						NOR = {
+							scope:raj_scope ?= this
+							scope:raj_scope.overlord ?= this
+						}
+					}
+					scope:journal_entry = {
+						remove_involved_country = prev
+					}
+				}
+			}
+			scope:raj_scope = {
+				if = {
+					limit = {
+						NOT = {
+							is_involved_in_journal_entry = je_tyrone_raj_nation
+						}
+					}
+					scope:journal_entry = {
+						add_involved_country = prev
+					}
+				}
+				if = {
+					limit = {
+						is_subject = yes
+					}
+					overlord = {
+						if = {
+							limit = {
+								NOT = {
+									is_involved_in_journal_entry = je_tyrone_raj_nation
+								}
+							}
+							scope:journal_entry = {
+								add_involved_country = prev
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			scope:raj_scope = {
+				trigger_event = {
+					on_action = tyrone_raj_nation_monthly_events
+				}
+			}
+		}
+	}
+	weight = 90
+	can_revolution_inherit = yes
+}

@@ -1,0 +1,71 @@
+namespace = tyrone_indian_patents
+
+# India and the overlord can both submit the request; only the overlord receives this event.
+tyrone_indian_patents.1 = {
+	type = country_event
+	placement = scope:tyrone_promise_india
+	title = tyrone_indian_patents.1.t
+	desc = tyrone_indian_patents.1.d
+	flavor = tyrone_indian_patents.1.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/dialectics.dds"
+	duration = 1
+	trigger = {
+		has_global_variable = tyrone_promise_active_var
+		scope:tyrone_promise_india ?= {
+			is_country_alive = yes
+			is_subject = yes
+			overlord ?= root
+			has_variable = tyrone_patents_request_pending
+			any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { has_global_variable = tyrone_promise_active_var }
+			NOT = {
+				scope:tyrone_promise_india ?= {
+					is_country_alive = yes
+					overlord ?= root
+					has_variable = tyrone_patents_request_pending
+					any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_indian_patents.1.a
+		default_option = yes
+		ai_chance = { base = 50 }
+		add_modifier = {
+			name = tyrone_patents_overlord_funding
+			multiplier = tyrone_patents_weekly_funding
+			days = normal_modifier_time
+		}
+		scope:tyrone_promise_india = { tyrone_patents_end_reliance = yes }
+	}
+	option = {
+		name = tyrone_indian_patents.1.b
+		ai_chance = { base = 25 }
+		add_modifier = {
+			name = tyrone_patents_overlord_funding
+			multiplier = tyrone_patents_weekly_research_funding
+			days = normal_modifier_time
+		}
+		scope:tyrone_promise_india = {
+			tyrone_patents_end_reliance = yes
+			add_modifier = {
+				name = tyrone_patents_academic_exchange
+				days = normal_modifier_time
+			}
+		}
+	}
+	option = {
+		name = tyrone_indian_patents.1.c
+		ai_chance = { base = 25 }
+		hidden_effect = {
+			scope:tyrone_promise_india = { remove_variable = tyrone_patents_request_pending }
+		}
+	}
+}

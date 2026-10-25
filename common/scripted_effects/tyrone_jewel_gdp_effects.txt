@@ -1,0 +1,90 @@
+# Country scope: India. The shared JE supplies csr_india and journal_entry.
+tyrone_jewel_gdp_reset_cycle = {
+	set_variable = { name = tyrone_jewel_gdp_baseline value = gdp }
+	set_variable = {
+		name = tyrone_jewel_gdp_target
+		value = { value = gdp multiply = 1.10 }
+	}
+	set_variable = { name = tyrone_jewel_gdp_months_left value = 24 }
+	scope:journal_entry = {
+		add_progress = {
+			name = tyrone_jewel_gdp_progress_bar
+			value = {
+				value = 0
+				subtract = "scope:journal_entry.scripted_bar_progress(tyrone_jewel_gdp_progress_bar)"
+			}
+		}
+	}
+}
+
+tyrone_jewel_gdp_initialize = {
+	if = {
+		limit = { NOT = { has_variable = tyrone_jewel_gdp_started } }
+		set_variable = tyrone_jewel_gdp_started
+		set_variable = { name = tyrone_jewel_gdp_successes value = 0 }
+		tyrone_jewel_gdp_reset_cycle = yes
+		trigger_event = { id = tyrone_jewel_gdp.1 popup = yes }
+	}
+}
+
+tyrone_jewel_gdp_monthly = {
+	change_variable = { name = tyrone_jewel_gdp_months_left add = -1 }
+	if = {
+		limit = { var:tyrone_jewel_gdp_months_left <= 0 }
+		if = {
+			limit = {
+				gdp >= var:tyrone_jewel_gdp_target
+				has_variable = tyrone_jewel_gdp_policy
+				NOT = { has_variable = tyrone_jewel_gdp_reward_pending }
+			}
+			set_variable = tyrone_jewel_gdp_reward_pending
+			trigger_event = { id = tyrone_jewel_gdp.2 popup = yes }
+		}
+		# A failed biennium also starts again from actual GDP.
+		tyrone_jewel_gdp_reset_cycle = yes
+	}
+}
+
+# Country modifiers deliberately avoid shared-JE propagation to the overlord.
+# Their lifetime is tied to the JE through on_invalid cleanup.
+tyrone_jewel_gdp_apply_bonus = {
+	hidden_effect = {
+		remove_modifier = tyrone_jewel_gdp_construction
+		remove_modifier = tyrone_jewel_gdp_institution_impact
+		remove_modifier = tyrone_jewel_gdp_institution_cost
+	}
+	if = {
+		limit = { var:tyrone_jewel_gdp_policy = 1 }
+		add_modifier = {
+			name = tyrone_jewel_gdp_construction
+			multiplier = $COUNT$
+		}
+	}
+	else_if = {
+		limit = { var:tyrone_jewel_gdp_policy = 2 }
+		add_modifier = {
+			name = tyrone_jewel_gdp_institution_impact
+			multiplier = $COUNT$
+		}
+	}
+	else_if = {
+		limit = { var:tyrone_jewel_gdp_policy = 3 }
+		add_modifier = {
+			name = tyrone_jewel_gdp_institution_cost
+			multiplier = $COUNT$
+		}
+	}
+}
+
+tyrone_jewel_gdp_cleanup = {
+	remove_modifier = tyrone_jewel_gdp_construction
+	remove_modifier = tyrone_jewel_gdp_institution_impact
+	remove_modifier = tyrone_jewel_gdp_institution_cost
+	remove_variable = tyrone_jewel_gdp_started
+	remove_variable = tyrone_jewel_gdp_baseline
+	remove_variable = tyrone_jewel_gdp_target
+	remove_variable = tyrone_jewel_gdp_months_left
+	remove_variable = tyrone_jewel_gdp_successes
+	remove_variable = tyrone_jewel_gdp_policy
+	remove_variable = tyrone_jewel_gdp_reward_pending
+}

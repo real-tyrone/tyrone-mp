@@ -1,0 +1,55 @@
+# Contextless JE scope. Preserve the country object when India's tag changes.
+tyrone_india_portfolio_bind = {
+	if = {
+		limit = { NOT = { exists = scope:$SCOPE$ } }
+		if = {
+			limit = { exists = global_var:$COUNTRY$ }
+			global_var:$COUNTRY$ = { save_scope_as = $SCOPE$ }
+		}
+		else_if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = $SCOPE$ }
+		}
+		else_if = {
+			limit = { exists = c:BHR }
+			c:BHR = { save_scope_as = $SCOPE$ }
+		}
+	}
+	scope:$SCOPE$ ?= {
+		set_global_variable = { name = $COUNTRY$ value = this }
+	}
+}
+
+tyrone_railways_bind_india = {
+	tyrone_india_portfolio_bind = {
+		SCOPE = tyrone_railways_india
+		COUNTRY = tyrone_railways_india_country
+	}
+}
+
+# Contextless JE scope, following the existing shared-JE involvement pattern.
+tyrone_india_portfolio_refresh_involvement = {
+	scope:journal_entry = {
+		every_scope_je_involved = {
+			limit = {
+				NOR = {
+					$INDIA$ ?= this
+					$INDIA$.overlord ?= this
+				}
+			}
+			scope:journal_entry = { remove_involved_country = prev }
+		}
+	}
+	$INDIA$ ?= {
+		if = {
+			limit = { NOT = { is_involved_in_journal_entry = $ENTRY$ } }
+			scope:journal_entry = { add_involved_country = prev }
+		}
+		overlord ?= {
+			if = {
+				limit = { NOT = { is_involved_in_journal_entry = $ENTRY$ } }
+				scope:journal_entry = { add_involved_country = prev }
+			}
+		}
+	}
+}

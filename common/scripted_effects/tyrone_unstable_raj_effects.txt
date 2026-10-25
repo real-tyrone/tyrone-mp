@@ -1,0 +1,51 @@
+﻿# Country binding for contextless entries. Saved once per JE, not retargeted to a new country.
+tyrone_unstable_bind_india = {
+	if = {
+		limit = {
+			exists = c:BIC
+		}
+		c:BIC = {
+			save_scope_as = raj_scope
+		}
+	}
+	else = {
+		random_country = {
+			limit = {
+				is_india_tag_trigger = yes
+			}
+			save_scope_as = raj_scope
+		}
+	}
+}
+
+# Country scope. The caller computes a non-negative, debt-capped payment.
+tyrone_raj_transfer_payment = {
+	if = {
+		limit = {
+			is_subject = yes
+			has_variable = tyrone_unstable_raj_active
+			var:tyrone_raj_debt > 0
+		}
+		save_temporary_scope_value_as = {
+			name = tyrone_raj_debit
+			value = {
+				value = scope:tyrone_raj_payment
+				multiply = -1
+			}
+		}
+		add_treasury = scope:tyrone_raj_debit
+		change_variable = {
+			name = tyrone_raj_debt
+			add = scope:tyrone_raj_debit
+		}
+		overlord = {
+			add_treasury = scope:tyrone_raj_payment
+		}
+		if = {
+			limit = {
+				var:tyrone_raj_debt <= 0
+			}
+			remove_variable = tyrone_raj_auto_repayment
+		}
+	}
+}

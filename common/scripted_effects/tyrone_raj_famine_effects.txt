@@ -1,0 +1,502 @@
+﻿# No natural harvest definition is overridden. The parameterized engine effect
+# Onset reserves regions; each local event option applies the condition and opens its JE.
+tyrone_raj_famine_start_wave = {
+	save_temporary_scope_value_as = {
+		name = tyrone_famine_duration
+		value = tyrone_raj_famine_duration_days
+	}
+	tyrone_raj_famine_select_state = {
+		SLOT = 1
+		EVENT = 1
+	}
+	if = {
+		limit = {
+			market_capital.market = {
+				mg:grain = {
+					market_goods_pricier >= 0.10
+				}
+			}
+		}
+		tyrone_raj_famine_select_state = {
+			SLOT = 2
+			EVENT = 3
+		}
+	}
+	if = {
+		limit = {
+			market_capital.market = {
+				mg:grain = {
+					market_goods_pricier >= 0.20
+				}
+			}
+		}
+		tyrone_raj_famine_select_state = {
+			SLOT = 3
+			EVENT = 4
+		}
+	}
+	if = {
+		limit = {
+			market_capital.market = {
+				mg:grain = {
+					market_goods_pricier >= 0.30
+				}
+			}
+		}
+		tyrone_raj_famine_select_state = {
+			SLOT = 4
+			EVENT = 5
+		}
+	}
+}
+
+# India scope. Reserve distinct regions while local event options are pending.
+tyrone_raj_famine_select_state = {
+	if = {
+		limit = {
+			any_state = {
+				tyrone_raj_famine_eligible_state = yes
+				tyrone_raj_famine_preferred_state = yes
+			}
+		}
+		random_state = {
+			limit = {
+				tyrone_raj_famine_eligible_state = yes
+				tyrone_raj_famine_preferred_state = yes
+			}
+			tyrone_raj_famine_queue_state = {
+				SLOT = $SLOT$
+				EVENT = $EVENT$
+			}
+		}
+	}
+	else = {
+		random_state = {
+			limit = {
+				tyrone_raj_famine_eligible_state = yes
+			}
+			tyrone_raj_famine_queue_state = {
+				SLOT = $SLOT$
+				EVENT = $EVENT$
+			}
+		}
+	}
+}
+
+# State scope. Called only from onset/spread events, never from a live JE's scope context.
+tyrone_raj_famine_queue_state = {
+	save_scope_as = famine_state
+	state_region = {
+		save_scope_as = famine_region
+		set_variable = tyrone_raj_famine_pending
+		set_variable = {
+			name = tyrone_raj_famine_pending_duration
+			value = scope:tyrone_famine_duration
+		}
+	}
+	scope:raj_scope = {
+		set_variable = {
+			name = tyrone_raj_famine_region_$SLOT$
+			value = scope:famine_region
+		}
+		trigger_event = {
+			id = tyrone_raj_famine.$EVENT$
+			popup = yes
+		}
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			overlord = {
+				trigger_event = {
+					id = tyrone_raj_famine.$EVENT$
+					popup = yes
+				}
+			}
+		}
+	}
+}
+
+# JE scope. The child event gets its own saved scopes before selecting another region.
+tyrone_raj_famine_monthly_spread = {
+	if = {
+		limit = {
+			tyrone_raj_famine_can_spread = yes
+		}
+		random_list = {
+			2 = {
+			}
+			1 = {
+				scope:raj_scope = {
+					trigger_event = tyrone_raj_famine.$EVENT$
+				}
+			}
+		}
+	}
+}
+
+# India country-event scope. No global wave cooldown is changed by local spread.
+tyrone_raj_famine_spread = {
+	scope:famine_region = {
+		save_scope_as = famine_source_region
+	}
+	save_temporary_scope_value_as = {
+		name = tyrone_famine_duration
+		value = tyrone_raj_famine_duration_days
+	}
+	if = {
+		limit = {
+			any_state = {
+				tyrone_raj_famine_spread_target = yes
+				tyrone_raj_famine_preferred_state = yes
+			}
+		}
+		random_state = {
+			limit = {
+				tyrone_raj_famine_spread_target = yes
+				tyrone_raj_famine_preferred_state = yes
+			}
+			tyrone_raj_famine_queue_spread_state = yes
+		}
+	}
+	else = {
+		random_state = {
+			limit = {
+				tyrone_raj_famine_spread_target = yes
+			}
+			tyrone_raj_famine_queue_spread_state = yes
+		}
+	}
+}
+
+# Selected state scope. Reserve the first free slot after choosing the destination.
+tyrone_raj_famine_queue_spread_state = {
+	if = {
+		limit = {
+			scope:raj_scope = {
+				NOT = {
+					has_variable = tyrone_raj_famine_region_1
+				}
+			}
+		}
+		tyrone_raj_famine_queue_state = {
+			SLOT = 1
+			EVENT = 1
+		}
+	}
+	else_if = {
+		limit = {
+			scope:raj_scope = {
+				NOT = {
+					has_variable = tyrone_raj_famine_region_2
+				}
+			}
+		}
+		tyrone_raj_famine_queue_state = {
+			SLOT = 2
+			EVENT = 3
+		}
+	}
+	else_if = {
+		limit = {
+			scope:raj_scope = {
+				NOT = {
+					has_variable = tyrone_raj_famine_region_3
+				}
+			}
+		}
+		tyrone_raj_famine_queue_state = {
+			SLOT = 3
+			EVENT = 4
+		}
+	}
+	else_if = {
+		limit = {
+			scope:raj_scope = {
+				NOT = {
+					has_variable = tyrone_raj_famine_region_4
+				}
+			}
+		}
+		tyrone_raj_famine_queue_state = {
+			SLOT = 4
+			EVENT = 5
+		}
+	}
+}
+
+# Contextless JE scope. Do not cancel the harvest condition or any funded relief.
+tyrone_raj_famine_close = {
+	scope:famine_region ?= {
+		remove_variable = tyrone_raj_famine_active
+	}
+	scope:raj_scope ?= {
+		remove_variable = tyrone_raj_famine_region_$SLOT$
+	}
+}
+
+# Clicking country. Recheck shared JE locks and independent invoice banks for multiplayer.
+tyrone_raj_famine_fund = {
+	if = {
+		limit = {
+			scope:raj_scope = {
+				NOT = {
+					has_law_or_variant = law_type:$BASE_LAW$
+				}
+			}
+			tyrone_raj_famine_can_fund = yes
+			tyrone_raj_famine_funding_available = {
+				AID = $AID$
+				SLOT = $SLOT$
+			}
+			scope:journal_entry = {
+				NOT = {
+					has_variable = tyrone_famine_$AID$_funded
+				}
+			}
+		}
+		hidden_effect = {
+			scope:journal_entry = {
+				set_variable = tyrone_famine_$AID$_funded
+			}
+		}
+		if = {
+			limit = {
+				tyrone_raj_famine_bank_available = {
+					AID = $AID$
+					SLOT = $SLOT$
+					BANK = a
+				}
+			}
+			tyrone_raj_famine_apply_relief = {
+				AID = $AID$
+				SLOT = $SLOT$
+				BANK = a
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_bank_available = {
+					AID = $AID$
+					SLOT = $SLOT$
+					BANK = b
+				}
+			}
+			tyrone_raj_famine_apply_relief = {
+				AID = $AID$
+				SLOT = $SLOT$
+				BANK = b
+			}
+		}
+		else = {
+			tyrone_raj_famine_apply_relief = {
+				AID = $AID$
+				SLOT = $SLOT$
+				BANK = c
+			}
+		}
+	}
+}
+
+# Clicking country. The multiplier snapshots revenue when the intervention is financed.
+tyrone_raj_famine_apply_relief = {
+	add_modifier = {
+		name = tyrone_raj_famine_$AID$_cost_$SLOT$_$BANK$
+		multiplier = tyrone_raj_famine_weekly_cost
+		days = very_short_modifier_time
+	}
+	scope:famine_region = {
+		every_scope_state = {
+			add_modifier = {
+				name = tyrone_raj_famine_$AID$_relief_$BANK$
+				days = very_short_modifier_time
+			}
+		}
+	}
+}
+
+# Contextless JE scope: preserve the geographical crisis through annexations.
+tyrone_raj_famine_refresh_state = {
+	if = {
+		limit = {
+			OR = {
+				NOT = {
+					exists = scope:famine_state
+				}
+				scope:famine_state ?= {
+					state_region = {
+						NOT = {
+							this = scope:famine_region
+						}
+					}
+				}
+				scope:famine_state ?= {
+					owner = {
+						NOR = {
+							this = scope:raj_scope
+							is_subject_of = scope:raj_scope
+						}
+					}
+				}
+			}
+		}
+		scope:famine_region = {
+			random_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							this = scope:raj_scope
+							is_subject_of = scope:raj_scope
+						}
+					}
+				}
+				save_scope_as = famine_state
+			}
+		}
+	}
+}
+
+# The engine's duration argument is a literal integer, not a script value.
+# The seven branches preserve the 12-18 month law-tier durations.
+tyrone_raj_famine_apply_harvest = {
+	if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 548
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 548
+		}
+	}
+	else_if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 517
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 517
+		}
+	}
+	else_if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 487
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 487
+		}
+	}
+	else_if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 457
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 457
+		}
+	}
+	else_if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 426
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 426
+		}
+	}
+	else_if = {
+		limit = {
+			var:tyrone_raj_famine_pending_duration >= 396
+		}
+		tyrone_raj_famine_start_disease = {
+			DAYS = 396
+		}
+	}
+	else = {
+		tyrone_raj_famine_start_disease = {
+			DAYS = 365
+		}
+	}
+}
+
+# State-region scope. Macro substitution supplies a literal duration to the engine.
+tyrone_raj_famine_start_disease = {
+	# Preserve any natural outbreak that appeared while the event was pending.
+	if = {
+		limit = {
+			NOT = {
+				has_harvest_condition = disease_outbreak
+			}
+		}
+		random_list = {
+			1 = {
+				start_harvest_condition_with_params = {
+					type = disease_outbreak
+					intensity = 3
+					duration = $DAYS$
+				}
+			}
+			1 = {
+				start_harvest_condition_with_params = {
+					type = disease_outbreak
+					intensity = 4
+					duration = $DAYS$
+				}
+			}
+			1 = {
+				start_harvest_condition_with_params = {
+					type = disease_outbreak
+					intensity = 5
+					duration = $DAYS$
+				}
+			}
+			1 = {
+				start_harvest_condition_with_params = {
+					type = disease_outbreak
+					intensity = 6
+					duration = $DAYS$
+				}
+			}
+			1 = {
+				start_harvest_condition_with_params = {
+					type = disease_outbreak
+					intensity = 7
+					duration = $DAYS$
+				}
+			}
+		}
+	}
+	every_scope_state = {
+		add_modifier = {
+			name = tyrone_raj_famine_peasant_mortality
+			days = $DAYS$
+		}
+	}
+}
+
+# India scope: parent endings release reservations without affecting existing crises.
+tyrone_raj_famine_cancel_pending = {
+	save_scope_as = raj_scope
+	tyrone_raj_famine_cancel_pending_slot = {
+		SLOT = 1
+	}
+	tyrone_raj_famine_cancel_pending_slot = {
+		SLOT = 2
+	}
+	tyrone_raj_famine_cancel_pending_slot = {
+		SLOT = 3
+	}
+	tyrone_raj_famine_cancel_pending_slot = {
+		SLOT = 4
+	}
+}
+
+tyrone_raj_famine_cancel_pending_slot = {
+	var:tyrone_raj_famine_region_$SLOT$ ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_famine_pending
+			}
+			remove_variable = tyrone_raj_famine_pending
+			remove_variable = tyrone_raj_famine_pending_duration
+			scope:raj_scope = {
+				remove_variable = tyrone_raj_famine_region_$SLOT$
+			}
+		}
+	}
+}

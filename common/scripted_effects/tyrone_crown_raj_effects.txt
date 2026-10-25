@@ -1,0 +1,367 @@
+﻿# Country scope: enter after a completed transfer to Crown rule.
+tyrone_cr_start = {
+	if = {
+		limit = {
+			is_india_tag_trigger = yes
+			is_subject = yes
+			NOT = { has_variable = tyrone_cr_started }
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_started
+			set_variable = tyrone_cr_active
+			set_variable = { name = tyrone_cr_reforms value = 0 }
+			save_scope_as = csr_india
+			if = {
+				limit = { any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly } }
+				set_variable = tyrone_cr_transfer_monopoly
+			}
+			if = {
+				limit = { any_active_law = { has_amendment = amendment_type:amendment_cotton_export_guarantees } }
+				set_variable = tyrone_cr_transfer_cotton
+			}
+		}
+		if = {
+			limit = { NOT = { has_law = law_type:law_india_crown_administration } }
+			activate_law = law_type:law_india_crown_administration
+		}
+		activate_law = law_type:law_india_crown_industrial_obligations
+		if = {
+			limit = { has_variable = tyrone_cr_transfer_monopoly }
+			active_law:lawgroup_india_chartered_obligations = {
+				add_amendment = { type = amendment_british_manufacturing_monopoly sponsor = prev.ig:ig_industrialists }
+			}
+			hidden_effect = { remove_variable = tyrone_cr_transfer_monopoly }
+		}
+		if = {
+			limit = { has_variable = tyrone_cr_transfer_cotton }
+			active_law:lawgroup_india_chartered_obligations = {
+				add_amendment = { type = amendment_cotton_export_guarantees sponsor = prev.ig:ig_landowners }
+			}
+			hidden_effect = { remove_variable = tyrone_cr_transfer_cotton }
+		}
+		if = {
+			limit = { NOT = { is_involved_in_journal_entry = je_tyrone_csr_crown_path } }
+			add_contextless_journal_entry = je_tyrone_csr_crown_path
+		}
+		add_contextless_journal_entry = je_tyrone_cr_police
+		add_contextless_journal_entry = je_tyrone_cr_corporations
+		add_contextless_journal_entry = je_tyrone_cr_apparatus
+		add_contextless_journal_entry = je_tyrone_cr_institutions
+	}
+}
+
+# Contextless JE/event scope: preserve the actual Indian country.
+tyrone_cr_bind_india = {
+	if = {
+		limit = { NOT = { exists = scope:csr_india } }
+		random_country = {
+			limit = { has_variable = tyrone_cr_started }
+			save_scope_as = csr_india
+		}
+	}
+}
+
+# Country scope. Manual repeal clears the flag through amendment on_deactivate.
+tyrone_cr_reapply_settlements = {
+	if = {
+		limit = { has_variable = tyrone_cr_manufacturing_imperial_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_manufacturing_imperial } }
+				add_amendment = { type = amendment_tyrone_cr_manufacturing_imperial sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_manufacturing_development_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_manufacturing_development } }
+				add_amendment = { type = amendment_tyrone_cr_manufacturing_development sponsor = prev.ig:ig_intelligentsia }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_railways_imperial_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_railways_imperial } }
+				add_amendment = { type = amendment_tyrone_cr_railways_imperial sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_railways_development_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_railways_development } }
+				add_amendment = { type = amendment_tyrone_cr_railways_development sponsor = prev.ig:ig_intelligentsia }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_plantations_imperial_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_plantations_imperial } }
+				add_amendment = { type = amendment_tyrone_cr_plantations_imperial sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_plantations_development_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_plantations_development } }
+				add_amendment = { type = amendment_tyrone_cr_plantations_development sponsor = prev.ig:ig_intelligentsia }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_power_imperial_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_power_imperial } }
+				add_amendment = { type = amendment_tyrone_cr_power_imperial sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+	if = {
+		limit = { has_variable = tyrone_cr_power_development_settlement }
+		active_law:lawgroup_india_chartered_obligations ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_power_development } }
+				add_amendment = { type = amendment_tyrone_cr_power_development sponsor = prev.ig:ig_intelligentsia }
+			}
+		}
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_manufacturing_imperial = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_manufacturing_pending
+				NOT = { has_variable = tyrone_cr_manufacturing_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_manufacturing_done
+			set_variable = tyrone_cr_manufacturing_imperial_settlement
+			remove_variable = tyrone_cr_manufacturing_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_manufacturing_imperial sponsor = prev.ig:ig_industrialists }
+		}
+		var:tyrone_cr_manufacturing_negotiator ?= {
+			add_modifier = {
+				name = tyrone_cr_manufacturing_imperial_returns
+				days = normal_modifier_time
+			}
+		}
+		hidden_effect = { remove_variable = tyrone_cr_manufacturing_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_manufacturing_development = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_manufacturing_pending
+				NOT = { has_variable = tyrone_cr_manufacturing_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_manufacturing_done
+			set_variable = tyrone_cr_manufacturing_development_settlement
+			remove_variable = tyrone_cr_manufacturing_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_manufacturing_development sponsor = prev.ig:ig_intelligentsia }
+		}
+		hidden_effect = { remove_variable = tyrone_cr_manufacturing_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_railways_imperial = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_railways_pending
+				NOT = { has_variable = tyrone_cr_railways_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_railways_done
+			set_variable = tyrone_cr_railways_imperial_settlement
+			remove_variable = tyrone_cr_railways_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_railways_imperial sponsor = prev.ig:ig_industrialists }
+		}
+		var:tyrone_cr_railways_negotiator ?= {
+			add_modifier = {
+				name = tyrone_cr_railways_imperial_returns
+				days = normal_modifier_time
+			}
+		}
+		hidden_effect = { remove_variable = tyrone_cr_railways_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_railways_development = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_railways_pending
+				NOT = { has_variable = tyrone_cr_railways_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_railways_done
+			set_variable = tyrone_cr_railways_development_settlement
+			remove_variable = tyrone_cr_railways_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_railways_development sponsor = prev.ig:ig_intelligentsia }
+		}
+		hidden_effect = { remove_variable = tyrone_cr_railways_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_plantations_imperial = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_plantations_pending
+				NOT = { has_variable = tyrone_cr_plantations_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_plantations_done
+			set_variable = tyrone_cr_plantations_imperial_settlement
+			remove_variable = tyrone_cr_plantations_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_plantations_imperial sponsor = prev.ig:ig_industrialists }
+		}
+		var:tyrone_cr_plantations_negotiator ?= {
+			add_modifier = {
+				name = tyrone_cr_plantations_imperial_returns
+				days = normal_modifier_time
+			}
+		}
+		hidden_effect = { remove_variable = tyrone_cr_plantations_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_plantations_development = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_plantations_pending
+				NOT = { has_variable = tyrone_cr_plantations_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_plantations_done
+			set_variable = tyrone_cr_plantations_development_settlement
+			remove_variable = tyrone_cr_plantations_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_plantations_development sponsor = prev.ig:ig_intelligentsia }
+		}
+		hidden_effect = { remove_variable = tyrone_cr_plantations_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_power_imperial = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_power_pending
+				NOT = { has_variable = tyrone_cr_power_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_power_done
+			set_variable = tyrone_cr_power_imperial_settlement
+			remove_variable = tyrone_cr_power_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_power_imperial sponsor = prev.ig:ig_industrialists }
+		}
+		var:tyrone_cr_power_negotiator ?= {
+			add_modifier = {
+				name = tyrone_cr_power_imperial_returns
+				days = normal_modifier_time
+			}
+		}
+		hidden_effect = { remove_variable = tyrone_cr_power_negotiator }
+	}
+}
+
+# Country scope: one signed settlement per sector.
+tyrone_cr_settle_power_development = {
+	if = {
+		limit = {
+			hidden_trigger = {
+				tyrone_cr_country_active = yes
+				has_variable = tyrone_cr_power_pending
+				NOT = { has_variable = tyrone_cr_power_done }
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cr_power_done
+			set_variable = tyrone_cr_power_development_settlement
+			remove_variable = tyrone_cr_power_pending
+		}
+		active_law:lawgroup_india_chartered_obligations = {
+			add_amendment = { type = amendment_tyrone_cr_power_development sponsor = prev.ig:ig_intelligentsia }
+		}
+		hidden_effect = { remove_variable = tyrone_cr_power_negotiator }
+	}
+}
+
+
+# Country scope: the alternative monopoly removal opens the same initial cohort.
+tyrone_cr_unlock_industrialization = {
+	if = {
+		limit = { has_global_variable = tyrone_promise_active_var }
+		if = {
+			limit = {
+				NOT = { has_global_variable = tyrone_promise_industrialize_bengal_done }
+				NOT = { is_involved_in_journal_entry = je_tyrone_promise_industrialize_bengal }
+			}
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_bengal
+		}
+		if = {
+			limit = {
+				NOT = { has_global_variable = tyrone_promise_industrialize_bombay_done }
+				NOT = { is_involved_in_journal_entry = je_tyrone_promise_industrialize_bombay }
+			}
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_bombay
+		}
+		if = {
+			limit = {
+				NOT = { has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done }
+				NOT = { is_involved_in_journal_entry = je_tyrone_promise_industrialize_carnatic_malabar }
+			}
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_carnatic_malabar
+		}
+	}
+}

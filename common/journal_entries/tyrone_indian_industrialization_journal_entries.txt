@@ -1,0 +1,701 @@
+# Regional follow-up to Ending the Manufacturing Monopoly.
+# Contextless entries shared by India and its current overlord; all requirements stay inline.
+je_tyrone_promise_industrialize_punjab = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Second wave: hidden until all three initial industrializations are complete.
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_punjab
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_punjab
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_PUNJAB
+			any_scope_state = {
+				state_region = s:STATE_PUNJAB
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		s:STATE_PUNJAB = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_bengal = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Only spawned by completion of Ending the Manufacturing Monopoly.
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_bengal
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_bengal
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_WEST_BENGAL
+			any_scope_state = {
+				state_region = s:STATE_WEST_BENGAL
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+			owns_entire_state_region = STATE_EAST_BENGAL
+			any_scope_state = {
+				state_region = s:STATE_EAST_BENGAL
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = { set_global_variable = tyrone_promise_industrialize_bengal_done }
+		s:STATE_WEST_BENGAL = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+		s:STATE_EAST_BENGAL = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_bombay = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Only spawned by completion of Ending the Manufacturing Monopoly.
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_bombay
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_bombay
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_BOMBAY
+			any_scope_state = {
+				state_region = s:STATE_BOMBAY
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = { set_global_variable = tyrone_promise_industrialize_bombay_done }
+		s:STATE_BOMBAY = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_gangetic_plain = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Second wave: hidden until all three initial industrializations are complete.
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_gangetic_plain
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_gangetic_plain
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_BIHAR
+			any_scope_state = {
+				state_region = s:STATE_BIHAR
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+			owns_entire_state_region = STATE_AGRA
+			any_scope_state = {
+				state_region = s:STATE_AGRA
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+			owns_entire_state_region = STATE_AWADH
+			any_scope_state = {
+				state_region = s:STATE_AWADH
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		s:STATE_BIHAR = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+		s:STATE_AGRA = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+		s:STATE_AWADH = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_carnatic_malabar = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Only spawned by completion of Ending the Manufacturing Monopoly.
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_carnatic_malabar
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_carnatic_malabar
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_MADRAS
+			any_scope_state = {
+				state_region = s:STATE_MADRAS
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+			owns_entire_state_region = STATE_TRAVANCORE
+			any_scope_state = {
+				state_region = s:STATE_TRAVANCORE
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 25
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 5
+				}
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = { set_global_variable = tyrone_promise_industrialize_carnatic_malabar_done }
+		s:STATE_MADRAS = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+		s:STATE_TRAVANCORE = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_deccan = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Second wave: hidden until all three initial industrializations are complete.
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_deccan
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_deccan
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_HYDERABAD
+			any_scope_state = {
+				state_region = s:STATE_HYDERABAD
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+			owns_entire_state_region = STATE_CENTRAL_PROVINCES
+			any_scope_state = {
+				state_region = s:STATE_CENTRAL_PROVINCES
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		s:STATE_HYDERABAD = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+		s:STATE_CENTRAL_PROVINCES = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}
+
+je_tyrone_promise_industrialize_rajputana = {
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	# Second wave: hidden until all three initial industrializations are complete.
+	is_shown_when_inactive = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	possible = {
+		has_global_variable = tyrone_promise_active_var
+		has_global_variable = tyrone_promise_industrialize_bombay_done
+		has_global_variable = tyrone_promise_industrialize_bengal_done
+		has_global_variable = tyrone_promise_industrialize_carnatic_malabar_done
+		tyrone_promise_india_exists = yes
+	}
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_industrialize_rajputana
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_industrialize_rajputana
+			}
+		}
+	}
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_promise_active_var
+			exists = scope:tyrone_promise_india
+			scope:tyrone_promise_india ?= { is_country_alive = yes }
+		}
+		scope:tyrone_promise_india ?= {
+			owns_entire_state_region = STATE_RAJPUTANA
+			any_scope_state = {
+				state_region = s:STATE_RAJPUTANA
+				state_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 100
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 50
+				}
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+			}
+		}
+	}
+	on_complete = {
+		s:STATE_RAJPUTANA = {
+			if = {
+				limit = { has_state_trait = state_trait_tyrone_indian_rural_region }
+				remove_state_trait = state_trait_tyrone_indian_rural_region
+			}
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_early_industrialized } }
+				add_state_trait = state_trait_tyrone_early_industrialized
+			}
+		}
+	}
+	invalid = {
+		NOT = {
+			AND = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+			}
+		}
+	}
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+}

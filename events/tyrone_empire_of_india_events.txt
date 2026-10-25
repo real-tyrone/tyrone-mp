@@ -1,0 +1,792 @@
+namespace = tyrone_empire_of_india
+
+tyrone_empire_of_india.110 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.110.t
+	desc = tyrone_empire_of_india.110.d
+	flavor = tyrone_empire_of_india.110.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/consumption_based_taxation.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 1 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_revenue_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.111 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_revenue_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.111 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.111 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.111.t
+	desc = tyrone_empire_of_india.111.d
+	flavor = tyrone_empire_of_india.111.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/consumption_based_taxation.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 1 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_revenue_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_revenue_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_revenue_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_revenue_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_revenue_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.120 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.120.t
+	desc = tyrone_empire_of_india.120.d
+	flavor = tyrone_empire_of_india.120.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 2 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_civil_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.121 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_civil_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.121 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.121 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.121.t
+	desc = tyrone_empire_of_india.121.d
+	flavor = tyrone_empire_of_india.121.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 2 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_civil_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_civil_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_civil_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_civil_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_civil_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.130 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.130.t
+	desc = tyrone_empire_of_india.130.d
+	flavor = tyrone_empire_of_india.130.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/mass_conscription.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 3 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_military_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.131 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_military_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.131 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.131 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.131.t
+	desc = tyrone_empire_of_india.131.d
+	flavor = tyrone_empire_of_india.131.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/mass_conscription.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 3 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_military_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_military_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_military_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_military_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_military_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.140 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.140.t
+	desc = tyrone_empire_of_india.140.d
+	flavor = tyrone_empire_of_india.140.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/free_trade.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 4 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_trade_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.141 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_trade_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.141 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.141 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.141.t
+	desc = tyrone_empire_of_india.141.d
+	flavor = tyrone_empire_of_india.141.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/free_trade.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 4 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_trade_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_trade_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_trade_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_trade_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_trade_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.150 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.150.t
+	desc = tyrone_empire_of_india.150.d
+	flavor = tyrone_empire_of_india.150.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/public_schools.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 5 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_education_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.151 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_education_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.151 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.151 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.151.t
+	desc = tyrone_empire_of_india.151.d
+	flavor = tyrone_empire_of_india.151.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/public_schools.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 5 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_education_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_education_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_education_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_education_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_education_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.160 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.160.t
+	desc = tyrone_empire_of_india.160.d
+	flavor = tyrone_empire_of_india.160.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/hereditary_bureaucrats.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 6 } scope:eoi_proposer = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_propose_autonomy
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_princes_autonomy_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = 1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.161 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_eoi_propose_imperial
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_eoi_princes_imperial_agreement = yes }
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_eoi_offer_side value = -1 } }
+			scope:eoi_partner = { trigger_event = { id = tyrone_empire_of_india.161 popup = yes } }
+		}
+	}
+}
+
+tyrone_empire_of_india.161 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.161.t
+	desc = tyrone_empire_of_india.161.d
+	flavor = tyrone_empire_of_india.161.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/hereditary_bureaucrats.dds"
+	duration = 1
+	trigger = { tyrone_eoi_negotiation_valid = yes scope:csr_india = { var:tyrone_eoi_calcutta_round = 6 } scope:eoi_partner = this }
+	cancellation_trigger = { NOT = { tyrone_eoi_negotiation_valid = yes } }
+	option = {
+		name = tyrone_eoi_accept_terms
+		default_option = yes
+		ai_chance = { base = 60 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_princes_autonomy_agreement = yes
+		}
+		else = { tyrone_eoi_princes_imperial_agreement = yes }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reverse_terms
+		ai_chance = { base = 30 }
+		if = {
+			limit = { scope:csr_india = { var:tyrone_eoi_offer_side = 1 } }
+			tyrone_eoi_princes_imperial_agreement = yes
+		}
+		else = { tyrone_eoi_princes_autonomy_agreement = yes }
+		add_modifier = { name = tyrone_eoi_princes_concession days = tyrone_eoi_round_modifier_time }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+	option = {
+		name = tyrone_eoi_reject_terms
+		ai_chance = { base = 10 }
+		change_relations = { country = scope:eoi_proposer value = -15 }
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_eoi_negotiation_pending } }
+	}
+}
+
+tyrone_empire_of_india.10 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.10.t
+	desc = tyrone_empire_of_india.10.d
+	flavor = tyrone_empire_of_india.10.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_calcutta_done exists = scope:eoi_settlement_overlord }
+	option = {
+		name = tyrone_eoi_final_administration_option
+		default_option = yes
+		ai_chance = { base = 1 }
+		add_modifier = {
+			name = tyrone_eoi_final_administration
+			multiplier = var:tyrone_eoi_settlement_strength
+			days = tyrone_eoi_final_modifier_time
+		}
+		scope:eoi_settlement_overlord ?= {
+			add_modifier = {
+				name = tyrone_eoi_final_authority_cost
+				multiplier = scope:csr_india.var:tyrone_eoi_settlement_strength
+				days = tyrone_eoi_final_modifier_time
+			}
+		}
+	}
+	option = {
+		name = tyrone_eoi_final_development_option
+		ai_chance = { base = 1 }
+		add_modifier = {
+			name = tyrone_eoi_final_development
+			multiplier = var:tyrone_eoi_settlement_strength
+			days = tyrone_eoi_final_modifier_time
+		}
+		scope:eoi_settlement_overlord ?= {
+			add_modifier = {
+				name = tyrone_eoi_final_minting_cost
+				multiplier = scope:csr_india.var:tyrone_eoi_settlement_strength
+				days = tyrone_eoi_final_modifier_time
+			}
+		}
+	}
+	option = {
+		name = tyrone_eoi_final_reform_option
+		ai_chance = { base = 1 }
+		add_modifier = {
+			name = tyrone_eoi_final_reform
+			multiplier = var:tyrone_eoi_settlement_strength
+			days = tyrone_eoi_final_modifier_time
+		}
+		scope:eoi_settlement_overlord ?= {
+			add_modifier = {
+				name = tyrone_eoi_final_authority_cost
+				multiplier = scope:csr_india.var:tyrone_eoi_settlement_strength
+				days = tyrone_eoi_final_modifier_time
+			}
+		}
+	}
+}
+
+tyrone_empire_of_india.11 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.11.t
+	desc = tyrone_empire_of_india.11.d
+	flavor = tyrone_empire_of_india.11.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	duration = 1
+	trigger = { scope:csr_india ?= { is_country_alive = yes has_variable = tyrone_eoi_calcutta_done } scope:eoi_settlement_overlord ?= this }
+	option = {
+		name = tyrone_eoi_final_capitalists_option
+		default_option = yes
+		ai_chance = { base = 1 }
+		add_modifier = { name = tyrone_eoi_final_capitalists days = tyrone_eoi_final_modifier_time }
+		scope:csr_india = { add_modifier = { name = tyrone_eoi_final_indian_remittances days = tyrone_eoi_final_modifier_time } }
+	}
+	option = {
+		name = tyrone_eoi_final_authority_option
+		ai_chance = { base = 1 }
+		add_modifier = { name = tyrone_eoi_final_authority days = tyrone_eoi_final_modifier_time }
+		scope:csr_india = { add_modifier = { name = tyrone_eoi_final_indian_remittances days = tyrone_eoi_final_modifier_time } }
+	}
+	option = {
+		name = tyrone_eoi_final_dividends_option
+		ai_chance = { base = 1 }
+		add_modifier = { name = tyrone_eoi_final_dividends days = tyrone_eoi_final_modifier_time }
+		scope:csr_india = { add_modifier = { name = tyrone_eoi_final_indian_remittances days = tyrone_eoi_final_modifier_time } }
+	}
+}
+
+tyrone_empire_of_india.20 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.20.t
+	desc = tyrone_empire_of_india.20.d
+	flavor = tyrone_empire_of_india.20.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/monarchy.dds"
+	duration = 1
+	trigger = { scope:csr_india ?= { is_country_alive = yes has_variable = tyrone_eoi_ultimatum_pending overlord ?= root } }
+	cancellation_trigger = { NOT = { scope:csr_india ?= { is_country_alive = yes overlord ?= root } } }
+	option = {
+		name = tyrone_eoi_recognise_independence
+		default_option = yes
+		ai_chance = { base = 25 }
+		scope:csr_india = {
+			make_independent = yes
+			hidden_effect = { remove_variable = tyrone_eoi_ultimatum_pending }
+		}
+	}
+	option = {
+		name = tyrone_eoi_contest_independence
+		ai_chance = { base = 75 }
+		scope:csr_india = {
+			create_diplomatic_play = {
+				target_country = scope:eoi_ultimatum_overlord
+				type = dp_independence
+				add_war_goal = { holder = scope:eoi_ultimatum_overlord target_country = scope:csr_india type = annex_country }
+			}
+			hidden_effect = { remove_variable = tyrone_eoi_ultimatum_pending }
+		}
+	}
+}
+
+tyrone_empire_of_india.30 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.30.t
+	desc = tyrone_empire_of_india.30.d
+	flavor = tyrone_empire_of_india.30.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/hereditary_bureaucrats.dds"
+	duration = 1
+	trigger = { scope:csr_india ?= { is_country_alive = yes has_variable = tyrone_eoi_council_active overlord ?= root has_variable = tyrone_eoi_council_permission_pending } }
+	cancellation_trigger = { NOT = { scope:csr_india ?= { is_country_alive = yes has_variable = tyrone_eoi_council_active overlord ?= root } } }
+	option = {
+		name = tyrone_eoi_authorise_council
+		default_option = yes
+		ai_chance = { base = 75 }
+		custom_tooltip = tyrone_eoi_council_authorised_tt
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_eoi_council_approved
+				remove_variable = tyrone_eoi_council_permission_pending
+			}
+		}
+	}
+	option = {
+		name = tyrone_eoi_refuse_council
+		ai_chance = { base = 25 }
+		change_relations = { country = scope:csr_india value = -50 }
+		scope:csr_india = {
+			add_liberty_desire = 75
+			hidden_effect = {
+				remove_variable = tyrone_eoi_council_approved
+				remove_variable = tyrone_eoi_council_permission_pending
+			}
+		}
+	}
+}
+
+tyrone_empire_of_india.35 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.35.t
+	desc = tyrone_empire_of_india.35.d
+	flavor = tyrone_empire_of_india.35.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/hereditary_bureaucrats.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_council_active has_variable = tyrone_eoi_council_integration_pending any_country = { tyrone_eoi_prince_eligible = yes } }
+	immediate = {
+		random_state_region = {
+			limit = {
+				any_scope_state = {
+					is_in_geographic_region = geographic_region_india
+					owner = { tyrone_eoi_prince_eligible = yes }
+				}
+			}
+			save_scope_as = eoi_council_region
+		}
+	}
+	cancellation_trigger = { NOT = { has_variable = tyrone_eoi_council_active } }
+	option = {
+		name = tyrone_eoi_integrate_princes_option
+		default_option = yes
+		tyrone_eoi_council_integrate = yes
+	}
+}
+
+tyrone_empire_of_india.40 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.40.t
+	desc = tyrone_empire_of_india.40.d
+	flavor = tyrone_empire_of_india.40.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_civil_done }
+	option = {
+		name = tyrone_eoi_civil_reward_option
+		default_option = yes
+		custom_tooltip = tyrone_eoi_civil_unlocked_tt
+	}
+}
+
+tyrone_empire_of_india.41 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.41.t
+	desc = tyrone_empire_of_india.41.d
+	flavor = tyrone_empire_of_india.41.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/breech_loading_artillery.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_army_done }
+	option = {
+		name = tyrone_eoi_army_reward_option
+		default_option = yes
+		tyrone_eoi_reapply_gendarmerie = yes
+	}
+}
+
+tyrone_empire_of_india.42 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.42.t
+	desc = tyrone_empire_of_india.42.d
+	flavor = tyrone_empire_of_india.42.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/multicultural.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_council_done }
+	option = {
+		name = tyrone_eoi_council_reward_option
+		default_option = yes
+		custom_tooltip = tyrone_eoi_council_unlocks_tt
+	}
+}
+
+tyrone_empire_of_india.50 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.50.t
+	desc = tyrone_empire_of_india.50.d
+	flavor = tyrone_empire_of_india.50.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/monarchy.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_main_done }
+	immediate = {
+		ig:ig_industrialists.leader ?= { save_scope_as = eoi_industrialist_claimant }
+		ig:ig_landowners.leader ?= { save_scope_as = eoi_princely_claimant }
+	}
+	option = {
+		name = tyrone_eoi_industrialist_emperor_option
+		trigger = { exists = scope:eoi_industrialist_claimant }
+		default_option = yes
+		ai_chance = { base = 35 }
+		scope:eoi_industrialist_claimant = { set_character_as_ruler = yes }
+	}
+	option = {
+		name = tyrone_eoi_prince_emperor_option
+		trigger = { exists = scope:eoi_princely_claimant }
+		ai_chance = { base = 35 }
+		scope:eoi_princely_claimant = { set_character_as_ruler = yes }
+	}
+	option = {
+		name = tyrone_eoi_union_emperor_option
+		trigger = {
+			is_subject = yes
+			overlord ?= { has_law_or_variant = law_type:law_monarchy }
+		}
+		ai_chance = { base = 30 }
+		change_subject_type = subject_type_personal_union
+	}
+	option = {
+		name = tyrone_eoi_retain_ruler_option
+		trigger = {
+			NOT = { exists = scope:eoi_industrialist_claimant }
+			NOT = { exists = scope:eoi_princely_claimant }
+		}
+	}
+}
+
+tyrone_empire_of_india.51 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.51.t
+	desc = tyrone_empire_of_india.51.d
+	flavor = tyrone_empire_of_india.51.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/monarchy.dds"
+	duration = 1
+	trigger = { c:GBR ?= this NOT = { has_law_or_variant = law_type:law_monarchy } scope:csr_india ?= { is_country_alive = yes overlord ?= root has_variable = tyrone_eoi_main_done } }
+	cancellation_trigger = { NOT = { scope:csr_india ?= { is_country_alive = yes overlord ?= root } } }
+	option = {
+		name = tyrone_eoi_britain_release_option
+		default_option = yes
+		ai_chance = { base = 25 }
+		scope:csr_india = { make_independent = yes }
+	}
+	option = {
+		name = tyrone_eoi_britain_retain_option
+		ai_chance = { base = 75 }
+		add_modifier = { name = tyrone_eoi_republican_imperial_crisis days = tyrone_eoi_final_modifier_time }
+		add_radicals = { value = 0.10 }
+	}
+}
+
+tyrone_empire_of_india.60 = {
+	type = country_event
+	placement = root
+	title = tyrone_empire_of_india.60.t
+	desc = tyrone_empire_of_india.60.d
+	flavor = tyrone_empire_of_india.60.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/multicultural.dds"
+	duration = 1
+	trigger = { has_variable = tyrone_eoi_home_rule_done NOT = { has_variable = has_done_homerule_var } }
+	option = {
+		name = tyrone_eoi_home_rule_option
+		default_option = yes
+		tyrone_eoi_home_rule_cultures = yes
+	}
+}

@@ -1,0 +1,96 @@
+# Shared objective; all academic progress belongs to the saved Indian country.
+je_tyrone_promise_british_patents = {
+	icon = "gfx/interface/icons/invention_icons/dialectics.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		scope:tyrone_promise_india ?= {
+			set_variable = tyrone_patents_entry_started
+			set_variable = { name = tyrone_patents_months value = 0 }
+		}
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_british_patents
+		}
+	}
+	scripted_button = tyrone_patents_request_agreement
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_british_patents
+			}
+			scope:tyrone_promise_india ?= {
+				# Qualifying months accumulate nationally. Missing a month never resets progress.
+				if = {
+					limit = {
+						is_country_alive = yes
+						var:tyrone_patents_months < 24
+						NOT = { has_law = law_type:law_chartered_no_schools }
+						any_scope_state = {
+							any_scope_building = {
+								is_building_type = building_university
+								level >= 75
+								has_active_production_method = pm_philosophy_department
+							}
+						}
+					}
+					change_variable = { name = tyrone_patents_months add = 1 }
+				}
+			}
+		}
+	}
+	complete = {
+		scope:tyrone_promise_india ?= {
+			custom_tooltip = {
+				text = tyrone_patents_agreement_accepted_tt
+				has_variable = tyrone_patents_agreement_accepted
+			}
+		}
+	}
+	on_complete = {
+		scope:tyrone_promise_india ?= {
+			remove_variable = tyrone_patents_months
+			remove_variable = tyrone_patents_request_pending
+			remove_variable = tyrone_patents_agreement_accepted
+		}
+	}
+	# Independence only disables requests. It does not discard academic progress.
+	# Manual repeal ends the objective without obliging an overlord to pay.
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_promise_active_var }
+			NOT = { tyrone_promise_india_exists = yes }
+			scope:tyrone_promise_india ?= {
+				NOT = { has_variable = tyrone_patents_agreement_accepted }
+				NOT = {
+					any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+				}
+			}
+		}
+	}
+	on_invalid = {
+		scope:tyrone_promise_india ?= {
+			remove_variable = tyrone_patents_months
+			remove_variable = tyrone_patents_request_pending
+			remove_variable = tyrone_patents_agreement_accepted
+		}
+	}
+	current_value = {
+		value = 0
+		scope:tyrone_promise_india ?= {
+			if = {
+				limit = { has_variable = tyrone_patents_months }
+				add = var:tyrone_patents_months
+			}
+		}
+	}
+	goal_add_value = { value = 24 }
+	progress_desc = tyrone_patents_progress
+	progressbar = yes
+	weight = 20
+	can_revolution_inherit = yes
+}

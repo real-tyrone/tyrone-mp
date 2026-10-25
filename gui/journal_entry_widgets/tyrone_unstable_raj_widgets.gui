@@ -1,0 +1,454 @@
+# Unstable Raj subentry cards and The Way of the Nation portraits.
+types tyrone_unstable_raj_widget_types
+{
+	type tyrone_raj_nation_character_card = widget {
+		size = { 230 324 }
+		visible = "[Character.IsValid]"
+
+		block "nation_portrait_pose" {
+			character_portrait_front_vs_left = {
+				parentanchor = hcenter|top
+				position = { 0 6 }
+				size = { 220 240 }
+				blockoverride "portrait_size" {
+					size = { 220 240 }
+				}
+				# Scale the rendered character, not just its layout widget.
+				blockoverride "portrait_transformation" {
+					portrait_scale = { 0.6 0.6 }
+					portrait_offset = { 0.2 0.4 }
+				}
+			}
+		}
+
+		# Padded text containers share the continuous lower nameplate.
+		widget = {
+			parentanchor = hcenter|top
+			position = { 0 248 }
+			size = { 206 64 }
+			textbox = {
+				position = { 10 3 }
+				size = { 186 32 }
+				text = "[Character.GetFullNameNoFormatting]"
+				using = regular_font
+				fontsize = 18
+				fontcolor = { 0.93 0.90 0.82 1 }
+				align = center|vcenter|nobaseline
+				alwaystransparent = yes
+			}
+			icon = {
+				parentanchor = hcenter|top
+				position = { 0 36 }
+				size = { 170 2 }
+				texture = "gfx/interface/dividers/divider_clean.dds"
+				spriteType = Corneredtiled
+				spriteborder = { 4 0 }
+				texture_density = 2
+				alpha = 0.25
+				alwaystransparent = yes
+			}
+			textbox = {
+				position = { 10 41 }
+				size = { 186 18 }
+				block "nation_portrait_affiliation" {}
+				using = regular_font
+				fontsize = 14
+				fontcolor = { 0.78 0.71 0.54 1 }
+				align = center|vcenter|nobaseline
+				elide = right
+				alwaystransparent = yes
+			}
+		}
+	}
+}
+
+# Use the saved Indian country, including when viewed by its overlord.
+widget = {
+	name = "tyrone_raj_nation_portraits_widget"
+	parentanchor = hcenter
+	size = { 488 348 }
+	datacontext = "[JournalEntry.GetTopScope.sCountry('raj_scope')]"
+
+	# One painted canvas, with the shading and velvet treatment of vanilla events.
+	widget = {
+		parentanchor = hcenter|top
+		position = { 0 8 }
+		size = { 480 324 }
+		background = {
+			using = dark_area_rounded
+			alpha = 0.65
+		}
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/illustrations/government/government_illustration.dds"
+			alpha = 0.65
+			modify_texture = {
+				using = simple_frame_mask
+			}
+			modify_texture = {
+				texture = "gfx/interface/backgrounds/default_bg_shading.dds"
+				spriteType = Corneredstretched
+				spriteborder = { 0 0 }
+				blend_mode = overlay
+			}
+			modify_texture = {
+				using = texture_velvet
+				alpha = 0.3
+			}
+			alwaystransparent = yes
+		}
+		widget = {
+			position = { 3 246 }
+			size = { 474 75 }
+			background = {
+				using = dark_area_rounded
+				alpha = 0.7
+			}
+			icon = {
+				parentanchor = hcenter|top
+				size = { 450 2 }
+				texture = "gfx/interface/dividers/divider_clean.dds"
+				spriteType = Corneredtiled
+				spriteborder = { 4 0 }
+				texture_density = 2
+				alpha = 0.45
+				alwaystransparent = yes
+			}
+		}
+		icon = {
+			size = { 100% 100% }
+			using = simple_frame
+			alpha = 0.75
+			alwaystransparent = yes
+		}
+	}
+
+	tyrone_raj_nation_character_card = {
+		parentanchor = left|top
+		position = { 4 8 }
+		datacontext = "[Country.GetInterestGroupOfType('ig_landowners').GetLeader]"
+		blockoverride "nation_portrait_affiliation" {
+			text = "[Country.GetInterestGroupOfType('ig_landowners').GetName]"
+		}
+	}
+
+	tyrone_raj_nation_character_card = {
+		parentanchor = right|top
+		position = { -4 8 }
+		datacontext = "[Country.GetRuler]"
+		blockoverride "nation_portrait_pose" {
+			character_portrait_front_vs_right = {
+				parentanchor = hcenter|top
+				position = { 0 6 }
+				size = { 220 240 }
+				blockoverride "portrait_size" {
+					size = { 220 240 }
+				}
+				# Scale the rendered character, not just its layout widget.
+				blockoverride "portrait_transformation" {
+					portrait_scale = { 0.6 0.6 }
+					portrait_offset = { 0.2 0.4 }
+				}
+			}
+		}
+		blockoverride "nation_portrait_affiliation" {
+			text = "[Country.GetName]"
+		}
+	}
+}
+flowcontainer = {
+	name = "tyrone_unstable_raj_subentries_widget"
+	parentanchor = hcenter
+	direction = vertical
+	spacing = 5
+
+	widget = {
+		size = { 488 26 }
+		textbox = {
+			size = { 164 26 }
+			text = "tyrone_raj_heading"
+			align = left|vcenter|nobaseline
+			using = regular_font
+			fontsize = 15
+			fontcolor = { 0.78 0.71 0.54 1 }
+			alwaystransparent = yes
+		}
+		icon = {
+			position = { 174 13 }
+			size = { 314 2 }
+			texture = "gfx/interface/dividers/divider_clean.dds"
+			spriteType = Corneredtiled
+			spriteborder = { 4 0 }
+			texture_density = 2
+			alpha = 0.35
+			alwaystransparent = yes
+		}
+	}
+
+	flowcontainer = {
+		direction = vertical
+		spacing = 7
+		datamodel = "[AccessPlayer.AccessActiveJournalEntries]"
+		item = {
+			button = {
+				size = { 488 54 }
+				using = default_button
+				texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
+				# Keep the same physical frame pixels at half the native density:
+				# this enlarges the rounded corners rather than stretching them.
+				texture_density = 1
+				framesize = { 38 38 }
+				spriteborder = { 14 14 }
+				blockoverride "bevel_texture" {
+					texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
+				}
+				blockoverride "bevel_margin" {
+					margin = { 6 6 }
+				}
+				visible = "[Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_nation'), Or(Or(Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_company_equity'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_welfare')), Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_schools'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_health'))), Or(Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_famine_1'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_famine_2')), Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_famine_3'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_raj_famine_4')))))]"
+				onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+
+				icon = {
+					name = "tyrone_promise_card_brass_edge"
+					size = { 100% 100% }
+					texture = "gfx/interface/buttons/default_button_frame_map_interaction.dds"
+					spriteType = Corneredstretched
+					spriteborder = { 24 24 }
+					texture_density = 1
+					color = { 0.72 0.72 0.66 1 }
+					alpha = 0.7
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 12 9 }
+					size = { 36 36 }
+					using = circle_bg_simple_dark
+					alpha = 0.65
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 17 14 }
+					size = { 26 26 }
+					texture = "[JournalEntry.GetIcon]"
+					alwaystransparent = yes
+				}
+				textbox = {
+					position = { 60 5 }
+					size = { 394 44 }
+					text = "[JournalEntry.GetName]"
+					align = left|vcenter|nobaseline
+					using = regular_font
+					fontsize = 20
+					fontcolor = { 0.93 0.90 0.82 1 }
+					elide = right
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 465 18 }
+					size = { 8 18 }
+					texture = "gfx/interface/politics_view/summary_arrow_right.dds"
+					alpha = 0.6
+					alwaystransparent = yes
+				}
+			}
+		}
+	}
+}
+
+flowcontainer = {
+	name = "tyrone_company_self_rule_subentries_widget"
+	parentanchor = hcenter
+	direction = vertical
+	spacing = 5
+
+	widget = {
+		size = { 488 26 }
+		textbox = {
+			size = { 164 26 }
+			text = "tyrone_csr_heading"
+			align = left|vcenter|nobaseline
+			using = regular_font
+			fontsize = 15
+			fontcolor = { 0.78 0.71 0.54 1 }
+			alwaystransparent = yes
+		}
+		icon = {
+			position = { 174 13 }
+			size = { 314 2 }
+			texture = "gfx/interface/dividers/divider_clean.dds"
+			spriteType = Corneredtiled
+			spriteborder = { 4 0 }
+			texture_density = 2
+			alpha = 0.35
+			alwaystransparent = yes
+		}
+	}
+
+	flowcontainer = {
+		direction = vertical
+		spacing = 7
+		datamodel = "[AccessPlayer.AccessActiveJournalEntries]"
+		item = {
+			button = {
+				size = { 488 54 }
+				using = default_button
+				texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
+				# Keep the same physical frame pixels at half the native density:
+				# this enlarges the rounded corners rather than stretching them.
+				texture_density = 1
+				framesize = { 38 38 }
+				spriteborder = { 14 14 }
+				blockoverride "bevel_texture" {
+					texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
+				}
+				blockoverride "bevel_margin" {
+					margin = { 6 6 }
+				}
+				visible = "[Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_csr_police'), Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_csr_army'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_csr_tax')))]"
+				onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+
+				icon = {
+					name = "tyrone_promise_card_brass_edge"
+					size = { 100% 100% }
+					texture = "gfx/interface/buttons/default_button_frame_map_interaction.dds"
+					spriteType = Corneredstretched
+					spriteborder = { 24 24 }
+					texture_density = 1
+					color = { 0.72 0.72 0.66 1 }
+					alpha = 0.7
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 12 9 }
+					size = { 36 36 }
+					using = circle_bg_simple_dark
+					alpha = 0.65
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 17 14 }
+					size = { 26 26 }
+					texture = "[JournalEntry.GetIcon]"
+					alwaystransparent = yes
+				}
+				textbox = {
+					position = { 60 5 }
+					size = { 394 44 }
+					text = "[JournalEntry.GetName]"
+					align = left|vcenter|nobaseline
+					using = regular_font
+					fontsize = 20
+					fontcolor = { 0.93 0.90 0.82 1 }
+					elide = right
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 465 18 }
+					size = { 8 18 }
+					texture = "gfx/interface/politics_view/summary_arrow_right.dds"
+					alpha = 0.6
+					alwaystransparent = yes
+				}
+			}
+		}
+	}
+}
+
+flowcontainer = {
+	name = "tyrone_crown_raj_subentries_widget"
+	parentanchor = hcenter
+	direction = vertical
+	spacing = 5
+
+	widget = {
+		size = { 488 26 }
+		textbox = {
+			size = { 164 26 }
+			text = "tyrone_cr_heading"
+			align = left|vcenter|nobaseline
+			using = regular_font
+			fontsize = 15
+			fontcolor = { 0.78 0.71 0.54 1 }
+			alwaystransparent = yes
+		}
+		icon = {
+			position = { 174 13 }
+			size = { 314 2 }
+			texture = "gfx/interface/dividers/divider_clean.dds"
+			spriteType = Corneredtiled
+			spriteborder = { 4 0 }
+			texture_density = 2
+			alpha = 0.35
+			alwaystransparent = yes
+		}
+	}
+
+	flowcontainer = {
+		direction = vertical
+		spacing = 7
+		datamodel = "[AccessPlayer.AccessActiveJournalEntries]"
+		item = {
+			button = {
+				size = { 488 54 }
+				using = default_button
+				texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
+				# Keep the same physical frame pixels at half the native density:
+				# this enlarges the rounded corners rather than stretching them.
+				texture_density = 1
+				framesize = { 38 38 }
+				spriteborder = { 14 14 }
+				blockoverride "bevel_texture" {
+					texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
+				}
+				blockoverride "bevel_margin" {
+					margin = { 6 6 }
+				}
+				visible = "[Or(Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_cr_police'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_cr_corporations')), Or(EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_cr_apparatus'), EqualTo_string(JournalEntry.GetType.GetKey, 'je_tyrone_cr_institutions')))]"
+				onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+
+				icon = {
+					name = "tyrone_promise_card_brass_edge"
+					size = { 100% 100% }
+					texture = "gfx/interface/buttons/default_button_frame_map_interaction.dds"
+					spriteType = Corneredstretched
+					spriteborder = { 24 24 }
+					texture_density = 1
+					color = { 0.72 0.72 0.66 1 }
+					alpha = 0.7
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 12 9 }
+					size = { 36 36 }
+					using = circle_bg_simple_dark
+					alpha = 0.65
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 17 14 }
+					size = { 26 26 }
+					texture = "[JournalEntry.GetIcon]"
+					alwaystransparent = yes
+				}
+				textbox = {
+					position = { 60 5 }
+					size = { 394 44 }
+					text = "[JournalEntry.GetName]"
+					align = left|vcenter|nobaseline
+					using = regular_font
+					fontsize = 20
+					fontcolor = { 0.93 0.90 0.82 1 }
+					elide = right
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 465 18 }
+					size = { 8 18 }
+					texture = "gfx/interface/politics_view/summary_arrow_right.dds"
+					alpha = 0.6
+					alwaystransparent = yes
+				}
+			}
+		}
+	}
+}

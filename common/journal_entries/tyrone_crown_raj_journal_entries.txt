@@ -1,0 +1,560 @@
+﻿# Reuses the existing Crown-path placeholder ID.
+REPLACE:je_tyrone_csr_crown_path = {
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyrone_cr_status_4
+				trigger = {
+					exists = scope:csr_india
+					scope:csr_india ?= {
+						has_variable = tyrone_cr_reforms
+						var:tyrone_cr_reforms >= 4
+					}
+				}
+			}
+			triggered_desc = {
+				desc = tyrone_cr_status_3
+				trigger = {
+					exists = scope:csr_india
+					scope:csr_india ?= {
+						has_variable = tyrone_cr_reforms
+						var:tyrone_cr_reforms >= 3
+					}
+				}
+			}
+			triggered_desc = {
+				desc = tyrone_cr_status_2
+				trigger = {
+					exists = scope:csr_india
+					scope:csr_india ?= {
+						has_variable = tyrone_cr_reforms
+						var:tyrone_cr_reforms >= 2
+					}
+				}
+			}
+			triggered_desc = {
+				desc = tyrone_cr_status_1
+				trigger = {
+					exists = scope:csr_india
+					scope:csr_india ?= {
+						has_variable = tyrone_cr_reforms
+						var:tyrone_cr_reforms >= 1
+					}
+				}
+			}
+			desc = tyrone_cr_status_0
+		}
+	}
+	immediate = {
+		tyrone_cr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_crown_path }
+	}
+	complete = {
+		hidden_trigger = { scope:csr_india ?= { tyrone_cr_country_active = yes } }
+		scope:csr_india = {
+			custom_tooltip = { text = tyrone_cr_police_done_tt has_variable = tyrone_cr_police_done }
+			custom_tooltip = { text = tyrone_cr_corporations_done_tt has_variable = tyrone_cr_corporations_done }
+			custom_tooltip = { text = tyrone_cr_apparatus_done_tt has_variable = tyrone_cr_apparatus_done }
+			custom_tooltip = { text = tyrone_cr_institutions_done_tt has_variable = tyrone_cr_institutions_done }
+		}
+	}
+	on_complete = {
+		scope:csr_india = {
+			hidden_effect = {
+				set_variable = tyrone_cr_finished
+				remove_variable = tyrone_cr_active
+			}
+			add_contextless_journal_entry = je_tyrone_jewel_of_the_empire
+			hidden_effect = { trigger_event = { id = tyrone_crown_raj.4 popup = yes } }
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					is_subject = no
+					AND = {
+						has_variable = tyrone_cr_started
+						NOT = { has_variable = tyrone_cr_active }
+					}
+				}
+			}
+		}
+	}
+	on_invalid = {
+		scope:csr_india ?= {
+			remove_variable = tyrone_cr_active
+			remove_variable = tyrone_cr_manufacturing_pending
+			remove_variable = tyrone_cr_manufacturing_negotiator
+			remove_variable = tyrone_cr_railways_pending
+			remove_variable = tyrone_cr_railways_negotiator
+			remove_variable = tyrone_cr_plantations_pending
+			remove_variable = tyrone_cr_plantations_negotiator
+			remove_variable = tyrone_cr_power_pending
+			remove_variable = tyrone_cr_power_negotiator
+			if = {
+				limit = {
+					is_country_alive = yes
+					is_subject = no
+					NOT = { has_variable = tyrone_cr_independent_opened }
+				}
+				set_variable = tyrone_cr_independent_opened
+				add_contextless_journal_entry = je_tyrone_csr_independent_path
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_crown_path }
+			scope:csr_india ?= {
+				# Initialize a Crown placeholder already active in an older save.
+				if = {
+					limit = {
+						is_subject = yes
+						NOT = { has_variable = tyrone_cr_started }
+					}
+					tyrone_cr_start = yes
+				}
+				if = {
+					limit = {
+						tyrone_cr_country_active = yes
+						NOT = { any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly } }
+					}
+					tyrone_cr_unlock_industrialization = yes
+				}
+			}
+		}
+	}
+	current_value = {
+		value = 0
+		if = {
+			limit = { scope:csr_india ?= { has_variable = tyrone_cr_reforms } }
+			value = scope:csr_india.var:tyrone_cr_reforms
+		}
+	}
+	goal_add_value = { value = 4 }
+	progressbar = yes
+	progress_desc = {}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_unstable_raj_widgets.gui"
+		name = "tyrone_crown_raj_subentries_widget"
+		container = "custom_widget_container_1"
+	}
+	weight = 100
+	should_be_pinned_by_default_involved = yes
+	can_revolution_inherit = yes
+}
+
+je_tyrone_cr_police = {
+	icon = "gfx/interface/icons/law_icons/militarized_police.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	scripted_button = tyrone_cr_police_recruitment
+	scripted_button = tyrone_cr_police_training
+	scripted_button = tyrone_cr_police_districts
+	scripted_button = tyrone_cr_police_surveillance
+	immediate = {
+		tyrone_cr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_police }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				tyrone_cr_country_active = yes
+				NOT = { has_variable = tyrone_cr_police_done }
+			}
+		}
+		scope:csr_india = {
+			custom_tooltip = { text = tyrone_cr_police_recruitment_done_tt has_variable = tyrone_cr_police_recruitment_done }
+			custom_tooltip = { text = tyrone_cr_police_training_done_tt has_variable = tyrone_cr_police_training_done }
+			custom_tooltip = { text = tyrone_cr_police_districts_done_tt has_variable = tyrone_cr_police_districts_done }
+			custom_tooltip = { text = tyrone_cr_police_surveillance_done_tt has_variable = tyrone_cr_police_surveillance_done }
+			OR = {
+				is_player = no
+				institution_investment_level = { institution = institution_police value >= 3 }
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_cr_police_done
+				change_variable = { name = tyrone_cr_reforms add = 1 }
+				set_variable = tyrone_cr_police_reward_pending
+				trigger_event = { id = tyrone_crown_raj.1 popup = yes }
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					is_subject = no
+					NOT = { has_variable = tyrone_cr_active }
+				}
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_police }
+		}
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+je_tyrone_cr_corporations = {
+	icon = "gfx/interface/icons/law_icons/state_capitalism.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	scripted_button = tyrone_cr_negotiate_manufacturing
+	scripted_button = tyrone_cr_negotiate_railways
+	scripted_button = tyrone_cr_negotiate_plantations
+	scripted_button = tyrone_cr_negotiate_power
+	immediate = {
+		tyrone_cr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_corporations }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				tyrone_cr_country_active = yes
+				NOT = { has_variable = tyrone_cr_corporations_done }
+			}
+		}
+		scope:csr_india = {
+			custom_tooltip = { text = tyrone_cr_manufacturing_signed_tt has_variable = tyrone_cr_manufacturing_done }
+			custom_tooltip = { text = tyrone_cr_railways_signed_tt has_variable = tyrone_cr_railways_done }
+			custom_tooltip = { text = tyrone_cr_plantations_signed_tt has_variable = tyrone_cr_plantations_done }
+			custom_tooltip = { text = tyrone_cr_power_signed_tt has_variable = tyrone_cr_power_done }
+		}
+	}
+	on_complete = {
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_cr_corporations_done
+				change_variable = { name = tyrone_cr_reforms add = 1 }
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					is_subject = no
+					NOT = { has_variable = tyrone_cr_active }
+				}
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_corporations }
+		}
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+je_tyrone_cr_apparatus = {
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	scripted_button = tyrone_cr_dismantle_directorate
+	scripted_button = tyrone_cr_dismantle_monopoly
+	scripted_button = tyrone_cr_dismantle_trade
+	scripted_button = tyrone_cr_dismantle_cotton
+	scripted_button = tyrone_cr_dismantle_patents
+	scripted_button = tyrone_cr_dismantle_bonded
+	immediate = {
+		tyrone_cr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_apparatus }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				tyrone_cr_country_active = yes
+				NOT = { has_variable = tyrone_cr_apparatus_done }
+			}
+		}
+		scope:csr_india = {
+			custom_tooltip = {
+				text = tyrone_cr_directorate_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_company_directorate } }
+			}
+			custom_tooltip = {
+				text = tyrone_cr_monopoly_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly } }
+			}
+			custom_tooltip = {
+				text = tyrone_cr_trade_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_colonial_trading_privileges } }
+			}
+			custom_tooltip = {
+				text = tyrone_cr_cotton_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_cotton_export_guarantees } }
+			}
+			custom_tooltip = {
+				text = tyrone_cr_patents_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents } }
+			}
+			custom_tooltip = {
+				text = tyrone_cr_bonded_removed_tt
+				NOT = { any_active_law = { has_amendment = amendment_type:amendment_company_bonded_labor_guarantees } }
+			}
+		}
+	}
+	on_complete = {
+		scope:csr_india = {
+			hidden_effect = {
+				set_variable = tyrone_cr_apparatus_done
+				change_variable = { name = tyrone_cr_reforms add = 1 }
+			}
+			if = {
+				limit = { has_law = law_type:law_india_crown_administration }
+				active_law:lawgroup_bureaucracy = {
+					if = {
+						limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_cr_reformed_civil_service } }
+						add_amendment = { type = amendment_tyrone_cr_reformed_civil_service sponsor = prev.ig:ig_intelligentsia }
+					}
+				}
+			}
+			hidden_effect = { trigger_event = { id = tyrone_crown_raj.2 popup = yes } }
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					is_subject = no
+					NOT = { has_variable = tyrone_cr_active }
+				}
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_apparatus }
+		}
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+je_tyrone_cr_institutions = {
+	icon = "gfx/interface/icons/law_icons/worker_protections.dds"
+	group = je_group_british_india_global
+	scripted_button = tyrone_cr_opposition_negotiation
+	scripted_button = tyrone_cr_utilitarian_support
+	scripted_button = tyrone_cr_force_reform
+	scripted_button = tyrone_cr_reform_at_gunpoint
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_cr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_institutions }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				tyrone_cr_country_active = yes
+				NOT = { has_variable = tyrone_cr_institutions_done }
+			}
+		}
+		scope:csr_india = {
+			has_law_or_variant = law_type:law_slavery_banned
+			OR = {
+				has_law = law_type:law_india_imperial_factory_inspectorate
+				has_law = law_type:law_india_imperial_labour_protections
+			}
+			OR = {
+				has_law = law_type:law_chartered_poor_laws
+				has_law = law_type:law_chartered_wage_subsidies
+				has_law = law_type:law_chartered_old_age_pension
+			}
+			OR = {
+				has_law = law_type:law_chartered_orientalist_schools
+				has_law = law_type:law_chartered_private_schools
+				has_law = law_type:law_chartered_public_schools
+				has_law = law_type:law_chartered_imperial_public_schools
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_cr_institutions_done
+				change_variable = { name = tyrone_cr_reforms add = 1 }
+				set_variable = tyrone_cr_institutions_reward_pending
+				trigger_event = { id = tyrone_crown_raj.3 popup = yes }
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					is_subject = no
+					NOT = { has_variable = tyrone_cr_active }
+				}
+			}
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_cr_institutions }
+		}
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+# Perpetual administration under the current overlord; negotiated modifiers expire naturally.
+je_tyrone_jewel_of_the_empire = {
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				has_variable = tyrone_cr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	scripted_button = tyrone_jewel_public_works
+	scripted_button = tyrone_jewel_revenue
+	scripted_button = tyrone_jewel_plantation_expansion
+	scripted_button = tyrone_jewel_irrigation
+	scripted_button = tyrone_jewel_crop_contracts
+	scripted_button = tyrone_jewel_plantation_labor
+	scripted_button = tyrone_jewel_district_offices
+	scripted_button = tyrone_jewel_local_notables
+	scripted_button = tyrone_jewel_district_schools
+	scripted_button = tyrone_jewel_rural_relief
+	scripted_button = tyrone_jewel_prospecting
+	scripted_button = tyrone_jewel_mine_leases
+	scripted_button = tyrone_jewel_mineral_routes
+	scripted_button = tyrone_jewel_mine_inspection
+	scripted_button = tyrone_jewel_industrial_credit
+	scripted_button = tyrone_jewel_factory_contracts
+	scripted_button = tyrone_jewel_commercial_agencies
+	scripted_button = tyrone_jewel_technical_training
+	scripted_button = tyrone_jewel_army_instruction
+	scripted_button = tyrone_jewel_army_transport
+	scripted_button = tyrone_jewel_arsenals
+	scripted_button = tyrone_jewel_recruitment
+	scripted_progress_bar = tyrone_jewel_gdp_progress_bar
+	immediate = {
+		tyrone_cr_bind_india = yes
+		scope:csr_india ?= {
+			set_variable = tyrone_jewel_active
+			tyrone_jewel_gdp_initialize = yes
+		}
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_jewel_of_the_empire }
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = { is_country_alive = no is_subject = no }
+			}
+		}
+	}
+	on_invalid = {
+		tyrone_jewel_clear_negotiation = yes
+		scope:csr_india ?= {
+			tyrone_jewel_gdp_cleanup = yes
+			remove_variable = tyrone_jewel_active
+			remove_variable = tyrone_jewel_monthly_pending
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			scope:csr_india ?= {
+				# Also initialise a Jewel placeholder already present in an older save.
+				if = {
+					limit = { is_country_alive = yes is_subject = yes }
+					set_variable = tyrone_jewel_active
+					if = {
+						limit = { has_variable = tyrone_jewel_gdp_started }
+						tyrone_jewel_gdp_monthly = yes
+					}
+					else = { tyrone_jewel_gdp_initialize = yes }
+					trigger_event = { on_action = tyrone_jewel_monthly_events }
+				}
+			}
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_jewel_of_the_empire }
+		}
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_jewel_widgets.gui"
+		name = "tyrone_jewel_governor_widget"
+		container = "custom_widget_container_1"
+	}
+	status_desc = { desc = tyrone_jewel_gdp_status }
+	progress_desc = tyrone_jewel_gdp_goal
+	weight = 80
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+	can_revolution_inherit = yes
+}
