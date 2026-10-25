@@ -1,0 +1,504 @@
+﻿je_tyrone_company_self_rule = {
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_company_self_rule }
+	}
+	timeout = tyrone_csr_reform_period
+	complete = {
+		hidden_trigger = {
+			exists = scope:csr_india
+			scope:csr_india ?= { NOT = { has_variable = tyrone_csr_resolved } }
+		}
+		scope:csr_india ?= {
+			custom_tooltip = {
+				text = tyrone_csr_all_reforms_done_tt
+				var:tyrone_csr_reforms >= 3
+			}
+		}
+	}
+	on_complete = {
+		hidden_effect = { scope:csr_india ?= { tyrone_csr_resolve = yes } }
+	}
+	fail = {
+		hidden_trigger = {
+			exists = scope:csr_india
+			scope:csr_india ?= {
+				is_country_alive = yes
+				NOT = { has_variable = tyrone_csr_resolved }
+			}
+		}
+		scope:csr_india ?= {
+			custom_tooltip = {
+				text = tyrone_csr_failure_condition_tt
+				NOT = { has_variable = tyrone_csr_active }
+				var:tyrone_csr_reforms = 0
+			}
+		}
+	}
+	on_fail = {
+		custom_tooltip = tyrone_csr_failure_outcome_tt
+		show_as_tooltip = {
+			scope:csr_india ?= {
+				if = {
+					limit = { is_subject = yes }
+					activate_law = law_type:law_india_crown_administration
+					activate_law = law_type:law_india_crown_industrial_obligations
+					if = {
+						limit = { NOT = { has_law = law_type:law_colonial_administration } }
+						activate_law = law_type:law_colonial_administration
+					}
+					activate_law = law_type:law_autocracy
+					if = {
+						limit = {
+							NOR = {
+								has_law = law_type:law_hindu_caste_enforced
+								has_law = law_type:law_hindu_caste_codified
+							}
+						}
+						activate_law = law_type:law_hindu_caste_codified
+					}
+				}
+			}
+		}
+		hidden_effect = {
+			scope:csr_india ?= { tyrone_csr_resolve = yes }
+		}
+	}
+	on_timeout = {
+		hidden_effect = { scope:csr_india ?= { tyrone_csr_resolve = yes } }
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_csr_settlement_preview_header
+		effect = { custom_tooltip = tyrone_csr_evaluation_tt }
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_csr_public_dividends_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_public_dividends days = long_modifier_time }
+			}
+		}
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_csr_private_investment_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_private_investment days = long_modifier_time }
+				add_loyalists = { pop_type = capitalists value = 0.20 }
+			}
+		}
+	}
+	event_outcome_completed_effect_desc = {
+		header = tyrone_csr_construction_drive_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_construction_drive days = long_modifier_time }
+				add_loyalists = { value = 0.02 }
+			}
+		}
+	}
+	event_outcome_timeout_effect_desc = {
+		header = tyrone_csr_settlement_preview_header
+		effect = { custom_tooltip = tyrone_csr_evaluation_tt }
+	}
+	event_outcome_timeout_effect_desc = {
+		header = tyrone_csr_public_dividends_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_public_dividends days = long_modifier_time }
+			}
+		}
+	}
+	event_outcome_timeout_effect_desc = {
+		header = tyrone_csr_private_investment_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_private_investment days = long_modifier_time }
+				add_loyalists = { pop_type = capitalists value = 0.20 }
+			}
+		}
+	}
+	event_outcome_timeout_effect_desc = {
+		header = tyrone_csr_construction_drive_preview_header
+		effect = {
+			scope:csr_india ?= {
+				add_modifier = { name = tyrone_csr_construction_drive days = long_modifier_time }
+				add_loyalists = { value = 0.02 }
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= { is_country_alive = no }
+		}
+	}
+	on_invalid = {
+		scope:csr_india ?= { remove_variable = tyrone_csr_active }
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_company_self_rule } }
+	}
+	current_value = { value = scope:csr_india.var:tyrone_csr_reforms }
+	goal_add_value = { value = 3 }
+	progressbar = yes
+	progress_desc = {}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_unstable_raj_widgets.gui"
+		name = "tyrone_company_self_rule_subentries_widget"
+		container = "custom_widget_container_1"
+	}
+	weight = 100
+	should_be_pinned_by_default_involved = yes
+	can_revolution_inherit = yes
+}
+
+je_tyrone_csr_police = {
+	icon = "gfx/interface/icons/law_icons/dedicated_police.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	scripted_button = tyrone_csr_welfare_intervention
+	scripted_button = tyrone_csr_police_intervention
+	scripted_button = tyrone_csr_schools_intervention
+	scripted_button = tyrone_csr_health_intervention
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_police }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				has_variable = tyrone_csr_active
+				NOT = { has_variable = tyrone_csr_police_done }
+			}
+		}
+		scope:csr_india = {
+			NOT = { has_law_or_variant = law_type:law_no_police }
+			institution_investment_level = {
+				institution = institution_police
+				value >= 2
+			}
+			radical_fraction = { value <= 0.10 }
+		}
+	}
+	on_complete = {
+		scope:csr_india = {
+			set_variable = tyrone_csr_police_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_police_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.1 popup = yes }
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					NOT = { has_variable = tyrone_csr_active }
+				}
+			}
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_police } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+je_tyrone_csr_army = {
+	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_army }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				has_variable = tyrone_csr_active
+				NOT = { has_variable = tyrone_csr_army_done }
+			}
+		}
+		scope:csr_india = {
+			army_size >= 250
+			has_technology_researched = rifling
+			has_technology_researched = logistics
+			OR = {
+				has_law = law_type:law_india_early_standing_army
+				has_law = law_type:law_india_company_army
+				has_law = law_type:law_india_great_indian_army
+			}
+		}
+	}
+	on_complete = {
+		scope:csr_india = {
+			set_variable = tyrone_csr_army_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_army_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.2 popup = yes }
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					NOT = { has_variable = tyrone_csr_active }
+				}
+			}
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_army } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+je_tyrone_csr_tax = {
+	icon = "gfx/interface/icons/law_icons/per_capita_based_taxation.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_tax }
+	}
+	complete = {
+		hidden_trigger = {
+			scope:csr_india ?= {
+				has_variable = tyrone_csr_active
+				NOT = { has_variable = tyrone_csr_tax_done }
+			}
+		}
+		scope:csr_india = {
+			OR = {
+				has_law = law_type:law_india_chartered_excise
+				has_law = law_type:law_india_company_assessment
+			}
+			bureaucracy >= 0
+		}
+	}
+	on_complete = {
+		scope:csr_india = {
+			set_variable = tyrone_csr_tax_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_tax_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.3 popup = yes }
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					is_country_alive = no
+					NOT = { has_variable = tyrone_csr_active }
+				}
+			}
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_tax } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+# Imperial constitutional arc, followed by the separate Home Rule undertaking.
+je_tyrone_csr_empire_of_india = {
+	icon = "gfx/interface/icons/law_icons/monarchy.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_eoi_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_eoi_bind_india = yes
+		scope:csr_india ?= { tyrone_eoi_initialize = yes }
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_empire_of_india }
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_eoi_bind_india = yes
+			tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_empire_of_india }
+			scope:csr_india ?= { tyrone_eoi_initialize = yes }
+		}
+	}
+	complete = {
+		scope:csr_india ?= {
+			custom_tooltip = {
+				text = tyrone_eoi_five_reforms_tt
+				has_variable = tyrone_eoi_calcutta_done
+				has_variable = tyrone_eoi_civil_done
+				has_variable = tyrone_eoi_army_done
+				has_variable = tyrone_eoi_council_done
+				has_variable = tyrone_eoi_coronation_done
+			}
+		}
+	}
+	on_complete = { scope:csr_india ?= { tyrone_eoi_finish_empire = yes } }
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= { is_country_alive = no }
+		}
+	}
+	on_invalid = {
+		scope:csr_india ?= {
+			remove_variable = tyrone_eoi_active
+			remove_variable = tyrone_eoi_calcutta_active
+			remove_variable = tyrone_eoi_negotiation_pending
+		}
+	}
+	current_value = { value = tyrone_eoi_completed_reforms }
+	goal_add_value = { value = 5 subtract = tyrone_eoi_completed_reforms }
+	progress_desc = tyrone_eoi_main_progress
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_empire_of_india_widgets.gui"
+		name = "tyrone_empire_of_india_subentries_widget"
+		container = "custom_widget_container_1"
+	}
+	weight = 100
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+	can_revolution_inherit = yes
+}
+
+# Placeholder for the next phase of the Indian arc.
+je_tyrone_csr_sovereign_company = {
+	icon = "gfx/interface/icons/law_icons/corporate_state.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_sovereign_company }
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= { is_country_alive = no }
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_sovereign_company } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+# Placeholder for the next phase of the Indian arc.
+je_tyrone_csr_independent_path = {
+	icon = "gfx/interface/icons/law_icons/parliamentary_republic.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			has_variable = tyrone_cr_started
+			any_subject_or_below = {
+				OR = {
+					has_variable = tyrone_csr_started
+					has_variable = tyrone_cr_started
+				}
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_independent_path }
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= { is_country_alive = no }
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_independent_path } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+
+# Placeholder for the next phase of the Indian arc.
+je_tyrone_csr_crown_path = {
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	group = je_group_british_india_global
+	should_be_involved = {
+		OR = {
+			has_variable = tyrone_csr_started
+			any_subject_or_below = {
+				has_variable = tyrone_csr_started
+				is_subject_of = root
+			}
+		}
+	}
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_csr_bind_india = yes
+		tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_crown_path }
+	}
+	invalid = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= { is_country_alive = no }
+		}
+	}
+	on_weekly_pulse = {
+		effect = { tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_csr_crown_path } }
+	}
+	weight = 80
+	can_revolution_inherit = yes
+}
+

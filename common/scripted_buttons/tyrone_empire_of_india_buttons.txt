@@ -1,0 +1,131 @@
+tyrone_eoi_independence_ultimatum = {
+	name = tyrone_eoi_ultimatum_button
+	desc = tyrone_eoi_ultimatum_button_desc
+	visible = { scope:csr_india ?= this }
+	possible = {
+		hidden_trigger = {
+			scope:csr_india ?= this
+			has_variable = tyrone_eoi_calcutta_active
+			NOT = { has_variable = tyrone_eoi_ultimatum_issued }
+		}
+		is_subject = yes
+		is_at_war = no
+		custom_tooltip = {
+			text = tyrone_eoi_ultimatum_threshold_tt
+			var:tyrone_eoi_calcutta_score >= 30
+		}
+	}
+	ai_chance = { value = 5 }
+	effect = {
+		if = {
+			limit = {
+				scope:csr_india ?= this
+				has_variable = tyrone_eoi_calcutta_active
+				is_subject = yes
+				var:tyrone_eoi_calcutta_score >= 30
+				NOT = { has_variable = tyrone_eoi_ultimatum_issued }
+			}
+			hidden_effect = {
+				set_variable = tyrone_eoi_ultimatum_issued
+				set_variable = tyrone_eoi_ultimatum_pending
+				overlord = { save_scope_as = eoi_ultimatum_overlord }
+			}
+			scope:eoi_ultimatum_overlord = { trigger_event = { id = tyrone_empire_of_india.20 popup = yes } }
+		}
+	}
+}
+
+tyrone_eoi_integrate_princes = {
+	name = tyrone_eoi_integrate_button
+	desc = tyrone_eoi_integrate_button_desc
+	visible = { always = yes }
+	possible = {
+		hidden_trigger = {
+			tyrone_eoi_button_actor = yes
+			scope:csr_india ?= { has_variable = tyrone_eoi_council_active }
+		}
+		scope:csr_india ?= {
+			OR = {
+				has_law = law_type:law_hindu_caste_codified
+				has_law = law_type:law_hindu_caste_enforced
+			}
+			custom_tooltip = {
+				text = tyrone_eoi_integration_available_tt
+				NOT = { has_variable = tyrone_eoi_council_cooldown }
+				NOT = { has_variable = tyrone_eoi_council_integration_pending }
+			}
+		}
+		custom_tooltip = {
+			text = tyrone_eoi_eligible_prince_tt
+			any_country = { tyrone_eoi_prince_eligible = yes }
+		}
+	}
+	cooldown = { days = tyrone_eoi_council_cooldown_time }
+	ai_chance = { value = 20 }
+	effect = {
+		if = {
+			limit = {
+				tyrone_eoi_button_actor = yes
+				scope:csr_india ?= {
+					has_variable = tyrone_eoi_council_active
+					NOT = { has_variable = tyrone_eoi_council_cooldown }
+					NOT = { has_variable = tyrone_eoi_council_integration_pending }
+					OR = {
+						has_law = law_type:law_hindu_caste_codified
+						has_law = law_type:law_hindu_caste_enforced
+					}
+				}
+				any_country = { tyrone_eoi_prince_eligible = yes }
+			}
+			scope:csr_india = {
+				hidden_effect = {
+					set_variable = { name = tyrone_eoi_council_cooldown days = tyrone_eoi_council_cooldown_time }
+					set_variable = { name = tyrone_eoi_council_integration_pending days = 30 }
+				}
+				trigger_event = { id = tyrone_empire_of_india.35 popup = yes }
+			}
+		}
+	}
+}
+
+tyrone_eoi_hold_coronation = {
+	name = tyrone_eoi_coronation_button
+	desc = tyrone_eoi_coronation_button_desc
+	visible = { always = yes }
+	possible = {
+		hidden_trigger = {
+			tyrone_eoi_button_actor = yes
+			scope:csr_india ?= { NOT = { has_variable = tyrone_eoi_coronation_held } }
+		}
+		scope:csr_india ?= {
+			custom_tooltip = {
+				text = tyrone_eoi_coronation_reforms_tt
+				has_variable = tyrone_eoi_civil_done
+				has_variable = tyrone_eoi_army_done
+				has_variable = tyrone_eoi_council_done
+			}
+			gdp >= var:tyrone_eoi_coronation_target
+			tyrone_eoi_controls_subcontinent = yes
+		}
+	}
+	ai_chance = { value = 100 }
+	effect = {
+		if = {
+			limit = {
+				tyrone_eoi_button_actor = yes
+				scope:csr_india ?= {
+					NOT = { has_variable = tyrone_eoi_coronation_held }
+					has_variable = tyrone_eoi_civil_done
+					has_variable = tyrone_eoi_army_done
+					has_variable = tyrone_eoi_council_done
+					gdp >= var:tyrone_eoi_coronation_target
+					tyrone_eoi_controls_subcontinent = yes
+				}
+			}
+			scope:csr_india = {
+				activate_law = law_type:law_monarchy
+				hidden_effect = { set_variable = tyrone_eoi_coronation_held }
+			}
+		}
+	}
+}

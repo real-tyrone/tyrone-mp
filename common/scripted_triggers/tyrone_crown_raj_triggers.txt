@@ -1,0 +1,148 @@
+﻿# Country scope unless a saved JE country is explicitly used.
+tyrone_cr_country_active = {
+	is_country_alive = yes
+	is_subject = yes
+	has_variable = tyrone_cr_active
+	NOT = { has_variable = tyrone_cr_finished }
+}
+tyrone_cr_is_actor = {
+	OR = {
+		scope:csr_india ?= this
+		scope:csr_india.overlord ?= this
+	}
+}
+tyrone_cr_can_leave_police = {
+	custom_tooltip = {
+		text = tyrone_cr_police_locked_tt
+		NOT = {
+			AND = {
+				is_subject = yes
+				has_law = law_type:law_india_crown_constabulary
+			}
+		}
+	}
+}
+
+# Country scope: only India, or its British overlord while India is AI.
+tyrone_cr_institution_actor_ready = {
+	exists = scope:csr_india
+	OR = {
+		scope:csr_india ?= this
+		AND = {
+			c:GBR ?= this
+			scope:csr_india ?= {
+				is_player = no
+				overlord ?= c:GBR
+			}
+		}
+	}
+	scope:csr_india ?= {
+		tyrone_cr_country_active = yes
+		NOT = { has_variable = tyrone_cr_institutions_done }
+	}
+}
+
+# Indian country scope. Character stances refer to the current enactment.
+tyrone_cr_has_supporting_utilitarian_agitator = {
+	exists = this.currently_enacting_law
+	any_scope_character = {
+		has_role_of_type = agitator
+		has_ideology = ideology:ideology_utilitarian_leader
+		law_enactment_stance = {
+			law = owner.currently_enacting_law.type
+			value > neutral
+		}
+	}
+}
+
+tyrone_cr_can_force_reform = {
+	exists = this.currently_enacting_law
+	radical_fraction = { value < 0.15 }
+	ig:ig_industrialists = {
+		exists = leader
+		leader ?= {
+			has_ideology = ideology:ideology_utilitarian_leader
+			law_enactment_stance = {
+				law = owner.currently_enacting_law.type
+				value > neutral
+			}
+		}
+	}
+}
+
+tyrone_cr_can_reform_at_gunpoint = {
+	radical_fraction = { value > 0.10 }
+	any_political_movement = {
+		is_political_movement_type = movement_utilitarian
+		political_movement_radicalism > 0.75
+	}
+	exists = ig:ig_industrialists.leader
+	NOT = {
+		AND = {
+			has_law = law_type:law_chartered_imperial_public_schools
+			OR = {
+				has_law = law_type:law_chartered_wage_subsidies
+				has_law = law_type:law_chartered_old_age_pension
+			}
+			has_law = law_type:law_india_imperial_labour_protections
+			has_law_or_variant = law_type:law_slavery_banned
+		}
+	}
+}
+
+# Mirror the laws' non-technological requirements; direct activation skips tech only.
+tyrone_cr_gunpoint_schools_available = {
+	is_india_tag_trigger = yes
+	NOR = {
+		has_law = law_type:law_chartered_imperial_public_schools
+		has_law_or_variant = law_type:law_state_religion
+		has_law_or_variant = law_type:law_serfdom
+	}
+}
+
+tyrone_cr_gunpoint_welfare_available = {
+	is_india_tag_trigger = yes
+	has_law_or_variant = law_type:law_affirmative_action
+	NOR = {
+		has_law = law_type:law_chartered_wage_subsidies
+		has_law = law_type:law_chartered_old_age_pension
+	}
+}
+
+tyrone_cr_gunpoint_labour_available = {
+	is_india_tag_trigger = yes
+	NOT = { has_law = law_type:law_india_imperial_labour_protections }
+}
+
+tyrone_cr_gunpoint_slavery_available = {
+	NOT = { has_law_or_variant = law_type:law_slavery_banned }
+	NOT = {
+		active_law:lawgroup_slavery = {
+			has_amendment = amendment_type:amendment_company_bonded_labor_guarantees
+		}
+	}
+}
+tyrone_cr_can_leave_corporations = {
+	custom_tooltip = {
+		text = tyrone_cr_corporations_locked_tt
+		NOT = {
+			AND = {
+				is_subject = yes
+				has_law = law_type:law_india_crown_industrial_obligations
+			}
+		}
+	}
+}
+tyrone_cr_can_leave_civil_service = {
+	custom_tooltip = {
+		text = tyrone_cr_civil_service_locked_tt
+		NOT = {
+			AND = {
+				is_subject = yes
+				has_variable = tyrone_cr_active
+				has_law = law_type:law_india_crown_administration
+				NOT = { has_variable = tyrone_cr_apparatus_done }
+			}
+		}
+	}
+}

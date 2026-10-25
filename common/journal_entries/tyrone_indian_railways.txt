@@ -1,0 +1,1130 @@
+# Shared, contextless replacement. Triggers remain inline in the JE file.
+# Routes use vanilla geographic_region_*_line membership from 04_geographic_regions_asia.txt.
+# One shared stage per route: 1 preparation -> 2 survey -> 3 construction -> 4 complete.
+# The clicked survey is charged only to its initiator, once per route.
+REPLACE:je_india_railway = {
+	icon = "gfx/interface/icons/event_icons/indian_railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { tyrone_railways_is_actor = yes }
+	is_shown_when_inactive = {
+		tyrone_railways_india_exists = yes
+		NOT = { has_global_variable = india_railway_done }
+	}
+	possible = {
+		OR = {
+			scope:tyrone_railways_india ?= { has_technology_researched = railways }
+			global_var:tyrone_railways_india_country ?= { has_technology_researched = railways }
+			AND = {
+				NOT = { exists = scope:tyrone_railways_india }
+				NOT = { has_global_variable = tyrone_railways_india_country }
+				OR = {
+					c:BIC ?= { has_technology_researched = railways }
+					c:BHR ?= { has_technology_researched = railways }
+				}
+			}
+		}
+	}
+	immediate = {
+		tyrone_railways_bind_india = yes
+		set_global_variable = tyrone_railways_active_var
+		set_global_variable = { name = tyrone_railway_delhi_calcutta_stage value = 1 }
+		add_contextless_journal_entry = je_tyrone_railway_delhi_calcutta_preparation
+		set_global_variable = { name = tyrone_railway_allahabad_bombay_stage value = 1 }
+		add_contextless_journal_entry = je_tyrone_railway_allahabad_bombay_preparation
+		set_global_variable = { name = tyrone_railway_bombay_madras_stage value = 1 }
+		add_contextless_journal_entry = je_tyrone_railway_bombay_madras_preparation
+		set_global_variable = { name = tyrone_railway_gujarat_bombay_stage value = 1 }
+		add_contextless_journal_entry = je_tyrone_railway_gujarat_bombay_preparation
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_india_railway
+		}
+	}
+	immediate_all_involved = {
+		trigger_event = { id = tyrone_indian_railways.3 days = 0 popup = yes }
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_india_railway
+			}
+		}
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_indian_railways_widgets.gui"
+		name = "tyrone_indian_railways_subentries_widget"
+		container = "custom_widget_container_1"
+	}
+	complete = { scope:journal_entry = { is_goal_complete = yes } }
+	on_complete = {
+		# Kept visible for the native "If completed" effects list.
+		scope:tyrone_railways_india ?= {
+			add_modifier = { name = tyrone_railways_indian_network }
+			overlord ?= {
+				add_modifier = { name = tyrone_railways_imperial_network }
+			}
+		}
+		# Resolve shared bookkeeping once; cosmetic events have no JE preview.
+		hidden_effect = {
+			set_global_variable = india_railway_done
+			remove_global_variable = tyrone_railways_active_var
+			remove_global_variable = tyrone_railway_delhi_calcutta_stage
+			remove_global_variable = tyrone_railway_delhi_calcutta_survey_started
+			remove_global_variable = tyrone_railway_delhi_calcutta_survey_payer
+			remove_global_variable = tyrone_railway_allahabad_bombay_stage
+			remove_global_variable = tyrone_railway_allahabad_bombay_survey_started
+			remove_global_variable = tyrone_railway_allahabad_bombay_survey_payer
+			remove_global_variable = tyrone_railway_bombay_madras_stage
+			remove_global_variable = tyrone_railway_bombay_madras_survey_started
+			remove_global_variable = tyrone_railway_bombay_madras_survey_payer
+			remove_global_variable = tyrone_railway_gujarat_bombay_stage
+			remove_global_variable = tyrone_railway_gujarat_bombay_survey_started
+			remove_global_variable = tyrone_railway_gujarat_bombay_survey_payer
+
+			scope:tyrone_railways_india ?= {
+				save_scope_as = tyrone_railways_india
+				trigger_event = { id = tyrone_indian_railways.1 days = 0 popup = yes }
+				overlord ?= {
+					trigger_event = { id = tyrone_indian_railways.2 days = 0 popup = yes }
+				}
+			}
+		}
+	}
+	invalid = {
+		NOT = { tyrone_railways_india_exists = yes }
+	}
+	on_invalid = {
+		remove_global_variable = tyrone_railways_active_var
+		remove_global_variable = tyrone_railway_delhi_calcutta_stage
+		remove_global_variable = tyrone_railway_delhi_calcutta_survey_started
+		remove_global_variable = tyrone_railway_delhi_calcutta_survey_payer
+		remove_global_variable = tyrone_railway_allahabad_bombay_stage
+		remove_global_variable = tyrone_railway_allahabad_bombay_survey_started
+		remove_global_variable = tyrone_railway_allahabad_bombay_survey_payer
+		remove_global_variable = tyrone_railway_bombay_madras_stage
+		remove_global_variable = tyrone_railway_bombay_madras_survey_started
+		remove_global_variable = tyrone_railway_bombay_madras_survey_payer
+		remove_global_variable = tyrone_railway_gujarat_bombay_stage
+		remove_global_variable = tyrone_railway_gujarat_bombay_survey_started
+		remove_global_variable = tyrone_railway_gujarat_bombay_survey_payer
+
+	}
+	current_value = {
+		value = 0
+		if = {
+			limit = { has_global_variable = india_railway_done }
+			value = 4
+		}
+		else = {
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { has_global_variable = tyrone_railway_delhi_calcutta_stage }
+						global_var:tyrone_railway_delhi_calcutta_stage = 4
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { has_global_variable = tyrone_railway_allahabad_bombay_stage }
+						global_var:tyrone_railway_allahabad_bombay_stage = 4
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { has_global_variable = tyrone_railway_bombay_madras_stage }
+						global_var:tyrone_railway_bombay_madras_stage = 4
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+			if = {
+				limit = {
+					trigger_if = {
+						limit = { has_global_variable = tyrone_railway_gujarat_bombay_stage }
+						global_var:tyrone_railway_gujarat_bombay_stage = 4
+					}
+					trigger_else = { always = no }
+				}
+				add = 1
+			}
+		}
+	}
+	goal_add_value = { add = 4 }
+	progress_desc = tyrone_railways_main_progress
+	progressbar = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+	weight = 60
+}
+
+je_tyrone_railway_delhi_calcutta_preparation = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_delhi_calcutta_preparation
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_delhi_calcutta_preparation
+			}
+		}
+	}
+
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_delhi_calcutta_stage }
+				global_var:tyrone_railway_delhi_calcutta_stage = 1
+			}
+			trigger_else = { always = no }
+		}
+		scope:tyrone_railways_india ?= {
+			owns_entire_state_region = STATE_WEST_BENGAL
+			any_scope_state = {
+				state_region = s:STATE_WEST_BENGAL
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_BIHAR
+			any_scope_state = {
+				state_region = s:STATE_BIHAR
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_AWADH
+			any_scope_state = {
+				state_region = s:STATE_AWADH
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_AGRA
+			any_scope_state = {
+				state_region = s:STATE_AGRA
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_DELHI
+			any_scope_state = {
+				state_region = s:STATE_DELHI
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_delhi_calcutta_stage value = 2 }
+		add_contextless_journal_entry = je_tyrone_railway_delhi_calcutta_survey
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_delhi_calcutta_preparation_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_delhi_calcutta_survey = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_delhi_calcutta_survey
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_delhi_calcutta_survey
+			}
+		}
+	}
+
+	scripted_button = tyrone_railway_delhi_calcutta_survey
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_delhi_calcutta_stage }
+				global_var:tyrone_railway_delhi_calcutta_stage = 2
+			}
+			trigger_else = { always = no }
+		}
+		custom_tooltip = {
+			text = tyrone_railway_delhi_calcutta_survey_started_tt
+			has_global_variable = tyrone_railway_delhi_calcutta_survey_started
+		}
+
+		tyrone_india_portfolio_survey_finished = {
+			PAYER = tyrone_railway_delhi_calcutta_survey_payer
+			MODIFIER = tyrone_railway_delhi_calcutta_survey_cost
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_delhi_calcutta_stage value = 3 }
+		add_contextless_journal_entry = je_tyrone_railway_delhi_calcutta_construction
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_delhi_calcutta_survey_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_delhi_calcutta_construction = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_delhi_calcutta_construction
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_delhi_calcutta_construction
+			}
+		}
+	}
+
+	scripted_progress_bar = tyrone_railway_delhi_calcutta_construction_bar
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_delhi_calcutta_stage }
+				global_var:tyrone_railway_delhi_calcutta_stage = 3
+			}
+			trigger_else = { always = no }
+		}
+		scope:journal_entry = {
+			"scripted_bar_progress(tyrone_railway_delhi_calcutta_construction_bar)" >= 100
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_delhi_calcutta_stage value = 4 }
+		s:STATE_WEST_BENGAL = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_BIHAR = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_AWADH = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_AGRA = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_DELHI = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_allahabad_bombay_preparation = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_allahabad_bombay_preparation
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_allahabad_bombay_preparation
+			}
+		}
+	}
+
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_allahabad_bombay_stage }
+				global_var:tyrone_railway_allahabad_bombay_stage = 1
+			}
+			trigger_else = { always = no }
+		}
+		scope:tyrone_railways_india ?= {
+			owns_entire_state_region = STATE_AGRA
+			any_scope_state = {
+				state_region = s:STATE_AGRA
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_BUNDELKHAND
+			any_scope_state = {
+				state_region = s:STATE_BUNDELKHAND
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_CENTRAL_PROVINCES
+			any_scope_state = {
+				state_region = s:STATE_CENTRAL_PROVINCES
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_MALWA
+			any_scope_state = {
+				state_region = s:STATE_MALWA
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_BOMBAY
+			any_scope_state = {
+				state_region = s:STATE_BOMBAY
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_allahabad_bombay_stage value = 2 }
+		add_contextless_journal_entry = je_tyrone_railway_allahabad_bombay_survey
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_allahabad_bombay_preparation_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_allahabad_bombay_survey = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_allahabad_bombay_survey
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_allahabad_bombay_survey
+			}
+		}
+	}
+
+	scripted_button = tyrone_railway_allahabad_bombay_survey
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_allahabad_bombay_stage }
+				global_var:tyrone_railway_allahabad_bombay_stage = 2
+			}
+			trigger_else = { always = no }
+		}
+		custom_tooltip = {
+			text = tyrone_railway_allahabad_bombay_survey_started_tt
+			has_global_variable = tyrone_railway_allahabad_bombay_survey_started
+		}
+
+		tyrone_india_portfolio_survey_finished = {
+			PAYER = tyrone_railway_allahabad_bombay_survey_payer
+			MODIFIER = tyrone_railway_allahabad_bombay_survey_cost
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_allahabad_bombay_stage value = 3 }
+		add_contextless_journal_entry = je_tyrone_railway_allahabad_bombay_construction
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_allahabad_bombay_survey_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_allahabad_bombay_construction = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_allahabad_bombay_construction
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_allahabad_bombay_construction
+			}
+		}
+	}
+
+	scripted_progress_bar = tyrone_railway_allahabad_bombay_construction_bar
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_allahabad_bombay_stage }
+				global_var:tyrone_railway_allahabad_bombay_stage = 3
+			}
+			trigger_else = { always = no }
+		}
+		scope:journal_entry = {
+			"scripted_bar_progress(tyrone_railway_allahabad_bombay_construction_bar)" >= 100
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_allahabad_bombay_stage value = 4 }
+		s:STATE_AGRA = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_BUNDELKHAND = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_CENTRAL_PROVINCES = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_MALWA = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_BOMBAY = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_bombay_madras_preparation = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_bombay_madras_preparation
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_bombay_madras_preparation
+			}
+		}
+	}
+
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_bombay_madras_stage }
+				global_var:tyrone_railway_bombay_madras_stage = 1
+			}
+			trigger_else = { always = no }
+		}
+		scope:tyrone_railways_india ?= {
+			owns_entire_state_region = STATE_BOMBAY
+			any_scope_state = {
+				state_region = s:STATE_BOMBAY
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_HYDERABAD
+			any_scope_state = {
+				state_region = s:STATE_HYDERABAD
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_KURNOOL
+			any_scope_state = {
+				state_region = s:STATE_KURNOOL
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_MADRAS
+			any_scope_state = {
+				state_region = s:STATE_MADRAS
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_bombay_madras_stage value = 2 }
+		add_contextless_journal_entry = je_tyrone_railway_bombay_madras_survey
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_bombay_madras_preparation_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_bombay_madras_survey = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_bombay_madras_survey
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_bombay_madras_survey
+			}
+		}
+	}
+
+	scripted_button = tyrone_railway_bombay_madras_survey
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_bombay_madras_stage }
+				global_var:tyrone_railway_bombay_madras_stage = 2
+			}
+			trigger_else = { always = no }
+		}
+		custom_tooltip = {
+			text = tyrone_railway_bombay_madras_survey_started_tt
+			has_global_variable = tyrone_railway_bombay_madras_survey_started
+		}
+
+		tyrone_india_portfolio_survey_finished = {
+			PAYER = tyrone_railway_bombay_madras_survey_payer
+			MODIFIER = tyrone_railway_bombay_madras_survey_cost
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_bombay_madras_stage value = 3 }
+		add_contextless_journal_entry = je_tyrone_railway_bombay_madras_construction
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_bombay_madras_survey_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_bombay_madras_construction = {
+	icon = "gfx/interface/icons/building_icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_bombay_madras_construction
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_bombay_madras_construction
+			}
+		}
+	}
+
+	scripted_progress_bar = tyrone_railway_bombay_madras_construction_bar
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_bombay_madras_stage }
+				global_var:tyrone_railway_bombay_madras_stage = 3
+			}
+			trigger_else = { always = no }
+		}
+		scope:journal_entry = {
+			"scripted_bar_progress(tyrone_railway_bombay_madras_construction_bar)" >= 100
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_bombay_madras_stage value = 4 }
+		s:STATE_BOMBAY = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_HYDERABAD = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_KURNOOL = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_MADRAS = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_gujarat_bombay_preparation = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_gujarat_bombay_preparation
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_gujarat_bombay_preparation
+			}
+		}
+	}
+
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_gujarat_bombay_stage }
+				global_var:tyrone_railway_gujarat_bombay_stage = 1
+			}
+			trigger_else = { always = no }
+		}
+		scope:tyrone_railways_india ?= {
+			owns_entire_state_region = STATE_BOMBAY
+			any_scope_state = {
+				state_region = s:STATE_BOMBAY
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+			owns_entire_state_region = STATE_GUJARAT
+			any_scope_state = {
+				state_region = s:STATE_GUJARAT
+				any_scope_building = {
+					is_building_type = building_railway
+					level >= 10
+				}
+				any_scope_building = {
+					is_building_type = building_urban_center
+					level >= 40
+				}
+			}
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_gujarat_bombay_stage value = 2 }
+		add_contextless_journal_entry = je_tyrone_railway_gujarat_bombay_survey
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_gujarat_bombay_preparation_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_gujarat_bombay_survey = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_gujarat_bombay_survey
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_gujarat_bombay_survey
+			}
+		}
+	}
+
+	scripted_button = tyrone_railway_gujarat_bombay_survey
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_gujarat_bombay_stage }
+				global_var:tyrone_railway_gujarat_bombay_stage = 2
+			}
+			trigger_else = { always = no }
+		}
+		custom_tooltip = {
+			text = tyrone_railway_gujarat_bombay_survey_started_tt
+			has_global_variable = tyrone_railway_gujarat_bombay_survey_started
+		}
+
+		tyrone_india_portfolio_survey_finished = {
+			PAYER = tyrone_railway_gujarat_bombay_survey_payer
+			MODIFIER = tyrone_railway_gujarat_bombay_survey_cost
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_gujarat_bombay_stage value = 3 }
+		add_contextless_journal_entry = je_tyrone_railway_gujarat_bombay_construction
+	}
+	event_outcome_completed_desc = {
+		first_valid = { triggered_desc = { desc = tyrone_railway_gujarat_bombay_survey_completed } }
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}
+
+je_tyrone_railway_gujarat_bombay_construction = {
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	group = je_group_british_india_global
+	should_be_involved = { tyrone_railways_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_railways_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_railways_india
+			ENTRY = je_tyrone_railway_gujarat_bombay_construction
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_railways_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_railways_india
+				ENTRY = je_tyrone_railway_gujarat_bombay_construction
+			}
+		}
+	}
+
+	scripted_progress_bar = tyrone_railway_gujarat_bombay_construction_bar
+	complete = {
+		hidden_trigger = {
+			has_global_variable = tyrone_railways_active_var
+			exists = scope:tyrone_railways_india
+			scope:tyrone_railways_india ?= { is_country_alive = yes }
+			trigger_if = {
+				limit = { has_global_variable = tyrone_railway_gujarat_bombay_stage }
+				global_var:tyrone_railway_gujarat_bombay_stage = 3
+			}
+			trigger_else = { always = no }
+		}
+		scope:journal_entry = {
+			"scripted_bar_progress(tyrone_railway_gujarat_bombay_construction_bar)" >= 100
+		}
+	}
+	on_complete = {
+		set_global_variable = { name = tyrone_railway_gujarat_bombay_stage value = 4 }
+		s:STATE_BOMBAY = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+		s:STATE_GUJARAT = {
+			if = {
+				limit = { NOT = { has_state_trait = state_trait_tyrone_great_indian_railways } }
+				add_state_trait = state_trait_tyrone_great_indian_railways
+			}
+		}
+	}
+	invalid = {
+		OR = {
+			NOT = { has_global_variable = tyrone_railways_active_var }
+			NOT = { exists = scope:tyrone_railways_india }
+			scope:tyrone_railways_india ?= { is_country_alive = no }
+		}
+	}
+	progressbar = no
+	weight = 20
+}

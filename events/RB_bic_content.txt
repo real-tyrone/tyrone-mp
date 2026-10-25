@@ -71,63 +71,49 @@ bic_content.1 = {
 
 bic_content.2 = {
 	type = country_event
-
+	placement = root
 	title = bic_content.2.t
 	desc = bic_content.2.d
 	flavor = bic_content.2.f
-
-	cooldown = { days = never_fire_again_modifier_time }
-
-	minor_left_icon = c:GBR
-	minor_right_icon = c:BIC
-
+	cooldown = {
+		days = never_fire_again_modifier_time
+	}
+	minor_left_icon = scope:gbr_scope
+	minor_right_icon = scope:company_scope
 	event_image = {
 		video = "ip2_telegraph_dictate"
 	}
-
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
-
 	duration = 3
-
-	placement = scope:west_bengal_scope
-
 	immediate = {
-		s:STATE_WEST_BENGAL.region_state:BIC = {
-			save_scope_as = west_bengal_scope
-		}
-		c:BIC = {
+		tyrone_unstable_bind_india = yes
+		scope:raj_scope = {
 			save_scope_as = company_scope
-		}
-		c:GBR = {
-			save_scope_as = gbr_scope
+			if = {
+				limit = {
+					is_subject = yes
+				}
+				overlord = {
+					save_scope_as = gbr_scope
+				}
+			}
 		}
 	}
-
 	option = {
 		name = bic_content.2.a
 		default_option = yes
-		custom_tooltip = activate_british_raj
-		trigger = {
-			this = c:GBR
-		}
-		c:GBR = {
+		custom_tooltip = tyrone_raj_crown_act_effect_tt
+		if = {
+			limit = {
+				scope:gbr_scope ?= this
+			}
 			add_modifier = {
 				name = gov_of_india_act_MODIFIER
 				years = 25
 				is_decaying = yes
 			}
-		}
-		c:GBR = {
 			set_variable = enacted_government_of_india_act
-		}
-	}
-	option = {
-		name = bic_content.2.a
-		custom_tooltip = activate_british_raj
-		trigger = {
-			this = c:BIC
 		}
 	}
 }
@@ -136,71 +122,59 @@ bic_content.2 = {
 
 bic_content.3 = {
 	type = country_event
-
+	placement = root
 	title = bic_content.3.t
 	desc = bic_content.3.d
 	flavor = bic_content.3.f
-
-	cooldown = { days = never_fire_again_modifier_time }
-
-	minor_left_icon = c:GBR
-	minor_right_icon = c:BIC
-
-
-
+	cooldown = {
+		days = never_fire_again_modifier_time
+	}
+	minor_left_icon = scope:gbr_scope
+	minor_right_icon = scope:company_scope
 	event_image = {
 		video = "ip2_india_countryside"
 	}
-
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
-
 	duration = 3
-
-	placement = scope:west_bengal_scope
-
 	immediate = {
-		s:STATE_WEST_BENGAL.region_state:BIC = {
-			save_scope_as = west_bengal_scope
-		}
-		c:BIC = {
+		tyrone_unstable_bind_india = yes
+		scope:raj_scope = {
 			save_scope_as = company_scope
-		}
-		c:GBR = {
-			save_scope_as = gbr_scope
+			if = {
+				limit = {
+					is_subject = yes
+				}
+				overlord = {
+					save_scope_as = gbr_scope
+				}
+			}
 		}
 	}
-
 	option = {
 		name = bic_content.3.a
 		default_option = yes
-		trigger = {
-			this = c:BIC
-		}
-		c:BIC = {
+		if = {
+			limit = {
+				scope:company_scope ?= this
+			}
 			add_modifier = {
 				name = economic_privileges_returned
-				days = very_long_modifier_time			
-				is_decaying = yes
-			}			
-			set_variable = repealed_charter_act
-		}
-	}
-
-	option = {
-		name = bic_content.3.a
-		trigger = {
-			this = c:GBR
-		}
-		c:GBR = {
-			add_modifier = {
-				name = charter_act_repealed
-				days = long_modifier_time			
+				days = very_long_modifier_time
 				is_decaying = yes
 			}
 		}
-		c:BIC = {
+		else_if = {
+			limit = {
+				scope:gbr_scope ?= this
+			}
+			add_modifier = {
+				name = charter_act_repealed
+				days = long_modifier_time
+				is_decaying = yes
+			}
+		}
+		scope:company_scope = {
 			set_variable = repealed_charter_act
 		}
 	}

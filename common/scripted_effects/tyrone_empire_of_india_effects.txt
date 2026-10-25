@@ -1,0 +1,356 @@
+# Contextless JE scope: preserve the Indian country across tag and overlord changes.
+tyrone_eoi_bind_india = {
+	if = {
+		limit = { exists = global_var:tyrone_eoi_india }
+		global_var:tyrone_eoi_india = { save_scope_as = csr_india }
+	}
+	else = { tyrone_csr_bind_india = yes }
+}
+
+# Country scope: India. Idempotent initialization also upgrades the old placeholder.
+tyrone_eoi_initialize = {
+	if = {
+		limit = { NOT = { has_variable = tyrone_eoi_started } }
+		set_variable = tyrone_eoi_started
+		set_variable = tyrone_eoi_active
+		set_global_variable = { name = tyrone_eoi_india value = this }
+		save_scope_as = csr_india
+		add_contextless_journal_entry = je_tyrone_eoi_calcutta
+	}
+}
+
+tyrone_eoi_open_reforms = {
+	if = {
+		limit = { NOT = { has_variable = tyrone_eoi_reforms_open } }
+		set_variable = tyrone_eoi_reforms_open
+		add_contextless_journal_entry = je_tyrone_eoi_civil_service
+		add_contextless_journal_entry = je_tyrone_eoi_gendarmerie
+		add_contextless_journal_entry = je_tyrone_eoi_council
+		add_contextless_journal_entry = je_tyrone_eoi_coronation
+	}
+}
+
+# India scope. A single writer moves both the canonical score and its shared JE bar.
+tyrone_eoi_calcutta_move = {
+	change_variable = { name = tyrone_eoi_calcutta_score add = $DELTA$ }
+	scope:journal_entry = {
+		add_progress = { name = tyrone_eoi_calcutta_bar value = $DELTA$ }
+	}
+}
+
+# India scope; the proposer alternates in six fixed rounds at months 0, 4, 8, 12, 16 and 20.
+tyrone_eoi_calcutta_send_round = {
+	change_variable = { name = tyrone_eoi_calcutta_round add = 1 }
+	set_variable = { name = tyrone_eoi_negotiation_pending days = 30 }
+	if = {
+		limit = {
+			OR = {
+				var:tyrone_eoi_calcutta_round = 1
+				var:tyrone_eoi_calcutta_round = 3
+				var:tyrone_eoi_calcutta_round = 5
+			}
+		}
+		save_scope_as = eoi_proposer
+		overlord = { save_scope_as = eoi_partner }
+	}
+	else = {
+		save_scope_as = eoi_partner
+		overlord = { save_scope_as = eoi_proposer }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 1 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.110 popup = yes } }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 2 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.120 popup = yes } }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 3 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.130 popup = yes } }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 4 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.140 popup = yes } }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 5 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.150 popup = yes } }
+	}
+	if = {
+		limit = { var:tyrone_eoi_calcutta_round = 6 }
+		scope:eoi_proposer = { trigger_event = { id = tyrone_empire_of_india.160 popup = yes } }
+	}
+}
+
+tyrone_eoi_calcutta_monthly = {
+	if = {
+		limit = { is_subject = yes }
+		change_variable = { name = tyrone_eoi_calcutta_months add = 1 }
+		if = {
+			limit = { var:tyrone_eoi_calcutta_months >= 24 }
+			set_variable = tyrone_eoi_calcutta_ready
+		}
+		else_if = {
+			limit = {
+				var:tyrone_eoi_calcutta_round < 6
+				NOT = { has_variable = tyrone_eoi_negotiation_pending }
+				var:tyrone_eoi_calcutta_months >= {
+					value = var:tyrone_eoi_calcutta_round
+					multiply = 4
+				}
+			}
+			tyrone_eoi_calcutta_send_round = yes
+		}
+	}
+}
+
+# The final packages are chosen after the JE completes. Temporary round effects persist.
+tyrone_eoi_calcutta_conclude = {
+	set_variable = tyrone_eoi_calcutta_done
+	if = {
+		limit = {
+			is_subject = yes
+			NOT = { has_variable = tyrone_eoi_ultimatum_issued }
+		}
+		overlord = { save_scope_as = eoi_settlement_overlord }
+		if = {
+			limit = { var:tyrone_eoi_calcutta_score <= -20 }
+			scope:eoi_settlement_overlord = { trigger_event = { id = tyrone_empire_of_india.11 popup = yes } }
+		}
+		else = {
+			if = {
+				limit = { var:tyrone_eoi_calcutta_score >= 20 }
+				set_variable = { name = tyrone_eoi_settlement_strength value = 1 }
+			}
+			else = { set_variable = { name = tyrone_eoi_settlement_strength value = 0.5 } }
+			trigger_event = { id = tyrone_empire_of_india.10 popup = yes }
+		}
+	}
+	remove_variable = tyrone_eoi_calcutta_active
+	remove_variable = tyrone_eoi_negotiation_pending
+	remove_variable = tyrone_eoi_offer_side
+	tyrone_eoi_open_reforms = yes
+}
+
+# India scope. Reapplication is a permanent reward of the military reform.
+tyrone_eoi_reapply_gendarmerie = {
+	if = {
+		limit = {
+			has_variable = tyrone_eoi_army_done
+			has_law = law_type:law_india_great_indian_army
+		}
+		active_law:lawgroup_army_model = {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_eoi_gendarmerie } }
+				add_amendment = { type = amendment_tyrone_eoi_gendarmerie sponsor = prev.ig:ig_armed_forces }
+			}
+		}
+	}
+}
+
+# India scope: one decision for each current overlord; independence needs no permission.
+tyrone_eoi_council_ask_authority = {
+	if = {
+		limit = {
+			is_subject = yes
+			OR = {
+				NOT = { has_variable = tyrone_eoi_council_authority }
+				NOT = { var:tyrone_eoi_council_authority ?= overlord }
+			}
+		}
+		overlord = { save_scope_as = eoi_council_overlord }
+		set_variable = { name = tyrone_eoi_council_authority value = scope:eoi_council_overlord }
+		remove_variable = tyrone_eoi_council_approved
+		set_variable = tyrone_eoi_council_permission_pending
+		scope:eoi_council_overlord = { trigger_event = { id = tyrone_empire_of_india.30 popup = yes } }
+	}
+	if = {
+		limit = { is_subject = no }
+		remove_variable = tyrone_eoi_council_permission_pending
+		remove_variable = tyrone_eoi_council_approved
+	}
+}
+
+# India scope: integrate whole eligible countries with land in the selected region.
+tyrone_eoi_council_integrate = {
+	hidden_effect = { remove_modifier = tyrone_eoi_council_expense }
+	add_modifier = {
+		name = tyrone_eoi_council_expense
+		multiplier = tyrone_eoi_council_weekly_cost
+		days = tyrone_eoi_council_cost_time
+	}
+	every_country = {
+		limit = {
+			tyrone_eoi_prince_eligible = yes
+			any_scope_state = { state_region = scope:eoi_council_region }
+		}
+		save_scope_as = eoi_integrating_prince
+		scope:csr_india = { annex = scope:eoi_integrating_prince }
+	}
+	hidden_effect = { remove_variable = tyrone_eoi_council_integration_pending }
+}
+
+# Country scope: India. Only the cultural section of the vanilla Home Rule Act.
+tyrone_eoi_home_rule_cultures = {
+	custom_tooltip = {
+		text = south_asian_primary_cultures_tt
+		every_scope_culture = {
+			limit = {
+				has_discrimination_trait_group = heritage_group_south_asian
+				save_temporary_scope_as = temp_culture_scope
+				ROOT = {
+					any_scope_state = {
+						state_region = { is_homeland = scope:temp_culture_scope }
+					}
+				}
+			}
+			ROOT = { add_primary_culture = prev }
+		}
+	}
+	hidden_effect = { set_variable = has_done_homerule_var }
+}
+
+tyrone_eoi_finish_empire = {
+	set_variable = tyrone_eoi_main_done
+	set_variable = tyrone_eoi_empire_declared
+	set_variable = is_empire_of_india
+	save_scope_as = eoi_empire_country
+	owning_company ?= {
+		remove_owned_country = scope:eoi_empire_country
+	}
+	if = {
+		limit = { is_subject = yes }
+		set_country_type = colonial
+		if = {
+			limit = { NOT = { is_subject_type = subject_type_dominion } }
+			change_subject_type = subject_type_dominion
+		}
+	}
+	else = { set_country_type = recognized }
+	remove_variable = tyrone_eoi_active
+	if = {
+		limit = { NOT = { has_law = law_type:law_india_imperial_provincial_administration } }
+		activate_law = law_type:law_india_imperial_provincial_administration
+	}
+	add_loyalists = { value = 0.10 }
+	trigger_event = { id = tyrone_empire_of_india.50 popup = yes }
+	if = {
+		limit = {
+			c:GBR ?= {
+				is_country_alive = yes
+				NOT = { has_law_or_variant = law_type:law_monarchy }
+			}
+			overlord ?= c:GBR
+		}
+		c:GBR = { trigger_event = { id = tyrone_empire_of_india.51 popup = yes } }
+	}
+}
+
+tyrone_eoi_revenue_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_revenue_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_revenue_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_revenue_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_revenue_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_revenue_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_civil_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_civil_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_civil_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_civil_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_civil_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_civil_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_military_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_military_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_military_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_military_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_military_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_military_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_trade_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_trade_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_trade_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_trade_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_trade_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_trade_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_education_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_education_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_education_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_education_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_education_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_education_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_princes_autonomy_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_princes_autonomy_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_plus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = 10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_princes_autonomy_overlord days = tyrone_eoi_round_modifier_time } }
+}
+
+tyrone_eoi_princes_imperial_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_eoi_princes_imperial_india days = tyrone_eoi_round_modifier_time }
+		custom_tooltip = tyrone_eoi_minus_ten_tt
+		hidden_effect = { tyrone_eoi_calcutta_move = { DELTA = -10 } }
+	}
+	scope:csr_india.overlord ?= { add_modifier = { name = tyrone_eoi_princes_imperial_overlord days = tyrone_eoi_round_modifier_time } }
+}

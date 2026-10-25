@@ -1,0 +1,54 @@
+# Country scope: either India or its current overlord. The cooldown is also stored on India.
+tyrone_patents_request_agreement = {
+	name = tyrone_patents_request_button
+	desc = tyrone_patents_request_button_desc
+	visible = { always = yes }
+	possible = {
+		hidden_trigger = {
+			tyrone_promise_is_actor = yes
+			has_global_variable = tyrone_promise_active_var
+		}
+		scope:tyrone_promise_india ?= {
+			is_subject = yes
+			NOT = { has_law = law_type:law_chartered_no_schools }
+			custom_tooltip = {
+				text = tyrone_patents_months_ready_tt
+				var:tyrone_patents_months >= 24
+			}
+			custom_tooltip = {
+				text = tyrone_patents_request_ready_tt
+				NOT = { has_variable = tyrone_patents_request_cooldown }
+				NOT = { has_variable = tyrone_patents_request_pending }
+			}
+			hidden_trigger = {
+				any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+			}
+		}
+	}
+	cooldown = { days = tyrone_patents_request_cooldown_time }
+	ai_chance = { value = 10 }
+	effect = {
+		if = {
+			limit = {
+				tyrone_promise_is_actor = yes
+				has_global_variable = tyrone_promise_active_var
+				scope:tyrone_promise_india ?= {
+					is_country_alive = yes
+					is_subject = yes
+					var:tyrone_patents_months >= 24
+					NOT = { has_law = law_type:law_chartered_no_schools }
+					NOT = { has_variable = tyrone_patents_request_cooldown }
+					NOT = { has_variable = tyrone_patents_request_pending }
+					any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+				}
+			}
+			scope:tyrone_promise_india = {
+				hidden_effect = {
+					set_variable = { name = tyrone_patents_request_cooldown days = tyrone_patents_request_cooldown_time }
+					set_variable = { name = tyrone_patents_request_pending days = 30 }
+				}
+				overlord = { trigger_event = { id = tyrone_indian_patents.1 popup = yes } }
+			}
+		}
+	}
+}

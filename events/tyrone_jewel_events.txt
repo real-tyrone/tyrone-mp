@@ -1,0 +1,3326 @@
+namespace = tyrone_jewel
+
+# Public Works Programme: proposal -> response -> optional concession.
+tyrone_jewel.10 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_public_works_title
+	desc = tyrone_jewel_public_works_proposal_desc
+	flavor = tyrone_jewel_public_works_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 1
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = public_works PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.11 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = public_works PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.11 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.11 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_public_works_title
+	desc = tyrone_jewel_public_works_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 1
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = public_works }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = public_works }
+			tyrone_jewel_apply_concession = { KEY = public_works }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.12 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.12 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_public_works_title
+	desc = tyrone_jewel_public_works_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 1
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = public_works }
+		tyrone_jewel_apply_concession = { KEY = public_works }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Revenue Settlement: proposal -> response -> optional concession.
+tyrone_jewel.20 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_revenue_title
+	desc = tyrone_jewel_revenue_proposal_desc
+	flavor = tyrone_jewel_revenue_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/currency_standards.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 2
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = revenue PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.21 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = revenue PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.21 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.21 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_revenue_title
+	desc = tyrone_jewel_revenue_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/currency_standards.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 2
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = revenue }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = revenue }
+			tyrone_jewel_apply_concession = { KEY = revenue }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.22 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.22 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_revenue_title
+	desc = tyrone_jewel_revenue_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/currency_standards.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 2
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = revenue }
+		tyrone_jewel_apply_concession = { KEY = revenue }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Plantation Leases: proposal -> response -> optional concession.
+tyrone_jewel.30 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_expansion_title
+	desc = tyrone_jewel_plantation_expansion_proposal_desc
+	flavor = tyrone_jewel_plantation_expansion_proposal_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 3
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = plantation_expansion PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.31 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = plantation_expansion PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.31 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.31 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_expansion_title
+	desc = tyrone_jewel_plantation_expansion_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 3
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = plantation_expansion }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = plantation_expansion }
+			tyrone_jewel_apply_concession = { KEY = plantation_expansion }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.32 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.32 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_expansion_title
+	desc = tyrone_jewel_plantation_expansion_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 3
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = plantation_expansion }
+		tyrone_jewel_apply_concession = { KEY = plantation_expansion }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Irrigation Boards: proposal -> response -> optional concession.
+tyrone_jewel.40 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_irrigation_title
+	desc = tyrone_jewel_irrigation_proposal_desc
+	flavor = tyrone_jewel_irrigation_proposal_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_farming.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 4
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = irrigation PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.41 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = irrigation PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.41 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.41 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_irrigation_title
+	desc = tyrone_jewel_irrigation_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_farming.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 4
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = irrigation }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = irrigation }
+			tyrone_jewel_apply_concession = { KEY = irrigation }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.42 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.42 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_irrigation_title
+	desc = tyrone_jewel_irrigation_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_farming.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 4
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = irrigation }
+		tyrone_jewel_apply_concession = { KEY = irrigation }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Crop Export Contracts: proposal -> response -> optional concession.
+tyrone_jewel.50 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_crop_contracts_title
+	desc = tyrone_jewel_crop_contracts_proposal_desc
+	flavor = tyrone_jewel_crop_contracts_proposal_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/international_trade.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 5
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = crop_contracts PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.51 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = crop_contracts PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.51 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.51 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_crop_contracts_title
+	desc = tyrone_jewel_crop_contracts_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/international_trade.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 5
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = crop_contracts }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = crop_contracts }
+			tyrone_jewel_apply_concession = { KEY = crop_contracts }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.52 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.52 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_crop_contracts_title
+	desc = tyrone_jewel_crop_contracts_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/international_trade.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 5
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = crop_contracts }
+		tyrone_jewel_apply_concession = { KEY = crop_contracts }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Estate Labour Standards: proposal -> response -> optional concession.
+tyrone_jewel.60 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_labor_title
+	desc = tyrone_jewel_plantation_labor_proposal_desc
+	flavor = tyrone_jewel_plantation_labor_proposal_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/worker_protections.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 6
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = plantation_labor PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.61 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = plantation_labor PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.61 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.61 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_labor_title
+	desc = tyrone_jewel_plantation_labor_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/worker_protections.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 6
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = plantation_labor }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = plantation_labor }
+			tyrone_jewel_apply_concession = { KEY = plantation_labor }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.62 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.62 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_plantation_labor_title
+	desc = tyrone_jewel_plantation_labor_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/worker_protections.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 6
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = plantation_labor }
+		tyrone_jewel_apply_concession = { KEY = plantation_labor }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# District Administration: proposal -> response -> optional concession.
+tyrone_jewel.70 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_offices_title
+	desc = tyrone_jewel_district_offices_proposal_desc
+	flavor = tyrone_jewel_district_offices_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 7
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = district_offices PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.71 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = district_offices PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.71 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.71 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_offices_title
+	desc = tyrone_jewel_district_offices_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 7
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = district_offices }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = district_offices }
+			tyrone_jewel_apply_concession = { KEY = district_offices }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.72 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.72 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_offices_title
+	desc = tyrone_jewel_district_offices_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 7
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = district_offices }
+		tyrone_jewel_apply_concession = { KEY = district_offices }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# District Compacts: proposal -> response -> optional concession.
+tyrone_jewel.80 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_local_notables_title
+	desc = tyrone_jewel_local_notables_proposal_desc
+	flavor = tyrone_jewel_local_notables_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/landed_voting.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 8
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = local_notables PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.81 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = local_notables PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.81 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.81 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_local_notables_title
+	desc = tyrone_jewel_local_notables_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/landed_voting.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 8
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = local_notables }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = local_notables }
+			tyrone_jewel_apply_concession = { KEY = local_notables }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.82 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.82 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_local_notables_title
+	desc = tyrone_jewel_local_notables_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/landed_voting.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 8
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = local_notables }
+		tyrone_jewel_apply_concession = { KEY = local_notables }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# District School Endowments: proposal -> response -> optional concession.
+tyrone_jewel.90 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_schools_title
+	desc = tyrone_jewel_district_schools_proposal_desc
+	flavor = tyrone_jewel_district_schools_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/academia.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 9
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = district_schools PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.91 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = district_schools PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.91 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.91 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_schools_title
+	desc = tyrone_jewel_district_schools_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/academia.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 9
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = district_schools }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = district_schools }
+			tyrone_jewel_apply_concession = { KEY = district_schools }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.92 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.92 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_district_schools_title
+	desc = tyrone_jewel_district_schools_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/academia.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 9
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = district_schools }
+		tyrone_jewel_apply_concession = { KEY = district_schools }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Rural Relief Boards: proposal -> response -> optional concession.
+tyrone_jewel.100 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_rural_relief_title
+	desc = tyrone_jewel_rural_relief_proposal_desc
+	flavor = tyrone_jewel_rural_relief_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/charitable_health_system.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 10
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = rural_relief PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.101 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = rural_relief PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.101 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.101 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_rural_relief_title
+	desc = tyrone_jewel_rural_relief_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/charitable_health_system.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 10
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = rural_relief }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = rural_relief }
+			tyrone_jewel_apply_concession = { KEY = rural_relief }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.102 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.102 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_rural_relief_title
+	desc = tyrone_jewel_rural_relief_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/charitable_health_system.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 10
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = rural_relief }
+		tyrone_jewel_apply_concession = { KEY = rural_relief }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Geological Survey Grants: proposal -> response -> optional concession.
+tyrone_jewel.110 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_prospecting_title
+	desc = tyrone_jewel_prospecting_proposal_desc
+	flavor = tyrone_jewel_prospecting_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/dynamite.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 11
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = prospecting PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.111 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = prospecting PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.111 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.111 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_prospecting_title
+	desc = tyrone_jewel_prospecting_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/dynamite.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 11
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = prospecting }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = prospecting }
+			tyrone_jewel_apply_concession = { KEY = prospecting }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.112 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.112 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_prospecting_title
+	desc = tyrone_jewel_prospecting_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/dynamite.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 11
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = prospecting }
+		tyrone_jewel_apply_concession = { KEY = prospecting }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Mining Concessions: proposal -> response -> optional concession.
+tyrone_jewel.120 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_leases_title
+	desc = tyrone_jewel_mine_leases_proposal_desc
+	flavor = tyrone_jewel_mine_leases_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/shaft_mining.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 12
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mine_leases PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.121 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mine_leases PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.121 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.121 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_leases_title
+	desc = tyrone_jewel_mine_leases_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/shaft_mining.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 12
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mine_leases }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = mine_leases }
+			tyrone_jewel_apply_concession = { KEY = mine_leases }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.122 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.122 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_leases_title
+	desc = tyrone_jewel_mine_leases_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/shaft_mining.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 12
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mine_leases }
+		tyrone_jewel_apply_concession = { KEY = mine_leases }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Mineral Freight Agreements: proposal -> response -> optional concession.
+tyrone_jewel.130 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mineral_routes_title
+	desc = tyrone_jewel_mineral_routes_proposal_desc
+	flavor = tyrone_jewel_mineral_routes_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steel_railway_cars.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 13
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mineral_routes PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.131 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mineral_routes PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.131 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.131 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mineral_routes_title
+	desc = tyrone_jewel_mineral_routes_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steel_railway_cars.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 13
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mineral_routes }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = mineral_routes }
+			tyrone_jewel_apply_concession = { KEY = mineral_routes }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.132 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.132 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mineral_routes_title
+	desc = tyrone_jewel_mineral_routes_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steel_railway_cars.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 13
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mineral_routes }
+		tyrone_jewel_apply_concession = { KEY = mineral_routes }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Mine Inspection Service: proposal -> response -> optional concession.
+tyrone_jewel.140 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_inspection_title
+	desc = tyrone_jewel_mine_inspection_proposal_desc
+	flavor = tyrone_jewel_mine_inspection_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/regulatory_bodies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 14
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mine_inspection PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.141 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = mine_inspection PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.141 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.141 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_inspection_title
+	desc = tyrone_jewel_mine_inspection_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/regulatory_bodies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 14
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mine_inspection }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = mine_inspection }
+			tyrone_jewel_apply_concession = { KEY = mine_inspection }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.142 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.142 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_mine_inspection_title
+	desc = tyrone_jewel_mine_inspection_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/regulatory_bodies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 14
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = mine_inspection }
+		tyrone_jewel_apply_concession = { KEY = mine_inspection }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Industrial Credit Agreements: proposal -> response -> optional concession.
+tyrone_jewel.150 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_industrial_credit_title
+	desc = tyrone_jewel_industrial_credit_proposal_desc
+	flavor = tyrone_jewel_industrial_credit_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/investment_banks.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 15
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = industrial_credit PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.151 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = industrial_credit PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.151 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.151 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_industrial_credit_title
+	desc = tyrone_jewel_industrial_credit_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/investment_banks.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 15
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = industrial_credit }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = industrial_credit }
+			tyrone_jewel_apply_concession = { KEY = industrial_credit }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.152 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.152 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_industrial_credit_title
+	desc = tyrone_jewel_industrial_credit_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/investment_banks.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 15
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = industrial_credit }
+		tyrone_jewel_apply_concession = { KEY = industrial_credit }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Manufacturing Contracts: proposal -> response -> optional concession.
+tyrone_jewel.160 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_factory_contracts_title
+	desc = tyrone_jewel_factory_contracts_proposal_desc
+	flavor = tyrone_jewel_factory_contracts_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 16
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = factory_contracts PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.161 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = factory_contracts PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.161 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.161 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_factory_contracts_title
+	desc = tyrone_jewel_factory_contracts_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 16
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = factory_contracts }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = factory_contracts }
+			tyrone_jewel_apply_concession = { KEY = factory_contracts }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.162 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.162 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_factory_contracts_title
+	desc = tyrone_jewel_factory_contracts_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/manufacturies.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 16
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = factory_contracts }
+		tyrone_jewel_apply_concession = { KEY = factory_contracts }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Commercial Agencies: proposal -> response -> optional concession.
+tyrone_jewel.170 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_commercial_agencies_title
+	desc = tyrone_jewel_commercial_agencies_proposal_desc
+	flavor = tyrone_jewel_commercial_agencies_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/stock_exchanges.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 17
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = commercial_agencies PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.171 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = commercial_agencies PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.171 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.171 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_commercial_agencies_title
+	desc = tyrone_jewel_commercial_agencies_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/stock_exchanges.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 17
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = commercial_agencies }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = commercial_agencies }
+			tyrone_jewel_apply_concession = { KEY = commercial_agencies }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.172 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.172 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_commercial_agencies_title
+	desc = tyrone_jewel_commercial_agencies_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/stock_exchanges.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 17
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = commercial_agencies }
+		tyrone_jewel_apply_concession = { KEY = commercial_agencies }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Technical Apprenticeships: proposal -> response -> optional concession.
+tyrone_jewel.180 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_technical_training_title
+	desc = tyrone_jewel_technical_training_proposal_desc
+	flavor = tyrone_jewel_technical_training_proposal_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_workshops.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 18
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = technical_training PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.181 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = technical_training PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.181 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.181 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_technical_training_title
+	desc = tyrone_jewel_technical_training_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_workshops.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 18
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = technical_training }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = technical_training }
+			tyrone_jewel_apply_concession = { KEY = technical_training }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.182 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.182 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_technical_training_title
+	desc = tyrone_jewel_technical_training_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_workshops.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 18
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = technical_training }
+		tyrone_jewel_apply_concession = { KEY = technical_training }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Army Instruction Mission: proposal -> response -> optional concession.
+tyrone_jewel.190 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_instruction_title
+	desc = tyrone_jewel_army_instruction_proposal_desc
+	flavor = tyrone_jewel_army_instruction_proposal_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/rifling.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 19
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = army_instruction PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.191 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = army_instruction PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.191 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.191 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_instruction_title
+	desc = tyrone_jewel_army_instruction_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/rifling.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 19
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = army_instruction }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = army_instruction }
+			tyrone_jewel_apply_concession = { KEY = army_instruction }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.192 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.192 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_instruction_title
+	desc = tyrone_jewel_army_instruction_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/rifling.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 19
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = army_instruction }
+		tyrone_jewel_apply_concession = { KEY = army_instruction }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Military Transport Board: proposal -> response -> optional concession.
+tyrone_jewel.200 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_transport_title
+	desc = tyrone_jewel_army_transport_proposal_desc
+	flavor = tyrone_jewel_army_transport_proposal_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/logistics_tech.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 20
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = army_transport PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.201 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = army_transport PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.201 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.201 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_transport_title
+	desc = tyrone_jewel_army_transport_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/logistics_tech.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 20
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = army_transport }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = army_transport }
+			tyrone_jewel_apply_concession = { KEY = army_transport }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.202 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.202 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_army_transport_title
+	desc = tyrone_jewel_army_transport_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/logistics_tech.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 20
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = army_transport }
+		tyrone_jewel_apply_concession = { KEY = army_transport }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Arsenal Procurement: proposal -> response -> optional concession.
+tyrone_jewel.210 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_arsenals_title
+	desc = tyrone_jewel_arsenals_proposal_desc
+	flavor = tyrone_jewel_arsenals_proposal_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steelworking.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 21
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = arsenals PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.211 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = arsenals PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.211 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.211 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_arsenals_title
+	desc = tyrone_jewel_arsenals_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steelworking.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 21
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = arsenals }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = arsenals }
+			tyrone_jewel_apply_concession = { KEY = arsenals }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.212 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.212 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_arsenals_title
+	desc = tyrone_jewel_arsenals_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/steelworking.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 21
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = arsenals }
+		tyrone_jewel_apply_concession = { KEY = arsenals }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# Recruitment Districts: proposal -> response -> optional concession.
+tyrone_jewel.220 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_recruitment_title
+	desc = tyrone_jewel_recruitment_proposal_desc
+	flavor = tyrone_jewel_recruitment_proposal_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 22
+			var:tyrone_jewel_stage = 0
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_development_option
+		default_option = yes
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = recruitment PATH = development IMPERIAL = no } }
+		hidden_effect = {
+			scope:csr_india = {
+				remove_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.221 popup = yes } }
+		}
+	}
+	option = {
+		name = tyrone_jewel_imperial_option
+		ai_chance = { base = 50 }
+		show_as_tooltip = { tyrone_jewel_apply_agreement = { KEY = recruitment PATH = imperial IMPERIAL = yes } }
+		hidden_effect = {
+			scope:csr_india = {
+				set_variable = tyrone_jewel_imperial
+				set_variable = { name = tyrone_jewel_stage value = 1 }
+			}
+			scope:jewel_partner = { trigger_event = { id = tyrone_jewel.221 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.221 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_recruitment_title
+	desc = tyrone_jewel_recruitment_response_desc
+	flavor = tyrone_jewel_response_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_partner = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 22
+			var:tyrone_jewel_stage = 1
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_accept_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = recruitment }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_request_option
+		ai_chance = { base = 30 }
+		show_as_tooltip = {
+			tyrone_jewel_apply_selected_agreement = { KEY = recruitment }
+			tyrone_jewel_apply_concession = { KEY = recruitment }
+		}
+		hidden_effect = {
+			scope:csr_india = { set_variable = { name = tyrone_jewel_stage value = 2 } }
+			scope:jewel_proposer = { trigger_event = { id = tyrone_jewel.222 popup = yes } }
+		}
+	}
+}
+
+tyrone_jewel.222 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_recruitment_title
+	desc = tyrone_jewel_recruitment_concession_desc
+	flavor = tyrone_jewel_concession_flavor
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_negotiation_valid = yes
+		scope:jewel_proposer = this
+		scope:csr_india = {
+			var:tyrone_jewel_pending = 22
+			var:tyrone_jewel_stage = 2
+		}
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_jewel_negotiation_valid = yes }
+	}
+	option = {
+		name = tyrone_jewel_pay_option
+		default_option = yes
+		ai_chance = { base = 70 }
+		tyrone_jewel_apply_selected_agreement = { KEY = recruitment }
+		tyrone_jewel_apply_concession = { KEY = recruitment }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+	option = {
+		name = tyrone_jewel_withdraw_option
+		ai_chance = { base = 30 }
+		hidden_effect = { tyrone_jewel_clear_negotiation = yes }
+	}
+}
+
+# The first native random_events draw is exactly 90:10; the second selects a valid incident.
+tyrone_jewel.900 = {
+	type = country_event
+	hidden = yes
+	trigger = {
+		tyrone_jewel_country_active = yes
+		NOT = { has_variable = tyrone_jewel_monthly_pending }
+	}
+	immediate = {
+		save_scope_as = csr_india
+		overlord = {
+			save_scope_as = jewel_overlord
+			trigger_event = { on_action = tyrone_jewel_incident_pool }
+		}
+	}
+}
+
+tyrone_jewel.1 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.1.t
+	desc = tyrone_jewel.1.d
+	flavor = tyrone_jewel.1.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_freight_dispute_a_india
+				has_modifier = tyrone_jewel_freight_dispute_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.1.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_freight_dispute_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_freight_dispute_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.1.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_freight_dispute_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.2 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.2.t
+	desc = tyrone_jewel.2.d
+	flavor = tyrone_jewel.2.f
+	event_image = { video = "ip2_india_countryside" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/poor_laws.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_relief_accounts_a_india
+				has_modifier = tyrone_jewel_relief_accounts_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.2.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_relief_accounts_funding_cost
+			multiplier = tyrone_jewel_weekly_heavy_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_relief_accounts_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.2.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_relief_accounts_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.3 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.3.t
+	desc = tyrone_jewel.3.d
+	flavor = tyrone_jewel.3.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/academia.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_examining_boards_a_india
+				has_modifier = tyrone_jewel_examining_boards_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.3.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_examining_boards_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_examining_boards_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.3.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_examining_boards_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.4 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.4.t
+	desc = tyrone_jewel.4.d
+	flavor = tyrone_jewel.4.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/mechanized_workshops.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_suppliers_a_india
+				has_modifier = tyrone_jewel_suppliers_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.4.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_suppliers_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_suppliers_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.4.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_suppliers_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.5 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.5.t
+	desc = tyrone_jewel.5.d
+	flavor = tyrone_jewel.5.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/right_of_assembly.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_public_petitions_a_india
+				has_modifier = tyrone_jewel_public_petitions_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.5.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_public_petitions_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_public_petitions_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.5.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_public_petitions_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.6 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.6.t
+	desc = tyrone_jewel.6.d
+	flavor = tyrone_jewel.6.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			NOR = {
+				has_modifier = tyrone_jewel_governor_accounts_a_india
+				has_modifier = tyrone_jewel_governor_accounts_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.6.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_governor_accounts_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_governor_accounts_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.6.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_governor_accounts_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.7 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.7.t
+	desc = tyrone_jewel.7.d
+	flavor = tyrone_jewel.7.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/universal_suffrage.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			liberty_desire > 75
+			NOR = {
+				has_modifier = tyrone_jewel_national_delegation_a_india
+				has_modifier = tyrone_jewel_national_delegation_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.7.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_national_delegation_funding_cost
+			multiplier = tyrone_jewel_weekly_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_national_delegation_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.7.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_national_delegation_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}
+
+tyrone_jewel.8 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel.8.t
+	desc = tyrone_jewel.8.d
+	flavor = tyrone_jewel.8.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/colonial_exploitation.dds"
+	duration = 1
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india ?= {
+			tyrone_jewel_country_active = yes
+			overlord ?= root
+			NOT = { has_variable = tyrone_jewel_monthly_pending }
+			liberty_desire > 75
+			NOR = {
+				has_modifier = tyrone_jewel_imperial_burden_a_india
+				has_modifier = tyrone_jewel_imperial_burden_b_india
+			}
+		}
+	}
+	immediate = {
+		save_scope_as = jewel_overlord
+		scope:csr_india = {
+			set_variable = { name = tyrone_jewel_monthly_pending days = very_short_modifier_time }
+		}
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				OR = {
+					NOT = { tyrone_jewel_country_active = yes }
+					NOT = { overlord ?= root }
+				}
+			}
+		}
+	}
+	option = {
+		name = tyrone_jewel.8.a
+		default_option = yes
+		ai_chance = { base = 60 }
+		add_modifier = {
+			name = tyrone_jewel_imperial_burden_funding_cost
+			multiplier = tyrone_jewel_weekly_heavy_obligation
+			days = tyrone_jewel_incident_modifier_time
+		}
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_imperial_burden_a_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+	option = {
+		name = tyrone_jewel.8.b
+		ai_chance = { base = 40 }
+		change_relations = { country = scope:csr_india value = -30 }
+		scope:csr_india = {
+			add_modifier = { name = tyrone_jewel_imperial_burden_b_india days = tyrone_jewel_incident_modifier_time }
+		}
+		hidden_effect = { scope:csr_india = { remove_variable = tyrone_jewel_monthly_pending } }
+	}
+}

@@ -1,0 +1,710 @@
+﻿namespace = tyrone_crown_raj
+
+tyrone_crown_raj.1 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.1.t
+	desc = tyrone_crown_raj.1.d
+	flavor = tyrone_crown_raj.1.f
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/militarized_police.dds"
+	duration = 3
+	trigger = {
+		has_variable = tyrone_cr_police_reward_pending
+	}
+
+	option = {
+		name = tyrone_crown_raj.1.a
+		default_option = yes
+		hidden_effect = { remove_variable = tyrone_cr_police_reward_pending }
+		activate_law = law_type:law_india_crown_constabulary
+	}
+}
+
+tyrone_crown_raj.2 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.2.t
+	desc = tyrone_crown_raj.2.d
+	flavor = tyrone_crown_raj.2.f
+	event_image = { video = "ep1_transfer_of_authority" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 3
+	trigger = {
+		has_variable = tyrone_cr_apparatus_done
+	}
+
+	option = {
+		name = tyrone_crown_raj.2.a
+		default_option = yes
+		# The civil-service amendment was applied on JE completion.
+	}
+}
+
+tyrone_crown_raj.3 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.3.t
+	desc = tyrone_crown_raj.3.d
+	flavor = tyrone_crown_raj.3.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/worker_protections.dds"
+	duration = 3
+	trigger = {
+		has_variable = tyrone_cr_institutions_reward_pending
+	}
+
+	option = {
+		name = tyrone_crown_raj.3.a
+		default_option = yes
+		hidden_effect = { remove_variable = tyrone_cr_institutions_reward_pending }
+		add_loyalists = { value = 0.02 }
+	}
+}
+
+tyrone_crown_raj.4 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.4.t
+	desc = tyrone_crown_raj.4.d
+	flavor = tyrone_crown_raj.4.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/colonial_administration.dds"
+	duration = 3
+	trigger = {
+		has_variable = tyrone_cr_finished
+	}
+
+	option = {
+		name = tyrone_crown_raj.4.a
+		default_option = yes
+		# The Jewel placeholder was opened on JE completion.
+	}
+}
+
+tyrone_crown_raj.10 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.10.t
+	desc = tyrone_crown_raj.10.d
+	flavor = tyrone_crown_raj.10.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/state_capitalism.dds"
+	duration = 3
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india = {
+			tyrone_cr_country_active = yes
+			has_variable = tyrone_cr_manufacturing_pending
+			NOT = { has_variable = tyrone_cr_manufacturing_done }
+		}
+	}
+	immediate = { tyrone_cr_bind_india = yes }
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				NOT = { tyrone_cr_country_active = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.10.a
+		default_option = yes
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_manufacturing_imperial sponsor = prev.ig:ig_industrialists }
+				}
+			}
+			add_modifier = { name = tyrone_cr_manufacturing_imperial_returns days = normal_modifier_time }
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.20 popup = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.10.b
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_manufacturing_development sponsor = prev.ig:ig_intelligentsia }
+				}
+			}
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.30 popup = yes }
+			}
+		}
+	}
+}
+
+tyrone_crown_raj.20 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.20.t
+	desc = tyrone_crown_raj.20.d
+	flavor = tyrone_crown_raj.20.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/state_capitalism.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_manufacturing_pending
+		NOT = { has_variable = tyrone_cr_manufacturing_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_manufacturing_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.20.a
+		default_option = yes
+		tyrone_cr_settle_manufacturing_imperial = yes
+	}
+	option = {
+		name = tyrone_crown_raj.20.b
+		add_modifier = { name = tyrone_cr_manufacturing_concession days = normal_modifier_time }
+		tyrone_cr_settle_manufacturing_development = yes
+	}
+}
+
+tyrone_crown_raj.30 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.30.t
+	desc = tyrone_crown_raj.30.d
+	flavor = tyrone_crown_raj.30.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/state_capitalism.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_manufacturing_pending
+		NOT = { has_variable = tyrone_cr_manufacturing_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_manufacturing_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.30.a
+		default_option = yes
+		tyrone_cr_settle_manufacturing_development = yes
+	}
+	option = {
+		name = tyrone_crown_raj.30.b
+		add_modifier = { name = tyrone_cr_manufacturing_concession days = normal_modifier_time }
+		tyrone_cr_settle_manufacturing_imperial = yes
+	}
+}
+
+tyrone_crown_raj.11 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.11.t
+	desc = tyrone_crown_raj.11.d
+	flavor = tyrone_crown_raj.11.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/interventionism.dds"
+	duration = 3
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india = {
+			tyrone_cr_country_active = yes
+			has_variable = tyrone_cr_railways_pending
+			NOT = { has_variable = tyrone_cr_railways_done }
+		}
+	}
+	immediate = { tyrone_cr_bind_india = yes }
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				NOT = { tyrone_cr_country_active = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.11.a
+		default_option = yes
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_railways_imperial sponsor = prev.ig:ig_industrialists }
+				}
+			}
+			add_modifier = { name = tyrone_cr_railways_imperial_returns days = normal_modifier_time }
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.21 popup = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.11.b
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_railways_development sponsor = prev.ig:ig_intelligentsia }
+				}
+			}
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.31 popup = yes }
+			}
+		}
+	}
+}
+
+tyrone_crown_raj.21 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.21.t
+	desc = tyrone_crown_raj.21.d
+	flavor = tyrone_crown_raj.21.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/interventionism.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_railways_pending
+		NOT = { has_variable = tyrone_cr_railways_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_railways_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.21.a
+		default_option = yes
+		tyrone_cr_settle_railways_imperial = yes
+	}
+	option = {
+		name = tyrone_crown_raj.21.b
+		add_modifier = { name = tyrone_cr_railways_concession days = normal_modifier_time }
+		tyrone_cr_settle_railways_development = yes
+	}
+}
+
+tyrone_crown_raj.31 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.31.t
+	desc = tyrone_crown_raj.31.d
+	flavor = tyrone_crown_raj.31.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/interventionism.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_railways_pending
+		NOT = { has_variable = tyrone_cr_railways_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_railways_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.31.a
+		default_option = yes
+		tyrone_cr_settle_railways_development = yes
+	}
+	option = {
+		name = tyrone_crown_raj.31.b
+		add_modifier = { name = tyrone_cr_railways_concession days = normal_modifier_time }
+		tyrone_cr_settle_railways_imperial = yes
+	}
+}
+
+tyrone_crown_raj.12 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.12.t
+	desc = tyrone_crown_raj.12.d
+	flavor = tyrone_crown_raj.12.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 3
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india = {
+			tyrone_cr_country_active = yes
+			has_variable = tyrone_cr_plantations_pending
+			NOT = { has_variable = tyrone_cr_plantations_done }
+		}
+	}
+	immediate = { tyrone_cr_bind_india = yes }
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				NOT = { tyrone_cr_country_active = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.12.a
+		default_option = yes
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_plantations_imperial sponsor = prev.ig:ig_industrialists }
+				}
+			}
+			add_modifier = { name = tyrone_cr_plantations_imperial_returns days = normal_modifier_time }
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.22 popup = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.12.b
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_plantations_development sponsor = prev.ig:ig_intelligentsia }
+				}
+			}
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.32 popup = yes }
+			}
+		}
+	}
+}
+
+tyrone_crown_raj.22 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.22.t
+	desc = tyrone_crown_raj.22.d
+	flavor = tyrone_crown_raj.22.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_plantations_pending
+		NOT = { has_variable = tyrone_cr_plantations_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_plantations_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.22.a
+		default_option = yes
+		tyrone_cr_settle_plantations_imperial = yes
+	}
+	option = {
+		name = tyrone_crown_raj.22.b
+		add_modifier = { name = tyrone_cr_plantations_concession days = normal_modifier_time }
+		tyrone_cr_settle_plantations_development = yes
+	}
+}
+
+tyrone_crown_raj.32 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.32.t
+	desc = tyrone_crown_raj.32.d
+	flavor = tyrone_crown_raj.32.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_plantations_pending
+		NOT = { has_variable = tyrone_cr_plantations_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_plantations_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.32.a
+		default_option = yes
+		tyrone_cr_settle_plantations_development = yes
+	}
+	option = {
+		name = tyrone_crown_raj.32.b
+		add_modifier = { name = tyrone_cr_plantations_concession days = normal_modifier_time }
+		tyrone_cr_settle_plantations_imperial = yes
+	}
+}
+
+tyrone_crown_raj.13 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.13.t
+	desc = tyrone_crown_raj.13.d
+	flavor = tyrone_crown_raj.13.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/command_economy.dds"
+	duration = 3
+	trigger = {
+		exists = scope:csr_india
+		scope:csr_india = {
+			tyrone_cr_country_active = yes
+			has_variable = tyrone_cr_power_pending
+			NOT = { has_variable = tyrone_cr_power_done }
+		}
+	}
+	immediate = { tyrone_cr_bind_india = yes }
+	cancellation_trigger = {
+		OR = {
+			NOT = { exists = scope:csr_india }
+			scope:csr_india ?= {
+				NOT = { tyrone_cr_country_active = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.13.a
+		default_option = yes
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_power_imperial sponsor = prev.ig:ig_industrialists }
+				}
+			}
+			add_modifier = { name = tyrone_cr_power_imperial_returns days = normal_modifier_time }
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.23 popup = yes }
+			}
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.13.b
+		show_as_tooltip = {
+			scope:csr_india = {
+				active_law:lawgroup_india_chartered_obligations = {
+					add_amendment = { type = amendment_tyrone_cr_power_development sponsor = prev.ig:ig_intelligentsia }
+				}
+			}
+		}
+		custom_tooltip = tyrone_cr_proposal_response_tt
+		hidden_effect = {
+			scope:csr_india = {
+				trigger_event = { id = tyrone_crown_raj.33 popup = yes }
+			}
+		}
+	}
+}
+
+tyrone_crown_raj.23 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.23.t
+	desc = tyrone_crown_raj.23.d
+	flavor = tyrone_crown_raj.23.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/command_economy.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_power_pending
+		NOT = { has_variable = tyrone_cr_power_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_power_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.23.a
+		default_option = yes
+		tyrone_cr_settle_power_imperial = yes
+	}
+	option = {
+		name = tyrone_crown_raj.23.b
+		add_modifier = { name = tyrone_cr_power_concession days = normal_modifier_time }
+		tyrone_cr_settle_power_development = yes
+	}
+}
+
+tyrone_crown_raj.33 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.33.t
+	desc = tyrone_crown_raj.33.d
+	flavor = tyrone_crown_raj.33.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/command_economy.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_country_active = yes
+		has_variable = tyrone_cr_power_pending
+		NOT = { has_variable = tyrone_cr_power_done }
+	}
+	cancellation_trigger = {
+		OR = {
+			NOT = { tyrone_cr_country_active = yes }
+			NOT = { has_variable = tyrone_cr_power_pending }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.33.a
+		default_option = yes
+		tyrone_cr_settle_power_development = yes
+	}
+	option = {
+		name = tyrone_crown_raj.33.b
+		add_modifier = { name = tyrone_cr_power_concession days = normal_modifier_time }
+		tyrone_cr_settle_power_imperial = yes
+	}
+}
+
+# These events belong to the clicking country; all consequences belong to India.
+tyrone_crown_raj.40 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.40.t
+	desc = tyrone_crown_raj.40.d
+	flavor = tyrone_crown_raj.40.f
+	event_image = { video = "ip2_telegraph_dictate" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_institution_actor_ready = yes
+		scope:csr_india = { has_variable = tyrone_cr_opposition_pending }
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_cr_institution_actor_ready = yes }
+	}
+	option = {
+		name = tyrone_crown_raj.40.a
+		default_option = yes
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_opposition_pending }
+			add_modifier = { name = tyrone_cr_negotiated_opposition days = tyrone_cr_reform_cooldown_time }
+			add_modifier = { name = tyrone_cr_negotiated_delays days = normal_modifier_time }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.40.b
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_opposition_pending }
+			add_modifier = { name = tyrone_cr_negotiated_opposition days = tyrone_cr_reform_cooldown_time }
+			add_modifier = { name = tyrone_cr_negotiated_revenue days = normal_modifier_time }
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.40.c
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_opposition_pending }
+			add_modifier = { name = tyrone_cr_negotiated_opposition days = tyrone_cr_reform_cooldown_time }
+			add_modifier = { name = tyrone_cr_alienated_industrialists days = normal_modifier_time }
+		}
+	}
+}
+
+tyrone_crown_raj.41 = {
+	type = country_event
+	placement = root
+	title = tyrone_crown_raj.41.t
+	desc = tyrone_crown_raj.41.d
+	flavor = tyrone_crown_raj.41.f
+	event_image = { video = "ep1_redcoats" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/law_icons/militarized_police.dds"
+	duration = 3
+	trigger = {
+		tyrone_cr_institution_actor_ready = yes
+		scope:csr_india = { has_variable = tyrone_cr_gunpoint_pending }
+	}
+	cancellation_trigger = {
+		NOT = { tyrone_cr_institution_actor_ready = yes }
+	}
+	option = {
+		name = tyrone_crown_raj.41.a
+		trigger = { scope:csr_india = { tyrone_cr_gunpoint_schools_available = yes } }
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_gunpoint_pending }
+			activate_law = law_type:law_chartered_imperial_public_schools
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.41.b
+		trigger = { scope:csr_india = { tyrone_cr_gunpoint_welfare_available = yes } }
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_gunpoint_pending }
+			activate_law = law_type:law_chartered_wage_subsidies
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.41.c
+		trigger = { scope:csr_india = { tyrone_cr_gunpoint_labour_available = yes } }
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_gunpoint_pending }
+			activate_law = law_type:law_india_imperial_labour_protections
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.41.slavery
+		trigger = { scope:csr_india = { tyrone_cr_gunpoint_slavery_available = yes } }
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_gunpoint_pending }
+			activate_law = law_type:law_slavery_banned
+		}
+	}
+	option = {
+		name = tyrone_crown_raj.41.e
+		default_option = yes
+		scope:csr_india = {
+			hidden_effect = { remove_variable = tyrone_cr_gunpoint_pending }
+			ig:ig_industrialists.leader = {
+				set_ideology = ideology:ideology_utilitarian_leader
+			}
+			add_radicals = { value = 0.02 }
+		}
+	}
+}

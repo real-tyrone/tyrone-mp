@@ -1,0 +1,71 @@
+# Country scope for actor and eligibility predicates; saved csr_india identifies the arc owner.
+tyrone_eoi_is_actor = {
+	OR = {
+		scope:csr_india ?= this
+		scope:csr_india.overlord ?= this
+		global_var:tyrone_eoi_india ?= this
+		global_var:tyrone_eoi_india ?= { overlord ?= root }
+	}
+}
+
+tyrone_eoi_button_actor = {
+	OR = {
+		scope:csr_india ?= this
+		AND = {
+			scope:csr_india ?= { is_player = no }
+			scope:csr_india.overlord ?= this
+		}
+	}
+}
+
+tyrone_eoi_prince_eligible = {
+	is_country_alive = yes
+	NOT = { scope:csr_india ?= this }
+	any_scope_state = { is_in_geographic_region = geographic_region_india }
+	OR = {
+		is_subject_of = scope:csr_india
+		AND = {
+			scope:csr_india ?= {
+				is_subject = yes
+				has_variable = tyrone_eoi_council_approved
+			}
+			is_direct_subject_of = scope:csr_india.overlord
+		}
+	}
+}
+
+# Contextless/event scope: both actors in a live Calcutta negotiation remain current participants.
+tyrone_eoi_negotiation_valid = {
+	scope:csr_india ?= {
+		is_country_alive = yes
+		is_subject = yes
+		has_variable = tyrone_eoi_calcutta_active
+		has_variable = tyrone_eoi_negotiation_pending
+	}
+	exists = scope:eoi_proposer
+	exists = scope:eoi_partner
+	OR = {
+		AND = {
+			scope:eoi_proposer ?= scope:csr_india
+			scope:eoi_partner ?= scope:csr_india.overlord
+		}
+		AND = {
+			scope:eoi_partner ?= scope:csr_india
+			scope:eoi_proposer ?= scope:csr_india.overlord
+		}
+	}
+}
+
+# Country scope: every existing country with Indian territory must be India or its subject.
+tyrone_eoi_controls_subcontinent = {
+	custom_tooltip = {
+		text = tyrone_eoi_controls_subcontinent_tt
+		NOT = {
+			any_country = {
+				any_scope_state = { is_in_geographic_region = geographic_region_india }
+				NOT = { scope:csr_india ?= this }
+				NOT = { is_subject_of = scope:csr_india }
+			}
+		}
+	}
+}
