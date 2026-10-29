@@ -1,0 +1,218 @@
+﻿tyrone_sc_back_experts = {
+	name = tyrone_sc_back_experts_name
+	desc = tyrone_sc_back_experts_desc
+	visible = { scope:csr_india ?= this }
+	possible = {
+		hidden_trigger = { scope:csr_india ?= this }
+		custom_tooltip = { text = tyrone_sc_intervention_ready_tt NOT = { has_variable = tyrone_sc_intervention_cooldown } }
+	}
+	cooldown = { days = tyrone_sc_year }
+	ai_chance = { value = 10 }
+	effect = {
+		if = {
+			limit = { scope:csr_india ?= this NOT = { has_variable = tyrone_sc_intervention_cooldown } }
+			custom_tooltip = {
+				text = tyrone_sc_experts_ten_tt
+				scope:journal_entry = { add_progress = { name = tyrone_sc_settlement_bar value = 10 } }
+			}
+			add_modifier = { name = tyrone_sc_back_experts_cost days = tyrone_sc_political_duration }
+			hidden_effect = { set_variable = { name = tyrone_sc_intervention_cooldown days = tyrone_sc_year } }
+		}
+	}
+}
+
+tyrone_sc_back_shareholders = {
+	name = tyrone_sc_back_shareholders_name
+	desc = tyrone_sc_back_shareholders_desc
+	visible = { scope:csr_india ?= this }
+	possible = {
+		hidden_trigger = { scope:csr_india ?= this }
+		custom_tooltip = { text = tyrone_sc_intervention_ready_tt NOT = { has_variable = tyrone_sc_intervention_cooldown } }
+	}
+	cooldown = { days = tyrone_sc_year }
+	ai_chance = { value = 10 }
+	effect = {
+		if = {
+			limit = { scope:csr_india ?= this NOT = { has_variable = tyrone_sc_intervention_cooldown } }
+			custom_tooltip = {
+				text = tyrone_sc_wealth_ten_tt
+				scope:journal_entry = { add_progress = { name = tyrone_sc_settlement_bar value = -10 } }
+			}
+			add_modifier = { name = tyrone_sc_back_shareholders_cost days = tyrone_sc_political_duration }
+			hidden_effect = { set_variable = { name = tyrone_sc_intervention_cooldown days = tyrone_sc_year } }
+		}
+	}
+}
+
+tyrone_sc_accept_citizenship = {
+	name = tyrone_sc_accept_citizenship_name
+	desc = tyrone_sc_accept_citizenship_desc
+	visible = { scope:csr_india ?= this scope:csr_india ?= { NOT = { has_law = law_type:law_india_company_citizenship } } }
+	possible = { scope:csr_india ?= this }
+	ai_chance = { value = 100 }
+	effect = { scope:csr_india ?= { activate_law = law_type:law_india_company_citizenship } }
+}
+
+tyrone_sc_found_tata = {
+	name = tyrone_sc_found_tata_name
+	desc = tyrone_sc_found_tata_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_tata STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_textile_mill is_building_type = building_steel_mill }" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_tata }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_tata STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_textile_mill is_building_type = building_steel_mill }" } }
+				tyrone_sc_found_company = { COMPANY = company_tata STATE = STATE_BOMBAY PRIMARY = building_textile_mill SECONDARY = building_steel_mill }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_coal = {
+	name = tyrone_sc_found_coal_name
+	desc = tyrone_sc_found_coal_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_bengal_coal_company STATE = STATE_WEST_BENGAL BUILDINGS = "is_building_type = building_coal_mine" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_bengal_coal_company }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_bengal_coal_company STATE = STATE_WEST_BENGAL BUILDINGS = "is_building_type = building_coal_mine" } }
+				tyrone_sc_found_company = { COMPANY = company_bengal_coal_company STATE = STATE_WEST_BENGAL PRIMARY = building_coal_mine SECONDARY = building_coal_mine }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_dyeing = {
+	name = tyrone_sc_found_dyeing_name
+	desc = tyrone_sc_found_dyeing_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_bombay_dyeing_company STATE = STATE_BOMBAY BUILDINGS = "is_building_type = building_textile_mill" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_bombay_dyeing_company }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_bombay_dyeing_company STATE = STATE_BOMBAY BUILDINGS = "is_building_type = building_textile_mill" } }
+				tyrone_sc_found_company = { COMPANY = company_bombay_dyeing_company STATE = STATE_BOMBAY PRIMARY = building_textile_mill SECONDARY = building_textile_mill }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_railway = {
+	name = tyrone_sc_found_railway_name
+	desc = tyrone_sc_found_railway_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_great_indian_railway STATE = STATE_BOMBAY BUILDINGS = "is_building_type = building_railway" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_great_indian_railway }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_great_indian_railway STATE = STATE_BOMBAY BUILDINGS = "is_building_type = building_railway" } }
+				tyrone_sc_found_company = { COMPANY = company_great_indian_railway STATE = STATE_BOMBAY PRIMARY = building_railway SECONDARY = building_railway }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_assam = {
+	name = tyrone_sc_found_assam_name
+	desc = tyrone_sc_found_assam_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_assam_company STATE = STATE_ASSAM BUILDINGS = "is_building_type = building_tea_plantation" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_assam_company }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_assam_company STATE = STATE_ASSAM BUILDINGS = "is_building_type = building_tea_plantation" } }
+				tyrone_sc_found_company = { COMPANY = company_assam_company STATE = STATE_ASSAM PRIMARY = building_tea_plantation SECONDARY = building_tea_plantation }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_burmah = {
+	name = tyrone_sc_found_burmah_name
+	desc = tyrone_sc_found_burmah_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_bombay_burmah_trading_corporation STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_logging_camp is_building_type = building_rubber_plantation }" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_bombay_burmah_trading_corporation }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_bombay_burmah_trading_corporation STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_logging_camp is_building_type = building_rubber_plantation }" } }
+				tyrone_sc_found_company = { COMPANY = company_bombay_burmah_trading_corporation STATE = STATE_BOMBAY PRIMARY = building_logging_camp SECONDARY = building_rubber_plantation }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_wadia = {
+	name = tyrone_sc_found_wadia_name
+	desc = tyrone_sc_found_wadia_desc
+	visible = { always = yes }
+	possible = { tyrone_sc_can_found = { COMPANY = company_wadia_shipbuilders STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_shipyard is_building_type = building_artillery_foundry }" } }
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_wadia_shipbuilders }
+		}
+		hidden_effect = {
+			if = {
+				limit = { tyrone_sc_can_found = { COMPANY = company_wadia_shipbuilders STATE = STATE_BOMBAY BUILDINGS = "OR = { is_building_type = building_shipyard is_building_type = building_artillery_foundry }" } }
+				tyrone_sc_found_company = { COMPANY = company_wadia_shipbuilders STATE = STATE_BOMBAY PRIMARY = building_shipyard SECONDARY = building_artillery_foundry }
+			}
+		}
+	}
+}
+
+tyrone_sc_found_calcutta = {
+	name = tyrone_sc_found_calcutta_name
+	desc = tyrone_sc_found_calcutta_desc
+	visible = { always = yes }
+	possible = {
+		tyrone_sc_can_found = {
+			COMPANY = company_calcutta_electric
+			STATE = STATE_WEST_BENGAL
+			BUILDINGS = "is_building_type = building_power_plant"
+		}
+	}
+	ai_chance = { value = 25 }
+	effect = {
+		show_as_tooltip = {
+			scope:csr_india = { add_company = company_type:company_calcutta_electric }
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					tyrone_sc_can_found = {
+						COMPANY = company_calcutta_electric
+						STATE = STATE_WEST_BENGAL
+						BUILDINGS = "is_building_type = building_power_plant"
+					}
+				}
+				tyrone_sc_found_company = { COMPANY = company_calcutta_electric STATE = STATE_WEST_BENGAL PRIMARY = building_power_plant SECONDARY = building_power_plant }
+			}
+		}
+	}
+}

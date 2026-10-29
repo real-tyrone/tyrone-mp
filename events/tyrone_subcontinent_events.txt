@@ -1,4 +1,4 @@
-namespace = tyrone_subcontinent
+﻿namespace = tyrone_subcontinent
 
 # Milestone feedback only: sub-entries do not grant additional rewards.
 tyrone_subcontinent.1 = {
@@ -11,9 +11,52 @@ tyrone_subcontinent.1 = {
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 	trigger = { tyrone_subcontinent_participant = yes }
+	immediate = {
+		if = {
+			limit = { is_india_tag_trigger = yes }
+			save_scope_as = tyrone_subcontinent_india
+		}
+		else_if = {
+			limit = { any_subject_or_below = { is_india_tag_trigger = yes } }
+			random_subject_or_below = {
+				limit = { is_india_tag_trigger = yes }
+				save_scope_as = tyrone_subcontinent_india
+			}
+		}
+		else_if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHR }
+			c:BHR = { save_scope_as = tyrone_subcontinent_india }
+		}
+	}
 	option = {
 		name = tyrone_subcontinent.1.a
 		default_option = yes
+		scope:tyrone_subcontinent_india ?= {
+			if = {
+				limit = { exists = c:KKI }
+				annex = c:KKI
+			}
+			if = {
+				limit = { exists = c:NGA }
+				annex = c:NGA
+			}
+			if = {
+				limit = { exists = c:MGH }
+				annex = c:MGH
+			}
+			if = {
+				limit = { exists = c:TIP }
+				annex = c:TIP
+			}
+		}
 	}
 }
 

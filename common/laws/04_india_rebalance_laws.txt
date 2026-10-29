@@ -1,4 +1,4 @@
-law_chartered_land_administration = {
+﻿law_chartered_land_administration = {
 	group = lawgroup_economic_system
 
 	parent = law_agrarianism
@@ -9,6 +9,37 @@ law_chartered_land_administration = {
 
 	is_visible = {
 		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = {
+			text = tyrone_raj_agrarianism_unlocked_tt
+			OR = {
+				has_variable = tyrone_company_self_rule_unlocked
+				has_variable = tyrone_unstable_raj_failed
+				AND = {
+					has_variable = tyrone_raj_nation_done
+					has_variable = tyrone_raj_nation_result
+					var:tyrone_raj_nation_result = -1
+				}
+			}
+		}
+	}
+	can_impose = {
+		is_india_tag_trigger = yes
+		custom_tooltip = {
+			text = tyrone_raj_agrarianism_unlocked_tt
+			OR = {
+				has_variable = tyrone_company_self_rule_unlocked
+				has_variable = tyrone_unstable_raj_failed
+				AND = {
+					has_variable = tyrone_raj_nation_done
+					has_variable = tyrone_raj_nation_result
+					var:tyrone_raj_nation_result = -1
+				}
+			}
+		}
 	}
 
 	disallowing_laws = {
@@ -78,12 +109,13 @@ law_chartered_no_health_system = {
 	}
 }
 
+
 law_chartered_charitable_health_system = {
 	group = lawgroup_health_system
 
 	parent = law_charitable_health_system
 
-	icon = "gfx/interface/icons/law_icons/charitable_health_system.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_charity_crown_health.dds"
 
 	progressiveness = 0
 
@@ -133,12 +165,118 @@ law_chartered_charitable_health_system = {
 	}
 }
 
+law_caste_charitable_health_system = {
+	group = lawgroup_health_system
+
+	parent = law_charitable_health_system
+
+	icon = "gfx/interface/icons/law_icons/law_bic_charity_caste_healthcare.dds"
+
+	progressiveness = 0
+
+	is_visible = {
+		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+	}
+
+	unlocking_technologies = {
+		pharmaceuticals
+	}
+
+	modifier = {
+		country_vaishyas_cultural_acceptance_mult = 0.1
+		country_shudras_cultural_acceptance_mult = 0.1
+		interest_group_ig_devout_pol_str_mult = 1
+	}
+
+	institution = institution_health_system
+	institution_modifier = {
+		state_mortality_mult = -0.02
+		state_food_security_add = 0.01
+		state_harvest_condition_disease_outbreak_impact_mult = -0.1
+	}
+
+	# Don't return to charity if we have something more advanced
+	ai_will_do = {
+		NOR = {
+			has_law_or_variant = law_type:law_private_health_insurance
+			has_law_or_variant = law_type:law_public_health_insurance
+		}
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+
+		# For Japanese religion Journal Entry
+		if = {
+			limit = {
+				has_journal_entry = je_elevate_buddhism
+			}
+			add = 1000
+		}
+	}
+}
+
+law_caste_private_health_insurance = {
+	group = lawgroup_health_system
+
+	parent = law_private_health_insurance
+
+	icon = "gfx/interface/icons/law_icons/law_bic_private_healthcare.dds"
+
+	progressiveness = 50
+
+	is_visible = {
+		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+	}
+
+	unlocking_technologies = {
+		labor_movement
+	}
+
+	modifier = {
+		country_institution_cost_institution_health_system_mult = -0.5
+		interest_group_ig_petty_bourgeoisie_pol_str_mult = 0.5
+		country_dalit_cultural_acceptance_mult = -0.5
+		country_shudras_cultural_acceptance_mult = -0.1
+		country_institution_health_system_max_investment_add = -1
+	}
+
+	institution = institution_health_system
+	institution_modifier = {
+		state_mortality_wealth_mult = -0.0075
+		state_middle_strata_standard_of_living_add = 2 #new
+		state_upper_strata_standard_of_living_add = 2
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
 law_chartered_private_health_insurance = {
 	group = lawgroup_health_system
 
 	parent = law_private_health_insurance
 
-	icon = "gfx/interface/icons/law_icons/private_health_insurance.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_private_healthcare.dds"
 
 	progressiveness = 50
 
@@ -176,12 +314,56 @@ law_chartered_private_health_insurance = {
 	}
 }
 
+law_caste_public_health_insurance = {
+	group = lawgroup_health_system
+
+	parent = law_public_health_insurance
+
+	icon = "gfx/interface/icons/law_icons/law_bic_public_caste_healthcare.dds"
+
+	progressiveness = 100
+
+	is_visible = {
+		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+	}
+
+	unlocking_technologies = {
+		civilizing_mission
+	}
+
+	modifier = {
+		state_harvest_condition_disease_outbreak_impact_mult = -0.2
+		country_institution_cost_institution_health_system_mult = 1.5
+	}
+
+	institution = institution_health_system
+	institution_modifier = {
+		state_mortality_mult = -0.03
+		state_pollution_reduction_health_mult = -0.15
+		state_standard_of_living_add = 0.5
+		country_shudras_cultural_acceptance_mult = 0.05
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
 law_chartered_public_health_insurance = {
 	group = lawgroup_health_system
 
 	parent = law_public_health_insurance
 
-	icon = "gfx/interface/icons/law_icons/public_health_insurance.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_public_crown_healthcare.dds"
 
 	progressiveness = 100
 
@@ -233,6 +415,37 @@ law_chartered_industrialization = {
 		is_india_tag_trigger = yes
 	}
 
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = {
+			text = tyrone_raj_interventionism_unlocked_tt
+			OR = {
+				has_variable = tyrone_company_self_rule_unlocked
+				has_variable = tyrone_unstable_raj_failed
+				AND = {
+					has_variable = tyrone_raj_nation_done
+					has_variable = tyrone_raj_nation_result
+					var:tyrone_raj_nation_result = 1
+				}
+			}
+		}
+	}
+	can_impose = {
+		is_india_tag_trigger = yes
+		custom_tooltip = {
+			text = tyrone_raj_interventionism_unlocked_tt
+			OR = {
+				has_variable = tyrone_company_self_rule_unlocked
+				has_variable = tyrone_unstable_raj_failed
+				AND = {
+					has_variable = tyrone_raj_nation_done
+					has_variable = tyrone_raj_nation_result
+					var:tyrone_raj_nation_result = 1
+				}
+			}
+		}
+	}
+
 	disallowing_laws = {
 		law_serfdom
 		law_anarchy
@@ -252,7 +465,7 @@ law_chartered_industrialization = {
 		country_government_dividends_reinvestment_add = 0.25
 		country_government_dividends_efficiency_add = 0.20
 		country_disable_nationalization_without_compensation_bool = yes
-		country_max_companies_add = -2
+		country_max_companies_add = -1
 		building_group_bg_heavy_industry_laborers_mortality_mult = 0.1
 		building_group_bg_light_industry_laborers_mortality_mult = 0.05
 		building_group_bg_mining_laborers_mortality_mult = 0.1
@@ -457,6 +670,7 @@ law_chartered_appointed_bureaucrats = {
 
 	modifier = {
 		country_bureaucracy_investment_cost_factor_mult = 0.25
+		state_bureaucracy_population_base_cost_factor_mult = -0.25
 		state_tax_capacity_mult = -0.10
 		country_capitalists_pol_str_mult = 1
 		state_decree_cost_mult = 4.0
@@ -551,6 +765,12 @@ law_india_crown_administration = {
 
 	is_visible = {
 		is_india_tag_trigger = yes
+		OR = {
+		    has_law = law_type:law_india_crown_administration
+		    is_enacting_law = law_type:law_india_crown_administration
+		    is_involved_in_journal_entry = je_tyrone_csr_crown_path
+		    is_involved_in_journal_entry = je_tyrone_jewel_of_the_empire
+		}
 	}
 
 	disallowing_laws = {
@@ -613,6 +833,7 @@ law_india_federal_administration = {
 	can_enact = {
 		tyrone_cr_can_leave_civil_service = yes
 		country_has_voting_franchise = yes
+		is_subject = no
 	}
 
 	disallowing_laws = {
@@ -632,7 +853,7 @@ law_india_federal_administration = {
 
 	modifier = {
 		country_bureaucracy_investment_cost_factor_mult = 1
-		state_decree_cost_mult = 1.5
+		state_decree_cost_mult = 0.5
 		country_legitimacy_ideological_incoherence_mult = -0.25
 		country_government_dividends_efficiency_add = 0.05
 		country_authority_per_subject_add = 10
@@ -719,15 +940,13 @@ law_chartered_religious_schools = {
 	}
 
 	modifier = {
-		country_weekly_innovation_max_add = -10
-		india_admin_capacity_medium_monthly_cost_add = 0.5
 		country_institution_cost_institution_schools_mult = -0.2
 		country_brahmins_cultural_acceptance_mult = 0.05
 	}
 
 	institution = institution_schools
 	institution_modifier = {
-		state_education_access_add = 0.05
+		state_education_access_add = 0.01
 		country_shudras_education_access_mult = 0.05
 		country_brahmins_cultural_acceptance_mult = 0.05
 		interest_group_ig_devout_pol_str_mult = 0.20
@@ -778,9 +997,7 @@ law_chartered_orientalist_schools = {
 	}
 
 	modifier = {
-		country_weekly_innovation_max_add = -15
-		india_admin_capacity_medium_monthly_cost_add = 0.5
-		country_institution_cost_institution_schools_mult = -0.1
+		country_institution_cost_institution_schools_mult = 0.2
 		country_dalit_education_access_mult = -0.1
 		country_brahmins_cultural_acceptance_mult = 0.05
 		country_kshatriyas_cultural_acceptance_mult = 0.025
@@ -843,15 +1060,13 @@ law_chartered_private_schools = {
 	}
 
 	modifier = {
-		india_admin_capacity_monthly_cost_add = 1
-		state_literacy_growth_add = 0.00005
 		country_weekly_innovation_max_add = 10
 	}
 
 	institution = institution_schools
 	institution_modifier = {
 		state_education_access_add = 0.025
-		state_education_access_wealth_add = 0.002
+		state_education_access_wealth_add = 0.004
 		interest_group_ig_intelligentsia_pol_str_mult = 0.1
 		country_vaishyas_education_access_mult = 0.025
 		country_kshatriyas_education_access_mult = 0.025
@@ -902,16 +1117,15 @@ law_chartered_imperial_public_schools = {
 	}
 
 	modifier = {
-		india_admin_capacity_monthly_cost_add = 1
-		country_institution_cost_institution_schools_mult = 0.5
+		country_institution_cost_institution_schools_mult = 1.5
 		country_weekly_innovation_max_add = 5
 	}
 
 	institution = institution_schools
 	institution_modifier = {
-		state_assimilation_mult = 0.1
+		state_assimilation_mult = -1
 		state_education_access_add = 0.15
-		country_education_fervor_add = 5
+		country_education_fervor_add = 25
 		state_literacy_growth_add = 0.000125
 		country_dalit_education_access_mult = 0.025
 		country_shudras_education_access_mult = 0.025
@@ -964,17 +1178,17 @@ law_chartered_public_schools = {
 	}
 
 	modifier = {
-		india_admin_capacity_monthly_cost_add = 1
+		country_institution_cost_institution_schools_mult = 0.8
+		state_education_access_wealth_add = 0.01
 	}
 
 	institution = institution_schools
 	institution_modifier = {
-		state_assimilation_mult = 0.125
-		state_education_access_add = 0.125
+		state_education_access_add = 0.10
 		country_education_fervor_add = 5
-		state_literacy_growth_add = 0.0001
-		country_shudras_cultural_acceptance_mult = 0.05
-		country_dalit_cultural_acceptance_mult = 0.05
+		state_literacy_growth_add = 0.001
+		country_shudras_cultural_acceptance_mult = 0.15
+		country_dalit_cultural_acceptance_mult = 0.15
 	}
 
 	can_impose = {
@@ -1023,7 +1237,7 @@ law_chartered_poor_laws = {
 
 	parent = law_poor_laws
 
-	icon = "gfx/interface/icons/law_icons/poor_laws.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_crown_poor_laws.dds"
 
 	progressiveness = 25
 
@@ -1040,7 +1254,6 @@ law_chartered_poor_laws = {
 	}
 
 	modifier = {
-		india_admin_capacity_medium_monthly_cost_add = 0.5
 		state_birth_rate_mult = -0.025
 		building_laborers_mortality_mult = 0.02
 		state_political_strength_from_welfare_mult = -0.8
@@ -1066,7 +1279,7 @@ law_chartered_caste_relief_rolls = {
 
 	parent = law_poor_laws
 
-	icon = "gfx/interface/icons/law_icons/poor_laws.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_company_poor_laws.dds"
 
 	progressiveness = 10
 
@@ -1083,7 +1296,6 @@ law_chartered_caste_relief_rolls = {
 	}
 
 	modifier = {
-		india_admin_capacity_medium_monthly_cost_add = 0.5
 		country_institution_cost_institution_social_security_mult = -0.1
 		state_political_strength_from_welfare_mult = -0.9
 		country_brahmins_cultural_acceptance_mult = 0.05
@@ -1112,7 +1324,7 @@ law_chartered_wage_subsidies = {
 
 	parent = law_wage_subsidies
 
-	icon = "gfx/interface/icons/law_icons/wage_controls.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_crown_wage_subsidies.dds"
 
 	progressiveness = 75
 
@@ -1130,7 +1342,6 @@ law_chartered_wage_subsidies = {
 
 	modifier = {
 		india_famine_relief_safeguards_add = yes
-		india_admin_capacity_monthly_cost_add = 1
 		country_institution_cost_institution_social_security_mult = 0.5
 	}
 
@@ -1155,7 +1366,7 @@ law_chartered_caste_labour_boards = {
 
 	parent = law_wage_subsidies
 
-	icon = "gfx/interface/icons/law_icons/wage_controls.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_company_wage_subsidies.dds"
 
 	progressiveness = 50
 
@@ -1172,8 +1383,6 @@ law_chartered_caste_labour_boards = {
 	}
 
 	modifier = {
-		india_famine_prevention_system_add = yes
-		india_admin_capacity_monthly_cost_add = 1
 		country_institution_cost_institution_social_security_mult = 0.25
 		state_political_strength_from_welfare_mult = -0.75
 		country_kshatriyas_cultural_acceptance_mult = 0.05
@@ -1202,7 +1411,7 @@ law_chartered_old_age_pension = {
 
 	parent = law_old_age_pension
 
-	icon = "gfx/interface/icons/law_icons/old_age_pension.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_old_age_pension.dds"
 
 	progressiveness = 100
 
@@ -1220,7 +1429,6 @@ law_chartered_old_age_pension = {
 	}
 
 	modifier = {
-		india_admin_capacity_monthly_cost_add = 1
 		country_institution_cost_institution_social_security_mult = 1
 		india_famine_prevention_system_add = yes
 	}
@@ -1502,172 +1710,23 @@ law_india_hindu_favored = {
 	}
 }
 
-law_caste_charitable_health_system = {
-	group = lawgroup_health_system
-
-	parent = law_charitable_health_system
-
-	icon = "gfx/interface/icons/law_icons/charitable_health_system.dds"
-
-	progressiveness = 0
-
-	is_visible = {
-		is_india_tag_trigger = yes
-	}
-
-	can_enact = {
-		is_india_tag_trigger = yes
-	}
-
-	unlocking_technologies = {
-		pharmaceuticals
-	}
-
-	modifier = {
-		country_vaishyas_cultural_acceptance_mult = 0.1
-		country_shudras_cultural_acceptance_mult = 0.1
-		interest_group_ig_devout_pol_str_mult = 1
-	}
-
-	institution = institution_health_system
-	institution_modifier = {
-		state_mortality_mult = -0.02
-		state_food_security_add = 0.01
-		state_harvest_condition_disease_outbreak_impact_mult = -0.1
-	}
-
-	# Don't return to charity if we have something more advanced
-	ai_will_do = {
-		NOR = {
-			has_law_or_variant = law_type:law_private_health_insurance
-			has_law_or_variant = law_type:law_public_health_insurance
-		}
-	}
-
-	ai_enact_weight_modifier = { #Petitions
-		value = 0
-
-		if = {
-			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
-			add = 750
-		}
-
-		# For Japanese religion Journal Entry
-		if = {
-			limit = {
-				has_journal_entry = je_elevate_buddhism
-			}
-			add = 1000
-		}
-	}
-}
-
-law_caste_private_health_insurance = {
-	group = lawgroup_health_system
-
-	parent = law_private_health_insurance
-
-	icon = "gfx/interface/icons/law_icons/private_health_insurance.dds"
-
-	progressiveness = 50
-
-	is_visible = {
-		is_india_tag_trigger = yes
-	}
-
-	can_enact = {
-		is_india_tag_trigger = yes
-	}
-
-	unlocking_technologies = {
-		labor_movement
-	}
-
-	modifier = {
-		country_institution_cost_institution_health_system_mult = -0.5
-		interest_group_ig_petty_bourgeoisie_pol_str_mult = 0.5
-		country_dalit_cultural_acceptance_mult = -0.5
-		country_shudras_cultural_acceptance_mult = -0.1
-		country_institution_health_system_max_investment_add = -1
-	}
-
-	institution = institution_health_system
-	institution_modifier = {
-		state_mortality_wealth_mult = -0.0075
-		state_middle_strata_standard_of_living_add = 2 #new
-		state_upper_strata_standard_of_living_add = 2
-	}
-
-	ai_enact_weight_modifier = { #Petitions
-		value = 0
-
-		if = {
-			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
-			add = 750
-		}
-	}
-}
-
-law_caste_public_health_insurance = {
-	group = lawgroup_health_system
-
-	parent = law_public_health_insurance
-
-	icon = "gfx/interface/icons/law_icons/public_health_insurance.dds"
-
-	progressiveness = 100
-
-	is_visible = {
-		is_india_tag_trigger = yes
-	}
-
-	can_enact = {
-		is_india_tag_trigger = yes
-	}
-
-	unlocking_technologies = {
-		civilizing_mission
-	}
-
-	modifier = {
-		state_harvest_condition_disease_outbreak_impact_mult = -0.2
-		country_institution_cost_institution_health_system_mult = 1.5
-	}
-
-	institution = institution_health_system
-	institution_modifier = {
-		state_mortality_mult = -0.03
-		state_pollution_reduction_health_mult = -0.15
-		state_standard_of_living_add = 0.5
-		country_shudras_cultural_acceptance_mult = 0.05
-	}
-
-	ai_enact_weight_modifier = { #Petitions
-		value = 0
-
-		if = {
-			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
-			add = 750
-		}
-	}
-}
-
 law_india_princely_garrison = {
 	group = lawgroup_army_model
 	parent = law_peasant_levies
-	icon = "gfx/interface/icons/law_icons/peasant_levies.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_peasant_levies_princely.dds"
 
 	progressiveness = -50
 
 	modifier = {
 		country_can_only_conscript_peasants_bool = yes
-		unit_morale_loss_mult = 0.1
+		unit_morale_loss_mult = 0.20
 		unit_experience_gain_mult = -0.25
-		state_conscription_rate_add = 0.04
-		country_aristocrats_pol_str_mult = 0.25
-		country_military_goods_cost_mult = -0.1
+		building_training_rate_mult = -0.25
+		country_military_goods_cost_mult = -0.20
+		country_aristocrats_pol_str_mult = 0.50
 		state_building_barrack_max_level_add = 25
-		state_building_conscription_center_max_level_add = 25
+		state_building_conscription_center_max_level_add = 75
+		state_conscription_rate_add = 0.04
 	}
 
 	can_impose = {
@@ -1693,6 +1752,7 @@ law_india_princely_garrison = {
 	}
 
 	on_enact = {
+		tyrone_india_reapply_training_restrictions = { LAW = law_india_princely_garrison }
 		custom_tooltip = QUALIFICATIONS_OFFICERS_PEASANT_LEVIES_DESC
 		if = {
 			limit = {
@@ -1729,19 +1789,18 @@ law_india_princely_garrison = {
 law_india_company_corps = {
 	group = lawgroup_army_model
 	parent = law_peasant_levies
-	icon = "gfx/interface/icons/law_icons/peasant_levies.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_peasant_levies_company.dds"
 
 	progressiveness = -50
 
 	modifier = {
-		country_can_only_conscript_peasants_bool = yes
-		unit_morale_loss_mult = 0.1
-		unit_experience_gain_mult = -0.25
-		state_conscription_rate_add = 0.04
-		country_aristocrats_pol_str_mult = 0.25
-		country_military_goods_cost_mult = -0.1
-		state_building_barrack_max_level_add = 25
-		state_building_conscription_center_max_level_add = 25
+		unit_morale_loss_mult = 0.05
+		building_training_rate_mult = 0.10
+		country_military_wages_mult = 0.10
+		country_officers_pol_str_mult = 0.25
+		state_building_barrack_max_level_add = 50
+		state_building_conscription_center_max_level_add = 50
+		state_conscription_rate_add = 0.02
 	}
 
 	can_impose = {
@@ -1767,6 +1826,7 @@ law_india_company_corps = {
 	}
 
 	on_enact = {
+		tyrone_india_reapply_training_restrictions = { LAW = law_india_company_corps }
 		custom_tooltip = QUALIFICATIONS_OFFICERS_PEASANT_LEVIES_DESC
 		if = {
 			limit = {
@@ -1803,7 +1863,7 @@ law_india_company_corps = {
 law_india_early_standing_army = {
 	group = lawgroup_army_model
 	parent = law_professional_army
-	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	icon = "gfx/interface/icons/law_icons/law_chi_professional_army.dds"
 
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -1818,12 +1878,13 @@ law_india_early_standing_army = {
 	unlocking_technologies = { military_drill }
 
 	modifier = {
-		unit_morale_loss_mult = -0.1
-		state_conscription_rate_add = 0.01
-		country_officers_pol_str_mult = 0.5
+		unit_experience_gain_mult = 0.25
+		building_training_rate_mult = -0.15
+		country_military_goods_cost_mult = 0.10
+		country_officers_pol_str_mult = 0.25
 		state_building_barrack_max_level_add = 100
 		state_building_conscription_center_max_level_add = 50
-		unit_experience_gain_mult = 1.0
+		state_conscription_rate_add = 0.01
 	}
 
 	can_impose = {
@@ -1846,6 +1907,7 @@ law_india_early_standing_army = {
 	}
 
 	on_enact = {
+		tyrone_india_reapply_training_restrictions = { LAW = law_india_early_standing_army }
 		if = {
 			limit = {
 				has_law_or_variant = law_type:law_peasant_levies
@@ -1904,7 +1966,7 @@ law_india_early_standing_army = {
 law_india_company_army = {
 	group = lawgroup_army_model
 	parent = law_professional_army
-	icon = "gfx/interface/icons/law_icons/professional_army.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_prof_armies_company.dds"
 
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -1916,15 +1978,18 @@ law_india_company_army = {
 
 	progressiveness = 0
 
-	unlocking_technologies = { military_drill }
+	unlocking_technologies = { general_staff }
 
 	modifier = {
-		unit_morale_loss_mult = -0.1
-		state_conscription_rate_add = 0.01
-		country_officers_pol_str_mult = 0.5
-		state_building_barrack_max_level_add = 100
-		state_building_conscription_center_max_level_add = 50
+		unit_morale_loss_mult = -0.20
 		unit_experience_gain_mult = 1.0
+		building_training_rate_mult = 0.25
+		country_military_wages_mult = 0.20
+		country_military_goods_cost_mult = 0.15
+		country_officers_pol_str_mult = 0.50
+		state_building_barrack_max_level_add = 100
+		state_building_conscription_center_max_level_add = 25
+		state_conscription_rate_add = 0.01
 	}
 
 	can_impose = {
@@ -1947,6 +2012,7 @@ law_india_company_army = {
 	}
 
 	on_enact = {
+		tyrone_india_reapply_training_restrictions = { LAW = law_india_company_army }
 		if = {
 			limit = {
 				has_law_or_variant = law_type:law_peasant_levies
@@ -2005,7 +2071,7 @@ law_india_company_army = {
 law_india_great_indian_army = {
 	group = lawgroup_army_model
 	parent = law_mass_conscription
-	icon = "gfx/interface/icons/law_icons/mass_conscription.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_mass_conscription.dds"
 
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2020,12 +2086,14 @@ law_india_great_indian_army = {
 	unlocking_technologies = { enlistment_offices }
 
 	modifier = {
-		unit_morale_loss_mult = 0.05
-		state_conscription_rate_add = 0.03
-		building_training_rate_mult = 1
+		unit_morale_loss_mult = 0.15
+		unit_experience_gain_mult = -0.25
+		building_training_rate_mult = 1.0
+		country_military_goods_cost_mult = 0.10
 		country_officers_pol_str_mult = 0.25
-		state_building_barrack_max_level_add = 100
-		state_building_conscription_center_max_level_add = 100
+		state_building_barrack_max_level_add = 150
+		state_building_conscription_center_max_level_add = 150
+		state_conscription_rate_add = 0.04
 	}
 
 	can_impose = {
@@ -2048,6 +2116,7 @@ law_india_great_indian_army = {
 	}
 
 	on_enact = {
+		tyrone_india_reapply_training_restrictions = { LAW = law_india_great_indian_army }
 		tyrone_eoi_reapply_gendarmerie = yes
 		if = {
 			limit = {
@@ -2117,21 +2186,22 @@ law_india_command_economy = {
 		NOT = { is_china_tag_trigger = yes }
 	}	
 
-	unlocking_technologies = {
-		socialism
-	}
+	unlocking_technologies = {}
 	
-	unlocking_laws = {
-		law_autocracy
-		law_neo_absolutism
-		law_oligarchy
-		law_organic_regulation
-		law_single_party_state
-		law_technocracy
-	}	
+	unlocking_laws = {}	
 	
 	can_enact = {
-		has_law = law_type:law_council_republic
+		is_india_tag_trigger = yes
+		is_subject = no
+		OR = {
+			custom_tooltip = {
+				text = tyrone_india_command_empire_completed_tt
+				has_variable = tyrone_eoi_main_done
+			}
+			has_law_or_variant = law_type:law_council_republic
+			has_law_or_variant = law_type:law_corporate_state
+			has_technology_researched = central_planning
+		}
 	}
 
 	on_activate = {
@@ -2355,11 +2425,37 @@ law_india_cooperative_ownership = {
 		law_women_in_the_fields
 	}
 	
-	unlocking_laws = {
-		law_council_republic	
-		law_corporate_state			
-	}
+	unlocking_laws = {}
 	
+	can_enact = {
+		is_india_tag_trigger = yes
+		OR = {
+			AND = {
+				is_subject = no
+				has_law_or_variant = law_type:law_council_republic
+			}
+			custom_tooltip = {
+				text = tyrone_india_collective_revolution_won_tt
+				has_variable = tyrone_nim_socialist_started
+				has_variable = tyrone_nim_civil_war_done
+			}
+		}
+	}
+	can_impose = {
+		is_india_tag_trigger = yes
+		OR = {
+			AND = {
+				is_subject = no
+				has_law_or_variant = law_type:law_council_republic
+			}
+			custom_tooltip = {
+				text = tyrone_india_collective_revolution_won_tt
+				has_variable = tyrone_nim_socialist_started
+				has_variable = tyrone_nim_civil_war_done
+			}
+		}
+	}
+
 	on_activate = {		
 		custom_tooltip = {
 			text = enact_law_radical_leftist_economy_warning_desc
@@ -2385,8 +2481,7 @@ law_india_cooperative_ownership = {
 		country_foreign_collectivization_bool = yes
 		state_minimum_incorporated_subsistence_arable_land_add = -0.50
 		building_group_bg_agriculture_throughput_add = 0.2
-		building_group_bg_plantation_throughput_add
-		goods_input_grain_add = 0.6
+		goods_output_grain_mult = -0.25
 
 	}
 	
@@ -2437,7 +2532,13 @@ law_india_cooperative_ownership = {
 law_india_unaided_enterprise = {
 	group = lawgroup_india_chartered_obligations
 	icon = "gfx/interface/icons/law_icons/laissez_faire.dds"
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_unaided_enterprise }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_unaided_enterprise }
+	}
 	progressiveness = -25
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2468,7 +2569,13 @@ law_india_unaided_enterprise = {
 law_india_guaranteed_railway_companies = {
 	group = lawgroup_india_chartered_obligations
 	icon = "gfx/interface/icons/law_icons/interventionism.dds"
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_guaranteed_railway_companies }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_guaranteed_railway_companies }
+	}
 	progressiveness = 0
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2501,7 +2608,13 @@ law_india_guaranteed_railway_companies = {
 law_india_plantation_guarantees = {
 	group = lawgroup_india_chartered_obligations
 	icon = "gfx/interface/icons/law_icons/commercial_agriculture.dds"
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_plantation_guarantees }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_plantation_guarantees }
+	}
 	progressiveness = 0
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2537,7 +2650,13 @@ law_india_plantation_guarantees = {
 law_india_chartered_manufactures = {
 	group = lawgroup_india_chartered_obligations
 	icon = "gfx/interface/icons/law_icons/state_capitalism.dds"
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_chartered_manufactures }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_chartered_manufactures }
+	}
 	progressiveness = 25
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2570,7 +2689,13 @@ law_india_chartered_manufactures = {
 law_india_imperial_revenue_guarantees = {
 	group = lawgroup_india_chartered_obligations
 	icon = "gfx/interface/icons/law_icons/command_economy.dds"
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_imperial_revenue_guarantees }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_imperial_revenue_guarantees }
+	}
 	progressiveness = 50
 	is_visible = {
 		is_india_tag_trigger = yes
@@ -2630,6 +2755,11 @@ law_india_chartered_excise = {
 
 	is_visible = {
 		is_india_tag_trigger = yes
+		OR = {
+			has_variable = tyrone_csr_started
+			has_law = law_type:law_india_chartered_excise
+			is_enacting_law = law_type:law_india_chartered_excise
+		}
 	}
 
 	can_enact = {
@@ -2641,31 +2771,53 @@ law_india_chartered_excise = {
 
 	progressiveness = -100
 
-	icon = "gfx/interface/icons/law_icons/consumption_based_taxation.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_consumption_taxes.dds"
 
 	modifier = {
-		state_bureaucracy_population_base_cost_factor_mult = -0.25
-		country_consumption_tax_cost_mult = -0.50
+		state_tax_capacity_mult = 1
+		country_consumption_tax_cost_mult = -0.70
+		state_capitalists_consumption_multiplier_add = 1
 	}
 
 	tax_modifier_very_low = {
-		tax_consumption_add = 0.15
+		tax_consumption_add = 0.20
+		state_construction_mult = 0.05
+		state_capitalists_consumption_multiplier_add = 0.5
 	}
 
 	tax_modifier_low = {
-		tax_consumption_add = 0.20
+		tax_consumption_add = 0.25
+		state_construction_mult = 0.02
 	}
 
 	tax_modifier_medium = {
-		tax_consumption_add = 0.25
+		tax_consumption_add = 0.45
 	}
 
 	tax_modifier_high = {
-		tax_consumption_add = 0.30
+		tax_consumption_add = 0.50
+		state_capitalists_investment_pool_efficiency_mult = -0.15
+		country_minting_mult = 0.1
+		country_legitimacy_base_add = 10
+		state_radicals_from_political_movements_mult = -0.5
+		interest_group_in_government_attraction_mult = 0.1
+		state_lower_strata_expected_sol_add = -1.5
+		state_middle_strata_expected_sol_add = -2.5
+		state_upper_strata_expected_sol_add = -3.5
+		state_construction_mult = -0.10
 	}
 
 	tax_modifier_very_high = {
-		tax_consumption_add = 0.35
+		tax_consumption_add = 0.70
+		state_capitalists_investment_pool_efficiency_mult = -0.25
+		country_minting_mult = 0.2
+		country_legitimacy_base_add = 20
+		state_radicals_from_political_movements_mult = -1.0
+		interest_group_in_government_attraction_mult = 0.2
+		state_lower_strata_expected_sol_add = -3
+		state_middle_strata_expected_sol_add = -5
+		state_upper_strata_expected_sol_add = -7
+		state_construction_mult = -0.15
 	}
 
 	# AI shouldn't change to consumption-based-taxation as it's likely to wreck their economy
@@ -2689,6 +2841,11 @@ law_india_company_assessment = {
 
 	is_visible = {
 		is_india_tag_trigger = yes
+		OR = {
+			has_variable = tyrone_csr_started
+			has_law = law_type:law_india_company_assessment
+			is_enacting_law = law_type:law_india_company_assessment
+		}
 	}
 
 	can_enact = {
@@ -2711,38 +2868,47 @@ law_india_company_assessment = {
 	}
 
 	tax_modifier_very_low = {
-		tax_consumption_add = 0.15
-		tax_per_capita_add = 0.40
+		tax_consumption_add = 0.05
+		tax_per_capita_add = 0.60
 		tax_land_add = 0.20
-		tax_income_add = 0.05
+		tax_income_add = 0.075
+		state_migration_pull_mult = 0.1		# removed bonus form low taxes
+		state_birth_rate_mult = 0.05
+		country_legitimacy_base_add = -10
 	}
 
 	tax_modifier_low = {
-		tax_consumption_add = 0.20
-		tax_per_capita_add = 0.55
-		tax_land_add = 0.275
-		tax_income_add = 0.075
+		tax_consumption_add = 0.05
+		tax_per_capita_add = 0.70
+		tax_land_add = 0.40
+		tax_income_add = 0.01
+		state_migration_pull_mult = 0.05	# removed bonus form low taxes
+		state_birth_rate_mult = 0.025
+		country_legitimacy_base_add = -5
 	}
 
 	tax_modifier_medium = {
-		tax_consumption_add = 0.25
-		tax_per_capita_add = 0.70
-		tax_land_add = 0.35
-		tax_income_add = 0.10
+		tax_consumption_add = 0.05
+		tax_per_capita_add = 0.90
+		tax_land_add = 0.60
+		tax_income_add = 0.15
+		state_tax_capacity_mult = 0.5
 	}
 
 	tax_modifier_high = {
-		tax_consumption_add = 0.30
-		tax_per_capita_add = 0.85
-		tax_land_add = 0.425
-		tax_income_add = 0.125
+		tax_consumption_add = 0.05
+		tax_per_capita_add = 1
+		tax_land_add = 0.80
+		tax_income_add = 0.2
+		state_tax_capacity_mult = 1
 	}
 
 	tax_modifier_very_high = {
-		tax_consumption_add = 0.35
-		tax_per_capita_add = 1.0
-		tax_land_add = 0.50
-		tax_income_add = 0.15
+		tax_consumption_add = 0.05
+		tax_per_capita_add = 1.2
+		tax_land_add = 1.0
+		tax_income_add = 0.25
+		state_tax_capacity_mult = 2
 	}
 
 	ai_enact_weight_modifier = { #Petitions
@@ -2914,7 +3080,7 @@ law_india_national_supremacy = {
 		is_india_tag_trigger = yes
 	}
 
-	icon = "gfx/interface/icons/law_icons/national_supremacy.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_nat_supremacy.dds"
 
 	progressiveness = -25
 
@@ -3040,7 +3206,7 @@ law_india_cultural_exclusion = {
 		is_india_tag_trigger = yes
 	}
 
-	icon = "gfx/interface/icons/law_icons/cultural_exclusion.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_cult_exlusion.dds"
 
 	progressiveness = 25
 
@@ -3169,7 +3335,7 @@ law_india_multicultural = {
 		is_india_tag_trigger = yes
 	}
 
-	icon = "gfx/interface/icons/law_icons/multicultural.dds"
+	icon = "gfx/interface/icons/law_icons/law_bic_multiculti.dds"
 
 	progressiveness = 75
 
@@ -3408,7 +3574,13 @@ law_india_crown_industrial_obligations = {
 		is_india_tag_trigger = yes
 		custom_tooltip = { text = tyrone_cr_corporations_unlocked_tt has_variable = tyrone_cr_started }
 	}
-	on_enact = { tyrone_cr_reapply_settlements = yes }
+	on_enact = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_crown_industrial_obligations }
+		tyrone_cr_reapply_settlements = yes
+	}
+	on_activate = {
+		tyrone_india_reapply_charter_restrictions = { LAW = law_india_crown_industrial_obligations }
+	}
 	ai_enact_weight_modifier = { value = 0 }
 }
 
@@ -3679,6 +3851,1289 @@ REPLACE:law_dedicated_police = {
 				power_bloc ?= { has_principle_group = principle_group:principle_group_police_coordination }
 			}
 			add = 10
+		}
+
+		if = {
+			limit = {
+				scope:target_country = {
+					c:BIC ?= this
+					OR = {
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+}
+
+law_india_imperial_provincial_administration = {
+	group = lawgroup_bureaucracy
+	parent = law_appointed_bureaucrats
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	progressiveness = 25
+	is_visible = {
+		is_india_tag_trigger = yes
+		OR = {
+		    has_law = law_type:law_india_imperial_provincial_administration
+		    is_enacting_law = law_type:law_india_imperial_provincial_administration
+		    has_variable = tyrone_eoi_civil_done
+		}
+	}
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = { text = tyrone_eoi_civil_unlocked_tt has_variable = tyrone_eoi_civil_done }
+	}
+	can_impose = { always = no }
+	modifier = {
+		country_bureaucracy_mult = 0.10
+		state_tax_capacity_mult = 0.15
+		country_bureaucrats_pol_str_mult = 0.25
+		country_aristocrats_pol_str_mult = 0.25
+		country_government_wages_mult = 0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.25
+		state_decree_cost_mult = 1.00
+	}
+	on_enact = { recalculate_pop_ig_support = yes }
+	ai_enact_weight_modifier = {
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+law_india_imperial_citizenship = {
+	group = lawgroup_citizenship
+	parent = law_multicultural
+	is_visible = { is_india_tag_trigger = yes }
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = { text = tyrone_eoi_council_law_unlocked_tt has_variable = tyrone_eoi_council_done }
+	}
+
+	icon = "gfx/interface/icons/law_icons/law_bic_imperial_multiculti.dds"
+
+	progressiveness = 75
+
+	unlocking_laws = {
+		law_slavery_banned
+	}
+
+	unlocking_technologies = {
+		human_rights
+	}
+
+	on_enact = {
+		recalculate_pop_ig_support = yes
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			custom_tooltip = fervor_effects_ld_tt
+		}
+		if = {
+			limit = {
+				has_modifier = modifier_polish_organic_statute
+			}
+			remove_modifier = modifier_polish_organic_statute
+		}
+	}
+
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+	}
+
+	modifier = {
+		country_government_wages_mult = 0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.25
+		#If primary culture, only apply this value
+		country_acceptance_primary_culture_add = 100
+		country_support_separatism_resistance_mult = 0.5
+		country_support_separatism_strength_mult = -0.5
+		state_assimilation_mult = -0.25
+
+		#Heritage
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_heritage_trait_add = 60
+		country_acceptance_shared_heritage_trait_group_add = 50
+		country_acceptance_no_shared_heritage_trait_add = 25
+
+		#Language
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_language_trait_add = 50
+		country_acceptance_shared_language_trait_group_add = 30
+		country_acceptance_no_shared_language_trait_add = 25
+
+		#Tradition
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_tradition_trait_add = 20
+		country_acceptance_no_shared_tradition_trait_add = 10
+
+		#Fervor
+		country_primary_culture_fervor_from_laws_add = -10
+	}
+
+	acceptance_modifier = {
+		country_allow_voting_violent_hostility_bool = yes
+		country_allow_voting_cultural_erasure_bool = yes
+		country_allow_voting_open_prejudice_bool = yes
+		country_allow_voting_second_rate_citizen_bool = yes
+		country_allow_voting_full_acceptance_bool = yes
+
+		country_allow_assimilation_cultural_erasure_bool = yes
+		country_allow_assimilation_open_prejudice_bool = yes
+		country_allow_assimilation_second_rate_citizen_bool = yes
+		country_allow_assimilation_full_acceptance_bool = yes
+
+		country_wage_violent_hostility_mult = -0.2
+		country_wage_cultural_erasure_mult = -0.1
+		country_wage_open_prejudice_mult = -0.05
+
+		country_disallow_military_work_violent_hostility_bool = no
+ 		country_disallow_military_work_cultural_erasure_bool = no
+ 		country_disallow_military_work_open_prejudice_bool = no
+		country_disallow_military_work_second_rate_citizen_bool = no
+		country_disallow_military_work_full_acceptance_bool = no
+
+		country_disallow_government_work_violent_hostility_bool = no
+ 		country_disallow_government_work_cultural_erasure_bool = no
+ 		country_disallow_government_work_open_prejudice_bool = no
+		country_disallow_government_work_second_rate_citizen_bool = no
+		country_disallow_government_work_full_acceptance_bool = no
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+law_india_company_technocracy = {
+	group = lawgroup_distribution_of_power
+	parent = law_technocracy
+
+	icon = "gfx/interface/icons/law_icons/technocracy.dds"
+
+	progressiveness = -50
+
+	on_activate = {
+		if = {
+			limit = {
+				has_law = law_type:law_elected_bureaucrats
+			}
+			deactivate_law = law_type:law_elected_bureaucrats
+			activate_law = law_type:law_appointed_bureaucrats
+		}
+		scripted_effect_parties_emergence = yes
+		if = {
+			limit = { game_date > 1836.1.1 country_has_voting_franchise = yes }
+			initialize_electoral_confidence = yes
+		}
+		cleanup_voting_strength_modifiers = yes
+		add_journal_entry = { type = je_technocracy }
+	}
+
+	modifier = {
+		country_legitimacy_headofstate_add = 10
+		country_legitimacy_govt_total_clout_add = 120
+		country_legitimacy_govt_size_add = 2
+		country_legitimacy_ideological_incoherence_mult = 0.15
+		country_academics_pol_str_mult = 0.33
+		country_engineers_pol_str_mult = 0.33
+		country_officers_pol_str_mult = 0.33
+		country_authority_add = 100
+		country_max_companies_add = 1
+		country_free_charters_add = 1
+		country_legitimacy_govt_total_votes_add = 50
+		country_officers_voting_power_add = 75
+		country_bureaucrats_voting_power_add = 75
+		country_engineers_voting_power_add = 75
+		country_academics_voting_power_add = 75
+		country_machinists_voting_power_add = 25
+		country_shopkeepers_voting_power_add = 25
+		country_electoral_confidence_impact_mult = -0.4
+	}
+
+	unlocking_technologies = {
+		central_archives
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = { text = tyrone_sc_main_unlocked_tt has_variable = tyrone_sc_main_done }
+	}
+
+	can_impose = {
+		always = no
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+	ai_impose_chance = {
+		value = 0
+
+		if = {
+			limit = {
+				has_law = law_type:law_technocracy
+				"ai_ideological_opinion(scope:target_country)" >= 25 # Only want to do this on ideologically similar countries
+				scope:target_country = { # Is their law different enough from what we want to impose?
+					NOT = { has_law_or_variant = law_type:law_single_party_state }
+				}
+			}
+
+			add = base_impose_law_weight
+		}
+
+		if = {
+			limit = {
+				scope:target_country = {
+					c:BIC ?= ROOT
+					OR = {
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+
+	is_visible = {
+		is_india_tag_trigger = yes
+		has_law = law_type:law_india_company_technocracy
+	}
+}
+
+law_india_shareholder_voting = {
+	group = lawgroup_distribution_of_power
+	parent = law_wealth_voting
+
+	icon = "gfx/interface/icons/law_icons/wealth_voting.dds"
+
+	progressiveness = 0
+
+	unlocking_technologies = {
+		democracy
+	}
+
+	disallowing_laws = {
+		law_chiefdom
+		law_command_economy
+	}
+
+	modifier = {
+		country_legitimacy_govt_total_votes_add = 65
+		country_legitimacy_govt_total_clout_add = 75
+		country_legitimacy_govt_size_add = 1
+		country_legitimacy_ideological_incoherence_mult = 0.2
+		country_voting_power_base_add = 50
+		country_voting_power_wealth_threshold_add = 20
+		country_authority_add = 100
+		country_electoral_confidence_impact_mult = -0.2
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+		custom_tooltip = { text = tyrone_sc_main_unlocked_tt has_variable = tyrone_sc_main_done }
+	}
+
+	on_activate = {
+		if = {
+			limit = {
+				game_date > 1836.1.1
+				country_has_voting_franchise = yes
+			}
+			initialize_electoral_confidence = yes
+		}
+		random_law = {
+			limit = {
+				type = law_type:law_india_shareholder_voting
+			}
+			save_scope_as = relevant_voting_law
+		}
+		handle_possible_absent_caciquismo_variables = yes
+		scripted_effect_parties_emergence = yes
+		inherit_caciquismo_effect = yes
+		inherit_free_elections_effect = yes
+		if = {
+			limit = {
+				has_law = law_type:law_monarchy
+				has_variable = king_in_parliament_possible
+				NOT = {
+					has_journal_entry = je_king_in_parliament
+				}
+			}
+			custom_tooltip = {
+				text = king_in_parliament_tt
+				add_journal_entry = { type = je_king_in_parliament }
+			}
+		}
+	}
+
+	can_impose = {
+		always = no
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+
+		if = {
+			limit = {
+				owner ?= {
+					has_journal_entry = je_zaibatsu
+					has_variable = ai_zaibatsu_cement
+				}
+			}
+			add = 500
+		}
+	}
+
+	ai_impose_chance = {
+		value = 0
+
+		if = {
+			limit = {
+				has_law = law_type:law_wealth_voting
+				has_strategy = ai_strategy_progressive_agenda
+				scope:target_country = { # Is their law different enough from what we want to impose?
+					NOR = {
+						has_law_or_variant = law_type:law_census_voting
+						has_law_or_variant = law_type:law_landed_voting
+					}
+				}
+			}
+
+			add = base_impose_law_weight
+		}
+
+		if = {
+			limit = {
+				scope:target_country = {
+					c:BIC ?= ROOT
+					OR = {
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}
+
+	is_visible = {
+		is_india_tag_trigger = yes
+		has_law = law_type:law_india_shareholder_voting
+	}
+}
+
+law_india_company_directorate = {
+	group = lawgroup_bureaucracy
+	parent = law_appointed_bureaucrats
+	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+	progressiveness = 25
+	is_visible = {
+		is_india_tag_trigger = yes
+		OR = {
+		    has_law = law_type:law_india_company_directorate
+		    is_enacting_law = law_type:law_india_company_directorate
+		    has_variable = tyrone_sc_directorate_chosen
+		}
+	}
+	can_enact = { custom_tooltip = { text = tyrone_sc_directorate_chosen_tt has_variable = tyrone_sc_directorate_chosen } }
+	can_impose = { always = no }
+	modifier = {
+		country_bureaucracy_mult = 0.20
+		state_tax_capacity_mult = 0.20
+		country_capitalists_pol_str_mult = 0.50
+		country_government_wages_mult = 0.20
+		country_bureaucracy_investment_cost_factor_mult = 0.25
+		state_decree_cost_mult = 1.00
+	}
+	on_enact = { recalculate_pop_ig_support = yes }
+}
+
+law_india_company_governors = {
+	group = lawgroup_bureaucracy
+	parent = law_elected_bureaucrats
+	icon = "gfx/interface/icons/law_icons/elected_bureaucrats.dds"
+	progressiveness = 25
+	is_visible = {
+		is_india_tag_trigger = yes
+		OR = {
+		    has_law = law_type:law_india_company_governors
+		    is_enacting_law = law_type:law_india_company_governors
+		    has_variable = tyrone_sc_governors_chosen
+		}
+	}
+	can_enact = { custom_tooltip = { text = tyrone_sc_governors_chosen_tt has_variable = tyrone_sc_governors_chosen } }
+	can_impose = { always = no }
+	modifier = {
+		state_institution_impact_add = 0.10
+		country_legitimacy_base_add = 15
+		country_bureaucrats_pol_str_mult = 0.25
+		country_government_wages_mult = 0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.25
+		state_decree_cost_mult = 1.00
+	}
+	on_enact = { recalculate_pop_ig_support = yes }
+}
+
+law_india_company_citizenship = {
+	group = lawgroup_citizenship
+	parent = law_multicultural
+
+	icon = "gfx/interface/icons/law_icons/law_bic_company_multiculti.dds"
+
+	progressiveness = 75
+
+	unlocking_laws = {
+
+	}
+
+	unlocking_technologies = {
+
+	}
+
+	on_enact = {
+		recalculate_pop_ig_support = yes
+		if = {
+			limit = {
+				is_subject = yes
+			}
+			custom_tooltip = fervor_effects_ld_tt
+		}
+		if = {
+			limit = {
+				has_modifier = modifier_polish_organic_statute
+			}
+			remove_modifier = modifier_polish_organic_statute
+		}
+	}
+
+	can_impose = {
+		always = no
+	}
+
+	modifier = {
+
+		#If primary culture, only apply this value
+		country_acceptance_primary_culture_add = 100
+		country_support_separatism_resistance_mult = 0.5
+		country_support_separatism_strength_mult = -0.5
+		state_assimilation_mult = -0.25
+
+		#Heritage
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_heritage_trait_add = 60
+		country_acceptance_shared_heritage_trait_group_add = 50
+		country_acceptance_no_shared_heritage_trait_add = 20
+
+		#Language
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_language_trait_add = 50
+		country_acceptance_shared_language_trait_group_add = 30
+		country_acceptance_no_shared_language_trait_add = 20
+
+		#Tradition
+		#From this block, we only apply the highest value a Pop qualifies for
+		country_acceptance_shared_tradition_trait_add = 10
+		country_acceptance_no_shared_tradition_trait_add = 0
+
+		#Fervor
+		country_primary_culture_fervor_from_laws_add = -10
+		country_sc_executive_upper_acceptance_min_add = 80
+		country_sc_executive_upper_education_access_mult = 0.15
+		country_sc_executive_middle_acceptance_min_add = 80
+		country_sc_executive_middle_education_access_mult = 0.15
+		country_sc_staff_upper_acceptance_max_add = 79
+		country_sc_staff_middle_acceptance_max_add = 79
+		country_sc_staff_lower_acceptance_max_add = 79
+		country_sc_labouring_lower_acceptance_max_add = 59
+		country_capitalists_pol_str_mult = 0.50
+		country_bureaucrats_pol_str_mult = 0.50
+		country_academics_pol_str_mult = 0.50
+		country_engineers_pol_str_mult = 0.50
+		country_laborers_pol_str_mult = -0.50
+		country_peasants_pol_str_mult = -0.50
+		country_slaves_pol_str_mult = -0.50
+
+	}
+
+	acceptance_modifier = {
+		country_allow_voting_violent_hostility_bool = yes
+		country_allow_voting_cultural_erasure_bool = yes
+		country_allow_voting_open_prejudice_bool = yes
+		country_allow_voting_second_rate_citizen_bool = yes
+		country_allow_voting_full_acceptance_bool = yes
+
+		country_allow_assimilation_cultural_erasure_bool = yes
+		country_allow_assimilation_open_prejudice_bool = yes
+		country_allow_assimilation_second_rate_citizen_bool = yes
+		country_allow_assimilation_full_acceptance_bool = yes
+
+		country_wage_violent_hostility_mult = -0.2
+		country_wage_cultural_erasure_mult = -0.1
+		country_wage_open_prejudice_mult = -0.05
+
+		country_disallow_military_work_violent_hostility_bool = no
+ 		country_disallow_military_work_cultural_erasure_bool = no
+ 		country_disallow_military_work_open_prejudice_bool = no
+		country_disallow_military_work_second_rate_citizen_bool = no
+		country_disallow_military_work_full_acceptance_bool = no
+
+		country_disallow_government_work_violent_hostility_bool = no
+ 		country_disallow_government_work_cultural_erasure_bool = no
+ 		country_disallow_government_work_open_prejudice_bool = no
+		country_disallow_government_work_second_rate_citizen_bool = no
+		country_disallow_government_work_full_acceptance_bool = no
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+	is_visible = {
+		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		custom_tooltip = { text = tyrone_sc_citizenship_unlocked_tt has_variable = tyrone_sc_started }
+	}
+
+	on_activate = {
+		tyrone_sc_enter_hierarchy = yes
+		tyrone_sc_apply_civic_amendment = yes
+	}
+
+	on_deactivate = {
+		tyrone_sc_leave_hierarchy = yes
+	}
+}
+
+law_india_company_free_trade = {
+	group = lawgroup_trade_policy
+	parent = law_free_trade
+
+	icon = "gfx/interface/icons/law_icons/free_trade.dds"
+
+	progressiveness = 50
+
+	disallowing_laws = {
+		law_command_economy
+	}
+
+	unlocking_technologies = {
+		international_trade
+	}
+
+	on_enact = {
+		if = {
+			limit = { is_banning_goods = g:opium }
+			remove_banned_goods = g:opium
+		}
+		if = {
+			limit = { is_banning_goods = g:liquor }
+			remove_banned_goods = g:liquor
+		}
+	}
+
+	on_activate = {
+		if = { # removes opium ban authority modifier if forced to open market via diplomacy
+			limit = {
+				AND = {
+					c:CHI ?= this
+					has_modifier = opium_ban_authority
+				}
+			}
+			remove_modifier = opium_ban_authority
+		}
+	}
+
+	modifier = {
+
+		state_subvention_export_add = 0.50
+		state_subvention_import_add = 0.50
+		state_trade_advantage_mult = 0.25
+		country_leverage_resistance_mult = -0.25
+		state_capitalists_investment_pool_efficiency_mult = 0.20
+		country_minting_mult = -0.10
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+
+		if = {
+			limit = {
+				has_journal_entry = je_meiji_diplomacy
+				has_law_or_variant = law_type:law_isolationism
+			}
+			add = 1000
+		}
+	}
+
+	is_visible = {
+		is_india_tag_trigger = yes
+	}
+
+	can_enact = {
+		custom_tooltip = { text = tyrone_sc_main_unlocked_tt has_variable = tyrone_sc_main_done }
+	}
+
+	can_impose = {
+		always = no
+	}
+}
+
+law_india_national_secretariat = {
+    group = lawgroup_bureaucracy
+    parent = law_appointed_bureaucrats
+    icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
+    progressiveness = 0
+    is_visible = {
+        is_india_tag_trigger = yes
+        OR = {
+            has_law = law_type:law_india_national_secretariat
+            is_enacting_law = law_type:law_india_national_secretariat
+            has_variable = tyrone_nim_central_chosen
+        }
+    }
+    can_enact = { custom_tooltip = { text = tyrone_nim_central_chosen_tt has_variable = tyrone_nim_central_chosen } }
+    can_impose = { always = no }
+    modifier = {
+        state_incorporation_speed_mult = 2
+        state_turmoil_effects_mult = -0.20
+        country_bureaucrats_pol_str_mult = 0.50
+        country_aristocrats_pol_str_mult = 0.50
+        country_government_wages_mult = 0.20
+        country_bureaucracy_investment_cost_factor_mult = 0.25
+        state_decree_cost_mult = 1
+        country_legitimacy_base_add = -10
+    }
+    on_enact = { recalculate_pop_ig_support = yes }
+}
+law_india_federal_secretariats = {
+    group = lawgroup_bureaucracy
+    parent = law_elected_bureaucrats
+    icon = "gfx/interface/icons/law_icons/elected_bureaucrats.dds"
+    progressiveness = 50
+    is_visible = {
+        is_india_tag_trigger = yes
+        OR = {
+            has_law = law_type:law_india_federal_secretariats
+            is_enacting_law = law_type:law_india_federal_secretariats
+            has_variable = tyrone_nim_federal_chosen
+        }
+    }
+    can_enact = { custom_tooltip = { text = tyrone_nim_federal_chosen_tt has_variable = tyrone_nim_federal_chosen } }
+    can_impose = { always = no }
+    modifier = {
+        country_legitimacy_base_add = 20
+        state_radicals_from_political_movements_mult = -0.30
+        country_bureaucracy_mult = -0.20
+        state_tax_capacity_mult = -0.20
+    }
+    on_enact = { recalculate_pop_ig_support = yes }
+}
+
+law_hindu_caste_enforced = {
+	group = lawgroup_caste_hegemony
+
+	icon = "gfx/interface/icons/law_icons/social_hierarchy_enforced.dds"
+
+	progressiveness = -75
+
+	on_enact = {
+		recalculate_pop_ig_support = yes
+	}
+
+	modifier = {
+		state_bureaucracy_population_base_cost_factor_mult = -0.25
+		interest_group_ig_landowners_pol_str_mult = 0.25
+
+		country_brahmins_qualification_growth_same_class_mult = -0.50
+		country_kshatriyas_qualification_growth_same_class_mult = -0.80
+		country_vaishyas_qualification_growth_same_class_mult = -0.80
+		country_shudras_qualification_growth_same_class_mult = -0.80
+		country_dalit_qualification_growth_same_class_mult = -0.80
+
+		country_brahmins_qualification_growth_other_class_mult = -0.80
+		country_kshatriyas_qualification_growth_other_class_mult = -1
+		country_vaishyas_qualification_growth_other_class_mult = -1
+		country_shudras_qualification_growth_other_class_mult = -1
+		country_dalit_qualification_growth_other_class_mult = -1
+
+		country_brahmins_acceptance_min_add = 50
+		country_kshatriyas_acceptance_min_add = 10
+		country_vaishyas_acceptance_min_add = 10
+		country_kshatriyas_acceptance_max_add = 69
+		country_vaishyas_acceptance_max_add = 69
+		country_shudras_acceptance_max_add = 49
+		country_dalit_acceptance_max_add = 49
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+law_hindu_caste_codified = {
+	group = lawgroup_caste_hegemony
+
+	icon = "gfx/interface/icons/law_icons/social_hierarchy_codified.dds"
+
+	progressiveness = -25
+
+	on_enact = {
+		recalculate_pop_ig_support = yes
+	}
+
+	modifier = {
+		state_bureaucracy_population_base_cost_factor_mult = -0.15
+		interest_group_ig_landowners_pol_str_mult = 0.15
+
+		country_brahmins_qualification_growth_same_class_mult = -0.50
+		country_kshatriyas_qualification_growth_same_class_mult = -0.80
+		country_vaishyas_qualification_growth_same_class_mult = -0.80
+		country_shudras_qualification_growth_same_class_mult = -0.80
+		country_dalit_qualification_growth_same_class_mult = -0.80
+
+		country_brahmins_acceptance_min_add = 50
+		country_kshatriyas_acceptance_min_add = 10
+		country_vaishyas_acceptance_min_add = 10
+		country_kshatriyas_acceptance_max_add = 69
+		country_vaishyas_acceptance_max_add = 69
+		country_shudras_acceptance_max_add = 49
+		country_dalit_acceptance_max_add = 49
+
+		country_kshatriyas_qualification_growth_mult = -0.10
+		country_vaishyas_qualification_growth_mult = -0.10
+		country_shudras_qualification_growth_mult = -0.20
+		country_dalit_qualification_growth_mult = -0.20
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+law_hindu_caste_not_enforced = {
+	group = lawgroup_caste_hegemony
+
+	icon = "gfx/interface/icons/law_icons/social_hierarchy_not_enforced.dds"
+
+	progressiveness = 0
+
+	on_enact = {
+		recalculate_pop_ig_support = yes
+	}
+
+	modifier = {
+		country_kshatriyas_cultural_acceptance_mult = -0.05
+		country_vaishyas_cultural_acceptance_mult = -0.05
+
+		country_shudras_cultural_acceptance_mult = -0.10
+		country_dalit_cultural_acceptance_mult = -0.10
+
+		country_brahmins_acceptance_min_add = 50
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+}
+
+INJECT_OR_CREATE:law_india_cooperative_ownership = {
+	on_activate = {
+		custom_tooltip = {
+			text = enact_law_radical_leftist_economy_warning_desc
+		}
+		tyrone_cp_apply_amendments = yes
+	}
+}
+
+INJECT:law_subjecthood = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_ethnostate = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_national_supremacy = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_racial_segregation = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_cultural_exclusion = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_multicultural = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_india_subjecthood = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_india_national_supremacy = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_india_cultural_exclusion = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_india_multicultural = {
+	can_enact = {
+
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_india_imperial_citizenship = {
+	can_enact = {
+
+		is_india_tag_trigger = yes
+		custom_tooltip = { text = tyrone_eoi_council_law_unlocked_tt has_variable = tyrone_eoi_council_done }
+		tyrone_sc_can_change_citizenship = yes
+	}
+	can_impose = {
+
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_citizenship_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country ?= { tyrone_sc_can_change_citizenship = yes }
+	}
+}
+
+INJECT:law_technocracy = {
+	can_enact = {
+
+		NOT = { is_india_tag_trigger = yes }
+	}
+	can_impose = {
+		scope:target_country ?= { NOT = { is_india_tag_trigger = yes } }
+		can_impose_law_default = yes
+	}
+}
+
+INJECT:law_wealth_voting = {
+	can_enact = {
+
+		trigger_if = {
+			limit = {
+				c:BIC ?= ROOT
+				is_subject = yes
+				NOT = { has_law = scope:law }
+			}
+			custom_tooltip = {
+				text = BIC_not_able_to_change_distribution_of_power_tt
+				has_variable = britain_granted_dop_permission
+			}
+		}
+		NOT = { is_india_tag_trigger = yes }
+	}
+	can_impose = {
+		scope:target_country ?= { NOT = { is_india_tag_trigger = yes } }
+		can_impose_law_default = yes
+	}
+}
+
+INJECT:law_merchant_navy = {
+	on_activate = {
+
+		tyrone_sc_apply_fleet_amendment = yes
+	}
+}
+
+INJECT:law_jeune_ecole = {
+	on_activate = {
+
+		tyrone_sc_apply_fleet_amendment = yes
+	}
+}
+
+INJECT:law_professional_navy = {
+	on_activate = {
+
+		tyrone_sc_apply_fleet_amendment = yes
+	}
+}
+
+INJECT:law_diplomatic_navy = {
+	on_activate = {
+
+		tyrone_sc_apply_fleet_amendment = yes
+	}
+}
+
+INJECT:law_chartered_elected_bureaucrats = {
+	unlocking_laws = {}
+	can_enact = {
+
+		tyrone_cr_can_leave_civil_service = yes
+		country_has_voting_franchise = yes
+		OR = {
+			has_law = law_type:law_hindu_caste_not_enforced
+			has_law = law_type:law_affirmative_action
+			has_law = law_type:law_india_company_citizenship
+		}
+	}
+}
+
+law_india_revolutionary_secularism = {
+	group = lawgroup_church_and_state
+	parent = law_state_atheism
+
+	is_visible = {
+		is_india_tag_trigger = yes
+		has_variable = tyrone_cp_started
+	}
+
+	icon = "gfx/interface/icons/law_icons/state_atheism.dds"
+
+	progressiveness = 100
+
+	unlocking_technologies = {
+		empiricism
+	}
+
+	disallowing_laws = {
+		law_theocracy
+	}
+
+	can_enact = {
+		is_india_tag_trigger = yes
+		has_variable = tyrone_cp_started
+		ig:ig_devout ?= {
+			is_in_government = no
+		}
+		OR = {
+			is_power_bloc_leader = no
+			power_bloc ?= {
+				NOT = { has_identity = identity:identity_religious }
+			}
+		}
+	}
+
+	modifier = {
+		interest_group_ig_devout_pol_str_mult = -0.5
+		state_conversion_mult = 4
+		country_bureaucracy_mult = -0.15
+		country_authority_add = 200
+
+		country_acceptance_state_religion_add = 30
+		country_acceptance_shared_religious_trait_add = 0
+		country_acceptance_shared_religious_trait_group_add = -15
+		country_acceptance_no_shared_religious_trait_add = -25
+
+		country_allow_conversion_violent_hostility_bool = yes
+		country_allow_conversion_cultural_erasure_bool = yes
+		country_allow_conversion_open_prejudice_bool = yes
+		country_allow_conversion_second_rate_citizen_bool = yes
+		country_allow_conversion_full_acceptance_bool = yes
+	}
+
+	on_enact = {
+
+	}
+
+	on_activate = {
+		set_state_religion = rel:atheist
+		add_modifier = {
+			name = antireligious_policies
+			days = long_modifier_time
+		}
+		custom_tooltip = {
+			text = state_atheism_conversion_tt
+			every_scope_state = {
+				limit = {
+					is_incorporated = yes
+				}
+				convert_population = {
+					target = rel:atheist
+					value = 0.1
+				}
+			}
+		}
+		recalculate_pop_ig_support = yes
+	}
+
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				AND = {
+					modifier:country_can_impose_same_lawgroup_church_and_state_in_power_bloc_bool = yes
+					has_law = scope:law
+				}
+			}
+			can_impose_law_default = yes
+		}
+	}
+
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+	ai_impose_chance = {
+		value = 0
+
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_state_atheism
+				power_bloc ?= { has_identity = identity:identity_ideological_union }
+			}
+
+			add = base_impose_law_weight
+
+			# Atheist leaders of ideological unions want to spread the cult of reason
+			if = {
+				limit = { scope:target_country = { has_law_or_variant = law_type:law_total_separation } }
+				multiply = 0.5
+			}
+			else = {
+				multiply = 2
+			}
 		}
 
 		if = {

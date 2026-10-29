@@ -388,3 +388,76 @@ REPLACE:nihilist_germany = {
 		}
 	}
 }
+
+
+tyrone_bharatiya_commune = {
+	color = "bharatiya_commune_red"
+	possible = {
+		is_india_tag_trigger = yes
+		has_law_or_variant = law_type:law_council_republic
+	}
+}
+
+INJECT:hindu_india = {
+	color = "orange_india"
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_council_republic }
+		exists = c:BHT
+		c:BHT ?= THIS
+		country_has_state_religion = rel:hindu
+		OR = {
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_freedom_of_conscience
+		}
+	}
+}
+
+INJECT:muslim_india = {
+	color = "green_india"
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_council_republic }
+		exists = c:BHT
+		c:BHT ?= THIS
+		OR = {
+			country_has_state_religion = rel:shiite
+			country_has_state_religion = rel:sunni
+		}
+		OR = {
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_freedom_of_conscience
+		}
+	}
+}
+
+INJECT:sikh_india = {
+	color = "blue_india"
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_council_republic }
+		exists = c:BHT
+		c:BHT ?= THIS
+		country_has_state_religion = rel:sikh
+		OR = {
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_freedom_of_conscience
+		}
+	}
+}
+
+INJECT:bengal_free_state = {
+	color = "bengal_free_state_colour"
+
+	possible = {
+		NOT = { has_law_or_variant = law_type:law_council_republic }
+		c:BIC ?= this
+		has_variable = bengal_free_state
+		capital ?= {
+			is_in_geographic_region = geographic_region_bengal_old
+		}
+		any_primary_culture = {
+			cu:british = this
+		}
+	}
+}

@@ -1,0 +1,179 @@
+﻿tyrone_nim_pakistan_negotiate = {
+name = tyrone_nim_pakistan_negotiate_name
+    desc = tyrone_nim_pakistan_negotiate_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_pakistan_open NOT = { has_variable = tyrone_nim_league_negotiate_used } }
+        custom_tooltip = { text = tyrone_nim_league_states_radicals_tt NOT = { any_state = { OR = { tyrone_nim_is_pakistan_state = yes tyrone_nim_is_bengal_state = yes } owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } radical_fraction = { value >= 0.10 } } } } }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_pakistan_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_negotiate_used } }
+        custom_tooltip = { text = tyrone_nim_league_states_radicals_tt NOT = { any_state = { OR = { tyrone_nim_is_pakistan_state = yes tyrone_nim_is_bengal_state = yes } owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } radical_fraction = { value >= 0.10 } } } } }
+            custom_tooltip = { text = tyrone_nim_region_pressure_down_ten_tt tyrone_nim_shift_pressure = { VALUE = -10 } }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_modifier = { name = tyrone_nim_regional_concessions days = tyrone_nim_ten_years }" }
+            hidden_effect = { set_variable = tyrone_nim_league_negotiate_used }
+        }
+    }
+}
+
+tyrone_nim_pakistan_develop = {
+name = tyrone_nim_pakistan_develop_name
+    desc = tyrone_nim_pakistan_develop_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_pakistan_open NOT = { has_variable = tyrone_nim_league_develop_used } }
+         }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_pakistan_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_develop_used } }
+         }
+            custom_tooltip = { text = tyrone_nim_region_pressure_down_five_tt tyrone_nim_shift_pressure = { VALUE = -5 } }
+                add_modifier = { name = tyrone_nim_pakistan_development_cost multiplier = tyrone_nim_regional_development_cost days = normal_modifier_time }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_modifier = { name = tyrone_nim_regional_development days = normal_modifier_time }" }
+            hidden_effect = { set_variable = tyrone_nim_league_develop_used }
+        }
+    }
+}
+
+tyrone_nim_pakistan_repress = {
+name = tyrone_nim_pakistan_repress_name
+    desc = tyrone_nim_pakistan_repress_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_pakistan_open NOT = { has_variable = tyrone_nim_league_repress_used } }
+         }
+    ai_chance = { value = 5 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_pakistan_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_repress_used } }
+         }
+            custom_tooltip = { text = tyrone_nim_region_repression_tt tyrone_nim_shift_pressure = { VALUE = 15 } }
+                hidden_effect = {
+                    set_variable = { name = tyrone_nim_league_repression_timer days = tyrone_nim_two_years }
+                    trigger_event = { id = tyrone_nim_regional_timer.70 days = tyrone_nim_two_years }
+                }
+                scope:nim_india = { random_political_movement = { limit = { is_political_movement_type = movement_muslim_nationalist } add_modifier = { name = tyrone_nim_movement_repression days = tyrone_nim_two_years } } }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_radicals_in_state = { value = 0.05 }" }
+            hidden_effect = { set_variable = tyrone_nim_league_repress_used }
+        }
+    }
+}
+
+tyrone_nim_pakistan_autonomy = {
+name = tyrone_nim_pakistan_autonomy_name
+    desc = tyrone_nim_pakistan_autonomy_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        
+        custom_tooltip = { text = tyrone_nim_pakistan_autonomy_tt has_variable = tyrone_nim_pakistan_open NOT = { has_variable = tyrone_nim_pakistan_released } var:tyrone_nim_league_activity > 0.75 var:tyrone_nim_league_activity <= 0.90 }
+         }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_pakistan_open
+        
+        custom_tooltip = { text = tyrone_nim_pakistan_autonomy_tt var:tyrone_nim_league_activity > 0.75 var:tyrone_nim_league_activity <= 0.90 }
+        NOT = { has_variable = tyrone_nim_pakistan_released } }
+            custom_tooltip = {
+                text = tyrone_nim_release_protectorates_tt
+                tyrone_nim_league_autonomy = yes
+            }
+            
+        }
+    }
+}
+
+tyrone_nim_bengal_negotiate = {
+name = tyrone_nim_bengal_negotiate_name
+    desc = tyrone_nim_bengal_negotiate_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_bengal_open NOT = { has_variable = tyrone_nim_league_negotiate_used } }
+        custom_tooltip = { text = tyrone_nim_league_states_radicals_tt NOT = { any_state = { OR = { tyrone_nim_is_pakistan_state = yes tyrone_nim_is_bengal_state = yes } owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } radical_fraction = { value >= 0.10 } } } } }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_bengal_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_negotiate_used } }
+        custom_tooltip = { text = tyrone_nim_league_states_radicals_tt NOT = { any_state = { OR = { tyrone_nim_is_pakistan_state = yes tyrone_nim_is_bengal_state = yes } owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } radical_fraction = { value >= 0.10 } } } } }
+            custom_tooltip = { text = tyrone_nim_region_pressure_down_ten_tt tyrone_nim_shift_pressure = { VALUE = -10 } }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_modifier = { name = tyrone_nim_regional_concessions days = tyrone_nim_ten_years }" }
+            hidden_effect = { set_variable = tyrone_nim_league_negotiate_used }
+        }
+    }
+}
+
+tyrone_nim_bengal_develop = {
+name = tyrone_nim_bengal_develop_name
+    desc = tyrone_nim_bengal_develop_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_bengal_open NOT = { has_variable = tyrone_nim_league_develop_used } }
+         }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_bengal_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_develop_used } }
+         }
+            custom_tooltip = { text = tyrone_nim_region_pressure_down_five_tt tyrone_nim_shift_pressure = { VALUE = -5 } }
+                add_modifier = { name = tyrone_nim_pakistan_development_cost multiplier = tyrone_nim_regional_development_cost days = normal_modifier_time }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_modifier = { name = tyrone_nim_regional_development days = normal_modifier_time }" }
+            hidden_effect = { set_variable = tyrone_nim_league_develop_used }
+        }
+    }
+}
+
+tyrone_nim_bengal_repress = {
+name = tyrone_nim_bengal_repress_name
+    desc = tyrone_nim_bengal_repress_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        custom_tooltip = { text = tyrone_nim_region_once_tt has_variable = tyrone_nim_bengal_open NOT = { has_variable = tyrone_nim_league_repress_used } }
+         }
+    ai_chance = { value = 5 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_bengal_open
+        custom_tooltip = { text = tyrone_nim_region_once_tt NOT = { has_variable = tyrone_nim_league_repress_used } }
+         }
+            custom_tooltip = { text = tyrone_nim_region_repression_tt tyrone_nim_shift_pressure = { VALUE = 15 } }
+                hidden_effect = {
+                    set_variable = { name = tyrone_nim_league_repression_timer days = tyrone_nim_two_years }
+                    trigger_event = { id = tyrone_nim_regional_timer.70 days = tyrone_nim_two_years }
+                }
+                scope:nim_india = { random_political_movement = { limit = { is_political_movement_type = movement_muslim_nationalist } add_modifier = { name = tyrone_nim_movement_repression days = tyrone_nim_two_years } } }
+                tyrone_nim_region_states = { REGION = league EFFECT = "add_radicals_in_state = { value = 0.05 }" }
+            hidden_effect = { set_variable = tyrone_nim_league_repress_used }
+        }
+    }
+}
+
+tyrone_nim_bengal_autonomy = {
+name = tyrone_nim_bengal_autonomy_name
+    desc = tyrone_nim_bengal_autonomy_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = { 
+        
+        custom_tooltip = { text = tyrone_nim_bengal_autonomy_tt has_variable = tyrone_nim_bengal_open NOT = { has_variable = tyrone_nim_bengal_released } var:tyrone_nim_league_activity > 0.75 var:tyrone_nim_league_activity <= 0.90 }
+         }
+    ai_chance = { value = 20 }
+    effect = {
+        if = {
+            limit = { has_variable = tyrone_nim_bengal_open
+        
+        custom_tooltip = { text = tyrone_nim_bengal_autonomy_tt var:tyrone_nim_league_activity > 0.75 var:tyrone_nim_league_activity <= 0.90 }
+        NOT = { has_variable = tyrone_nim_bengal_released } }
+            custom_tooltip = {
+                text = tyrone_nim_release_protectorates_tt
+                tyrone_nim_league_autonomy = yes
+            }
+            
+        }
+    }
+}

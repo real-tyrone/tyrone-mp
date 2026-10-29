@@ -1,0 +1,29 @@
+﻿# Country scope: India. Restore a missing entry without replaying its opening event.
+tyrone_ch_start = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOT = { has_variable = tyrone_ch_done }
+			NOT = { has_journal_entry = je_tyrone_cp_home_rule }
+		}
+		add_journal_entry = { type = je_tyrone_cp_home_rule }
+	}
+}
+
+# Country scope: India. Recognitions already obtained are permanent.
+tyrone_ch_complete = {
+	custom_tooltip = {
+		text = tyrone_ch_remaining_cultures_tt
+		every_scope_culture = {
+			limit = { has_discrimination_trait_group = heritage_group_south_asian }
+			ROOT = { add_primary_culture = prev }
+		}
+	}
+	hidden_effect = {
+		set_variable = tyrone_ch_done
+		if = {
+			limit = { has_variable = tyrone_ch_recognition_cooldown }
+			remove_variable = tyrone_ch_recognition_cooldown
+		}
+	}
+}

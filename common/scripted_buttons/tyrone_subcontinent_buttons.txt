@@ -1,4 +1,4 @@
-# Deliberate replication of Victorian Century's post-Punjab annexation action.
+﻿# Deliberate replication of Victorian Century's post-Punjab annexation action.
 tyrone_subcontinent_punjab_annexation = {
 	name = tyrone_subcontinent_punjab_annexation
 	desc = tyrone_subcontinent_punjab_annexation_desc
@@ -47,6 +47,30 @@ tyrone_subcontinent_punjab_annexation = {
 				annex = c:BHW
 			}
 			}
+		}
+	}
+}
+
+# Country scope: India launches the play and bears its mobilization costs.
+tyrone_subcontinent_attack_khalsa = {
+	name = tyrone_subcontinent_attack_khalsa
+	desc = tyrone_subcontinent_attack_khalsa_desc
+	visible = { always = yes }
+	possible = {
+		exists = scope:tyrone_subcontinent_india
+		scope:tyrone_subcontinent_india ?= {
+			exists = c:PAN
+			is_at_war = no
+			NOT = { has_truce_with = c:PAN }
+			NOT = { is_at_war_with = c:PAN }
+		}
+		c:PAN ?= { is_subject = no }
+	}
+	ai_chance = { value = 10 }
+	effect = {
+		scope:tyrone_subcontinent_india ?= {
+			create_diplomatic_play = { target_country = c:PAN type = dp_annex_war }
+			add_modifier = { name = tyrone_subcontinent_punjab_campaign days = very_short_modifier_time }
 		}
 	}
 }

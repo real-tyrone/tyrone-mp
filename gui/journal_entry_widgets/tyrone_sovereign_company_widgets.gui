@@ -1,0 +1,228 @@
+# Imperial reforms, shown only by the Empire of India parent JE.
+flowcontainer = {
+	name = "tyrone_sc_subentries_widget"
+	parentanchor = hcenter
+	direction = vertical
+	spacing = 5
+
+	widget = {
+		size = { 488 26 }
+		textbox = {
+			size = { 164 26 }
+			text = "tyrone_sc_heading"
+			align = left|vcenter|nobaseline
+			using = regular_font
+			fontsize = 15
+			fontcolor = { 0.78 0.71 0.54 1 }
+			alwaystransparent = yes
+		}
+		icon = {
+			position = { 174 13 }
+			size = { 314 2 }
+			texture = "gfx/interface/dividers/divider_clean.dds"
+			spriteType = Corneredtiled
+			spriteborder = { 4 0 }
+			texture_density = 2
+			alpha = 0.35
+			alwaystransparent = yes
+		}
+	}
+
+	flowcontainer = {
+		direction = vertical
+		spacing = 7
+		datamodel = "[AccessPlayer.AccessActiveJournalEntries]"
+		item = {
+			button = {
+				size = { 488 54 }
+				using = default_button
+				texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
+				# Keep the same physical frame pixels at half the native density:
+				# this enlarges the rounded corners rather than stretching them.
+				texture_density = 1
+				framesize = { 38 38 }
+				spriteborder = { 14 14 }
+				blockoverride "bevel_texture" {
+					texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
+				}
+				blockoverride "bevel_margin" {
+					margin = { 6 6 }
+				}
+				visible = "[Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_settlement')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_civil')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_fleet')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_capitalists')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_culture')), EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_sc_home_rule')))))))]"
+				onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+
+				icon = {
+					name = "tyrone_promise_card_brass_edge"
+					size = { 100% 100% }
+					texture = "gfx/interface/buttons/default_button_frame_map_interaction.dds"
+					spriteType = Corneredstretched
+					spriteborder = { 24 24 }
+					texture_density = 1
+					color = { 0.72 0.72 0.66 1 }
+					alpha = 0.7
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 12 9 }
+					size = { 36 36 }
+					using = circle_bg_simple_dark
+					alpha = 0.65
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 17 14 }
+					size = { 26 26 }
+					texture = "[JournalEntry.GetIcon]"
+					alwaystransparent = yes
+				}
+				textbox = {
+					position = { 60 5 }
+					size = { 394 44 }
+					text = "[JournalEntry.GetName]"
+					align = left|vcenter|nobaseline
+					using = regular_font
+					fontsize = 20
+					fontcolor = { 0.93 0.90 0.82 1 }
+					elide = right
+					alwaystransparent = yes
+				}
+				icon = {
+					position = { 465 18 }
+					size = { 8 18 }
+					texture = "gfx/interface/politics_view/summary_arrow_right.dds"
+					alpha = 0.6
+					alwaystransparent = yes
+				}
+			}
+		}
+	}
+}
+
+
+flowcontainer = {
+	name = "tyrone_sc_charters_widget"
+	parentanchor = hcenter
+	direction = vertical
+	spacing = 8
+	textbox = {
+		size = { 488 28 }
+		text = "tyrone_sc_charters_heading"
+		using = regular_font
+		fontsize = 17
+		fontcolor = { 0.78 0.71 0.54 1 }
+		align = left|vcenter|nobaseline
+	}
+	dynamicgridbox = {
+		datamodel = "[JournalEntry.GetScriptedButtons]"
+		datamodel_wrap = 2
+		flipdirection = yes
+		parentanchor = hcenter
+		item = {
+			widget = {
+				size = { 244 96 }
+				button = {
+					size = { 236 88 }
+					parentanchor = center
+					using = default_button
+					texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
+					texture_density = 1
+					framesize = { 38 38 }
+					spriteborder = { 14 14 }
+					blockoverride "bevel_texture" {
+						texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
+					}
+					blockoverride "bevel_margin" { margin = { 6 6 } }
+					tooltip = "SCRIPTED_ACTION_TOOLTIP"
+					enabled = "[IsValid(ScriptedButton.ExecuteEffect)]"
+					onclick = "[Execute(ScriptedButton.ExecuteEffect)]"
+					visible = "[ScriptedButton.IsVisible]"
+					icon = {
+						size = { 100% 100% }
+						texture = "gfx/interface/buttons/default_button_frame_map_interaction.dds"
+						spriteType = Corneredstretched
+						spriteborder = { 24 24 }
+						texture_density = 1
+						color = { 0.72 0.72 0.66 1 }
+						alpha = 0.65
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 9 20 }
+						size = { 48 48 }
+						using = circle_bg_simple_dark
+						alpha = 0.5
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/india_tata.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_tata_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_bengal_coal_company.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_coal_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_bombay_dyeing.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_dyeing_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/india_great_indian_peninsula_railway.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_railway_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_assam_company.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_assam_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_bombay_burmah_trading.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_burmah_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_wadia_shipbuilders.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_wadia_name'))]"
+						alwaystransparent = yes
+					}
+					icon = {
+						position = { 13 24 }
+						size = { 40 40 }
+						texture = "gfx/interface/icons/company_icons/historical_company_icons/ip2_calcutta_electric.dds"
+						visible = "[EqualTo_string(ScriptedButton.GetName, Localize('tyrone_sc_found_calcutta_name'))]"
+						alwaystransparent = yes
+					}
+					textbox = {
+						position = { 67 9 }
+						size = { 156 70 }
+						text = "[ScriptedButton.GetName]"
+						multiline = yes
+						max_width = 156
+						using = regular_font
+						fontsize = 16
+						fontcolor = { 0.93 0.90 0.82 1 }
+						align = left|vcenter|nobaseline
+						alwaystransparent = yes
+					}
+				}
+			}
+		}
+	}
+}

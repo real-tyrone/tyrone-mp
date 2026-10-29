@@ -1,0 +1,52 @@
+﻿tyrone_sc_is_actor = {
+	OR = {
+		scope:csr_india ?= this
+		scope:csr_india.overlord ?= this
+		global_var:tyrone_sc_india ?= this
+		global_var:tyrone_sc_india ?= { overlord ?= root }
+	}
+}
+tyrone_sc_button_actor = {
+	OR = {
+		scope:csr_india ?= this
+		AND = {
+			scope:csr_india ?= { is_player = no }
+			scope:csr_india.overlord ?= this
+		}
+	}
+}
+tyrone_sc_can_change_citizenship = {
+	custom_tooltip = {
+		text = tyrone_sc_citizenship_binding_tt
+		NOT = { has_law = law_type:law_india_company_citizenship }
+	}
+}
+tyrone_sc_can_found = {
+	hidden_trigger = { tyrone_sc_button_actor = yes }
+	scope:csr_india ?= {
+		num_companies < max_num_companies
+		custom_tooltip = {
+			text = tyrone_sc_company_slot_tt
+			NOT = { any_company = { count >= 4 } }
+			NOT = {
+				NOT = { has_variable = tyrone_sc_settlement_done }
+				NOT = { has_company = company_type:company_east_india_company }
+				any_company = { count >= 3 }
+			}
+		}
+		NOT = { has_company = company_type:$COMPANY$ }
+		any_scope_state = {
+			state_region = s:$STATE$
+			any_scope_building = {
+				$BUILDINGS$
+				level >= 10
+			}
+		}
+	}
+}
+tyrone_sc_election_candidate = {
+	OR = {
+		NOT = { exists = scope:csr_india.owning_company }
+		NOT = { scope:csr_india.owning_company ?= this }
+	}
+}
