@@ -1,4 +1,4 @@
-REPLACE:je_consolidate_colonial_rule = {
+﻿REPLACE:je_consolidate_colonial_rule = {
 	icon = "gfx/interface/icons/event_icons/tyrone_unified_subcontinent.png"
 	group = je_group_british_india_global
 	should_be_involved = { tyrone_subcontinent_participant = yes }
@@ -172,6 +172,15 @@ je_tyrone_conquer_burma = {
 		c:RUS ?= { save_scope_as = RUS_scope }
 	}
 
+	immediate_all_involved = {
+		if = { limit = { is_india_tag_trigger = yes } add_modifier = { name = tyrone_burma_colonial_growth } }
+	}
+	on_become_involved_after_activation = {
+		if = { limit = { is_india_tag_trigger = yes } add_modifier = { name = tyrone_burma_colonial_growth } }
+	}
+	on_no_longer_involved = { if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth } }
+	on_invalid_all_involved = { if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth } }
+
 	complete = {
 		tyrone_subcontinent_burma_controlled = yes
 		hidden_trigger = {
@@ -179,9 +188,22 @@ je_tyrone_conquer_burma = {
 		}
 	}
 	on_complete = {
+
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+
 		change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
 	}
 	on_complete_all_involved = {
+		if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth }
 		trigger_event = { id = tyrone_subcontinent.1 days = 0 popup = yes }
 	}
 	invalid = { NOT = { has_global_variable = tyrone_subcontinent_active_var } }
@@ -222,6 +244,17 @@ je_tyrone_conquer_sindh = {
 		}
 	}
 	on_complete = {
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+
 		change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
 	}
 	on_complete_all_involved = {
@@ -236,6 +269,7 @@ je_tyrone_conquer_sindh = {
 je_tyrone_conquer_punjab = {
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 	group = je_group_british_india_global
+	scripted_button = tyrone_subcontinent_attack_khalsa
 	should_be_involved = { tyrone_subcontinent_participant = yes }
 	should_show_when_not_involved = { always = no }
 
@@ -265,6 +299,17 @@ je_tyrone_conquer_punjab = {
 		}
 	}
 	on_complete = {
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+
 		change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
 		add_contextless_journal_entry = je_tyrone_conquer_western_frontier
 	}
@@ -309,6 +354,17 @@ je_tyrone_conquer_western_frontier = {
 		}
 	}
 	on_complete = {
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+
 		change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
 		set_global_variable = tyrone_subcontinent_afghanistan_active_var
 		add_contextless_journal_entry = je_tyrone_conquer_afghanistan
@@ -344,6 +400,17 @@ je_tyrone_conquer_himalayas = {
 		hidden_trigger = { has_global_variable = tyrone_subcontinent_active_var }
 	}
 	on_complete = {
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+
 		change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
 	}
 	invalid = { NOT = { has_global_variable = tyrone_subcontinent_active_var } }
@@ -384,7 +451,18 @@ je_tyrone_conquer_afghanistan = {
 			has_global_variable = tyrone_subcontinent_afghanistan_active_var
 		}
 	}
-	on_complete = { remove_global_variable = tyrone_subcontinent_afghanistan_active_var }
+	on_complete = {
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+				set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+			}
+			set_global_variable = {
+				name = tyrone_subcontinent_presidency_bonus
+				value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+			}
+		}
+ remove_global_variable = tyrone_subcontinent_afghanistan_active_var }
 	on_complete_all_involved = {
 		trigger_event = { id = tyrone_subcontinent.6 days = 0 popup = yes }
 	}

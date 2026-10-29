@@ -1,0 +1,212 @@
+﻿namespace = bic_breakup
+
+bic_breakup.1 = {
+	type = country_event
+	placement = root
+
+	title = bic_breakup.1.t
+	desc = bic_breakup.1.d
+	flavor = bic_breakup.1.f
+
+	event_image = {
+		video = "asia_sepoy_mutiny"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		c:BIC ?= this
+		is_subject = no
+		is_at_war = no
+		NOT = {
+			has_variable = bic_collapse_var
+		}
+	}
+
+	immediate = {
+		random_primary_culture = {
+			save_scope_as = british_culture
+		}
+		cu:scottish = { # Making sure to cover for that one Scottish guy
+			save_scope_as = scottish_culture
+		}
+		set_variable = bic_collapse_var
+	}
+
+
+	option = {
+		name = bic_breakup.1.b
+
+		if = {
+			limit = { has_modifier = modifier_india_company_rule }
+			remove_modifier = modifier_india_company_rule
+		}
+		if = {
+			limit = { has_modifier = modifier_india_company_rule_upgraded }
+			remove_modifier = modifier_india_company_rule_upgraded
+		}
+
+		every_active_law = {
+			every_scope_amendment = {
+				limit = {
+					OR = {
+						amendment_type:amendment_colonial_trading_privileges = this.type
+						amendment_type:amendment_cotton_export_guarantees = this.type
+						amendment_type:amendment_british_manufacturing_monopoly = this.type
+						amendment_type:amendment_royal_navy_supremacy = this.type
+					}
+				}
+				remove_amendment = yes
+			}
+		}
+		highlighted_option = yes
+		trigger = {
+			has_technology_researched = pan-nationalism
+		}
+		ai_chance = {
+			factor = 1 # this will be quite rare for the AI
+		}
+		change_tag = BHT
+		activate_law = law_type:law_presidential_republic
+		hidden_effect = {
+			every_primary_culture = {
+				save_temporary_scope_as = primary_culture_to_remove
+				PREV ?= { # scope:target
+					remove_primary_culture = scope:primary_culture_to_remove
+					every_scope_character = {
+						limit = {
+							scope:primary_culture_to_remove ?= culture 
+						}
+						retire_character = yes
+					}
+				}
+			}
+			add_primary_culture = cu:bengali
+			add_primary_culture = cu:assamese
+			add_primary_culture = cu:avadhi
+			add_primary_culture = cu:bihari
+			add_primary_culture = cu:gujarati
+			add_primary_culture = cu:kannada
+			add_primary_culture = cu:malayalam
+			add_primary_culture = cu:marathi
+			add_primary_culture = cu:oriya
+			add_primary_culture = cu:panjabi
+			add_primary_culture = cu:rajput
+			add_primary_culture = cu:sindi
+			add_primary_culture = cu:tamil
+			add_primary_culture = cu:telegu
+			if = {
+				limit = {
+					NOT = {
+						has_law_or_variant = law_type:law_state_atheism
+					}
+				}
+				if = {
+					limit = {
+						religion_percent_country = {
+							target = rel:hindu
+							value >= 0.5
+						}
+					}
+					set_state_religion = rel:hindu
+				}
+				else_if = {
+					limit = {
+						religion_percent_country = {
+							target = rel:sunni
+							value >= 0.5
+						}
+					}
+					set_state_religion = rel:sunni
+				}
+				else = {
+					set_state_religion = rel:hindu
+				}
+			}
+			india_independence_ig_effects = yes
+			if = {
+				limit = {
+					has_modifier = modifier_india_crown_rule
+				}
+				remove_modifier = modifier_india_crown_rule
+			}
+			if = {
+				limit = {
+					has_modifier = modifier_indian_imperial_police
+				}
+				remove_modifier = modifier_indian_imperial_police
+			}
+			recalculate_pop_ig_support = yes
+		}
+	}
+	option = {
+		name = bic_breakup.1.c
+
+		if = {
+			limit = { has_modifier = modifier_india_company_rule }
+			remove_modifier = modifier_india_company_rule
+		}
+		if = {
+			limit = { has_modifier = modifier_india_company_rule_upgraded }
+			remove_modifier = modifier_india_company_rule_upgraded
+		}
+
+		every_active_law = {
+			every_scope_amendment = {
+				limit = {
+					OR = {
+						amendment_type:amendment_colonial_trading_privileges = this.type
+						amendment_type:amendment_cotton_export_guarantees = this.type
+						amendment_type:amendment_british_manufacturing_monopoly = this.type
+						amendment_type:amendment_royal_navy_supremacy = this.type
+					}
+				}
+				remove_amendment = yes
+			}
+		}
+		default_option = yes
+		ai_chance = { base = 0 }
+		add_radicals = { value = 0.05 }
+		add_modifier = {
+			name = tyrone_seized_colonial_assets
+			days = tyrone_seized_colonial_assets_time
+			is_decaying = yes
+		}
+	}
+
+	option = {
+		name = tyrone_bic_breakup_hindu_option
+
+		if = {
+			limit = { has_modifier = modifier_india_company_rule }
+			remove_modifier = modifier_india_company_rule
+		}
+		if = {
+			limit = { has_modifier = modifier_india_company_rule_upgraded }
+			remove_modifier = modifier_india_company_rule_upgraded
+		}
+
+		every_active_law = {
+			every_scope_amendment = {
+				limit = {
+					OR = {
+						amendment_type:amendment_colonial_trading_privileges = this.type
+						amendment_type:amendment_cotton_export_guarantees = this.type
+						amendment_type:amendment_british_manufacturing_monopoly = this.type
+						amendment_type:amendment_royal_navy_supremacy = this.type
+					}
+				}
+				remove_amendment = yes
+			}
+		}
+		ai_chance = { base = 8 }
+		change_tag = BHT
+		activate_law = law_type:law_india_hindu_favored
+		add_loyalists = { religion = rel:hindu value = 0.10 }
+		add_radicals = { religion = rel:sunni value = 0.10 }
+	}
+}

@@ -1,0 +1,341 @@
+﻿tyrone_nim_initialize_pakistan = {
+if = {
+    limit = { tyrone_nim_pakistan_territory_exists = yes }
+    set_variable = tyrone_nim_pakistan_open
+    add_contextless_journal_entry = je_tyrone_nim_pakistan
+}
+else = { set_variable = tyrone_nim_pakistan_done }
+}
+
+tyrone_nim_release_pakistan = {
+save_scope_as = nim_india
+    if = {
+        limit = { NOT = { exists = c:PAK } tyrone_nim_pakistan_territory_exists = yes }
+        random_state = {
+            limit = { tyrone_nim_is_pakistan_state = yes owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+            save_scope_as = nim_pakistan_seed
+        }
+        if = {
+            limit = { exists = scope:nim_pakistan_seed }
+            create_country = {
+                tag = PAK
+                origin = scope:nim_india
+                state = scope:nim_pakistan_seed
+                on_created = {
+                    set_country_type = recognized
+                    set_state_religion = rel:sunni
+                    
+                }
+            }
+        }
+    }
+    if = {
+        limit = { exists = c:PAK }
+        # Transfer every eligible state part, including those held by Indian subjects.
+        every_state = {
+            limit = {
+                tyrone_nim_is_pakistan_state = yes
+                owner = {
+                    OR = {
+                        this = scope:nim_india
+                        is_subject_of = scope:nim_india
+                    }
+                }
+                NOT = { owner = c:PAK }
+            }
+            set_state_owner = c:PAK
+        }
+        remove_variable = tyrone_nim_pakistan_movement_host
+        set_variable = { name = tyrone_nim_pakistan_host value = c:PAK }
+        set_variable = tyrone_nim_pakistan_released
+        if = {
+            limit = { always = $PROTECTORATE$ }
+            if = { limit = { c:PAK = { is_subject = no } } create_diplomatic_pact = { country = c:PAK type = protectorate } }
+            else = { c:PAK = { if = { limit = { is_subject_of = scope:nim_india } change_subject_type = subject_type_protectorate } } }
+            tyrone_nim_refresh_regional_movement = yes
+        }
+        else = {
+            c:PAK = { if = { limit = { is_subject_of = scope:nim_india } make_independent = yes } }
+        }
+    }
+}
+
+tyrone_nim_monthly_pakistan = {
+tyrone_nim_league_monthly = yes
+}
+
+tyrone_nim_initialize_bengal = {
+if = {
+    limit = { tyrone_nim_bengal_territory_exists = yes }
+    set_variable = tyrone_nim_bengal_open
+    add_contextless_journal_entry = je_tyrone_nim_bengal
+}
+else = { set_variable = tyrone_nim_bengal_done }
+}
+
+tyrone_nim_release_bengal = {
+save_scope_as = nim_india
+    if = {
+        limit = { NOT = { exists = c:BGL } tyrone_nim_bengal_territory_exists = yes }
+        random_state = {
+            limit = { tyrone_nim_is_bengal_state = yes owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+            save_scope_as = nim_bengal_seed
+        }
+        if = {
+            limit = { exists = scope:nim_bengal_seed }
+            create_country = {
+                tag = BGL
+                origin = scope:nim_india
+                state = scope:nim_bengal_seed
+                on_created = {
+                    set_country_type = recognized
+                    set_state_religion = rel:sunni
+                    set_variable = tyrone_nim_bangladesh
+                }
+            }
+        }
+    }
+    if = {
+        limit = { exists = c:BGL }
+        # Transfer every eligible state part, including those held by Indian subjects.
+        every_state = {
+            limit = {
+                tyrone_nim_is_bengal_state = yes
+                owner = {
+                    OR = {
+                        this = scope:nim_india
+                        is_subject_of = scope:nim_india
+                    }
+                }
+                NOT = { owner = c:BGL }
+            }
+            set_state_owner = c:BGL
+        }
+        remove_variable = tyrone_nim_bengal_movement_host
+        set_variable = { name = tyrone_nim_bengal_host value = c:BGL }
+        set_variable = tyrone_nim_bengal_released
+        if = {
+            limit = { always = $PROTECTORATE$ }
+            if = { limit = { c:BGL = { is_subject = no } } create_diplomatic_pact = { country = c:BGL type = protectorate } }
+            else = { c:BGL = { if = { limit = { is_subject_of = scope:nim_india } change_subject_type = subject_type_protectorate } } }
+            tyrone_nim_refresh_regional_movement = yes
+        }
+        else = {
+            c:BGL = { if = { limit = { is_subject_of = scope:nim_india } make_independent = yes } }
+        }
+    }
+}
+
+tyrone_nim_monthly_bengal = {
+if = { limit = { NOT = { has_variable = tyrone_nim_pakistan_open } } tyrone_nim_league_monthly = yes }
+}
+
+tyrone_nim_region_states = {
+    save_scope_as = nim_india
+    tyrone_nim_$REGION$_states = { EFFECT = $EFFECT$ }
+}
+
+tyrone_nim_pakistan_states = {
+s:STATE_PUNJAB = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+s:STATE_SINDH = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+s:STATE_KASHMIR = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+s:STATE_QUETTA = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+s:STATE_BALUCHISTAN = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+s:STATE_PASHTUNISTAN = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+}
+
+tyrone_nim_bengal_states = {
+s:STATE_EAST_BENGAL = {
+    every_scope_state = {
+        limit = { owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } } }
+        $EFFECT$
+    }
+}
+}
+
+
+tyrone_nim_initialize_regions = {
+tyrone_nim_league_initialize = yes
+tyrone_nim_initialize_pakistan = yes
+tyrone_nim_initialize_bengal = yes
+}
+
+
+tyrone_nim_shift_pressure = {
+    save_scope_as = nim_india
+    if = {
+        limit = { NOT = { has_variable = tyrone_nim_league_pressure } }
+        set_variable = { name = tyrone_nim_league_pressure value = 10 }
+    }
+    change_variable = { name = tyrone_nim_league_pressure add = $VALUE$ }
+    clamp_variable = { name = tyrone_nim_league_pressure min = 0 max = 50 }
+    tyrone_nim_sync_league_bars = yes
+    tyrone_nim_refresh_regional_movement = yes
+}
+
+
+tyrone_nim_refresh_regional_movement = {
+save_scope_as = nim_india
+if = {
+    limit = { NOT = { any_political_movement = { is_political_movement_type = movement_muslim_nationalist } } }
+    set_variable = { name = tyrone_nim_seed_activity value = 0.50 }
+    create_political_movement = { type = movement_muslim_nationalist }
+    random_political_movement = {
+        limit = { is_political_movement_type = movement_muslim_nationalist }
+        add_modifier = { name = tyrone_nim_movement_seed multiplier = tyrone_nim_movement_seed_delta }
+    }
+}
+every_political_movement = {
+    limit = { is_political_movement_type = movement_muslim_nationalist }
+    if = { limit = { has_modifier = tyrone_nim_pressure_activism } remove_modifier = tyrone_nim_pressure_activism }
+    add_modifier = { name = tyrone_nim_pressure_activism multiplier = scope:nim_india.var:tyrone_nim_league_pressure }
+    save_temporary_scope_value_as = { name = nim_league_activity value = political_movement_radicalism }
+    scope:nim_india = {
+        set_variable = { name = tyrone_nim_league_activity value = scope:nim_league_activity }
+    }
+}
+}
+
+
+tyrone_nim_finish_regional_crisis = {
+remove_variable = tyrone_nim_$REGION$_open
+remove_variable = tyrone_nim_$REGION$_movement_host
+if = {
+    limit = { NOT = { has_variable = tyrone_nim_pakistan_open } NOT = { has_variable = tyrone_nim_bengal_open } }
+    remove_variable = tyrone_nim_league_open
+    every_political_movement = {
+        limit = { is_political_movement_type = movement_muslim_nationalist has_modifier = tyrone_nim_pressure_activism }
+        remove_modifier = tyrone_nim_pressure_activism
+    }
+}
+}
+
+
+# India country scope. Existing League activism is not reset.
+tyrone_nim_league_initialize = {
+    save_scope_as = nim_india
+    set_variable = tyrone_nim_league_open
+    if = {
+        limit = { NOT = { has_variable = tyrone_nim_league_pressure } }
+        set_variable = { name = tyrone_nim_league_pressure value = 10 }
+        set_variable = { name = tyrone_nim_league_stable_months value = 0 }
+        if = {
+            limit = { has_variable = tyrone_nim_pakistan_pressure var:tyrone_nim_pakistan_pressure > var:tyrone_nim_league_pressure }
+            set_variable = { name = tyrone_nim_league_pressure value = var:tyrone_nim_pakistan_pressure }
+        }
+        if = {
+            limit = { has_variable = tyrone_nim_bengal_pressure var:tyrone_nim_bengal_pressure > var:tyrone_nim_league_pressure }
+            set_variable = { name = tyrone_nim_league_pressure value = var:tyrone_nim_bengal_pressure }
+        }
+    }
+    if = {
+        limit = { OR = { has_variable = tyrone_nim_pakistan_negotiate_used has_variable = tyrone_nim_bengal_negotiate_used } }
+        set_variable = tyrone_nim_league_negotiate_used
+    }
+    if = {
+        limit = { OR = { has_variable = tyrone_nim_pakistan_develop_used has_variable = tyrone_nim_bengal_develop_used } }
+        set_variable = tyrone_nim_league_develop_used
+    }
+    if = {
+        limit = { OR = { has_variable = tyrone_nim_pakistan_repress_used has_variable = tyrone_nim_bengal_repress_used } }
+        set_variable = tyrone_nim_league_repress_used
+    }
+    tyrone_nim_refresh_regional_movement = yes
+    tyrone_nim_sync_league_bars = yes
+}
+
+tyrone_nim_resolve_league = {
+    set_variable = tyrone_nim_pakistan_done
+    set_variable = tyrone_nim_bengal_done
+    tyrone_nim_finish_regional_crisis = { REGION = pakistan }
+    tyrone_nim_finish_regional_crisis = { REGION = bengal }
+}
+
+tyrone_nim_league_autonomy = {
+    tyrone_nim_release_pakistan = { PROTECTORATE = yes }
+    tyrone_nim_release_bengal = { PROTECTORATE = yes }
+    tyrone_nim_resolve_league = yes
+}
+
+tyrone_nim_league_monthly = {
+    if = {
+        limit = { OR = { has_variable = tyrone_nim_pakistan_open has_variable = tyrone_nim_bengal_open } }
+        tyrone_nim_league_initialize = yes
+        if = {
+            limit = { var:tyrone_nim_league_activity > 0.90 }
+            if = {
+                limit = { tyrone_nim_pakistan_territory_exists = yes }
+                tyrone_nim_release_pakistan = { PROTECTORATE = no }
+                trigger_event = { id = tyrone_nim.70 popup = yes }
+            }
+            if = {
+                limit = { tyrone_nim_bengal_territory_exists = yes }
+                tyrone_nim_release_bengal = { PROTECTORATE = no }
+                trigger_event = { id = tyrone_nim.71 popup = yes }
+            }
+            tyrone_nim_resolve_league = yes
+        }
+        else = {
+            if = {
+                limit = { var:tyrone_nim_league_activity < 0.25 }
+                change_variable = { name = tyrone_nim_league_stable_months add = 1 }
+            }
+            else = { set_variable = { name = tyrone_nim_league_stable_months value = 0 } }
+            if = {
+                limit = { var:tyrone_nim_league_stable_months >= 24 }
+                tyrone_nim_resolve_league = yes
+            }
+            else = { trigger_event = { on_action = tyrone_nim_league_monthly_events } }
+        }
+    }
+}
+
+tyrone_nim_league_states = {
+    tyrone_nim_pakistan_states = { EFFECT = $EFFECT$ }
+    tyrone_nim_bengal_states = { EFFECT = $EFFECT$ }
+}
+
+# India country scope. Both panels show the absolute pressure, not growth since activation.
+tyrone_nim_sync_league_bars = {
+    save_scope_as = nim_india
+    save_temporary_scope_value_as = {
+        name = nim_current_league_pressure
+        value = var:tyrone_nim_league_pressure
+    }
+    je:je_tyrone_nim_pakistan ?= {
+        set_bar_progress = { name = tyrone_nim_league_pressure_bar value = scope:nim_current_league_pressure }
+    }
+    je:je_tyrone_nim_bengal ?= {
+        set_bar_progress = { name = tyrone_nim_league_pressure_bar value = scope:nim_current_league_pressure }
+    }
+}

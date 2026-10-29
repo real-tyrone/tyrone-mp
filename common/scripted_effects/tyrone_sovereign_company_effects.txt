@@ -1,0 +1,237 @@
+﻿# Contextless entry scope; csr_india remains the same country across overlord changes.
+tyrone_sc_bind_india = {
+	if = {
+		limit = { NOT = { exists = scope:csr_india } }
+		global_var:tyrone_sc_india ?= { save_scope_as = csr_india }
+	}
+	if = {
+		limit = { NOT = { exists = scope:csr_india } }
+		tyrone_csr_bind_india = yes
+	}
+}
+tyrone_sc_start = {
+	if = {
+		limit = { NOT = { has_variable = tyrone_sc_started } }
+		set_variable = tyrone_sc_started
+		set_variable = britain_granted_dop_permission
+		set_global_variable = { name = tyrone_sc_india value = this }
+		save_scope_as = csr_india
+		add_contextless_journal_entry = je_tyrone_sc_settlement
+		add_contextless_journal_entry = je_tyrone_sc_civil
+		add_contextless_journal_entry = je_tyrone_sc_fleet
+		add_contextless_journal_entry = je_tyrone_sc_capitalists
+		add_contextless_journal_entry = je_tyrone_sc_culture
+	}
+}
+# Country scope. No global on_action performs this work.
+tyrone_sc_refresh_home_rule = {
+	save_scope_as = sc_home_country
+	# Track regions so all successor split-state objects are cleaned after transfers.
+	if = {
+		limit = { has_variable_list = tyrone_sc_home_regions }
+		every_in_list = {
+			variable = tyrone_sc_home_regions
+			every_scope_state = {
+				if = {
+					limit = {
+						has_modifier = tyrone_sc_home_rule
+						OR = {
+							NOT = { owner = scope:sc_home_country }
+							is_split_state = yes
+						}
+					}
+					remove_modifier = tyrone_sc_home_rule
+				}
+			}
+		}
+		clear_variable_list = tyrone_sc_home_regions
+	}
+	every_scope_state = {
+		limit = {
+			is_in_geographic_region = geographic_region_india
+			is_split_state = no
+		}
+		if = { limit = { NOT = { has_modifier = tyrone_sc_home_rule } } add_modifier = { name = tyrone_sc_home_rule } }
+		state_region = {
+			scope:sc_home_country = { add_to_variable_list = { name = tyrone_sc_home_regions target = prev } }
+		}
+	}
+}
+tyrone_sc_apply_fleet_amendment = {
+	if = {
+		limit = { has_variable = tyrone_sc_fleet_done }
+		active_law:lawgroup_navy_model ?= {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_sc_asian_fleet } }
+				add_amendment = { type = amendment_tyrone_sc_asian_fleet sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+}
+tyrone_sc_apply_civic_amendment = {
+	if = {
+		limit = { has_variable = tyrone_sc_culture_done has_law = law_type:law_india_company_citizenship }
+		active_law:lawgroup_citizenship = {
+			if = {
+				limit = { NOT = { has_amendment = amendment_type:amendment_tyrone_sc_civic_charter } }
+				add_amendment = { type = amendment_tyrone_sc_civic_charter sponsor = prev.ig:ig_industrialists }
+			}
+		}
+	}
+}
+# Company types can be established by script even in a company-state.
+tyrone_sc_found_company = {
+	scope:csr_india = {
+		add_company = company_type:$COMPANY$
+		random_scope_state = {
+			limit = { state_region = s:$STATE$ }
+			if = {
+				limit = { any_scope_building = { is_building_type = $PRIMARY$ level >= 10 } }
+				tyrone_sc_seed_company_building = { COMPANY = $COMPANY$ BUILDING = $PRIMARY$ }
+			}
+			else = {
+				tyrone_sc_seed_company_building = { COMPANY = $COMPANY$ BUILDING = $SECONDARY$ }
+			}
+		}
+		company:$COMPANY$ ?= { set_company_state_region = s:$STATE$ }
+	}
+}
+# State scope. Add exactly five new levels, owned by the newly founded company.
+tyrone_sc_seed_company_building = {
+	create_building = {
+		building = $BUILDING$
+		add_ownership = {
+			company = {
+				type = $COMPANY$
+				country = scope:csr_india
+				levels = 5
+			}
+		}
+	}
+}
+# Country scope. Replace the foreign corporate registration with an Indian registration.
+tyrone_sc_domesticate_company = {
+	save_scope_as = csr_india
+	owning_company ?= {
+		if = {
+			limit = { NOT = { owner = scope:csr_india } }
+			save_scope_as = sc_old_company
+			owner = { save_scope_as = sc_old_company_country }
+			remove_owned_country = scope:csr_india
+		}
+	}
+	if = {
+		limit = { exists = scope:sc_old_company }
+		scope:sc_old_company_country = { remove_company = scope:sc_old_company.type }
+	}
+	# Do not remove and re-add the same company type in the same tick.
+	trigger_event = { id = tyrone_sovereign_company.41 days = 1 }
+}
+# India country scope, after the foreign company registration has been removed.
+tyrone_sc_register_indian_eic = {
+	save_scope_as = csr_india
+	capital = { state_region = { save_scope_as = sc_company_capital_region } }
+	if = {
+		limit = { NOT = { has_company = company_type:company_east_india_company } }
+		add_company = company_type:company_east_india_company
+		company:company_east_india_company = { save_scope_as = sc_indian_eic }
+		create_character = {
+			culture = english
+			interest_group = ig_industrialists
+			ideology = ideology_utilitarian_leader
+			on_created = {
+				set_character_as_executive = scope:sc_indian_eic
+			}
+		}
+	}
+	# A single initial asset grant; never duplicate existing plantation levels.
+	if = {
+		limit = {
+			has_company = company_type:company_east_india_company
+			NOT = { has_variable = tyrone_sc_eic_opium_granted }
+		}
+		random_scope_state = {
+			limit = {
+				can_construct_building = building_opium_plantation
+				free_arable_land >= 10
+			}
+			create_building = {
+				building = building_opium_plantation
+				add_ownership = {
+					company = {
+						type = company_east_india_company
+						country = scope:csr_india
+						levels = 10
+					}
+				}
+			}
+			scope:csr_india = { set_variable = tyrone_sc_eic_opium_granted }
+		}
+	}
+	company:company_east_india_company ?= {
+		set_company_state_region = scope:sc_company_capital_region
+		add_owned_country = scope:csr_india
+	}
+	set_country_type = company
+}
+tyrone_sc_hold_election = {
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_sc_election_pending }
+			any_company = { tyrone_sc_election_candidate = yes }
+		}
+		set_variable = tyrone_sc_election_pending
+		trigger_event = { id = tyrone_sovereign_company.30 popup = yes }
+	}
+}
+tyrone_sc_elect_company = {
+	owning_company ?= { remove_owned_country = scope:csr_india }
+	scope:$CANDIDATE$ = { add_owned_country = scope:csr_india }
+	set_country_type = company
+	remove_variable = tyrone_sc_election_pending
+	set_variable = { name = tyrone_sc_election_cooldown days = tyrone_sc_election_period }
+}
+tyrone_sc_finish = {
+	set_variable = tyrone_sc_main_done
+	activate_law = law_type:law_corporate_state
+	active_law:lawgroup_governance_principles = {
+		if = {
+			limit = { NOT = { has_amendment = amendment_type:amendment_company_directorate } }
+			add_amendment = { type = amendment_company_directorate sponsor = prev.ig:ig_industrialists }
+		}
+	}
+	activate_law = law_type:law_india_laissez_faire
+	activate_law = law_type:law_india_company_free_trade
+	overlord ?= { add_modifier = { name = tyrone_sc_imperial_authority_lost days = tyrone_sc_overlord_duration } }
+	add_contextless_journal_entry = je_tyrone_sc_company_council
+	trigger_event = { id = tyrone_sovereign_company.40 popup = yes }
+}
+tyrone_sc_enter_hierarchy = {
+	if = {
+		limit = { NOT = { has_social_hierarchy = tyrone_company_hierarchy } }
+		if = { limit = { has_social_hierarchy = british_indian_caste_system } set_variable = tyrone_sc_previous_castes }
+		if = { limit = { has_social_hierarchy = edo_system } set_variable = tyrone_sc_previous_edo }
+		set_social_hierarchy = tyrone_company_hierarchy
+		recalculate_pop_ig_support = yes
+	}
+}
+tyrone_sc_leave_hierarchy = {
+	if = { limit = { has_variable = tyrone_sc_previous_castes } set_social_hierarchy = british_indian_caste_system }
+	else_if = { limit = { has_variable = tyrone_sc_previous_edo } set_social_hierarchy = edo_system }
+	else = { set_social_hierarchy = default_social_hierarchy }
+	remove_variable = tyrone_sc_previous_castes
+	remove_variable = tyrone_sc_previous_edo
+	recalculate_pop_ig_support = yes
+}
+
+# Only one active parent owns the monthly corporate maintenance loop.
+tyrone_sc_corporate_monthly = {
+	tyrone_sc_apply_fleet_amendment = yes
+	if = {
+		limit = {
+			has_variable = tyrone_sc_capitalists_done
+			NOT = { has_variable = tyrone_sc_election_cooldown }
+		}
+		tyrone_sc_hold_election = yes
+	}
+}

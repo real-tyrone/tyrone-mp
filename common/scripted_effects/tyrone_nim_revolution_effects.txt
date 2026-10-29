@@ -1,0 +1,153 @@
+﻿# India country scope. Keep the player country; consolidate opponents in one new country.
+tyrone_nim_start_revolution = {
+    if = {
+        limit = { NOT = { has_variable = tyrone_nim_socialist_started } }
+        save_scope_as = nim_india
+        set_variable = tyrone_nim_socialist_started
+        hidden_effect = {
+            if = { limit = { has_modifier = tyrone_nim_event_30_a } remove_modifier = tyrone_nim_event_30_a }
+            if = { limit = { has_modifier = tyrone_nim_event_30_b } remove_modifier = tyrone_nim_event_30_b }
+            if = { limit = { has_modifier = tyrone_nim_event_31_a } remove_modifier = tyrone_nim_event_31_a }
+            if = { limit = { has_modifier = tyrone_nim_event_31_b } remove_modifier = tyrone_nim_event_31_b }
+            if = { limit = { has_modifier = tyrone_nim_event_32_a } remove_modifier = tyrone_nim_event_32_a }
+            if = { limit = { has_modifier = tyrone_nim_event_32_b } remove_modifier = tyrone_nim_event_32_b }
+            if = { limit = { has_modifier = tyrone_nim_event_33_a } remove_modifier = tyrone_nim_event_33_a }
+            if = { limit = { has_modifier = tyrone_nim_event_33_b } remove_modifier = tyrone_nim_event_33_b }
+            if = { limit = { has_modifier = tyrone_nim_event_34_a } remove_modifier = tyrone_nim_event_34_a }
+            if = { limit = { has_modifier = tyrone_nim_event_34_b } remove_modifier = tyrone_nim_event_34_b }
+            if = { limit = { has_modifier = tyrone_nim_event_35_a } remove_modifier = tyrone_nim_event_35_a }
+            if = { limit = { has_modifier = tyrone_nim_event_35_b } remove_modifier = tyrone_nim_event_35_b }
+        }
+        remove_variable = tyrone_nim_active
+        remove_variable = tyrone_nim_emergency_pending
+        custom_tooltip = {
+            text = tyrone_nim_counterrevolution_territories_tt
+            if = {
+                limit = { OR = { has_variable = tyrone_nim_pakistan_open tyrone_nim_pakistan_territory_exists = yes exists = c:PAK } }
+                tyrone_nim_release_pakistan = { PROTECTORATE = yes }
+                set_variable = tyrone_nim_pakistan_done
+                tyrone_nim_finish_regional_crisis = { REGION = pakistan }
+            }
+            if = {
+                limit = { has_variable = tyrone_nim_bengal_open }
+                set_variable = tyrone_nim_bengal_done
+                tyrone_nim_finish_regional_crisis = { REGION = bengal }
+            }
+
+            every_state = {
+                limit = {
+                    OR = { state_region = s:STATE_EAST_BENGAL state_region = s:STATE_ORISSA }
+                    owner = { OR = { this = scope:nim_india is_subject_of = scope:nim_india } }
+                    NOT = { owner = scope:nim_india }
+                }
+                set_state_owner = scope:nim_india
+            }
+            if = {
+                limit = { exists = c:PAK c:PAK = { is_subject_of = scope:nim_india } }
+                c:PAK = {
+                    change_subject_type = subject_type_protectorate
+                    activate_law = law_type:law_council_republic
+                    activate_law = law_type:law_cooperative_ownership
+                }
+            }
+
+            # Prefer a historical princely state. Retain at least one loyalist state for the player.
+            random_state = {
+                limit = {
+                    tyrone_nim_is_princely_state = yes
+                    owner = { OR = { scope:nim_india ?= this is_subject_of = scope:nim_india } }
+                    NOT = { this = scope:nim_india.capital }
+                }
+                save_scope_as = nim_counter_seed
+            }
+            if = {
+                limit = { NOT = { exists = scope:nim_counter_seed } any_subject_or_below = { is_country_alive = yes NOT = { this = c:PAK } } }
+                random_subject_or_below = { limit = { NOT = { this = c:PAK } } random_scope_state = { save_scope_as = nim_counter_seed } }
+            }
+            if = {
+                limit = { exists = scope:nim_counter_seed NOT = { exists = c:NIM } }
+                create_country = {
+                    tag = NIM
+                    origin = scope:nim_india
+                    state = scope:nim_counter_seed
+                    on_created = {
+                        save_scope_as = nim_counterrevolution
+                        set_country_type = recognized
+                        activate_law = law_type:law_monarchy
+                        add_modifier = { name = tyrone_nim_rebel_disarray }
+                    }
+                }
+                # Capture subjects before transfers can destroy their last owned state.
+                every_subject_or_below = { limit = { NOT = { this = c:PAK } } c:NIM = { annex = prev } }
+                if = {
+                    limit = { any_scope_state = { NOT = { tyrone_nim_is_princely_state = yes } } }
+                    every_scope_state = {
+                        limit = { tyrone_nim_is_princely_state = yes }
+                        set_state_owner = c:NIM
+                    }
+                }
+                else = {
+                    every_scope_state = {
+                        limit = { tyrone_nim_is_princely_state = yes NOT = { this = scope:nim_india.capital } }
+                        set_state_owner = c:NIM
+                    }
+                }
+            }
+        }
+        owning_company ?= { remove_owned_country = scope:nim_india }
+        set_country_type = recognized
+        activate_law = law_type:law_council_republic
+        activate_law = law_type:law_india_cooperative_ownership
+        add_modifier = { name = tyrone_nim_revolution_advance }
+        if = {
+            limit = { exists = c:NIM }
+            c:NIM = {
+                create_diplomatic_play = {
+                    name = tyrone_nim_counterrevolution_war
+                    target_country = scope:nim_india
+                    type = dp_tyrone_nim_counterrevolution
+                    war = yes
+                    annex_as_civil_war = yes
+                }
+            }
+            add_contextless_journal_entry = je_tyrone_nim_civil_war
+            tyrone_nim_join_pakistan_war = yes
+        }
+        else = { tyrone_nim_end_civil_war = yes }
+        trigger_event = { id = tyrone_nim.11 popup = yes }
+    }
+}
+# India country scope. Emergency settlement is immediate; the event explains its cost.
+tyrone_nim_force_socialist_victory = {
+    if = {
+        limit = { NOT = { has_variable = tyrone_nim_capital_rescue_used } }
+        set_variable = tyrone_nim_capital_rescue_used
+        if = { limit = { exists = c:NIM } annex_as_civil_war = c:NIM }
+        add_modifier = { name = tyrone_nim_revolution_reliance days = tyrone_nim_five_years is_decaying = yes }
+        tyrone_nim_end_civil_war = yes
+        trigger_event = { id = tyrone_nim.13 popup = yes }
+    }
+}
+tyrone_nim_end_civil_war = {
+    set_variable = tyrone_nim_civil_war_done
+    if = { limit = { NOT = { is_involved_in_journal_entry = je_tyrone_nim_socialist } } add_contextless_journal_entry = je_tyrone_nim_socialist }
+    tyrone_cp_start = yes
+    if = { limit = { has_modifier = tyrone_nim_revolution_advance } remove_modifier = tyrone_nim_revolution_advance }
+}
+
+# India country scope. Retry from the war JE if war initialization is deferred.
+tyrone_nim_join_pakistan_war = {
+    save_scope_as = nim_india
+    if = {
+        limit = {
+            exists = c:NIM
+            exists = c:PAK
+            c:PAK = { is_subject_of = scope:nim_india NOT = { is_at_war_with = c:NIM } }
+        }
+        c:NIM = {
+            every_scope_war = {
+                join_war = { target = c:PAK side = scope:nim_india }
+            }
+        }
+    }
+}

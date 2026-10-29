@@ -1,0 +1,9197 @@
+﻿tyrone_cp_apply_amendments = {
+	save_scope_as = cp_india
+	if = {
+		limit = {
+			has_law = law_type:law_india_cooperative_ownership
+		}
+		active_law:lawgroup_economic_system = {
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_heavy_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_heavy
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_heavy
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_food_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_food
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_food
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_light_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_light
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_light
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_infrastructure_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_infrastructure
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_infrastructure
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_extraction_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_extraction
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_extraction
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_military_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_military
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_military
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+		}
+	}
+}
+tyrone_cp_start = {
+	if = {
+		limit = {
+			has_variable = tyrone_nim_civil_war_done
+			NOT = {
+				has_variable = tyrone_cp_started
+			}
+		}
+		set_variable = tyrone_cp_started
+		add_journal_entry = {
+			type = je_tyrone_cp_village
+		}
+	}
+	tyrone_cp_apply_amendments = yes
+	tyrone_ch_start = yes
+}
+tyrone_cp_start_heavy = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_heavy_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_heavy_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_heavy_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_heavy
+		}
+	}
+}
+tyrone_cp_resolve_heavy = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_heavy_mobilization
+			}
+			remove_modifier = tyrone_cp_heavy_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_heavy_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_heavy_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.1
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.11
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_food = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_food_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_food_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_food_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_food
+		}
+	}
+}
+tyrone_cp_resolve_food = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_food_mobilization
+			}
+			remove_modifier = tyrone_cp_food_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_food_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_food_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.2
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.12
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_light = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_light_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_light_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_light_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_light
+		}
+	}
+}
+tyrone_cp_resolve_light = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_light_mobilization
+			}
+			remove_modifier = tyrone_cp_light_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_light_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_light_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.3
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.13
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_infrastructure = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_infrastructure_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_infrastructure_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_infrastructure_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_infrastructure
+		}
+	}
+}
+tyrone_cp_resolve_infrastructure = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_infrastructure_mobilization
+			}
+			remove_modifier = tyrone_cp_infrastructure_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_infrastructure_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_infrastructure_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.4
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.14
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_extraction = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_extraction_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_extraction_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_extraction_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_extraction
+		}
+	}
+}
+tyrone_cp_resolve_extraction = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_extraction_mobilization
+			}
+			remove_modifier = tyrone_cp_extraction_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_extraction_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_extraction_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.5
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.15
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_military = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_military_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_military_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_military_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_military
+		}
+	}
+}
+tyrone_cp_resolve_military = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_military_mobilization
+			}
+			remove_modifier = tyrone_cp_military_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_military_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_military_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.6
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.16
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_forced = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOT = {
+				has_variable = tyrone_cp_forced_attempted
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cp_forced_attempted
+			set_variable = tyrone_cp_forced_active
+		}
+		add_modifier = {
+			name = tyrone_cp_forced_mobilization
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_forced
+		}
+		trigger_event = {
+			id = tyrone_cp.21
+			popup = yes
+		}
+	}
+}
+tyrone_cp_end_forced = {
+	remove_variable = tyrone_cp_forced_active
+	if = {
+		limit = {
+			has_modifier = tyrone_cp_forced_mobilization
+		}
+		remove_modifier = tyrone_cp_forced_mobilization
+	}
+}
+tyrone_cp_check_famine = {
+	ordered_scope_state = {
+		limit = {
+			tyrone_cp_famine_candidate = yes
+		}
+		order_by = tyrone_cp_state_unemployed
+		position = 0
+		check_range_bounds = no
+		save_scope_as = cp_famine_state
+		state_region = {
+			save_scope_as = cp_famine_region
+			set_variable = {
+				name = tyrone_cp_famine_pending
+				days = 10
+			}
+		}
+		owner = {
+			trigger_event = {
+				id = tyrone_cp.24
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_begin_famine = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_forced_active
+			exists = scope:cp_famine_region
+		}
+		save_scope_as = cp_india
+		if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 548
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 548
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 517
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 517
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 487
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 487
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 457
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 457
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 426
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 426
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 396
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 396
+			}
+		}
+		else = {
+			tyrone_cp_apply_disease = {
+				DAYS = 365
+			}
+		}
+	}
+}
+tyrone_cp_apply_disease = {
+	scope:cp_famine_region = {
+		remove_variable = tyrone_cp_famine_pending
+		set_variable = tyrone_cp_famine_active
+		set_variable = tyrone_cp_famine_end
+		start_harvest_condition_with_params = {
+			type = disease_outbreak
+			intensity = 7
+			duration = $DAYS$
+		}
+		every_scope_state = {
+			add_modifier = {
+				name = tyrone_cp_famine_mortality
+				days = $DAYS$
+			}
+		}
+	}
+	hidden_effect = {
+		scope:cp_famine_state = {
+			tyrone_cp_open_local_famine = yes
+		}
+	}
+}
+tyrone_cp_open_local_famine = {
+	if = {
+		limit = {
+			state_region = s:STATE_ABRUZZO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_abruzzo
+				target = s:STATE_ABRUZZO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ABU_DHABI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_abu_dhabi
+				target = s:STATE_ABU_DHABI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ACEH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aceh
+				target = s:STATE_ACEH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ACRE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_acre
+				target = s:STATE_ACRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ADANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_adana
+				target = s:STATE_ADANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ADRIATIC_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_adriatic_sea
+				target = s:STATE_ADRIATIC_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AEGEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aegean_sea
+				target = s:STATE_AEGEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AGRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_agra
+				target = s:STATE_AGRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AKMOLINSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_akmolinsk
+				target = s:STATE_AKMOLINSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AKTOBE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aktobe
+				target = s:STATE_AKTOBE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALABAMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alabama
+				target = s:STATE_ALABAMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aland
+				target = s:STATE_ALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALASKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alaska
+				target = s:STATE_ALASKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALBANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_albania
+				target = s:STATE_ALBANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALBERTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alberta
+				target = s:STATE_ALBERTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALENTEJO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alentejo
+				target = s:STATE_ALENTEJO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALEPPO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aleppo
+				target = s:STATE_ALEPPO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALGIERS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_algiers
+				target = s:STATE_ALGIERS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALSACE_LORRAINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alsace_lorraine
+				target = s:STATE_ALSACE_LORRAINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALTAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_altai
+				target = s:STATE_ALTAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALTO_PARAGUAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alto_paraguay
+				target = s:STATE_ALTO_PARAGUAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ALXA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_alxa
+				target = s:STATE_ALXA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AL_RIF
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_al_rif
+				target = s:STATE_AL_RIF
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AMAZONAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_amazonas
+				target = s:STATE_AMAZONAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AMAZON_DELTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_amazon_delta
+				target = s:STATE_AMAZON_DELTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AMHARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_amhara
+				target = s:STATE_AMHARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AMUR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_amur
+				target = s:STATE_AMUR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ANHALT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_anhalt
+				target = s:STATE_ANHALT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ANKARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ankara
+				target = s:STATE_ANKARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ANNAM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_annam
+				target = s:STATE_ANNAM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ANTIOQUIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_antioquia
+				target = s:STATE_ANTIOQUIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ANTOFAGASTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_antofagasta
+				target = s:STATE_ANTOFAGASTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_APULIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_apulia
+				target = s:STATE_APULIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AQUITAINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aquitaine
+				target = s:STATE_AQUITAINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARABIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arabian_sea
+				target = s:STATE_ARABIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARAGON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aragon
+				target = s:STATE_ARAGON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARAKAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arakan
+				target = s:STATE_ARAKAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARAUCANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_araucania
+				target = s:STATE_ARAUCANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AREQUIPA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arequipa
+				target = s:STATE_AREQUIPA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARIZONA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arizona
+				target = s:STATE_ARIZONA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARKANSAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arkansas
+				target = s:STATE_ARKANSAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARKHANGELSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_arkhangelsk
+				target = s:STATE_ARKHANGELSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ARMENIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_armenia
+				target = s:STATE_ARMENIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ASSAM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_assam
+				target = s:STATE_ASSAM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ASTRAKHAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_astrakhan
+				target = s:STATE_ASTRAKHAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ASTURIAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_asturias
+				target = s:STATE_ASTURIAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ATTICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_attica
+				target = s:STATE_ATTICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AUSTRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_austria
+				target = s:STATE_AUSTRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AUVERGNE_LIMOUSIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_auvergne_limousin
+				target = s:STATE_AUVERGNE_LIMOUSIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AWADH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_awadh
+				target = s:STATE_AWADH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AYDIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_aydin
+				target = s:STATE_AYDIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AZERBAIJAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_azerbaijan
+				target = s:STATE_AZERBAIJAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AZORES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_azores
+				target = s:STATE_AZORES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BADEN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baden
+				target = s:STATE_BADEN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAFFIN_BAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baffin_bay
+				target = s:STATE_BAFFIN_BAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAGHDAD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baghdad
+				target = s:STATE_BAGHDAD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAHAMAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bahamas
+				target = s:STATE_BAHAMAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAHAMA_BANKS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bahama_banks
+				target = s:STATE_BAHAMA_BANKS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAHIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bahia
+				target = s:STATE_BAHIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAJA_CALIFORNIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baja_california
+				target = s:STATE_BAJA_CALIFORNIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAJIO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bajio
+				target = s:STATE_BAJIO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAJO_PARAGUAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bajo_paraguay
+				target = s:STATE_BAJO_PARAGUAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALEARIC_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_balearic_islands
+				target = s:STATE_BALEARIC_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALEARIC_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_balearic_sea
+				target = s:STATE_BALEARIC_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALKH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_balkh
+				target = s:STATE_BALKH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALTIC_ENTRANCES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baltic_entrances
+				target = s:STATE_BALTIC_ENTRANCES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALUCHISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baluchistan
+				target = s:STATE_BALUCHISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BANAT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_banat
+				target = s:STATE_BANAT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BANGKOK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bangkok
+				target = s:STATE_BANGKOK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BARENTS_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_barents_sea
+				target = s:STATE_BARENTS_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BASQUE_COUNTRY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_basque_country
+				target = s:STATE_BASQUE_COUNTRY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BASRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_basra
+				target = s:STATE_BASRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAS_CONGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bas_congo
+				target = s:STATE_BAS_CONGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAVARIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bavaria
+				target = s:STATE_BAVARIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAY_OF_BENGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bay_of_bengal
+				target = s:STATE_BAY_OF_BENGAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BAY_OF_BISCAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bay_of_biscay
+				target = s:STATE_BAY_OF_BISCAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BEAUFORT_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_beaufort_sea
+				target = s:STATE_BEAUFORT_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BEIJING
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_beijing
+				target = s:STATE_BEIJING
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BEIRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_beira
+				target = s:STATE_BEIRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BEKES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bekes
+				target = s:STATE_BEKES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BENGUELA_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_benguela_coast
+				target = s:STATE_BENGUELA_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BENIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_benin
+				target = s:STATE_BENIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BERING_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bering_sea
+				target = s:STATE_BERING_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BERMUDA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bermuda
+				target = s:STATE_BERMUDA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BESSARABIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bessarabia
+				target = s:STATE_BESSARABIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BIHAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bihar
+				target = s:STATE_BIHAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BLUE_NILE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_blue_nile
+				target = s:STATE_BLUE_NILE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOHEMIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bohemia
+				target = s:STATE_BOHEMIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOLIVAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bolivar
+				target = s:STATE_BOLIVAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOMBAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bombay
+				target = s:STATE_BOMBAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BORNU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bornu
+				target = s:STATE_BORNU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOSNIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bosnia
+				target = s:STATE_BOSNIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOTSWANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_botswana
+				target = s:STATE_BOTSWANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOUGAINVILLE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bougainville
+				target = s:STATE_BOUGAINVILLE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BRANDENBURG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_brandenburg
+				target = s:STATE_BRANDENBURG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BREST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_brest
+				target = s:STATE_BREST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BRITISH_COLUMBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_british_columbia
+				target = s:STATE_BRITISH_COLUMBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BRITTANY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_brittany
+				target = s:STATE_BRITTANY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BRUNSWICK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_brunswick
+				target = s:STATE_BRUNSWICK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BUENOS_AIRES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_buenos_aires
+				target = s:STATE_BUENOS_AIRES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BUKOVINA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bukovina
+				target = s:STATE_BUKOVINA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BULGARIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bulgaria
+				target = s:STATE_BULGARIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BUNDELKHAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bundelkhand
+				target = s:STATE_BUNDELKHAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BURGUNDY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_burgundy
+				target = s:STATE_BURGUNDY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BURYATIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_buryatia
+				target = s:STATE_BURYATIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BUSAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_busan
+				target = s:STATE_BUSAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAJAMARCA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cajamarca
+				target = s:STATE_CAJAMARCA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CALABRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_calabria
+				target = s:STATE_CALABRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CALIFORNIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_california
+				target = s:STATE_CALIFORNIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAMBODIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cambodia
+				target = s:STATE_CAMBODIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAMPANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_campania
+				target = s:STATE_CAMPANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CANARY_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_canary_islands
+				target = s:STATE_CANARY_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAPE_COLONY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cape_colony
+				target = s:STATE_CAPE_COLONY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAPE_OF_GOOD_HOPE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cape_of_good_hope
+				target = s:STATE_CAPE_OF_GOOD_HOPE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAPE_ST_ROQUE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cape_st_roque
+				target = s:STATE_CAPE_ST_ROQUE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAPE_VERDE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cape_verde
+				target = s:STATE_CAPE_VERDE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAPE_VERDE_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cape_verde_sea
+				target = s:STATE_CAPE_VERDE_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CATALONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_catalonia
+				target = s:STATE_CATALONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CAUCA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cauca
+				target = s:STATE_CAUCA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CEARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ceara
+				target = s:STATE_CEARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CELEBES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_celebes
+				target = s:STATE_CELEBES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CELTIC_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_celtic_sea
+				target = s:STATE_CELTIC_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_CUBA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_cuba
+				target = s:STATE_CENTRAL_CUBA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_HIGHLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_highlands
+				target = s:STATE_CENTRAL_HIGHLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_HUNGARY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_hungary
+				target = s:STATE_CENTRAL_HUNGARY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_JAVA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_java
+				target = s:STATE_CENTRAL_JAVA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_MEDITERRANEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_mediterranean_sea
+				target = s:STATE_CENTRAL_MEDITERRANEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_PROVINCES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_provinces
+				target = s:STATE_CENTRAL_PROVINCES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTROAMERICAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_centroamerican_sea
+				target = s:STATE_CENTROAMERICAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CEYLON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ceylon
+				target = s:STATE_CEYLON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHACO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chaco
+				target = s:STATE_CHACO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHAD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chad
+				target = s:STATE_CHAD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHAMPAGNE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_champagne
+				target = s:STATE_CHAMPAGNE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHELYABINSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chelyabinsk
+				target = s:STATE_CHELYABINSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHERNIHIV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chernihiv
+				target = s:STATE_CHERNIHIV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHERSON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cherson
+				target = s:STATE_CHERSON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHIANG_MAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chiang_mai
+				target = s:STATE_CHIANG_MAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHIAPAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chiapas
+				target = s:STATE_CHIAPAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHIHUAHUA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chihuahua
+				target = s:STATE_CHIHUAHUA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHONGQING
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chongqing
+				target = s:STATE_CHONGQING
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHUCKCHI_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chuckchi_sea
+				target = s:STATE_CHUCKCHI_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHUGOKU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chugoku
+				target = s:STATE_CHUGOKU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHUKOTKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chukotka
+				target = s:STATE_CHUKOTKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CHUVASHIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_chuvashia
+				target = s:STATE_CHUVASHIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CIRCARS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_circars
+				target = s:STATE_CIRCARS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_COAST_OF_GUYANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_coast_of_guyana
+				target = s:STATE_COAST_OF_GUYANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_COLORADO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_colorado
+				target = s:STATE_COLORADO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CONGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_congo
+				target = s:STATE_CONGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CONGO_ORIENTALE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_congo_orientale
+				target = s:STATE_CONGO_ORIENTALE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CONNAUGHT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_connaught
+				target = s:STATE_CONNAUGHT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CONNECTICUT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_connecticut
+				target = s:STATE_CONNECTICUT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CONSTANTINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_constantine
+				target = s:STATE_CONSTANTINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CORAL_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_coral_sea
+				target = s:STATE_CORAL_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CORRIENTES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_corrientes
+				target = s:STATE_CORRIENTES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CORSICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_corsica
+				target = s:STATE_CORSICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_COSTA_RICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_costa_rica
+				target = s:STATE_COSTA_RICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_COURLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_courland
+				target = s:STATE_COURLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CRETE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_crete
+				target = s:STATE_CRETE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CRIMEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_crimea
+				target = s:STATE_CRIMEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CROATIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_croatia
+				target = s:STATE_CROATIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CUNDINAMARCA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cundinamarca
+				target = s:STATE_CUNDINAMARCA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CYPRUS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_cyprus
+				target = s:STATE_CYPRUS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DAGESTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dagestan
+				target = s:STATE_DAGESTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DAHOMEY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dahomey
+				target = s:STATE_DAHOMEY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DALMATIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dalmatia
+				target = s:STATE_DALMATIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DARFUR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_darfur
+				target = s:STATE_DARFUR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DAVIS_STRAIT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_davis_strait
+				target = s:STATE_DAVIS_STRAIT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DEIR_EZ_ZOR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_deir_ez_zor
+				target = s:STATE_DEIR_EZ_ZOR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DELAWARE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_delaware
+				target = s:STATE_DELAWARE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DELHI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_delhi
+				target = s:STATE_DELHI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DELVIDEK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_delvidek
+				target = s:STATE_DELVIDEK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DISTRICT_OF_COLUMBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_district_of_columbia
+				target = s:STATE_DISTRICT_OF_COLUMBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DIYARBAKIR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_diyarbakir
+				target = s:STATE_DIYARBAKIR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DOBRUDJA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dobrudja
+				target = s:STATE_DOBRUDJA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DONGOLA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dongola
+				target = s:STATE_DONGOLA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DURANGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_durango
+				target = s:STATE_DURANGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DZUNGARIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_dzungaria
+				target = s:STATE_DZUNGARIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_BLACK_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_black_sea
+				target = s:STATE_EASTERN_BLACK_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_CAPE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_cape
+				target = s:STATE_EASTERN_CAPE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_CARIBBEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_caribbean_sea
+				target = s:STATE_EASTERN_CARIBBEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_CUBA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_cuba
+				target = s:STATE_EASTERN_CUBA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_HIMALAYAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_himalayas
+				target = s:STATE_EASTERN_HIMALAYAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_HUBEI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_hubei
+				target = s:STATE_EASTERN_HUBEI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_INDIAN_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_indian_ocean
+				target = s:STATE_EASTERN_INDIAN_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_MALI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_mali
+				target = s:STATE_EASTERN_MALI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_MEDITERRANEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_mediterranean_sea
+				target = s:STATE_EASTERN_MEDITERRANEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_NEW_GUINEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_new_guinea
+				target = s:STATE_EASTERN_NEW_GUINEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_NORWAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_norway
+				target = s:STATE_EASTERN_NORWAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_POLYNESIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_polynesia
+				target = s:STATE_EASTERN_POLYNESIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_SERBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_serbia
+				target = s:STATE_EASTERN_SERBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EASTERN_THRACE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eastern_thrace
+				target = s:STATE_EASTERN_THRACE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_AEGEAN_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_aegean_islands
+				target = s:STATE_EAST_AEGEAN_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_ANGLIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_anglia
+				target = s:STATE_EAST_ANGLIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_ANGOLA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_angola
+				target = s:STATE_EAST_ANGOLA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_BENGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_bengal
+				target = s:STATE_EAST_BENGAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_BORNEO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_borneo
+				target = s:STATE_EAST_BORNEO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_CHINA_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_china_sea
+				target = s:STATE_EAST_CHINA_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_GALICIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_galicia
+				target = s:STATE_EAST_GALICIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_HAUSALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_hausaland
+				target = s:STATE_EAST_HAUSALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_JAVA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_java
+				target = s:STATE_EAST_JAVA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_KARELIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_karelia
+				target = s:STATE_EAST_KARELIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_MICRONESIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_micronesia
+				target = s:STATE_EAST_MICRONESIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_PRUSSIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_prussia
+				target = s:STATE_EAST_PRUSSIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_SAHARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_sahara
+				target = s:STATE_EAST_SAHARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_SIBERIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_siberian_sea
+				target = s:STATE_EAST_SIBERIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_SWITZERLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_switzerland
+				target = s:STATE_EAST_SWITZERLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ECUADOR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ecuador
+				target = s:STATE_ECUADOR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EGYPTIAN_DESERT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_egyptian_desert
+				target = s:STATE_EGYPTIAN_DESERT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ELBE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_elbe
+				target = s:STATE_ELBE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ELIZAVETPOL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_elizavetpol
+				target = s:STATE_ELIZAVETPOL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EMILIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_emilia
+				target = s:STATE_EMILIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ENGLISH_CHANNEL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_english_channel
+				target = s:STATE_ENGLISH_CHANNEL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ENTRE_DOURO_E_MINHO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_entre_douro_e_minho
+				target = s:STATE_ENTRE_DOURO_E_MINHO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EQUATEUR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_equateur
+				target = s:STATE_EQUATEUR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EQUATORIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_equatoria
+				target = s:STATE_EQUATORIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EQUATORIAL_ATLANTIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_equatorial_atlantic_ocean
+				target = s:STATE_EQUATORIAL_ATLANTIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EQUATORIAL_PACIFIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_equatorial_pacific_ocean
+				target = s:STATE_EQUATORIAL_PACIFIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ERITREA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_eritrea
+				target = s:STATE_ERITREA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ERZURUM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_erzurum
+				target = s:STATE_ERZURUM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ESTREMADURA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_estremadura
+				target = s:STATE_ESTREMADURA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EXTREMADURA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_extremadura
+				target = s:STATE_EXTREMADURA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FARS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_fars
+				target = s:STATE_FARS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FERGANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_fergana
+				target = s:STATE_FERGANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FEZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_fez
+				target = s:STATE_FEZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FIJI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_fiji
+				target = s:STATE_FIJI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FLANDERS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_flanders
+				target = s:STATE_FLANDERS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FLORIDA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_florida
+				target = s:STATE_FLORIDA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FORMOSA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_formosa
+				target = s:STATE_FORMOSA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FRANCHE_COMTE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_franche_comte
+				target = s:STATE_FRANCHE_COMTE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FRANCONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_franconia
+				target = s:STATE_FRANCONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FRENCH_LOW_COUNTRIES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_french_low_countries
+				target = s:STATE_FRENCH_LOW_COUNTRIES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FRIESLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_friesland
+				target = s:STATE_FRIESLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_FUJIAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_fujian
+				target = s:STATE_FUJIAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GABON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gabon
+				target = s:STATE_GABON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GALAPAGOS_RISE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_galapagos_rise
+				target = s:STATE_GALAPAGOS_RISE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GALICH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_galich
+				target = s:STATE_GALICH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GALICIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_galicia
+				target = s:STATE_GALICIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GANSU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gansu
+				target = s:STATE_GANSU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GELRE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gelre
+				target = s:STATE_GELRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GEORGIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_georgia
+				target = s:STATE_GEORGIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GOIAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_goias
+				target = s:STATE_GOIAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GOLD_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gold_coast
+				target = s:STATE_GOLD_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GONDER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gonder
+				target = s:STATE_GONDER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GOTALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gotaland
+				target = s:STATE_GOTALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GOTLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gotland
+				target = s:STATE_GOTLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GRAND_BANKS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_grand_banks
+				target = s:STATE_GRAND_BANKS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GREATER_CAUCASUS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_greater_caucasus
+				target = s:STATE_GREATER_CAUCASUS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GREATER_POLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_greater_poland
+				target = s:STATE_GREATER_POLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GREAT_AUSTRALIAN_BIGHT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_great_australian_bight
+				target = s:STATE_GREAT_AUSTRALIAN_BIGHT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GREENLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_greenland
+				target = s:STATE_GREENLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GREENLAND_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_greenland_sea
+				target = s:STATE_GREENLAND_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUANGDONG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guangdong
+				target = s:STATE_GUANGDONG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUANGXI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guangxi
+				target = s:STATE_GUANGXI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUATEMALA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guatemala
+				target = s:STATE_GUATEMALA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUAVIARE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guaviare
+				target = s:STATE_GUAVIARE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUAYANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guayana
+				target = s:STATE_GUAYANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUERRERO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guerrero
+				target = s:STATE_GUERRERO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUINEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guinea
+				target = s:STATE_GUINEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUINEA_CURRENT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guinea_current
+				target = s:STATE_GUINEA_CURRENT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUIZHOU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guizhou
+				target = s:STATE_GUIZHOU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUJARAT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gujarat
+				target = s:STATE_GUJARAT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GULF_OF_ALASKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gulf_of_alaska
+				target = s:STATE_GULF_OF_ALASKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GULF_OF_FINLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gulf_of_finland
+				target = s:STATE_GULF_OF_FINLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GULF_OF_GUINEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gulf_of_guinea
+				target = s:STATE_GULF_OF_GUINEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GULF_OF_MEXICO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gulf_of_mexico
+				target = s:STATE_GULF_OF_MEXICO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GULF_OF_SAINT_LAWRENCE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gulf_of_saint_lawrence
+				target = s:STATE_GULF_OF_SAINT_LAWRENCE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUYENNE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_guyenne
+				target = s:STATE_GUYENNE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HAIL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hail
+				target = s:STATE_HAIL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HAITI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_haiti
+				target = s:STATE_HAITI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HANNOVER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hannover
+				target = s:STATE_HANNOVER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HAUSALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hausaland
+				target = s:STATE_HAUSALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HAWAIIAN_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hawaiian_islands
+				target = s:STATE_HAWAIIAN_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HEDJAZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hedjaz
+				target = s:STATE_HEDJAZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HENAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_henan
+				target = s:STATE_HENAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HERAT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_herat
+				target = s:STATE_HERAT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HEREROLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hereroland
+				target = s:STATE_HEREROLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HESSE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hesse
+				target = s:STATE_HESSE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HIGHLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_highlands
+				target = s:STATE_HIGHLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HILL_PUNJAB
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hill_punjab
+				target = s:STATE_HILL_PUNJAB
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HIMALAYAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_himalayas
+				target = s:STATE_HIMALAYAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HINGGAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hinggan
+				target = s:STATE_HINGGAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HOKKAIDO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hokkaido
+				target = s:STATE_HOKKAIDO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HOKUSHINETSU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hokushinetsu
+				target = s:STATE_HOKUSHINETSU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HOLLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_holland
+				target = s:STATE_HOLLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HOME_COUNTIES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_home_counties
+				target = s:STATE_HOME_COUNTIES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HONDURAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_honduras
+				target = s:STATE_HONDURAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HORN_OF_AFRICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_horn_of_africa
+				target = s:STATE_HORN_OF_AFRICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HUDAVENDIGAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hudavendigar
+				target = s:STATE_HUDAVENDIGAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HUDSON_BAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hudson_bay
+				target = s:STATE_HUDSON_BAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HUNAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hunan
+				target = s:STATE_HUNAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HYDERABAD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hyderabad
+				target = s:STATE_HYDERABAD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ica
+				target = s:STATE_ICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ICELAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_iceland
+				target = s:STATE_ICELAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IDAHO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_idaho
+				target = s:STATE_IDAHO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ILE_DE_FRANCE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ile_de_france
+				target = s:STATE_ILE_DE_FRANCE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ILLINOIS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_illinois
+				target = s:STATE_ILLINOIS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INDIANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_indiana
+				target = s:STATE_INDIANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INDIAN_OCEAN_TERRITORY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_indian_ocean_territory
+				target = s:STATE_INDIAN_OCEAN_TERRITORY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INGRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ingria
+				target = s:STATE_INGRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INNER_MAURITANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_inner_mauritania
+				target = s:STATE_INNER_MAURITANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INNER_MOROCCO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_inner_morocco
+				target = s:STATE_INNER_MOROCCO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_INSIDE_PASSAGE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_inside_passage
+				target = s:STATE_INSIDE_PASSAGE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IONIAN_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ionian_islands
+				target = s:STATE_IONIAN_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IOWA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_iowa
+				target = s:STATE_IOWA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IRAKAJEMI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_irakajemi
+				target = s:STATE_IRAKAJEMI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IRISH_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_irish_sea
+				target = s:STATE_IRISH_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IRKUTSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_irkutsk
+				target = s:STATE_IRKUTSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ISFAHAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_isfahan
+				target = s:STATE_ISFAHAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ISTRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_istria
+				target = s:STATE_ISTRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_IVORY_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ivory_coast
+				target = s:STATE_IVORY_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JALISCO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jalisco
+				target = s:STATE_JALISCO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JAMAICA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jamaica
+				target = s:STATE_JAMAICA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JAPAN_CURRENT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_japan_current
+				target = s:STATE_JAPAN_CURRENT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JAVA_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_java_sea
+				target = s:STATE_JAVA_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JETISY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jetisy
+				target = s:STATE_JETISY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JIANGSU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jiangsu
+				target = s:STATE_JIANGSU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JIANGXI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jiangxi
+				target = s:STATE_JIANGXI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JUJUY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jujuy
+				target = s:STATE_JUJUY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_JUTLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_jutland
+				target = s:STATE_JUTLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KABUL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kabul
+				target = s:STATE_KABUL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KACHIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kachin
+				target = s:STATE_KACHIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KALMYKIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kalmykia
+				target = s:STATE_KALMYKIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KAMCHATKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kamchatka
+				target = s:STATE_KAMCHATKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KANAK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kanak
+				target = s:STATE_KANAK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KANDAHAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kandahar
+				target = s:STATE_KANDAHAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KANSAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kansai
+				target = s:STATE_KANSAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KANSAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kansas
+				target = s:STATE_KANSAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KANTO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kanto
+				target = s:STATE_KANTO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KARA_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kara_sea
+				target = s:STATE_KARA_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KARS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kars
+				target = s:STATE_KARS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KASAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kasai
+				target = s:STATE_KASAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KASHMIR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kashmir
+				target = s:STATE_KASHMIR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KASTAMONU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kastamonu
+				target = s:STATE_KASTAMONU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KATANGA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_katanga
+				target = s:STATE_KATANGA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KAUNAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kaunas
+				target = s:STATE_KAUNAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KAZAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kazan
+				target = s:STATE_KAZAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KAZEMBE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kazembe
+				target = s:STATE_KAZEMBE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KENTUCKY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kentucky
+				target = s:STATE_KENTUCKY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KENYA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kenya
+				target = s:STATE_KENYA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KERMAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kerman
+				target = s:STATE_KERMAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KHARKOV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kharkov
+				target = s:STATE_KHARKOV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KHIVA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_khiva
+				target = s:STATE_KHIVA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KHORASAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_khorasan
+				target = s:STATE_KHORASAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KHUZESTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_khuzestan
+				target = s:STATE_KHUZESTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KIEV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kiev
+				target = s:STATE_KIEV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KIRGHIZIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kirghizia
+				target = s:STATE_KIRGHIZIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KOLA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kola
+				target = s:STATE_KOLA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KOLYMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kolyma
+				target = s:STATE_KOLYMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KONYA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_konya
+				target = s:STATE_KONYA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KORDOFAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kordofan
+				target = s:STATE_KORDOFAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KOSOVO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kosovo
+				target = s:STATE_KOSOVO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KRASNOYARSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_krasnoyarsk
+				target = s:STATE_KRASNOYARSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KUBAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kuban
+				target = s:STATE_KUBAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KUOPIO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kuopio
+				target = s:STATE_KUOPIO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KURNOOL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kurnool
+				target = s:STATE_KURNOOL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KURSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kursk
+				target = s:STATE_KURSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KYOTO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kyoto
+				target = s:STATE_KYOTO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KYUSHU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kyushu
+				target = s:STATE_KYUSHU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LABRADOR_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_labrador_sea
+				target = s:STATE_LABRADOR_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LACCADIVE_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_laccadive_sea
+				target = s:STATE_LACCADIVE_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LANCASHIRE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lancashire
+				target = s:STATE_LANCASHIRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LANGUEDOC
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_languedoc
+				target = s:STATE_LANGUEDOC
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LAOS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_laos
+				target = s:STATE_LAOS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LAPTEV_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_laptev_sea
+				target = s:STATE_LAPTEV_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LARISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_laristan
+				target = s:STATE_LARISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LAZIO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lazio
+				target = s:STATE_LAZIO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LA_PAMPA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_la_pampa
+				target = s:STATE_LA_PAMPA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LA_PAZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_la_paz
+				target = s:STATE_LA_PAZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LEBANON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lebanon
+				target = s:STATE_LEBANON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LEINSTER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_leinster
+				target = s:STATE_LEINSTER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LEON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_leon
+				target = s:STATE_LEON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LESSER_POLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lesser_poland
+				target = s:STATE_LESSER_POLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LHASA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lhasa
+				target = s:STATE_LHASA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LIBERIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_liberia
+				target = s:STATE_LIBERIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LIBYA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_libya
+				target = s:STATE_LIBYA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LIBYAN_DESERT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_libyan_desert
+				target = s:STATE_LIBYAN_DESERT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LIMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lima
+				target = s:STATE_LIMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LINDI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lindi
+				target = s:STATE_LINDI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOMBARDY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lombardy
+				target = s:STATE_LOMBARDY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LORRAINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lorraine
+				target = s:STATE_LORRAINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOS_RIOS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_los_rios
+				target = s:STATE_LOS_RIOS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOUISIANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_louisiana
+				target = s:STATE_LOUISIANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOURENCO_MARQUES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lourenco_marques
+				target = s:STATE_LOURENCO_MARQUES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOWER_ANDALUSIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lower_andalusia
+				target = s:STATE_LOWER_ANDALUSIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOWER_EGYPT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lower_egypt
+				target = s:STATE_LOWER_EGYPT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOWER_SILESIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lower_silesia
+				target = s:STATE_LOWER_SILESIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LOWLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lowlands
+				target = s:STATE_LOWLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LURISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_luristan
+				target = s:STATE_LURISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LUSITANIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_lusitanian_sea
+				target = s:STATE_LUSITANIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_LUZON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_luzon
+				target = s:STATE_LUZON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MACEDONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_macedonia
+				target = s:STATE_MACEDONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MADEIRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_madeira
+				target = s:STATE_MADEIRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MADRAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_madras
+				target = s:STATE_MADRAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_maine
+				target = s:STATE_MAINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAINE_ANJOU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_maine_anjou
+				target = s:STATE_MAINE_ANJOU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAIN_EQUATORIAL_CRURRENT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_main_equatorial_crurrent
+				target = s:STATE_MAIN_EQUATORIAL_CRURRENT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALACCA_STRAIT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malacca_strait
+				target = s:STATE_MALACCA_STRAIT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALAYA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malaya
+				target = s:STATE_MALAYA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALAY_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malay_sea
+				target = s:STATE_MALAY_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malta
+				target = s:STATE_MALTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALWA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malwa
+				target = s:STATE_MALWA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MANDALAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mandalay
+				target = s:STATE_MANDALAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MANITOBA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_manitoba
+				target = s:STATE_MANITOBA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MARANHAO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_maranhao
+				target = s:STATE_MARANHAO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MARRAKECH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_marrakech
+				target = s:STATE_MARRAKECH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MARYLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_maryland
+				target = s:STATE_MARYLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MASSACHUSETTS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_massachusetts
+				target = s:STATE_MASSACHUSETTS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MATO_GROSSO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mato_grosso
+				target = s:STATE_MATO_GROSSO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MATRUH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_matruh
+				target = s:STATE_MATRUH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAURITANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mauritania
+				target = s:STATE_MAURITANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAZANDARAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mazandaran
+				target = s:STATE_MAZANDARAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MAZOVIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mazovia
+				target = s:STATE_MAZOVIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MECKLENBURG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mecklenburg
+				target = s:STATE_MECKLENBURG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MEKONG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mekong
+				target = s:STATE_MEKONG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MERZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_merz
+				target = s:STATE_MERZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MEXICO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mexico
+				target = s:STATE_MEXICO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MICHIGAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_michigan
+				target = s:STATE_MICHIGAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MICRONESIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_micronesian_sea
+				target = s:STATE_MICRONESIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MIDDLE_EGYPT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_middle_egypt
+				target = s:STATE_MIDDLE_EGYPT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MIDLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_midlands
+				target = s:STATE_MIDLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MID_ATLANTIC_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mid_atlantic_coast
+				target = s:STATE_MID_ATLANTIC_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MINAS_GERAIS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_minas_gerais
+				target = s:STATE_MINAS_GERAIS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MINDANAO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mindanao
+				target = s:STATE_MINDANAO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MINNESOTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_minnesota
+				target = s:STATE_MINNESOTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MINSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_minsk
+				target = s:STATE_MINSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MIRANDA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_miranda
+				target = s:STATE_MIRANDA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MISSISSIPPI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mississippi
+				target = s:STATE_MISSISSIPPI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MISSOURI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_missouri
+				target = s:STATE_MISSOURI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOCAMBIQUE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mocambique
+				target = s:STATE_MOCAMBIQUE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOGILEV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mogilev
+				target = s:STATE_MOGILEV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOLDAVIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_moldavia
+				target = s:STATE_MOLDAVIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOLUCCAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_moluccas
+				target = s:STATE_MOLUCCAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOLUCCA_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_molucca_sea
+				target = s:STATE_MOLUCCA_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MONTANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_montana
+				target = s:STATE_MONTANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MONTENEGRO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_montenegro
+				target = s:STATE_MONTENEGRO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MORAVIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_moravia
+				target = s:STATE_MORAVIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOSCOW
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_moscow
+				target = s:STATE_MOSCOW
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOSUL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mosul
+				target = s:STATE_MOSUL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MOZAMBIQUE_CHANNEL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mozambique_channel
+				target = s:STATE_MOZAMBIQUE_CHANNEL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MUNSTER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_munster
+				target = s:STATE_MUNSTER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MURCIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_murcia
+				target = s:STATE_MURCIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MYSORE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mysore
+				target = s:STATE_MYSORE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NAKHON_RATCHASIMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nakhon_ratchasima
+				target = s:STATE_NAKHON_RATCHASIMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NAMAQUALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_namaqualand
+				target = s:STATE_NAMAQUALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NANJING
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nanjing
+				target = s:STATE_NANJING
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NAURU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nauru
+				target = s:STATE_NAURU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEBRASKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nebraska
+				target = s:STATE_NEBRASKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEJD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nejd
+				target = s:STATE_NEJD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NENETSIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nenetsia
+				target = s:STATE_NENETSIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEVADA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nevada
+				target = s:STATE_NEVADA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEWFOUNDLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_newfoundland
+				target = s:STATE_NEWFOUNDLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_BRUNSWICK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_brunswick
+				target = s:STATE_NEW_BRUNSWICK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_CASTILE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_castile
+				target = s:STATE_NEW_CASTILE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_HAMPSHIRE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_hampshire
+				target = s:STATE_NEW_HAMPSHIRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_JERSEY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_jersey
+				target = s:STATE_NEW_JERSEY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_MEXICO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_mexico
+				target = s:STATE_NEW_MEXICO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_SOUTH_WALES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_south_wales
+				target = s:STATE_NEW_SOUTH_WALES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NEW_YORK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_new_york
+				target = s:STATE_NEW_YORK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NGARI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ngari
+				target = s:STATE_NGARI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NICARAGUA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nicaragua
+				target = s:STATE_NICARAGUA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NIGER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_niger
+				target = s:STATE_NIGER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NIGERIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nigeria
+				target = s:STATE_NIGERIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NIGER_DELTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_niger_delta
+				target = s:STATE_NIGER_DELTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NINGXIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ningxia
+				target = s:STATE_NINGXIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NIZHNY_NOVGOROD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nizhny_novgorod
+				target = s:STATE_NIZHNY_NOVGOROD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORMANDY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_normandy
+				target = s:STATE_NORMANDY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORRLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_norrland
+				target = s:STATE_NORRLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHEAST_ATLANTIC_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northeast_atlantic_coast
+				target = s:STATE_NORTHEAST_ATLANTIC_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHEAST_PACIFIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northeast_pacific_ocean
+				target = s:STATE_NORTHEAST_PACIFIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_ANHUI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_anhui
+				target = s:STATE_NORTHERN_ANHUI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_BALTIC_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_baltic_sea
+				target = s:STATE_NORTHERN_BALTIC_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_BALUCHISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_baluchistan
+				target = s:STATE_NORTHERN_BALUCHISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_CAPE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_cape
+				target = s:STATE_NORTHERN_CAPE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_MANCHURIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_manchuria
+				target = s:STATE_NORTHERN_MANCHURIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_NORTH_ATLANTIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_north_atlantic_ocean
+				target = s:STATE_NORTHERN_NORTH_ATLANTIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_NORWAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_norway
+				target = s:STATE_NORTHERN_NORWAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_POLYNESIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_polynesian_sea
+				target = s:STATE_NORTHERN_POLYNESIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_TERRITORY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_territory
+				target = s:STATE_NORTHERN_TERRITORY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_THRACE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_thrace
+				target = s:STATE_NORTHERN_THRACE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHERN_TRANSYLVANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northern_transylvania
+				target = s:STATE_NORTHERN_TRANSYLVANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHWEST_PACIFIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northwest_pacific_ocean
+				target = s:STATE_NORTHWEST_PACIFIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHWEST_PASSAGE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northwest_passage
+				target = s:STATE_NORTHWEST_PASSAGE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTHWEST_TERRITORIES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_northwest_territories
+				target = s:STATE_NORTHWEST_TERRITORIES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_ANGOLA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_angola
+				target = s:STATE_NORTH_ANGOLA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_ATLANTIC_CURRENT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_atlantic_current
+				target = s:STATE_NORTH_ATLANTIC_CURRENT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_ATLANTIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_atlantic_ocean
+				target = s:STATE_NORTH_ATLANTIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_BORNEO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_borneo
+				target = s:STATE_NORTH_BORNEO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_CAMEROON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_cameroon
+				target = s:STATE_NORTH_CAMEROON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_CAROLINA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_carolina
+				target = s:STATE_NORTH_CAROLINA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_CAUCASUS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_caucasus
+				target = s:STATE_NORTH_CAUCASUS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_DAKOTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_dakota
+				target = s:STATE_NORTH_DAKOTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_ISLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_island
+				target = s:STATE_NORTH_ISLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_MADAGASCAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_madagascar
+				target = s:STATE_NORTH_MADAGASCAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_PACIFIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_pacific_ocean
+				target = s:STATE_NORTH_PACIFIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_RHINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_rhine
+				target = s:STATE_NORTH_RHINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_sea
+				target = s:STATE_NORTH_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORTH_SUMATRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_north_sumatra
+				target = s:STATE_NORTH_SUMATRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NORWEGIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_norwegian_sea
+				target = s:STATE_NORWEGIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NOVGOROD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_novgorod
+				target = s:STATE_NOVGOROD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_NUNAVUT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_nunavut
+				target = s:STATE_NUNAVUT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OAXACA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oaxaca
+				target = s:STATE_OAXACA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OB
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ob
+				target = s:STATE_OB
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OHIO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ohio
+				target = s:STATE_OHIO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OKHOTSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_okhotsk
+				target = s:STATE_OKHOTSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OKLAHOMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oklahoma
+				target = s:STATE_OKLAHOMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OLD_CASTILE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_old_castile
+				target = s:STATE_OLD_CASTILE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OMAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oman
+				target = s:STATE_OMAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ONTARIO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ontario
+				target = s:STATE_ONTARIO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ORAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oran
+				target = s:STATE_ORAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OREGON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oregon
+				target = s:STATE_OREGON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ORISSA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_orissa
+				target = s:STATE_ORISSA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ORLEANS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_orleans
+				target = s:STATE_ORLEANS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OROMIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oromia
+				target = s:STATE_OROMIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ORYOL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oryol
+				target = s:STATE_ORYOL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OSTROBOTHNIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ostrobothnia
+				target = s:STATE_OSTROBOTHNIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OULU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_oulu
+				target = s:STATE_OULU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OUTER_HAUSALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_outer_hausaland
+				target = s:STATE_OUTER_HAUSALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_OUTER_MANCHURIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_outer_manchuria
+				target = s:STATE_OUTER_MANCHURIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PACIFIC_SEABOARD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pacific_seaboard
+				target = s:STATE_PACIFIC_SEABOARD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PALESTINE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_palestine
+				target = s:STATE_PALESTINE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PANAMA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_panama
+				target = s:STATE_PANAMA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_para
+				target = s:STATE_PARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PARAIBA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_paraiba
+				target = s:STATE_PARAIBA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PARANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_parana
+				target = s:STATE_PARANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PASHTUNISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pashtunistan
+				target = s:STATE_PASHTUNISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PASTAZA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pastaza
+				target = s:STATE_PASTAZA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PATAGONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_patagonia
+				target = s:STATE_PATAGONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PATAGONIAN_CHANNELS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_patagonian_channels
+				target = s:STATE_PATAGONIAN_CHANNELS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PATAGONIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_patagonian_sea
+				target = s:STATE_PATAGONIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PEGU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pegu
+				target = s:STATE_PEGU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PELOPONNESE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_peloponnese
+				target = s:STATE_PELOPONNESE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PENNSYLVANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pennsylvania
+				target = s:STATE_PENNSYLVANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PERM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_perm
+				target = s:STATE_PERM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PERNAMBUCO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pernambuco
+				target = s:STATE_PERNAMBUCO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PERSIAN_GULF
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_persian_gulf
+				target = s:STATE_PERSIAN_GULF
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PERSIAN_KURDISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_persian_kurdistan
+				target = s:STATE_PERSIAN_KURDISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PERUVIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_peruvian_sea
+				target = s:STATE_PERUVIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PHILIPPINES_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_philippines_sea
+				target = s:STATE_PHILIPPINES_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PIAUI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_piaui
+				target = s:STATE_PIAUI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PICARDY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_picardy
+				target = s:STATE_PICARDY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PIEDMONT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_piedmont
+				target = s:STATE_PIEDMONT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_POITOU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_poitou
+				target = s:STATE_POITOU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_POMERANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pomerania
+				target = s:STATE_POMERANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_POSEN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_posen
+				target = s:STATE_POSEN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_POTOSI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_potosi
+				target = s:STATE_POTOSI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PROVENCE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_provence
+				target = s:STATE_PROVENCE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PSKOV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pskov
+				target = s:STATE_PSKOV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PUERTO_RICO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_puerto_rico
+				target = s:STATE_PUERTO_RICO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PUNJAB
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_punjab
+				target = s:STATE_PUNJAB
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PYONGYANG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pyongyang
+				target = s:STATE_PYONGYANG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_QINGHAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_qinghai
+				target = s:STATE_QINGHAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_QUEBEC
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_quebec
+				target = s:STATE_QUEBEC
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_QUEENSLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_queensland
+				target = s:STATE_QUEENSLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_QUETTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_quetta
+				target = s:STATE_QUETTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RAJPUTANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rajputana
+				target = s:STATE_RAJPUTANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RED_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_red_sea
+				target = s:STATE_RED_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RHINELAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rhineland
+				target = s:STATE_RHINELAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RHODE_ISLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rhode_island
+				target = s:STATE_RHODE_ISLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RHONE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rhone
+				target = s:STATE_RHONE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIFT_VALLEY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rift_valley
+				target = s:STATE_RIFT_VALLEY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIGA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_riga
+				target = s:STATE_RIGA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIO_DE_JANEIRO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rio_de_janeiro
+				target = s:STATE_RIO_DE_JANEIRO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIO_GRANDE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rio_grande
+				target = s:STATE_RIO_GRANDE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIO_GRANDE_DO_NORTE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rio_grande_do_norte
+				target = s:STATE_RIO_GRANDE_DO_NORTE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIO_GRANDE_DO_SUL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rio_grande_do_sul
+				target = s:STATE_RIO_GRANDE_DO_SUL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIO_NEGRO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rio_negro
+				target = s:STATE_RIO_NEGRO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RIVER_PLATE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_river_plate
+				target = s:STATE_RIVER_PLATE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ROMAGNA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_romagna
+				target = s:STATE_ROMAGNA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ROSTOV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rostov
+				target = s:STATE_ROSTOV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RUHR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ruhr
+				target = s:STATE_RUHR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RUTHENIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ruthenia
+				target = s:STATE_RUTHENIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RYAZAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ryazan
+				target = s:STATE_RYAZAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RYUKYU_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ryukyu_islands
+				target = s:STATE_RYUKYU_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAHARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sahara
+				target = s:STATE_SAHARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAKHALIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sakhalin
+				target = s:STATE_SAKHALIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAMARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_samara
+				target = s:STATE_SAMARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SANTA_CATARINA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_santa_catarina
+				target = s:STATE_SANTA_CATARINA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SANTA_CRUZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_santa_cruz
+				target = s:STATE_SANTA_CRUZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SANTA_FE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_santa_fe
+				target = s:STATE_SANTA_FE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SANTIAGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_santiago
+				target = s:STATE_SANTIAGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SANTO_DOMINGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_santo_domingo
+				target = s:STATE_SANTO_DOMINGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAN_SALVADOR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_san_salvador
+				target = s:STATE_SAN_SALVADOR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAO_PAULO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sao_paulo
+				target = s:STATE_SAO_PAULO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SARDINIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sardinia
+				target = s:STATE_SARDINIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SARGASSO_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sargasso_sea
+				target = s:STATE_SARGASSO_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SARIWON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sariwon
+				target = s:STATE_SARIWON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SASKATCHEWAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_saskatchewan
+				target = s:STATE_SASKATCHEWAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAVOY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_savoy
+				target = s:STATE_SAVOY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SAXONY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_saxony
+				target = s:STATE_SAXONY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SCANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_scania
+				target = s:STATE_SCANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SCHLESWIG_HOLSTEIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_schleswig_holstein
+				target = s:STATE_SCHLESWIG_HOLSTEIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEA_OF_JAPAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sea_of_japan
+				target = s:STATE_SEA_OF_JAPAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEA_OF_MARMARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sea_of_marmara
+				target = s:STATE_SEA_OF_MARMARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEA_OF_OKHOTSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sea_of_okhotsk
+				target = s:STATE_SEA_OF_OKHOTSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEMIRECHE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_semireche
+				target = s:STATE_SEMIRECHE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEMNAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_semnan
+				target = s:STATE_SEMNAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SENEGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_senegal
+				target = s:STATE_SENEGAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SEOUL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_seoul
+				target = s:STATE_SEOUL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHANDONG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shandong
+				target = s:STATE_SHANDONG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHANXI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shanxi
+				target = s:STATE_SHANXI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHAN_STATES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shan_states
+				target = s:STATE_SHAN_STATES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHAOZHOU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shaozhou
+				target = s:STATE_SHAOZHOU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHENGJING
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shengjing
+				target = s:STATE_SHENGJING
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SHIKOKU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_shikoku
+				target = s:STATE_SHIKOKU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SICHUAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sichuan
+				target = s:STATE_SICHUAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SICILY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sicily
+				target = s:STATE_SICILY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SIERRA_LEONE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sierra_leone
+				target = s:STATE_SIERRA_LEONE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SINAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sinai
+				target = s:STATE_SINAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SINALOA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sinaloa
+				target = s:STATE_SINALOA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SINDH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sindh
+				target = s:STATE_SINDH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sistan
+				target = s:STATE_SISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SKOPIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_skopia
+				target = s:STATE_SKOPIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SLAVONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_slavonia
+				target = s:STATE_SLAVONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SLOVAKIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_slovakia
+				target = s:STATE_SLOVAKIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SLOVENIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_slovenia
+				target = s:STATE_SLOVENIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SMOLENSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_smolensk
+				target = s:STATE_SMOLENSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOLOMON_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_solomon_islands
+				target = s:STATE_SOLOMON_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOMALILAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_somaliland
+				target = s:STATE_SOMALILAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SONORA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sonora
+				target = s:STATE_SONORA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_ANHUI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_anhui
+				target = s:STATE_SOUTHERN_ANHUI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_ATLANTIC_CRURRENT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_atlantic_crurrent
+				target = s:STATE_SOUTHERN_ATLANTIC_CRURRENT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_BALTIC_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_baltic_sea
+				target = s:STATE_SOUTHERN_BALTIC_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_BIGHT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_bight
+				target = s:STATE_SOUTHERN_BIGHT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_MANCHURIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_manchuria
+				target = s:STATE_SOUTHERN_MANCHURIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_OCEAN_01
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_ocean_01
+				target = s:STATE_SOUTHERN_OCEAN_01
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_OCEAN_02
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_ocean_02
+				target = s:STATE_SOUTHERN_OCEAN_02
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTHERN_TRANSYLVANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_southern_transylvania
+				target = s:STATE_SOUTHERN_TRANSYLVANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_ANGOLA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_angola
+				target = s:STATE_SOUTH_ANGOLA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_ATLANTIC_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_atlantic_coast
+				target = s:STATE_SOUTH_ATLANTIC_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_ATLANTIC_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_atlantic_islands
+				target = s:STATE_SOUTH_ATLANTIC_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_ATLANTIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_atlantic_ocean
+				target = s:STATE_SOUTH_ATLANTIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_AUSTRALIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_australia
+				target = s:STATE_SOUTH_AUSTRALIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_BRAZIL_BIGHT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_brazil_bight
+				target = s:STATE_SOUTH_BRAZIL_BIGHT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_CAMEROON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_cameroon
+				target = s:STATE_SOUTH_CAMEROON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_CAROLINA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_carolina
+				target = s:STATE_SOUTH_CAROLINA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_CHINA_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_china_sea
+				target = s:STATE_SOUTH_CHINA_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_DAKOTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_dakota
+				target = s:STATE_SOUTH_DAKOTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_INDIAN_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_indian_ocean
+				target = s:STATE_SOUTH_INDIAN_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_ISLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_island
+				target = s:STATE_SOUTH_ISLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_MADAGASCAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_madagascar
+				target = s:STATE_SOUTH_MADAGASCAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_PACIFIC_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_pacific_ocean
+				target = s:STATE_SOUTH_PACIFIC_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_SUMATRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_sumatra
+				target = s:STATE_SOUTH_SUMATRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SOUTH_TYROL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_south_tyrol
+				target = s:STATE_SOUTH_TYROL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_STAVROPOL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_stavropol
+				target = s:STATE_STAVROPOL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_STYRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_styria
+				target = s:STATE_STYRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SUNDA_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sunda_islands
+				target = s:STATE_SUNDA_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SURGUT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_surgut
+				target = s:STATE_SURGUT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SUZHOU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_suzhou
+				target = s:STATE_SUZHOU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SVEALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_svealand
+				target = s:STATE_SVEALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SYRDARYA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_syrdarya
+				target = s:STATE_SYRDARYA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SYRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_syria
+				target = s:STATE_SYRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TABRIZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tabriz
+				target = s:STATE_TABRIZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TAHITI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tahiti
+				target = s:STATE_TAHITI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TAJIKISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tajikistan
+				target = s:STATE_TAJIKISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TALINN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_talinn
+				target = s:STATE_TALINN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TAMBOV
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tambov
+				target = s:STATE_TAMBOV
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TANGANYIKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tanganyika
+				target = s:STATE_TANGANYIKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TARAPACA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tarapaca
+				target = s:STATE_TARAPACA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TARTARIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tartaria
+				target = s:STATE_TARTARIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TARTU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tartu
+				target = s:STATE_TARTU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TASMANIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tasmania
+				target = s:STATE_TASMANIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TASMAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tasman_sea
+				target = s:STATE_TASMAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TAURIDA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_taurida
+				target = s:STATE_TAURIDA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TENASSERIM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tenasserim
+				target = s:STATE_TENASSERIM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TENNESSEE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tennessee
+				target = s:STATE_TENNESSEE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TEXAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_texas
+				target = s:STATE_TEXAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_THESSALIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_thessalia
+				target = s:STATE_THESSALIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TIANSHAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tianshan
+				target = s:STATE_TIANSHAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TIMBUKTU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_timbuktu
+				target = s:STATE_TIMBUKTU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TOBOLSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tobolsk
+				target = s:STATE_TOBOLSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TOGO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_togo
+				target = s:STATE_TOGO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TOHOKU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tohoku
+				target = s:STATE_TOHOKU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TOKAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tokai
+				target = s:STATE_TOKAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TOMSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tomsk
+				target = s:STATE_TOMSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TONGA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tonga
+				target = s:STATE_TONGA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TONKIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tonkin
+				target = s:STATE_TONKIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRABZON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_trabzon
+				target = s:STATE_TRABZON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRANSDANUBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_transdanubia
+				target = s:STATE_TRANSDANUBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRANSJORDAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_transjordan
+				target = s:STATE_TRANSJORDAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRANSVAAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_transvaal
+				target = s:STATE_TRANSVAAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRANS_BAIKAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_trans_baikal
+				target = s:STATE_TRANS_BAIKAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRAVANCORE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_travancore
+				target = s:STATE_TRAVANCORE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRIPOLI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tripoli
+				target = s:STATE_TRIPOLI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TUCUMAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tucuman
+				target = s:STATE_TUCUMAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TUNISIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tunisia
+				target = s:STATE_TUNISIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TURKMENIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_turkmenia
+				target = s:STATE_TURKMENIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TUSCANY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tuscany
+				target = s:STATE_TUSCANY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TUVA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tuva
+				target = s:STATE_TUVA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TVER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tver
+				target = s:STATE_TVER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TYROL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tyrol
+				target = s:STATE_TYROL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TYRRHENIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_tyrrhenian_sea
+				target = s:STATE_TYRRHENIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UBANGI_SHARI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ubangi_shari
+				target = s:STATE_UBANGI_SHARI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UFA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ufa
+				target = s:STATE_UFA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UGANDA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uganda
+				target = s:STATE_UGANDA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ULIASTAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uliastai
+				target = s:STATE_ULIASTAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ULSTER
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ulster
+				target = s:STATE_ULSTER
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UMBRIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_umbria
+				target = s:STATE_UMBRIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UPPER_ANDALUSIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_upper_andalusia
+				target = s:STATE_UPPER_ANDALUSIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UPPER_EGYPT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_upper_egypt
+				target = s:STATE_UPPER_EGYPT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UPPER_SILESIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_upper_silesia
+				target = s:STATE_UPPER_SILESIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UPPER_YENISEYSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_upper_yeniseysk
+				target = s:STATE_UPPER_YENISEYSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_URAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ural
+				target = s:STATE_URAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_URALSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uralsk
+				target = s:STATE_URALSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_URGA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_urga
+				target = s:STATE_URGA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_URMIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_urmia
+				target = s:STATE_URMIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_URUGUAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uruguay
+				target = s:STATE_URUGUAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UTAH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_utah
+				target = s:STATE_UTAH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UUSIMAA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uusimaa
+				target = s:STATE_UUSIMAA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_UZBEKIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_uzbekia
+				target = s:STATE_UZBEKIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VALENCIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_valencia
+				target = s:STATE_VALENCIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VANUATU
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vanuatu
+				target = s:STATE_VANUATU
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VENETIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_venetia
+				target = s:STATE_VENETIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VERACRUZ
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_veracruz
+				target = s:STATE_VERACRUZ
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VERMONT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vermont
+				target = s:STATE_VERMONT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VICTORIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_victoria
+				target = s:STATE_VICTORIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VILNIUS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vilnius
+				target = s:STATE_VILNIUS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VIRGINIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_virginia
+				target = s:STATE_VIRGINIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VISAYAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_visayas
+				target = s:STATE_VISAYAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VITEBSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vitebsk
+				target = s:STATE_VITEBSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VOLHYNIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_volhynia
+				target = s:STATE_VOLHYNIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VOLTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_volta
+				target = s:STATE_VOLTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VRYSTAAT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vrystaat
+				target = s:STATE_VRYSTAAT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_VYATKA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_vyatka
+				target = s:STATE_VYATKA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WADDAI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_waddai
+				target = s:STATE_WADDAI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WALES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wales
+				target = s:STATE_WALES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WALLACHIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wallachia
+				target = s:STATE_WALLACHIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WALLONIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wallonia
+				target = s:STATE_WALLONIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WASHINGTON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_washington
+				target = s:STATE_WASHINGTON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_AUSTRALIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_australia
+				target = s:STATE_WESTERN_AUSTRALIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_BLACK_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_black_sea
+				target = s:STATE_WESTERN_BLACK_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_CARIBBEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_caribbean_sea
+				target = s:STATE_WESTERN_CARIBBEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_CUBA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_cuba
+				target = s:STATE_WESTERN_CUBA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_HUBEI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_hubei
+				target = s:STATE_WESTERN_HUBEI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_INDIAN_OCEAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_indian_ocean
+				target = s:STATE_WESTERN_INDIAN_OCEAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_MALI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_mali
+				target = s:STATE_WESTERN_MALI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_MEDITERRANEAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_mediterranean_sea
+				target = s:STATE_WESTERN_MEDITERRANEAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_NEW_GUINEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_new_guinea
+				target = s:STATE_WESTERN_NEW_GUINEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_NORWAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_norway
+				target = s:STATE_WESTERN_NORWAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_POLYNESIAN_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_polynesian_sea
+				target = s:STATE_WESTERN_POLYNESIAN_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_SERBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_serbia
+				target = s:STATE_WESTERN_SERBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTERN_THRACE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_western_thrace
+				target = s:STATE_WESTERN_THRACE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WESTPHALIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_westphalia
+				target = s:STATE_WESTPHALIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_AEGEAN_ISLANDS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_aegean_islands
+				target = s:STATE_WEST_AEGEAN_ISLANDS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_BENGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_bengal
+				target = s:STATE_WEST_BENGAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_BORNEO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_borneo
+				target = s:STATE_WEST_BORNEO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_COUNTRY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_country
+				target = s:STATE_WEST_COUNTRY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_GALICIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_galicia
+				target = s:STATE_WEST_GALICIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_INDIES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_indies
+				target = s:STATE_WEST_INDIES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_JAVA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_java
+				target = s:STATE_WEST_JAVA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_KARELIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_karelia
+				target = s:STATE_WEST_KARELIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_MICRONESIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_micronesia
+				target = s:STATE_WEST_MICRONESIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_PRUSSIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_prussia
+				target = s:STATE_WEST_PRUSSIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_SAHARA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_sahara
+				target = s:STATE_WEST_SAHARA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_SWITZERLAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_switzerland
+				target = s:STATE_WEST_SWITZERLAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_VIRGINIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_virginia
+				target = s:STATE_WEST_VIRGINIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WINDWARD_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_windward_coast
+				target = s:STATE_WINDWARD_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WISCONSIN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wisconsin
+				target = s:STATE_WISCONSIN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WURTTEMBERG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wurttemberg
+				target = s:STATE_WURTTEMBERG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WYOMING
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_wyoming
+				target = s:STATE_WYOMING
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_XIAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_xian
+				target = s:STATE_XIAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YAKUTSK
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yakutsk
+				target = s:STATE_YAKUTSK
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YANGHO
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yangho
+				target = s:STATE_YANGHO
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YAROSLAVL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yaroslavl
+				target = s:STATE_YAROSLAVL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YELLOW_SEA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yellow_sea
+				target = s:STATE_YELLOW_SEA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YEMEN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yemen
+				target = s:STATE_YEMEN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YORKSHIRE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yorkshire
+				target = s:STATE_YORKSHIRE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YORUBA_STATES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yoruba_states
+				target = s:STATE_YORUBA_STATES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YUCATAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yucatan
+				target = s:STATE_YUCATAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YUKON_TERRITORY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yukon_territory
+				target = s:STATE_YUKON_TERRITORY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_YUNNAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_yunnan
+				target = s:STATE_YUNNAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZACATECAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zacatecas
+				target = s:STATE_ZACATECAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZAMBEZI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zambezi
+				target = s:STATE_ZAMBEZI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZAMBEZIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zambezia
+				target = s:STATE_ZAMBEZIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZAMBIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zambia
+				target = s:STATE_ZAMBIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZANZIBAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zanzibar
+				target = s:STATE_ZANZIBAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZANZIBAR_COAST
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zanzibar_coast
+				target = s:STATE_ZANZIBAR_COAST
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZEALAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zealand
+				target = s:STATE_ZEALAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZHEJIANG
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zhejiang
+				target = s:STATE_ZHEJIANG
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZHILI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zhili
+				target = s:STATE_ZHILI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZULIA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zulia
+				target = s:STATE_ZULIA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ZULULAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_zululand
+				target = s:STATE_ZULULAND
+			}
+		}
+	}
+}
+tyrone_cp_maintain_famine_cooldowns = {
+	every_state_region = {
+		limit = {
+			has_variable = tyrone_cp_famine_end
+			NOT = {
+				has_harvest_condition = disease_outbreak
+			}
+		}
+		remove_variable = tyrone_cp_famine_end
+		remove_variable = tyrone_cp_famine_active
+		set_variable = {
+			name = tyrone_cp_famine_cooldown
+			days = tyrone_cp_three_years
+		}
+	}
+}

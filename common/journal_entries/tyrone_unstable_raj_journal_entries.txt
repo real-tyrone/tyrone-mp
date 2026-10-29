@@ -268,7 +268,11 @@
 				popup = yes
 			}
 		}
-		custom_tooltip = tyrone_company_self_rule_unlocked_tt
+		if = {
+			limit = { scope:raj_scope ?= { is_subject = no } }
+			custom_tooltip = tyrone_independent_route_choice_tt
+		}
+		else = { custom_tooltip = tyrone_company_self_rule_unlocked_tt }
 	}
 	event_outcome_completed_desc = {
 		first_valid = {
@@ -664,14 +668,12 @@ je_tyrone_raj_schools = {
 	immediate = {
 		tyrone_unstable_bind_india = yes
 	}
+	scripted_progress_bar = tyrone_raj_schooling_bar
 	complete = {
-		scope:raj_scope = {
-			NOT = {
-				has_law_or_variant = law_type:law_no_schools
-			}
-			institution_investment_level = {
-				institution = institution_schools
-				value >= 2
+		custom_tooltip = {
+			text = tyrone_raj_schooling_complete_tt
+			scope:journal_entry = {
+				"scripted_bar_progress(tyrone_raj_schooling_bar)" >= 100
 			}
 		}
 	}

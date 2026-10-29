@@ -1,0 +1,140 @@
+﻿# Contextless JE or country scope. Keep the same country object across tag changes.
+tyrone_nim_bind_india = {
+    if = {
+        limit = { NOT = { exists = scope:nim_india } }
+        global_var:tyrone_nim_india ?= { save_scope_as = nim_india }
+    }
+    if = {
+        limit = { NOT = { exists = scope:nim_india } }
+        tyrone_csr_bind_india = yes
+        scope:csr_india ?= { save_scope_as = nim_india }
+    }
+    if = {
+        limit = { NOT = { exists = scope:nim_india } }
+        random_country = {
+            limit = { is_india_tag_trigger = yes is_country_alive = yes }
+            save_scope_as = nim_india
+        }
+    }
+}
+# Contextless JE scope; only the Indian player is involved.
+tyrone_nim_refresh_involvement = {
+    tyrone_nim_bind_india = yes
+    scope:journal_entry = {
+        every_scope_je_involved = {
+            limit = { NOT = { scope:nim_india = this } }
+            scope:journal_entry = { remove_involved_country = prev }
+        }
+    }
+    scope:nim_india ?= {
+        if = {
+            limit = { NOT = { is_involved_in_journal_entry = $ENTRY$ } }
+            scope:journal_entry = { add_involved_country = scope:nim_india }
+        }
+    }
+}
+# Country scope, called solely from the existing independent-path placeholder.
+tyrone_nim_start = {
+    if = {
+        limit = { NOT = { has_variable = tyrone_nim_started } }
+        save_scope_as = nim_india
+        set_global_variable = { name = tyrone_nim_india value = this }
+        set_variable = tyrone_nim_started
+        set_variable = tyrone_nim_active
+        add_contextless_journal_entry = je_tyrone_nim_assembly
+        tyrone_nim_initialize_regions = yes
+        trigger_event = { id = tyrone_nim.1 popup = yes }
+    }
+}
+tyrone_nim_shift_constitution = {
+    global_var:tyrone_nim_assembly_je ?= {
+        add_progress = { name = tyrone_nim_constitution_bar value = $VALUE$ }
+    }
+}
+tyrone_nim_shift_socialism = {
+    global_var:tyrone_nim_assembly_je ?= {
+        add_progress = { name = tyrone_nim_socialism_bar value = $VALUE$ }
+    }
+}
+tyrone_nim_choose_constitution = {
+    set_variable = tyrone_nim_constitution_done
+    remove_variable = tyrone_nim_emergency_pending
+    owning_company ?= { remove_owned_country = scope:nim_india }
+    set_country_type = recognized
+    if = {
+        limit = { always = $MONARCHY$ }
+        set_variable = tyrone_nim_central_chosen
+        activate_law = law_type:law_monarchy
+        activate_law = law_type:law_autocracy
+        activate_law = law_type:law_india_national_secretariat
+        trigger_event = { id = tyrone_nim.2 popup = yes }
+    }
+    else = {
+        set_variable = tyrone_nim_federal_chosen
+        activate_law = law_type:law_parliamentary_republic
+        activate_law = law_type:law_census_voting
+        activate_law = law_type:law_india_federal_secretariats
+        trigger_event = { id = tyrone_nim.3 popup = yes }
+    }
+    add_contextless_journal_entry = je_tyrone_nim_administration
+    add_contextless_journal_entry = je_tyrone_nim_schools
+    add_contextless_journal_entry = je_tyrone_nim_army
+    add_contextless_journal_entry = je_tyrone_nim_industry
+    add_contextless_journal_entry = je_tyrone_nim_citizens
+}
+tyrone_nim_repress_emergency = {
+    set_variable = tyrone_nim_emergency_used
+    remove_variable = tyrone_nim_emergency_pending
+    global_var:tyrone_nim_assembly_je ?= {
+        set_bar_progress = { name = tyrone_nim_socialism_bar value = 50 }
+    }
+    add_modifier = { name = tyrone_nim_emergency_repression days = tyrone_nim_five_years }
+    add_radicals = { value = 0.05 }
+}
+tyrone_nim_refresh_army_modifier = {
+    if = { limit = { has_modifier = tyrone_nim_army_disorder_0 } remove_modifier = tyrone_nim_army_disorder_0 }
+    if = { limit = { has_modifier = tyrone_nim_army_disorder_1 } remove_modifier = tyrone_nim_army_disorder_1 }
+    if = { limit = { has_modifier = tyrone_nim_army_disorder_2 } remove_modifier = tyrone_nim_army_disorder_2 }
+    if = { limit = { has_modifier = tyrone_nim_army_disorder_3 } remove_modifier = tyrone_nim_army_disorder_3 }
+    if = { limit = { has_modifier = tyrone_nim_army_disorder_4 } remove_modifier = tyrone_nim_army_disorder_4 }
+    if = { limit = { var:tyrone_nim_army_stage = 0 } add_modifier = { name = tyrone_nim_army_disorder_0 } }
+    else_if = { limit = { var:tyrone_nim_army_stage = 1 } add_modifier = { name = tyrone_nim_army_disorder_1 } }
+    else_if = { limit = { var:tyrone_nim_army_stage = 2 } add_modifier = { name = tyrone_nim_army_disorder_2 } }
+    else_if = { limit = { var:tyrone_nim_army_stage = 3 } add_modifier = { name = tyrone_nim_army_disorder_3 } }
+    else_if = { limit = { var:tyrone_nim_army_stage = 4 } add_modifier = { name = tyrone_nim_army_disorder_4 } }
+
+}
+tyrone_nim_army_monthly = {
+    if = {
+        limit = { has_variable = tyrone_nim_army_work_pending NOT = { has_variable = tyrone_nim_army_work_timer } }
+        remove_variable = tyrone_nim_army_work_pending
+        change_variable = { name = tyrone_nim_army_stage add = 1 }
+        tyrone_nim_refresh_army_modifier = yes
+    }
+}
+tyrone_nim_constitution_intervention_cost = {
+    if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_1 } NOT = { has_modifier = tyrone_nim_federal_cost_1 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_1 days = tyrone_nim_five_years }
+    }
+    else_if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_2 } NOT = { has_modifier = tyrone_nim_federal_cost_2 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_2 days = tyrone_nim_five_years }
+    }
+    else_if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_3 } NOT = { has_modifier = tyrone_nim_federal_cost_3 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_3 days = tyrone_nim_five_years }
+    }
+    else_if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_4 } NOT = { has_modifier = tyrone_nim_federal_cost_4 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_4 days = tyrone_nim_five_years }
+    }
+    else_if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_5 } NOT = { has_modifier = tyrone_nim_federal_cost_5 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_5 days = tyrone_nim_five_years }
+    }
+    else_if = {
+        limit = { NOT = { has_modifier = tyrone_nim_monarchy_cost_6 } NOT = { has_modifier = tyrone_nim_federal_cost_6 } }
+        add_modifier = { name = tyrone_nim_$SIDE$_cost_6 days = tyrone_nim_five_years }
+    }
+}

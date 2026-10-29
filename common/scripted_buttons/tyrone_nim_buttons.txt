@@ -1,0 +1,194 @@
+﻿tyrone_nim_back_monarchy = {
+name = tyrone_nim_back_monarchy_name
+    desc = tyrone_nim_back_monarchy_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = {
+        custom_tooltip = { text = tyrone_nim_assembly_open_tt tyrone_nim_constitution_open = yes }
+        custom_tooltip = { text = tyrone_nim_intervention_ready_tt NOT = { has_variable = tyrone_nim_intervention_cooldown } }
+    }
+    cooldown = { days = tyrone_nim_year }
+    ai_chance = { value = 10 }
+    effect = {
+        if = {
+            limit = { tyrone_nim_constitution_open = yes NOT = { has_variable = tyrone_nim_intervention_cooldown } }
+            custom_tooltip = { text = tyrone_nim_const_monarch_ten_tt tyrone_nim_shift_constitution = { VALUE = -10 } }
+            tyrone_nim_constitution_intervention_cost = { SIDE = monarchy }
+            hidden_effect = { set_variable = { name = tyrone_nim_intervention_cooldown days = tyrone_nim_year } }
+        }
+    }
+}
+
+tyrone_nim_adopt_monarchy = {
+name = tyrone_nim_adopt_monarchy_name
+    desc = tyrone_nim_adopt_monarchy_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = {
+        custom_tooltip = { text = tyrone_nim_assembly_open_tt tyrone_nim_constitution_open = yes }
+        custom_tooltip = { text = tyrone_nim_monarchy_threshold_tt global_var:tyrone_nim_assembly_je ?= { "scripted_bar_progress(tyrone_nim_constitution_bar)" <= -50 } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { tyrone_nim_constitution_open = yes global_var:tyrone_nim_assembly_je ?= { "scripted_bar_progress(tyrone_nim_constitution_bar)" <= -50 } }
+            tyrone_nim_choose_constitution = { MONARCHY = yes }
+        }
+    }
+}
+
+tyrone_nim_back_federal = {
+name = tyrone_nim_back_federal_name
+    desc = tyrone_nim_back_federal_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = {
+        custom_tooltip = { text = tyrone_nim_assembly_open_tt tyrone_nim_constitution_open = yes }
+        custom_tooltip = { text = tyrone_nim_intervention_ready_tt NOT = { has_variable = tyrone_nim_intervention_cooldown } }
+    }
+    cooldown = { days = tyrone_nim_year }
+    ai_chance = { value = 10 }
+    effect = {
+        if = {
+            limit = { tyrone_nim_constitution_open = yes NOT = { has_variable = tyrone_nim_intervention_cooldown } }
+            custom_tooltip = { text = tyrone_nim_const_federal_ten_tt tyrone_nim_shift_constitution = { VALUE = 10 } }
+            tyrone_nim_constitution_intervention_cost = { SIDE = federal }
+            hidden_effect = { set_variable = { name = tyrone_nim_intervention_cooldown days = tyrone_nim_year } }
+        }
+    }
+}
+
+tyrone_nim_adopt_federal = {
+name = tyrone_nim_adopt_federal_name
+    desc = tyrone_nim_adopt_federal_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = {
+        custom_tooltip = { text = tyrone_nim_assembly_open_tt tyrone_nim_constitution_open = yes }
+        custom_tooltip = { text = tyrone_nim_federal_threshold_tt global_var:tyrone_nim_assembly_je ?= { "scripted_bar_progress(tyrone_nim_constitution_bar)" >= 50 } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { tyrone_nim_constitution_open = yes global_var:tyrone_nim_assembly_je ?= { "scripted_bar_progress(tyrone_nim_constitution_bar)" >= 50 } }
+            tyrone_nim_choose_constitution = { MONARCHY = no }
+        }
+    }
+}
+
+tyrone_nim_army_1 = {
+name = tyrone_nim_army_1_name
+    desc = tyrone_nim_army_1_desc
+    visible = { tyrone_nim_is_actor = yes var:tyrone_nim_army_stage = 0 }
+    possible = {
+        army_size >= 250
+        NOT = { has_law_or_variant = law_type:law_peasant_levies }
+        custom_tooltip = { text = tyrone_nim_army_ready_tt NOT = { has_variable = tyrone_nim_army_work_pending } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { var:tyrone_nim_army_stage = 0 NOT = { has_variable = tyrone_nim_army_work_pending } army_size >= 250
+        NOT = { has_law_or_variant = law_type:law_peasant_levies } }
+            add_modifier = { name = tyrone_nim_army_cost_1 days = tyrone_nim_two_years }
+            custom_tooltip = tyrone_nim_army_work_tt
+            hidden_effect = { set_variable = tyrone_nim_army_work_pending set_variable = { name = tyrone_nim_army_work_timer days = tyrone_nim_two_years } trigger_event = { id = tyrone_nim.9 days = tyrone_nim_two_years } }
+        }
+    }
+}
+
+tyrone_nim_army_2 = {
+name = tyrone_nim_army_2_name
+    desc = tyrone_nim_army_2_desc
+    visible = { tyrone_nim_is_actor = yes var:tyrone_nim_army_stage = 1 }
+    possible = {
+        
+        custom_tooltip = { text = tyrone_nim_army_ready_tt NOT = { has_variable = tyrone_nim_army_work_pending } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { var:tyrone_nim_army_stage = 1 NOT = { has_variable = tyrone_nim_army_work_pending }  }
+            add_modifier = { name = tyrone_nim_army_cost_2 days = tyrone_nim_two_years }
+            custom_tooltip = tyrone_nim_army_work_tt
+            hidden_effect = { set_variable = tyrone_nim_army_work_pending set_variable = { name = tyrone_nim_army_work_timer days = tyrone_nim_two_years } trigger_event = { id = tyrone_nim.9 days = tyrone_nim_two_years } }
+        }
+    }
+}
+
+tyrone_nim_army_3 = {
+name = tyrone_nim_army_3_name
+    desc = tyrone_nim_army_3_desc
+    visible = { tyrone_nim_is_actor = yes var:tyrone_nim_army_stage = 2 }
+    possible = {
+        
+        custom_tooltip = { text = tyrone_nim_army_ready_tt NOT = { has_variable = tyrone_nim_army_work_pending } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { var:tyrone_nim_army_stage = 2 NOT = { has_variable = tyrone_nim_army_work_pending }  }
+            add_modifier = { name = tyrone_nim_army_cost_3 days = tyrone_nim_two_years }
+            custom_tooltip = tyrone_nim_army_work_tt
+            hidden_effect = { set_variable = tyrone_nim_army_work_pending set_variable = { name = tyrone_nim_army_work_timer days = tyrone_nim_two_years } trigger_event = { id = tyrone_nim.9 days = tyrone_nim_two_years } }
+        }
+    }
+}
+
+tyrone_nim_army_4 = {
+name = tyrone_nim_army_4_name
+    desc = tyrone_nim_army_4_desc
+    visible = { tyrone_nim_is_actor = yes var:tyrone_nim_army_stage = 3 }
+    possible = {
+        
+        custom_tooltip = { text = tyrone_nim_army_ready_tt NOT = { has_variable = tyrone_nim_army_work_pending } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { var:tyrone_nim_army_stage = 3 NOT = { has_variable = tyrone_nim_army_work_pending }  }
+            add_modifier = { name = tyrone_nim_army_cost_4 days = tyrone_nim_two_years }
+            custom_tooltip = tyrone_nim_army_work_tt
+            hidden_effect = { set_variable = tyrone_nim_army_work_pending set_variable = { name = tyrone_nim_army_work_timer days = tyrone_nim_two_years } trigger_event = { id = tyrone_nim.9 days = tyrone_nim_two_years } }
+        }
+    }
+}
+
+tyrone_nim_army_5 = {
+name = tyrone_nim_army_5_name
+    desc = tyrone_nim_army_5_desc
+    visible = { tyrone_nim_is_actor = yes var:tyrone_nim_army_stage = 4 }
+    possible = {
+        
+        custom_tooltip = { text = tyrone_nim_army_ready_tt NOT = { has_variable = tyrone_nim_army_work_pending } }
+    }
+    ai_chance = { value = 100 }
+    effect = {
+        if = {
+            limit = { var:tyrone_nim_army_stage = 4 NOT = { has_variable = tyrone_nim_army_work_pending }  }
+            add_modifier = { name = tyrone_nim_army_cost_5 days = tyrone_nim_two_years }
+            custom_tooltip = tyrone_nim_army_work_tt
+            hidden_effect = { set_variable = tyrone_nim_army_work_pending set_variable = { name = tyrone_nim_army_work_timer days = tyrone_nim_two_years } trigger_event = { id = tyrone_nim.9 days = tyrone_nim_two_years } }
+        }
+    }
+}
+
+
+tyrone_nim_industrial_awakening = {
+    name = tyrone_nim_industry_button
+    desc = tyrone_nim_industry_button_desc
+    visible = { tyrone_nim_is_actor = yes }
+    possible = {
+        any_scope_state = {
+            state_region = { has_state_trait = state_trait_tyrone_indian_rural_region }
+            any_scope_building = { is_building_type = building_urban_center level >= 80 }
+        }
+    }
+    cooldown = { days = tyrone_nim_two_years }
+    ai_chance = { value = 100 }
+    effect = {
+        every_scope_state = {
+            limit = {
+                state_region = { has_state_trait = state_trait_tyrone_indian_rural_region }
+                any_scope_building = { is_building_type = building_urban_center level >= 80 }
+            }
+            state_region = { remove_state_trait = state_trait_tyrone_indian_rural_region }
+        }
+    }
+}
