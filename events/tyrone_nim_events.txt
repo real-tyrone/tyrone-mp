@@ -57,7 +57,13 @@ type = country_event
     duration = 3
     trigger = { has_variable = tyrone_nim_started }
     immediate = { save_scope_as = nim_india }
-option = { name = tyrone_nim.4.a default_option = yes }
+option = {
+	name = tyrone_nim.4.a
+	default_option = yes
+	power_bloc ?= {
+		add_modifier = { name = tyrone_nim_united_india_mandates days = normal_modifier_time }
+	}
+}
 }
 
 tyrone_nim.11 = {
@@ -186,8 +192,8 @@ tyrone_nim.9 = {
     type = country_event
     hidden = yes
     trigger = { has_variable = tyrone_nim_army_work_pending }
-    # The scheduled callback is authoritative at day 730, regardless of timed-variable expiry order.
-    # Clearing pending in the shared helper prevents a second advance from the monthly recovery pulse.
+    # Release the work lock at the scheduled deadline, even after the journal entry completes.
+    # New reforms already advance at the click; older pending reforms retain their original advance.
     immediate = {
         save_scope_as = nim_india
         remove_variable = tyrone_nim_army_work_timer

@@ -2070,6 +2070,26 @@ sepoy_mutiny_events.4 = {
 				sepoy_mutiny_tag_specific_war_goals = yes
 			}
 		}
+		# A regional rebel tag may be absent; never leave the seceding prince neutral.
+		if = {
+			limit = {
+				NOT = {
+					any_diplomatic_play = {
+						is_diplomatic_play_type = dp_sepoy_mutiny
+						any_scope_play_involved = { this = root }
+					}
+				}
+			}
+			random_diplomatic_play = {
+				limit = {
+					is_diplomatic_play_type = dp_sepoy_mutiny
+					initiator = { c:BIC ?= this }
+				}
+				add_target_backers = { root }
+				add_war_goal = { holder = c:BIC target_country = root type = annex_country }
+				sepoy_mutiny_tag_specific_war_goals = yes
+			}
+		}
 		add_modifier = {
 			name = war_for_independence
 			days = normal_modifier_time

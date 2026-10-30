@@ -66,14 +66,32 @@
 	}
 
 	on_complete = {
-		scope:nim_india ?= {
-			set_variable = tyrone_nim_main_done
-			remove_variable = tyrone_nim_active
-			trigger_event = {
-				id = tyrone_nim.4
-				popup = yes
+		hidden_effect = {
+			scope:nim_india ?= {
+				set_variable = tyrone_nim_main_done
+				remove_variable = tyrone_nim_active
+				every_subject_or_below = {
+					limit = {
+						is_princely_state = yes
+						NOT = { c:PAK ?= this }
+						NOT = { c:BGL ?= this }
+					}
+					save_scope_as = nim_integrating_prince
+					scope:nim_india = { annex = scope:nim_integrating_prince }
+				}
+				trigger_event = { id = tyrone_nim.4 popup = yes }
 			}
 		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim_bloc_reward_header
+		effect = { custom_tooltip = tyrone_nim_bloc_reward_tt }
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim_princes_reward_header
+		effect = { custom_tooltip = tyrone_nim_annex_princely_subjects_tt }
 	}
 
 	progressbar = no
@@ -210,6 +228,35 @@ je_tyrone_nim_assembly = {
 		}
 	}
 
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim_assembly_monarchy_preview_header
+		effect = {
+			scope:nim_india ?= {
+				activate_law = law_type:law_monarchy
+				activate_law = law_type:law_autocracy
+				activate_law = law_type:law_india_national_secretariat
+			}
+			custom_tooltip = tyrone_nim_assembly_reforms_preview_tt
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim_assembly_federal_preview_header
+		effect = {
+			scope:nim_india ?= {
+				activate_law = law_type:law_parliamentary_republic
+				activate_law = law_type:law_census_voting
+				activate_law = law_type:law_india_federal_secretariats
+			}
+			custom_tooltip = tyrone_nim_assembly_reforms_preview_tt
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim_assembly_socialist_preview_header
+		effect = { custom_tooltip = tyrone_nim_assembly_socialist_preview_tt }
+	}
+
 	weight = 40
 	can_revolution_inherit = yes
 	should_be_pinned_by_default_involved = yes
@@ -263,6 +310,16 @@ je_tyrone_nim_administration = {
 			trigger_event = {
 				id = tyrone_nim.5
 				popup = yes
+			}
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim.5.t
+		effect = {
+			scope:nim_india ?= {
+				add_loyalists = { value = 0.02 }
+				add_modifier = { name = tyrone_nim_administration_reward days = normal_modifier_time }
 			}
 		}
 	}
@@ -329,6 +386,16 @@ je_tyrone_nim_schools = {
 			trigger_event = {
 				id = tyrone_nim.6
 				popup = yes
+			}
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim.6.t
+		effect = {
+			scope:nim_india ?= {
+				add_loyalists = { value = 0.02 }
+				add_modifier = { name = tyrone_nim_school_reward days = normal_modifier_time }
 			}
 		}
 	}
@@ -427,6 +494,15 @@ je_tyrone_nim_army = {
 		value = 5
 	}
 
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim.7.t
+		effect = {
+			scope:nim_india ?= {
+				add_modifier = { name = tyrone_nim_home_army }
+			}
+		}
+	}
+
 	progressbar = yes
 
 	invalid = {
@@ -474,7 +550,70 @@ je_tyrone_nim_industry = {
 	scripted_button = tyrone_nim_industrial_awakening
 
 	complete = {
-		always = no
+		custom_tooltip = {
+			text = tyrone_nim_industry_complete_tt
+			NOT = {
+				any_state_region = {
+					has_state_trait = state_trait_tyrone_indian_rural_region
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		scope:nim_india ?= {
+			custom_tooltip = {
+				text = tyrone_nim_industry_iron_reward_tt
+				random_scope_state = {
+					limit = { NOT = { has_variable = tyrone_nim_mineral_reward_selected } }
+					set_variable = tyrone_nim_mineral_reward_selected
+					state_region = {
+						add_resource_potential = building_iron_mine
+						change_resource_potential = { type = building_iron_mine amount = 60 }
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyrone_nim_industry_coal_reward_tt
+				random_scope_state = {
+					limit = { NOT = { has_variable = tyrone_nim_mineral_reward_selected } }
+					set_variable = tyrone_nim_mineral_reward_selected
+					state_region = {
+						add_resource_potential = building_coal_mine
+						change_resource_potential = { type = building_coal_mine amount = 50 }
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyrone_nim_industry_sulfur_reward_tt
+				random_scope_state = {
+					limit = { NOT = { has_variable = tyrone_nim_mineral_reward_selected } }
+					set_variable = tyrone_nim_mineral_reward_selected
+					state_region = {
+						add_resource_potential = building_sulfur_mine
+						change_resource_potential = { type = building_sulfur_mine amount = 50 }
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyrone_nim_industry_lead_reward_tt
+				random_scope_state = {
+					limit = { NOT = { has_variable = tyrone_nim_mineral_reward_selected } }
+					set_variable = tyrone_nim_mineral_reward_selected
+					state_region = {
+						add_resource_potential = building_lead_mine
+						change_resource_potential = { type = building_lead_mine amount = 50 }
+					}
+				}
+			}
+			hidden_effect = {
+				every_scope_state = {
+					limit = { has_variable = tyrone_nim_mineral_reward_selected }
+					remove_variable = tyrone_nim_mineral_reward_selected
+				}
+				set_variable = tyrone_nim_industry_done
+			}
+		}
 	}
 
 	progressbar = no
@@ -545,6 +684,15 @@ je_tyrone_nim_citizens = {
 			trigger_event = {
 				id = tyrone_nim.8
 				popup = yes
+			}
+		}
+	}
+
+	event_outcome_completed_effect_desc = {
+		header = tyrone_nim.8.t
+		effect = {
+			scope:nim_india ?= {
+				tyrone_eoi_home_rule_cultures = yes
 			}
 		}
 	}

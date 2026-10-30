@@ -605,7 +605,19 @@ law_india_industry_banned = {
 
 law_chartered_hereditary_bureaucrats = {
 	group = lawgroup_bureaucracy
-	can_impose = { tyrone_cr_can_leave_civil_service = yes }
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
 	can_enact = { tyrone_cr_can_leave_civil_service = yes }
 
 	parent = law_hereditary_bureaucrats
@@ -655,7 +667,19 @@ law_chartered_hereditary_bureaucrats = {
 
 law_chartered_appointed_bureaucrats = {
 	group = lawgroup_bureaucracy
-	can_impose = { tyrone_cr_can_leave_civil_service = yes }
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
 	can_enact = { tyrone_cr_can_leave_civil_service = yes }
 
 	parent = law_appointed_bureaucrats
@@ -703,7 +727,19 @@ law_chartered_appointed_bureaucrats = {
 
 law_chartered_elected_bureaucrats = {
 	group = lawgroup_bureaucracy
-	can_impose = { tyrone_cr_can_leave_civil_service = yes }
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
 
 	parent = law_elected_bureaucrats
 
@@ -814,7 +850,19 @@ law_india_crown_administration = {
 
 law_india_federal_administration = {
 	group = lawgroup_bureaucracy
-	can_impose = { tyrone_cr_can_leave_civil_service = yes }
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
 
 	parent = law_elected_bureaucrats
 
@@ -940,6 +988,7 @@ law_chartered_religious_schools = {
 	}
 
 	modifier = {
+		country_institution_schools_max_investment_add = -2
 		country_institution_cost_institution_schools_mult = -0.2
 		country_brahmins_cultural_acceptance_mult = 0.05
 	}
@@ -1006,7 +1055,7 @@ law_chartered_orientalist_schools = {
 
 	institution = institution_schools
 	institution_modifier = {
-		state_education_access_add = 0.05
+		state_education_access_add = 0.02
 		state_peasants_education_access_add = 0.02
 		state_peasants_consumption_multiplier_add = 0.05
 		interest_group_ig_industrialists_pol_str_mult = 0.25
@@ -1297,7 +1346,7 @@ law_chartered_caste_relief_rolls = {
 
 	modifier = {
 		country_institution_cost_institution_social_security_mult = -0.1
-		state_political_strength_from_welfare_mult = -0.9
+		building_laborers_mortality_mult = 0.02
 		country_brahmins_cultural_acceptance_mult = 0.05
 		country_kshatriyas_cultural_acceptance_mult = 0.05
 		country_vaishyas_cultural_acceptance_mult = 0.05
@@ -1435,9 +1484,10 @@ law_chartered_old_age_pension = {
 
 	institution = institution_social_security
 	institution_modifier = {
+		state_welfare_payments_add = -0.10
 		state_dependent_wage_mult = 0.1
 		state_dependent_political_participation_add = 0.02
-		state_food_security_add = 0.02
+		state_food_security_add = 0.05
 		state_working_adult_ratio_add = -0.01
 		state_mortality_mult = -0.05
 		state_standard_of_living_add = 0.5
@@ -1795,12 +1845,11 @@ law_india_company_corps = {
 
 	modifier = {
 		unit_morale_loss_mult = 0.05
-		building_training_rate_mult = 0.10
 		country_military_wages_mult = 0.10
 		country_officers_pol_str_mult = 0.25
 		state_building_barrack_max_level_add = 50
 		state_building_conscription_center_max_level_add = 50
-		state_conscription_rate_add = 0.02
+		state_conscription_rate_add = 0.005
 	}
 
 	can_impose = {
@@ -1879,12 +1928,11 @@ law_india_early_standing_army = {
 
 	modifier = {
 		unit_experience_gain_mult = 0.25
-		building_training_rate_mult = -0.15
-		country_military_goods_cost_mult = 0.10
+		building_training_rate_mult = 0.15
+		country_military_goods_cost_mult = 0.50
 		country_officers_pol_str_mult = 0.25
-		state_building_barrack_max_level_add = 100
-		state_building_conscription_center_max_level_add = 50
-		state_conscription_rate_add = 0.01
+		state_building_barrack_max_level_add = 60
+		state_building_conscription_center_max_level_add = -100
 	}
 
 	can_impose = {
@@ -2836,6 +2884,7 @@ law_india_chartered_excise = {
 }
 
 law_india_company_assessment = {
+	modifier = { state_standard_of_living_add = -2 }
 	group = lawgroup_taxation
 	parent = law_per_capita_based_taxation
 
