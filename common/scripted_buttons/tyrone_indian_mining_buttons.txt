@@ -1,4 +1,4 @@
-# Country scope: India or its current overlord may fund a survey; only the initiating country pays.
+﻿# Country scope: India or its current overlord may fund a survey; only the initiating country pays.
 tyrone_mining_rajputana_survey_1 = {
 	name = tyrone_mining_rajputana_survey_1_button
 	desc = tyrone_mining_rajputana_survey_1_button_desc
@@ -331,6 +331,57 @@ tyrone_mining_bihar_survey_3 = {
 			}
 			set_global_variable = tyrone_mining_bihar_survey_3_started
 			add_modifier = { name = tyrone_mining_bihar_survey_cost days = very_short_modifier_time }
+		}
+	}
+}
+
+tyrone_promise_plantation_reform_1 = {
+	name = tyrone_promise_plantation_reform_1
+	desc = tyrone_promise_plantation_reform_1_desc
+	visible = { tyrone_promise_is_actor = yes }
+	possible = {
+		scope:tyrone_promise_india = {
+			NOT = { has_law = law_type:law_company_exploitation }
+			any_active_law = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations } }
+		}
+	}
+	ai_chance = { value = 10 }
+	effect = {
+		scope:tyrone_promise_india = {
+			random_active_law = {
+				limit = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations } }
+				every_scope_amendment = {
+					limit = { OR = { amendment_type:amendment_plantation_labor_obligations ?= this.type } }
+					remove_amendment = yes
+				}
+				add_amendment = { type = amendment_plantation_labor_obligations_regulated sponsor = scope:tyrone_promise_india.ig:ig_landowners }
+			}
+		}
+	}
+}
+
+tyrone_promise_plantation_reform_2 = {
+	name = tyrone_promise_plantation_reform_2
+	desc = tyrone_promise_plantation_reform_2_desc
+	visible = { tyrone_promise_is_actor = yes }
+	possible = {
+		scope:tyrone_promise_india = {
+			NOT = { has_law = law_type:law_company_exploitation }
+			NOT = { has_law = law_type:law_chartered_no_social_security }
+			any_active_law = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations has_amendment = amendment_type:amendment_plantation_labor_obligations_regulated } }
+		}
+	}
+	ai_chance = { value = 10 }
+	effect = {
+		scope:tyrone_promise_india = {
+			random_active_law = {
+				limit = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations has_amendment = amendment_type:amendment_plantation_labor_obligations_regulated } }
+				every_scope_amendment = {
+					limit = { OR = { amendment_type:amendment_plantation_labor_obligations ?= this.type amendment_type:amendment_plantation_labor_obligations_regulated ?= this.type } }
+					remove_amendment = yes
+				}
+				add_amendment = { type = amendment_plantation_labor_obligations_relief sponsor = scope:tyrone_promise_india.ig:ig_landowners }
+			}
 		}
 	}
 }
