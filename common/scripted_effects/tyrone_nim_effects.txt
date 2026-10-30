@@ -107,9 +107,17 @@ tyrone_nim_refresh_army_modifier = {
 tyrone_nim_army_monthly = {
     if = {
         limit = { has_variable = tyrone_nim_army_work_pending NOT = { has_variable = tyrone_nim_army_work_timer } }
+        # Older saves may still have a reform awaiting its end-of-work advance.
+        if = {
+            limit = { NOT = { has_variable = tyrone_nim_army_work_advanced } }
+            change_variable = { name = tyrone_nim_army_stage add = 1 }
+            tyrone_nim_refresh_army_modifier = yes
+        }
         remove_variable = tyrone_nim_army_work_pending
-        change_variable = { name = tyrone_nim_army_stage add = 1 }
-        tyrone_nim_refresh_army_modifier = yes
+        if = {
+            limit = { has_variable = tyrone_nim_army_work_advanced }
+            remove_variable = tyrone_nim_army_work_advanced
+        }
     }
 }
 tyrone_nim_constitution_intervention_cost = {

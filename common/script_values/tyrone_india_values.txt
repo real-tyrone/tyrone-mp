@@ -1,0 +1,1317 @@
+# Country scope: India's laws govern the whole wave, including subject states.
+tyrone_raj_famine_duration_days = {
+	value = 18
+	if = {
+		limit = {
+			has_law_or_variant = law_type:law_old_age_pension
+		}
+		subtract = 3
+	}
+	else_if = {
+		limit = {
+			has_law_or_variant = law_type:law_wage_subsidies
+		}
+		subtract = 2
+	}
+	else_if = {
+		limit = {
+			has_law_or_variant = law_type:law_poor_laws
+		}
+		subtract = 1
+	}
+	if = {
+		limit = {
+			has_law_or_variant = law_type:law_public_health_insurance
+		}
+		subtract = 3
+	}
+	else_if = {
+		limit = {
+			has_law_or_variant = law_type:law_private_health_insurance
+		}
+		subtract = 2
+	}
+	else_if = {
+		limit = {
+			has_law_or_variant = law_type:law_charitable_health_system
+		}
+		subtract = 1
+	}
+	# Harvest-condition parameters take days, not months.
+	multiply = 30.4375
+	round = yes
+}
+
+# Clicking country: gross weekly income, frozen by add_modifier at the click.
+tyrone_raj_famine_weekly_cost = {
+	value = total_income
+	min = 0
+	multiply = 0.01
+}
+
+tyrone_raj_nation_education_drift = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_chartered_orientalist_schools
+				has_law = law_type:law_chartered_private_schools
+				has_law = law_type:law_chartered_imperial_public_schools
+				has_law = law_type:law_chartered_public_schools
+			}
+		}
+		value = 1
+	}
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_chartered_religious_schools
+			}
+		}
+		value = -1
+	}
+}
+
+tyrone_raj_nation_welfare_drift = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_chartered_poor_laws
+				has_law = law_type:law_chartered_wage_subsidies
+				has_law = law_type:law_chartered_old_age_pension
+			}
+		}
+		value = 1
+	}
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_chartered_caste_relief_rolls
+				has_law = law_type:law_chartered_caste_labour_boards
+			}
+		}
+		value = -1
+	}
+}
+
+tyrone_raj_nation_health_drift = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_chartered_charitable_health_system
+				has_law = law_type:law_chartered_private_health_insurance
+				has_law = law_type:law_chartered_public_health_insurance
+			}
+		}
+		value = 1
+	}
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_caste_charitable_health_system
+				has_law = law_type:law_caste_private_health_insurance
+				has_law = law_type:law_caste_public_health_insurance
+			}
+		}
+		value = -1
+	}
+}
+
+tyrone_raj_nation_caste_drift = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_affirmative_action
+			}
+		}
+		value = 1
+	}
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_hindu_caste_codified
+				has_law = law_type:law_hindu_caste_enforced
+			}
+		}
+		value = -1
+	}
+}
+
+tyrone_raj_nation_religion_drift = {
+	value = 0
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_india_muslim_favored
+				has_law = law_type:law_india_hindu_favored
+			}
+		}
+		value = -1
+	}
+}
+
+tyrone_raj_nation_law_drift = {
+	value = 0
+	add = tyrone_raj_nation_education_drift
+	add = tyrone_raj_nation_welfare_drift
+	add = tyrone_raj_nation_health_drift
+	add = tyrone_raj_nation_caste_drift
+	add = tyrone_raj_nation_religion_drift
+}
+
+tyrone_raj_nation_relief_cost = {
+	value = total_income
+	min = 0
+	multiply = 0.01
+}
+
+tyrone_raj_nation_bar_education = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_education_drift
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_education_drift
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_education_drift
+		}
+	}
+}
+
+tyrone_raj_nation_bar_welfare = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_welfare_drift
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_welfare_drift
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_welfare_drift
+		}
+	}
+}
+
+tyrone_raj_nation_bar_health = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_health_drift
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_health_drift
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_health_drift
+		}
+	}
+}
+
+tyrone_raj_nation_bar_caste = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_caste_drift
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_caste_drift
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_caste_drift
+		}
+	}
+}
+
+tyrone_raj_nation_bar_religion = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_religion_drift
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_religion_drift
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			add = tyrone_raj_nation_religion_drift
+		}
+	}
+}
+
+tyrone_raj_nation_bar_intervention = {
+	value = 0
+	c:BIC ?= {
+		if = {
+			limit = {
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			if = { limit = { has_variable = tyrone_raj_nation_intervention } add = var:tyrone_raj_nation_intervention }
+		}
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			if = { limit = { has_variable = tyrone_raj_nation_intervention } add = var:tyrone_raj_nation_intervention }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+				has_variable = tyrone_raj_nation_active
+				is_involved_in_journal_entry = je_tyrone_raj_nation
+				NOT = { has_variable = tyrone_unstable_raj_failed }
+			}
+			if = { limit = { has_variable = tyrone_raj_nation_intervention } add = var:tyrone_raj_nation_intervention }
+		}
+	}
+}
+
+tyrone_nim_year = 365
+tyrone_nim_two_years = 730
+tyrone_nim_event_time = 1095
+tyrone_nim_five_years = 1825
+tyrone_nim_ten_years = 3650
+tyrone_nim_citizens_loyalists = { value = loyalist_fraction multiply = 10 }
+tyrone_nim_citizens_education = {
+    value = 0
+    if = { limit = { institution_investment_level = { institution = institution_schools value >= 1 } } add = 0.2 }
+    if = { limit = { institution_investment_level = { institution = institution_schools value >= 2 } } add = 0.2 }
+    if = { limit = { institution_investment_level = { institution = institution_schools value >= 3 } } add = 0.2 }
+    if = { limit = { institution_investment_level = { institution = institution_schools value >= 4 } } add = 0.2 }
+    if = { limit = { institution_investment_level = { institution = institution_schools value >= 5 } } add = 0.2 }
+}
+tyrone_nim_citizens_gdp = { value = gdp divide = 200000000 }
+tyrone_nim_socialist_radicals = { value = radical_fraction multiply = 20 }
+tyrone_nim_regional_development_cost = { value = fixed_income min = 0 multiply = 0.15 }
+
+tyrone_nim_movement_seed_delta = {
+    value = 0
+    owner = { add = var:tyrone_nim_seed_activity }
+    subtract = political_movement_radicalism
+}
+
+tyrone_nim_citizens_bar_loyalists = {
+	value = 0
+	c:BIC ?= {
+		add = tyrone_nim_citizens_loyalists
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = tyrone_nim_citizens_loyalists
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = tyrone_nim_citizens_loyalists
+		}
+	}
+}
+
+tyrone_nim_citizens_bar_gdp = {
+	value = 0
+	c:BIC ?= {
+		add = tyrone_nim_citizens_gdp
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = tyrone_nim_citizens_gdp
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = tyrone_nim_citizens_gdp
+		}
+	}
+}
+
+tyrone_nim_citizens_bar_education = {
+	value = 0
+	c:BIC ?= {
+		add = tyrone_nim_citizens_education
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = tyrone_nim_citizens_education
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = tyrone_nim_citizens_education
+		}
+	}
+}
+
+tyrone_nim_citizens_bar_exclusion = {
+	value = 0
+	c:BIC ?= {
+		if = { limit = { has_law_or_variant = law_type:law_cultural_exclusion } add = 0.5 }
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_cultural_exclusion } add = 0.5 }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_cultural_exclusion } add = 0.5 }
+		}
+	}
+}
+
+tyrone_nim_citizens_bar_multicultural = {
+	value = 0
+	c:BIC ?= {
+		if = { limit = { has_law_or_variant = law_type:law_multicultural } add = 1 }
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_multicultural } add = 1 }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_multicultural } add = 1 }
+		}
+	}
+}
+
+# Country scope: India; country building iterator excludes subjects.
+tyrone_raj_schooling_universities = {
+	value = 0
+	every_scope_building = {
+		limit = { is_building_type = building_university }
+		add = level
+	}
+	divide = 50
+}
+
+tyrone_raj_schooling_institution = {
+	value = 0
+	if = {
+		limit = { institution_investment_level = { institution = institution_schools value >= 1 } }
+		add = 1
+	}
+	if = {
+		limit = { institution_investment_level = { institution = institution_schools value >= 2 } }
+		add = 1
+	}
+	if = {
+		limit = { institution_investment_level = { institution = institution_schools value >= 3 } }
+		add = 1
+	}
+	if = {
+		limit = { institution_investment_level = { institution = institution_schools value >= 4 } }
+		add = 1
+	}
+	if = {
+		limit = { institution_investment_level = { institution = institution_schools value >= 5 } }
+		add = 1
+	}
+}
+
+# Enter a valid country before evaluating triggers. Priority: BIC, BHT, BHR.
+tyrone_raj_schooling_bar_universities = {
+	value = 0
+	c:BIC ?= {
+		add = tyrone_raj_schooling_universities
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = tyrone_raj_schooling_universities
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = tyrone_raj_schooling_universities
+		}
+	}
+}
+
+tyrone_raj_schooling_bar_literacy = {
+	value = 0
+	c:BIC ?= {
+		add = { value = literacy_rate multiply = 10 }
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = { value = literacy_rate multiply = 10 }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = { value = literacy_rate multiply = 10 }
+		}
+	}
+}
+
+tyrone_raj_schooling_bar_institution = {
+	value = 0
+	c:BIC ?= {
+		add = tyrone_raj_schooling_institution
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			add = tyrone_raj_schooling_institution
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			add = tyrone_raj_schooling_institution
+		}
+	}
+}
+
+tyrone_raj_schooling_bar_no_schools = {
+	value = 0
+	c:BIC ?= {
+		if = { limit = { has_law_or_variant = law_type:law_no_schools } add = 2 }
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_no_schools } add = 2 }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			if = { limit = { has_law_or_variant = law_type:law_no_schools } add = 2 }
+		}
+	}
+}
+
+tyrone_raj_schooling_bar_low_literacy = {
+	value = 0
+	c:BIC ?= {
+		if = { limit = { literacy_rate < 0.10 } add = 2 }
+	}
+	c:BHT ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+			}
+			if = { limit = { literacy_rate < 0.10 } add = 2 }
+		}
+	}
+	c:BHR ?= {
+		if = {
+			limit = {
+				NOT = { exists = c:BIC }
+				NOT = { exists = c:BHT }
+			}
+			if = { limit = { literacy_rate < 0.10 } add = 2 }
+		}
+	}
+}
+
+# Two-year cooldown on the proposing country; shared five-year initiative timers use normal_modifier_time.
+tyrone_jewel_personal_cooldown_time = 730
+
+# Three-year incident effects; normal_modifier_time remains five years for agreements.
+tyrone_jewel_incident_modifier_time = 1095
+
+# Country scope. Vanilla yearly_gross_income uses fixed_income * 52.
+# add_modifier snapshots the multiplier once; these are weekly expenses, not a treasury payment.
+tyrone_jewel_weekly_obligation = {
+	value = fixed_income
+	min = 0
+	multiply = 0.10
+}
+
+tyrone_jewel_weekly_heavy_obligation = {
+	value = fixed_income
+	min = 0
+	multiply = 0.15
+}
+
+tyrone_sc_year = 365
+tyrone_sc_political_duration = 1095
+tyrone_sc_election_period = 1460
+tyrone_sc_overlord_duration = 3650
+tyrone_sc_education_drift = {
+	value = 0
+	if = { limit = { institution_investment_level = { institution = institution_schools value >= 1 } } add = 1 }
+	if = { limit = { institution_investment_level = { institution = institution_schools value >= 2 } } add = 1 }
+	if = { limit = { institution_investment_level = { institution = institution_schools value >= 3 } } add = 1 }
+	if = { limit = { institution_investment_level = { institution = institution_schools value >= 4 } } add = 1 }
+	if = { limit = { institution_investment_level = { institution = institution_schools value >= 5 } } add = 1 }
+}
+tyrone_sc_company_drift = {
+	value = 0
+	if = { limit = { any_company = { company_is_prosperous = yes } } subtract = 1 }
+	if = { limit = { any_company = { count >= 2 company_is_prosperous = yes } } subtract = 1 }
+}
+tyrone_sc_capital_ships = {
+	value = 0
+	every_military_formation = {
+		limit = { is_fleet = yes }
+		add = "num_ships_of_group(ship_group:ship_group_capital_ships)"
+	}
+}
+
+# Country scope: India; compare against the current overlord, not a fixed tag.
+tyrone_raj_equity_gdp_ratio = {
+	value = 1
+	if = {
+		limit = {
+			is_subject = yes
+			overlord = {
+				gdp > 0
+			}
+		}
+		value = gdp
+		divide = overlord.gdp
+	}
+}
+
+tyrone_seized_colonial_assets_time = 2555 # Seven years
+
+tyrone_ch_hindustani_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = hindustani }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_hindustani_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = hindustani
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_hindustani_population
+		min = 1
+	}
+}
+tyrone_ch_hindustani_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = hindustani }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_hindustani_population
+		min = 1
+	}
+}
+
+tyrone_ch_bengali_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = bengali }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_bengali_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = bengali
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_bengali_population
+		min = 1
+	}
+}
+tyrone_ch_bengali_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = bengali }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_bengali_population
+		min = 1
+	}
+}
+
+tyrone_ch_panjabi_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = panjabi }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_panjabi_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = panjabi
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_panjabi_population
+		min = 1
+	}
+}
+tyrone_ch_panjabi_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = panjabi }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_panjabi_population
+		min = 1
+	}
+}
+
+tyrone_ch_marathi_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = marathi }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_marathi_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = marathi
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_marathi_population
+		min = 1
+	}
+}
+tyrone_ch_marathi_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = marathi }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_marathi_population
+		min = 1
+	}
+}
+
+tyrone_ch_tamil_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = tamil }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_tamil_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = tamil
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_tamil_population
+		min = 1
+	}
+}
+tyrone_ch_tamil_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = tamil }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_tamil_population
+		min = 1
+	}
+}
+
+tyrone_ch_gujarati_population = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = gujarati }
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_ch_gujarati_atheist_share = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			has_pop_culture = gujarati
+			has_pop_religion = atheist
+		}
+		add = workforce
+		add = dependents
+	}
+	divide = {
+		value = tyrone_ch_gujarati_population
+		min = 1
+	}
+}
+tyrone_ch_gujarati_radical_share = {
+	value = 0
+	every_scope_pop = {
+		limit = { has_pop_culture = gujarati }
+		add = {
+			value = workforce
+			add = dependents
+			multiply = pop_radical_fraction
+		}
+	}
+	divide = {
+		value = tyrone_ch_gujarati_population
+		min = 1
+	}
+}
+
+tyrone_ch_recognized_cultures = {
+	value = 0
+	if = {
+		limit = { country_has_primary_culture = cu:hindustani }
+		add = 1
+	}
+	if = {
+		limit = { country_has_primary_culture = cu:bengali }
+		add = 1
+	}
+	if = {
+		limit = { country_has_primary_culture = cu:panjabi }
+		add = 1
+	}
+	if = {
+		limit = { country_has_primary_culture = cu:marathi }
+		add = 1
+	}
+	if = {
+		limit = { country_has_primary_culture = cu:tamil }
+		add = 1
+	}
+	if = {
+		limit = { country_has_primary_culture = cu:gujarati }
+		add = 1
+	}
+}
+
+tyrone_cp_five_years = 1825
+tyrone_cp_ten_years = 3650
+tyrone_cp_three_years = 1095
+tyrone_cp_heavy_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_automotive_industry
+				is_building_type = building_chemical_plant
+				is_building_type = building_electrics_industry
+				is_building_type = building_motor_industry
+				is_building_type = building_steel_mill
+				is_building_type = building_synthetic_oil_plants
+				is_building_type = building_synthetic_rubber_plants
+				is_building_type = building_tooling_workshop
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_heavy_target = {
+	value = tyrone_cp_heavy_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_heavy_levels
+}
+tyrone_cp_food_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_banana_plantation
+				is_building_type = building_coffee_plantation
+				is_building_type = building_cotton_plantation
+				is_building_type = building_dye_plantation
+				is_building_type = building_fishing_wharf
+				is_building_type = building_food_industry
+				is_building_type = building_livestock_ranch
+				is_building_type = building_maize_farm
+				is_building_type = building_millet_farm
+				is_building_type = building_opium_plantation
+				is_building_type = building_rice_farm
+				is_building_type = building_rye_farm
+				is_building_type = building_silk_plantation
+				is_building_type = building_sugar_plantation
+				is_building_type = building_tea_plantation
+				is_building_type = building_tobacco_plantation
+				is_building_type = building_vineyard
+				is_building_type = building_whaling_station
+				is_building_type = building_wheat_farm
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_food_target = {
+	value = tyrone_cp_food_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_food_levels
+}
+tyrone_cp_light_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_furniture_manufactory
+				is_building_type = building_glassworks
+				is_building_type = building_paper_mill
+				is_building_type = building_synthetics_plant
+				is_building_type = building_textile_mill
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_light_target = {
+	value = tyrone_cp_light_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_light_levels
+}
+tyrone_cp_infrastructure_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_port
+				is_building_type = building_power_plant
+				is_building_type = building_railway
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_infrastructure_target = {
+	value = tyrone_cp_infrastructure_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_infrastructure_levels
+}
+tyrone_cp_extraction_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_coal_mine
+				is_building_type = building_gold_mine
+				is_building_type = building_iron_mine
+				is_building_type = building_lead_mine
+				is_building_type = building_logging_camp
+				is_building_type = building_oil_rig
+				is_building_type = building_rubber_plantation
+				is_building_type = building_sulfur_mine
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_extraction_target = {
+	value = tyrone_cp_extraction_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_extraction_levels
+}
+tyrone_cp_military_levels = {
+	value = 0
+	every_scope_building = {
+		limit = {
+			OR = {
+				is_building_type = building_arms_industry
+				is_building_type = building_artillery_foundry
+				is_building_type = building_barrack
+				is_building_type = building_explosives_factory
+				is_building_type = building_munition_plant
+				is_building_type = building_naval_administration
+				is_building_type = building_shipyard
+			}
+		}
+		add = level
+	}
+}
+tyrone_cp_military_target = {
+	value = tyrone_cp_military_levels
+	multiply = 1.5
+	min = 350
+	max = 1000
+	round = yes
+	add = tyrone_cp_military_levels
+}
+tyrone_cp_peasants = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			is_pop_type = peasants
+		}
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_cp_lower_population = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			strata = lower
+		}
+		add = workforce
+		add = dependents
+	}
+}
+tyrone_cp_lower_sol = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			strata = lower
+		}
+		add = {
+			value = workforce
+			add = dependents
+			multiply = standard_of_living
+		}
+	}
+	divide = {
+		value = tyrone_cp_lower_population
+		min = 1
+	}
+}
+tyrone_cp_state_unemployed = {
+	value = 0
+	every_scope_pop = {
+		limit = {
+			is_employed = no
+		}
+		add = workforce
+		add = dependents
+	}
+}
+
+# Seven years for the reform window; reward modifiers retain their own durations.
+tyrone_csr_reform_period = 2555
+
+tyrone_eoi_council_cooldown_time = 365
+tyrone_eoi_council_cost_time = 730
+
+# Country scope: snapshot weekly public revenue when an integration is accepted.
+tyrone_eoi_council_weekly_cost = {
+	value = fixed_income
+	min = 0
+	multiply = 0.10
+}
+
+# Contextless JE scope. Count permanent milestones rather than current laws.
+tyrone_eoi_completed_reforms = {
+	value = 0
+	scope:csr_india ?= {
+		if = { limit = { has_variable = tyrone_eoi_calcutta_done } add = 1 }
+		if = { limit = { has_variable = tyrone_eoi_civil_done } add = 1 }
+		if = { limit = { has_variable = tyrone_eoi_army_done } add = 1 }
+		if = { limit = { has_variable = tyrone_eoi_council_done } add = 1 }
+		if = { limit = { has_variable = tyrone_eoi_coronation_done } add = 1 }
+	}
+}
+
+tyrone_eoi_round_modifier_time = 1095
+tyrone_eoi_final_modifier_time = 3650
+
+
+# Federation privy purses: one fifteenth of the vanilla amount.
+REPLACE:privy_purse_value = {
+	value = root.gdp
+	divide = 100000
+	multiply = 0.05
+	round = yes
+	multiply = 100
+	multiply = root.var:indian_states_annexed
+	min = 100
+	divide = 15
+}
+
+
+# Federation privy purses: one fifteenth of the vanilla amount.
+REPLACE:privy_purse_value_potential = {
+	value = root.gdp
+	divide = 100000
+	multiply = 0.05
+	round = yes
+	multiply = 100
+	multiply = num_princely_state_subjects_eligible_for_federation
+	min = 100
+	divide = 15
+}
+
+# Three years; short_modifier_time is only two and a half years.
+tyrone_cr_reform_cooldown_time = 1095
+
+tyrone_patents_request_cooldown_time = 730
+
+# Country scope: the paying overlord. Amounts are snapshotted when the option is selected.
+tyrone_patents_weekly_funding = {
+	value = fixed_income
+	min = 0
+	multiply = 0.10
+}
+
+tyrone_patents_weekly_research_funding = {
+	value = fixed_income
+	min = 0
+	multiply = 0.15
+}
+
+# Country scope: 100% of the bar means 10% GDP growth over the fixed baseline.
+tyrone_jewel_gdp_next_successes = {
+	value = var:tyrone_jewel_gdp_successes
+	add = 1
+}
+
+tyrone_jewel_gdp_progress = {
+	value = 0
+	if = {
+		limit = {
+			has_variable = tyrone_jewel_gdp_baseline
+			var:tyrone_jewel_gdp_baseline > 0
+		}
+		add = gdp
+		divide = var:tyrone_jewel_gdp_baseline
+		subtract = 1
+		multiply = 1000
+	}
+	min = 0
+	max = 100
+}

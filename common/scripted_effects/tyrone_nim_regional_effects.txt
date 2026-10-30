@@ -205,25 +205,27 @@ tyrone_nim_shift_pressure = {
 
 
 tyrone_nim_refresh_regional_movement = {
-save_scope_as = nim_india
-if = {
-    limit = { NOT = { any_political_movement = { is_political_movement_type = movement_muslim_nationalist } } }
-    set_variable = { name = tyrone_nim_seed_activity value = 0.50 }
-    create_political_movement = { type = movement_muslim_nationalist }
-    random_political_movement = {
-        limit = { is_political_movement_type = movement_muslim_nationalist }
-        add_modifier = { name = tyrone_nim_movement_seed multiplier = tyrone_nim_movement_seed_delta }
-    }
-}
-every_political_movement = {
-    limit = { is_political_movement_type = movement_muslim_nationalist }
-    if = { limit = { has_modifier = tyrone_nim_pressure_activism } remove_modifier = tyrone_nim_pressure_activism }
-    add_modifier = { name = tyrone_nim_pressure_activism multiplier = scope:nim_india.var:tyrone_nim_league_pressure }
-    save_temporary_scope_value_as = { name = nim_league_activity value = political_movement_radicalism }
-    scope:nim_india = {
-        set_variable = { name = tyrone_nim_league_activity value = scope:nim_league_activity }
-    }
-}
+	hidden_effect = {
+		save_scope_as = nim_india
+		if = {
+		    limit = { NOT = { any_political_movement = { is_political_movement_type = movement_muslim_nationalist } } }
+		    set_variable = { name = tyrone_nim_seed_activity value = 0.50 }
+		    create_political_movement = { type = movement_muslim_nationalist }
+		    random_political_movement = {
+		        limit = { is_political_movement_type = movement_muslim_nationalist }
+		        add_modifier = { name = tyrone_nim_movement_seed multiplier = tyrone_nim_movement_seed_delta }
+		    }
+		}
+		every_political_movement = {
+		    limit = { is_political_movement_type = movement_muslim_nationalist }
+		    if = { limit = { has_modifier = tyrone_nim_pressure_activism } remove_modifier = tyrone_nim_pressure_activism }
+		    add_modifier = { name = tyrone_nim_pressure_activism multiplier = scope:nim_india.var:tyrone_nim_league_pressure }
+		    save_temporary_scope_value_as = { name = nim_league_activity value = political_movement_radicalism }
+		    scope:nim_india = {
+		        set_variable = { name = tyrone_nim_league_activity value = scope:nim_league_activity }
+		    }
+		}
+	}
 }
 
 
