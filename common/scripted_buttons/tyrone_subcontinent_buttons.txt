@@ -74,3 +74,32 @@ tyrone_subcontinent_attack_khalsa = {
 		}
 	}
 }
+
+tyrone_subcontinent_attack_burma = {
+	name = tyrone_subcontinent_attack_burma
+	desc = tyrone_subcontinent_attack_burma_desc
+	visible = { always = yes }
+	possible = {
+		exists = scope:tyrone_subcontinent_india
+		OR = {
+			scope:tyrone_subcontinent_india ?= this
+			scope:tyrone_subcontinent_india.overlord ?= this
+		}
+		scope:tyrone_subcontinent_india ?= {
+			has_technology_researched = rifling
+			has_technology_researched = logistics
+			is_at_war = no
+			exists = c:BUR
+		}
+		c:BUR ?= { is_subject = no }
+	}
+	ai_chance = { value = 10 }
+	effect = {
+		change_infamy = 15
+		scope:tyrone_subcontinent_india ?= {
+			if = { limit = { has_truce_with = c:BUR } end_truce = c:BUR }
+			create_diplomatic_play = { target_country = c:BUR type = dp_make_protectorate }
+			add_modifier = { name = tyrone_subcontinent_punjab_campaign days = very_short_modifier_time }
+		}
+	}
+}
