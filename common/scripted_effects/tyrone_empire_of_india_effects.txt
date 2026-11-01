@@ -217,15 +217,22 @@ tyrone_eoi_finish_empire = {
 	set_variable = tyrone_eoi_empire_declared
 	set_variable = is_empire_of_india
 	save_scope_as = eoi_empire_country
+	overlord ?= { save_scope_as = eoi_empire_overlord }
 	owning_company ?= {
 		remove_owned_country = scope:eoi_empire_country
 	}
 	if = {
-		limit = { is_subject = yes }
+		limit = { exists = scope:eoi_empire_overlord }
 		set_country_type = colonial
 		if = {
-			limit = { NOT = { is_subject_type = subject_type_dominion } }
-			change_subject_type = subject_type_dominion
+			limit = { is_subject = no }
+			scope:eoi_empire_overlord = {
+				create_diplomatic_pact = { country = scope:eoi_empire_country type = colony }
+			}
+		}
+		if = {
+			limit = { NOT = { is_subject_type = subject_type_colony } }
+			change_subject_type = subject_type_colony
 		}
 	}
 	else = { set_country_type = recognized }
