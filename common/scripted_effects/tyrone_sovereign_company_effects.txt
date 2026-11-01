@@ -26,35 +26,27 @@ tyrone_sc_start = {
 # Country scope. No global on_action performs this work.
 tyrone_sc_refresh_home_rule = {
 	save_scope_as = sc_home_country
-	# Track regions so all successor split-state objects are cleaned after transfers.
-	if = {
-		limit = { has_variable_list = tyrone_sc_home_regions }
-		every_in_list = {
-			variable = tyrone_sc_home_regions
-			every_scope_state = {
-				if = {
-					limit = {
-						has_modifier = tyrone_sc_home_rule
-						OR = {
-							NOT = { owner = scope:sc_home_country }
-							is_split_state = yes
-						}
-					}
-					remove_modifier = tyrone_sc_home_rule
+	# Check current state objects directly, including states lost since the previous pulse.
+	every_state_region = {
+		limit = { is_in_geographic_region = geographic_region_india }
+		every_scope_state = {
+			if = {
+				limit = { has_modifier = tyrone_sc_home_rule }
+				remove_modifier = tyrone_sc_home_rule
+			}
+			if = {
+				limit = {
+					owner = scope:sc_home_country
+					is_split_state = no
 				}
+				add_modifier = { name = tyrone_sc_home_rule }
 			}
 		}
-		clear_variable_list = tyrone_sc_home_regions
 	}
-	every_scope_state = {
-		limit = {
-			is_in_geographic_region = geographic_region_india
-			is_split_state = no
-		}
-		if = { limit = { NOT = { has_modifier = tyrone_sc_home_rule } } add_modifier = { name = tyrone_sc_home_rule } }
-		state_region = {
-			scope:sc_home_country = { add_to_variable_list = { name = tyrone_sc_home_regions target = prev } }
-		}
+	# Retire the old cache; region ownership is evaluated afresh each month.
+	if = {
+		limit = { has_variable_list = tyrone_sc_home_regions }
+		clear_variable_list = tyrone_sc_home_regions
 	}
 }
 tyrone_sc_apply_fleet_amendment = {
