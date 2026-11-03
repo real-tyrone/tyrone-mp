@@ -19,8 +19,14 @@ chi_early_army_napoleonic_button = {
 	}
 
 	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
 		set_variable = chi_early_army_napoleonic_done
-		chi_early_army_advance_stage = yes
 		trigger_event = { id = chi_early_army.1 popup = yes }
 	}
 }
@@ -41,16 +47,21 @@ chi_early_army_rifling_button = {
 			value <= 0
 		}
 		NOT = {
-			any_scope_building = {
-				filter = { is_building_type = building_barrack }
+        any_scope_building = {
+			filter = {
+				is_building_type = building_barrack
+			}
+			AND = {
+				building_has_goods_shortage = no
 				has_active_production_method = pm_no_organization
 			}
+			percent = 1
 		}
+
 		NOT = {
-			any_military_formation = {
-				filter = { is_army = yes }
-				any_combat_unit = {
-					has_unit_type = unit_type:combat_unit_type_irregular_infantry
+				country_army_unit_type_fraction = {
+				unit_type = unit_type:combat_unit_type_irregular_infantry
+				fraction = 0
 				}
 			}
 		}
@@ -58,8 +69,15 @@ chi_early_army_rifling_button = {
 	}
 
 	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			remove_modifier = chi_early_army_line_artillery_penalty
+			chi_early_army_advance_stage = yes
+		}
 		set_variable = chi_early_army_rifling_done
-		chi_early_army_advance_stage = yes
 		trigger_event = { id = chi_early_army.2 popup = yes }
 	}
 }
@@ -79,8 +97,14 @@ chi_early_army_general_staff_button = {
 	}
 
 	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
 		set_variable = chi_early_army_general_staff_done
-		chi_early_army_advance_stage = yes
 		trigger_event = { id = chi_early_army.3 popup = yes }
 	}
 }
@@ -100,8 +124,14 @@ chi_early_army_screw_frigates_button = {
 	}
 
 	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
 		set_variable = chi_early_army_screw_frigates_done
-		chi_early_army_advance_stage = yes
 		trigger_event = { id = chi_early_army.4 popup = yes }
 	}
 }
