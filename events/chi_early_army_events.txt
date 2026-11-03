@@ -20,12 +20,31 @@ chi_early_army.1 = {
 
 	option = {
 		name = chi_early_army.1.a
-		default_option = yes
+		show_as_unavailable = { always = yes }
+		trigger = {
+				exists = c:GBR
+				c:GBR ?= {
+					relations:ROOT > 20
+				}
+		}
+		custom_tooltip = {
+		text = chi_early_army.1.gbr_relations_tt
+		}
 		add_modifier = chi_early_army_gbr_advisors
 	}
 
 	option = {
 		name = chi_early_army.1.b
+		show_as_unavailable = { always = yes }
+		trigger = {
+				exists = c:FRA
+				c:FRA ?= {
+					relations:ROOT > 20
+				}
+		}
+		custom_tooltip = {
+		text = chi_early_army.1.gbr_relations_tt
+		}
 		add_modifier = chi_early_army_france_advisors
 		add_modifier = {
 			name = chi_early_army_france_home_defence
@@ -35,11 +54,36 @@ chi_early_army.1 = {
 
 	option = {
 		name = chi_early_army.1.c
-		add_modifier = chi_early_army_prussia_advisors
+		show_as_unavailable = { always = yes }
+		trigger = {
+			OR = {
+				AND = {
+					exists = c:PRU
+					c:PRU ?= {
+						relations:ROOT > 20
+					}
+				}
+				AND = {
+					exists = c:GER
+					c:GER ?= {
+						relations:ROOT > 20
+					}
+				}
+			}
+		}
+		custom_tooltip = {
+			text = chi_early_army.1.pru_ger_relations_tt
+		}
+		add_modifier = { 
+			name = chi_early_army_prussia_advisors 
+			years = 10
+			decaying = yes
+		}
 	}
 
 	option = {
 		name = chi_early_army.1.e
+		default_option = yes
 		add_modifier = chi_early_army_self_taught
 	}
 }
@@ -131,6 +175,7 @@ chi_early_army.4 = {
 
 	option = {
 		name = chi_early_army.4.b
+		set_variable = chi_imperial_dockyards_unlocked
 		active_law:lawgroup_navy_model ?= {
 			add_amendment = {
 				type = amendment_chi_early_army_capital_fleet
@@ -141,6 +186,7 @@ chi_early_army.4 = {
 
 	option = {
 		name = chi_early_army.4.c
+		set_variable = chi_imperial_dockyards_unlocked
 		active_law:lawgroup_navy_model ?= {
 			add_amendment = {
 				type = amendment_chi_early_army_cruiser_fleet
