@@ -1,27 +1,10 @@
 ﻿# tyr_gir_journal
 je_tyr_gir_main = {
-	invalid = {
-		NOT = {
-			c:GER ?= this
-		}
-	}
 
-	on_invalid = {
-		custom_tooltip = {
-			text = tyr_gir_invalidation_tt
-			hidden_effect = {
-				tyr_gir_de_cleanup = yes
-				tyr_gir_clean_support = yes
-			}
-		}
-	}
 
-	event_outcome_invalidated_effect_desc = {
-		header = tyr_gir_invalidation_header
-		effect = {
-			custom_tooltip = tyr_gir_invalidation_tt
-		}
-	}
+
+
+
 
 	event_outcome_activated_effect_desc = {
 		header = tyr_gir_activation_header
@@ -266,7 +249,30 @@ je_tyr_gir_main = {
 	can_revolution_inherit = yes
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
-	complete = {
+
+
+
+
+	timeout = 18250
+
+
+
+
+
+
+
+
+
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		NOT = {
 			has_modifier = declared_bankruptcy
 		}
@@ -287,46 +293,12 @@ je_tyr_gir_main = {
 			tyr_gir_safe_level_4 >= 5
 		}
 	}
-
-	fail = {
-		has_modifier = declared_bankruptcy
-	}
-
-	timeout = 18250
-
-	on_complete = {
+		effect = {
 		hidden_effect = {
 			tyr_gir_complete_programme = yes
 		}
 	}
-
-	on_fail = {
-		hidden_effect = {
-			tyr_gir_fail_programme = yes
-		}
-	}
-
-	on_timeout = {
-		hidden_effect = {
-			if = {
-				limit = {
-					NOT = {
-						has_modifier = declared_bankruptcy
-					}
-					tyr_gir_safe_level_1 >= 5
-					tyr_gir_safe_level_2 >= 5
-					tyr_gir_safe_level_3 >= 5
-					tyr_gir_safe_level_4 >= 5
-				}
-				tyr_gir_complete_programme = yes
-			}
-			else = {
-				tyr_gir_fail_programme = yes
-			}
-		}
-	}
-
-	event_outcome_completed_effect_desc = {
+		event_outcome_effect_desc = {
 		header = tyr_gir_complete_header
 		effect = {
 			custom_tooltip = tyr_gir_complete_preview
@@ -423,21 +395,86 @@ je_tyr_gir_main = {
 			custom_tooltip = tyr_gir_finish_costs_tt
 		}
 	}
+	}
 
-	event_outcome_failed_effect_desc = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		has_modifier = declared_bankruptcy
+	}
+		effect = {
+		hidden_effect = {
+			tyr_gir_fail_programme = yes
+		}
+	}
+		event_outcome_effect_desc = {
 		header = tyr_gir_failed_header
 		effect = {
 			custom_tooltip = tyr_gir_failure_preview
 			custom_tooltip = tyr_gir_finish_costs_tt
 		}
 	}
+	}
 
-	event_outcome_timeout_effect_desc = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = {
+			c:GER ?= this
+		}
+	}
+		effect = {
+		custom_tooltip = {
+			text = tyr_gir_invalidation_tt
+			hidden_effect = {
+				tyr_gir_de_cleanup = yes
+				tyr_gir_clean_support = yes
+			}
+		}
+	}
+		event_outcome_effect_desc = {
+		header = tyr_gir_invalidation_header
+		effect = {
+			custom_tooltip = tyr_gir_invalidation_tt
+		}
+	}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = declared_bankruptcy
+					}
+					tyr_gir_safe_level_1 >= 5
+					tyr_gir_safe_level_2 >= 5
+					tyr_gir_safe_level_3 >= 5
+					tyr_gir_safe_level_4 >= 5
+				}
+				tyr_gir_complete_programme = yes
+			}
+			else = {
+				tyr_gir_fail_programme = yes
+			}
+		}
+	}
+		event_outcome_effect_desc = {
 		header = tyr_gir_timeout_header
 		effect = {
 			custom_tooltip = tyr_gir_failure_preview
 			custom_tooltip = tyr_gir_finish_costs_tt
 		}
+	}
 	}
 }
 
@@ -471,7 +508,39 @@ je_tyr_gir_contract = {
 
 	timeout = 1095
 
-	on_timeout = {
+
+
+
+
+	on_monthly_pulse = {
+		effect = {
+			tyr_gir_recount = yes
+		}
+	}
+
+	transferable = no
+	can_revolution_inherit = yes
+	weight = 200
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
 		custom_tooltip = {
 			text = tyr_gir_contract_resolution_tt
 			hidden_effect = {
@@ -487,29 +556,12 @@ je_tyr_gir_contract = {
 			}
 		}
 	}
-
-	event_outcome_timeout_effect_desc = {
+		event_outcome_effect_desc = {
 		header = tyr_gir_contract_resolution_header
 		effect = {
 			custom_tooltip = tyr_gir_contract_resolution_tt
 		}
 	}
-
-	on_monthly_pulse = {
-		effect = {
-			tyr_gir_recount = yes
-		}
-	}
-
-	transferable = no
-	can_revolution_inherit = yes
-	weight = 200
-	should_be_pinned_by_default_uninvolved_or_context = yes
-
-	invalid = {
-		NOT = {
-			has_journal_entry = je_tyr_gir_main
-		}
 	}
 }
 # tyr_gir_agricultural_development
@@ -521,15 +573,38 @@ je_tyr_gir_de_trial = {
 		always = no
 	}
 
-	complete = {
+
+
+
+
+	timeout = 365
+
+
+
+
+
+
+
+	status_desc = je_tyr_gir_de_trial_status
+	transferable = no
+	can_revolution_inherit = no
+	weight = 180
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = tyr_gir_de_trial_complete_tt
 			tyr_gir_de_farms > 0
 			tyr_gir_de_fertilized_share >= 50
 		}
 	}
-
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				tyr_gir_gui_level_4 < 5
@@ -555,30 +630,7 @@ je_tyr_gir_de_trial = {
 			}
 		}
 	}
-
-	timeout = 365
-
-	on_timeout = {
-		trigger_event = {
-			id = tyr_gir_de.22
-			popup = yes
-		}
-	}
-
-	invalid = {
-		NOT = {
-			has_journal_entry = je_tyr_gir_main
-		}
-	}
-
-	on_invalid = {}
-
-	status_desc = je_tyr_gir_de_trial_status
-	transferable = no
-	can_revolution_inherit = no
-	weight = 180
-
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
@@ -590,6 +642,31 @@ je_tyr_gir_de_trial = {
 				desc = tyr_gir_de_agricultural_level_cap_tt
 			}
 		}
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+		effect = {}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		trigger_event = {
+			id = tyr_gir_de.22
+			popup = yes
+		}
+	}
 	}
 }
 
@@ -608,44 +685,17 @@ je_tyr_gir_de_agriculture = {
 		}
 	}
 
-	complete = {
-		custom_tooltip = {
-			text = tyr_gir_de_agriculture_complete_tt
-			has_variable = tyr_gir_de_agriculture_months
-			tyr_gir_de_adoption_months >= 24
-		}
-	}
 
-	on_complete = {
-		je:je_tyr_gir_main ?= {
-			add_modifier = {
-				name = tyr_gir_de_agricultural_transformation
-			}
-		}
-		trigger_event = {
-			id = tyr_gir_de.23
-			popup = yes
-		}
-	}
+
+
 
 	timeout = 1825
 
-	on_timeout = {
-		trigger_event = {
-			id = tyr_gir_de.24
-			popup = yes
-		}
-	}
 
-	invalid = {
-		NOT = {
-			has_journal_entry = je_tyr_gir_main
-		}
-	}
 
-	on_invalid = {
-		remove_variable = tyr_gir_de_agriculture_months
-	}
+
+
+
 
 	on_monthly_pulse = {
 		effect = {
@@ -682,6 +732,57 @@ je_tyr_gir_de_agriculture = {
 	transferable = no
 	can_revolution_inherit = no
 	weight = 180
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = tyr_gir_de_agriculture_complete_tt
+			has_variable = tyr_gir_de_agriculture_months
+			tyr_gir_de_adoption_months >= 24
+		}
+	}
+		effect = {
+		je:je_tyr_gir_main ?= {
+			add_modifier = {
+				name = tyr_gir_de_agricultural_transformation
+			}
+		}
+		trigger_event = {
+			id = tyr_gir_de.23
+			popup = yes
+		}
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = {
+			has_journal_entry = je_tyr_gir_main
+		}
+	}
+		effect = {
+		remove_variable = tyr_gir_de_agriculture_months
+	}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		trigger_event = {
+			id = tyr_gir_de.24
+			popup = yes
+		}
+	}
+	}
 }
 # tyr_gcol_journal
 je_tyr_gcol_empire = {
@@ -814,14 +915,28 @@ je_tyr_gcol_empire = {
 		}
 	}
 
-	complete = {
+
+
+
+
+	status_desc = je_tyr_gcol_empire_status
+	transferable = no
+	can_revolution_inherit = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 150
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = tyr_gcol_finish_condition
 			has_variable = tyr_gcol_finish_requested
 		}
 	}
-
-	on_complete = {
+		effect = {
 		hidden_effect = {
 			set_variable = tyr_gcol_completed
 			remove_variable = tyr_gcol_finish_requested
@@ -837,12 +952,7 @@ je_tyr_gcol_empire = {
 			tyr_gcol_apply_colonial_rewards = yes
 		}
 	}
-
-	status_desc = je_tyr_gcol_empire_status
-	transferable = no
-	can_revolution_inherit = no
-	should_be_pinned_by_default_uninvolved_or_context = yes
-	weight = 150
+	}
 }
 
 je_tyr_gcol_administration = {
@@ -879,9 +989,7 @@ je_tyr_gcol_administration = {
 	scripted_button = tyr_gcol_create_maf_button
 	scripted_button = tyr_gcol_create_dea_button
 
-	complete = {
-		always = no
-	}
+
 
 	status_desc = je_tyr_gcol_administration_status
 	transferable = no
@@ -892,6 +1000,16 @@ je_tyr_gcol_administration = {
 		effect = {
 			tyr_gcol_apply_subject_subsidies = yes
 		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		always = no
+	}
 	}
 }
 
@@ -918,20 +1036,9 @@ je_tyr_gcol_colonial_charter = {
 		}
 	}
 
-	complete = {
-		custom_tooltip = {
-			text = tyr_gcol_charter_dissolution_tt
-			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
-		}
-	}
 
-	on_complete = {
-		hidden_effect = {
-			tyr_gcol_dissolve_administration = yes
-		}
-	}
+
+
 
 	on_monthly_pulse = {
 		effect = {
@@ -950,6 +1057,26 @@ je_tyr_gcol_colonial_charter = {
 	transferable = no
 	can_revolution_inherit = no
 	weight = 100
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = tyr_gcol_charter_dissolution_tt
+			is_subject = no
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+		effect = {
+		hidden_effect = {
+			tyr_gcol_dissolve_administration = yes
+		}
+	}
+	}
 }
 # tyr_kk_journal
 je_tyr_kk_kulturkampf = {
@@ -1035,39 +1162,11 @@ je_tyr_kk_kulturkampf = {
 		}
 	}
 
-	complete = {
-		custom_tooltip = {
-			text = tyr_kk_complete_tt
-			OR = {
-				tyr_kk_balance <= 0
-				tyr_kk_balance >= 100
-			}
-		}
-	}
 
-	on_complete = {
-		hidden_effect = {
-			set_variable = tyr_kk_completed
-			if = {
-				limit = {
-					tyr_kk_balance >= 100
-				}
-				set_variable = tyr_kk_state_victory
-			}
-			trigger_event = {
-				id = tyr_kk.1
-				popup = yes
-			}
-		}
-	}
 
-	event_outcome_completed_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = tyr_kk_outcome_preview
-			}
-		}
-	}
+
+
+
 
 	status_desc = {
 		first_valid = {
@@ -1089,4 +1188,42 @@ je_tyr_kk_kulturkampf = {
 	transferable = no
 	can_revolution_inherit = no
 	weight = 145
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = tyr_kk_complete_tt
+			OR = {
+				tyr_kk_balance <= 0
+				tyr_kk_balance >= 100
+			}
+		}
+	}
+		effect = {
+		hidden_effect = {
+			set_variable = tyr_kk_completed
+			if = {
+				limit = {
+					tyr_kk_balance >= 100
+				}
+				set_variable = tyr_kk_state_victory
+			}
+			trigger_event = {
+				id = tyr_kk.1
+				popup = yes
+			}
+		}
+	}
+		event_outcome_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_kk_outcome_preview
+			}
+		}
+	}
+	}
 }

@@ -1,6 +1,18 @@
 ﻿#BONAPARTE
 
 je_post_bonapartists = {
+	# Tyrone widgets injected into the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_bonapartist_palace"
+		container = "custom_widget_container_1"
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_bonapartist_portrait"
+		container = "custom_widget_container_je_icon"
+	}
+
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 	group = je_group_historical_content
 
@@ -73,7 +85,24 @@ je_post_bonapartists = {
 		}
 	}
 	
-	complete = {	
+
+
+
+	
+
+	
+
+
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+		
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {	
 		custom_tooltip = {
 			text = has_cemented_dynasty_TT
 			has_variable = one_true_french_dynasty
@@ -103,27 +132,23 @@ je_post_bonapartists = {
 			has_variable = conquered_spain_NAPOLEON
 		}
 	}
-
-	on_complete = {
+		effect = {
 		trigger_event ={
 			id = empire_of_france.8
 		}
 		set_variable = napoleonic_victory	
 	}
-	
-	fail = {
-		
 	}
-	
-	invalid = {
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_law_or_variant = law_type:law_monarchy
 		}
 	}
-
-	weight = 1000
-	should_be_pinned_by_default_uninvolved_or_context = yes
-		
+	}
 }
 
 je_the_city_of_light_rebuild = {
@@ -135,7 +160,24 @@ je_the_city_of_light_rebuild = {
     immediate = {
     }
 
-	complete = {
+
+
+
+
+
+
+	scripted_button = rebuild_paris_button
+
+
+    weight = 50
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		NOT = { has_modifier = rebuilding_paris_modifier }
 		any_scope_state = {
 			state_region = s:STATE_ILE_DE_FRANCE
@@ -148,14 +190,7 @@ je_the_city_of_light_rebuild = {
 			has_variable = clicked_paris_button
 		}
 	}
-
-    fail = {
-        NOT= {
-            has_law_or_variant = law_type:law_monarchy
-        }
-    }
-
-	on_complete = {
+		effect = {
 		set_variable = {
 			name = rebuilt_paris_NAPOLEON
 		}
@@ -164,12 +199,19 @@ je_the_city_of_light_rebuild = {
 			days = long_modifier_time
 		}
 	}
+	}
 
-	scripted_button = rebuild_paris_button
-
-
-    weight = 50
-    should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+	}
 }
 
 je_rebuilt_railways_napoleon = {
@@ -179,12 +221,20 @@ je_rebuilt_railways_napoleon = {
 
 	immediate = {
     }
-    fail = {
-        NOT= {
-            has_law_or_variant = law_type:law_monarchy
-        }
-    }
-	complete = {
+
+
+
+
+
+	weight = 50
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		any_scope_state = {
 			filter = {
 				OR = {
@@ -216,8 +266,7 @@ je_rebuilt_railways_napoleon = {
 			percent >= 0.80
 		}
 	}
-
-	on_complete = {
+		effect = {
 		set_variable = {
 			name = rebuilt_railroads_NAPOLEON
 		}
@@ -226,9 +275,19 @@ je_rebuilt_railways_napoleon = {
 			days = long_modifier_time
 		}
 	}
+	}
 
-	weight = 50
-    should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+	}
 }
 
 je_improved_living_napoleon = {
@@ -239,7 +298,21 @@ je_improved_living_napoleon = {
     immediate = {
     }
 
-    complete = {
+
+
+
+
+
+
+    weight = 50
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         has_law_or_variant = law_type:law_public_health_insurance
 		institution_investment_level = {
 			institution = institution_health_system
@@ -253,14 +326,7 @@ je_improved_living_napoleon = {
         percent >= 0.50
         }
     }
-
-    fail = {
-        NOT= {
-            has_law_or_variant = law_type:law_monarchy
-        }
-    }
-
-	on_complete = {
+		effect = {
 		set_variable = {
 			name = public_health_NAPOLEON
 		}
@@ -269,9 +335,19 @@ je_improved_living_napoleon = {
 			days = long_modifier_time
 		}
 	}
+	}
 
-    weight = 50
-    should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+        NOT= {
+            has_law_or_variant = law_type:law_monarchy
+        }
+    }
+	}
 }
 
 je_king_of_italy = {
@@ -292,7 +368,20 @@ je_king_of_italy = {
 		}
     }
 
-    complete = {
+
+
+
+
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
+    weight = 100
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         any_state = {
             filter = {
                 OR = {
@@ -321,17 +410,13 @@ je_king_of_italy = {
             percent >= 0.75
         }
     }
-
-	on_complete = {
+		effect = {
 		trigger_event ={
 			id = empire_of_france.4
 		}
 		set_variable = conquered_italy_NAPOLEON
 	}
-
-    should_be_pinned_by_default_uninvolved_or_context = yes
-
-    weight = 100
+	}
 }
 
 je_king_spain = {
@@ -351,7 +436,18 @@ je_king_spain = {
 		}
     }
 
-    complete = {
+
+
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
+    weight = 100
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         any_state = {
             filter = {
                 OR = {
@@ -380,20 +476,25 @@ je_king_spain = {
             percent >= 0.80
         }
     }
-	on_complete = {
+		effect = {
 		trigger_event ={
 			id = empire_of_france.7
 		}
 		set_variable = conquered_spain_NAPOLEON
 	}
-    should_be_pinned_by_default_uninvolved_or_context = yes
-
-    weight = 100
+	}
 }
 
 #ORLEANIST
 
 je_orleanist_france_industry_revolution = {
+	# Tyrone widgets injected into the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_orleanist_ministry"
+		container = "custom_widget_container_1"
+	}
+
 	icon = "gfx/interface/icons/event_icons/orleanist_main_icon.dds"
 	group = je_group_historical_content
 
@@ -514,25 +615,14 @@ je_orleanist_france_industry_revolution = {
 		add = 500
 	}
 
-	complete = {	
-		scope:journal_entry = {
-			is_goal_complete = yes
-		}
-	}
 
-	on_complete = {
-		trigger_event ={
-			id = orleanist_france.1
-		}
-		set_variable = orleanist_victory	
-	}
+
+
 	
 	timeout = 10950
 	
 
-	fail = {
-		
-	}
+
 
 	on_yearly_pulse = {
         effect = {
@@ -587,8 +677,7 @@ je_orleanist_france_industry_revolution = {
         }
     }
 
-	invalid = {
-	}
+
 
 	scripted_button = promote_investment_button
 	scripted_button = advocate_mining_button
@@ -598,6 +687,31 @@ je_orleanist_france_industry_revolution = {
 	weight = 1000
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {	
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+	}
+		effect = {
+		trigger_event ={
+			id = orleanist_france.1
+		}
+		set_variable = orleanist_victory	
+	}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+	}
 }
 
 
@@ -668,32 +782,13 @@ je_house_of_bourbon = {
 		}
 	}
 	
-	complete = {	
-		custom_tooltip = {
-			text = completed_legitimist_agenda_tt
-			has_modifier = restored_noble_priviledges
-			has_modifier = catholic_church_revived
-			has_modifier = ancien_regime_restored
-			has_law = law_type:law_outlawed_dissent
-		}
-	}
 
-	on_complete = {
-		activate_law = law_type:law_ancien_regime
-		trigger_event = {
-			id = legitimist_events.5
-		}
-	}
 
-	fail = {
-		NOT = {
-			has_law = law_type:law_monarchy
-		}
-	}
+
+
+
 	
-	invalid = {
-		country_rank < rank_value:great_power
-	}
+
 
 	current_value = root.var:legitimist_consolidation_var
 
@@ -704,4 +799,46 @@ je_house_of_bourbon = {
 	weight = 1000
 	should_be_pinned_by_default_uninvolved_or_context = yes
 		
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = completed_legitimist_agenda_tt
+			has_modifier = restored_noble_priviledges
+			has_modifier = catholic_church_revived
+			has_modifier = ancien_regime_restored
+			has_law = law_type:law_outlawed_dissent
+		}
+	}
+		effect = {
+		activate_law = law_type:law_ancien_regime
+		trigger_event = {
+			id = legitimist_events.5
+		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = {
+			has_law = law_type:law_monarchy
+		}
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		country_rank < rank_value:great_power
+	}
+	}
 }

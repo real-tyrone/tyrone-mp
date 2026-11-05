@@ -63,67 +63,23 @@
 		
 	}
 
-	invalid = {
-		OR = {
-			c:BIC = {
-				has_journal_entry = je_sepoy_mutiny
-			}
-			c:BIC = {
-				has_modifier = modifier_india_crown_rule
-			}
-			NOT = {
-				exists = c:BIC
-			}
-		}
-	}
 
-	custom_completion_header = je_company_equity_completion_header
 
-	complete = {
-		custom_tooltip = {
-			text = has_repealed_charter_act
-			c:BIC = {
-				has_variable = repealed_charter_act
-			}
-		}
-	}
 
-	custom_failure_header = je_company_equity_failure_header
 
-	fail = {
-		custom_tooltip = {
-			text = has_passed_gov_of_india_act
-			c:GBR = {
-				has_variable = enacted_government_of_india_act
-			}
-		}
-	}
 
-	on_complete = {
-		c:BIC = { trigger_event = { id = sepoy_mutiny_events.11 } }
-		set_global_variable = invalidate_uneasy_raj
-	}
 
-	event_outcome_completed_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = event_effects_sepoy_mutiny_events.11_tt
-			}
-		}
-	}
 
-	on_fail = {
-		c:GBR = { trigger_event = { id = raj.1 } }
-		set_global_variable = invalidate_uneasy_raj
-	}
 
-	event_outcome_failed_desc = {
-		first_valid = {
-            triggered_desc = {
-                desc = event_effects_raj_tyrone.1_tt
-            }
-        }
-	}
+
+
+
+
+
+
+
+
+
 
 	status_desc = {
 		first_valid = {
@@ -169,4 +125,74 @@
 	weight = 1000
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_company_equity_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = has_repealed_charter_act
+			c:BIC = {
+				has_variable = repealed_charter_act
+			}
+		}
+	}
+		effect = {
+		c:BIC = { trigger_event = { id = sepoy_mutiny_events.11 } }
+		set_global_variable = invalidate_uneasy_raj
+	}
+		event_outcome_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = event_effects_sepoy_mutiny_events.11_tt
+			}
+		}
+	}
+	}
+
+	outcome = {
+		header = je_company_equity_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = has_passed_gov_of_india_act
+			c:GBR = {
+				has_variable = enacted_government_of_india_act
+			}
+		}
+	}
+		effect = {
+		c:GBR = { trigger_event = { id = raj.1 } }
+		set_global_variable = invalidate_uneasy_raj
+	}
+		event_outcome_desc = {
+		first_valid = {
+            triggered_desc = {
+                desc = event_effects_raj_tyrone.1_tt
+            }
+        }
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			c:BIC = {
+				has_journal_entry = je_sepoy_mutiny
+			}
+			c:BIC = {
+				has_modifier = modifier_india_crown_rule
+			}
+			NOT = {
+				exists = c:BIC
+			}
+		}
+	}
+	}
 }

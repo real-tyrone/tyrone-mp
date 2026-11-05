@@ -22,27 +22,44 @@ je_american_exceptionalism = {
 
 	scripted_button = je_american_exceptionalism_button
 
-	complete = {
+
+
+
+
+
+
+	weight = 200
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = je_american_exceptionalism_complete_tt
 			has_variable = je_american_exceptionalism_declared
 		}
 	}
-
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = je_american_exceptionalism_completed_tt
 			}
 		}
 	}
-
-	fail = {
-		NOT = { is_power_bloc_leader = yes }
 	}
 
-	weight = 200
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = { is_power_bloc_leader = yes }
+	}
+	}
 }
 
 ### Spanish-American War
@@ -130,9 +147,29 @@ je_spanish_american_war = {
 		}
 	}
 
-	custom_completion_header = je_spanish_american_war_american_victory_header
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+	weight = 100
+	should_be_pinned_by_default_involved = yes
+
+	outcome = {
+		header = je_spanish_american_war_american_victory_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		tyr_resolve_spanish_content_trigger = yes
 		custom_tooltip = {
 			text = je_saw_american_victory_humiliation_tt
@@ -189,8 +226,7 @@ je_spanish_american_war = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		tyr_resolve_spanish_content_effect = yes
 		c:USA ?= {
 			add_modifier = { name = saw_american_victory years = 10 }
@@ -200,10 +236,14 @@ je_spanish_american_war = {
 			add_modifier = { name = saw_spanish_defeat years = 10 }
 		}
 	}
+	}
 
-	custom_failure_header = je_spanish_american_war_spanish_victory_header
-
-	fail = {
+	outcome = {
+		header = je_spanish_american_war_spanish_victory_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		tyr_resolve_spanish_content_trigger = yes
 		custom_tooltip = {
 			text = je_saw_spanish_victory_humiliation_tt
@@ -213,8 +253,7 @@ je_spanish_american_war = {
 			}
 		}
 	}
-
-	on_fail = {
+		effect = {
 		tyr_resolve_spanish_content_effect = yes
 		scope:tyr_spanish_content_scope ?= {
 			add_modifier = { name = saw_spanish_victory years = 10 }
@@ -223,16 +262,25 @@ je_spanish_american_war = {
 			add_modifier = { name = saw_american_defeat years = 10 }
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		tyr_resolve_spanish_content_trigger = yes
 		c:USA = {
 			"relations(scope:tyr_spanish_content_scope)" > relations_threshold:cordial
 		}
 	}
+	}
 
-	weight = 100
-	should_be_pinned_by_default_involved = yes
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+	}
 }
 
 ### Ostend Manifesto
@@ -306,7 +354,60 @@ je_ostend_manifesto = {
 		}
 	}
 
-	on_complete = {
+
+
+	timeout = 365
+
+
+
+
+
+
+
+
+
+	weight = 100
+	should_be_pinned_by_default_involved = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		tyr_resolve_spanish_content_trigger = yes
+		c:USA = { exists = yes }
+		OR = {
+			custom_tooltip = {
+				text = je_ostend_manifesto_complete_concluded_tt
+				OR = {
+					c:USA = { has_variable = ostend_usa_negotiations_concluded }
+					scope:tyr_spanish_content_scope = { has_variable = ostend_spa_negotiations_concluded }
+				}
+			}
+			AND = {
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_cuba_tt
+					c:CUB = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
+						}
+					}
+				}
+				custom_tooltip = {
+					text = je_ostend_manifesto_complete_pco_tt
+					c:PCO = {
+						OR = {
+							is_subject_of = c:USA
+							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
+						}
+					}
+				}
+			}
+		}
+	}
+		effect = {
 		c:USA = {
 			add_loyalists = {
 				value = 0.10
@@ -340,62 +441,14 @@ je_ostend_manifesto = {
 			}
 		}
 	}
-
-	timeout = 365
-
-	on_fail = {
-		hidden_effect = {
-			c:USA ?= { set_variable = ostend_negotiations_failed }
-			c:CUB ?= {
-				if = {
-					limit = { has_modifier = ostend_liberation_alignment }
-					remove_modifier = ostend_liberation_alignment
-				}
-				if = {
-					limit = { has_modifier = ostend_spain_alignment }
-					remove_modifier = ostend_spain_alignment
-				}
-			}
-			c:PCO ?= {
-				if = {
-					limit = { has_modifier = ostend_liberation_alignment }
-					remove_modifier = ostend_liberation_alignment
-				}
-				if = {
-					limit = { has_modifier = ostend_spain_alignment }
-					remove_modifier = ostend_spain_alignment
-				}
-			}
-		}
 	}
 
-	on_timeout = {
-		hidden_effect = {
-			c:USA ?= { set_variable = ostend_negotiations_failed }
-			c:CUB ?= {
-				if = {
-					limit = { has_modifier = ostend_liberation_alignment }
-					remove_modifier = ostend_liberation_alignment
-				}
-				if = {
-					limit = { has_modifier = ostend_spain_alignment }
-					remove_modifier = ostend_spain_alignment
-				}
-			}
-			c:PCO ?= {
-				if = {
-					limit = { has_modifier = ostend_liberation_alignment }
-					remove_modifier = ostend_liberation_alignment
-				}
-				if = {
-					limit = { has_modifier = ostend_spain_alignment }
-					remove_modifier = ostend_spain_alignment
-				}
-			}
-		}
-	}
-
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		tyr_resolve_spanish_content_trigger = yes
 		OR = {
 			custom_tooltip = {
@@ -413,43 +466,64 @@ je_ostend_manifesto = {
 			}
 		}
 	}
-
-	complete = {
-		tyr_resolve_spanish_content_trigger = yes
-		c:USA = { exists = yes }
-		OR = {
-			custom_tooltip = {
-				text = je_ostend_manifesto_complete_concluded_tt
-				OR = {
-					c:USA = { has_variable = ostend_usa_negotiations_concluded }
-					scope:tyr_spanish_content_scope = { has_variable = ostend_spa_negotiations_concluded }
+		effect = {
+		hidden_effect = {
+			c:USA ?= { set_variable = ostend_negotiations_failed }
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
 				}
 			}
-			AND = {
-				custom_tooltip = {
-					text = je_ostend_manifesto_complete_cuba_tt
-					c:CUB = {
-						OR = {
-							is_subject_of = c:USA
-							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
-						}
-					}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
 				}
-				custom_tooltip = {
-					text = je_ostend_manifesto_complete_pco_tt
-					c:PCO = {
-						OR = {
-							is_subject_of = c:USA
-							NOT = { is_subject_of = scope:tyr_spanish_content_scope }
-						}
-					}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
 				}
 			}
 		}
 	}
+	}
 
-	weight = 100
-	should_be_pinned_by_default_involved = yes
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		hidden_effect = {
+			c:USA ?= { set_variable = ostend_negotiations_failed }
+			c:CUB ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+			c:PCO ?= {
+				if = {
+					limit = { has_modifier = ostend_liberation_alignment }
+					remove_modifier = ostend_liberation_alignment
+				}
+				if = {
+					limit = { has_modifier = ostend_spain_alignment }
+					remove_modifier = ostend_spain_alignment
+				}
+			}
+		}
+	}
+	}
 }
 
 

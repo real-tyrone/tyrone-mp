@@ -26,7 +26,52 @@
 		set_variable = { name = landowners_out_var value = 0 }
 	}
 
-	complete = {
+
+
+	on_monthly_pulse = {
+		random_events = {
+			50 = 0
+			10 = metternich.3
+		}
+		effect = {
+			if = {
+				limit = {
+					ig:ig_landowners ?= {
+						is_in_government = no
+					}
+				}
+				change_variable = { name = landowners_out_var add = 1 }
+			}
+			else = {
+				set_variable = { name = landowners_out_var value = 0 }
+			}
+		}
+	}
+
+
+	
+
+
+
+
+
+	
+
+
+
+
+
+
+	weight = 200
+		
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 			trigger_if = {
 				limit = {
@@ -52,43 +97,27 @@
 			}
 		}
 	}
-
-	on_monthly_pulse = {
-		random_events = {
-			50 = 0
-			10 = metternich.3
-		}
 		effect = {
-			if = {
-				limit = {
-					ig:ig_landowners ?= {
-						is_in_government = no
-					}
-				}
-				change_variable = { name = landowners_out_var add = 1 }
-			}
-			else = {
-				set_variable = { name = landowners_out_var value = 0 }
-			}
-		}
-	}
-
-	on_complete = {
 		custom_tooltip = {
 			text = metternich_retirement_tt
 		}
 		trigger_event = { id = metternich.1 }
 	}
-	
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_metternich.1_tt
 			}
 		}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			any_civil_war = {
 				is_civil_war_type = revolution
@@ -108,8 +137,7 @@
 			}
 		}
 	}
-
-	on_fail = {
+		effect = {
 		if = {
 			limit = {
 				ig:ig_landowners.leader ?= {
@@ -120,22 +148,24 @@
 			trigger_event = { id = metternich.2 }
 		}
 	}
-	
-	event_outcome_failed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_metternich.2_tt
 			}
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_law = law_type:law_monarchy
 		}
 	}
-
-	on_invalid = {
+		effect = {
 		scope:metternich_scope = {
 			if = {
 				limit = {
@@ -146,8 +176,5 @@
 			exile_character_with_role_cleanup = yes
 		}
 	}
-
-	weight = 200
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	}
 }

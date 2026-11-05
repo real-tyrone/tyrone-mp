@@ -1,6 +1,6 @@
-﻿ ### For je_divided_monarchists
+﻿# Selective Tyrone overrides. All other bars are inherited from vanilla.
 
- divided_monarchists_bonapartist_progress_bar = {
+REPLACE:divided_monarchists_bonapartist_progress_bar = {
 	name = "divided_monarchists_bonapartist_progress_bar"
 	desc = "divided_monarchists_bonapartist_progress_bar_desc"
 
@@ -13,30 +13,124 @@
 					has_variable = fra_divided_monarchists_freeze #This variable stops iteration, and is granted by reaching 360 with one dynasty. It's reset when this JE is completed, or when je_cement_the_rightful_dynasty fails.
 				}
 			}
-			add = {
-				desc = "bonapartist_progress_from_characters"
-				value = owner.var:bonapartist_progress_from_characters
+			# From Characters - combined prominence of every Bonapartist character (prominence is 0/100, so divide by 200).
+			progress_condition = {
+				limit = {
+					any_scope_character = {
+						has_ideology = ideology:ideology_bonapartist
+					}
+				}
+				add = {
+					desc = "bonapartist_progress_from_characters"
+					every_scope_character = {
+						limit = {
+							has_ideology = ideology:ideology_bonapartist
+						}
+						add = this.prominence
+					}
+					divide = 200
+				}
 			}
-			add = {
-				desc = "bonapartist_progress_from_igs"
-				value = owner.var:bonapartist_progress_from_igs
+			# From Interest Groups - clout of every Bonapartist-led IG, weighted double if in government.
+			progress_condition = {
+				limit = {
+					any_interest_group = {
+						leader = {
+							has_ideology = ideology:ideology_bonapartist
+						}
+					}
+				}
+				add = {
+					desc = "bonapartist_progress_from_igs"
+					every_interest_group = {
+						limit = {
+							leader = {
+								has_ideology = ideology:ideology_bonapartist
+							}
+						}
+						add = {
+							value = this.ig_clout
+							progress_condition = {
+								limit = {
+									is_in_government = yes
+								}
+								multiply = 2
+							}
+						}
+					}
+				}
 			}
-			add = {
-				desc = "bonapartist_progress_from_military"
-				value = owner.var:bonapartist_progress_from_military
-				multiply = 0.75
+			# From Buildings - sum of occupied military building levels (0.0033 per level).
+			progress_condition = {
+				limit = {
+					any_scope_building = {
+						is_building_group = bg_military # Derives from barracks and naval bases.
+						occupancy >= 0.5
+					}
+				}
+				add = {
+					desc = "bonapartist_progress_from_military"
+					every_scope_building = {
+						limit = {
+							is_building_group = bg_military # Derives from barracks and naval bases.
+							occupancy >= 0.5
+						}
+						add = this.level
+					}
+					divide = 300
+					multiply = 0.75
 			}
-			add = {
-				desc = "bonapartist_progress_from_legitimacy"
-				value = owner.var:bonapartist_progress_from_legitimacy
 			}
-			add = {
-				desc = "bonapartist_progress_from_movements"
-				value = owner.var:bonapartist_progress_from_movements
+			# From Movements - support of any Bonapartist movement.
+			progress_condition = {
+				limit = {
+					any_political_movement = {
+						is_political_movement_type = movement_bonapartist
+					}
+				}
+				add = {
+					desc = "bonapartist_progress_from_movements"
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_bonapartist
+						}
+						add = {
+							value = this.political_movement_support
+							multiply = 5
+						}
+					}
+				}
 			}
-			add = {
-				desc = "bonapartist_progress_from_effects"
-				value = owner.var:bonapartist_progress_from_effects
+			# From Legitimacy - balanced around 0.5; a Bonapartist ruler benefits from high legitimacy, otherwise low legitimacy.
+			progress_condition = {
+				limit = {
+					ruler_is_bonapartist = yes
+				}
+				add = {
+					desc = "bonapartist_progress_from_legitimacy"
+					value = government_legitimacy
+					divide = 100
+					subtract = 0.5
+				}
+				else = {
+					add = {
+						desc = "bonapartist_progress_from_legitimacy"
+						value = government_legitimacy
+						divide = 100
+						subtract = 0.5
+						multiply = -0.5
+					}
+				}
+			}
+			# From Effects - scripted bonuses/maluses granted manually by events.
+			progress_condition = {
+				limit = {
+					has_variable = bonapartist_progress_from_effects
+				}
+				add = {
+					desc = "bonapartist_progress_from_effects"
+					value = var:bonapartist_progress_from_effects
+				}
 			}
 		}
 	}
@@ -47,7 +141,7 @@
 
  }
 
- divided_monarchists_orleanist_progress_bar = {
+REPLACE:divided_monarchists_orleanist_progress_bar = {
 	name = "divided_monarchists_orleanist_progress_bar"
 	desc = "divided_monarchists_orleanist_progress_bar_desc"
 
@@ -60,29 +154,123 @@
 					has_variable = fra_divided_monarchists_freeze #This variable stops iteration, and is granted by reaching 360 with one dynasty. It's reset when this JE is completed, or when je_cement_the_rightful_dynasty fails.
 				}
 			}
-			add = {
-				desc = "orleanist_progress_from_characters"
-				value = owner.var:orleanist_progress_from_characters
+			# From Characters - combined prominence of every Orleanist character (prominence is 0/100, so divide by 200).
+			progress_condition = {
+				limit = {
+					any_scope_character = {
+						has_ideology = ideology:ideology_orleanist
+					}
+				}
+				add = {
+					desc = "orleanist_progress_from_characters"
+					every_scope_character = {
+						limit = {
+							has_ideology = ideology:ideology_orleanist
+						}
+						add = this.prominence
+					}
+					divide = 200
+				}
 			}
-			add = {
-				desc = "orleanist_progress_from_igs"
-				value = owner.var:orleanist_progress_from_igs
+			# From Interest Groups - clout of every Orleanist-led IG, weighted double if in government.
+			progress_condition = {
+				limit = {
+					any_interest_group = {
+						leader = {
+							has_ideology = ideology:ideology_orleanist
+						}
+					}
+				}
+				add = {
+					desc = "orleanist_progress_from_igs"
+					every_interest_group = {
+						limit = {
+							leader = {
+								has_ideology = ideology:ideology_orleanist
+							}
+						}
+						add = {
+							value = this.ig_clout
+							progress_condition = {
+								limit = {
+									is_in_government = yes
+								}
+								multiply = 2
+							}
+						}
+					}
+				}
 			}
-			add = {
-				desc = "orleanist_progress_from_factories"
-				value = owner.var:orleanist_progress_from_factories
+			# From Buildings - sum of profitable manufacturing building levels.
+			progress_condition = {
+				limit = {
+					any_scope_building = {
+						is_building_group = bg_manufacturing
+						weekly_profit > 0
+					}
+				}
+				add = {
+					desc = "orleanist_progress_from_factories"
+					every_scope_building = {
+						limit = {
+							is_building_group = bg_manufacturing
+							weekly_profit > 0
+						}
+						add = this.level
+					}
+					divide = 200
+				}
 			}
-			add = {
-				desc = "orleanist_progress_from_legitimacy"
-				value = owner.var:orleanist_progress_from_legitimacy
+			# From Movements - support of any Orleanist movement.
+			progress_condition = {
+				limit = {
+					any_political_movement = {
+						is_political_movement_type = movement_orleanist
+					}
+				}
+				add = {
+					desc = "orleanist_progress_from_movements"
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_orleanist
+						}
+						add = {
+							value = this.political_movement_support
+							multiply = 5
+						}
+					}
+				}
 			}
-			add = {
-				desc = "orleanist_progress_from_movements"
-				value = owner.var:orleanist_progress_from_movements
+			# From Legitimacy - balanced around 0.5; a Orleanist ruler benefits from high legitimacy, otherwise low legitimacy.
+			progress_condition = {
+				limit = {
+					ruler_is_orleanist = yes
+				}
+				add = {
+					desc = "orleanist_progress_from_legitimacy"
+					value = government_legitimacy
+					divide = 100
+					subtract = 0.5
+				}
+				else = {
+					add = {
+						desc = "orleanist_progress_from_legitimacy"
+						value = government_legitimacy
+						divide = 100
+						subtract = 0.5
+						multiply = -0.5
+					}
+				}
 			}
-			add = {
-				desc = "orleanist_progress_from_effects"
-				value = owner.var:orleanist_progress_from_effects
+			# From Effects - scripted bonuses/maluses granted manually by events.
+			progress_condition = {
+				limit = {
+					has_variable = orleanist_progress_from_effects
+				}
+				add = {
+					desc = "orleanist_progress_from_effects"
+					value = var:orleanist_progress_from_effects
+				}
 			}
 		}
 	}
@@ -93,7 +281,7 @@
 
  }
 
- divided_monarchists_legitimist_progress_bar = {
+REPLACE:divided_monarchists_legitimist_progress_bar = {
 	name = "divided_monarchists_legitimist_progress_bar"
 	desc = "divided_monarchists_legitimist_progress_bar_desc"
 
@@ -106,35 +294,136 @@
 					has_variable = fra_divided_monarchists_freeze #This variable stops iteration, and is granted by reaching 360 with one dynasty. It's reset when this JE is completed, or when je_cement_the_rightful_dynasty fails.
 				}
 			}
-			add = {
-				desc = "legitimist_progress_from_characters"
-				value = owner.var:legitimist_progress_from_characters
-				multiply = 1.25
+			# From Characters - combined prominence of every Legitimist character (prominence is 0/100, so divide by 200).
+			progress_condition = {
+				limit = {
+					any_scope_character = {
+						has_ideology = ideology:ideology_legitimist
+					}
+				}
+				add = {
+					desc = "legitimist_progress_from_characters"
+					every_scope_character = {
+						limit = {
+							has_ideology = ideology:ideology_legitimist
+						}
+						add = this.prominence
+					}
+					divide = 200
+					multiply = 1.25
 			}
-			add = {
-				desc = "legitimist_progress_from_igs"
-				value = owner.var:legitimist_progress_from_igs
-				multiply = 1.25
 			}
-			add = {
-				desc = "legitimist_progress_from_farms"
-				value = owner.var:legitimist_progress_from_farms
-				multiply = 1.25
+			# From Interest Groups - clout of every Legitimist-led IG, weighted double if in government.
+			progress_condition = {
+				limit = {
+					any_interest_group = {
+						leader = {
+							has_ideology = ideology:ideology_legitimist
+						}
+					}
+				}
+				add = {
+					desc = "legitimist_progress_from_igs"
+					every_interest_group = {
+						limit = {
+							leader = {
+								has_ideology = ideology:ideology_legitimist
+							}
+						}
+						add = {
+							value = this.ig_clout
+							progress_condition = {
+								limit = {
+									is_in_government = yes
+								}
+								multiply = 2
+							}
+						}
+					}
+					multiply = 1.25
 			}
-			add = {
-				desc = "legitimist_progress_from_legitimacy"
-				value = owner.var:legitimist_progress_from_legitimacy
-				multiply = 1.25
 			}
-			add = {
-				desc = "legitimist_progress_from_movements"
-				value = owner.var:legitimist_progress_from_movements
-				multiply = 1.25
+			# From Buildings - sum of profitable (non-subsistence) agriculture building levels.
+			progress_condition = {
+				limit = {
+					any_scope_building = {
+						is_building_group = bg_agriculture
+						NOT = {
+							is_building_group = bg_subsistence_agriculture
+						}
+						weekly_profit > 0
+					}
+				}
+				add = {
+					desc = "legitimist_progress_from_farms"
+					every_scope_building = {
+						limit = {
+							is_building_group = bg_agriculture
+							NOT = {
+								is_building_group = bg_subsistence_agriculture
+							}
+							weekly_profit > 0
+						}
+						add = this.level
+					}
+					divide = 200
+					multiply = 1.25
 			}
-			add = {
-				desc = "legitimist_progress_from_effects"
-				value = owner.var:legitimist_progress_from_effects
-				multiply = 1.25
+			}
+			# From Movements - support of any Legitimist movement.
+			progress_condition = {
+				limit = {
+					any_political_movement = {
+						is_political_movement_type = movement_legitimist
+					}
+				}
+				add = {
+					desc = "legitimist_progress_from_movements"
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_legitimist
+						}
+						add = {
+							value = this.political_movement_support
+							multiply = 5
+						}
+					}
+					multiply = 1.25
+			}
+			}
+			# From Legitimacy - balanced around 0.5; a Legitimist ruler benefits from high legitimacy, otherwise low legitimacy.
+			progress_condition = {
+				limit = {
+					ruler_is_legitimist = yes
+				}
+				add = {
+					desc = "legitimist_progress_from_legitimacy"
+					value = government_legitimacy
+					divide = 100
+					subtract = 0.5
+					multiply = 1.25
+			}
+				else = {
+					add = {
+						desc = "legitimist_progress_from_legitimacy"
+						value = government_legitimacy
+						divide = 100
+						subtract = 0.5
+						multiply = -0.5
+						multiply = 1.25
+			}
+				}
+			}
+			# From Effects - scripted bonuses/maluses granted manually by events.
+			progress_condition = {
+				limit = {
+					has_variable = legitimist_progress_from_effects
+				}
+				add = {
+					desc = "legitimist_progress_from_effects"
+					value = var:legitimist_progress_from_effects
+					multiply = 1.25
+			}
 			}
 		}
 	}
@@ -145,180 +434,7 @@
 
  }
 
- ### For je_communism_1
-
- communism_1_progress_bar = {
-	name = "communism_1_progress_bar"
-	desc = "communism_1_progress_bar_desc"
-
-	default_bad = yes
-
-	monthly_progress = {
-		if = {
-			limit = {
-				owner = {
-					any_scope_state = {
-						is_incorporated = yes
-						loyalists >= 0.10
-					}
-				}
-			}
-			owner = {
-				subtract = {
-					desc = "communism_progress_from_loyalists_tt"
-					every_scope_state = {
-						limit = {
-							is_incorporated = yes
-							loyalists >= 0.10
-						}
-						add = this.loyalists
-					}
-					divide = num_incorporated_states
-					multiply = 3 # Maxes out at -3
-				}
-			}
-		}
-		if = {
-			limit = {
-				any_political_movement = {
-					movement_is_socialist = yes
-				}
-			}
-			add = {
-				desc = "communism_progress_from_movement_support_tt"
-				every_political_movement = {
-					limit = {
-						movement_is_socialist = yes
-					}
-					add = {
-						value = this.political_movement_support
-						multiply = 10
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				any_political_movement = {
-					movement_is_socialist = yes
-				}
-			}
-			add = {
-				desc = "communism_progress_from_movement_activism_tt"
-				every_political_movement = {
-					limit = {
-						movement_is_socialist = yes
-					}
-					add = {
-						value = this.political_movement_radicalism
-						multiply = 5
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				owner = {
-					any_scope_character = {
-						has_socialist_ideology = yes
-					}
-				}
-			}
-			add = {
-				desc = "communism_progress_from_characters_tt"
-				owner = {
-					every_scope_character = {
-						limit = {
-							has_socialist_ideology = yes
-						}
-						add = this.popularity
-						divide = 100
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				owner = {
-					any_interest_group = {
-						OR = {
-							law_stance = {
-								law = law_type:law_council_republic
-								value = approve
-							}
-							law_stance = {
-								law = law_type:law_council_republic
-								value = strongly_approve
-							}
-						}
-					}
-				}
-			}
-			add = {
-				desc = "communism_progress_from_interest_groups_tt"
-				owner = {
-					every_interest_group = {
-						limit = {
-							OR = { # There is a very good reason for this, and that's because of the 'count' value causing problems with a greater-than.
-								law_stance = {
-									law = law_type:law_council_republic
-									value = approve
-								}
-								law_stance = {
-									law = law_type:law_council_republic
-									value = strongly_approve
-								}
-							}
-						}
-						add = this.ig_clout
-					}
-				}
-			}
-		}
-		if = {
-			limit = {
-				exists = owner.var:communism_progress_from_laws
-			}
-			if = {
-				limit = {
-					owner.var:communism_progress_from_laws = 0
-				}
-				add = {
-					desc = "communism_progress_from_no_laws_tt"
-					value = 0.05
-				}
-			}
-			else ={
-			add = {
-				desc = "communism_progress_from_laws_tt"
-				value = owner.var:communism_progress_from_laws
-			}
-		}
-		}
-		if = {
-			limit = {
-				exists = owner.var:communism_progress_var_add
-				NOT = {
-					owner.var:communism_progress_var_add = 0
-				}
-			}
-			add = {
-				desc = "communism_progress_from_events_tt"
-				value = owner.var:communism_progress_var_add
-			}
-		}
-	}
-
-	start_value = 10
-	min_value = 0
-	max_value = 100
-
- }
-
-
- ### For je_populist_unrest
-
- populist_unrest_progress_bar = {
+REPLACE:populist_unrest_progress_bar = {
 	name = "populist_unrest_progress_bar"
 	desc = "populist_unrest_progress_bar_desc"
 
@@ -455,9 +571,7 @@
 
  }
 
- ### For je_matter_of_slavery
-
- matter_of_slavery_progress_bar = {
+REPLACE:matter_of_slavery_progress_bar = {
 	name = "matter_of_slavery_progress_bar"
 	desc = "matter_of_slavery_progress_bar_desc"
 
@@ -646,33 +760,7 @@
 	max_value = 360
  }
 
- # For expeditions
-
- expedition_progress_bar = {
-	name = "expedition_progress_bar"
-	desc = "expedition_progress_bar_desc"
-
-	default_green = yes
-
-	start_value = 0
-	min_value = 0
-	max_value = 8
- }
-
- expedition_peril_progress_bar = {
-	name = "expedition_peril_progress_bar"
-	desc = "expedition_peril_progress_bar_desc"
-
-	default_bad = yes
-
-	start_value = 0
-	min_value = 0
-	max_value = 8
- }
-
- ### For je_earn_recognition
-
- earn_recognition_progress_bar = {
+REPLACE:earn_recognition_progress_bar = {
 	name = "earning_recognition_progress_bar"
 	desc = "earning_recognition_progress_bar_desc"
 
@@ -830,7 +918,7 @@
 	max_value = 200
 }
 
-fascism_progress_bar = {
+REPLACE:fascism_progress_bar = {
    name = "fascism_progress_bar"
    desc = "fascism_progress_bar_desc"
 
@@ -1022,9 +1110,7 @@ fascism_progress_bar = {
 	max_value = 100
  }
 
- ### For je_india_home_rule
-
- je_india_home_rule_progressbar = {
+REPLACE:je_india_home_rule_progressbar = {
 	name = "je_india_home_rule_progressbar"
 	desc = "je_india_home_rule_progressbar_desc"
 
@@ -1159,9 +1245,7 @@ fascism_progress_bar = {
 
  }
 
-# For je_sikh_sovereignty
-
-sikh_empire_progress_bar = {
+REPLACE:sikh_empire_progress_bar = {
 	name = "sikh_empire_progress_bar"
 	desc = "sikh_empire_progress_bar_desc"
 
@@ -1233,7 +1317,7 @@ sikh_empire_progress_bar = {
 
 }
 
-sikh_empire_intrigue_bar = {
+REPLACE:sikh_empire_intrigue_bar = {
 	name = "sikh_empire_intrigue_bar"
 	desc = "sikh_empire_intrigue_bar_desc"
 
@@ -1464,7 +1548,7 @@ sikh_empire_intrigue_bar = {
 
 }
 
-positivist_progress_bar = {
+REPLACE:positivist_progress_bar = {
 	name = "positivist_progress_bar"
 	desc = "positivist_progress_bar_desc"
 
@@ -1513,7 +1597,7 @@ positivist_progress_bar = {
 
 }
 
-serbian_dethrone_bar = {
+REPLACE:serbian_dethrone_bar = {
 	name = "serbian_dethrone_progress_bar"
 	desc = "serbian_dethrone_progress_bar_desc"
 
@@ -1906,7 +1990,7 @@ serbian_dethrone_bar = {
 	max_value = 500
 }
 
-red_summer_progress_bar = {
+REPLACE:red_summer_progress_bar = {
 	name = "red_summer_progress_bar"
 	desc = "red_summer_progress_bar_desc"
 
@@ -2010,7 +2094,7 @@ red_summer_progress_bar = {
 
  }
 
-red_summer_counter_revolution_progress_bar = {
+REPLACE:red_summer_counter_revolution_progress_bar = {
 	name = "red_summer_counter_revolution_progress_bar"
 	desc = "red_summer_counter_revolution_progress_bar_desc"
 
@@ -2138,7 +2222,7 @@ red_summer_counter_revolution_progress_bar = {
 	max_value = 100
  }
 
- je_technocracy_progress_bar = {
+REPLACE:je_technocracy_progress_bar = {
 	name = "je_technocracy_progress_bar"
 	desc = "je_technocracy_progress_bar_desc"
 
@@ -2280,8 +2364,7 @@ red_summer_counter_revolution_progress_bar = {
 	max_value = 144 # Tied to technocracy_upper_bound
  }
 
- # for je_great_eastern_crisis
- control_eastern_crisis_bar = {
+REPLACE:control_eastern_crisis_bar = {
 	name = "control_eastern_crisis_bar"
 	desc = "control_eastern_crisis_bar_desc"
 
@@ -2355,8 +2438,7 @@ red_summer_counter_revolution_progress_bar = {
 
 }
 
-# for je_caudillo
- je_caudillo_progress_bar = {
+REPLACE:je_caudillo_progress_bar = {
 	name = "je_caudillo_progress_bar"
 	desc = "je_caudillo_progress_bar_desc"
 
@@ -2504,4 +2586,3 @@ red_summer_counter_revolution_progress_bar = {
 	max_value = 1200
 
  }
-

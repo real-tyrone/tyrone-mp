@@ -56,7 +56,30 @@
 		}
 	}
 
-	complete = {
+
+
+
+	
+
+
+	timeout = 3650 # 10 years
+
+
+
+
+
+		
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 100
+	transferable = no
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = bulgaria_is_independent_tt
 			any_diplomatically_relevant_country = {
@@ -89,24 +112,26 @@
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		set_global_variable = eastern_crisis_ottoman_defeat
 		set_variable = russia_eastern_question_victory
 		trigger_event = { id = eastern_question_russia.1 popup = yes }
 	}
-	
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_eastern_question_russia.1_tt
 			}
 		}
 	}
+	}
 
-	timeout = 3650 # 10 years
-
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = bulgaria_is_not_free_tt
 			NOT = {
@@ -119,18 +144,24 @@
 			}
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			exists = c:TUR
 		}
 	}
+	}
 
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
-	weight = 100
-	transferable = no
-
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+	}
 }
 
 je_eastern_question_austria = {
@@ -190,7 +221,26 @@ je_eastern_question_austria = {
 		}
 	}
 
-	complete = {
+
+	
+
+
+
+
+
+
+
+
+
+
+	weight = 1000
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 			owns_entire_state_region = STATE_BOSNIA
 			any_subject_or_below = {
@@ -208,20 +258,31 @@ je_eastern_question_austria = {
 			}
 		}
 	}
-	
-	event_outcome_completed_desc = {
+		effect = {
+		scope:relevant_lobby = {
+			change_appeasement = {
+				amount = 3
+				factor = appeasement_lobby_request_accepted
+			}
+		}
+		trigger_event = { id = eastern_question_austria.2 popup = yes }
+		clear_anti_lobby_vars = yes
+	}
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_eastern_question_austria.2_tt
 			}
 		}
 	}
-
-	invalid = {
-
 	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOR = {
 			any_scope_state = {
 				state_region = {
@@ -237,19 +298,14 @@ je_eastern_question_austria = {
 			}
 		}
 	}
-
-	on_complete = {
-		scope:relevant_lobby = {
-			change_appeasement = {
-				amount = 3
-				factor = appeasement_lobby_request_accepted
-			}
-		}
-		trigger_event = { id = eastern_question_austria.2 popup = yes }
-		clear_anti_lobby_vars = yes
 	}
 
-	on_timeout = {
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
 		scope:relevant_lobby = {
 			change_appeasement = {
 				amount = -5
@@ -258,6 +314,5 @@ je_eastern_question_austria = {
 		}
 		clear_anti_lobby_vars = yes
 	}
-
-	weight = 1000
+	}
 }

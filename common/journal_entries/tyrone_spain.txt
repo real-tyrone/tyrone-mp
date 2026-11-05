@@ -1,4 +1,11 @@
 je_spain_napoleonic_reforms = {
+	# Tyrone widgets injected into the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_spanish_bonapartist_portrait"
+		container = "custom_widget_container_je_icon"
+	}
+
 	icon = "gfx/interface/icons/event_icons/napoleon_empire_icon.dds"
 	group = je_group_historical_content
 	is_shown_when_inactive = { tyr_spanish_content_country = yes }
@@ -16,7 +23,18 @@ je_spain_napoleonic_reforms = {
 		add_journal_entry = { type = je_spain_napoleonic_domestic_reforms }
 		add_journal_entry = { type = je_spain_napoleonic_military_reforms }
 	}
-	complete = {
+
+
+
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = je_spain_napoleonic_domestic_completed_tt
 			has_variable = spain_napoleonic_domestic_reforms_completed
@@ -26,14 +44,11 @@ je_spain_napoleonic_reforms = {
 			has_variable = spain_napoleonic_military_reforms_completed
 		}
 	}
-	on_complete = {
+		effect = {
 		set_variable = spain_napoleonic_reforms_completed
 		trigger_event = { id = spain_napoleonic_reforms.11 popup = yes }
 	}
-	invalid = {
 	}
-	weight = 1000
-	should_be_pinned_by_default_uninvolved_or_context = yes
 }
 
 je_spain_napoleonic_domestic_reforms = {
@@ -53,7 +68,18 @@ je_spain_napoleonic_domestic_reforms = {
 	scripted_button = spain_napoleonic_trade_button
 	scripted_button = spain_napoleonic_taxation_button
 
-	complete = {
+
+
+
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = spain_napoleonic_schooling_confirmed_tt
 			has_variable = spain_napoleonic_schooling_confirmed
@@ -75,8 +101,13 @@ je_spain_napoleonic_domestic_reforms = {
 			has_variable = spain_napoleonic_taxation_confirmed
 		}
 	}
-	on_complete = { set_variable = spain_napoleonic_domestic_reforms_completed }
-	invalid = {
+		effect = { set_variable = spain_napoleonic_domestic_reforms_completed }
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			NOT = { has_law_or_variant = law_type:law_monarchy }
 			NOT = {
@@ -84,8 +115,7 @@ je_spain_napoleonic_domestic_reforms = {
 			}
 		}
 	}
-	weight = 1000
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	}
 }
 
 je_spain_napoleonic_military_reforms = {
@@ -105,7 +135,18 @@ je_spain_napoleonic_military_reforms = {
 	scripted_button = spain_napoleonic_communications_button
 	scripted_button = spain_napoleonic_ironclads_button
 
-	complete = {
+
+
+
+	weight = 1000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = spain_napoleonic_conscription_confirmed_tt
 			has_variable = spain_napoleonic_conscription_confirmed
@@ -127,8 +168,13 @@ je_spain_napoleonic_military_reforms = {
 			has_variable = spain_napoleonic_ironclads_confirmed
 		}
 	}
-	on_complete = { set_variable = spain_napoleonic_military_reforms_completed }
-	invalid = {
+		effect = { set_variable = spain_napoleonic_military_reforms_completed }
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			NOT = { has_law_or_variant = law_type:law_monarchy }
 			NOT = {
@@ -136,11 +182,17 @@ je_spain_napoleonic_military_reforms = {
 			}
 		}
 	}
-	weight = 1000
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	}
 }
 
 je_spanish_commonwealth = {
+	# Tyrone widgets injected into the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_scw_progress_details"
+		container = "custom_widget_container_4"
+	}
+
 	icon = "gfx/interface/icons/event_icons/spanish_commonwealth.dds"
 	group = je_group_global_international_situations
 	weight = 6000
@@ -180,32 +232,8 @@ je_spanish_commonwealth = {
 			scw_sync_journal = { ENTRY = je_spanish_commonwealth }
 		}
 	}
-	fail = {
-		custom_tooltip = {
-			text = scw_lost_leadership_tt NOT = {
-				any_country = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-					is_power_bloc_leader = yes
-				}
-			}
-		}
-	}
-	on_fail = {
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-				}
-				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
-			}
-		}
-	}
+
+
 
 	is_shown_when_inactive = {
 		any_country = {
@@ -302,7 +330,35 @@ je_spanish_commonwealth = {
 
 		scw_sync_journal = { ENTRY = je_spanish_commonwealth }
 	}
-	complete = {
+
+
+
+	should_be_pinned_by_default_involved = yes
+	should_be_involved = {
+		OR = {
+			c:SPA ?= this
+			was_formed_from = SPA
+			AND = {
+				is_in_geographic_region = geographic_region_americas
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+					is_in_same_power_bloc = prev
+				}
+			}
+		}
+	}
+	should_show_when_not_involved = { scw_american_eligible = yes }
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		hidden_trigger = {
 			any_country = {
 				OR = {
@@ -352,7 +408,7 @@ je_spanish_commonwealth = {
 			}
 		}
 	}
-	on_complete = {
+		effect = {
 		hidden_effect = {
 			every_country = {
 				limit = {
@@ -376,29 +432,50 @@ je_spanish_commonwealth = {
 			}
 		}
 	}
+	}
 
-	should_be_pinned_by_default_involved = yes
-	should_be_involved = {
-		OR = {
-			c:SPA ?= this
-			was_formed_from = SPA
-			AND = {
-				is_in_geographic_region = geographic_region_americas
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
 				any_country = {
 					OR = {
 						c:SPA ?= this
 						was_formed_from = SPA
 					}
 					is_power_bloc_leader = yes
-					is_in_same_power_bloc = prev
 				}
 			}
 		}
 	}
-	should_show_when_not_involved = { scw_american_eligible = yes }
+		effect = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+	}
 }
 
 je_spanish_commonwealth_charter = {
+	# Tyrone widgets injected into the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
+		name = "tyr_scw_progress_details"
+		container = "custom_widget_container_4"
+	}
+
 	icon = "gfx/interface/icons/event_icons/spanish_commonwealth.dds"
 	group = je_group_global_international_situations
 	weight = 6000
@@ -440,32 +517,8 @@ je_spanish_commonwealth_charter = {
 			scw_sync_journal = { ENTRY = je_spanish_commonwealth_charter }
 		}
 	}
-	fail = {
-		custom_tooltip = {
-			text = scw_lost_leadership_tt NOT = {
-				any_country = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-					is_power_bloc_leader = yes
-				}
-			}
-		}
-	}
-	on_fail = {
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-				}
-				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
-			}
-		}
-	}
+
+
 
 	is_shown_when_inactive = {
 		any_country = {
@@ -565,32 +618,8 @@ je_spanish_commonwealth_charter = {
 		}
 
 	}
-	invalid = {
-		custom_tooltip = {
-			text = scw_lost_leadership_tt NOT = {
-				any_country = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-					is_power_bloc_leader = yes
-				}
-			}
-		}
-	}
-	on_invalid = {
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						c:SPA ?= this
-						was_formed_from = SPA
-					}
-				}
-				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
-			}
-		}
-	}
+
+
 	immediate = {
 
 		hidden_effect = {
@@ -611,9 +640,7 @@ je_spanish_commonwealth_charter = {
 
 		scw_sync_journal = { ENTRY = je_spanish_commonwealth_charter }
 	}
-	complete = {
-		always = no
-	}
+
 
 	should_be_pinned_by_default_involved = yes
 	should_be_involved = {
@@ -638,4 +665,78 @@ je_spanish_commonwealth_charter = {
 
 
 
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		always = no
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+				}
+			}
+		}
+	}
+		effect = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = scw_lost_leadership_tt NOT = {
+				any_country = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+					is_power_bloc_leader = yes
+				}
+			}
+		}
+	}
+		effect = {
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						c:SPA ?= this
+						was_formed_from = SPA
+					}
+				}
+				save_scope_as = scw_sponsor  scw_end_commonwealth = yes
+			}
+		}
+	}
+	}
 }
