@@ -28,12 +28,7 @@
 		modifier_young_hungary_movement
 	}
 
-	complete = {
-		custom_tooltip = {
-			has_variable = finished_hungary_var
-			text = finished_hungary_je_tt
-		}
-	}
+
 
 	on_monthly_pulse = {
 		effect = {
@@ -53,7 +48,32 @@
 		}
 	}
 
-	on_complete = {
+
+
+
+
+
+	
+
+
+
+
+	weight = 100
+		
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			has_variable = finished_hungary_var
+			text = finished_hungary_je_tt
+		}
+	}
+		effect = {
 		scope:journal_entry = {
 			remove_modifier = modifier_young_hungary_movement
 		}
@@ -100,8 +120,14 @@
 			}
 		}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = je_matter_of_hungary_fail_hungary_is_free
 			OR = {
@@ -144,29 +170,28 @@
 			}
 		}
 	}
-
-	on_fail = {
+		effect = {
 		trigger_event = { id = austria_events.3 popup = yes }
 		custom_tooltip = {
 			text = je_matter_of_hungary_on_fail_lose_control
 		}
 	}
-	
-	event_outcome_failed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_austria_events.3_tt
 			}
 		}
 	}
-
-	invalid = {
-		has_variable = je_german_confederate_unifier
 	}
 
-	weight = 100
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		has_variable = je_german_confederate_unifier
+	}
+	}
 }
 
 je_austrian_neo_absolutism = {
@@ -245,7 +270,85 @@ je_austrian_neo_absolutism = {
 		modifier_austrian_state_police
 	}
 
-	complete = {
+
+
+
+	
+
+
+
+	
+
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = je_austrian_neo_absolutism_status
+				trigger = {
+					NOT = {
+						has_journal_entry = je_austrian_neo_absolutism
+					}
+				}
+			}
+			triggered_desc = {
+				desc = je_austrian_neo_absolutism_status_1
+				trigger = {
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 25
+					}
+				}
+			}
+			triggered_desc = {
+				desc = je_austrian_neo_absolutism_status_2
+				trigger = {
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 25
+					}
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 50
+					}
+				}
+			}
+			triggered_desc = {
+				desc = je_austrian_neo_absolutism_status_3
+				trigger = {
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 50
+					}
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 75
+					}
+				}
+			}
+			triggered_desc = {
+				desc = je_austrian_neo_absolutism_status_4
+				trigger = {
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 75
+					}
+					scope:journal_entry ?= {
+						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 100
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+
+	weight = 100
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		calc_true_if = {
 			amount >= 4
 			trigger_if = {
@@ -318,23 +421,27 @@ je_austrian_neo_absolutism = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		show_as_tooltip = {
 			activate_law = law_type:law_neo_absolutism
 		}
 		trigger_event = { id = austria_events.1 popup = yes }
 	}
-	
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_austria_events.1_tt
 			}
 		}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			custom_tooltip = {
 				text = je_austrian_neo_absolutism_fail_tt
@@ -358,8 +465,21 @@ je_austrian_neo_absolutism = {
 			}
 		}
 	}
-	
-	event_outcome_failed_desc = {
+		effect = {
+		if = {
+			limit = {
+				je:je_austrian_neo_absolutism ?= {
+					"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" >= 100
+				}
+			}
+			trigger_event = { id = austria_events.2 popup = yes }
+		}
+		else = {
+			trigger_event = { id = austria_events.5 popup = yes }
+		}
+		set_variable = je_austrian_neo_absolutism_failed_var
+	}
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
@@ -377,77 +497,12 @@ je_austrian_neo_absolutism = {
 			}
 		}
 	}
-
-	status_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = je_austrian_neo_absolutism_status
-				trigger = {
-					NOT = {
-						has_journal_entry = je_austrian_neo_absolutism
-					}
-				}
-			}
-			triggered_desc = {
-				desc = je_austrian_neo_absolutism_status_1
-				trigger = {
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 25
-					}
-				}
-			}
-			triggered_desc = {
-				desc = je_austrian_neo_absolutism_status_2
-				trigger = {
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 25
-					}
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 50
-					}
-				}
-			}
-			triggered_desc = {
-				desc = je_austrian_neo_absolutism_status_3
-				trigger = {
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 50
-					}
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 75
-					}
-				}
-			}
-			triggered_desc = {
-				desc = je_austrian_neo_absolutism_status_4
-				trigger = {
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" > 75
-					}
-					scope:journal_entry ?= {
-						"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" <= 100
-					}
-				}
-			}
-		}
 	}
 
-	on_fail = {
-		if = {
-			limit = {
-				je:je_austrian_neo_absolutism ?= {
-					"scripted_bar_progress(austrian_neo_absolutism_constitutional_pressure_progress_bar)" >= 100
-				}
-			}
-			trigger_event = { id = austria_events.2 popup = yes }
-		}
-		else = {
-			trigger_event = { id = austria_events.5 popup = yes }
-		}
-		set_variable = je_austrian_neo_absolutism_failed_var
-	}
-
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			NOT = {
 				has_law_or_variant = law_type:law_autocracy
@@ -457,13 +512,10 @@ je_austrian_neo_absolutism = {
 			}
 		}
 	}
-
-	on_invalid = {
+		effect = {
 		set_variable = je_austrian_neo_absolutism_failed_var
 	}
-
-	weight = 100
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	}
 }
 
 je_hungarian_revolution_aus = {
@@ -477,7 +529,19 @@ je_hungarian_revolution_aus = {
 		c:HUN ?= { save_scope_as = hungary_scope }
 	}
 	
-	complete = {
+
+
+
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = hungary_doesnt_exist_tt
 			NOT = {
@@ -491,14 +555,19 @@ je_hungarian_revolution_aus = {
 			c:AUS ?= owner
 		}
 	}
-
-	on_complete = {
+		effect = {
 		trigger_event = {
 			id = germany_rework.6 popup = yes	
 		}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = je_matter_of_hungary_fail_not_at_war_with_hungary
 			c:HUN ?= {
@@ -532,7 +601,7 @@ je_hungarian_revolution_aus = {
 			}
 		}
 	}
-
+	}
 }
 
 je_german_ambition = {
@@ -544,31 +613,11 @@ je_german_ambition = {
 		c:PRU ?= { save_scope_as = prussia_scope }
 	}
 
-	complete = {
-		custom_tooltip = {
-			OR = {
-				c:GER ?= this
-				owns_entire_state_region = STATE_BRANDENBURG
-			}
-			text = je_german_unification_complete_trigger_desc
-		}
-	}
 
-	fail = {
-		OR = {
-			has_modifier = brothers_war_defeat_aus
-			custom_tooltip = {
-				text = abandoned_germany_fail
-				has_variable = abandoned_germany_button_var
-			}
-			has_global_variable = ngf_defeated_sgf
-		}
-	}
 
-	on_fail = {
-		trigger_event = { id = austria_events.9 popup = yes }
-		set_variable = reclaiming_empire_aus_var
-	}
+
+
+
 
 
 	scripted_button = modernize_government_button
@@ -594,6 +643,43 @@ je_german_ambition = {
 		modifier_german_ambition
 	}	
 
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			OR = {
+				c:GER ?= this
+				owns_entire_state_region = STATE_BRANDENBURG
+			}
+			text = je_german_unification_complete_trigger_desc
+		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			has_modifier = brothers_war_defeat_aus
+			custom_tooltip = {
+				text = abandoned_germany_fail
+				has_variable = abandoned_germany_button_var
+			}
+			has_global_variable = ngf_defeated_sgf
+		}
+	}
+		effect = {
+		trigger_event = { id = austria_events.9 popup = yes }
+		set_variable = reclaiming_empire_aus_var
+	}
+	}
 }
 
 je_austrian_reclamation = {
@@ -606,7 +692,25 @@ je_austrian_reclamation = {
 		c:GAL ?= { save_scope_as = galicia_scope }
 	}
 
-	complete = {
+
+
+	scripted_button = revisit_matter_of_hungary_button
+	scripted_button = reclaim_hungary_button
+	scripted_button = reclaim_croatia_button
+	scripted_button = reclaim_galicia_button
+	scripted_button = reclaim_transylvania_button
+
+	group = je_group_historical_content
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			AND = {
 				has_journal_entry = je_matter_of_hungary
@@ -638,15 +742,5 @@ je_austrian_reclamation = {
 			text = finished_reclamation_tt
 		}
 	}
-
-	scripted_button = revisit_matter_of_hungary_button
-	scripted_button = reclaim_hungary_button
-	scripted_button = reclaim_croatia_button
-	scripted_button = reclaim_galicia_button
-	scripted_button = reclaim_transylvania_button
-
-	group = je_group_historical_content
-
-	should_be_pinned_by_default_uninvolved_or_context = yes
-
+	}
 }

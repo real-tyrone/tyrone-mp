@@ -49,10 +49,10 @@ je_tyr_spain_italy_dynastic_contest = {
 	}
 
 	should_be_involved = {
-		OR = { c:SPA = root c:ITA = root }
+		OR = { c:SPA ?= root c:ITA ?= root }
 	}
 	should_show_when_not_involved = {
-		OR = { this = c:SPA this = c:ITA }
+		OR = { c:SPA ?= this c:ITA ?= this }
 	}
 
 	# A contextless JE has no country root; this hook runs for each participant.
@@ -60,7 +60,24 @@ je_tyr_spain_italy_dynastic_contest = {
 		set_variable = tyr_dynastic_contest_active
 	}
 
-	complete = {
+
+
+
+
+
+
+
+
+	weight = 5000
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		exists = c:SPA
 		exists = c:ITA
 		c:SPA = { is_subject = no }
@@ -76,8 +93,7 @@ je_tyr_spain_italy_dynastic_contest = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		set_global_variable = tyr_dynastic_contest_resolved
 		if = {
 			limit = { scope:journal_entry = { "scripted_bar_progress(tyr_spain_italy_dynastic_contest_bar)" <= 0 } }
@@ -101,8 +117,12 @@ je_tyr_spain_italy_dynastic_contest = {
 		c:SPA ?= { remove_variable = tyr_dynastic_contest_active }
 		c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			NOT = { exists = c:SPA }
 			NOT = { exists = c:ITA }
@@ -110,15 +130,11 @@ je_tyr_spain_italy_dynastic_contest = {
 			c:ITA ?= { is_subject = yes }
 		}
 	}
-
-	on_invalid = {
+		effect = {
 		c:SPA ?= { remove_variable = tyr_dynastic_contest_active }
 		c:ITA ?= { remove_variable = tyr_dynastic_contest_active }
 	}
-
-	weight = 5000
-	should_be_pinned_by_default_involved = yes
-	should_be_pinned_by_default_uninvolved_or_context = no
+	}
 }
 
 je_tyr_crown_union_consolidation = {
@@ -133,12 +149,12 @@ je_tyr_crown_union_consolidation = {
 	possible = {
 		OR = {
 			AND = {
-				this = c:SPA
+				c:SPA ?= this
 				exists = c:ITA
 				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
 			AND = {
-				this = c:ITA
+				c:ITA ?= this
 				exists = c:SPA
 				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
@@ -148,7 +164,7 @@ je_tyr_crown_union_consolidation = {
 	immediate = {
 		remove_variable = tyr_crown_union_war_unlocked
 		if = {
-			limit = { this = c:SPA }
+			limit = { c:SPA ?= this }
 			c:ITA = { remove_variable = tyr_crown_union_rejected }
 		}
 		else = {
@@ -156,50 +172,66 @@ je_tyr_crown_union_consolidation = {
 		}
 	}
 
-	complete = {
+
+
+
+
+
+
+
+
+	weight = 5000
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 			AND = {
-				this = c:SPA
+				c:SPA ?= this
 				exists = c:ITA
 				c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
 			AND = {
-				this = c:ITA
+				c:ITA ?= this
 				exists = c:SPA
 				c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 			}
 		}
 		scope:journal_entry = { "scripted_bar_progress(tyr_crown_union_consolidation_bar)" >= 36 }
 	}
-
-	on_complete = {
+		effect = {
 		trigger_event = { id = tyr_crown_union.2 popup = yes }
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			OR = {
 				AND = {
-					this = c:SPA
+					c:SPA ?= this
 					exists = c:ITA
 					c:ITA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 				}
 				AND = {
-					this = c:ITA
+					c:ITA ?= this
 					exists = c:SPA
 					c:SPA ?= { is_subject_of = root is_subject_type = subject_type_personal_union }
 				}
 			}
 		}
 	}
-
-	on_invalid = {
+		effect = {
 		remove_variable = tyr_crown_union_winner
 		remove_variable = tyr_crown_union_war_unlocked
 		c:SPA ?= { remove_variable = tyr_crown_union_loser remove_variable = tyr_crown_union_rejected }
 		c:ITA ?= { remove_variable = tyr_crown_union_loser remove_variable = tyr_crown_union_rejected }
 	}
-
-	weight = 5000
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	}
 }

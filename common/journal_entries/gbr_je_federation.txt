@@ -46,25 +46,9 @@ je_imperial_federation = {
 		c:GBR ?= THIS
 	}
 
-	invalid = {
-		OR = {
-			has_global_variable = british_commonwealth_var
-			c:GBR = { has_variable = chose_commonwealth_path }
-			NOT = { exists = c:GBR }
-		}
-	}
 
-	on_invalid = {
-		if = {
-			limit = {
-				c:GBR = exists
-				c:GBR = {
-					has_variable = chose_commonwealth_path
-				}
-			}
-			add_contextless_journal_entry = je_british_commonwealth
-		}
-	}
+
+
 
 	immediate = {
 		c:BIC = {
@@ -172,7 +156,26 @@ je_imperial_federation = {
 			}
 	}
 
-	complete = {
+
+
+
+
+
+
+
+
+	scripted_progress_bar = bar_federation_progress
+
+	weight = 500
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		c:GBR ?= {
 			has_technology_researched = pan-nationalism
 			OR = {
@@ -187,30 +190,43 @@ je_imperial_federation = {
 		}
 	}
 	}
-
-	on_complete = {
+		effect = {
 		set_global_variable = imperial_federation_var
 		
 		c:GBR ?= {
 			trigger_event = { id = imperial_events.2 popup = yes } 
 		}
 	}
-
-	event_outcome_completed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				desc = event_effects_gbr_imperial_federation_tt
 			}
 		}
 	}
-
-	fail = {
 	}
 
-	scripted_progress_bar = bar_federation_progress
-
-	weight = 500
-	should_be_pinned_by_default_involved = yes
-	should_be_pinned_by_default_uninvolved_or_context = no
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			has_global_variable = british_commonwealth_var
+			c:GBR = { has_variable = chose_commonwealth_path }
+			NOT = { exists = c:GBR }
+		}
+	}
+		effect = {
+		if = {
+			limit = {
+				c:GBR = exists
+				c:GBR = {
+					has_variable = chose_commonwealth_path
+				}
+			}
+			add_contextless_journal_entry = je_british_commonwealth
+		}
+	}
+	}
 }
 

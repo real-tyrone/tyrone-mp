@@ -79,7 +79,101 @@ je_great_game_control = {
 		}
     }
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+    on_weekly_pulse = {
+        effect = {
+            if = {
+                limit = {
+					is_player = yes
+                    NOT = { has_global_variable = gg_started }
+                }
+                set_global_variable = gg_started
+            }
+			update_gg_progressbar_tooltips = yes
+        }
+    }
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					is_player = yes
+				}
+				calculate_great_game_passive_progress = yes
+			}
+			if = {
+				limit = {
+					OR = {
+						c:GBR ?= this
+						c:RUS ?= this
+					}
+				}
+				if = {
+					limit = {
+						is_in_power_bloc = yes
+						is_power_bloc_leader = no
+					}
+					change_variable = {
+						name = great_game_no_longer_power_bloc_leader_var
+						add = 1
+					}
+				}
+				if = {
+					limit = {
+						is_in_power_bloc = yes
+						is_power_bloc_leader = yes
+					}
+					set_variable = {
+						name = great_game_no_longer_power_bloc_leader_var
+						value = 0
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						is_subject = yes
+					}
+					change_variable = {
+						name = great_game_subjected_var
+						add = 1
+					}
+				}
+				if = {
+					limit = {
+						is_subject = no
+					}
+					set_variable = {
+						name = great_game_subjected_var
+						value = 0
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		trigger_if = {
 			limit = {
 				OR = {
@@ -252,208 +346,7 @@ je_great_game_control = {
 			}
 		}
 	}
-
-	invalid = {
-		OR = {
-			NOT = {
-				exists = c:GBR
-			}
-			NOT = {
-				exists = c:RUS
-			}
-		}
-	}
-
-	on_invalid = {
-		set_global_variable = great_game_failed
-	}
-
-	fail = {
-		OR = {
-			trigger_if = {
-				limit = {
-					OR = {
-						c:RUS ?= this
-						c:GBR ?= this
-					}
-				}
-				OR = {
-					is_in_power_bloc = no
-					custom_tooltip = {
-						text = not_leader_of_power_bloc_tt
-						is_in_power_bloc = yes
-						is_power_bloc_leader = no
-						var:great_game_no_longer_power_bloc_leader_var >= 60
-					}
-					AND = {
-						custom_tooltip = {
-							text = any_casia_country_recognised_tt
-							any_country = {
-								capital = {
-									OR = {
-										region = sr:region_greater_persia
-										region = sr:region_central_asia
-									}
-								}
-								is_country_type = recognized
-								country_rank >= rank_value:major_power
-							}
-						}
-						custom_tooltip = {
-							text = europeans_expelled_from_casia_tt
-							NOT = {
-								c:GBR ?= {
-									OR = {
-										any_subject_or_below = {
-											any_scope_state = {
-												OR = {
-													region = sr:region_greater_persia
-													region = sr:region_central_asia
-												}
-											}
-										}
-										any_scope_state = {
-											OR = {
-												region = sr:region_greater_persia
-												region = sr:region_central_asia
-											}
-										}
-									}
-								}
-							}
-							NOT = {
-								c:RUS ?= {
-									OR = {
-										any_subject_or_below = {
-											any_scope_state = {
-												OR = {
-													region = sr:region_greater_persia
-													region = sr:region_central_asia
-												}
-											}
-										}
-										any_scope_state = {
-											OR = {
-												region = sr:region_greater_persia
-												region = sr:region_central_asia
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					trigger_if = {
-						limit = {
-							c:RUS ?= this
-						}
-						c:RUS ?= {
-							country_rank < rank_value:great_power
-						}
-					}
-					trigger_if = {
-						limit = {
-							c:GBR ?= this
-						}
-						c:GBR ?= {
-							country_rank < rank_value:great_power
-						}
-					}
-				}
-			}
-			trigger_if = {
-				limit = {
-					OR = {
-						c:PER ?= this
-						is_afghan_nation = yes
-					}
-				}
-				custom_tooltip = {
-					text = puppeted_for_too_long_tt
-					is_subject = yes
-					var:great_game_subjected_var >= 60
-				}
-			}
-		}
-	}
-
-	on_fail = {
-		set_global_variable = great_game_failed
-	}
-
-    on_weekly_pulse = {
-        effect = {
-            if = {
-                limit = {
-					is_player = yes
-                    NOT = { has_global_variable = gg_started }
-                }
-                set_global_variable = gg_started
-            }
-			update_gg_progressbar_tooltips = yes
-        }
-    }
-
-	on_monthly_pulse = {
 		effect = {
-			if = {
-				limit = {
-					is_player = yes
-				}
-				calculate_great_game_passive_progress = yes
-			}
-			if = {
-				limit = {
-					OR = {
-						c:GBR ?= this
-						c:RUS ?= this
-					}
-				}
-				if = {
-					limit = {
-						is_in_power_bloc = yes
-						is_power_bloc_leader = no
-					}
-					change_variable = {
-						name = great_game_no_longer_power_bloc_leader_var
-						add = 1
-					}
-				}
-				if = {
-					limit = {
-						is_in_power_bloc = yes
-						is_power_bloc_leader = yes
-					}
-					set_variable = {
-						name = great_game_no_longer_power_bloc_leader_var
-						value = 0
-					}
-				}
-			}
-			else = {
-				if = {
-					limit = {
-						is_subject = yes
-					}
-					change_variable = {
-						name = great_game_subjected_var
-						add = 1
-					}
-				}
-				if = {
-					limit = {
-						is_subject = no
-					}
-					set_variable = {
-						name = great_game_subjected_var
-						value = 0
-					}
-				}
-			}
-		}
-	}
-
-	on_complete = {
 		if = {
 			limit = {
 				OR = {
@@ -567,8 +460,7 @@ je_great_game_control = {
 			set_variable = achievement_great_game_no_re
 		}
 	}
-
-    event_outcome_completed_desc = {
+		event_outcome_desc = {
         first_valid = {
             triggered_desc = {
 				trigger = {
@@ -648,9 +540,143 @@ je_great_game_control = {
             }
         }
     }
+	}
 
-	weight = 1000
-	transferable = yes
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			trigger_if = {
+				limit = {
+					OR = {
+						c:RUS ?= this
+						c:GBR ?= this
+					}
+				}
+				OR = {
+					is_in_power_bloc = no
+					custom_tooltip = {
+						text = not_leader_of_power_bloc_tt
+						is_in_power_bloc = yes
+						is_power_bloc_leader = no
+						var:great_game_no_longer_power_bloc_leader_var >= 60
+					}
+					AND = {
+						custom_tooltip = {
+							text = any_casia_country_recognised_tt
+							any_country = {
+								capital = {
+									OR = {
+										region = sr:region_greater_persia
+										region = sr:region_central_asia
+									}
+								}
+								is_country_type = recognized
+								country_rank >= rank_value:major_power
+							}
+						}
+						custom_tooltip = {
+							text = europeans_expelled_from_casia_tt
+							NOT = {
+								c:GBR ?= {
+									OR = {
+										any_subject_or_below = {
+											any_scope_state = {
+												OR = {
+													region = sr:region_greater_persia
+													region = sr:region_central_asia
+												}
+											}
+										}
+										any_scope_state = {
+											OR = {
+												region = sr:region_greater_persia
+												region = sr:region_central_asia
+											}
+										}
+									}
+								}
+							}
+							NOT = {
+								c:RUS ?= {
+									OR = {
+										any_subject_or_below = {
+											any_scope_state = {
+												OR = {
+													region = sr:region_greater_persia
+													region = sr:region_central_asia
+												}
+											}
+										}
+										any_scope_state = {
+											OR = {
+												region = sr:region_greater_persia
+												region = sr:region_central_asia
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					trigger_if = {
+						limit = {
+							c:RUS ?= this
+						}
+						c:RUS ?= {
+							country_rank < rank_value:great_power
+						}
+					}
+					trigger_if = {
+						limit = {
+							c:GBR ?= this
+						}
+						c:GBR ?= {
+							country_rank < rank_value:great_power
+						}
+					}
+				}
+			}
+			trigger_if = {
+				limit = {
+					OR = {
+						c:PER ?= this
+						is_afghan_nation = yes
+					}
+				}
+				custom_tooltip = {
+					text = puppeted_for_too_long_tt
+					is_subject = yes
+					var:great_game_subjected_var >= 60
+				}
+			}
+		}
+	}
+		effect = {
+		set_global_variable = great_game_failed
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			NOT = {
+				exists = c:GBR
+			}
+			NOT = {
+				exists = c:RUS
+			}
+		}
+	}
+		effect = {
+		set_global_variable = great_game_failed
+	}
+	}
 }
 
 ### Russia
@@ -661,36 +687,60 @@ je_secure_persian_border = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         custom_tooltip = {
             text = je_secure_persian_border_complete_tt
             has_global_variable = caucasus_consolidated_var
         }
 	}
-
-	on_complete = {
+		effect = {
 		great_game_russia_progress_15 = yes
 	}
+	}
 
-    fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
         custom_tooltip = {
             text = je_secure_persian_border_fail_tt
             has_global_variable = caucasus_failure_var
         }
     }
-
-	on_fail = {
+		effect = {
 		great_game_britain_progress_15 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_pacify_kazakh_steppes = {
@@ -699,36 +749,60 @@ je_pacify_kazakh_steppes = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         custom_tooltip = {
             text = je_pacify_kazakh_steppes_success_tt
             has_global_variable = kazakhstan_victory_var
         }
 	}
-
-	on_complete = {
+		effect = {
 		great_game_russia_progress_10 = yes
 	}
+	}
 
-    fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
         custom_tooltip = {
             text = je_pacify_kazakh_steppes_fail_tt
             has_global_variable = kazakhstan_defeat_var
         }
     }
-
-	on_fail = {
+		effect = {
 		great_game_britain_progress_25 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_codify_chinese_border = {
@@ -763,7 +837,21 @@ je_codify_chinese_border = {
         }
     }
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         owns_entire_state_region = STATE_AMUR
         owns_entire_state_region = STATE_OUTER_MANCHURIA
         owns_entire_state_region = STATE_JETISY
@@ -785,20 +873,21 @@ je_codify_chinese_border = {
             }
         }
 	}
-
-	on_complete = {
+		effect = {
         set_global_variable = china_border_codified_variable
 		great_game_russia_progress_15 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_consolidate_central_asia = {
@@ -828,7 +917,21 @@ je_consolidate_central_asia = {
 		has_journal_entry = je_conquest_of_central_asia
 	}
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         any_state = {
             filter = {
                 OR = {
@@ -869,19 +972,20 @@ je_consolidate_central_asia = {
             percent = 1
         }
 	}
-
-	on_complete = {
+		effect = {
 		great_game_russia_progress_15 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_chinese_concessions = {
@@ -890,7 +994,21 @@ je_chinese_concessions = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 			any_scope_state = {
 				region = sr:region_northeast_asia
@@ -928,20 +1046,21 @@ je_chinese_concessions = {
             percent >= 1
         }
 	}
-
-	on_complete = {
+		effect = {
 		set_global_variable = manchurian_railway_variable
 		great_game_russia_progress_15 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_acquire_korean_protectorate = {
@@ -950,37 +1069,61 @@ je_acquire_korean_protectorate = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
         exists = c:KOR
         c:KOR ?= {
             is_subject_of = ROOT
         }
 	}
-
-	on_complete = {
+		effect = {
 		set_global_variable = korean_protectorate_success
 		great_game_russia_progress_25 = yes
 	}
+	}
 
-    fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
         c:KOR ?= {
             is_country_type = recognized
         }
     }
-
-    on_fail = {
+		effect = {
 		set_global_variable = korean_protectorate_failure
 		great_game_britain_progress_10 = yes
     }
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 ### Britain
@@ -991,17 +1134,38 @@ je_disrupt_russian_caucasus = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		c:CIR ?= {
             owns_entire_state_region = STATE_KUBAN
         }
 	}
-
-	on_complete = {
+		effect = {
 		great_game_britain_progress_15 = yes
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = circassia_dead_tt
 			OR = {
@@ -1014,15 +1178,17 @@ je_disrupt_russian_caucasus = {
 			}
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_counter_russian_pacific_influence = {
@@ -1031,7 +1197,21 @@ je_counter_russian_pacific_influence = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		any_diplomatically_relevant_country = {
 			country_rank >= rank_value:unrecognized_major_power
 			OR = {
@@ -1058,19 +1238,20 @@ je_counter_russian_pacific_influence = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		great_game_britain_progress_10 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_consolidate_british_india = {
@@ -1103,7 +1284,21 @@ je_consolidate_british_india = {
 		}
 	}
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 			any_scope_state = {
 				state_region = s:STATE_DELHI
@@ -1177,19 +1372,20 @@ je_consolidate_british_india = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		great_game_britain_progress_10 = yes
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 je_pamir_expedition_objective = {
@@ -1226,7 +1422,23 @@ je_pamir_expedition_objective = {
 #		}
 	}
 
-	complete = {
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		c:RUS ?= {
 			NOR = {
 				custom_tooltip = {
@@ -1270,28 +1482,35 @@ je_pamir_expedition_objective = {
 			}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		great_game_britain_progress_50 = yes
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = has_cancelled_pamir_expedition_tt
 			has_variable = dismissed_pamir_expedition
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 			NOT = {
 				has_journal_entry = je_great_game_control
 			}
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 ### Generic GP objectives
@@ -1392,126 +1611,15 @@ je_maintain_afghan_protectorate = {
 		}
 	}
 
-	complete = {
-		trigger_if = {
-			limit = {
-				any_country = {
-					capital = {
-						region = sr:region_greater_persia
-					}
-					OR = {
-						country_has_primary_culture = cu:tajik
-						country_has_primary_culture = cu:pashtun
-					}
-				}
-			}
-			custom_tooltip = {
-				text = all_pashtun_or_tajik_countries_puppeted_tt
-				any_country = {
-					filter = {
-						capital = {
-							region = sr:region_greater_persia
-						}
-						OR = {
-							country_has_primary_culture = cu:tajik
-							country_has_primary_culture = cu:pashtun
-						}
-					}
-					OR = {
-						AND = {
-							is_in_power_bloc = yes
-							is_power_bloc_leader = no
-						}
-						is_subject_of = root
-					}
-					percent = 1
-				}
-			}
-		}
-		trigger_else = {
-			OR = {
-				country_or_subject_owns_entire_state_region = STATE_KABUL
-				country_or_subject_owns_entire_state_region = STATE_HERAT
-				country_or_subject_owns_entire_state_region = STATE_KANDAHAR
-				any_state = {
-					filter = {
-						region = sr:region_greater_persia
-						state_region = {
-							is_homeland = cu:pashtun
-						}
-					}
-					custom_tooltip = {
-						text = owned_by_this_country_or_subjects_tt
-						OR = {
-							owner = ROOT
-							owner = {
-								OR = {
-									AND = {
-										is_in_power_bloc = yes
-										is_power_bloc_leader = no
-									}
-									is_subject_of = root
-								}
-							}
-						}
-					}
-					percent >= 0.6
-				}
-			}
-		}
 
-		scope:journal_entry = {
-			is_goal_complete = yes
-		}
-	}
 
-	on_complete = {
-		set_global_variable = gg_afghanistan_protectorate_done
-		if = {
-			limit = {
-				c:RUS ?= this
-			}
-			set_global_variable = afghanistan_russia_victory_var
-			great_game_russia_progress_25 = yes
-		}
-		else_if = {
-			limit = {
-				c:GBR ?= this
-			}
-			set_global_variable = afghanistan_britain_victory_var
-			great_game_britain_progress_25 = yes
-		}
-	}
 
-	fail = {
-		any_country = {
-			filter = {
-				capital = {
-					region = sr:region_greater_persia
-				}
-				OR = {
-					country_has_primary_culture = cu:tajik
-					country_has_primary_culture = cu:pashtun
-				}
-			}
-			is_country_type = recognized
-			percent = 1
-		}
-	}
 
-	on_fail = {
-		set_global_variable = gg_afghanistan_protectorate_done
-		set_global_variable = afghanistan_afghan_victory_var
-	}
 
-	invalid = {
-		OR = {
-			NOT = {
-				has_journal_entry = je_great_game_control
-			}
-			has_global_variable = gg_afghanistan_protectorate_done
-		}
-	}
+
+
+
+
 
 	current_value = {
 		value = root.var:afghanistan_variable
@@ -1584,6 +1692,141 @@ je_maintain_afghan_protectorate = {
 
 	weight = 1000
 	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		trigger_if = {
+			limit = {
+				any_country = {
+					capital = {
+						region = sr:region_greater_persia
+					}
+					OR = {
+						country_has_primary_culture = cu:tajik
+						country_has_primary_culture = cu:pashtun
+					}
+				}
+			}
+			custom_tooltip = {
+				text = all_pashtun_or_tajik_countries_puppeted_tt
+				any_country = {
+					filter = {
+						capital = {
+							region = sr:region_greater_persia
+						}
+						OR = {
+							country_has_primary_culture = cu:tajik
+							country_has_primary_culture = cu:pashtun
+						}
+					}
+					OR = {
+						AND = {
+							is_in_power_bloc = yes
+							is_power_bloc_leader = no
+						}
+						is_subject_of = root
+					}
+					percent = 1
+				}
+			}
+		}
+		trigger_else = {
+			OR = {
+				country_or_subject_owns_entire_state_region = STATE_KABUL
+				country_or_subject_owns_entire_state_region = STATE_HERAT
+				country_or_subject_owns_entire_state_region = STATE_KANDAHAR
+				any_state = {
+					filter = {
+						region = sr:region_greater_persia
+						state_region = {
+							is_homeland = cu:pashtun
+						}
+					}
+					custom_tooltip = {
+						text = owned_by_this_country_or_subjects_tt
+						OR = {
+							owner = ROOT
+							owner = {
+								OR = {
+									AND = {
+										is_in_power_bloc = yes
+										is_power_bloc_leader = no
+									}
+									is_subject_of = root
+								}
+							}
+						}
+					}
+					percent >= 0.6
+				}
+			}
+		}
+
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+	}
+		effect = {
+		set_global_variable = gg_afghanistan_protectorate_done
+		if = {
+			limit = {
+				c:RUS ?= this
+			}
+			set_global_variable = afghanistan_russia_victory_var
+			great_game_russia_progress_25 = yes
+		}
+		else_if = {
+			limit = {
+				c:GBR ?= this
+			}
+			set_global_variable = afghanistan_britain_victory_var
+			great_game_britain_progress_25 = yes
+		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		any_country = {
+			filter = {
+				capital = {
+					region = sr:region_greater_persia
+				}
+				OR = {
+					country_has_primary_culture = cu:tajik
+					country_has_primary_culture = cu:pashtun
+				}
+			}
+			is_country_type = recognized
+			percent = 1
+		}
+	}
+		effect = {
+		set_global_variable = gg_afghanistan_protectorate_done
+		set_global_variable = afghanistan_afghan_victory_var
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			NOT = {
+				has_journal_entry = je_great_game_control
+			}
+			has_global_variable = gg_afghanistan_protectorate_done
+		}
+	}
+	}
 }
 
 je_consolidate_afghanistan_objective = {
@@ -1592,7 +1835,21 @@ je_consolidate_afghanistan_objective = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+	weight = 1001
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = afghanistan_exists_tt
 			exists = c:AFG
@@ -1602,8 +1859,7 @@ je_consolidate_afghanistan_objective = {
 			has_global_variable = afghan_borders_solidified
 		}
 	}
-
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				c:RUS ?= this
@@ -1619,15 +1875,17 @@ je_consolidate_afghanistan_objective = {
 			great_game_britain_progress_10 = yes
 		}
 	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1001
-	transferable = yes
+	}
 }
 
 je_secure_influence_over_persia = {
@@ -1644,60 +1902,7 @@ je_secure_influence_over_persia = {
 		set_global_variable = persia_conflict_started
 	}
 
-	complete = {
-		scope:journal_entry = {
-			is_goal_complete = yes
-		}
-		OR = {
-			trigger_if = {
-				limit = {
-					exists = c:PER
-				}
-				custom_tooltip = {
-					text = persia_puppeted_tt
-					c:PER ?= {
-						OR = {
-							AND = {
-								is_in_power_bloc = yes
-								is_power_bloc_leader = no
-							}
-							is_subject_of = root
-						}
-					}
-				}
-			}
-			trigger_else = {
-				any_state = {
-					filter = {
-						region = sr:region_greater_persia
-						state_region = {
-							is_homeland = cu:persian
-						}
-					}
-					custom_tooltip = {
-						text = owned_by_this_country_or_subjects_tt
-						OR = {
-							owner = ROOT
-							owner = {
-								is_subject_of = ROOT
-							}
-						}
-					}
-					percent >= 0.6
-				}
-			}
-			AND = {
-				country_or_subject_owns_entire_state_region = STATE_IRAKAJEMI
-				country_or_subject_owns_entire_state_region = STATE_TABRIZ
-				country_or_subject_owns_entire_state_region = STATE_MAZANDARAN
-			}
-			AND = {
-				country_or_subject_owns_entire_state_region = STATE_LARISTAN
-				country_or_subject_owns_entire_state_region = STATE_FARS
-				country_or_subject_owns_entire_state_region = STATE_KHUZESTAN
-			}						
-		}
-	}
+
 
 	current_value = {
 		value = root.var:persia_variable
@@ -1802,7 +2007,77 @@ je_secure_influence_over_persia = {
 		}
 	}
 
-	on_complete = {
+
+
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+		OR = {
+			trigger_if = {
+				limit = {
+					exists = c:PER
+				}
+				custom_tooltip = {
+					text = persia_puppeted_tt
+					c:PER ?= {
+						OR = {
+							AND = {
+								is_in_power_bloc = yes
+								is_power_bloc_leader = no
+							}
+							is_subject_of = root
+						}
+					}
+				}
+			}
+			trigger_else = {
+				any_state = {
+					filter = {
+						region = sr:region_greater_persia
+						state_region = {
+							is_homeland = cu:persian
+						}
+					}
+					custom_tooltip = {
+						text = owned_by_this_country_or_subjects_tt
+						OR = {
+							owner = ROOT
+							owner = {
+								is_subject_of = ROOT
+							}
+						}
+					}
+					percent >= 0.6
+				}
+			}
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_IRAKAJEMI
+				country_or_subject_owns_entire_state_region = STATE_TABRIZ
+				country_or_subject_owns_entire_state_region = STATE_MAZANDARAN
+			}
+			AND = {
+				country_or_subject_owns_entire_state_region = STATE_LARISTAN
+				country_or_subject_owns_entire_state_region = STATE_FARS
+				country_or_subject_owns_entire_state_region = STATE_KHUZESTAN
+			}						
+		}
+	}
+		effect = {
 		set_global_variable = gg_afghanistan_protectorate_done
 		if = {
 			limit = {
@@ -1819,25 +2094,32 @@ je_secure_influence_over_persia = {
 			great_game_britain_progress_25 = yes
 		}
 	}
-
-	on_fail = {
-		set_global_variable = persia_persian_victory_var
 	}
 
-    fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
         c:PER ?= {
             is_country_type = recognized
         }
     }
+		effect = {
+		set_global_variable = persia_persian_victory_var
+	}
+	}
 
-	invalid = {
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = {
 			has_journal_entry = je_great_game_control
 		}
 	}
-
-	weight = 1000
-	transferable = yes
+	}
 }
 
 ### Minor objectives
@@ -1848,22 +2130,30 @@ je_unify_afghanistan_objective = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+	weight = 1002
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = has_formed_afghanistan_tt
 			c:AFG ?= this
 		}
 	}
-
-	on_complete = {
+		effect = {
 
 	}
-
-	invalid = {
 	}
-
-	weight = 1002
-	transferable = yes
 }
 
 je_consolidate_persia = {
@@ -1872,7 +2162,21 @@ je_consolidate_persia = {
 
 	group = je_group_objectives
 
-	complete = {
+
+
+
+
+
+
+	weight = 1000
+	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		any_scope_state = {
 			state_region = s:STATE_KHUZESTAN
 			is_split_state = no
@@ -1889,19 +2193,13 @@ je_consolidate_persia = {
 			is_incorporated = yes
 		}
 	}
-
-	on_complete = {
+		effect = {
 		add_modifier = {
 			name = persia_consolidated
 			days = long_modifier_time
 		}
 	}
-
-	invalid = {
 	}
-
-	weight = 1000
-	transferable = yes
 }
 
 je_achieve_sovereignty = {
@@ -1910,21 +2208,9 @@ je_achieve_sovereignty = {
 
 	group = je_group_objectives
 
-	complete = {
-		custom_tooltip = {
-			text = je_achieve_sovereignty_tt_3
-			is_country_type = recognized
-		}
-	}
 
-	on_complete = {
-		custom_tooltip = je_achieve_sovereignty_tt_2
-		add_modifier = {
-			name = sovereignty_established
-			days = very_long_modifier_time
-			is_decaying = yes
-		}
-	}
+
+
 
 	immediate = {
 		set_variable = {
@@ -1933,12 +2219,7 @@ je_achieve_sovereignty = {
 		}
 	}
 
-	fail = {
-		custom_tooltip = {
-			text = je_achieve_sovereignty_tt
-			var:achieve_sovereignty_var >= 1
-		}
-	}
+
 
 	on_monthly_pulse = {
 		effect = {
@@ -1968,10 +2249,43 @@ je_achieve_sovereignty = {
 		}
 	}
 
-	invalid = {
-	}
+
 
 	weight = 1000
 	transferable = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = je_achieve_sovereignty_tt_3
+			is_country_type = recognized
+		}
+	}
+		effect = {
+		custom_tooltip = je_achieve_sovereignty_tt_2
+		add_modifier = {
+			name = sovereignty_established
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = je_achieve_sovereignty_tt
+			var:achieve_sovereignty_var >= 1
+		}
+	}
+	}
 }
 

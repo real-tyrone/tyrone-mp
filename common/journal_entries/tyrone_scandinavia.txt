@@ -26,7 +26,25 @@
 
 	}
 
-	complete = {
+
+
+
+
+
+
+
+	
+
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		OR = {
 		c:DEN = {
 			is_subject_of = ROOT
@@ -41,15 +59,20 @@
 		}
 		}
 	}
-
-	on_complete = {
+		effect = {
 		hidden_effect = {set_global_variable = two_crowns_plus_one}
 		hidden_effect = { set_global_variable = secured_scandinavia }
 		add_modifier = { name = modifier_pan_scandinavianism_partially_realized }
 		trigger_event = { id = of_two_crowns.1 popup = yes}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		OR = {
 		c:DEN = {
 			NOT = {
@@ -69,19 +92,20 @@
 		}
 		}
 	}
-
-	on_fail = {
+		effect = {
 		trigger_event = { id = of_two_crowns.2 popup = yes }
 		hidden_effect = {set_global_variable = two_crowns_plus_one}
 
 	}
-	
-	invalid = {
-		NOT = { has_law = law_type:law_monarchy }
 	}
 
-	should_be_pinned_by_default_uninvolved_or_context = yes
-
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = { has_law = law_type:law_monarchy }
+	}
+	}
 }
 
 je_unification_of_three_crowns = {
@@ -146,43 +170,20 @@ je_unification_of_three_crowns = {
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	
-	fail = {
-		OR = {
-			NOT = { has_law = law_type:law_monarchy }
-			custom_tooltip = {
-				text = scandinavian_crowns_rebel
-				
-				scope:journal_entry = {
-				"scripted_bar_progress(je_unification_of_three_crowns_progress_bar)" = 0
-				}
-				has_journal_entry = je_unification_of_three_crowns # Prevents fail being seen as "true" in JE window prior to activation. Probably a better way to do this.
-			}
-			custom_tooltip = {
-				text = scandinavia_no_crowns
-						
-				NOT = {
-						c:NOR = {
-							is_subject_of = ROOT
-						}
-						c:FIN = {
-							is_subject_of = ROOT
-						}
-						c:DEN  = {
-							is_subject_of = ROOT
-						}
-						c:SWE = {
-							is_subject_of = ROOT
-						}
-					}			
-			}
-		}	
-	}
 
-	on_fail = {
-		trigger_event = { id = shattered_crown.1 popup = yes}
-	}
+
+
 	
-	complete = {
+
+	
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = scandinavia_three_crowns_unification_progress
 			scope:journal_entry = {
@@ -190,8 +191,7 @@ je_unification_of_three_crowns = {
 			}
 		}
 	}
-	
-	on_complete = {
+		effect = {
 		custom_tooltip = {
 			text = je_scandinavia_unification_context
 		}
@@ -263,6 +263,48 @@ je_unification_of_three_crowns = {
 		}
 		trigger_event = {id = scandinavian_unification.1 popup = yes}
 	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		OR = {
+			NOT = { has_law = law_type:law_monarchy }
+			custom_tooltip = {
+				text = scandinavian_crowns_rebel
+				
+				scope:journal_entry = {
+				"scripted_bar_progress(je_unification_of_three_crowns_progress_bar)" = 0
+				}
+				has_journal_entry = je_unification_of_three_crowns # Prevents fail being seen as "true" in JE window prior to activation. Probably a better way to do this.
+			}
+			custom_tooltip = {
+				text = scandinavia_no_crowns
+						
+				NOT = {
+						c:NOR = {
+							is_subject_of = ROOT
+						}
+						c:FIN = {
+							is_subject_of = ROOT
+						}
+						c:DEN  = {
+							is_subject_of = ROOT
+						}
+						c:SWE = {
+							is_subject_of = ROOT
+						}
+					}			
+			}
+		}	
+	}
+		effect = {
+		trigger_event = { id = shattered_crown.1 popup = yes}
+	}
+	}
 }
 
 je_securing_scandinavia = {
@@ -276,7 +318,15 @@ je_securing_scandinavia = {
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 
-	complete = {
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 	custom_tooltip = {
 		text = scandinavia_secured
 		country_or_subject_owns_entire_state_region = STATE_JUTLAND
@@ -290,11 +340,12 @@ je_securing_scandinavia = {
 		country_or_subject_owns_entire_state_region = STATE_NORTHERN_NORWAY
 		}
 	}
-	on_complete = {
+		effect = {
 		hidden_effect = {set_global_variable = secured_scandinavia}
 		custom_tooltip = secured_scandinavia_desc
 	}
-  }
+	}
+}
 
   je_scandinavia_missing_crown = {
 	icon = "gfx/interface/icons/event_icons/crown_in_the_gutter.dds"
@@ -306,7 +357,15 @@ je_securing_scandinavia = {
 			country_has_primary_culture = cu:finnish
 		}
 	}
-	complete = {
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = scandinavia_finland_reclaimed
 			country_or_subject_owns_entire_state_region = STATE_OULU
@@ -317,7 +376,7 @@ je_securing_scandinavia = {
 			country_or_subject_owns_entire_state_region = STATE_WEST_KARELIA
 		}
 	}
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				c:FIN = {
@@ -339,7 +398,8 @@ je_securing_scandinavia = {
 			text = je_scandinavia_missing_crown_completion_context
 		}
 	}
-  }
+	}
+}
 je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification path is taken (Sweden, Norway, Finland) 
   	icon = "gfx/interface/icons/event_icons/crown_in_the_gutter.dds"
 	group = je_group_scandinavian_unification
@@ -351,12 +411,20 @@ je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification 
 		}
 	}
 
-	complete = {
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		country_or_subject_owns_entire_state_region = STATE_JUTLAND
 		country_or_subject_owns_entire_state_region = STATE_ZEALAND
 	}
-
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				c:DEN = {
@@ -369,6 +437,7 @@ je_scandinavia_missing_crown_b = { #Danish acquisition if alternate unification 
 		custom_tooltip = {
 			text = je_scandinavia_missing_crown_b_completion_context
 		}
+	}
 	}
 }
 
@@ -383,14 +452,22 @@ je_scandinavia_missing_crown_d = { #Swedish culture acquisition as an edge case 
 		}
 	}
 
-	complete = {
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		country_or_subject_owns_entire_state_region = STATE_SVEALAND
 		country_or_subject_owns_entire_state_region = STATE_GOTALAND
 		country_or_subject_owns_entire_state_region = STATE_SCANIA
 		country_or_subject_owns_entire_state_region = STATE_NORRLAND
 	}
-
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				c:SWE = {
@@ -403,6 +480,7 @@ je_scandinavia_missing_crown_d = { #Swedish culture acquisition as an edge case 
 		custom_tooltip = {
 			text = je_scandinavia_missing_crown_d_completion_context
 		}
+	}
 	}
 }
 
@@ -417,12 +495,20 @@ je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge cas
 		}
 	}
 
-	complete = {
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		country_or_subject_owns_entire_state_region = STATE_EASTERN_NORWAY
 		country_or_subject_owns_entire_state_region = STATE_WESTERN_NORWAY
 	}
-
-	on_complete = {
+		effect = {
 		if = {
 			limit = {
 				c:NOR = {
@@ -435,6 +521,7 @@ je_scandinavia_missing_crown_c = { #Norwegian culture acquisition as an edge cas
 		custom_tooltip = {
 			text = je_scandinavia_missing_crown_c_completion_context
 		}
+	}
 	}
 }
 
@@ -473,28 +560,24 @@ je_scandinavian_baltic_claims = {
 		c:SCA ?= THIS
 	}
 
-	fail = {
-		custom_tooltip = {
-		text = scandinavia_baltic_claims_forfeited
-		has_global_variable = scandinavian_baltics_forfeited
-		}
-	}
-	on_fail = {
-		add_modifier = {
-			name = modifier_sisu_b
-		}
-		custom_tooltip = {
-			text = scandinavia_baltic_claims_give_up
-		}
-	}
-	complete = {
+
+
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		country_or_subject_owns_entire_state_region = STATE_TALINN
 		country_or_subject_owns_entire_state_region = STATE_TARTU 
 		country_or_subject_owns_entire_state_region = STATE_RIGA
 		country_or_subject_owns_entire_state_region = STATE_INGRIA
 	}
-
-	on_complete = {
+		effect = {
 		add_modifier = {
 			name = modifier_sisu_a
 		}
@@ -509,6 +592,28 @@ je_scandinavian_baltic_claims = {
 			annex = c:UBD
 		}
 		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+		text = scandinavia_baltic_claims_forfeited
+		has_global_variable = scandinavian_baltics_forfeited
+		}
+	}
+		effect = {
+		add_modifier = {
+			name = modifier_sisu_b
+		}
+		custom_tooltip = {
+			text = scandinavia_baltic_claims_give_up
+		}
+	}
 	}
 }
 je_denmark_scandinavia_1 = {
@@ -534,9 +639,31 @@ je_denmark_scandinavia_1 = {
 		NOT = { c:SWE = { is_player = yes } }
 	}
 
-	custom_completion_header = je_denmark_scandinavia_1_complete_header
 
-	complete = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	outcome = {
+		header = je_denmark_scandinavia_1_complete_header
+		effect_header = je_denmark_scandinavia_1_on_complete_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		has_technology_researched = nationalism
 		c:SWE = {
 			NOT = { is_subject_of = ROOT }
@@ -556,12 +683,20 @@ je_denmark_scandinavia_1 = {
 		}
 
 	}
+		effect = {
+		hidden_effect = {
+			set_variable = denmark_kalmar_diplomatic
+		}
+		trigger_event = { id = denmark_content.3 popup = yes }
+	}
+	}
 
-	custom_on_completion_header = je_denmark_scandinavia_1_on_complete_header
-
-	custom_failure_header = je_denmark_scandinavia_1_fail_header
-
-	fail = {
+	outcome = {
+		header = je_denmark_scandinavia_1_fail_header
+		effect_header = je_denmark_scandinavia_1_on_fail_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		has_technology_researched = nationalism
 		c:SWE = {
 			is_subject_of = ROOT
@@ -579,27 +714,21 @@ je_denmark_scandinavia_1 = {
 		}
 
 	}
-
-	on_complete = {
-		hidden_effect = {
-			set_variable = denmark_kalmar_diplomatic
-		}
-		trigger_event = { id = denmark_content.3 popup = yes }
-	}
-
-	custom_on_failure_header = je_denmark_scandinavia_1_on_fail_header
-
-	on_fail = {
+		effect = {
 		hidden_effect = {
 			set_variable = denmark_kalmar_military
 		}
 		trigger_event = { id = denmark_content.3 popup = yes }
 	}
-
-	invalid = {
-		NOT = { has_law = law_type:law_monarchy }
 	}
 
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		NOT = { has_law = law_type:law_monarchy }
+	}
+	}
 }
 
 je_denmark_scandinavia_ruler = {
@@ -617,27 +746,44 @@ je_denmark_scandinavia_ruler = {
 		}
 	}
 
-	complete = {
+
+
+
+
+
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		has_law = law_type:law_monarchy
 		custom_tooltip = {
 			text = je_denmark_scandinavia_ruler_no_longer_ruler_tt
 			NOT = { ruler = scope:denmark_ruler }
 		}
 	}
-
-	on_complete = {
+		effect = {
 		add_modifier = {
 			name = modifier_denmark_scandinavia_ruler
 			days = 3650
 			is_decaying = yes
 		}
 	}
+	}
 
-	fail = {
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOT = { has_law = law_type:law_monarchy }
 		custom_tooltip = {
 			text = je_denmark_scandinavia_ruler_no_longer_ruler_tt
 			NOT = { ruler = scope:denmark_ruler }
 		}
+	}
 	}
 }
