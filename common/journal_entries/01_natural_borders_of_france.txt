@@ -37,7 +37,23 @@
 		trigger_event = { id = natural_borders.1 popup = yes }
 	}
 
-	complete = {
+
+
+
+
+
+
+		
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	weight = 100
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
 		is_at_war = no
 		custom_tooltip = {
 			text = own_all_french_homelands
@@ -53,20 +69,19 @@
 		country_or_subject_owns_entire_state_region = STATE_NORTH_RHINE
 		country_or_subject_owns_entire_state_region = STATE_CATALONIA
 	}
-
-	on_complete = {
+		effect = {
 		set_variable = completed_natural_borders_je
 		trigger_event = { id = natural_borders.2 popup = yes }
 	}
-
-	invalid = {
-		has_variable = reject_natural_borders
 	}
 
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
-
-	weight = 100
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		has_variable = reject_natural_borders
+	}
+	}
 }
 
 je_confederation_of_the_rhine = {
@@ -143,7 +158,66 @@ je_confederation_of_the_rhine = {
 	scripted_button = je_confederation_of_the_rhine_confederate_button
 	scripted_button = je_confederation_of_the_rhine_expand_button
 
-	invalid = {
+
+
+
+
+
+
+
+
+		
+	should_be_pinned_by_default_uninvolved_or_context = yes
+
+	weight = 100
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+		custom_tooltip = {
+			text = no_german_great_powers_tt
+			NOT = {
+				any_country_in_german_confederation = {
+					OR = {
+						country_has_primary_culture = cu:north_german
+						country_has_primary_culture = cu:south_german
+					}
+					country_rank = rank_value:great_power
+				}
+			}
+		}
+	}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+		exists = c:RHN
+		c:RHN ?= {
+			NOT = {
+				is_subject_of = ROOT
+			}
+		}
+	}
+		effect = {
+		add_modifier = {
+			name = modifier_fall_of_germany
+			days = normal_modifier_time
+			is_decaying = yes
+		}
+	}
+	}
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		NOR = {
 			any_country_in_german_confederation = {
 				is_subject_of = ROOT
@@ -160,41 +234,5 @@ je_confederation_of_the_rhine = {
 			}
 		}
 	}
-
-	complete = {
-		custom_tooltip = {
-			text = no_german_great_powers_tt
-			NOT = {
-				any_country_in_german_confederation = {
-					OR = {
-						country_has_primary_culture = cu:north_german
-						country_has_primary_culture = cu:south_german
-					}
-					country_rank = rank_value:great_power
-				}
-			}
-		}
 	}
-
-	fail = {
-		exists = c:RHN
-		c:RHN ?= {
-			NOT = {
-				is_subject_of = ROOT
-			}
-		}
-	}
-
-	on_fail = {
-		add_modifier = {
-			name = modifier_fall_of_germany
-			days = normal_modifier_time
-			is_decaying = yes
-		}
-	}
-
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
-
-	weight = 100
 }

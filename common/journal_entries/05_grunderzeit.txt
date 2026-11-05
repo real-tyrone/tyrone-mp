@@ -255,9 +255,32 @@
 		}
 	}
 
-	custom_failure_header = je_grunderzeit_fail_header
 
-	fail = {
+
+
+
+
+
+
+
+
+
+
+
+	timeout = 7300
+
+
+
+
+
+
+
+	outcome = {
+		header = je_grunderzeit_fail_header
+		effect_header = je_grunderzeit_on_fail_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
 		custom_tooltip = {
 			text = je_grunderzeit_fail_tt
 			scope:journal_entry = {
@@ -265,19 +288,14 @@
 			}
 		}
 	}
-
-	custom_on_failure_header = je_grunderzeit_on_fail_header
-
-	on_fail = {
+		effect = {
 		set_global_variable = grunderzeit_happened_global_var # To ensure no wonkiness
 	}
-
-	on_fail_all_involved = {
+		effect_all_involved = {
 		grunderzeit_variable_cleanup = yes
 		trigger_event = { id = grunderzeit.1 popup = yes }
 	}
-
-	event_outcome_failed_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
@@ -303,19 +321,21 @@
 			}
 		}
 	}
-
-	timeout = 7300
-
-	on_timeout = {
-		set_global_variable = grunderzeit_happened_global_var # To ensure no wonkiness
 	}
 
-	on_timeout_all_involved = {
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		set_global_variable = grunderzeit_happened_global_var # To ensure no wonkiness
+	}
+		effect_all_involved = {
 		grunderzeit_variable_cleanup = yes
 		trigger_event = { id = grunderzeit.2 popup = yes }
 	}
-
-	event_outcome_timeout_desc = {
+		event_outcome_desc = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
@@ -340,5 +360,6 @@
 				desc = grunderzeit.2_high_commitment_effects_string
 			}
 		}
+	}
 	}
 }
