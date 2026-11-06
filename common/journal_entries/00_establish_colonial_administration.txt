@@ -69,3 +69,55 @@
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 }
+
+je_colonial_administration_pacific = {
+	icon = "gfx/interface/icons/invention_icons/colonization.dds"
+	group = je_group_foreign_affairs
+
+	is_shown_when_inactive = {
+		NOT = {
+			is_country_type = unrecognized
+		}
+		is_not_in_geographic_region = geographic_region_oceania
+		has_interest_marker_in_region = sr:region_oceania
+	}
+
+	possible = {
+		NOT = {
+			is_country_type = unrecognized
+		}
+		is_subject = no
+		has_technology_researched = civilizing_mission
+		any_scope_state = {
+			region = sr:region_oceania
+		}
+		hidden_trigger = {
+			OR = {
+				NOT = {
+					c:USA ?= this
+				}
+				any_scope_state = {
+					region = sr:region_oceania
+					NOT = {
+						state_region = s:STATE_HAWAIIAN_ISLANDS
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		random_state_region = {
+			limit = {
+				region = sr:region_oceania
+			}
+			save_scope_as = pacific_region_scope
+		}
+	}
+
+	scripted_button = je_colonial_administration_button_pacific
+	scripted_button = je_colonial_administration_button_expand_pacific
+
+	weight = 100
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
