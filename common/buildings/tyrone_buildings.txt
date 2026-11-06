@@ -115,3 +115,91 @@ REPLACE:building_munition_plant = {
 }
 
 
+
+
+REPLACE:building_skyscraper = {
+
+	building_group = bg_skyscraper
+
+	city_type = city
+
+	levels_per_mesh = 1
+
+	enable_air_connection = yes
+
+	expandable = no
+
+	downsizeable = no
+
+	production_method_groups = {
+		pmg_base_building_skyscraper
+		pmg_airship_mooring_post
+	}
+
+	icon = "gfx/interface/icons/building_icons/skyscraper.dds"
+
+	required_construction = construction_cost_monument
+
+	can_build_government = {
+		OR = {
+			custom_tooltip = {
+				text = skyscraper_can_construct_tt
+				has_modifier = skyscraper_site
+			}
+			AND = {
+				is_incorporated = yes
+				owner = {
+					custom_tooltip = {
+						text = tyrone_skyscraper_construction_completed_tt
+						has_variable = tyrone_skyscraper_construction_completed
+					}
+				}
+			}
+		}
+	}
+	can_build_private = {
+		always = no
+	}
+
+	ai_value = 50000
+
+	background = "gfx/interface/icons/building_icons/backgrounds/building_panel_bg_monuments.dds"
+}
+
+
+REPLACE:building_silk_plantation = {
+	building_group = bg_plantations
+	icon = "gfx/interface/icons/building_icons/silk_plantation.dds"
+	required_construction = construction_cost_low
+
+	unlocking_technologies = {
+		enclosure
+	}
+
+	city_type = farm
+	levels_per_mesh = 50
+
+	production_method_groups = {
+		pmg_base_building_silk_plantation
+		pmg_exploitation_silk
+		pmg_train_automation_building_silk_plantation
+	}
+	ownership_type = self
+
+	background = "gfx/interface/icons/building_icons/backgrounds/building_panel_bg_plantations.dds"
+	
+	ai_value = {
+		value = 1000
+
+		if = { # Colonisation of Korea
+			limit = {
+				owner ?= {
+					c:JAP ?= this
+					has_journal_entry = je_colonize_korea
+				}
+				is_in_geographic_region = geographic_region_korea
+			}
+			add = 2000
+		}
+	}
+}
