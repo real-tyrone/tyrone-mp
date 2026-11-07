@@ -3069,6 +3069,29 @@ egypt_become_sudan = {
 	}
 }
 
+west_ukraine_reform_galicia_lodomeria = {
+	is_shown = {
+		c:ki_WUK ?= this
+		NOT = { exists = c:GAL }
+		owns_entire_state_region = STATE_WEST_GALICIA
+	}
+
+	possible = {
+		c:ki_WUK ?= this
+		NOT = { exists = c:GAL }
+		owns_entire_state_region = STATE_WEST_GALICIA
+	}
+
+	when_taken = {
+		change_tag = GAL
+		add_primary_culture = cu:polish
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 egypt_ai_return_darfur = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
@@ -5876,6 +5899,36 @@ usa_annex_independent_csa = {
 	}
 }
 
+usa_ai_abolitionist_president_abolish_slavery = {
+	is_shown = {
+		is_ai = yes
+		c:USA ?= this
+		enacting_any_law = no
+		NOT = { has_law_or_variant = law_type:law_slavery_banned }
+		ruler ?= {
+			has_ideology = ideology:ideology_abolitionist
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		c:USA ?= this
+		enacting_any_law = no
+		NOT = { has_law_or_variant = law_type:law_slavery_banned }
+		ruler ?= {
+			has_ideology = ideology:ideology_abolitionist
+		}
+	}
+
+	when_taken = {
+		start_enactment = law_type:law_slavery_banned
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 usa_ai_declare_japan_interest_after_california = {
 	is_shown = {
 		is_ai = yes
@@ -7293,6 +7346,7 @@ rus_ai_return_persian_central_asian_claims = {
 
 rus_annex_siberian_caucasian_minor_powers = {
 	is_shown = {
+		is_ai = yes
 		tyrone_ai_attack_country_allowed = yes
 		c:RUS ?= this
 		any_country = {
@@ -9474,7 +9528,10 @@ brz_ai_return_brazilian_states = {
 					state_region = s:STATE_GOIAS
 					AND = {
 						state_region = s:STATE_MATO_GROSSO
-						NOT = { owner = c:PRG }
+						OR = {
+							NOT = { owner = c:PRG }
+							owner = { num_states = 1 }
+						}
 					}
 					state_region = s:STATE_RIO_GRANDE_DO_SUL
 					state_region = s:STATE_PARANA
@@ -9547,7 +9604,10 @@ brz_ai_return_brazilian_states = {
 					state_region = s:STATE_GOIAS
 					AND = {
 						state_region = s:STATE_MATO_GROSSO
-						NOT = { owner = c:PRG }
+						OR = {
+							NOT = { owner = c:PRG }
+							owner = { num_states = 1 }
+						}
 					}
 					state_region = s:STATE_RIO_GRANDE_DO_SUL
 					state_region = s:STATE_PARANA
@@ -9612,7 +9672,10 @@ brz_ai_return_brazilian_states = {
 						state_region = s:STATE_GOIAS
 						AND = {
 							state_region = s:STATE_MATO_GROSSO
-							NOT = { owner = c:PRG }
+							OR = {
+								NOT = { owner = c:PRG }
+								owner = { num_states = 1 }
+							}
 						}
 						state_region = s:STATE_RIO_GRANDE_DO_SUL
 						state_region = s:STATE_PARANA
@@ -9653,7 +9716,10 @@ brz_ai_return_brazilian_states = {
 						state_region = s:STATE_GOIAS
 						AND = {
 							state_region = s:STATE_MATO_GROSSO
-							NOT = { owner = c:PRG }
+							OR = {
+								NOT = { owner = c:PRG }
+								owner = { num_states = 1 }
+							}
 						}
 						state_region = s:STATE_RIO_GRANDE_DO_SUL
 						state_region = s:STATE_PARANA
@@ -10268,6 +10334,160 @@ jap_ai_attack_formosa = {
 	}
 }
 
+jap_ai_attack_korea = {
+	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		is_ai = yes
+		c:JAP ?= this
+		has_journal_entry = je_sino_japanese_wars
+		has_variable = korean_question_var
+		any_state = {
+			OR = {
+				state_region = s:STATE_YANGHO
+				state_region = s:STATE_BUSAN
+				state_region = s:STATE_SEOUL
+				state_region = s:STATE_PYONGYANG
+				state_region = s:STATE_SARIWON
+			}
+			has_claim_by = ROOT
+			NOT = { owner = ROOT }
+			owner = {
+				tyrone_ai_attack_country_allowed = yes
+				is_adjacent_to_country = ROOT
+				AND = {
+					army_power_projection < ROOT.army_power_projection
+					naval_power_projection < ROOT.naval_power_projection
+				}
+				OR = {
+					is_subject = no
+					AND = {
+						is_subject = yes
+						NOT = { is_subject_of = ROOT }
+						overlord = {
+							AND = {
+								army_power_projection < ROOT.army_power_projection
+								naval_power_projection < ROOT.naval_power_projection
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		c:JAP ?= this
+		has_journal_entry = je_sino_japanese_wars
+		has_variable = korean_question_var
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {fcolonial_admin
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		any_state = {
+			OR = {
+				state_region = s:STATE_YANGHO
+				state_region = s:STATE_BUSAN
+				state_region = s:STATE_SEOUL
+				state_region = s:STATE_PYONGYANG
+				state_region = s:STATE_SARIWON
+			}
+			has_claim_by = ROOT
+			NOT = { owner = ROOT }
+			owner = {
+				tyrone_ai_attack_country_allowed = yes
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				NOT = { has_truce_with = ROOT }
+				NOT = { has_war_with = ROOT }
+				is_adjacent_to_country = ROOT
+				AND = {
+					army_power_projection < ROOT.army_power_projection
+					naval_power_projection < ROOT.naval_power_projection
+				}
+				OR = {
+					is_subject = no
+					AND = {
+						is_subject = yes
+						NOT = { is_subject_of = ROOT }
+						overlord = {
+							NOT = { has_truce_with = ROOT }
+							NOT = { has_war_with = ROOT }
+							AND = {
+								army_power_projection < ROOT.army_power_projection
+								naval_power_projection < ROOT.naval_power_projection
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		random_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_YANGHO
+					state_region = s:STATE_BUSAN
+					state_region = s:STATE_SEOUL
+					state_region = s:STATE_PYONGYANG
+					state_region = s:STATE_SARIWON
+				}
+				has_claim_by = ROOT
+				NOT = { owner = ROOT }
+				owner = {
+					tyrone_ai_attack_country_allowed = yes
+					is_at_war = no
+					is_diplomatic_play_committed_participant = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					is_adjacent_to_country = ROOT
+					AND = {
+						army_power_projection < ROOT.army_power_projection
+						naval_power_projection < ROOT.naval_power_projection
+					}
+					OR = {
+						is_subject = no
+						AND = {
+							is_subject = yes
+							NOT = { is_subject_of = ROOT }
+							overlord = {
+								NOT = { has_truce_with = ROOT }
+								NOT = { has_war_with = ROOT }
+								AND = {
+									army_power_projection < ROOT.army_power_projection
+									naval_power_projection < ROOT.naval_power_projection
+								}
+							}
+						}
+					}
+				}
+			}
+			save_scope_as = jap_korea_target_state_scope
+			owner = { save_scope_as = jap_korea_target_country_scope }
+		}
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				scope:jap_korea_target_country_scope = { tyrone_ai_attack_country_allowed = yes }
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = scope:jap_korea_target_country_scope
+				target_state = scope:jap_korea_target_state_scope
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 jap_ai_transfer_korea = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
@@ -10778,6 +10998,7 @@ bol_ai_return_alto_paraguay_split_state = {
 		OR = {
 			c:BOL ?= this
 			c:PBC ?= this
+			c:FND ?= this
 		}
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
@@ -11287,6 +11508,7 @@ aus_ai_age_of_liberty_reforms = {
 
 fra_ai_conquer_eritrea = {
 	is_shown = {
+		has_technology_researched = civilizing_mission
 		tyrone_ai_attack_country_allowed = yes
 		is_ai = yes
 		c:FRA ?= this
@@ -11314,6 +11536,7 @@ fra_ai_conquer_eritrea = {
 	}
 
 	possible = {
+		has_technology_researched = civilizing_mission
 		tyrone_ai_attack_country_allowed = yes
 		has_game_rule = historical_africa_berlin_enabled
 		is_at_war = no
@@ -13736,6 +13959,7 @@ ai_colonial_administration_release_rhodesia = {
 				save_scope_as = rhodesia_founding_state_scope
 			}
 		}
+
 		create_country = {
 			tag = ki_RDS
 			origin = ROOT
@@ -13788,6 +14012,76 @@ ai_colonial_administration_release_rhodesia = {
 			if = {
 				limit = { NOT = { owns_entire_state_region = STATE_KAZEMBE } }
 				s:STATE_KAZEMBE = { add_claim = PREV }
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+rhodesia_consolidate_split_states = {
+	is_shown = {
+		c:ki_RDS ?= this
+		is_subject = yes
+		overlord = {
+			any_subject_or_below = {
+				limit = {
+					is_country_type = colonial
+					is_subject_of = ROOT.overlord
+					NOT = { this = ROOT }
+				}
+				any_scope_state = {
+					OR = {
+						state_region = s:STATE_ZAMBIA
+						state_region = s:STATE_ZAMBEZI
+						state_region = s:STATE_KAZEMBE
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		c:ki_RDS ?= this
+		is_subject = yes
+		overlord = {
+			any_subject_or_below = {
+				limit = {
+					is_country_type = colonial
+					is_subject_of = ROOT.overlord
+					NOT = { this = ROOT }
+				}
+				any_scope_state = {
+					OR = {
+						state_region = s:STATE_ZAMBIA
+						state_region = s:STATE_ZAMBEZI
+						state_region = s:STATE_KAZEMBE
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		overlord = {
+			every_subject_or_below = {
+				limit = {
+					is_country_type = colonial
+					is_subject_of = ROOT.overlord
+					NOT = { this = ROOT }
+				}
+				every_scope_state = {
+					limit = {
+						OR = {
+							state_region = s:STATE_ZAMBIA
+							state_region = s:STATE_ZAMBEZI
+							state_region = s:STATE_KAZEMBE
+						}
+					}
+					set_state_owner = ROOT
+				}
 			}
 		}
 	}

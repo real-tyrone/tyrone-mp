@@ -15,7 +15,27 @@ scw_institutions_bar = {
 	start_value = 0
 	min_value = 0
 	max_value = 40
-	monthly_progress = { value = 0 }
+	monthly_progress = {
+		value = 0
+		if = {
+			limit = {
+				any_country = {
+					OR = { c:SPA ?= this was_formed_from = SPA }
+					scw_institutions_monthly_advance = yes
+				}
+			}
+			add = { value = 0.25 desc = scw_native_institutions_advance }
+		}
+		else_if = {
+			limit = {
+				any_country = {
+					OR = { c:SPA ?= this was_formed_from = SPA }
+					scw_institutions_monthly_retreat = yes
+				}
+			}
+			subtract = { value = 0.25 desc = scw_native_institutions_retreat }
+		}
+	}
 }
 
 scw_consolidation_bar = {

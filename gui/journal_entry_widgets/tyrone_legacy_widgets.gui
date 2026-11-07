@@ -63,21 +63,6 @@ container = {
 	}
 }
 
-container = {
-	name = "tyr_orleanist_ministry"
-	parentanchor = hcenter
-	visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution'))]"
-	minimumsize = { @panel_width_minus_30 -1 }
-	background = {
-		alpha = 0.4
-		using = entry_bg_fancy_dark
-	}
-	container = {
-		visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution'))]"
-		parentanchor = hcenter
-		finance_ministry = {}
-	}
-}
 
 widget = {
 	name = "tyr_bonapartist_portrait"
@@ -156,30 +141,449 @@ flowcontainer = {
 	italy_developing_industry_bars = {}
 }
 
+
 flowcontainer = {
-	name = "tyr_scw_progress_details"
+	name = "tyr_scw_progress_conditions"
 	direction = vertical
 	parentanchor = hcenter
 	spacing = 5
-	textbox = {
-		text = "scw_regions_bar_value"
-		tooltip = "scw_regions_bar_tooltip"
-		autoresize = yes
-		multiline = yes
-		max_width = 510
+	flowcontainer = {
+		direction = vertical
+		background = {
+			using = dropdown_background
+			margin = { 0 -2 }
+		}
+		section_header_button = {
+			blockoverride "layout" { size = { @panel_width_plus_10 38 } }
+			blockoverride "left_text" { text = "scw_regions_bar" }
+			blockoverride "onclick" {
+				onclick = "[GetVariableSystem.Toggle('scw_regions_conditions_open')]"
+			}
+			blockoverride "onclick_showmore" {
+				visible = "[Not(GetVariableSystem.Exists('scw_regions_conditions_open'))]"
+			}
+			blockoverride "onclick_showless" {
+				visible = "[GetVariableSystem.Exists('scw_regions_conditions_open')]"
+			}
+		}
+		flowcontainer = {
+			visible = "[GetVariableSystem.Exists('scw_regions_conditions_open')]"
+			direction = vertical
+			ignoreinvisible = yes
+			margin = { 10 10 }
+			parentanchor = hcenter
+			tooltip = "scw_regions_bar_tooltip"
+			textbox = {
+				text = "scw_ui_regions_intro"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				text = "scw_ui_region_mexico_caribbean"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_mexico').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_mexico_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_mexico').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_mexico_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_western_cuba').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_western_cuba_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_western_cuba').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_western_cuba_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_santo_domingo').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_santo_domingo_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_santo_domingo').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_santo_domingo_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				text = "scw_ui_region_central_america"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_guatemala').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_guatemala_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_guatemala').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_guatemala_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_honduras').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_honduras_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_honduras').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_honduras_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_nicaragua').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_nicaragua_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_nicaragua').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_nicaragua_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				text = "scw_ui_region_gran_colombia"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_cundinamarca').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_cundinamarca_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_cundinamarca').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_cundinamarca_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_miranda').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_miranda_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_miranda').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_miranda_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_ecuador').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_ecuador_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_ecuador').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_ecuador_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				text = "scw_ui_region_peru_bolivia"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_lima').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_lima_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_lima').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_lima_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_la_paz').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_la_paz_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_la_paz').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_la_paz_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_potosi').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_potosi_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_potosi').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_potosi_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				text = "scw_ui_region_rio_plata"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_buenos_aires').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_buenos_aires_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_buenos_aires').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_buenos_aires_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_uruguay').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_uruguay_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_uruguay').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_uruguay_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_bajo_paraguay').GetValue, '(CFixedPoint)1')]"
+				text = "scw_ui_anchor_bajo_paraguay_met"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(GreaterThanOrEqualTo_CFixedPoint(JournalEntry.MakeScope.Var('scw_ui_anchor_bajo_paraguay').GetValue, '(CFixedPoint)1'))]"
+				text = "scw_ui_anchor_bajo_paraguay_unmet"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+		}
 	}
-	textbox = {
-		text = "scw_institutions_bar_value"
-		tooltip = "scw_institutions_bar_tooltip"
-		autoresize = yes
-		multiline = yes
-		max_width = 510
+	flowcontainer = {
+		direction = vertical
+		background = {
+			using = dropdown_background
+			margin = { 0 -2 }
+		}
+		section_header_button = {
+			blockoverride "layout" { size = { @panel_width_plus_10 38 } }
+			blockoverride "left_text" { text = "scw_institutions_bar" }
+			blockoverride "onclick" {
+				onclick = "[GetVariableSystem.Toggle('scw_institutions_conditions_open')]"
+			}
+			blockoverride "onclick_showmore" {
+				visible = "[Not(GetVariableSystem.Exists('scw_institutions_conditions_open'))]"
+			}
+			blockoverride "onclick_showless" {
+				visible = "[GetVariableSystem.Exists('scw_institutions_conditions_open')]"
+			}
+		}
+		flowcontainer = {
+			visible = "[GetVariableSystem.Exists('scw_institutions_conditions_open')]"
+			direction = vertical
+			ignoreinvisible = yes
+			parentanchor = hcenter
+			margin = { 10 10 }
+			tooltip = "scw_institutions_bar_tooltip"
+			textbox = {
+				visible = "[Not(StringIsEmpty(JournalEntry.GetAdvanceDesc))]"
+				text = "[JournalEntry.GetAdvanceDesc]"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+			}
+			textbox = {
+				visible = "[Not(StringIsEmpty(JournalEntry.GetDepleteDesc))]"
+				text = "[JournalEntry.GetDepleteDesc]"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 10
+			}
+			textbox = {
+				text = "scw_ui_institutions_event_rewards"
+				autoresize = yes
+				multiline = yes
+				min_width = @panel_width_minus_30
+				max_width = @panel_width_minus_30
+				align = nobaseline
+				margin_top = 12
+			}
+		}
 	}
-	textbox = {
-		text = "scw_consolidation_bar_value"
-		tooltip = "scw_consolidation_bar_tooltip"
-		autoresize = yes
-		multiline = yes
-		max_width = 510
+	flowcontainer = {
+		direction = vertical
+		background = {
+			using = dropdown_background
+			margin = { 0 -2 }
+		}
+		section_header_button = {
+			blockoverride "layout" { size = { @panel_width_plus_10 38 } }
+			blockoverride "left_text" { text = "scw_consolidation_bar" }
+			blockoverride "onclick" {
+				onclick = "[GetVariableSystem.Toggle('scw_consolidation_conditions_open')]"
+			}
+			blockoverride "onclick_showmore" {
+				visible = "[Not(GetVariableSystem.Exists('scw_consolidation_conditions_open'))]"
+			}
+			blockoverride "onclick_showless" {
+				visible = "[GetVariableSystem.Exists('scw_consolidation_conditions_open')]"
+			}
+		}
+		textbox = {
+			visible = "[GetVariableSystem.Exists('scw_consolidation_conditions_open')]"
+			text = "scw_consolidation_conditions"
+			tooltip = "scw_consolidation_bar_tooltip"
+			autoresize = yes
+			multiline = yes
+			min_width = @panel_width_minus_30
+			max_width = @panel_width_minus_30
+			margin = { 10 10 }
+			parentanchor = hcenter
+			align = nobaseline
+		}
 	}
 }

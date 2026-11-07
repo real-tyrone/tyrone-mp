@@ -10,7 +10,16 @@ scw_american_eligible = {
 	}
 	is_revolutionary = no
 	is_secessionist = no
-	NOT = { is_country_type = colonial }
+	# Spanish colonial subjects such as Cuba can participate in the Commonwealth.
+	OR = {
+		NOT = { is_country_type = colonial }
+		AND = {
+			is_subject = yes
+			top_overlord = {
+				OR = { c:SPA ?= this was_formed_from = SPA }
+			}
+		}
+	}
 	NOT = { has_variable = scw_running }
 
 }

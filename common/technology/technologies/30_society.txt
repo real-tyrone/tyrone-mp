@@ -1038,31 +1038,22 @@ civilizing_mission = {
 
 	ai_weight = {
 		value = 1
+		# Prefer colonial technology only for AI countries claiming territory overseas in Africa.
 		if = {
 			limit = {
-				AND = {
-					OR = {
-						country_has_primary_culture = cu:british
-						country_has_primary_culture = cu:scottish
-					}
-					has_technology_researched = quinine
+				has_technology_researched = quinine
+				tyr_ai_overseas_african_claimant = yes
+			}
+			add = 500
+			max = 500
+			# Steel frames retain priority whenever they are available and unresearched.
+			if = {
+				limit = {
+					NOT = { has_technology_researched = steel_frame_buildings }
+					can_research = steel_frame_buildings
 				}
+				max = 1
 			}
-			add = 1000
-		}
-		# Important for colonizers
-		if = {
-			limit = {
-				navy_size >= 25
-				is_country_type = recognized
-			}
-			add = 1
-		}
-		if = {
-			limit = {
-				has_strategy = ai_strategy_colonial_expansion
-			}
-			add = 1
 		}
 	}
 }

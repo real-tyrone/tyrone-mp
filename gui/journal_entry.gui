@@ -320,6 +320,21 @@ types journal_entry_panel_types
 					}
 				}
 
+				container = {
+					parentanchor = hcenter
+					visible = "[Or(EqualTo_string(JournalEntry.GetName, Localize('je_post_bonapartists')), EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution')))]"
+					minimumsize = { @panel_width_minus_30 -1 }
+					background = {
+						alpha = 0.4
+						using = entry_bg_fancy_dark
+					}
+					container = {
+						visible = "[EqualTo_string(JournalEntry.GetName, Localize('je_orleanist_france_industry_revolution'))]"
+						parentanchor = hcenter
+						finance_ministry = {}
+					}
+				}
+
 				flowcontainer = {
 					name = "custom_widget_container_1"
 					visible = "[JournalEntry.HasCustomWidget('custom_widget_container_1')]"
@@ -474,7 +489,7 @@ types journal_entry_panel_types
 									size = { 504 30 }
 								}
 
-								tooltip = "[ScriptedProgressBar.GetPeriodicProgressBreakdown]"
+								tooltip = "[Select_CString(And(Or(EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth')), EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth_charter'))), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_regions_bar_desc'))), Localize('scw_regions_bar_tooltip'), Select_CString(And(Or(EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth')), EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth_charter'))), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('scw_consolidation_bar_desc'))), Localize('scw_consolidation_bar_tooltip'), ScriptedProgressBar.GetPeriodicProgressBreakdown))]"
 								blockoverride "values" {
 									value = "[JournalEntry.GetCurrentBarProgress(ScriptedProgressBar.Self)]"
 									min = 0
@@ -614,7 +629,7 @@ types journal_entry_panel_types
 
 					# PROGRESS BAR CONDITIONS
 					flowcontainer = {
-						visible = "[Or(Not(StringIsEmpty(JournalEntry.GetAdvanceDesc)), Not(StringIsEmpty(JournalEntry.GetDepleteDesc)))]"
+						visible = "[And(Not(Or(EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth')), EqualTo_string(JournalEntry.GetName, Localize('je_spanish_commonwealth_charter')))), Or(Not(StringIsEmpty(JournalEntry.GetAdvanceDesc)), Not(StringIsEmpty(JournalEntry.GetDepleteDesc))))]"
 						direction = vertical
 
 						background = {
