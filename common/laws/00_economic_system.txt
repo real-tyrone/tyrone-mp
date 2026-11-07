@@ -752,6 +752,15 @@ law_cooperative_ownership = {
 	on_activate = {		
 		custom_tooltip = {
 			text = enact_law_radical_leftist_economy_warning_desc
+			every_country = {
+				limit = {
+					has_overlapping_interests = ROOT
+				}
+				create_diplomatic_catalyst = {
+					type = catalyst_socialist_economy
+					target = root
+				}
+			}
 		}	
 	}
 	
@@ -775,6 +784,10 @@ law_cooperative_ownership = {
 		building_group_bg_manufacturing_employee_mult = -0.15
 		building_group_bg_mining_employee_mult = -0.1
 		building_group_bg_service_employee_mult = -0.20
+		
+		country_other_country_socialist_economy_hostility_impact_add = 50
+
+
 		country_foreign_collectivization_bool = yes
 	}
 	
@@ -856,6 +869,15 @@ law_command_economy = {
 		seize_investment_pool = yes
 		custom_tooltip = {
 			text = enact_law_radical_leftist_economy_warning_desc
+			every_country = {
+				limit = {
+					has_overlapping_interests = ROOT
+				}
+				create_diplomatic_catalyst = {
+					type = catalyst_socialist_economy
+					target = root
+				}
+			}
 		}	
 	}
 	
@@ -878,17 +900,20 @@ law_command_economy = {
 
 		country_leverage_resistance_mult = 0.25
 
+		country_other_country_socialist_economy_hostility_impact_add = 50
+
 		country_disable_non_company_privatization_bool = yes
 	}
 	
 	ai_will_do = {
-		OR = {
+		calc_true_if = {
+			amount >= 2
 			has_law_or_variant = law_type:law_technocracy
-			AND = {
-				has_law_or_variant = law_type:law_council_republic
-				ruler ?= {
-					has_ideology = ideology:ideology_vanguardist
-					has_ideology = ideology:ideology_communist
+			has_law_or_variant = law_type:law_council_republic
+			ruler = {
+				law_stance = {
+					law = law_type:law_command_economy
+					value >= approve
 				}			
 			}
 		}
