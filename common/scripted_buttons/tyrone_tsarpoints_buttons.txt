@@ -1,0 +1,67 @@
+REPLACE:je_tp_tsar_gendarme_of_europe_button_2 = { # Dissidents
+	name = "je_tp_tsar_gendarme_of_europe_button_2_name"
+	desc = "je_tp_tsar_gendarme_of_europe_button_2_desc"
+	autocomplete = yes
+
+	ai_chance = {
+		value = 100
+	}
+
+	visible = {
+		always = yes
+	}
+
+	possible = {
+		hidden_trigger = {
+			NOT = {
+				has_variable = je_tp_tsar_gendarme_of_europe_button_2_complete
+			}
+		}
+		AND = {
+			institution_investment_level = {
+				institution = institution_schools
+				value < 1
+			}
+			any_political_movement = {
+				count < 1
+				OR = {
+					movement_is_liberal = yes
+					movement_is_socialist = yes
+					is_political_movement_type = movement_cultural_minority
+				}
+				OR = {
+					political_movement_support >= 0.05
+					political_movement_identity_support >= 0.15
+				}
+			}
+			any_political_movement = {
+				has_core_ideology = ideology:ideology_tsarist_movement
+				OR = {
+					political_movement_support >= 0.15
+					political_movement_identity_support >= 0.25
+				}
+			}
+			custom_tooltip = {
+				text = je_tp_tsar_gendarme_of_europe_button_2_rev_prestige_tt
+				var:je_tp_tsar_gendarme_of_europe_button_2_cached_rev_prestige_ratio < je_tp_tsar_gendarme_of_europe_button_2_rev_prestige_requirement
+			}
+		}
+	}
+
+	selected = {
+		has_variable = je_tp_tsar_gendarme_of_europe_button_2_complete
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = je_tp_tsar_button_advance_agenda_tt
+			set_variable = je_tp_tsar_gendarme_of_europe_button_2_complete
+			je:je_tp_tsar_gendarme_of_europe = {
+				add_progress = {
+					value = 1
+					name = je_tp_tsar_gendarme_of_europe_progress_bar
+				}
+			}
+		}
+	}
+}

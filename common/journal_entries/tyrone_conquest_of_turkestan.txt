@@ -1,0 +1,114 @@
+REPLACE:je_conquest_of_central_asia = {
+    icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+    group = je_group_russia_expansion
+    dlc = dlc010
+
+    activation_description = {
+        always = yes
+    }
+
+    scripted_button = je_conquest_of_central_asia_turkmen_button
+
+    is_shown_when_inactive = {
+        OR = {
+            has_dlc_feature = ep1_content # Sphere of Influence
+            has_dlc_feature = ip5_content # State and Revolution
+        }
+        exists = c:RUS
+        c:RUS ?= THIS
+        is_independent_and_not_being_subjugated = yes
+        any_scope_state = {
+            state_region = s:STATE_URALSK
+        }
+        any_scope_state = {
+            state_region = s:STATE_SYRDARYA
+        }
+        owns_entire_state_region_uncontested = STATE_AKTOBE
+        owns_entire_state_region_uncontested = STATE_AKMOLINSK
+        owns_entire_state_region_uncontested = STATE_SEMIRECHE
+    }
+    possible = {
+        has_technology_researched = nationalism
+        any_scope_state = {
+            state_region = s:STATE_URALSK
+        }
+        any_scope_state = {
+            state_region = s:STATE_SYRDARYA
+        }
+        owns_entire_state_region_uncontested = STATE_AKTOBE
+        owns_entire_state_region_uncontested = STATE_AKMOLINSK
+        owns_entire_state_region_uncontested = STATE_SEMIRECHE
+    }
+    immediate = {
+        trigger_event = { id = russian_central_asia.1 } # Central Asia initialisation
+        set_global_variable = central_asia_consolidation_happened
+        if = {
+            limit = {
+                exists = c:TRM
+            }
+            c:TRM ?= {
+                save_scope_as = turkmenia_scope
+            }
+        }
+        else = {
+            random_neighbouring_state = {
+                limit = {
+                    OR = {
+                        state_region = s:STATE_TURKMENIA
+                        state_region = s:STATE_SYRDARYA
+                        state_region = s:STATE_UZBEKIA
+                        state_region = s:STATE_KIRGHIZIA
+                        state_region = s:STATE_KHIVA
+                        state_region = s:STATE_TAJIKISTAN
+                    }
+                    not = { owner = ROOT }
+                }
+                owner = {
+                    save_scope_as = turkmenia_scope
+                }
+            }
+        }
+    }
+
+    outcome = {
+        header = je_standard_completion_header
+        effect_header = je_standard_on_completion_header
+        color = "gold_positive"
+        conclusion_desc = je_standard_completion_conclusion_desc
+        trigger = {
+            country_or_subject_owns_entire_state_region_uncontested = STATE_SYRDARYA
+            country_or_subject_owns_entire_state_region_uncontested = STATE_UZBEKIA
+            country_or_subject_owns_entire_state_region_uncontested = STATE_KIRGHIZIA
+            country_or_subject_owns_entire_state_region_uncontested = STATE_KHIVA # Chorasmia
+            country_or_subject_owns_entire_state_region_uncontested = STATE_TURKMENIA
+            country_or_subject_owns_entire_state_region_uncontested = STATE_TAJIKISTAN
+            country_or_subject_owns_entire_state_region_uncontested = STATE_FERGANA
+            country_or_subject_owns_entire_state_region_uncontested = STATE_MERZ # Merv
+        }
+        effect = {
+            trigger_event = { id = russian_central_asia.2 } # The Great Game
+            set_global_variable = khanates_russia_victory_var
+            great_game_russia_progress_15 = yes
+            show_as_tooltip = {
+                if = {
+                    limit = {
+                        has_journal_entry = je_tsarpoints_master
+                    }
+                    je_tsarpoints_add_med = yes
+                }
+            }
+        }
+        event_outcome_desc = {
+            first_valid = {
+                triggered_desc = {
+                    desc = event_effects_russian_central_asia.2_tt
+                }
+            }
+        }
+    }
+
+    weight = 1000
+    	
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
