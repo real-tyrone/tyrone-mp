@@ -1,6 +1,7 @@
 ﻿REPLACE:je_uneasy_raj = {
 	icon = "gfx/interface/icons/event_icons/company_equity_dispute.dds"
-	group = je_group_global_international_situations
+	group = je_group_tyrone_india_unstable
+	highlight = yes
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -58,198 +59,9 @@
 			tyrone_raj_nation_ensure_started = yes
 		}
 	}
-	custom_completion_header = je_uneasy_raj_complete_header
-	complete = {
-		scope:raj_scope = {
-			OR = {
-				is_subject = no
-				AND = {
-					custom_tooltip = {
-						text = tyrone_raj_welfare_done_tt
-						has_variable = tyrone_raj_welfare_done
-					}
-					custom_tooltip = {
-						text = tyrone_raj_schools_done_tt
-						has_variable = tyrone_raj_schools_done
-					}
-					custom_tooltip = {
-						text = tyrone_raj_health_done_tt
-						has_variable = tyrone_raj_health_done
-					}
-					custom_tooltip = {
-						text = tyrone_raj_debt_done_tt
-						has_variable = tyrone_raj_debt_done
-					}
-					custom_tooltip = {
-						text = tyrone_raj_nation_done_tt
-						has_variable = tyrone_raj_nation_done
-					}
-				}
-			}
-		}
-	}
-	custom_failure_header = je_uneasy_raj_fail_header
-	fail = {
-		scope:raj_scope = {
-			is_subject = yes
-			OR = {
-				custom_tooltip = {
-					text = je_uneasy_raj_tt_2
-					var:sepoy_mutiny_timer_var >= 100
-				}
-				custom_tooltip = {
-					text = tyrone_raj_company_failed_tt
-					has_variable = tyrone_raj_company_failed
-				}
-			}
-		}
-	}
+
 	timeout = 5475
-	on_timeout = {
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
-				remove_modifier = tyrone_unstable_raj_reduced_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_raised_payments }
-				remove_modifier = tyrone_unstable_raj_raised_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
-				remove_modifier = tyrone_unstable_raj_princely_discontent
-			}
-		}
-		scope:raj_scope ?= {
-			remove_modifier = tyrone_unstable_raj_liberty_desire
-			set_variable = tyrone_unstable_raj_failed
-			remove_variable = tyrone_unstable_raj_active
-			tyrone_raj_famine_cancel_pending = yes
-			remove_variable = tyrone_raj_famine_wait
-			remove_variable = tyrone_raj_famine_cooldown
-			remove_variable = tyrone_raj_famine_bank_a
-			remove_variable = tyrone_raj_auto_repayment
-			add_journal_entry = {
-				type = je_sepoy_mutiny
-			}
-			trigger_event = {
-				id = sepoy_mutiny_events.3
-				popup = yes
-			}
-			# Bengal Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_low
-			}
-			# Bombay Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_low
-			}
-			# Madras Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_low
-			}
-			remove_global_variable = bengal_presidency_stability
-			remove_global_variable = bombay_presidency_stability
-			remove_global_variable = madras_presidency_stability
-		}
-	}
+	
 	#event_outcome_timeout_desc = {
 	#	first_valid = {
 	#		triggered_desc = {
@@ -257,243 +69,7 @@
 	#		}
 	#	}
 	#}
-	invalid = {
-		scope:raj_scope = {
-			is_country_alive = no
-		}
-	}
-	on_invalid = {
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
-				remove_modifier = tyrone_unstable_raj_reduced_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_raised_payments }
-				remove_modifier = tyrone_unstable_raj_raised_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
-				remove_modifier = tyrone_unstable_raj_princely_discontent
-			}
-		}
-		scope:raj_scope ?= {
-			remove_modifier = tyrone_unstable_raj_liberty_desire
-		}
-	}
-	custom_on_completion_header = je_uneasy_raj_on_complete_header
-	on_complete = {
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
-				remove_modifier = tyrone_unstable_raj_reduced_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_raised_payments }
-				remove_modifier = tyrone_unstable_raj_raised_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
-				remove_modifier = tyrone_unstable_raj_princely_discontent
-			}
-		}
-		scope:raj_scope = {
-			remove_modifier = tyrone_unstable_raj_liberty_desire
-			remove_variable = tyrone_unstable_raj_active
-			tyrone_raj_famine_cancel_pending = yes
-			remove_variable = tyrone_raj_famine_wait
-			remove_variable = tyrone_raj_famine_cooldown
-			remove_variable = tyrone_raj_famine_bank_a
-			remove_variable = tyrone_raj_auto_repayment
-			set_variable = {
-				name = tyrone_raj_debt
-				value = 0
-			}
-			set_variable = tyrone_raj_debt_done
-			set_variable = tyrone_company_self_rule_unlocked
-			set_variable = company_rule_enduring
-			remove_global_variable = bengal_presidency_stability
-			remove_global_variable = bombay_presidency_stability
-			remove_global_variable = madras_presidency_stability
-			trigger_event = {
-				id = sepoy_mutiny_events.11
-				popup = yes
-			}
-		}
-		if = {
-			limit = { scope:raj_scope ?= { is_subject = no } }
-			custom_tooltip = tyrone_independent_route_choice_tt
-		}
-		else = { custom_tooltip = tyrone_company_self_rule_unlocked_tt }
-	}
-	event_outcome_completed_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = event_effects_sepoy_mutiny_events.11_tt
-			}
-		}
-	}
-	custom_on_failure_header = je_uneasy_raj_on_fail_header
-	on_fail = {
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
-				remove_modifier = tyrone_unstable_raj_reduced_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_raised_payments }
-				remove_modifier = tyrone_unstable_raj_raised_payments
-			}
-		}
-		hidden_effect = {
-			every_country = {
-				limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
-				remove_modifier = tyrone_unstable_raj_princely_discontent
-			}
-		}
-		scope:raj_scope ?= {
-			remove_modifier = tyrone_unstable_raj_liberty_desire
-			set_variable = tyrone_unstable_raj_failed
-			remove_variable = tyrone_unstable_raj_active
-			tyrone_raj_famine_cancel_pending = yes
-			remove_variable = tyrone_raj_famine_wait
-			remove_variable = tyrone_raj_famine_cooldown
-			remove_variable = tyrone_raj_famine_bank_a
-			remove_variable = tyrone_raj_auto_repayment
-			add_journal_entry = {
-				type = je_sepoy_mutiny
-			}
-			trigger_event = {
-				id = sepoy_mutiny_events.3
-				popup = yes
-			}
-			# Bengal Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bengal_effect_low
-			}
-			# Bombay Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_bombay_effect_low
-			}
-			# Madras Presidency
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_low_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_critical
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_low_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_medium_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_high
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_medium_lower_bound
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_medium
-			}
-			if = {
-				limit = {
-					je:je_uneasy_raj ?= {
-						"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_high_lower_bound
-					}
-				}
-				set_variable = sepoy_mutiny_madras_effect_low
-			}
-			remove_global_variable = bengal_presidency_stability
-			remove_global_variable = bombay_presidency_stability
-			remove_global_variable = madras_presidency_stability
-		}
-	}
-	event_outcome_failed_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = event_effects_sepoy_mutiny_events.3_tt
-			}
-		}
-	}
+
 	on_weekly_pulse = {
 		events = {
 		}
@@ -722,20 +298,514 @@
 			}
 		}
 	}
-	widget = {
-		gui = "gui/journal_entry_widgets/tyrone_unstable_raj_widgets.gui"
-		name = "tyrone_unstable_raj_subentries_widget"
-		container = "custom_widget_container_1"
-	}
+	
 	weight = 100
 	should_be_pinned_by_default_involved = yes
 	should_be_pinned_by_default_uninvolved_or_context = no
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				scope:raj_scope ?= { is_country_alive = no }
+			}
+		}
+		effect = {
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
+					remove_modifier = tyrone_unstable_raj_reduced_payments
+				}
+			}
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_raised_payments }
+					remove_modifier = tyrone_unstable_raj_raised_payments
+				}
+			}
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
+					remove_modifier = tyrone_unstable_raj_princely_discontent
+				}
+			}
+			scope:raj_scope ?= {
+				remove_modifier = tyrone_unstable_raj_liberty_desire
+			}
+		}
+	}
+
+	outcome = {
+		header = je_uneasy_raj_complete_header
+		effect_header = je_uneasy_raj_on_complete_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				scope:raj_scope ?= { NOT = { has_modifier = subject_great_game_defeated } }
+			}
+			scope:raj_scope = {
+				OR = {
+					is_subject = no
+					AND = {
+						custom_tooltip = {
+							text = tyrone_raj_welfare_done_tt
+							OR = { has_variable = tyrone_raj_welfare_done tyrone_arc_tyrone_raj_welfare_ready = yes }
+						}
+						custom_tooltip = {
+							text = tyrone_raj_schools_done_tt
+							OR = { has_variable = tyrone_raj_schools_done tyrone_arc_tyrone_raj_schools_ready = yes }
+						}
+						custom_tooltip = {
+							text = tyrone_raj_health_done_tt
+							OR = { has_variable = tyrone_raj_health_done tyrone_arc_tyrone_raj_health_ready = yes }
+						}
+						custom_tooltip = {
+							text = tyrone_raj_debt_done_tt
+							OR = { has_variable = tyrone_raj_debt_done tyrone_arc_company_equity_ready = yes }
+						}
+						custom_tooltip = {
+							text = tyrone_raj_nation_done_tt
+							OR = { has_variable = tyrone_raj_nation_done tyrone_arc_tyrone_raj_nation_ready = yes }
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			tyrone_arc_unstable_success = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_sepoy_mutiny_events.11_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_uneasy_raj_fail_header
+		effect_header = je_uneasy_raj_on_fail_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= {
+						custom_tooltip = {
+							text = tyrone_raj_great_game_failed_tt
+							has_modifier = subject_great_game_defeated
+						}
+					}
+				}
+				AND = {
+					scope:raj_scope = {
+						is_subject = yes
+						OR = {
+							custom_tooltip = {
+								text = je_uneasy_raj_tt_2
+								var:sepoy_mutiny_timer_var >= 100
+							}
+							custom_tooltip = {
+								text = tyrone_raj_company_failed_tt
+								has_variable = tyrone_raj_company_failed
+							}
+						}
+					}
+					hidden_trigger = {
+						NOT = {
+							scope:raj_scope = {
+								OR = {
+									is_subject = no
+									AND = {
+										custom_tooltip = {
+											text = tyrone_raj_welfare_done_tt
+											OR = { has_variable = tyrone_raj_welfare_done tyrone_arc_tyrone_raj_welfare_ready = yes }
+										}
+										custom_tooltip = {
+											text = tyrone_raj_schools_done_tt
+											OR = { has_variable = tyrone_raj_schools_done tyrone_arc_tyrone_raj_schools_ready = yes }
+										}
+										custom_tooltip = {
+											text = tyrone_raj_health_done_tt
+											OR = { has_variable = tyrone_raj_health_done tyrone_arc_tyrone_raj_health_ready = yes }
+										}
+										custom_tooltip = {
+											text = tyrone_raj_debt_done_tt
+											OR = { has_variable = tyrone_raj_debt_done tyrone_arc_company_equity_ready = yes }
+										}
+										custom_tooltip = {
+											text = tyrone_raj_nation_done_tt
+											OR = { has_variable = tyrone_raj_nation_done tyrone_arc_tyrone_raj_nation_ready = yes }
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			hidden_effect = { scope:raj_scope ?= { tyrone_arc_unstable_settle_ready_reforms = yes } }
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
+					remove_modifier = tyrone_unstable_raj_reduced_payments
+				}
+			}
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_raised_payments }
+					remove_modifier = tyrone_unstable_raj_raised_payments
+				}
+			}
+			hidden_effect = {
+				every_country = {
+					limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
+					remove_modifier = tyrone_unstable_raj_princely_discontent
+				}
+			}
+			scope:raj_scope ?= {
+				remove_modifier = tyrone_unstable_raj_liberty_desire
+				set_variable = tyrone_unstable_raj_failed
+				remove_variable = tyrone_unstable_raj_active
+				tyrone_raj_famine_cancel_pending = yes
+				remove_variable = tyrone_raj_famine_wait
+				remove_variable = tyrone_raj_famine_cooldown
+				remove_variable = tyrone_raj_famine_bank_a
+				remove_variable = tyrone_raj_auto_repayment
+				add_journal_entry = {
+					type = je_sepoy_mutiny
+				}
+				trigger_event = {
+					id = sepoy_mutiny_events.3
+					popup = yes
+				}
+				# Bengal Presidency
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_low_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bengal_effect_critical
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_low_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_medium_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bengal_effect_high
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_medium_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bengal_effect_medium
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bengal_effect_low
+				}
+				# Bombay Presidency
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_low_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bombay_effect_critical
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_low_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_medium_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bombay_effect_high
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_medium_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bombay_effect_medium
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_bombay_effect_low
+				}
+				# Madras Presidency
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_low_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_madras_effect_critical
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_low_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_medium_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_madras_effect_high
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_medium_lower_bound
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_madras_effect_medium
+				}
+				if = {
+					limit = {
+						je:je_uneasy_raj ?= {
+							"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_high_lower_bound
+						}
+					}
+					set_variable = sepoy_mutiny_madras_effect_low
+				}
+				remove_global_variable = bengal_presidency_stability
+				remove_global_variable = bombay_presidency_stability
+				remove_global_variable = madras_presidency_stability
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_sepoy_mutiny_events.3_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			hidden_effect = { scope:raj_scope ?= { tyrone_arc_unstable_settle_ready_reforms = yes } }
+			if = {
+				limit = {
+					hidden_trigger = {
+						scope:raj_scope ?= { NOT = { has_modifier = subject_great_game_defeated } }
+					}
+					scope:raj_scope = {
+						OR = {
+							is_subject = no
+							AND = {
+								custom_tooltip = {
+									text = tyrone_raj_welfare_done_tt
+									OR = { has_variable = tyrone_raj_welfare_done tyrone_arc_tyrone_raj_welfare_ready = yes }
+								}
+								custom_tooltip = {
+									text = tyrone_raj_schools_done_tt
+									OR = { has_variable = tyrone_raj_schools_done tyrone_arc_tyrone_raj_schools_ready = yes }
+								}
+								custom_tooltip = {
+									text = tyrone_raj_health_done_tt
+									OR = { has_variable = tyrone_raj_health_done tyrone_arc_tyrone_raj_health_ready = yes }
+								}
+								custom_tooltip = {
+									text = tyrone_raj_debt_done_tt
+									OR = { has_variable = tyrone_raj_debt_done tyrone_arc_company_equity_ready = yes }
+								}
+								custom_tooltip = {
+									text = tyrone_raj_nation_done_tt
+									OR = { has_variable = tyrone_raj_nation_done tyrone_arc_tyrone_raj_nation_ready = yes }
+								}
+							}
+						}
+					}
+				}
+				tyrone_arc_unstable_success = yes
+			}
+			else = {
+				hidden_effect = {
+					every_country = {
+						limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
+						remove_modifier = tyrone_unstable_raj_reduced_payments
+					}
+				}
+				hidden_effect = {
+					every_country = {
+						limit = { has_modifier = tyrone_unstable_raj_raised_payments }
+						remove_modifier = tyrone_unstable_raj_raised_payments
+					}
+				}
+				hidden_effect = {
+					every_country = {
+						limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
+						remove_modifier = tyrone_unstable_raj_princely_discontent
+					}
+				}
+				scope:raj_scope ?= {
+					remove_modifier = tyrone_unstable_raj_liberty_desire
+					set_variable = tyrone_unstable_raj_failed
+					remove_variable = tyrone_unstable_raj_active
+					tyrone_raj_famine_cancel_pending = yes
+					remove_variable = tyrone_raj_famine_wait
+					remove_variable = tyrone_raj_famine_cooldown
+					remove_variable = tyrone_raj_famine_bank_a
+					remove_variable = tyrone_raj_auto_repayment
+					add_journal_entry = {
+						type = je_sepoy_mutiny
+					}
+					trigger_event = {
+						id = sepoy_mutiny_events.3
+						popup = yes
+					}
+					# Bengal Presidency
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_low_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bengal_effect_critical
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_low_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_medium_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bengal_effect_high
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_medium_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" <= uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bengal_effect_medium
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bengal)" > uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bengal_effect_low
+					}
+					# Bombay Presidency
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_low_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bombay_effect_critical
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_low_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_medium_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bombay_effect_high
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_medium_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" <= uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bombay_effect_medium
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_bombay)" > uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_bombay_effect_low
+					}
+					# Madras Presidency
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_low_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_madras_effect_critical
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_low_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_medium_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_madras_effect_high
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_medium_lower_bound
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" <= uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_madras_effect_medium
+					}
+					if = {
+						limit = {
+							je:je_uneasy_raj ?= {
+								"scripted_bar_progress(sepoy_mutiny_progress_bar_madras)" > uneasy_raj_stability_high_lower_bound
+							}
+						}
+						set_variable = sepoy_mutiny_madras_effect_low
+					}
+					remove_global_variable = bengal_presidency_stability
+					remove_global_variable = bombay_presidency_stability
+					remove_global_variable = madras_presidency_stability
+				}
+			}
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_india_native_subentries.gui"
+		name = "tyrone_india_active_subentries_unstable"
+		container = "custom_widget_container_3"
+	}
 }
 
 je_tyrone_raj_welfare = {
 	icon = "gfx/interface/icons/law_icons/poor_laws.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_unstable
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -757,33 +827,7 @@ je_tyrone_raj_welfare = {
 	immediate = {
 		tyrone_unstable_bind_india = yes
 	}
-	complete = {
-		scope:raj_scope = {
-			NOT = {
-				has_law_or_variant = law_type:law_no_social_security
-			}
-			institution_investment_level = {
-				institution = institution_social_security
-				value >= 2
-			}
-		}
-	}
-	on_complete = {
-		scope:raj_scope = {
-			set_variable = tyrone_raj_welfare_done
-			trigger_event = {
-				id = tyrone_raj_reform.2
-				popup = yes
-			}
-		}
-	}
-	invalid = {
-		scope:raj_scope = {
-			NOT = {
-				has_variable = tyrone_unstable_raj_active
-			}
-		}
-	}
+
 	on_weekly_pulse = {
 		effect = {
 			scope:journal_entry = {
@@ -831,11 +875,52 @@ je_tyrone_raj_welfare = {
 		}
 	}
 	weight = 80
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				scope:raj_scope ?= { NOT = { has_variable = tyrone_unstable_raj_active } }
+			}
+			scope:raj_scope ?= { NOT = { has_variable = tyrone_raj_welfare_done } }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= { custom_tooltip = { text = tyrone_raj_welfare_done_tt has_variable = tyrone_raj_welfare_done } }
+				}
+				AND = {
+					scope:raj_scope = {
+						NOT = {
+							has_law_or_variant = law_type:law_no_social_security
+						}
+						institution_investment_level = {
+							institution = institution_social_security
+							value >= 2
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:raj_scope ?= { tyrone_arc_tyrone_raj_welfare_grant = yes }
+		}
+	}
 }
 
 je_tyrone_raj_schools = {
 	icon = "gfx/interface/icons/law_icons/public_schools.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_unstable
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -858,30 +943,7 @@ je_tyrone_raj_schools = {
 		tyrone_unstable_bind_india = yes
 	}
 	scripted_progress_bar = tyrone_raj_schooling_bar
-	complete = {
-		custom_tooltip = {
-			text = tyrone_raj_schooling_complete_tt
-			scope:journal_entry = {
-				"scripted_bar_progress(tyrone_raj_schooling_bar)" >= 100
-			}
-		}
-	}
-	on_complete = {
-		scope:raj_scope = {
-			set_variable = tyrone_raj_schools_done
-			trigger_event = {
-				id = tyrone_raj_reform.1
-				popup = yes
-			}
-		}
-	}
-	invalid = {
-		scope:raj_scope = {
-			NOT = {
-				has_variable = tyrone_unstable_raj_active
-			}
-		}
-	}
+
 	on_weekly_pulse = {
 		effect = {
 			scope:journal_entry = {
@@ -929,11 +991,49 @@ je_tyrone_raj_schools = {
 		}
 	}
 	weight = 80
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				scope:raj_scope ?= { NOT = { has_variable = tyrone_unstable_raj_active } }
+			}
+			scope:raj_scope ?= { NOT = { has_variable = tyrone_raj_schools_done } }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= { custom_tooltip = { text = tyrone_raj_schools_done_tt has_variable = tyrone_raj_schools_done } }
+				}
+				AND = {
+					custom_tooltip = {
+						text = tyrone_raj_schooling_complete_tt
+						scope:journal_entry = {
+							"scripted_bar_progress(tyrone_raj_schooling_bar)" >= 100
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:raj_scope ?= { tyrone_arc_tyrone_raj_schools_grant = yes }
+		}
+	}
 }
 
 je_tyrone_raj_health = {
 	icon = "gfx/interface/icons/law_icons/public_health_insurance.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_unstable
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -955,33 +1055,7 @@ je_tyrone_raj_health = {
 	immediate = {
 		tyrone_unstable_bind_india = yes
 	}
-	complete = {
-		scope:raj_scope = {
-			NOT = {
-				has_law_or_variant = law_type:law_no_health_system
-			}
-			institution_investment_level = {
-				institution = institution_health_system
-				value >= 2
-			}
-		}
-	}
-	on_complete = {
-		scope:raj_scope = {
-			set_variable = tyrone_raj_health_done
-			trigger_event = {
-				id = tyrone_raj_reform.3
-				popup = yes
-			}
-		}
-	}
-	invalid = {
-		scope:raj_scope = {
-			NOT = {
-				has_variable = tyrone_unstable_raj_active
-			}
-		}
-	}
+
 	on_weekly_pulse = {
 		effect = {
 			scope:journal_entry = {
@@ -1029,12 +1103,53 @@ je_tyrone_raj_health = {
 		}
 	}
 	weight = 80
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				scope:raj_scope ?= { NOT = { has_variable = tyrone_unstable_raj_active } }
+			}
+			scope:raj_scope ?= { NOT = { has_variable = tyrone_raj_health_done } }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= { custom_tooltip = { text = tyrone_raj_health_done_tt has_variable = tyrone_raj_health_done } }
+				}
+				AND = {
+					scope:raj_scope = {
+						NOT = {
+							has_law_or_variant = law_type:law_no_health_system
+						}
+						institution_investment_level = {
+							institution = institution_health_system
+							value >= 2
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:raj_scope ?= { tyrone_arc_tyrone_raj_health_grant = yes }
+		}
+	}
 }
 
 # Reuses the history-spawned vanilla ID; the old equity minigame is replaced.
 REPLACE:je_company_equity = {
 	icon = "gfx/interface/icons/invention_icons/banking.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_unstable
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -1053,8 +1168,7 @@ REPLACE:je_company_equity = {
 			}
 		}
 	}
-	custom_completion_header = je_company_equity_completion_header
-	custom_failure_header = je_company_equity_failure_header
+
 	scripted_progress_bar = company_equity_progress_bar
 	scripted_button = treasury_buy_shares
 	scripted_button = sell_shares_to_private_investors
@@ -1102,74 +1216,7 @@ REPLACE:je_company_equity = {
 			}
 		}
 	}
-	complete = {
-		scope:raj_scope = {
-			OR = {
-				is_subject = no
-				AND = {
-					custom_tooltip = {
-						text = tyrone_raj_debt_paid_tt
-						var:tyrone_raj_debt <= 0
-					}
-					scope:journal_entry = {
-						"scripted_bar_progress(company_equity_progress_bar)" >= 150
-					}
-				}
-			}
-		}
-	}
-	fail = {
-		scope:raj_scope = {
-			is_subject = yes
-		}
-		scope:journal_entry = {
-			"scripted_bar_progress(company_equity_progress_bar)" <= -150
-		}
-	}
-	on_fail = {
-		scope:raj_scope = {
-			if = {
-				limit = {
-					is_subject = yes
-					NOT = { has_variable = tyrone_raj_crown_act_passed }
-				}
-				set_variable = tyrone_raj_crown_act_passed
-				trigger_event = { id = bic_content.2 popup = yes }
-				overlord = { trigger_event = { id = bic_content.2 popup = yes } }
-			}
-			set_variable = tyrone_raj_company_failed
-			remove_variable = tyrone_raj_auto_repayment
-		}
-	}
-	on_complete = {
-		scope:raj_scope = {
-			# Political agreements already settle the question without the Charter Act rewards.
-			if = {
-				limit = {
-					is_subject = yes
-					NOT = { has_variable = tyrone_raj_charter_act_passed }
-				}
-				set_variable = tyrone_raj_charter_act_passed
-				trigger_event = { id = bic_content.3 popup = yes }
-				overlord = { trigger_event = { id = bic_content.3 popup = yes } }
-			}
-			set_variable = { name = tyrone_raj_debt value = 0 }
-			set_variable = tyrone_raj_debt_done
-			remove_variable = tyrone_raj_auto_repayment
-		}
-	}
-	invalid = {
-		scope:raj_scope = {
-			NOT = {
-				has_variable = tyrone_unstable_raj_active
-			}
-		}
-	}
-	on_invalid = {
-		scope:raj_scope = {
-			remove_variable = tyrone_raj_auto_repayment
-		}
-	}
+
 	on_weekly_pulse = {
 		effect = {
 			scope:journal_entry = {
@@ -1243,4 +1290,85 @@ REPLACE:je_company_equity = {
 		}
 	}
 	weight = 85
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				scope:raj_scope ?= { NOT = { has_variable = tyrone_unstable_raj_active } }
+			}
+			scope:raj_scope ?= { NOT = { has_variable = tyrone_raj_debt_done } }
+		}
+		effect = {
+			scope:raj_scope = {
+				remove_variable = tyrone_raj_auto_repayment
+			}
+		}
+	}
+
+	outcome = {
+		header = je_company_equity_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= { custom_tooltip = { text = tyrone_raj_debt_done_tt has_variable = tyrone_raj_debt_done } }
+				}
+				AND = {
+					scope:raj_scope = {
+						OR = {
+							is_subject = no
+							AND = {
+								custom_tooltip = {
+									text = tyrone_raj_debt_paid_tt
+									var:tyrone_raj_debt <= 0
+								}
+								scope:journal_entry = {
+									"scripted_bar_progress(company_equity_progress_bar)" >= 150
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:raj_scope ?= { tyrone_arc_company_equity_grant = yes }
+		}
+	}
+
+	outcome = {
+		header = je_company_equity_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			scope:raj_scope = {
+				is_subject = yes
+			}
+			scope:journal_entry = {
+				"scripted_bar_progress(company_equity_progress_bar)" <= -150
+			}
+		}
+		effect = {
+			scope:raj_scope = {
+				if = {
+					limit = {
+						is_subject = yes
+						NOT = { has_variable = tyrone_raj_crown_act_passed }
+					}
+					set_variable = tyrone_raj_crown_act_passed
+					trigger_event = { id = bic_content.2 popup = yes }
+					overlord = { trigger_event = { id = bic_content.2 popup = yes } }
+				}
+				set_variable = tyrone_raj_company_failed
+				remove_variable = tyrone_raj_auto_repayment
+			}
+		}
+	}
 }

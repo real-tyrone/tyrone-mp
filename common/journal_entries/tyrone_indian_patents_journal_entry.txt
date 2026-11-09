@@ -1,7 +1,7 @@
-# Shared objective; all academic progress belongs to the saved Indian country.
+﻿# Shared objective; all academic progress belongs to the saved Indian country.
 je_tyrone_promise_british_patents = {
 	icon = "gfx/interface/icons/invention_icons/dialectics.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_promise
 	should_be_involved = { tyrone_promise_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = {
@@ -43,42 +43,10 @@ je_tyrone_promise_british_patents = {
 			}
 		}
 	}
-	complete = {
-		scope:tyrone_promise_india ?= {
-			custom_tooltip = {
-				text = tyrone_patents_agreement_accepted_tt
-				has_variable = tyrone_patents_agreement_accepted
-			}
-		}
-	}
-	on_complete = {
-		scope:tyrone_promise_india ?= {
-			remove_variable = tyrone_patents_months
-			remove_variable = tyrone_patents_request_pending
-			remove_variable = tyrone_patents_agreement_accepted
-		}
-	}
+
 	# Independence only disables requests. It does not discard academic progress.
 	# Manual repeal ends the objective without obliging an overlord to pay.
-	invalid = {
-		OR = {
-			NOT = { has_global_variable = tyrone_promise_active_var }
-			NOT = { tyrone_promise_india_exists = yes }
-			scope:tyrone_promise_india ?= {
-				NOT = { has_variable = tyrone_patents_agreement_accepted }
-				NOT = {
-					any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
-				}
-			}
-		}
-	}
-	on_invalid = {
-		scope:tyrone_promise_india ?= {
-			remove_variable = tyrone_patents_months
-			remove_variable = tyrone_patents_request_pending
-			remove_variable = tyrone_patents_agreement_accepted
-		}
-	}
+
 	current_value = {
 		value = 0
 		scope:tyrone_promise_india ?= {
@@ -93,4 +61,50 @@ je_tyrone_promise_british_patents = {
 	progressbar = yes
 	weight = 20
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { has_global_variable = tyrone_promise_active_var }
+				NOT = { tyrone_promise_india_exists = yes }
+				scope:tyrone_promise_india ?= {
+					NOT = { has_variable = tyrone_patents_agreement_accepted }
+					NOT = {
+						any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+					}
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= {
+				remove_variable = tyrone_patents_months
+				remove_variable = tyrone_patents_request_pending
+				remove_variable = tyrone_patents_agreement_accepted
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:tyrone_promise_india ?= {
+				custom_tooltip = {
+					text = tyrone_patents_agreement_accepted_tt
+					has_variable = tyrone_patents_agreement_accepted
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= {
+				remove_variable = tyrone_patents_months
+				remove_variable = tyrone_patents_request_pending
+				remove_variable = tyrone_patents_agreement_accepted
+			}
+		}
+	}
 }

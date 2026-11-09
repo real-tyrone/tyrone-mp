@@ -1,0 +1,132 @@
+﻿# Country scope: readiness for je_tyrone_raj_welfare.
+tyrone_arc_tyrone_raj_welfare_ready = {
+	has_journal_entry = je_tyrone_raj_welfare
+	scope:raj_scope = {
+		NOT = {
+			has_law_or_variant = law_type:law_no_social_security
+		}
+		institution_investment_level = {
+			institution = institution_social_security
+			value >= 2
+		}
+	}
+}
+
+# Country scope: readiness for je_tyrone_raj_schools.
+tyrone_arc_tyrone_raj_schools_ready = {
+	has_journal_entry = je_tyrone_raj_schools
+	custom_tooltip = {
+		text = tyrone_raj_schooling_complete_tt
+		je:je_tyrone_raj_schools = {
+			"scripted_bar_progress(tyrone_raj_schooling_bar)" >= 100
+		}
+	}
+}
+
+# Country scope: readiness for je_tyrone_raj_health.
+tyrone_arc_tyrone_raj_health_ready = {
+	has_journal_entry = je_tyrone_raj_health
+	scope:raj_scope = {
+		NOT = {
+			has_law_or_variant = law_type:law_no_health_system
+		}
+		institution_investment_level = {
+			institution = institution_health_system
+			value >= 2
+		}
+	}
+}
+
+# Country scope: readiness for je_company_equity.
+tyrone_arc_company_equity_ready = {
+	has_journal_entry = je_company_equity
+	scope:raj_scope = {
+		OR = {
+			is_subject = no
+			AND = {
+				custom_tooltip = {
+					text = tyrone_raj_debt_paid_tt
+					var:tyrone_raj_debt <= 0
+				}
+				je:je_company_equity = {
+					"scripted_bar_progress(company_equity_progress_bar)" >= 150
+				}
+			}
+		}
+	}
+}
+
+# Country scope: readiness for je_tyrone_raj_nation.
+tyrone_arc_tyrone_raj_nation_ready = {
+	has_journal_entry = je_tyrone_raj_nation
+	hidden_trigger = {
+		tyrone_raj_nation_can_continue = yes
+	}
+	custom_tooltip = {
+		text = tyrone_raj_nation_goal_tt
+		je:je_tyrone_raj_nation = {
+			OR = {
+				"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
+				"scripted_bar_progress(tyrone_raj_nation_progress_bar)" >= 60
+			}
+		}
+	}
+}
+
+# Country scope: readiness for je_tyrone_csr_police.
+tyrone_arc_tyrone_csr_police_ready = {
+	has_journal_entry = je_tyrone_csr_police
+	hidden_trigger = {
+		scope:csr_india ?= {
+			always = yes
+			NOT = { has_variable = tyrone_csr_police_done }
+		}
+	}
+	scope:csr_india = {
+		NOT = { has_law_or_variant = law_type:law_no_police }
+		institution_investment_level = {
+			institution = institution_police
+			value >= 2
+		}
+		radical_fraction = { value <= 0.10 }
+	}
+}
+
+# Country scope: readiness for je_tyrone_csr_army.
+tyrone_arc_tyrone_csr_army_ready = {
+	has_journal_entry = je_tyrone_csr_army
+	hidden_trigger = {
+		scope:csr_india ?= {
+			always = yes
+			NOT = { has_variable = tyrone_csr_army_done }
+		}
+	}
+	scope:csr_india = {
+		army_size >= 250
+		has_technology_researched = rifling
+		has_technology_researched = logistics
+		OR = {
+			has_law = law_type:law_india_early_standing_army
+			has_law = law_type:law_india_company_army
+			has_law = law_type:law_india_great_indian_army
+		}
+	}
+}
+
+# Country scope: readiness for je_tyrone_csr_tax.
+tyrone_arc_tyrone_csr_tax_ready = {
+	has_journal_entry = je_tyrone_csr_tax
+	hidden_trigger = {
+		scope:csr_india ?= {
+			always = yes
+			NOT = { has_variable = tyrone_csr_tax_done }
+		}
+	}
+	scope:csr_india = {
+		OR = {
+			has_law = law_type:law_india_chartered_excise
+			has_law = law_type:law_india_company_assessment
+		}
+		bureaucracy >= 0
+	}
+}

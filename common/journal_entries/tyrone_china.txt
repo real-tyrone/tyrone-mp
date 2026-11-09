@@ -1,25 +1,19 @@
 ﻿je_mandate_of_heaven = {
 	icon = "gfx/interface/icons/event_icons/Mandate_Heaven.dds"
-
-	group = je_group_internal_affairs
+	group = je_group_tyrone_china_mandate
+	context = country
+	highlight = yes
 	scripted_progress_bar = chi_centralisation_progress_bar
-
 	widget = {
 		gui = "gui/journal_entry_widgets/chi_mandate_progress_dropdowns.gui"
 		name = "chi_mandate_progress_dropdowns"
 		container = "custom_widget_container_4"
 	}
-
 	widget = {
 		gui = "gui/journal_entry_widgets/chi_mandate_subentries.gui"
 		name = "chi_mandate_subentries"
-		container = "custom_widget_container_1"
+		container = "custom_widget_container_3"
 	}
-
-	immediate = {
-		add_contextless_journal_entry = je_economic_direction
-	}
-
 	on_monthly_pulse = {
 		random_events = {
 			21 = 0
@@ -151,114 +145,126 @@
 			chi_mandate_update_centralisation_modifier = yes
 		}
 	}
-
-	complete = {
-		"scope:journal_entry.scripted_bar_progress(chi_centralisation_progress_bar)" >= 10
-	}
-
 	weight = 1000
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = chi_mandate_centralisation_complete_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(chi_centralisation_progress_bar)" >= 10
+				}
+			}
+		}
+		effect = {
+			hidden_effect = {
+				chi_mandate_update_centralisation_modifier = yes
+			}
+		}
+	}
 }
 
 je_economic_direction = {
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
-
-	group = je_group_internal_affairs
-
-	modifier = {
-		state_peasants_consumption_multiplier_add = 0.15
-	}
-
-	complete = {
-		OR = {
-			AND = {
-				relative_bureaucracy >= 0.25
-				NOT = { has_law_or_variant = law_type:law_chi_no_schools }
-				NOT = { has_law_or_variant = law_type:law_serfdom }
-				has_technology_researched = romanticism
-			}
-			AND = {
-				has_law_or_variant = law_type:law_local_police
-				has_technology_researched = romanticism
-				army_power_projection >= 15000
-			}
-		}
-	}
-
-	on_complete = {
-		if = {
-			limit = {
-				relative_bureaucracy >= 0.25
-				NOT = { has_law_or_variant = law_type:law_chi_no_schools }
-				NOT = { has_law_or_variant = law_type:law_serfdom }
-				has_technology_researched = romanticism
-			}
-			activate_law = law_type:law_chi_mixed_economic_policy
-			add_modifier = {
-				name = economic_direction_mixed_policy
-			}
-		}
-		else_if = {
-			limit = {
-				has_law_or_variant = law_type:law_local_police
-				has_technology_researched = romanticism
-				army_power_projection >= 15000
-			}
-			activate_law = law_type:law_chi_industry_banned
-			add_modifier = {
-				name = economic_direction_industry_banned
-			}
-		}
-		add_journal_entry = {
-			type = je_homeland_development
-		}
-	}
-
+	group = je_group_tyrone_china_mandate
+	context = country
 	weight = 1000
+	modifiers_while_active = { chi_economic_direction_consumption }
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					relative_bureaucracy >= 0.25
+					NOT = { has_law_or_variant = law_type:law_chi_no_schools }
+					NOT = { has_law_or_variant = law_type:law_serfdom }
+					has_technology_researched = romanticism
+				}
+				AND = {
+					has_law_or_variant = law_type:law_local_police
+					has_technology_researched = romanticism
+					army_power_projection >= 15000
+				}
+			}
+		}
+		effect = {
+			if = {
+				limit = {
+					relative_bureaucracy >= 0.25
+					NOT = { has_law_or_variant = law_type:law_chi_no_schools }
+					NOT = { has_law_or_variant = law_type:law_serfdom }
+					has_technology_researched = romanticism
+				}
+				activate_law = law_type:law_chi_mixed_economic_policy
+				add_modifier = {
+					name = economic_direction_mixed_policy
+				}
+			}
+			else_if = {
+				limit = {
+					has_law_or_variant = law_type:law_local_police
+					has_technology_researched = romanticism
+					army_power_projection >= 15000
+				}
+				activate_law = law_type:law_chi_industry_banned
+				add_modifier = {
+					name = economic_direction_industry_banned
+				}
+			}
+			add_journal_entry = {
+				type = je_homeland_development
+			}
+		}
+	}
 }
 
 je_homeland_development = {
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
-
-	group = je_group_internal_affairs
+	group = je_group_tyrone_china_mandate
+	context = country
 	scripted_button = homeland_development_labour_program_button
 	scripted_button = homeland_development_repose_assets_button
-
 	immediate = {
 		trigger_event = {
 			id = homeland_development.1
 			popup = yes
 		}
 	}
-
-	on_complete = {
-	    je:je_mandate_of_heaven = {     
-			add_progress = {       
-				value = 2   
-				name = chi_centralisation_progress_bar      
-			}     
+	weight = 1000
+	outcome = {
+		flags = { hidden }
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			always = no
+		}
+		effect = {
+			je:je_mandate_of_heaven = {
+				add_progress = {
+					value = 2
+					name = chi_centralisation_progress_bar
+				}
+			}
 		}
 	}
-	weight = 1000
 }
 
 je_early_army_modernization = {
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	group = je_group_internal_affairs
+	group = je_group_tyrone_china_mandate
+	context = country
 	scripted_button = chi_early_army_napoleonic_button
 	scripted_button = chi_early_army_rifling_button
 	scripted_button = chi_early_army_general_staff_button
 	scripted_button = chi_early_army_screw_frigates_button
-
-	is_shown = {
-		is_china_tag_trigger = yes
-	}
-
 	modifiers_while_active = {
 	}
-
 	immediate = {
 		set_variable = {
 			name = chi_early_army_stages
@@ -267,60 +273,54 @@ je_early_army_modernization = {
 		add_modifier = chi_early_army_line_artillery_penalty
 		chi_early_army_refresh_stage_modifier = yes
 	}
-
-	complete = {
-		custom_tooltip = {
-			text = "chi_early_army_modernization_tt"
-			var:chi_early_army_stages <= 0
+	weight = 1000
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = chi_early_army_stages_complete_tt
+				var:chi_early_army_stages <= 0
+			}
 		}
-	}
-
-	on_complete = {
-		if = {
-			limit = {
-				je:je_mandate_of_heaven = {
-					"scripted_bar_progress(chi_centralisation_progress_bar)" >= 5
+		effect = {
+			if = {
+				limit = {
+					je:je_mandate_of_heaven = {
+						"scripted_bar_progress(chi_centralisation_progress_bar)" >= 5
+					}
+				}
+				custom_tooltip = {
+					text = "chi_early_army_modernization_tt"
+					set_variable = chi_early_army_early_law_unlocked
 				}
 			}
-			custom_tooltip = {
-				text = "chi_early_army_modernization_tt"
-				set_variable = chi_early_army_early_law_unlocked
+			else = {
+				set_variable = chi_early_army_militia_law_unlocked
+			}
+			je:je_mandate_of_heaven = {
+				add_progress = {
+					value = 1
+					name = chi_centralisation_progress_bar
+				}
 			}
 		}
-		else = {
-			set_variable = chi_early_army_militia_law_unlocked
-		}
-
-	    je:je_mandate_of_heaven = {     
-			add_progress = {       
-				value = 1    
-				name = chi_centralisation_progress_bar      
-			}     
-		}
 	}
-
-	weight = 1000
 }
 
 je_confront_confucian_scholars = {
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
-
-	group = je_group_internal_affairs
+	group = je_group_tyrone_china_mandate
+	context = country
 	scripted_button = chi_confucian_scholars_button
-
 	immediate = {
 		set_variable = {
 			name = chi_confucian_scholars_progress
 			value = 0
 		}
 	}
-
-	complete = {
-		scope:journal_entry = {
-			is_goal_complete = yes
-		}
-	}
-
 	on_monthly_pulse = {
 		random_events = {
 			10 = 0
@@ -373,45 +373,52 @@ je_confront_confucian_scholars = {
 			}
 		}
 	}
-
-	on_complete = {
-		if = {
-			limit = {
-				has_variable = chi_confucian_scholars_end_isolation
-			}
-			activate_law = law_type:law_chi_religious_focus
-			ig:ig_devout ?= {
-				remove_ideology = ideology_chi_devout_traditionalist
-				add_ideology = ideology_chi_devout_scholar
-			}
-		}
-		if = {
-			limit = {
-				has_variable = chi_confucian_scholars_evict_scholars
-			}
-			activate_law = law_type:law_freedom_of_conscience
-			activate_law = law_type:law_chi_merchent_led
-		}
-	    je:je_mandate_of_heaven = {     
-			add_progress = {       
-				value = 1    
-				name = chi_centralisation_progress_bar      
-			}     
-		}
-		remove_modifier = chi_confucian_scholars_button_modifier
-		remove_variable = chi_confucian_scholars_progress
-	}
-
 	current_value = {
-		value = root.var:chi_confucian_scholars_progress
+		value = var:chi_confucian_scholars_progress
 	}
-
 	goal_add_value = {
 		value = 96
+		subtract = var:chi_confucian_scholars_progress
 	}
-
 	progressbar = yes
-
 	weight = 1000
-
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:journal_entry = {
+				is_goal_complete = yes
+			}
+		}
+		effect = {
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_end_isolation
+				}
+				activate_law = law_type:law_chi_religious_focus
+				ig:ig_devout ?= {
+					remove_ideology = ideology_chi_devout_traditionalist
+					add_ideology = ideology_chi_devout_scholar
+				}
+			}
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_evict_scholars
+				}
+				activate_law = law_type:law_freedom_of_conscience
+				activate_law = law_type:law_chi_merchent_led
+			}
+			je:je_mandate_of_heaven = {
+				add_progress = {
+					value = 1
+					name = chi_centralisation_progress_bar
+				}
+			}
+			if = { limit = { has_modifier = chi_confucian_scholars_button_modifier } remove_modifier = chi_confucian_scholars_button_modifier }
+			remove_variable = chi_confucian_scholars_progress
+		}
+	}
+	should_be_pinned_by_default_uninvolved_or_context = yes
 }

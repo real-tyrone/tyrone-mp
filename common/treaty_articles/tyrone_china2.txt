@@ -1,0 +1,169 @@
+# China-only concession articles. Source is the central Chinese negotiator.
+# Do not put port ownership in requirement_to_maintain: that destroys articles.
+# Concession caches are rebuilt monthly; treaty callbacks never dispatch events.
+
+regional_investment_rights = {
+    kind = directed
+    cost = 10
+    icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/foreign_investment_agreement_treaties.dds"
+    flags = { is_investment_rights can_be_enforced can_be_renegotiated }
+    maintenance_paid_by = target_country
+    usage_limit = once_per_side_with_same_inputs
+    required_inputs = { state }
+    visible = {
+        chi_legation_is_central = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { is_involved_in_journal_entry = je_chi_legation_system }
+    }
+    possible = {
+        chi_legation_is_central = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { chi_legation_eligible = yes }
+    }
+    can_ratify = {
+        scope:source_country = { chi_legation_is_central = yes }
+        scope:target_country = { is_involved_in_journal_entry = je_chi_legation_system }
+        has_global_variable = chi_legation_active
+    }
+    can_withdraw = {
+        OR = {
+            NOT = { has_global_variable = chi_legation_active }
+            NOT = { scope:withdrawing_country = scope:source_country }
+        }
+    }
+    state_valid_trigger = {
+        scope:input = {
+            state_region = { chi_legation_region = yes }
+            owner = { chi_legation_chinese_government = yes }
+            any_neighbouring_state = {
+                state_region = { save_temporary_scope_as = chi_legation_neighbour_region }
+                scope:other_country = {
+                    is_target_in_variable_list = { name = chi_legation_regions target = scope:chi_legation_neighbour_region }
+                }
+            }
+        }
+    }
+    ai = {
+        treaty_categories = { economy }
+        article_ai_usage = { will_request }
+        evaluation_chance = { value = 10 }
+        inherent_accept_score = { value = -20 }
+        wargoal_score_multiplier = { value = 1 }
+    }
+    wargoal = {
+        execution_priority = 21
+        maneuvers = { value = 10 }
+        infamy = { value = 2 }
+        contestion_type = control_target_country_capital
+    }
+}
+
+building_investment_rights = {
+    kind = directed
+    cost = 10
+    icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/foreign_investment_agreement_treaties.dds"
+    flags = { is_investment_rights can_be_enforced can_be_renegotiated }
+    maintenance_paid_by = target_country
+    usage_limit = once_per_side_with_same_inputs
+    required_inputs = { building_type }
+    visible = {
+        chi_legation_is_central = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { is_involved_in_journal_entry = je_chi_legation_system }
+    }
+    possible = {
+        chi_legation_is_central = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { chi_legation_eligible = yes }
+    }
+    can_ratify = {
+        scope:source_country = { chi_legation_is_central = yes }
+        scope:target_country = { is_involved_in_journal_entry = je_chi_legation_system }
+        has_global_variable = chi_legation_active
+    }
+    can_withdraw = {
+        OR = {
+            NOT = { has_global_variable = chi_legation_active }
+            NOT = { scope:withdrawing_country = scope:source_country }
+        }
+    }
+    building_type_valid_trigger = {
+        scope:input = {
+            OR = {
+                this = bt:building_food_industry
+                this = bt:building_textile_mill
+                this = bt:building_furniture_manufactory
+                this = bt:building_glassworks
+                this = bt:building_tooling_workshop
+                this = bt:building_paper_mill
+                this = bt:building_chemical_plant
+                this = bt:building_explosives_factory
+                this = bt:building_synthetics_plant
+                this = bt:building_steel_mill
+                this = bt:building_motor_industry
+                this = bt:building_automotive_industry
+                this = bt:building_electrics_industry
+                this = bt:building_shipyard
+                this = bt:building_arms_industry
+                this = bt:building_artillery_foundry
+                this = bt:building_munition_plant
+                this = bt:building_rye_farm
+                this = bt:building_wheat_farm
+                this = bt:building_rice_farm
+                this = bt:building_maize_farm
+                this = bt:building_millet_farm
+                this = bt:building_livestock_ranch
+                this = bt:building_vineyard
+                this = bt:building_coffee_plantation
+                this = bt:building_cotton_plantation
+                this = bt:building_dye_plantation
+                this = bt:building_opium_plantation
+                this = bt:building_tea_plantation
+                this = bt:building_tobacco_plantation
+                this = bt:building_sugar_plantation
+                this = bt:building_banana_plantation
+                this = bt:building_silk_plantation
+                this = bt:building_coal_mine
+                this = bt:building_iron_mine
+                this = bt:building_lead_mine
+                this = bt:building_sulfur_mine
+                this = bt:building_gold_mine
+                this = bt:building_logging_camp
+                this = bt:building_rubber_plantation
+                this = bt:building_fishing_wharf
+                this = bt:building_whaling_station
+                this = bt:building_oil_rig
+                this = bt:building_art_academy
+                this = bt:building_power_plant
+                this = bt:building_port
+                this = bt:building_railway
+            }
+        }
+    }
+    ai = {
+        treaty_categories = { economy }
+        article_ai_usage = { will_request }
+        evaluation_chance = { value = 10 }
+        inherent_accept_score = { value = -20 }
+        wargoal_score_multiplier = { value = 1 }
+    }
+    wargoal = {
+        execution_priority = 21
+        maneuvers = { value = 10 }
+        infamy = { value = 2 }
+        contestion_type = control_target_country_capital
+    }
+}
+
+# Add a proposal/ratification restriction without replacing the vanilla article.
+INJECT_OR_CREATE:foreign_investment_rights = {
+    possible = {
+        NOT = { has_global_variable = chi_legation_active chi_legation_chinese_government = yes }
+    }
+    can_ratify = {
+        NOT = {
+            has_global_variable = chi_legation_active
+            scope:source_country = { chi_legation_chinese_government = yes }
+        }
+    }
+}

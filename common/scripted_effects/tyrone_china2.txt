@@ -1,0 +1,249 @@
+﻿# No scope. One election per global monthly pulse, never per state/country pulse.
+chi_legation_select_central_government = {
+    if = {
+        limit = { any_country = { chi_legation_chinese_government = yes is_player = yes } }
+        ordered_country = {
+            limit = { chi_legation_chinese_government = yes is_player = yes }
+            order_by = chi_legation_population
+            position = 0
+            check_range_bounds = no
+            set_global_variable = { name = chi_legation_central value = this }
+        }
+    }
+    else_if = {
+        limit = { exists = c:CHI }
+        set_global_variable = { name = chi_legation_central value = c:CHI }
+    }
+    else = {
+        ordered_country = {
+            limit = { chi_legation_chinese_government = yes }
+            order_by = chi_legation_population
+            position = 0
+            check_range_bounds = no
+            set_global_variable = { name = chi_legation_central value = this }
+        }
+    }
+}
+# Country scope: investor. Rebuild bounded caches from this country's treaties.
+chi_legation_refresh_rights = {
+    save_scope_as = chi_legation_investor
+    clear_variable_list = chi_legation_regions
+    clear_variable_list = chi_legation_industries
+    # Port-region access is implicit; every industry requires a negotiated article.
+    every_scope_state = {
+        limit = { is_treaty_port = yes state_region = { chi_legation_region = yes } }
+        state_region = { save_scope_as = chi_legation_port_region }
+        scope:chi_legation_investor = {
+            add_to_variable_list = { name = chi_legation_regions target = scope:chi_legation_port_region }
+        }
+    }
+    every_scope_treaty = {
+        every_scope_article = {
+            # Filter by directed article type before following source/target links.
+            limit = {
+                OR = {
+                    has_type = regional_investment_rights
+                    has_type = building_investment_rights
+                }
+            }
+            if = {
+                limit = {
+                    has_type = regional_investment_rights
+                    target_country = scope:chi_legation_investor
+                    exists = input_state
+                }
+                input_state.state_region = { save_scope_as = chi_legation_article_region }
+                scope:chi_legation_investor = {
+                    add_to_variable_list = { name = chi_legation_regions target = scope:chi_legation_article_region }
+                }
+            }
+            else_if = {
+                limit = { has_type = building_investment_rights target_country = scope:chi_legation_investor exists = input_building_type }
+                input_building_type = { save_scope_as = chi_legation_article_building }
+                scope:chi_legation_investor = {
+                    add_to_variable_list = { name = chi_legation_industries target = scope:chi_legation_article_building }
+                }
+            }
+        }
+    }
+}
+# No scope. Runs once per global JE month; only relevant countries receive work.
+chi_legation_monthly_update = {
+    chi_legation_select_central_government = yes
+    every_country = {
+        if = {
+            limit = { chi_legation_chinese_government = yes }
+            if = {
+                limit = { NOT = { has_modifier = chi_legation_nationalization_prohibited } }
+                add_modifier = chi_legation_nationalization_prohibited
+            }
+        }
+        else_if = {
+            limit = { chi_legation_eligible = yes }
+            if = {
+                limit = { NOT = { is_involved_in_journal_entry = je_chi_legation_system } }
+                scope:journal_entry = { add_involved_country = prev }
+            }
+            chi_legation_refresh_rights = yes
+        }
+        else_if = {
+            limit = { is_involved_in_journal_entry = je_chi_legation_system }
+            scope:journal_entry = { remove_involved_country = prev }
+        }
+    }
+}
+# No scope. Shared hook for a future victorious Boxer outcome and the debug event.
+chi_legation_boxer_victory = {
+    set_global_variable = { name = chi_legation_boxer_victory value = 1 }
+    every_country = {
+        limit = { has_modifier = chi_legation_nationalization_prohibited }
+        remove_modifier = chi_legation_nationalization_prohibited
+    }
+}
+
+# Country scope: admission grants no treaty and no free industry.
+chi_legation_admit = {
+    set_variable = chi_legation_admitted
+    chi_legation_refresh_rights = yes
+}
+
+# Any root scope. Called on port acquisition and once per global month as a fallback.
+# The cheap flags stop country scans once active or after a victorious Boxer outcome.
+chi_legation_try_start = {
+    if = {
+        limit = {
+            NOT = { has_global_variable = chi_legation_active }
+            NOT = { has_global_variable = chi_legation_boxer_victory }
+            any_country = {
+                country_rank >= rank_value:great_power
+                NOT = { chi_legation_chinese_government = yes }
+                chi_legation_has_port = yes
+            }
+        }
+        add_contextless_journal_entry = je_chi_legation_system
+    }
+}
+
+# Called by the existing global monthly hook, not by treaty callbacks.
+chi_boxer_try_start = {
+    if = {
+        limit = { NOT = { has_global_variable = chi_boxer_resolved } }
+        global_var:chi_legation_central ?= {
+            if = {
+                limit = {
+                    has_technology_researched = pan-nationalism
+                    NOT = { has_journal_entry = je_boxer_rebellion }
+                }
+                add_journal_entry = { type = je_boxer_rebellion }
+            }
+        }
+    }
+}
+chi_boxer_success = {
+    set_variable = won_boxer_rebellion
+    set_global_variable = { name = chi_boxer_resolved value = 1 }
+    remove_variable = chi_boxer_campaign_active
+    chi_legation_boxer_victory = yes
+    trigger_event = { id = chi_boxer.3 popup = yes }
+}
+chi_boxer_failure = {
+    set_global_variable = { name = chi_boxer_resolved value = 1 }
+    remove_variable = chi_boxer_campaign_active
+    add_modifier = { name = chi_boxer_humiliation years = 5 }
+    trigger_event = { id = chi_boxer.4 popup = yes }
+}
+# Snapshot taken on the button; later admissions remain ordinary diplomatic targets.
+# Already-existing wars are excluded without radicalization.
+chi_boxer_next_power = {
+    if = {
+        limit = {
+            chi_legation_is_central = yes
+            has_journal_entry = je_boxer_rebellion
+            any_country = {
+                has_variable = chi_boxer_in_chain
+                NOT = { has_variable = chi_boxer_addressed }
+                chi_boxer_port_holder = yes
+                NOT = { has_war_with = root }
+            }
+        }
+        random_country = {
+            limit = {
+                has_variable = chi_boxer_in_chain
+                NOT = { has_variable = chi_boxer_addressed }
+                chi_boxer_port_holder = yes
+                NOT = { has_war_with = root }
+            }
+            save_scope_as = chi_boxer_power
+        }
+        if = {
+            limit = { exists = scope:chi_boxer_power }
+            scope:chi_boxer_power = { set_variable = chi_boxer_addressed }
+            trigger_event = { id = chi_boxer.2 popup = yes }
+        }
+    }
+}
+chi_boxer_declare_war = {
+    save_scope_as = chi_boxer_china
+    clear_variable_list = chi_boxer_port_targets
+    # Snapshot the actual split states while they still carry the port flag.
+    scope:chi_boxer_power = {
+        every_scope_state = {
+            limit = { is_treaty_port = yes state_region = { chi_legation_region = yes } }
+            save_scope_as = chi_boxer_port_state
+            if = {
+                limit = { NOT = { has_claim_by = scope:chi_boxer_china } }
+                state_region = { add_claim = scope:chi_boxer_china }
+            }
+            scope:chi_boxer_china = {
+                add_to_variable_list = { name = chi_boxer_port_targets target = scope:chi_boxer_port_state }
+            }
+        }
+    }
+    create_diplomatic_play = {
+        name = chi_boxer_war_name
+        type = dp_chi_boxer_war
+        target_country = scope:chi_boxer_power
+        add_war_goal = {
+            holder = scope:chi_boxer_china
+            type = force_nationalization
+            target_country = scope:chi_boxer_power
+            primary_demand = yes
+        }
+        add_war_goal = {
+            holder = scope:chi_boxer_power
+            type = chi_boxer_reparations
+            target_country = scope:chi_boxer_china
+            primary_demand = yes
+        }
+    }
+    random_diplomatic_play = {
+        limit = { is_diplomatic_play_type = dp_chi_boxer_war initiator_is = scope:chi_boxer_china target_is = scope:chi_boxer_power is_war = no }
+        save_scope_as = chi_boxer_play
+        # Native Return State excludes active treaty ports. War removes that
+        # classification, so add territorial demands using the saved states now.
+        set_war = yes
+        scope:chi_boxer_china = {
+            every_in_list = {
+                variable = chi_boxer_port_targets
+                save_scope_as = chi_boxer_port_state
+                scope:chi_boxer_play = {
+                    add_war_goal = {
+                        holder = scope:chi_boxer_china
+                        type = return_state
+                        target_state = scope:chi_boxer_port_state
+                        primary_demand = yes
+                    }
+                }
+            }
+        }
+    }
+    clear_variable_list = chi_boxer_port_targets
+    if = {
+        limit = {
+            has_war_with = scope:chi_boxer_power
+            NOT = { has_global_variable = chi_boxer_defence_used }
+        }
+        set_global_variable = { name = chi_boxer_defence_used value = 1 }
+        add_modifier = { name = chi_boxer_home_defence years = 5 }
+    }
+}

@@ -1,0 +1,28 @@
+﻿
+# Current vanilla represents financial obligations as money-transfer treaties.
+chi_boxer_reparations = {
+    icon = "gfx/interface/icons/war_goals/enforce_treaty_article.dds"
+    kind = custom
+    settings = { require_target_be_part_of_war }
+    target_type = country
+    contestion_type = control_target_country_capital
+    possible = { always = no }
+    maneuvers = { value = 0 }
+    infamy = { value = 0 }
+    on_enforced = {
+        create_treaty = {
+            first_country = root
+            second_country = scope:target_country
+            is_draft = no
+            binding_period = { years = 5 }
+            articles_to_create = {
+                {
+                    article = money_transfer
+                    source_country = scope:target_country
+                    target_country = root
+                    inputs = { { quantity = chi_boxer_reparations_amount } }
+                }
+            }
+        }
+    }
+}

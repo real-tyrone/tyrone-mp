@@ -1,6 +1,6 @@
-je_tyrone_eoi_calcutta = {
+﻿je_tyrone_eoi_calcutta = {
 	icon = "gfx/interface/icons/invention_icons/political_agitation.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = {
@@ -26,40 +26,55 @@ je_tyrone_eoi_calcutta = {
 			scope:csr_india ?= { tyrone_eoi_calcutta_monthly = yes }
 		}
 	}
-	complete = {
-		scope:csr_india ?= {
-			custom_tooltip = {
-				text = tyrone_eoi_calcutta_resolved_tt
-				OR = {
-					is_subject = no
-					has_variable = tyrone_eoi_calcutta_ready
-					has_variable = tyrone_eoi_ultimatum_issued
-				}
-			}
-		}
-	}
-	on_complete = { scope:csr_india ?= { tyrone_eoi_calcutta_conclude = yes } }
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
-	on_invalid = {
-		scope:csr_india ?= {
-			remove_variable = tyrone_eoi_calcutta_active
-			remove_variable = tyrone_eoi_negotiation_pending
-		}
-	}
+
 	progress_desc = tyrone_eoi_calcutta_progress
 	progressbar = no
 	weight = 40
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				remove_variable = tyrone_eoi_calcutta_active
+				remove_variable = tyrone_eoi_negotiation_pending
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:csr_india ?= {
+				custom_tooltip = {
+					text = tyrone_eoi_calcutta_resolved_tt
+					OR = {
+						is_subject = no
+						has_variable = tyrone_eoi_calcutta_ready
+						has_variable = tyrone_eoi_ultimatum_issued
+					}
+				}
+			}
+		}
+		effect = {
+			scope:csr_india ?= { tyrone_eoi_calcutta_conclude = yes }
+		}
+	}
 }
 
 je_tyrone_eoi_civil_service = {
 	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = { tyrone_eoi_bind_india = yes tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_eoi_civil_service } }
@@ -70,38 +85,51 @@ je_tyrone_eoi_civil_service = {
 			
 		}
 	}
-	complete = {
-		scope:csr_india ?= {
-			bureaucracy >= 0
-			any_scope_state = {
-				count >= 4
-				any_scope_building = {
-					is_building_type = building_government_administration
-					level >= 40
-				}
-			}
-		}
-	}
-	on_complete = {
-		scope:csr_india ?= {
-			set_variable = tyrone_eoi_civil_done
-			trigger_event = { id = tyrone_empire_of_india.40 popup = yes }
-		}
-	}
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
+
 	progressbar = no
 	weight = 30
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:csr_india ?= {
+				bureaucracy >= 0
+				any_scope_state = {
+					count >= 4
+					any_scope_building = {
+						is_building_type = building_government_administration
+						level >= 40
+					}
+				}
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				set_variable = tyrone_eoi_civil_done
+				trigger_event = { id = tyrone_empire_of_india.40 popup = yes }
+			}
+		}
+	}
 }
 
 je_tyrone_eoi_gendarmerie = {
 	icon = "gfx/interface/icons/invention_icons/breech_loading_artillery.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = { tyrone_eoi_bind_india = yes tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_eoi_gendarmerie } }
@@ -112,35 +140,48 @@ je_tyrone_eoi_gendarmerie = {
 			
 		}
 	}
-	complete = {
-		scope:csr_india ?= {
-			army_size >= 500
-			has_law = law_type:law_india_great_indian_army
-			has_technology_researched = repeaters
-			has_technology_researched = enlistment_offices
-			has_technology_researched = breech_loading_artillery
-		}
-	}
-	on_complete = {
-		scope:csr_india ?= {
-			set_variable = tyrone_eoi_army_done
-			trigger_event = { id = tyrone_empire_of_india.41 popup = yes }
-		}
-	}
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
+
 	progressbar = no
 	weight = 30
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:csr_india ?= {
+				army_size >= 500
+				has_law = law_type:law_india_great_indian_army
+				has_technology_researched = repeaters
+				has_technology_researched = enlistment_offices
+				has_technology_researched = breech_loading_artillery
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				set_variable = tyrone_eoi_army_done
+				trigger_event = { id = tyrone_empire_of_india.41 popup = yes }
+			}
+		}
+	}
 }
 
 je_tyrone_eoi_council = {
 	icon = "gfx/interface/icons/law_icons/hereditary_bureaucrats.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = {
@@ -159,47 +200,60 @@ je_tyrone_eoi_council = {
 			scope:csr_india ?= { tyrone_eoi_council_ask_authority = yes }
 		}
 	}
-	complete = {
-		hidden_trigger = {
-			scope:csr_india ?= {
-				NOT = { has_variable = tyrone_eoi_council_permission_pending }
-				NOT = { has_variable = tyrone_eoi_council_integration_pending }
-			}
-		}
-		custom_tooltip = {
-			text = tyrone_eoi_princes_integrated_tt
-			NOT = { any_country = { tyrone_eoi_prince_eligible = yes } }
-		}
-	}
-	on_complete = {
-		scope:csr_india ?= {
-			set_variable = tyrone_eoi_council_done
-			remove_variable = tyrone_eoi_council_active
-			add_contextless_journal_entry = je_tyrone_eoi_home_rule
-			trigger_event = { id = tyrone_empire_of_india.42 popup = yes }
-		}
-	}
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
-	on_invalid = {
-		scope:csr_india ?= {
-			remove_variable = tyrone_eoi_council_active
-			remove_variable = tyrone_eoi_council_permission_pending
-			remove_variable = tyrone_eoi_council_integration_pending
-		}
-	}
+
 	progressbar = no
 	weight = 30
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				remove_variable = tyrone_eoi_council_active
+				remove_variable = tyrone_eoi_council_permission_pending
+				remove_variable = tyrone_eoi_council_integration_pending
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				scope:csr_india ?= {
+					NOT = { has_variable = tyrone_eoi_council_permission_pending }
+					NOT = { has_variable = tyrone_eoi_council_integration_pending }
+				}
+			}
+			custom_tooltip = {
+				text = tyrone_eoi_princes_integrated_tt
+				NOT = { any_country = { tyrone_eoi_prince_eligible = yes } }
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				set_variable = tyrone_eoi_council_done
+				remove_variable = tyrone_eoi_council_active
+				add_contextless_journal_entry = je_tyrone_eoi_home_rule
+				trigger_event = { id = tyrone_empire_of_india.42 popup = yes }
+			}
+		}
+	}
 }
 
 je_tyrone_eoi_coronation = {
 	icon = "gfx/interface/icons/law_icons/monarchy.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = {
@@ -218,18 +272,7 @@ je_tyrone_eoi_coronation = {
 			
 		}
 	}
-	complete = {
-		scope:csr_india ?= {
-			custom_tooltip = { text = tyrone_eoi_coronation_held_tt has_variable = tyrone_eoi_coronation_held }
-		}
-	}
-	on_complete = { scope:csr_india ?= { set_variable = tyrone_eoi_coronation_done } }
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
+
 	current_value = {
 		value = 0
 		scope:csr_india ?= {
@@ -250,11 +293,37 @@ je_tyrone_eoi_coronation = {
 	progressbar = yes
 	weight = 30
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:csr_india ?= {
+				custom_tooltip = { text = tyrone_eoi_coronation_held_tt has_variable = tyrone_eoi_coronation_held }
+			}
+		}
+		effect = {
+			scope:csr_india ?= { set_variable = tyrone_eoi_coronation_done }
+		}
+	}
 }
 
 je_tyrone_eoi_home_rule = {
 	icon = "gfx/interface/icons/law_icons/multicultural.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_empire
 	should_be_involved = { tyrone_eoi_is_actor = yes }
 	should_show_when_not_involved = { always = no }
 	immediate = { tyrone_eoi_bind_india = yes tyrone_csr_refresh_involvement = { ENTRY = je_tyrone_eoi_home_rule } }
@@ -265,29 +334,42 @@ je_tyrone_eoi_home_rule = {
 			
 		}
 	}
-	complete = {
-		scope:csr_india ?= {
-			has_law_or_variant = law_type:law_monarchy
-			has_law = law_type:law_india_imperial_citizenship
-			OR = {
-				has_law = law_type:law_india_muslim_favored
-				has_law = law_type:law_india_hindu_favored
-			}
-		}
-	}
-	on_complete = {
-		scope:csr_india ?= {
-			set_variable = tyrone_eoi_home_rule_done
-			trigger_event = { id = tyrone_empire_of_india.60 popup = yes }
-		}
-	}
-	invalid = {
-		OR = {
-			NOT = { exists = scope:csr_india }
-			scope:csr_india ?= { is_country_alive = no }
-		}
-	}
+
 	progressbar = no
 	weight = 30
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:csr_india }
+				scope:csr_india ?= { is_country_alive = no }
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:csr_india ?= {
+				has_law_or_variant = law_type:law_monarchy
+				has_law = law_type:law_india_imperial_citizenship
+				OR = {
+					has_law = law_type:law_india_muslim_favored
+					has_law = law_type:law_india_hindu_favored
+				}
+			}
+		}
+		effect = {
+			scope:csr_india ?= {
+				set_variable = tyrone_eoi_home_rule_done
+				trigger_event = { id = tyrone_empire_of_india.60 popup = yes }
+			}
+		}
+	}
 }

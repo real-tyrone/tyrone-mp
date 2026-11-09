@@ -1,61 +1,89 @@
+﻿# Native Emperor and Autocrat active-entry lists; the current main is excluded.
+
 flowcontainer = {
 	name = "chi_mandate_subentries"
-	parentanchor = hcenter
-	direction = vertical
+	ignoreinvisible = yes
 
 	flowcontainer = {
-		parentanchor = hcenter
 		direction = vertical
-		spacing = 5
-		datamodel = "[AccessPlayer.AccessActiveJournalEntries]"
+		parentanchor = hcenter
+		spacing = 4
+		ignoreinvisible = yes
 
-		item = {
-			button = {
-				size = { 488 54 }
-				using = default_button
-				texture = "gfx/interface/buttons/default_button_bg_map_interaction.dds"
-				texture_density = 1
-				framesize = { 38 38 }
-				spriteborder = { 14 14 }
-				blockoverride "bevel_texture" {
-					texture = "gfx/interface/buttons/default_button_bevel_map_interaction.dds"
-				}
-				blockoverride "bevel_margin" {
-					margin = { 6 6 }
-				}
-				visible = "[Or(EqualTo_string(JournalEntry.GetName, Localize('je_economic_direction')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_confront_confucian_scholars')), Or(EqualTo_string(JournalEntry.GetName, Localize('je_early_army_modernization')), EqualTo_string(JournalEntry.GetName, Localize('je_homeland_development')))))]"
-				onclick = "[InformationPanelBar.OpenJournalEntryPanel(JournalEntry.AccessSelf)]"
+		textbox = {
+			visible = "[GreaterThan_int32(GetDataModelSize(GetJournalEntryGroup('je_group_tyrone_china_mandate').GetActiveJournalEntryTypes(GetPlayer.Self)), '(int32)1')]"
+			autoresize = yes
+			align = left|nobaseline
+			default_format = "#title"
+			margin_bottom = 2
+			text = "ACTIVE_JOURNAL_ENTRIES"
+		}
 
-				icon = {
-					position = { 12 9 }
-					size = { 36 36 }
-					using = circle_bg_simple_dark
-					alpha = 0.65
-					alwaystransparent = yes
+		flowcontainer = {
+			direction = vertical
+			spacing = 4
+			ignoreinvisible = yes
+			datamodel = "[AccessPlayer.GetGroupsForActiveJournalEntries]"
+
+			item = {
+				flowcontainer = {
+					visible = "[ObjectsEqual(JournalEntryGroup.Self, GetJournalEntryGroup('je_group_tyrone_china_mandate').Self)]"
+					direction = vertical
+					spacing = 4
+					ignoreinvisible = yes
+					datamodel = "[JournalEntryGroup.GetActiveJournalEntryTypes(GetPlayer.Self)]"
+
+					item = {
+						journal_entry = {
+							datacontext = "[AccessPlayer.GetJournalEntry(JournalEntryType.Self)]"
+							visible = "[Not(ObjectsEqual(JournalEntryType.Self, JournalEntryPanel.GetJournalEntryType.Self))]"
+						}
+					}
 				}
-				icon = {
-					position = { 17 14 }
-					size = { 26 26 }
-					texture = "[JournalEntry.GetIcon]"
-					alwaystransparent = yes
-				}
-				textbox = {
-					position = { 60 5 }
-					size = { 394 44 }
-					text = "[JournalEntry.GetName]"
-					align = left|vcenter|nobaseline
-					using = regular_font
-					fontsize = 20
-					fontcolor = { 0.93 0.90 0.82 1 }
-					elide = right
-					alwaystransparent = yes
-				}
-				icon = {
-					position = { 465 18 }
-					size = { 8 18 }
-					texture = "gfx/interface/politics_view/summary_arrow_right.dds"
-					alpha = 0.6
-					alwaystransparent = yes
+			}
+		}
+	}
+}
+
+flowcontainer = {
+	name = "chi_legation_active_subentries"
+	ignoreinvisible = yes
+
+	flowcontainer = {
+		direction = vertical
+		parentanchor = hcenter
+		spacing = 4
+		ignoreinvisible = yes
+
+		textbox = {
+			visible = "[GreaterThan_int32(GetDataModelSize(GetJournalEntryGroup('je_group_tyrone_china_legations').GetActiveJournalEntryTypes(GetPlayer.Self)), '(int32)1')]"
+			autoresize = yes
+			align = left|nobaseline
+			default_format = "#title"
+			margin_bottom = 2
+			text = "ACTIVE_JOURNAL_ENTRIES"
+		}
+
+		flowcontainer = {
+			direction = vertical
+			spacing = 4
+			ignoreinvisible = yes
+			datamodel = "[AccessPlayer.GetGroupsForActiveJournalEntries]"
+
+			item = {
+				flowcontainer = {
+					visible = "[ObjectsEqual(JournalEntryGroup.Self, GetJournalEntryGroup('je_group_tyrone_china_legations').Self)]"
+					direction = vertical
+					spacing = 4
+					ignoreinvisible = yes
+					datamodel = "[JournalEntryGroup.GetActiveJournalEntryTypes(GetPlayer.Self)]"
+
+					item = {
+						journal_entry = {
+							datacontext = "[AccessPlayer.GetJournalEntry(JournalEntryType.Self)]"
+							visible = "[Not(ObjectsEqual(JournalEntryType.Self, JournalEntryPanel.GetJournalEntryType.Self))]"
+						}
+					}
 				}
 			}
 		}

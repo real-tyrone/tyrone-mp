@@ -1,0 +1,1440 @@
+# Consolidated building-concession UI; vanilla templates retained.
+types chi_legation_types {
+
+	type article_draft = vbox {
+		layoutpolicy_horizontal = expanding
+
+		tooltipwidget = {
+			FancyTooltip_ArticleDraftWithCountryContext = {}
+		}
+
+		vbox = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			margin_bottom = 5
+
+			background = {
+				using = frame_decorative_light_bg
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				minimumsize = { -1 30 }
+				spacing = 2
+				margin = { 5 0 }
+				margin_right = 5
+
+				background = {
+					using = fade_right_simple
+				}
+
+				### TYPE ICON
+				icon = {
+					size = { 28 28 }
+
+					icon = {
+						parentanchor = vcenter
+						size = { 100% 100% }
+						texture = "[ArticleDraft.GetIcon]"
+					}
+				}
+
+				### NAME
+				textbox = {
+					text = "[ArticleDraft.GetNameNoFormatting]"
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					align = nobaseline
+					default_format = "#white"
+					using = elide_fontsize_min
+					max_width = 135
+				}
+
+				expand = {}
+
+				### LIST NUMBER
+				treaty_textbox = {
+					align = nobaseline
+					autoresize = yes
+					using = elide_fontsize_min
+					text = "ARTICLE_DRAFT_NUMBER"
+
+					block "article_number_max_width" {
+						max_width = 60
+					}
+				}
+
+				### REMOVE ARTICLE BUTTON
+				button_icon_cancel = {
+					size = { 25 25 }
+					tooltip = "[ArticleDraft.CanBeModifiedDesc]"
+					onclick = "[TreatyDraft.RemoveArticle(ArticleDraft.Self)]"
+					enabled = "[ArticleDraft.CanBeModified]"
+					using = ui_item_remove
+				}
+			}
+
+			### INFORMATION AREA
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				margin = { 10 5 }
+
+				### MUTUAL AGREEMENT
+				treaty_textbox = {
+					visible = "[ArticleDraft.HasKind('mutual')]"
+					text = "[ArticleDraft.GetShortDesc]"
+					autoresize = yes
+					maximumsize = { 290 60 }
+					align = nobaseline
+					using = elide_fontsize_min
+					multiline = yes
+				}
+
+				### NO INPUT DIRECTED ARTICLES
+				treaty_textbox = {
+					visible = "[And(Not(ArticleDraft.HasKind('mutual')), Not(ArticleDraft.RequiresAnyInput))]"
+					text = "[ArticleDraft.GetShortDesc]"
+					autoresize = yes
+					maximumsize = { 150 60 }
+					align = nobaseline
+					using = elide_fontsize_min
+					multiline = yes
+				}
+
+				### MONEY TRANSFER
+				button = {
+					visible = "[ArticleDraft.HasType('money_transfer')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 130 30 }
+					using = default_button
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					textbox = {
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						max_width = 100
+						margin_left = 10
+						using = elide_fontsize_min
+						text = "TREATY_DRAFT_SELECTED_MONEY_ARTICLE_AMOUNT"
+					}
+				}
+
+				### FREE TEXT
+				button = {
+					visible = "[ArticleDraft.RequiresInput('text')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 220 100 }
+					using = default_button
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					textbox = {
+						resizeparent = yes
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						multiline = yes
+						maxcharacters = 3000
+						max_width = 220
+						margin = { 10 10 }
+						using = elide_fontsize_min
+						text = "TREATY_DRAFT_SELECTED_TEXT_INPUT"
+					}
+				}
+
+				### STATE INPUT
+				button = {
+					visible = "[ArticleDraft.RequiresInput('state')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 130 30 }
+					datacontext = "[ArticleDraft.GetState]"
+					using = default_button
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					flowcontainer = {
+						parentanchor = center
+						spacing = 5
+
+						textbox = {
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 110
+							using = elide_fontsize_min
+							raw_text = "[State.GetCountry.GetFlagTextIcon] [State.GetNameNoFormatting]"
+						}
+					}
+				}
+
+				### COUNTRY INPUT
+				button = {
+					visible = "[ArticleDraft.RequiresInput('country')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 130 30 }
+					# Do not add ArticleDraft.GetCountry as a datacontext here as it might conflict with other Country contexts
+					using = default_button
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					flowcontainer = {
+						parentanchor = center
+						spacing = 5
+
+						textbox = {
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 110
+							using = elide_fontsize_min
+							raw_text = "[ArticleDraft.GetCountry.GetFlagTextIcon] [ArticleDraft.GetCountry.GetNameNoFormatting]"
+						}
+					}
+				}
+
+				### SHIP INPUT
+				button = {
+					visible = "[ArticleDraft.RequiresInput('ship')]"
+					size = { 140 90 }
+					using = default_button
+					using = tooltip_es
+					tooltipwidget = {
+						FancyTooltip_Ship = {
+							blockoverride "click_text" {
+								custom_tooltip_newline = {}
+
+								custom_tooltip_textbox = {
+									text = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+								}
+							}
+						}
+					}
+					enabled = "[ArticleDraft.CanBeModified]"
+					datacontext = "[ArticleDraft.GetShip]"
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					flowcontainer = {
+						direction = vertical
+						parentanchor = center
+						margin = { 5 5 }
+						spacing = 5
+
+						textbox = {
+							background = {
+								using = dark_area
+								alpha = 0.5
+								margin = { 20 0 }
+
+								modify_texture = {
+									texture = "gfx/interface/masks/fade_horizontal_center.dds"
+									spriteType = Corneredstretched
+									spriteborder = { 0 0 }
+									blend_mode = alphamultiply
+								}
+							}
+
+							parentanchor = hcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 120
+							using = elide_fontsize_min
+							raw_text = "[Ship.GetNameNoFormatting]"
+						}
+
+						button = {
+							size = { 100 25 }
+							alwaystransparent = yes
+
+							background = {
+								fittype = center
+								texture = "[Ship.GetType.GetProfileTexture]"
+							}
+						}
+
+						flowcontainer = {
+							datacontext = "[Ship.GetTemplate]"
+							spacing = 2
+							parentanchor = hcenter
+
+							flowcontainer = {
+								spacing = 2
+								datamodel = "[ShipTemplate.GetModifications]"
+
+								item = {
+									icon = {
+										size = { 20 20 }
+										texture = "[ShipModificationType.GetIcon]"
+									}
+								}
+							}
+
+							flowcontainer = {
+								spacing = 2
+								datamodel = "[ShipTemplate.GetUtilityModifications]"
+
+								item = {
+									icon = {
+										size = { 20 20 }
+										texture = "[ShipModificationType.GetIcon]"
+									}
+								}
+							}
+						}
+					}
+				}
+
+				### STRATEGIC REGION INPUT
+				button = {
+					visible = "[ArticleDraft.RequiresInput('strategic_region')]"
+					datacontext = "[ArticleDraft.GetStrategicRegion]"
+					size = { 130 30 }
+					using = default_button
+					using = tooltip_se
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					flowcontainer = {
+						parentanchor = center
+						spacing = 5
+
+						textbox = {
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 110
+							using = elide_fontsize_min
+							raw_text = "[StrategicRegion.GetNameNoFormatting]"
+						}
+					}
+				}
+
+				### GOODS TRANSFER
+				button = {
+					visible = "[ArticleDraft.HasType('goods_transfer')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 130 40 }
+					datacontext = "[ArticleDraft.GetGoods]"
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					button = {
+						enabled = "[ArticleDraft.CanBeModified]"
+						parentanchor = vcenter|right
+						size = { 130 30 }
+						using = default_button
+
+						block "right_click_menu_onclick" {
+							onclick = "[RightClickMenuManager.Close]"
+							onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+						}
+
+						textbox = {
+							text = "TREATY_DRAFT_SELECTED_ARTICLE_AMOUNT"
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							margin_left = 30
+							max_width = 110
+							using = elide_fontsize_min
+						}
+
+						button = {
+							texture = "[Goods.GetTexture]"
+							parentanchor = vcenter
+							size = { 32 32 }
+							position = { -8 0 }
+							alwaystransparent = yes
+						}
+					}
+				}
+
+				### GOODS INPUT GENERIC
+				button = {
+					visible = "[And(ArticleDraft.RequiresInput('goods'), Not(ArticleDraft.HasType('goods_transfer')))]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 130 40 }
+					datacontext = "[ArticleDraft.GetGoods]"
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					button = {
+						enabled = "[ArticleDraft.CanBeModified]"
+						block "right_click_menu_onclick" {
+							onclick = "[RightClickMenuManager.Close]"
+							onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+						}
+						parentanchor = vcenter|right
+						size = { 130 30 }
+						using = default_button
+
+						textbox = {
+							text = "[Goods.GetNameNoFormatting]"
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							margin_left = 30
+							max_width = 110
+							using = elide_fontsize_min
+						}
+
+						button = {
+							texture = "[Goods.GetTexture]"
+							parentanchor = vcenter
+							size = { 32 32 }
+							position = { -8 0 }
+							alwaystransparent = yes
+						}
+					}
+				}
+
+				### COMPANY MONOPOLY
+				vbox = {
+					visible = "[Or(ArticleDraft.HasType('acquire_monopoly_for_company'), ArticleDraft.HasType('building_investment_rights'))]"
+					layoutpolicy_horizontal = preferred
+					margin = { 0 5 }
+					spacing = 5
+
+					button = {
+						visible = "[ArticleDraft.HasType('acquire_monopoly_for_company')]"
+						tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+						enabled = "[ArticleDraft.CanBeModified]"
+						size = { 145 30 }
+						datacontext = "[ArticleDraft.GetCompany]"
+						using = default_button
+
+						block "right_click_menu_onclick" {
+							onclick = "[RightClickMenuManager.Close]"
+							onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+						}
+
+						textbox = {
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 145
+							margin_left = 30
+							using = elide_fontsize_min
+							text = "[Company.GetNameNoFormatting]"
+						}
+
+						button = {
+							parentanchor = vcenter
+							size = { 32 32 }
+							position = { -5 0 }
+							alwaystransparent = yes
+							texture = "[Company.GetCompanyType.GetIcon]"
+						}
+					}
+
+					button = {
+						tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+						enabled = "[ArticleDraft.CanBeModified]"
+						size = { 145 30 }
+						datacontext = "[ArticleDraft.GetBuildingType]"
+						using = default_button
+
+						block "right_click_menu_onclick" {
+							onclick = "[RightClickMenuManager.Close]"
+							onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+						}
+
+						textbox = {
+							text = "[BuildingType.GetNameNoFormatting]"
+							parentanchor = vcenter
+							autoresize = yes
+							align = nobaseline
+							max_width = 145
+							margin_left = 30
+							using = elide_fontsize_min
+						}
+
+						button = {
+							texture = "[BuildingType.GetIcon]"
+							parentanchor = vcenter
+							size = { 32 32 }
+							position = { -5 0 }
+							alwaystransparent = yes
+						}
+					}
+				}
+
+				### LAW TYPE INPUT GENERIC
+				button = {
+					visible = "[ArticleDraft.RequiresInput('law_type')]"
+					tooltip = "ARTICLE_DRAFT_CLICK_TO_CHANGE"
+					enabled = "[ArticleDraft.CanBeModified]"
+					size = { 145 60 }
+					datacontext = "[ArticleDraft.GetLawType]"
+
+					block "right_click_menu_onclick" {
+						onclick = "[RightClickMenuManager.Close]"
+						onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+					}
+
+					button = {
+						enabled = "[ArticleDraft.CanBeModified]"
+						parentanchor = vcenter|right
+						size = { 135 50 }
+						using = default_button
+
+						block "right_click_menu_onclick" {
+							onclick = "[RightClickMenuManager.Close]"
+							onclick = "[RightClickMenuManager.ToggleArticleDraftInput(TreatyDraft.Self, ArticleDraft.Self, Country.Self, PdxGuiWidget.AccessSelf, 'article_input_right_click_menu_left')]"
+						}
+
+						textbox = {
+							text = "[LawType.GetNameNoFormatting]"
+							parentanchor = vcenter
+							autoresize = yes
+							minimumsize = { 135 20 }
+							maximumsize = { 135 50 }
+							align = nobaseline
+							margin_left = 45
+							multiline = yes
+							using = elide_fontsize_min
+						}
+
+						button = {
+							texture = "gfx/interface/backgrounds/round_button_bg.dds"
+							parentanchor = vcenter
+							size = { 60 60 }
+							position = { -15 0 }
+							alwaystransparent = yes
+
+							icon = {
+								texture = "[LawType.GetTexture]"
+								parentanchor = center
+								size = { 70% 70% }
+							}
+						}
+					}
+				}
+
+				expand = {}
+
+				vbox = {
+					layoutpolicy_horizontal = expanding
+					maximumsize = { 150 -1 }
+					spacing = 5
+
+					### INFLUENCE COST AND ICONS - DIRECTED
+					hbox = {
+						visible = "[And( ArticleDraft.HasKind('directed'), Not(ArticleDraft.HasType('free_text')) )]"
+						layoutpolicy_horizontal = expanding
+
+						expand = {}
+
+						article_draft_influence_cost = {
+							datacontext = "[ArticleDraft.GetMaintenancePayer]"
+						}
+					}
+
+					### INFLUENCE COSTS AND ICONS - MUTUAL
+					hbox = {
+						visible = "[And( ArticleDraft.HasKind('mutual'), Not(ArticleDraft.HasType('free_text')) )]"
+						layoutpolicy_horizontal = expanding
+						spacing = 25
+
+						expand = {}
+
+						article_draft_influence_cost = {
+							datacontext = "[ArticleDraft.GetFirstOrSource]"
+
+							blockoverride "maximumsize" {
+								maximumsize = { 60 -1 }
+								minimumsize = { 60 -1 }
+							}
+						}
+
+						article_draft_influence_cost = {
+							datacontext = "[ArticleDraft.GetSecondOrTarget]"
+
+							blockoverride "maximumsize" {
+								maximumsize = { 60 -1 }
+								minimumsize = { 60 -1 }
+							}
+						}
+					}
+
+					hbox = {
+						visible = "[And( TreatyDraft.GetRightCountry.IsAI, Not(ArticleDraft.HasType('free_text')) )]"
+						layoutpolicy_horizontal = expanding
+
+						expand = {}
+
+						hbox = {
+							layoutpolicy_horizontal = expanding
+							maximumsize = { 58 -1 }
+
+							background = {
+								using = entry_bg_simple_solid
+								alpha = 0.4
+							}
+
+							### ACCEPTANCE ICON
+							widget = {
+								size = { 10 20 }
+
+								treaty_draft_input_acceptance_icon = {
+									parentanchor = center
+									size = { 20 20 }
+									position = { -5 0 }
+								}
+							}
+
+							### ACCEPTANCE VALUE
+							textbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								align = right|nobaseline
+								margin_right = 5
+								elide = right
+								fontsize_min = 10
+								raw_text = "#v [ArticleDraft.GetAcceptance(TreatyDraft.GetRightCountry.Self)|0+=]#!"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	type company_monopoly_article = flowcontainer {
+		visible = "[Or(Article.HasType('acquire_monopoly_for_company'), Article.HasType('building_investment_rights'))]"
+		direction = vertical
+		spacing = 2
+
+		flowcontainer = {
+			visible = "[Article.HasType('acquire_monopoly_for_company')]"
+			datacontext = "[Article.GetCompany]"
+			spacing = 2
+
+			icon = {
+				parentanchor = vcenter
+				size = { 30 30 }
+				texture = "[Company.GetCompanyType.GetIcon]"
+			}
+
+			textbox = {
+				parentanchor = vcenter
+				autoresize = yes
+				align = nobaseline
+				max_width = 110
+				using = elide_fontsize_min
+				text = "[Company.GetNameNoFormatting]"
+
+				block "text_format" {
+					default_format = "#black"
+				}
+			}
+		}
+
+		flowcontainer = {
+			datacontext = "[Article.GetBuildingType]"
+			spacing = 2
+
+			icon = {
+				parentanchor = vcenter
+				size = { 30 30 }
+				texture = "[BuildingType.GetIcon]"
+			}
+
+			textbox = {
+				parentanchor = vcenter
+				autoresize = yes
+				align = nobaseline
+				max_width = 110
+				using = elide_fontsize_min
+				text = "[BuildingType.GetNameNoFormatting]"
+
+				block "text_format" {
+					default_format = "#black"
+				}
+			}
+		}
+	}
+
+
+	type war_goal_article_inputs = flowcontainer {
+		minimumsize = { 240 30 }
+		datacontext = "[WarGoal.GetArticleDraft]"
+		datacontext = "[WarGoal.GetArticleType]"
+
+		flowcontainer = {
+			direction = vertical
+			spacing = 5
+
+			### MUTUAL AGREEMENT
+			treaty_textbox = {
+				visible = "[ArticleDraft.HasKind('mutual')]"
+				text = "[ArticleDraft.GetShortDesc]"
+				autoresize = yes
+				maximumsize = { 240 60 }
+				align = nobaseline
+				using = elide_fontsize_min
+				multiline = yes
+			}
+
+			### NO INPUT DIRECTED ARTICLES
+			treaty_textbox = {
+				visible = "[And(Not(ArticleDraft.HasKind('mutual')), Not(ArticleDraft.RequiresAnyInput))]"
+				text = "[ArticleDraft.GetShortDesc]"
+				autoresize = yes
+				maximumsize = { 240 60 }
+				align = nobaseline
+				using = elide_fontsize_min
+				multiline = yes
+			}
+
+			### MONEY TRANSFER
+			widget = {
+				visible = "[ArticleDraft.HasType('money_transfer')]"
+				size = { 230 30 }
+
+				treaty_textbox = {
+					parentanchor = vcenter
+					autoresize = yes
+					align = nobaseline
+					max_width = 230
+					using = elide_fontsize_min
+					text = "TREATY_DRAFT_SELECTED_MONEY_ARTICLE_AMOUNT"
+				}
+			}
+
+			### STATE INPUT
+			widget = {
+				visible = "[ArticleDraft.RequiresInput('state')]"
+				size = { 230 30 }
+				datacontext = "[ArticleDraft.GetState]"
+
+				treaty_textbox = {
+					parentanchor = vcenter
+					autoresize = yes
+					align = nobaseline
+					max_width = 230
+					using = elide_fontsize_min
+					raw_text = "[State.GetCountry.GetFlagTextIcon] [State.GetNameNoFormatting]"
+				}
+			}
+
+			### COUNTRY INPUT
+			widget = {
+				visible = "[ArticleDraft.RequiresInput('country')]"
+				size = { 230 30 }
+				# Do not add ArticleDraft.GetCountry as a datacontext here as it might conflict with other Country contexts
+
+				treaty_textbox = {
+					parentanchor = vcenter
+					autoresize = yes
+					align = nobaseline
+					max_width = 230
+					using = elide_fontsize_min
+					raw_text = "[ArticleDraft.GetCountry.GetFlagTextIcon] [ArticleDraft.GetCountry.GetNameNoFormatting]"
+				}
+			}
+
+			### STRATEGIC REGION INPUT
+			widget = {
+				visible = "[ArticleDraft.RequiresInput('strategic_region')]"
+				datacontext = "[ArticleDraft.GetStrategicRegion]"
+				size = { 230 30 }
+
+				treaty_textbox = {
+					parentanchor = vcenter
+					autoresize = yes
+					align = nobaseline
+					max_width = 230
+					using = elide_fontsize_min
+					raw_text = "[StrategicRegion.GetNameNoFormatting]"
+				}
+			}
+
+			### GOODS TRANSFER
+			widget = {
+				visible = "[ArticleDraft.HasType('goods_transfer')]"
+				size = { 230 30 }
+				datacontext = "[ArticleDraft.GetGoods]"
+
+				widget = {
+					parentanchor = vcenter
+					size = { 230 30 }
+
+					treaty_textbox = {
+						text = "TREATY_DRAFT_SELECTED_ARTICLE_AMOUNT"
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						margin_left = 30
+						max_width = 230
+						using = elide_fontsize_min
+					}
+
+					icon = {
+						texture = "[Goods.GetTexture]"
+						parentanchor = vcenter
+						size = { 26 26 }
+					}
+				}
+			}
+
+			### GOODS INPUT GENERIC
+			widget = {
+				visible = "[And(ArticleDraft.RequiresInput('goods'), Not(ArticleDraft.HasType('goods_transfer')))]"
+				size = { 230 30 }
+				datacontext = "[ArticleDraft.GetGoods]"
+
+				widget = {
+					parentanchor = vcenter
+					size = { 230 30 }
+
+					treaty_textbox = {
+						text = "[Goods.GetNameNoFormatting]"
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						margin_left = 30
+						max_width = 220
+						using = elide_fontsize_min
+					}
+
+					icon = {
+						texture = "[Goods.GetTexture]"
+						parentanchor = vcenter
+						size = { 26 26 }
+					}
+				}
+			}
+
+			### COMPANY MONOPOLY
+			flowcontainer = {
+				visible = "[Or(ArticleDraft.HasType('acquire_monopoly_for_company'), ArticleDraft.HasType('building_investment_rights'))]"
+				direction = vertical
+				spacing = 5
+
+				widget = {
+					visible = "[ArticleDraft.HasType('acquire_monopoly_for_company')]"
+					size = { 230 30 }
+					datacontext = "[ArticleDraft.GetCompany]"
+
+					treaty_textbox = {
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						max_width = 230
+						margin_left = 30
+						using = elide_fontsize_min
+						text = "[Company.GetNameNoFormatting]"
+					}
+
+					icon = {
+						parentanchor = vcenter
+						size = { 26 26 }
+						texture = "[Company.GetCompanyType.GetIcon]"
+					}
+				}
+
+				widget = {
+					size = { 230 30 }
+					datacontext = "[ArticleDraft.GetBuildingType]"
+
+					treaty_textbox = {
+						parentanchor = vcenter
+						autoresize = yes
+						align = nobaseline
+						max_width = 230
+						margin_left = 30
+						using = elide_fontsize_min
+						text = "[BuildingType.GetNameNoFormatting]"
+					}
+
+					icon = {
+						parentanchor = vcenter
+						size = { 26 26 }
+						texture = "[BuildingType.GetIcon]"
+					}
+				}
+			}
+
+			### LAW TYPE INPUT GENERIC
+			widget = {
+				visible = "[ArticleDraft.RequiresInput('law_type')]"
+				size = { 230 60 }
+				datacontext = "[ArticleDraft.GetLawType]"
+
+				widget = {
+					parentanchor = vcenter
+					size = { 230 50 }
+
+					treaty_textbox = {
+						text = "[LawType.GetNameNoFormatting]"
+						parentanchor = vcenter
+						autoresize = yes
+						minimumsize = { 230 20 }
+						maximumsize = { 230 50 }
+						align = nobaseline
+						margin_left = 55
+						multiline = yes
+						using = elide_fontsize_min
+					}
+
+					icon = {
+						texture = "gfx/interface/backgrounds/round_button_bg.dds"
+						parentanchor = vcenter
+						size = { 50 50 }
+
+						icon = {
+							texture = "[LawType.GetTexture]"
+							parentanchor = center
+							size = { 70% 70% }
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	type article_icon_all_items = container {
+
+		### ARTICLE WITH NO INPUT
+		article_icon_item = {
+			visible = "[And(Not(Or6(Article.HasType('goods_transfer'), Article.HasType('money_transfer'), Article.HasType('acquire_monopoly_for_company'), Article.HasType('law_commitment'), Article.HasType('transfer_subject'), Article.RequiresInput('country'))), Not(Article.HasType('building_investment_rights')))]"
+		}
+
+		### COUNTRY INPUT
+		article_icon_item = {
+			visible = "[And(Article.RequiresInput('country'), Not(Article.HasType('transfer_subject')))]"
+
+			blockoverride "article_icon" {
+				tiny_flag_no_interact = {
+					parentanchor = center
+					datacontext = "[Article.GetCountry]"
+
+					blockoverride "tooltip" {}
+				}
+			}
+		}
+
+		### TRANSFER SUBJECT
+		article_icon_item = {
+			visible = "[Article.HasType('transfer_subject')]"
+
+			blockoverride "article_icon" {
+				icon = {
+					size = { 100% 100% }
+					texture = "[Article.GetIcon]"
+				}
+
+				tiny_flag_no_interact = {
+					parentanchor = bottom
+					datacontext = "[Article.GetCountry]"
+
+					blockoverride "tooltip" {}
+				}
+			}
+		}
+
+		### GOODS TRANSFER
+		article_icon_item = {
+			visible = "[Article.HasType('goods_transfer')]"
+
+			blockoverride "article_texture" {
+				texture = "[Article.GetGoods.GetTexture]"
+			}
+
+			blockoverride "additional_properties" {
+				textbox = {
+					parentanchor = bottom|right
+					align = nobaseline
+					autoresize = yes
+					using = fontsize_small
+					elide = right
+					max_width = 40
+					text = "TREATY_SELECTED_ARTICLE_AMOUNT_WITHOUT_LABEL"
+
+					background = {
+						margin = { 5 2 }
+						using = fade_center_simple
+					}
+				}
+			}
+		}
+
+		### MONEY TRANSFER
+		article_icon_item = {
+			visible = "[Article.HasType('money_transfer')]"
+
+			blockoverride "additional_properties" {
+				textbox = {
+					parentanchor = bottom|right
+					align = nobaseline
+					autoresize = yes
+					using = fontsize_small
+					elide = right
+					max_width = 40
+					text = "TREATY_SELECTED_ARTICLE_AMOUNT_WITHOUT_LABEL"
+
+					background = {
+						margin = { 5 2 }
+						using = fade_center_simple
+					}
+				}
+			}
+		}
+
+		### COMPANY MONOPOLY
+		article_icon_item = {
+			visible = "[Or(Article.HasType('acquire_monopoly_for_company'), Article.HasType('building_investment_rights'))]"
+
+			blockoverride "article_texture" {
+				texture = "[Article.GetBuildingType.GetIcon]"
+			}
+
+			blockoverride "additional_properties" {
+				icon = {
+					size = { 30 30  }
+					position = { -2 -2 }
+					texture = "gfx/interface/backgrounds/round_button_bg.dds"
+
+
+					icon = {
+						parentanchor = center
+						size = { 75% 75% }
+						texture = "[Article.GetIcon]"
+					}
+				}
+			}
+		}
+
+		### LAW COMMITMENT
+		article_icon_item = {
+			visible = "[Article.HasType('law_commitment')]"
+
+			blockoverride "article_icon" {
+				icon = {
+					visible = "[Not(ObjectsEqual(Article.GetLaw, Country.GetLawBeingEnacted.GetLawType))]"
+					parentanchor = center
+					size = { 40 40 }
+					texture = "[Article.GetLaw.GetTexture]"
+				}
+
+				icon = {
+					visible = "[ObjectsEqual(Article.GetLaw, Country.GetLawBeingEnacted.GetLawType)]"
+					size = { 40 40 }
+					texture = "gfx/interface/backgrounds/round_button_bg.dds"
+					parentanchor = center
+					datacontext = "[Country.GetLawBeingEnacted]"
+
+					round_progress_default = {
+						visible = "[Country.HasProgressingLawEnactment]"
+						size = { 80% 80% }
+						parentanchor = center
+						value = "[FixedPointToFloat(Country.GetLawEnactmentProgress)]"
+					}
+
+					round_progress_bad = {
+						visible = "[Not(Country.HasProgressingLawEnactment)]"
+						size = { 80% 80% }
+						parentanchor = center
+						value = "[FixedPointToFloat(Country.GetLawEnactmentProgress)]"
+					}
+
+					law_icon = {
+						alpha = "[TransparentIfTrue(Not(Country.HasProgressingLawEnactment))]"
+						size = { 30 30 }
+						parentanchor = center
+					}
+
+					paused_icon_bad = {
+						visible = "[Not(Country.HasProgressingLawEnactment)]"
+						parentanchor = center
+					}
+				}
+			}
+
+
+			blockoverride "additional_properties" {
+				icon = {
+					visible = "[ObjectsEqual(Article.GetLaw, Country.GetActiveLawFromGroup(Article.GetLaw.GetGroup.GetKey).GetLawType)]"
+					parentanchor = bottom|right
+					size = { 30 30  }
+					position = { 2 2 }
+					texture = "gfx/interface/icons/generic_icons/green_checkmark.dds"
+				}
+			}
+		}
+	}
+
+	type building_investment_explicit_item = container {
+		size = { 100 120 }
+
+		grid_button = {
+			tooltipwidget = {
+				FancyTooltip_BuildingType = {}
+			}
+			blockoverride "min_width" { min_width = 100 }
+			blockoverride "properties" {
+				enabled = yes
+				onclick = "[ArticleDraft.SetBuildingType(BuildingType.Self)]"
+			}
+			blockoverride "texture" { texture = "[BuildingType.GetIcon]" }
+			blockoverride "text_middle" { text = "[BuildingType.GetNameNoFormatting]" }
+			blockoverride "text_bottom_alpha" {
+				alpha = "[Select_float(GreaterThan_int32(BuildingType.GetNumLevelsInCountryRaw(ArticleDraft.GetFirstOrSource.Self),'(int32)0'),'(float)1.0','(float)0.5')]"
+			}
+			blockoverride "text_bottom" {
+				raw_text = "[SelectLocalization(GreaterThan_int32(BuildingType.GetNumLevelsInCountryRaw(ArticleDraft.GetFirstOrSource.Self),'(int32)0'),BuildingType.GetProductivitySpanDesc(ArticleDraft.GetFirstOrSource.Self),'NO_LEVELS')]"
+			}
+			blockoverride "default_button" { using = default_button }
+		}
+
+		icon = {
+			visible = "[ObjectsEqual(ArticleDraft.GetBuildingType.Self, BuildingType.Self)]"
+			alwaystransparent = yes
+			size = { 100% 100% }
+			using = highlighted_square_selection
+		}
+	}
+
+
+	type article_input_building_investment = flowcontainer {
+		parentanchor = hcenter
+		direction = vertical
+
+		default_header_clean_faded = {
+			layoutpolicy_horizontal = expanding
+			size = { 300 44 }
+			blockoverride "text" { text = "ARTICLE_INPUT_SELECT_BUILDING_TYPE_HEADER" }
+		}
+
+		fixedgridbox = {
+			parentanchor = hcenter
+			datamodel = "[DataModelRepeatedItem('(int32)47')]"
+			datamodel_wrap = 3
+			flipdirection = yes
+			addcolumn = 100
+			addrow = 120
+
+			item = {
+				container = {
+					size = { 100 120 }
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)0')]" 
+					datacontext = "[GetBuildingType('building_food_industry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)1')]" 
+					datacontext = "[GetBuildingType('building_textile_mill')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)2')]" 
+					datacontext = "[GetBuildingType('building_furniture_manufactory')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)3')]" 
+					datacontext = "[GetBuildingType('building_glassworks')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)4')]" 
+					datacontext = "[GetBuildingType('building_tooling_workshop')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)5')]" 
+					datacontext = "[GetBuildingType('building_paper_mill')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)6')]" 
+					datacontext = "[GetBuildingType('building_chemical_plant')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)7')]" 
+					datacontext = "[GetBuildingType('building_explosives_factory')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)8')]" 
+					datacontext = "[GetBuildingType('building_synthetics_plant')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)9')]" 
+					datacontext = "[GetBuildingType('building_steel_mill')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)10')]" 
+					datacontext = "[GetBuildingType('building_motor_industry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)11')]" 
+					datacontext = "[GetBuildingType('building_automotive_industry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)12')]" 
+					datacontext = "[GetBuildingType('building_electrics_industry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)13')]" 
+					datacontext = "[GetBuildingType('building_shipyard')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)14')]" 
+					datacontext = "[GetBuildingType('building_arms_industry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)15')]" 
+					datacontext = "[GetBuildingType('building_artillery_foundry')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)16')]" 
+					datacontext = "[GetBuildingType('building_munition_plant')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)17')]" 
+					datacontext = "[GetBuildingType('building_rye_farm')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)18')]" 
+					datacontext = "[GetBuildingType('building_wheat_farm')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)19')]" 
+					datacontext = "[GetBuildingType('building_rice_farm')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)20')]" 
+					datacontext = "[GetBuildingType('building_maize_farm')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)21')]" 
+					datacontext = "[GetBuildingType('building_millet_farm')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)22')]" 
+					datacontext = "[GetBuildingType('building_livestock_ranch')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)23')]" 
+					datacontext = "[GetBuildingType('building_vineyard')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)24')]" 
+					datacontext = "[GetBuildingType('building_coffee_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)25')]" 
+					datacontext = "[GetBuildingType('building_cotton_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)26')]" 
+					datacontext = "[GetBuildingType('building_dye_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)27')]" 
+					datacontext = "[GetBuildingType('building_opium_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)28')]" 
+					datacontext = "[GetBuildingType('building_tea_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)29')]" 
+					datacontext = "[GetBuildingType('building_tobacco_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)30')]" 
+					datacontext = "[GetBuildingType('building_sugar_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)31')]" 
+					datacontext = "[GetBuildingType('building_banana_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)32')]" 
+					datacontext = "[GetBuildingType('building_silk_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)33')]" 
+					datacontext = "[GetBuildingType('building_coal_mine')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)34')]" 
+					datacontext = "[GetBuildingType('building_iron_mine')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)35')]" 
+					datacontext = "[GetBuildingType('building_lead_mine')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)36')]" 
+					datacontext = "[GetBuildingType('building_sulfur_mine')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)37')]" 
+					datacontext = "[GetBuildingType('building_gold_mine')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)38')]" 
+					datacontext = "[GetBuildingType('building_logging_camp')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)39')]" 
+					datacontext = "[GetBuildingType('building_rubber_plantation')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)40')]" 
+					datacontext = "[GetBuildingType('building_fishing_wharf')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)41')]" 
+					datacontext = "[GetBuildingType('building_whaling_station')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)42')]" 
+					datacontext = "[GetBuildingType('building_oil_rig')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)43')]" 
+					datacontext = "[GetBuildingType('building_art_academy')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)44')]" 
+					datacontext = "[GetBuildingType('building_power_plant')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)45')]" 
+					datacontext = "[GetBuildingType('building_port')]" 
+				}
+				building_investment_explicit_item = {
+					visible = "[EqualTo_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)46')]" 
+					datacontext = "[GetBuildingType('building_railway')]" 
+				}
+				}
+			}
+		}
+	}
+}
+template article_input_items {
+	margin_bottom = 10
+	datacontext = "[ArticleDraft.GetArticleType]"
+
+	### STATE LIST
+	article_input_state_list = {
+		visible = "[ArticleDraft.RequiresInput('state')]"
+		datamodel = "[ArticleDraft.GetValidStates]"
+	}
+
+	### COUNTRY LIST
+	article_input_country_list = {
+		visible = "[ArticleDraft.RequiresInput('country')]"
+		datamodel = "[ArticleDraft.GetValidCountries]"
+	}
+
+	### STRATEGIC REGION LIST
+	article_input_strategic_region_list = {
+		visible = "[ArticleDraft.RequiresInput('strategic_region')]"
+		datamodel = "[ArticleDraft.GetValidStrategicRegions]"
+	}
+
+	### GOODS LIST
+	article_input_goods_list = {
+		visible = "[ArticleDraft.RequiresInput('goods')]"
+		datamodel = "[ArticleDraft.GetValidGoods]"
+	}
+
+	### GOODS LIST - EMPTY STATE
+	empty_state = {
+		blockoverride "visible" {
+			visible = "[And(IsDataModelEmpty(ArticleDraft.GetValidGoods), ArticleDraft.RequiresInput('goods'))]"
+		}
+
+		blockoverride "text" {
+			text = "NONE"
+		}
+
+		blockoverride "size" {
+			minimumsize = { 400 -1 }
+			maximumsize = { 400 -1 }
+		}
+	}
+
+	### COMPANY MONOPOLY
+	article_input_company_monopoly = {
+		visible = "[ArticleDraft.HasType('acquire_monopoly_for_company')]"
+	}
+
+	### BUILDING INVESTMENT RIGHTS
+	article_input_building_investment = {
+		visible = "[ArticleDraft.HasType('building_investment_rights')]"
+	}
+
+	### LAW LIST
+	article_input_law_list = {
+		visible = "[ArticleDraft.HasType('law_commitment')]"
+	}
+
+	### SHIP LIST
+	article_input_ship_list = {
+		visible = "[ArticleDraft.RequiresInput('ship')]"
+	}
+}
+
+# Framed prose card: separate title band and body.
+widget = {
+    name = "chi_legation_rules"
+    parentanchor = hcenter
+    size = { 460 220 }
+    background = {
+        using = paper_bg_light
+    }
+    textbox = {
+        position = { 18 14 }
+        size = { 424 36 }
+        fontsize = 24
+        align = hcenter|nobaseline
+        text = "chi_legation_rules_title"
+    }
+    divider_clean = {
+        position = { 30 60 }
+        size = { 400 2 }
+    }
+    textbox = {
+        position = { 18 80 }
+        size = { 424 120 }
+        fontsize = 18
+        text = "chi_legation_rules_summary"
+    }
+}

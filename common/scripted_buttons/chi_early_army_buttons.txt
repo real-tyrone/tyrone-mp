@@ -1,4 +1,4 @@
-chi_early_army_napoleonic_button = {
+﻿chi_early_army_napoleonic_button = {
 	name = chi_early_army_napoleonic_button
 	desc = chi_early_army_napoleonic_button_desc
 
@@ -15,7 +15,7 @@ chi_early_army_napoleonic_button = {
 				has_active_production_method = pm_no_organization
 			}
 		}
-		var:chi_early_army_stages > 0
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
 	}
 
 	effect = {
@@ -42,30 +42,20 @@ chi_early_army_rifling_button = {
 
 	possible = {
 		has_technology_researched = rifling
-		market_goods_price_impact = {
-			goods = goods:small_arms
-			value <= 0
+		market_capital.market = {
+			mg:small_arms = { market_goods_pricier <= 0 }
 		}
 		NOT = {
-        any_scope_building = {
-			filter = {
+			any_scope_building = {
 				is_building_type = building_barrack
-			}
-			AND = {
-				building_has_goods_shortage = no
 				has_active_production_method = pm_no_organization
 			}
-			percent = 1
 		}
-
-		NOT = {
-				country_army_unit_type_fraction = {
-				unit_type = unit_type:combat_unit_type_irregular_infantry
-				fraction = 0
-				}
-			}
+		country_army_unit_type_fraction = {
+			target = unit_type:combat_unit_type_irregular_infantry
+			value = 0
 		}
-		var:chi_early_army_stages > 0
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
 	}
 
 	effect = {
@@ -74,7 +64,7 @@ chi_early_army_rifling_button = {
 				limit = { var:chi_early_army_stages > 0 }
 				change_variable = { name = chi_early_army_stages subtract = 1 }
 			}
-			remove_modifier = chi_early_army_line_artillery_penalty
+			if = { limit = { has_modifier = chi_early_army_line_artillery_penalty } remove_modifier = chi_early_army_line_artillery_penalty }
 			chi_early_army_advance_stage = yes
 		}
 		set_variable = chi_early_army_rifling_done
@@ -93,7 +83,7 @@ chi_early_army_general_staff_button = {
 
 	possible = {
 		has_technology_researched = general_staff
-		var:chi_early_army_stages > 0
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
 	}
 
 	effect = {
@@ -120,7 +110,7 @@ chi_early_army_screw_frigates_button = {
 
 	possible = {
 		has_technology_researched = screw_frigate
-		var:chi_early_army_stages > 0
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
 	}
 
 	effect = {

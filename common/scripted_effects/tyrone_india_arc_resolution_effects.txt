@@ -1,0 +1,269 @@
+﻿# Country scope: record and reward je_tyrone_raj_welfare once.
+tyrone_arc_tyrone_raj_welfare_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_raj_welfare_done } } }
+		scope:raj_scope = {
+			set_variable = tyrone_raj_welfare_done
+			trigger_event = {
+				id = tyrone_raj_reform.2
+				popup = yes
+			}
+		}
+	}
+}
+
+# Country scope: record and reward je_tyrone_raj_schools once.
+tyrone_arc_tyrone_raj_schools_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_raj_schools_done } } }
+		scope:raj_scope = {
+			set_variable = tyrone_raj_schools_done
+			trigger_event = {
+				id = tyrone_raj_reform.1
+				popup = yes
+			}
+		}
+	}
+}
+
+# Country scope: record and reward je_tyrone_raj_health once.
+tyrone_arc_tyrone_raj_health_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_raj_health_done } } }
+		scope:raj_scope = {
+			set_variable = tyrone_raj_health_done
+			trigger_event = {
+				id = tyrone_raj_reform.3
+				popup = yes
+			}
+		}
+	}
+}
+
+# Country scope: record and reward je_company_equity once.
+tyrone_arc_company_equity_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_raj_debt_done } } }
+		scope:raj_scope = {
+			# Political agreements already settle the question without the Charter Act rewards.
+			if = {
+				limit = {
+					is_subject = yes
+					NOT = { has_variable = tyrone_raj_charter_act_passed }
+				}
+				set_variable = tyrone_raj_charter_act_passed
+				trigger_event = { id = bic_content.3 popup = yes }
+				overlord = { trigger_event = { id = bic_content.3 popup = yes } }
+			}
+			set_variable = { name = tyrone_raj_debt value = 0 }
+			set_variable = tyrone_raj_debt_done
+			remove_variable = tyrone_raj_auto_repayment
+		}
+	}
+}
+
+# Country scope: record and reward je_tyrone_raj_nation once.
+tyrone_arc_tyrone_raj_nation_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_raj_nation_done } } }
+		scope:raj_scope ?= {
+			ig:ig_industrialists ?= {
+				remove_ideology = ideology_john_company
+				add_ideology = ideology_john_company_reformed
+			}
+			ig:ig_landowners ?= {
+				remove_ideology = ideology_zamindar_system
+				add_ideology = ideology_zamindar_system_reformed
+			}
+		}
+		if = {
+			limit = {
+				je:je_tyrone_raj_nation = {
+					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
+				}
+			}
+			scope:raj_scope = {
+				set_variable = {
+					name = tyrone_raj_nation_result
+					value = -1
+				}
+				activate_law = law_type:law_hindu_caste_codified
+				activate_law = law_type:law_chartered_hereditary_bureaucrats
+				set_variable = tyrone_raj_nation_done
+				trigger_event = {
+					id = tyrone_raj_nation.4
+					popup = yes
+				}
+			}
+		}
+		else = {
+			scope:raj_scope = {
+				set_variable = {
+					name = tyrone_raj_nation_result
+					value = 1
+				}
+				tyrone_raj_nation_remove_informal_classes = yes
+				set_variable = tyrone_raj_nation_done
+				trigger_event = {
+					id = tyrone_raj_nation.5
+					popup = yes
+				}
+			}
+		}
+		tyrone_raj_nation_end = yes
+	}
+}
+
+# Country scope: record and reward je_tyrone_csr_police once.
+tyrone_arc_tyrone_csr_police_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_csr_police_done } } }
+		scope:csr_india = {
+			set_variable = tyrone_csr_police_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_police_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.1 popup = yes }
+		}
+	}
+}
+
+# Country scope: record and reward je_tyrone_csr_army once.
+tyrone_arc_tyrone_csr_army_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_csr_army_done } } }
+		scope:csr_india = {
+			set_variable = tyrone_csr_army_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_army_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.2 popup = yes }
+		}
+	}
+}
+
+# Country scope: record and reward je_tyrone_csr_tax once.
+tyrone_arc_tyrone_csr_tax_grant = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyrone_csr_tax_done } } }
+		scope:csr_india = {
+			set_variable = tyrone_csr_tax_done
+			change_variable = { name = tyrone_csr_reforms add = 1 }
+			set_variable = tyrone_csr_tax_reward_pending
+			trigger_event = { id = tyrone_company_self_rule.3 popup = yes }
+		}
+	}
+}
+
+# Country scope: called before the parent removes its active flag.
+tyrone_arc_unstable_settle_ready_reforms = {
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_raj_welfare_done }
+			tyrone_arc_tyrone_raj_welfare_ready = yes
+		}
+		tyrone_arc_tyrone_raj_welfare_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_raj_schools_done }
+			tyrone_arc_tyrone_raj_schools_ready = yes
+		}
+		tyrone_arc_tyrone_raj_schools_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_raj_health_done }
+			tyrone_arc_tyrone_raj_health_ready = yes
+		}
+		tyrone_arc_tyrone_raj_health_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_raj_debt_done }
+			tyrone_arc_company_equity_ready = yes
+		}
+		tyrone_arc_company_equity_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_raj_nation_done }
+			tyrone_arc_tyrone_raj_nation_ready = yes
+		}
+		tyrone_arc_tyrone_raj_nation_grant = yes
+	}
+}
+
+# Country scope: called before the parent removes its active flag.
+tyrone_arc_csr_settle_ready_reforms = {
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_csr_police_done }
+			tyrone_arc_tyrone_csr_police_ready = yes
+		}
+		tyrone_arc_tyrone_csr_police_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_csr_army_done }
+			tyrone_arc_tyrone_csr_army_ready = yes
+		}
+		tyrone_arc_tyrone_csr_army_grant = yes
+	}
+	if = {
+		limit = {
+			NOT = { has_variable = tyrone_csr_tax_done }
+			tyrone_arc_tyrone_csr_tax_ready = yes
+		}
+		tyrone_arc_tyrone_csr_tax_grant = yes
+	}
+}
+
+# Contextless Unstable Raj scope.
+tyrone_arc_unstable_success = {
+	hidden_effect = { scope:raj_scope ?= { tyrone_arc_unstable_settle_ready_reforms = yes } }
+	hidden_effect = {
+		every_country = {
+			limit = { has_modifier = tyrone_unstable_raj_reduced_payments }
+			remove_modifier = tyrone_unstable_raj_reduced_payments
+		}
+	}
+	hidden_effect = {
+		every_country = {
+			limit = { has_modifier = tyrone_unstable_raj_raised_payments }
+			remove_modifier = tyrone_unstable_raj_raised_payments
+		}
+	}
+	hidden_effect = {
+		every_country = {
+			limit = { has_modifier = tyrone_unstable_raj_princely_discontent }
+			remove_modifier = tyrone_unstable_raj_princely_discontent
+		}
+	}
+	scope:raj_scope = {
+		remove_modifier = tyrone_unstable_raj_liberty_desire
+		remove_variable = tyrone_unstable_raj_active
+		tyrone_raj_famine_cancel_pending = yes
+		remove_variable = tyrone_raj_famine_wait
+		remove_variable = tyrone_raj_famine_cooldown
+		remove_variable = tyrone_raj_famine_bank_a
+		remove_variable = tyrone_raj_auto_repayment
+		set_variable = {
+			name = tyrone_raj_debt
+			value = 0
+		}
+		set_variable = tyrone_raj_debt_done
+		set_variable = tyrone_company_self_rule_unlocked
+		set_variable = company_rule_enduring
+		remove_global_variable = bengal_presidency_stability
+		remove_global_variable = bombay_presidency_stability
+		remove_global_variable = madras_presidency_stability
+		trigger_event = {
+			id = sepoy_mutiny_events.11
+			popup = yes
+		}
+	}
+	if = {
+		limit = { scope:raj_scope ?= { is_subject = no } }
+		custom_tooltip = tyrone_independent_route_choice_tt
+	}
+	else = { custom_tooltip = tyrone_company_self_rule_unlocked_tt }
+}

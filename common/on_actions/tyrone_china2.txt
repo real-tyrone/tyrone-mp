@@ -1,0 +1,43 @@
+# Event-driven startup, plus one global monthly fallback. No weekly/state pulse.
+on_game_started_after_lobby = {
+    on_actions = { chi_legation_check_start }
+}
+on_monthly_pulse = {
+    on_actions = { chi_legation_check_start }
+}
+on_state_owner_change = {
+    on_actions = { chi_legation_port_acquired }
+}
+chi_legation_check_start = {
+    effect = {
+        if = {
+            limit = { NOT = { has_global_variable = chi_legation_active } }
+            chi_legation_select_central_government = yes
+        }
+        chi_legation_try_start = yes
+        chi_boxer_try_start = yes
+        # Once the JE closes, its monthly pulse stops. Continue to maintain the
+        # surviving concessions on this existing global monthly hook.
+        if = {
+            limit = {
+                has_global_variable = chi_legation_boxer_victory
+                NOT = { has_global_variable = chi_legation_active }
+            }
+            every_country = {
+                limit = { has_variable = chi_legation_admitted }
+                chi_legation_refresh_rights = yes
+            }
+        }
+    }
+}
+# Root = transferred state. Some port transfers mark the port after this hook;
+# the global monthly fallback also covers that native ordering and existing saves.
+chi_legation_port_acquired = {
+    trigger = {
+        is_treaty_port = yes
+        state_region = { chi_legation_region = yes }
+    }
+    effect = { chi_legation_try_start = yes }
+}
+
+

@@ -1,6 +1,6 @@
 ﻿je_tyrone_raj_nation = {
 	icon = "gfx/interface/icons/invention_icons/political_agitation.dds"
-	group = je_group_british_india_global
+	group = je_group_tyrone_india_unstable
 	should_be_involved = {
 		OR = {
 			is_india_tag_trigger = yes
@@ -36,102 +36,7 @@
 			set_variable = tyrone_raj_nation_active
 		}
 	}
-	complete = {
-		hidden_trigger = {
-			tyrone_raj_nation_can_continue = yes
-		}
-		custom_tooltip = {
-			text = tyrone_raj_nation_goal_tt
-			scope:journal_entry = {
-				OR = {
-					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
-					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" >= 60
-				}
-			}
-		}
-	}
-	on_complete = {
-		scope:raj_scope ?= {
-			ig:ig_industrialists ?= {
-				remove_ideology = ideology_john_company
-				add_ideology = ideology_john_company_reformed
-			}
-			ig:ig_landowners ?= {
-				remove_ideology = ideology_zamindar_system
-				add_ideology = ideology_zamindar_system_reformed
-			}
-		}
-		if = {
-			limit = {
-				scope:journal_entry = {
-					"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
-				}
-			}
-			scope:raj_scope = {
-				set_variable = {
-					name = tyrone_raj_nation_result
-					value = -1
-				}
-				activate_law = law_type:law_hindu_caste_codified
-				activate_law = law_type:law_chartered_hereditary_bureaucrats
-				set_variable = tyrone_raj_nation_done
-				trigger_event = {
-					id = tyrone_raj_nation.4
-					popup = yes
-				}
-			}
-		}
-		else = {
-			scope:raj_scope = {
-				set_variable = {
-					name = tyrone_raj_nation_result
-					value = 1
-				}
-				tyrone_raj_nation_remove_informal_classes = yes
-				set_variable = tyrone_raj_nation_done
-				trigger_event = {
-					id = tyrone_raj_nation.5
-					popup = yes
-				}
-			}
-		}
-		tyrone_raj_nation_end = yes
-	}
-	event_outcome_completed_effect_desc = {
-		header = tyrone_raj_nation_caste_outcome
-		effect = {
-			scope:raj_scope = {
-				activate_law = law_type:law_hindu_caste_codified
-				activate_law = law_type:law_chartered_hereditary_bureaucrats
-			}
-		}
-	}
-	event_outcome_completed_effect_desc = {
-		header = tyrone_raj_nation_imperial_outcome
-		effect = {
-			scope:raj_scope = {
-				tyrone_raj_nation_remove_informal_classes = yes
-			}
-		}
-	}
-	invalid = {
-		OR = {
-			NOT = {
-				exists = scope:raj_scope
-			}
-			scope:raj_scope ?= {
-				OR = {
-					is_country_alive = no
-					has_variable = tyrone_unstable_raj_failed
-					has_variable = tyrone_nim_started
-					has_journal_entry = je_sepoy_mutiny
-				}
-			}
-		}
-	}
-	on_invalid = {
-		tyrone_raj_nation_end = yes
-	}
+
 	on_weekly_pulse = {
 		effect = {
 			scope:journal_entry = {
@@ -190,4 +95,80 @@
 	should_be_pinned_by_default_involved = yes
 	weight = 90
 	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = scope:raj_scope }
+				OR = {
+					NOT = {
+						exists = scope:raj_scope
+					}
+					scope:raj_scope ?= {
+						OR = {
+							is_country_alive = no
+							has_variable = tyrone_unstable_raj_failed
+							has_variable = tyrone_nim_started
+							has_journal_entry = je_sepoy_mutiny
+						}
+					}
+				}
+			}
+			scope:raj_scope ?= { NOT = { has_variable = tyrone_raj_nation_done } }
+		}
+		effect = {
+			tyrone_raj_nation_end = yes
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				AND = {
+					exists = scope:raj_scope
+					scope:raj_scope ?= { custom_tooltip = { text = tyrone_raj_nation_done_tt has_variable = tyrone_raj_nation_done } }
+				}
+				AND = {
+					hidden_trigger = {
+						tyrone_raj_nation_can_continue = yes
+					}
+					custom_tooltip = {
+						text = tyrone_raj_nation_goal_tt
+						scope:journal_entry = {
+							OR = {
+								"scripted_bar_progress(tyrone_raj_nation_progress_bar)" <= -60
+								"scripted_bar_progress(tyrone_raj_nation_progress_bar)" >= 60
+							}
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:raj_scope ?= { tyrone_arc_tyrone_raj_nation_grant = yes }
+		}
+		event_outcome_effect_desc = {
+			header = tyrone_raj_nation_caste_outcome
+			effect = {
+				scope:raj_scope = {
+					activate_law = law_type:law_hindu_caste_codified
+					activate_law = law_type:law_chartered_hereditary_bureaucrats
+				}
+			}
+		}
+		event_outcome_effect_desc = {
+			header = tyrone_raj_nation_imperial_outcome
+			effect = {
+				scope:raj_scope = {
+					tyrone_raj_nation_remove_informal_classes = yes
+				}
+			}
+		}
+	}
 }

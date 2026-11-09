@@ -1,4 +1,4 @@
-# Country scope: India. The shared JE supplies csr_india and journal_entry.
+﻿# Country scope: India. The shared JE supplies csr_india and journal_entry.
 tyrone_jewel_gdp_reset_cycle = {
 	set_variable = { name = tyrone_jewel_gdp_baseline value = gdp }
 	set_variable = {
@@ -49,9 +49,18 @@ tyrone_jewel_gdp_monthly = {
 # Their lifetime is tied to the JE through on_invalid cleanup.
 tyrone_jewel_gdp_apply_bonus = {
 	hidden_effect = {
-		remove_modifier = tyrone_jewel_gdp_construction
-		remove_modifier = tyrone_jewel_gdp_institution_impact
-		remove_modifier = tyrone_jewel_gdp_institution_cost
+		if = {
+			limit = { has_modifier = tyrone_jewel_gdp_construction }
+			remove_modifier = tyrone_jewel_gdp_construction
+		}
+		if = {
+			limit = { has_modifier = tyrone_jewel_gdp_institution_impact }
+			remove_modifier = tyrone_jewel_gdp_institution_impact
+		}
+		if = {
+			limit = { has_modifier = tyrone_jewel_gdp_institution_cost }
+			remove_modifier = tyrone_jewel_gdp_institution_cost
+		}
 	}
 	if = {
 		limit = { var:tyrone_jewel_gdp_policy = 1 }
@@ -77,9 +86,18 @@ tyrone_jewel_gdp_apply_bonus = {
 }
 
 tyrone_jewel_gdp_cleanup = {
-	remove_modifier = tyrone_jewel_gdp_construction
-	remove_modifier = tyrone_jewel_gdp_institution_impact
-	remove_modifier = tyrone_jewel_gdp_institution_cost
+	if = {
+		limit = { has_modifier = tyrone_jewel_gdp_construction }
+		remove_modifier = tyrone_jewel_gdp_construction
+	}
+	if = {
+		limit = { has_modifier = tyrone_jewel_gdp_institution_impact }
+		remove_modifier = tyrone_jewel_gdp_institution_impact
+	}
+	if = {
+		limit = { has_modifier = tyrone_jewel_gdp_institution_cost }
+		remove_modifier = tyrone_jewel_gdp_institution_cost
+	}
 	remove_variable = tyrone_jewel_gdp_started
 	remove_variable = tyrone_jewel_gdp_baseline
 	remove_variable = tyrone_jewel_gdp_target

@@ -1,0 +1,124 @@
+﻿je_chi_legation_system = {
+	icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/acquire_monopoly_for_company_treaties.dds"
+	group = je_group_tyrone_china_legations
+	context = none
+	highlight = yes
+	is_shown_when_inactive = { NOT = { has_global_variable = chi_legation_boxer_victory } }
+	possible = {
+		OR = {
+			has_global_variable = chi_legation_debug_activate
+			any_country = {
+				country_rank >= rank_value:great_power
+				NOT = { chi_legation_chinese_government = yes }
+				chi_legation_has_port = yes
+			}
+		}
+	}
+	should_be_involved = { chi_legation_eligible = yes }
+	should_show_when_not_involved = { chi_legation_chinese_government = yes }
+	immediate = {
+		set_global_variable = { name = chi_legation_active value = 1 }
+		chi_legation_select_central_government = yes
+		every_country = {
+			limit = { chi_legation_chinese_government = yes }
+			add_modifier = chi_legation_nationalization_prohibited
+		}
+	}
+	immediate_all_involved = { chi_legation_admit = yes }
+	on_become_involved_after_activation = { chi_legation_admit = yes }
+	on_monthly_pulse = { effect = { chi_legation_monthly_update = yes } }
+	should_be_pinned_by_default_involved = yes
+	widget = {
+		gui = "gui/00_tyrone_china2.gui"
+		name = "chi_legation_rules"
+		container = "custom_widget_container_1"
+	}
+	weight = 100
+	widget = {
+		gui = "gui/journal_entry_widgets/chi_mandate_subentries.gui"
+		name = "chi_legation_active_subentries"
+		container = "custom_widget_container_3"
+	}
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = chi_legation_boxer_victory_tt
+				has_global_variable = chi_legation_boxer_victory
+			}
+		}
+		effect = {
+			remove_global_variable = chi_legation_active
+			chi_legation_boxer_victory = yes
+		}
+	}
+}
+
+REPLACE_OR_CREATE:je_boxer_rebellion = {
+	icon = "gfx/interface/icons/event_icons/event_fire.dds"
+	group = je_group_tyrone_china_legations
+	context = country
+	is_shown_when_inactive = {
+		chi_legation_is_central = yes
+		NOT = { has_global_variable = chi_boxer_resolved }
+	}
+	possible = { has_technology_researched = pan-nationalism }
+	immediate = {
+		set_variable = chi_boxer_campaign_active
+		if = {
+			limit = { NOT = { chi_boxer_can_complete = yes } }
+			trigger_event = { id = chi_boxer.1 popup = yes }
+		}
+	}
+	scripted_button = chi_boxer_kaicha_button
+	timeout = 3650
+	can_revolution_inherit = no
+	transferable = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 1000
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { chi_legation_is_central = yes }
+		}
+		effect = {
+			remove_variable = chi_boxer_campaign_active
+		}
+	}
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				chi_legation_is_central = yes
+			}
+			custom_tooltip = { text = chi_boxer_at_peace_tt is_at_war = no }
+			custom_tooltip = {
+				text = chi_boxer_ports_recovered_tt
+				NOT = { any_country = { chi_boxer_port_holder = yes } }
+			}
+		}
+		effect = {
+			chi_boxer_success = yes
+		}
+	}
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = { timeout }
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			if = {
+				limit = { chi_legation_is_central = yes }
+				if = { limit = { chi_boxer_can_complete = yes } chi_boxer_success = yes }
+				else = { chi_boxer_failure = yes }
+			}
+		}
+	}
+}
