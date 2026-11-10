@@ -3,302 +3,56 @@
 # Start event for obsessed country
 opium_wars.1 = {
 	type = country_event
-	placement = ROOT
-
-	title = opium_wars.1.t
-	desc = opium_wars.1.d
-	flavor = opium_wars.1.f
-
+	placement = root
+	title = tyr_opium_china.t
+	desc = tyr_opium_china.d
+	flavor = tyr_opium_china.f
+	event_image = { video = "europenorthamerica_opium_smoker" }
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 	duration = 3
 
-	cooldown = { days = stupidly_long_modifier_time }
-
-	event_image = {
-		video = "europenorthamerica_opium_smoker"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
-
-	trigger = {
-		NOT = { has_variable = opium_wars_start_var }
-		is_china_tag_trigger = yes
-		is_country_type = unrecognized
-		total_population > 5000000
-		NOT = {
-			any_country = {
-				has_variable = opium_wars_target
-			}
-		}
-		any_scope_state = {
-			any_scope_building = {
-				is_building_type = building_trade_center
-			}
-		}
-		any_market = {
-			owner = {
-				country_rank >= rank_value:major_power
-				NOR = {
-					any_scope_state = {
-						is_treaty_port = yes
-						any_neighbouring_state = {
-							owner = ROOT
-						}
-					}
-					any_scope_treaty = {
-						binds = ROOT
-						any_scope_article = {
-							has_type = foreign_investment_rights
-							source_country = root
-						}
-					}
-				}
-			}
-        }
-		NOT = {
-			has_modifier = opium_wars_addiction_modifier
-		}
-	}
-
+	fire_only_once = yes
+	trigger = { c:CHI ?= this has_variable = tyr_opium_chinese_dispatch NOT = { has_variable = tyr_opium_chinese_started } }
 	immediate = {
+		remove_variable = tyr_opium_chinese_dispatch
+		set_variable = tyr_opium_chinese_started
 		set_variable = opium_wars_start_var
-		random_primary_culture = {
-			limit = {
-				has_cultural_obsession = opium
-			}
-			save_scope_as = addicted_culture
-		}
-		random_market = {
-			limit = {
-				root.market = {
-					market_imports_reliance = { target = prev goods = opium value > 0.25 }
-				}
-				owner = {
-					country_rank >= rank_value:major_power
-					NOR = {
-						any_scope_state = {
-							is_treaty_port = yes
-							any_neighbouring_state = {
-								owner = ROOT
-							}
-						}
-						any_scope_treaty = {
-							binds = ROOT
-							any_scope_article = {
-								has_type = foreign_investment_rights
-								source_country = root
-							}
-						}
-					}
-				}
-			}
-			owner = {
-				save_scope_as = opium_exporter
-			}
-		}
-	}
-
-	option = {
-		name = opium_wars.1.a
-		default_option = yes
 		set_variable = opium_wars_target
-		set_variable = {
-			name = opium_wars_completion_tracker
-			value = 0
-		}
-		add_journal_entry = {
-			type = je_opium_obsession
-		}
-		# send events to all applicable powers
-		# can't just use the scope because we want to catch multiple countries if we can
-		random_market = {
-			limit = {
-				root.market = {
-					market_imports_reliance = { target = prev goods = opium value > 0.25 }
-				}
-				owner = {
-					country_rank >= rank_value:major_power
-					NOR = {
-						any_scope_state = {
-							is_treaty_port = yes
-							any_neighbouring_state = {
-								owner = ROOT
-							}
-						}
-						any_scope_treaty = {
-							binds = ROOT
-							any_scope_article = {
-								has_type = foreign_investment_rights
-								source_country = root
-							}
-						}
-					}
-				}
-			}
-			owner = {
-				trigger_event = { id = opium_wars.2 }
-			}
-		}
-		add_modifier = {
-			name = opium_wars_addiction_modifier
-			days = long_modifier_time
-		}
-		ai_chance = {
-			base = 100
-		}
+		set_variable = { name = opium_wars_completion_tracker value = 0 }
+		c:GBR = { save_scope_as = opium_exporter save_scope_as = opium_wars_aggressor_country }
+		random_primary_culture = { limit = { has_cultural_obsession = opium } save_scope_as = addicted_culture }
+		if = { limit = { NOT = { has_modifier = opium_wars_addiction_modifier } } add_modifier = { name = opium_wars_addiction_modifier days = long_modifier_time } }
 	}
-	option = {
-		name = opium_wars.1.b
-		add_modifier = {
-			name = opium_wars_addiction_modifier
-			days = very_long_modifier_time
-		}
-		add_radicals = {
-			value = medium_radicals
-		}
-		set_variable = opium_wars_gave_in
-		if = {
-			limit = { has_journal_entry = je_warlord_china }
-			chi_remove_1_fragile_unity = yes
-		}
-		ai_chance = {
-			base = 10
-		}
-	}
+	option = { name = tyr_opium_china.a default_option = yes }
 }
 
 # Start event for opium importer
 opium_wars.2 = {
 	type = country_event
-	placement = ROOT
-
-	title = opium_wars.2.t
-	desc = opium_wars.2.d
-	flavor = opium_wars.2.f
-
+	placement = root
+	title = tyr_opium_britain.t
+	desc = tyr_opium_britain.d
+	flavor = tyr_opium_britain.f
+	event_image = { video = "europenorthamerica_opium_smoker" }
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 	duration = 3
 
-	cooldown = { days = stupidly_long_modifier_time }
-
-	event_image = {
-		video = "europenorthamerica_opium_smoker"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
-
-	trigger = {
-		# triggered by event
-	}
-
+	fire_only_once = yes
+	trigger = { c:GBR ?= this has_variable = tyr_opium_british_dispatch NOT = { has_variable = tyr_opium_british_started } exists = c:CHI }
 	immediate = {
-		save_scope_as = opium_wars_aggressor_country
-		random_country = {
-			limit = {
-				has_variable = opium_wars_target
-			}
-			save_scope_as = opium_wars_target_country
-			random_primary_culture = {
-				limit = {
-					has_cultural_obsession = opium
-				}
-				save_scope_as = opium_addicted_culture
-			}
-		}
-	}
-
-	option = { # go opium wars
-		name = opium_wars.2.a
-		default_option = yes
+		remove_variable = tyr_opium_british_dispatch
+		set_variable = tyr_opium_british_started
 		set_variable = opium_wars_aggressor
-		change_relations = {
-			country = scope:opium_wars_target_country
-			value = -30
+		save_scope_as = opium_wars_aggressor_country
+		c:CHI = {
+			save_scope_as = opium_wars_target_country
+			set_variable = tyr_opium_chinese_dispatch
+			trigger_event = { id = opium_wars.1 }
 		}
-		add_journal_entry = {
-			type = je_opium_wars
-			target = scope:opium_wars_target_country
-		}
-		add_involvement = {
-			strategic_region = sr:region_south_china
-			value = 2500
-		}
-		hidden_effect = {
-			every_country = {
-				limit = {
-					NOT = { this = root }
-					OR = {
-						this = scope:opium_wars_target_country
-						has_overlapping_interests = scope:opium_wars_target_country
-						has_overlapping_interests = root
-					}
-				}
-				post_notification = opium_wars_british_response_angry
-			}
-
-			scope:opium_wars_target_country = {
-				set_secret_goal = {
-					country = root
-					secret_goal = antagonize
-				}
-			}
-			set_secret_goal = {
-				country = scope:opium_wars_target_country
-				secret_goal = conquer
-			}
-		}
-		ai_chance = {
-			base = 95
-		}
+		add_involvement = { strategic_region = sr:region_south_china value = 2500 }
+		change_relations = { country = c:CHI value = -30 }
 	}
-	option = { # not interested
-		name = opium_wars.2.b
-		change_relations = {
-			country = scope:opium_wars_target_country
-			value = 50
-		}
-
-		set_variable = opium_wars_ignored_ban
-
-		every_subject_or_below = {
-			limit = {
-				is_direct_subject_of = root
-				any_scope_building = {
-					is_building_type = building_opium_plantation
-				}
-			}
-
-			add_liberty_desire = 50
-			change_relations = {
-				country = root
-				value = -50
-			}
-		}
-
-		hidden_effect = {
-			every_country = {
-				limit = {
-					NOT = { this = root }
-					OR = {
-						this = scope:opium_wars_target_country
-						has_overlapping_interests = scope:opium_wars_target_country
-						has_overlapping_interests = root
-					}
-				}
-				post_notification = opium_wars_british_response_passive
-			}
-
-			set_mutual_secret_goal = {
-				country = scope:opium_wars_target_country
-				secret_goal = befriend
-			}
-		}
-		ai_chance = {
-			base = 5
-		}
-	}
+	option = { name = tyr_opium_britain.a default_option = yes }
 }
 
 # Obssessed country succeeds
@@ -345,6 +99,7 @@ opium_wars.3 = {
 
 	immediate = {
 		set_variable = opium_wars_won
+		hidden_effect = { remove_variable = opium_wars_unresolved }
 		if = {
 			limit = { has_modifier = opium_wars_addiction_modifier }
 			remove_modifier = opium_wars_addiction_modifier
@@ -413,35 +168,7 @@ opium_wars.4 = {
 	placement = ROOT
 
 	title = opium_wars.4.t
-	desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = opium_wars.4.d
-				trigger = {
-					has_law_or_variant = law_type:law_free_trade
-				}
-			}
-			triggered_desc = {
-				desc = opium_wars.4.d2
-				trigger = {
-					any_country = {
-						has_variable = opium_wars_aggressor
-						any_scope_state = {
-							market = {
-								owner = ROOT
-							}
-						}
-					}
-				}
-			}
-			triggered_desc = {
-				desc = opium_wars.4.d3
-				trigger = {
-					always = yes
-				}
-			}
-		}
-	}
+	desc = tyr_opium_chinese_defeat.d
 	flavor = opium_wars.4.f
 
 	duration = 3
@@ -466,45 +193,9 @@ opium_wars.4 = {
 			limit = { has_modifier = opium_wars_addiction_modifier }
 			remove_modifier = opium_wars_addiction_modifier
 		}
-		if = {
-			limit = {
-				any_country = {
-					has_variable = opium_wars_aggressor
-					any_scope_state = {
-						is_treaty_port = yes
-						state_region = {
-							any_scope_state = {
-								owner = root
-							}
-						}
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					has_variable = opium_wars_aggressor
-					any_scope_state = {
-						is_treaty_port = yes
-						state_region = {
-							any_scope_state = {
-								owner = root
-							}
-						}
-					}
-				}
-				save_scope_as = opium_wars_treaty_port_winner
-				random_scope_state = {
-					limit = {
-						is_treaty_port = yes
-						state_region = {
-							any_scope_state = {
-								owner = root
-							}
-						}
-					}
-					save_scope_as = treaty_port_state
-				}
-			}
+		c:GBR = {
+			save_scope_as = opium_wars_treaty_port_winner
+			random_scope_state = { limit = { tyr_opium_is_british_port = yes } save_scope_as = treaty_port_state }
 		}
 		if = {
 			limit = {
@@ -552,6 +243,9 @@ opium_wars.4 = {
 			remove_modifier = opium_ban_authority
 		}
 	}
+	after = {
+		hidden_effect = { remove_variable = opium_wars_unresolved }
+	}
 }
 
 # Importer country succeeds
@@ -560,31 +254,7 @@ opium_wars.5 = {
 	placement = ROOT
 
 	title = opium_wars.5.t
-	desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = opium_wars.5.d
-				trigger = {
-					scope:opium_wars_target_country = {
-						has_law_or_variant = law_type:law_free_trade
-					}
-				}
-			}
-			triggered_desc = {
-				desc = opium_wars.5.d2
-				trigger = {
-					any_scope_state = {
-						is_treaty_port = yes
-						state_region = {
-							any_scope_state = {
-								owner = scope:opium_wars_target_country
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	desc = tyr_opium_british_success.d
 
 	flavor = opium_wars.5.f
 
@@ -603,37 +273,10 @@ opium_wars.5 = {
 	}
 
 	immediate = {
-		random_country = {
-			limit = {
-				has_variable = opium_wars_target
-			}
-			save_scope_as = opium_wars_target_country
-			remove_variable = opium_wars_target
-		}
-		if = {
-			limit = {
-				exists = scope:opium_wars_target_country
-				any_scope_state = {
-					is_treaty_port = yes
-					state_region = {
-						any_scope_state = {
-							owner = scope:opium_wars_target_country
-						}
-					}
-				}
-			}
-			random_scope_state = {
-				limit = {
-					is_treaty_port = yes
-					state_region = {
-						any_scope_state = {
-							owner = scope:opium_wars_target_country
-						}
-					}
-				}
-				save_scope_as = treaty_port_state
-			}
-		}
+		c:CHI = { save_scope_as = opium_wars_target_country }
+		save_scope_as = opium_wars_aggressor_country
+		random_scope_state = { limit = { tyr_opium_is_british_port = yes } save_scope_as = treaty_port_state }
+		set_variable = tyr_opium_british_won
 	}
 
 	option = {
@@ -643,6 +286,7 @@ opium_wars.5 = {
 			name = opium_wars_navy_modifier
 			days = normal_modifier_time
 		}
+		tyr_opium_grant_british_concessions = yes
 		#remove_variable = opium_wars_aggressor
 	}
 
@@ -652,6 +296,7 @@ opium_wars.5 = {
 			name = opium_wars_export_modifier
 			days = normal_modifier_time
 		}
+		tyr_opium_grant_british_concessions = yes
 		#remove_variable = opium_wars_aggressor
 	}
 }

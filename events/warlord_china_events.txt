@@ -1,0 +1,371 @@
+﻿namespace = warlord_china_events
+
+warlord_china_events.100 = {
+	type = country_event
+	placement = root
+	duration = 3
+	title = tyr_chi_fragment.t
+	desc = tyr_chi_fragment.d
+	flavor = tyr_chi_fragment.f
+	event_image = { video = "unspecific_armored_train" }
+	icon = "gfx/interface/icons/event_icons/event_fire.dds"
+	trigger = { c:CHI ?= this NOT = { has_global_variable = china_shatters } }
+	option = {
+		name = tyr_chi_fragment.han
+		trigger = { is_player = yes country_has_monarchy_law = yes }
+		remove_primary_culture = cu:manchu
+		if = { limit = { NOT = { country_has_primary_culture = cu:han } } add_primary_culture = cu:han }
+		create_character = { culture = han interest_group = ig_landowners on_created = { set_character_as_ruler = yes } }
+		set_variable = china_han_empire
+		add_loyalists = { culture = cu:han value = 0.30 }
+		custom_tooltip = tyr_chi_fragment_common_tt
+		hidden_effect = { tyr_chi_fragment = yes tyr_chi_release_MCH = yes }
+		custom_tooltip = tyr_chi_release_mch_tt
+		ai_chance = { base = 0 }
+	}
+	option = {
+		name = tyr_chi_fragment.manchu
+		trigger = { is_player = yes country_has_monarchy_law = yes }
+		add_loyalists = { culture = cu:manchu value = 0.20 }
+		add_radicals = { culture = cu:han value = 0.20 }
+		custom_tooltip = tyr_chi_fragment_common_tt
+		hidden_effect = { tyr_chi_fragment = yes tyr_chi_release_YUE = yes }
+		custom_tooltip = tyr_chi_release_yue_tt
+		ai_chance = { base = 0 }
+	}
+	option = {
+		name = tyr_chi_fragment.republic
+		trigger = {
+			is_player = yes
+			custom_tooltip = { text = tyr_chi_republic_tt OR = {
+					NOT = { country_has_monarchy_law = yes }
+					any_political_movement = { OR = { is_political_movement_type = movement_liberal is_political_movement_type = movement_radical } political_movement_support >= 0.10 }
+				} }
+		}
+		show_as_unavailable = { is_player = yes }
+		tyr_chi_republic_cost = yes
+		if = { limit = { country_has_monarchy_law = yes } activate_law = law_type:law_presidential_republic }
+		custom_tooltip = tyr_chi_fragment_common_tt
+		hidden_effect = { tyr_chi_fragment = yes }
+		custom_tooltip = tyr_chi_keep_both_tt
+		ai_chance = { base = 0 }
+	}
+	option = {
+		name = tyr_chi_fragment.army
+		default_option = yes
+		trigger = { is_player = no }
+		tyr_chi_republic_cost = yes
+		ig:ig_armed_forces.leader = { save_scope_as = tyr_chi_military_ruler }
+		ruler = { if = { limit = { NOT = { this = scope:tyr_chi_military_ruler } } kill_character = yes } }
+		activate_law = law_type:law_presidential_republic
+		activate_law = law_type:law_autocracy
+		scope:tyr_chi_military_ruler = { set_character_as_ruler = yes }
+		custom_tooltip = tyr_chi_fragment_common_tt
+		hidden_effect = { tyr_chi_fragment = yes tyr_chi_release_MCH = yes tyr_chi_release_YUE = yes }
+		custom_tooltip = tyr_chi_release_both_tt
+		ai_chance = { base = 100 }
+	}
+}
+
+warlord_china_events.101 = { #Chinese Reunification
+	type = country_event
+	placement = root
+	duration = 3
+
+	title = warlord_china_events.101.t
+	desc = warlord_china_events.101.d
+	flavor = warlord_china_events.101.f
+
+	event_image = {
+		video = "asia_farmers_market"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+		# Triggered by JE
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		default_option = yes
+		name = warlord_china_events.101.a
+		add_loyalists = {
+			value = large_radicals
+		}
+		every_state_region = {
+			limit = {
+				NOT = {
+					any_scope_state = {
+						owner = root
+					}
+				}
+				OR = {
+					is_homeland = cu:han
+					is_homeland = cu:manchu
+					is_homeland = cu:tibetan
+					is_homeland = cu:uighur
+					is_homeland = cu:tuvan
+					is_homeland = cu:mongol
+				}
+			}
+			add_claim = ROOT
+		}
+	}
+
+	option = {
+		name = warlord_china_events.101.b
+		add_loyalists = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = modifier_end_of_warlord_period
+			days = normal_modifier_time
+		}
+	}
+
+	after = {
+		je_reunify_china_cleanup = yes
+	}
+}
+
+warlord_china_events.200 = { #Fragile Unity Victory
+	type = country_event
+	placement = root
+	duration = 3
+
+	title = warlord_china_events.200.t
+	desc = warlord_china_events.200.d
+	flavor = warlord_china_events.200.f
+
+	event_image = {
+		video = "asia_farmers_market"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+
+	trigger = {
+		# Triggered by JE
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		default_option = yes
+		name = warlord_china_events.200.a
+		add_modifier = {
+			name = modifier_century_of_triumph_politics
+			days = long_modifier_time
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+	}
+
+	option = {
+		name = warlord_china_events.200.b
+		add_modifier = {
+			name = modifier_century_of_triumph_technology
+			days = long_modifier_time
+		}
+		add_loyalists = {
+			value = large_radicals
+		}
+	}
+
+	after = {
+		je_warlord_china_cleanup = yes
+	}
+}
+
+
+warlord_china_events.110 = { #Prisoner Killing
+	type = country_event
+	placement = root
+	duration = 3
+
+	fire_only_once = yes
+
+	title = warlord_china_events.110.t
+	desc = warlord_china_events.110.d
+	flavor = warlord_china_events.110.f
+
+	event_image = {
+		video = "asia_farmers_market"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	trigger = {
+		# triggered by on_action - on_yearly_events
+		any_scope_character = {
+			is_ruler_of_own_country = yes
+
+			has_trait = cruel
+
+		}
+		has_journal_entry = je_reunify_china
+	}
+
+	immediate = {
+		random_scope_character = {
+			limit = {
+				is_ruler_of_own_country = yes
+
+				has_trait = cruel
+			}
+			save_scope_as = prisoner_killing_warlord
+			set_temporary_event_immortality = { DURATION = 3 }
+		}
+
+	}
+
+	after = {
+		revoke_temporary_event_immortality = { CHARACTER = scope:prisoner_killing_warlord }
+	}
+
+	option = {
+		default_option = yes
+		name = warlord_china_events.110.a
+		capital = {
+			add_radicals_in_state = {
+				value = very_large_radicals
+			}
+		}
+
+	}
+
+	option = {
+		default_option = yes
+		name = warlord_china_events.110.b
+		add_modifier = {
+			name = modifier_prisoner_murder_covered_up
+			days = normal_modifier_time
+		}
+
+	}
+}
+
+
+
+
+# Yan Xishan Thought
+warlord_china_events.301 = {
+	type = country_event
+	placement = root
+	duration = 3
+
+	title = warlord_china_events.301.t
+	desc = warlord_china_events.301.d
+	flavor = warlord_china_events.301.f
+
+	fire_only_once = yes
+
+
+
+	gui_window = event_window_1char_tabloid
+	left_icon = scope:yan_xishan_thinker
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/misc/1Character_Banner"
+
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+
+	trigger = {
+		# triggered by on_action - on_yearly_events
+		has_journal_entry = je_reunify_china
+		has_law_or_variant = law_type:law_autocracy
+		has_technology_researched = mass_propaganda
+		NOT = {
+			ruler = {
+				interest_group ?= {
+					OR = {
+						has_modifier = yan_xishan_thought_mod
+						has_modifier = failed_yan_xishan_thought_mod
+					}
+				}
+			}
+		}
+		NOT = {
+			has_modifier = warlord_legitimacy
+		}
+	}
+	immediate = {
+		ruler = {
+			save_scope_as = yan_xishan_thinker
+			set_temporary_event_immortality = { DURATION = 3 }
+			interest_group ?= {
+				save_scope_as = yan_xishan_ig
+			}
+		}
+	}
+	after = {
+		revoke_temporary_event_immortality = { CHARACTER = scope:yan_xishan_thinker }
+	}
+	option = {
+		name = warlord_china_events.301.a
+		default_option = yes
+		random_list = {
+			50 = {
+				modifier = {
+					if = {
+						limit = {
+							any_scope_state = {
+								is_production_method_active = {
+									building_type = building_university
+									production_method = pm_philosophy_department
+								}
+							}
+						}
+						add = 25
+					}
+					if = {
+						limit = {
+							government_legitimacy > 75
+						}
+						add = 25
+					}
+				}
+				root = {
+					add_modifier = {
+						name = yan_xishan_thought_mod
+					}
+				}
+			}
+			50 = {
+				modifier = {
+					if = {
+						limit = {
+							government_legitimacy < 50
+						}
+						add = 25
+					}
+				}
+				root = {
+					add_modifier = {
+						name = failed_yan_xishan_thought_mod
+						days = long_modifier_time
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = warlord_china_events.301.b
+		add_modifier = {
+			name = warlord_legitimacy
+			days = long_modifier_time
+		}
+	}
+}

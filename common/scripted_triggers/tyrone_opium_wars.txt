@@ -1,0 +1,41 @@
+﻿# State scope: a British port in a region shared with China or its subjects.
+tyr_opium_is_british_port = {
+	is_treaty_port = yes
+	owner = c:GBR
+	state_region = {
+		any_scope_state = {
+			owner = {
+				OR = {
+					c:CHI ?= this
+					any_overlord_or_above = { c:CHI ?= this }
+				}
+			}
+		}
+	}
+}
+# Callable from either country; the participants are deliberately fixed.
+tyr_opium_britain_has_port = {
+	exists = c:CHI
+	exists = c:GBR
+	c:GBR = { any_scope_state = { tyr_opium_is_british_port = yes } }
+}
+tyr_opium_britain_has_reparations = {
+	exists = c:CHI
+	exists = c:GBR
+	c:CHI = { in_default = no }
+	c:GBR = {
+		any_scope_treaty = {
+			binds = c:CHI
+			enforcer_country ?= c:GBR
+			enforced_on_country ?= c:CHI
+			exists = enforcer_country
+			exists = enforced_on_country
+			any_scope_article = {
+				has_type = money_transfer
+				source_country = c:CHI
+				target_country = c:GBR
+				input_quantity > 0
+			}
+		}
+	}
+}

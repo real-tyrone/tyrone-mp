@@ -143,7 +143,7 @@ heavenly.2 = {
 			show_as_tooltip = {
 				add_modifier = {
 					name = god_worshippers
-					days = short_modifier_time
+					years = 5
 				}
 			}
 			convert_population = {
@@ -195,104 +195,24 @@ heavenly.2 = {
 heavenly.3 = {
 	type = country_event
 	placement = scope:cult_growth_state
-
-	title = heavenly.3.t
-	desc = heavenly.3.d
-	flavor = heavenly.3.f
-
-	event_image = {
-		video = "asia_union_leader"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
+	title = tyr_heavenly_spread.t
+	desc = tyr_heavenly_spread.d
+	flavor = tyr_heavenly_spread.f
+	event_image = { video = "asia_union_leader" }
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
-
 	duration = 3
-
-	cooldown = { months = 6 }
-
-	trigger = {
-		any_scope_state = {
-			has_variable = cult_center
-			religion_percent_state = {
-				target = rel:protestant
-				value >= 0.01
-			}
-			any_neighbouring_state = {
-				owner = ROOT
-				turmoil >= 0.10
-				NOT = {
-					has_variable = cult_center
-				}
-				NOT = { is_capital = yes }
-				state_region = {
-					OR = {
-						is_homeland = cu:han
-						is_homeland = cu:hakka
-					}
-				}
-			}
-		}
-	}
+	trigger = { has_journal_entry = je_heavenly_kingdom_main NOT = { exists = c:TPG } any_scope_state = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
+			any_neighbouring_state = { owner = root has_modifier = god_worshippers } } }
 	immediate = {
-		random_scope_state = {
-			limit = {
-				has_variable = cult_center
-				religion_percent_state = {
-					target = rel:protestant
-					value >= 0.01
-				}
-				any_neighbouring_state = {
-					owner = ROOT
-					turmoil >= 0.10
-					NOT = {
-						has_variable = cult_center
-					}
-					state_region = {
-						OR = {
-							is_homeland = cu:han
-							is_homeland = cu:hakka
-						}
-					}
-					NOT = { is_capital = yes }
-				}
-			}
-			save_scope_as = cult_center
-			random_neighbouring_state = {
-				limit = {
-					owner = ROOT
-					turmoil >= 0.10
-					NOT = {
-						has_variable = cult_center
-					}
-					state_region = {
-						OR = {
-							is_homeland = cu:han
-							is_homeland = cu:hakka
-						}
-					}
-					NOT = { is_capital = yes }
-				}
-				save_scope_as = cult_growth_state
-				set_variable = {
-					name = cult_center
-				}
-			}
+		random_scope_state = { limit = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
+				any_neighbouring_state = { owner = root has_modifier = god_worshippers } }
+			save_scope_as = cult_growth_state
+			add_modifier = { name = god_worshippers years = 5 }
+			set_variable = cult_center
+			convert_population = { target = rel:protestant value = 0.1 }
 		}
 	}
-	option = {
-		name = heavenly.3.a
-		scope:cult_growth_state = {
-			add_modifier = {
-				name = god_worshippers
-				days = normal_modifier_time
-			}
-			convert_population = {
-				target = rel:protestant value = 0.1
-			}
-		}
-	}
+	option = { name = heavenly.3.a default_option = yes custom_tooltip = tyr_heavenly_spread_tt }
 }
 
 # Heavenly Kingdom spawn
@@ -300,9 +220,9 @@ heavenly.4 = {
 	type = country_event
 	placement = ROOT
 
-	title = heavenly.4.t
-	desc = heavenly.4.d
-	flavor = heavenly.4.f
+	title = tyr_heavenly_choice.t
+	desc = tyr_heavenly_choice.d
+	flavor = tyr_heavenly_choice.f
 
 	event_image = {
 		video = "asia_union_leader"
@@ -314,10 +234,10 @@ heavenly.4 = {
 
 	duration = 3
 
-	trigger = {
-
-	}
+	trigger = { NOT = { exists = c:TPG } any_scope_state = { has_modifier = god_worshippers count >= 8 } }
 	immediate = {
+		every_scope_state = { limit = { has_modifier = god_worshippers is_capital = no } set_variable = tyr_heavenly_transfer }
+
 		hidden_effect = {
 			random_scope_character = {
 				limit = {
@@ -347,18 +267,7 @@ heavenly.4 = {
 			}
 		}
 		random_scope_state = {
-			limit = {
-				has_variable = cult_center
-				religion_percent_state = {
-					target = rel:protestant
-					value >= 0.01
-				}
-				state_religious_acceptance = {
-					target = rel:protestant
-					value <= religious_acceptance_low
-				}
-				radical_fraction = { value >= 0.15 }
-			}
+			limit = { has_variable = tyr_heavenly_transfer is_capital = no }
 			save_scope_as = heavenly_kingdom_spawn
 		}
 		create_country = {
@@ -366,6 +275,8 @@ heavenly.4 = {
 			origin = this
 			state = scope:heavenly_kingdom_spawn
 			on_created = {
+				# Preserve the exact Qing law variants before Heavenly overrides.
+				copy_laws = c:CHI
 				ig:ig_devout ?= {
 					set_interest_group_name = ig_taiping_god_worshippers
 					remove_ideology = ideology_moralist
@@ -470,6 +381,8 @@ heavenly.4 = {
 					days = normal_modifier_time
 					is_decaying = yes
 				}
+
+				tyr_heavenly_setup = yes
 			}
 		}
 		c:TPG ?= {
@@ -483,14 +396,14 @@ heavenly.4 = {
 			limit = { has_journal_entry = je_warlord_china }
 			chi_remove_1_fragile_unity = yes
 		}
-		if = { 
-			limit = { has_journal_entry = je_mandate_of_heaven } 
-				je:je_mandate_of_heaven = {
-					add_progress = {
-						value = -1
-						name = chi_centralisation_progress_bar
-					}
+		if = {
+			limit = { has_journal_entry = je_mandate_of_heaven }
+			je:je_mandate_of_heaven = {
+				add_progress = {
+					value = -1
+					name = chi_centralisation_progress_bar
 				}
+			}
 		}
 		add_modifier = {
 			name = taiping_taiping_rebellion
@@ -511,17 +424,8 @@ heavenly.4 = {
 				type = je_taiping_revolution
 			}
 		}
-		assign_taiping_states = yes
-		scope:heavenly_kingdom_scope ?= {
-			create_diplomatic_play = {
-				name = taiping_rebellion
-				target_country = c:CHI
-				type = dp_taiping_rebellion
-			}
-			hidden_effect = { #Why? Because the Taiping Rebellion play grants an insane amount of infamy.
-				change_infamy = -150
-			}
-		}
+		tyr_heavenly_assign_states = yes
+
 		hidden_effect = {
 			c:TPG ?= {
 				create_taiping_characters = yes
@@ -530,17 +434,7 @@ heavenly.4 = {
 				}
 				add_treasury = var:gold_transfer
 			}
-			random_diplomatic_play = {
-				limit = {
-					c:TPG ?= {
-						is_diplomatic_play_initiator = yes
-					}
-					c:CHI ?= {
-						is_diplomatic_play_target = yes
-					}
-				}
-				add_diplomatic_play_war_support = { target = c:TPG value = 50 }
-			}
+
 			c:CHI ?= {
 				every_scope_state = {
 					limit = {
@@ -559,16 +453,26 @@ heavenly.4 = {
 		}
 	}
 
+
+
+
 	option = {
 		name = heavenly.4.a
 		default_option = yes
-		ai_chance = { base = 1 }
+		ai_chance = { base = 100 }
+		if = { limit = { is_player = yes } add_modifier = { name = tyr_heavenly_player_resolve years = 2 } }
+		tyr_heavenly_begin_war = yes
 	}
 	option = {
 		name = heavenly.4.b
+		trigger = { is_player = yes }
 		ai_chance = { base = 0 }
-		play_as = scope:heavenly_kingdom_scope
+		c:TPG = { add_modifier = { name = tyr_heavenly_player_resolve years = 2 } }
+		play_as = c:TPG
+		tyr_heavenly_begin_war = yes
 	}
+
+	after = { je_heavenly_kingdom_main_cleanup = yes }
 }
 
 # Aftermath event
