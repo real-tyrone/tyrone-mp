@@ -2,6 +2,12 @@ INJECT:law_revolutionary_guard = {
 	modifier = {
         state_building_conscription_center_max_level_add = 100
 	}
+	is_visible = {
+		NOT = {
+			is_china_tag_trigger = yes
+			c:JAP ?= this
+		}
+	}	
 }
 
 REPLACE:law_peasant_levies = {
@@ -388,7 +394,14 @@ law_chi_tuanlian = {
 	progressiveness = 0
 
 	is_visible = {
-		is_china_tag_trigger = yes
+		OR = { 
+			NOT = { has_law = law_type:law_chi_mintuan }
+			AND = { 
+				is_china_tag_trigger = yes 
+				has_law_or_variant = law_type:law_monarchy 
+				has_law_or_variant = law_type:law_theocracy
+			}
+		}
 	}
 
 	can_enact = {
@@ -448,7 +461,13 @@ law_chi_mintuan = {
 	progressiveness = 0 
 
 	is_visible = { 
-		is_china_tag_trigger = yes
+		AND	= {
+			is_china_tag_trigger = yes
+			NOT = { 			
+				has_law_or_variant = law_type:law_monarchy 
+				has_law_or_variant = law_type:law_theocracy
+			}
+		}
 	}
 
 	can_enact = { 
@@ -467,7 +486,7 @@ law_chi_mintuan = {
 		state_conscription_rate_add = 0.03
 		country_military_goods_cost_mult = -0.15
 		state_building_barrack_max_level_add = 30
-		state_building_conscription_center_max_level_add = 30
+		state_building_conscription_center_max_level_add = 35
 	}
 
 	on_enact = {
@@ -595,6 +614,10 @@ law_chi_mass_conscription = {
 	progressiveness = 50
 
 	unlocking_technologies = { enlistment_offices }
+
+	is_visible = {
+		is_china_tag_trigger = yes
+	}
 
 	modifier = {
 		unit_morale_loss_mult = 0.15
