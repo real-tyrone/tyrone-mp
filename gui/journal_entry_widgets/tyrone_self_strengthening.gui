@@ -1,0 +1,45 @@
+﻿# Uses the native Emperor and Autocrat journal-entry item.
+flowcontainer = {
+	name = "tyr_ssm_active_subentries"
+	ignoreinvisible = yes
+
+	flowcontainer = {
+		direction = vertical
+		parentanchor = hcenter
+		spacing = 4
+		ignoreinvisible = yes
+
+		textbox = {
+			visible = "[GreaterThan_int32(GetDataModelSize(GetJournalEntryGroup('je_group_tyr_self_strengthening').GetActiveJournalEntryTypes(GetPlayer.Self)), '(int32)1')]"
+			autoresize = yes
+			align = left|nobaseline
+			default_format = "#title"
+			margin_bottom = 2
+			text = "ACTIVE_JOURNAL_ENTRIES"
+		}
+
+		flowcontainer = {
+			direction = vertical
+			spacing = 4
+			ignoreinvisible = yes
+			datamodel = "[AccessPlayer.GetGroupsForActiveJournalEntries]"
+
+			item = {
+				flowcontainer = {
+					visible = "[ObjectsEqual(JournalEntryGroup.Self, GetJournalEntryGroup('je_group_tyr_self_strengthening').Self)]"
+					direction = vertical
+					spacing = 4
+					ignoreinvisible = yes
+					datamodel = "[JournalEntryGroup.GetActiveJournalEntryTypes(GetPlayer.Self)]"
+
+					item = {
+						journal_entry = {
+							datacontext = "[AccessPlayer.GetJournalEntry(JournalEntryType.Self)]"
+							visible = "[Not(ObjectsEqual(JournalEntryType.Self, JournalEntryPanel.GetJournalEntryType.Self))]"
+						}
+					}
+				}
+			}
+		}
+	}
+}

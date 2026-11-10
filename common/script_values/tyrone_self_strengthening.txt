@@ -1,0 +1,58 @@
+﻿tyr_ssm_duration = 5475
+
+tyr_ssm_industry_levels = {
+	value = 0
+	every_scope_state = {
+		every_scope_building = {
+			limit = {
+				OR = { is_building_group = bg_light_industry is_building_group = bg_heavy_industry }
+			}
+			add = level
+		}
+	}
+}
+
+tyr_ssm_industry_next_target = {
+	value = tyr_ssm_cached_industry_levels
+	multiply = 0.20
+	ceiling = yes
+	min = 50
+	add = tyr_ssm_cached_industry_levels
+}
+
+tyr_ssm_industry_bar_max = {
+	value = 50
+	if = { limit = { has_variable = tyr_ssm_industry_target } value = var:tyr_ssm_industry_target }
+	min = 1
+}
+
+tyr_ssm_industry_rounds = {
+	value = 0
+	if = { limit = { has_variable = tyr_ssm_industrial_rounds } value = var:tyr_ssm_industrial_rounds }
+	min = 0
+	max = 5
+}
+
+tyr_ssm_cruisers = {
+	value = 0
+	every_military_formation = {
+		limit = { is_fleet = yes }
+		add = "num_ships_of_group(ship_group:ship_group_cruisers)"
+	}
+}
+
+tyr_ssm_capital_ships = {
+	value = 0
+	every_military_formation = {
+		limit = { is_fleet = yes }
+		add = "num_ships_of_group(ship_group:ship_group_capital_ships)"
+	}
+}
+
+tyr_ssm_cached_industry_levels = {
+	value = 0
+	if = {
+		limit = { has_variable = tyr_ssm_industry_levels }
+		value = var:tyr_ssm_industry_levels
+	}
+}
