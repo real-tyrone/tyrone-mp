@@ -1,13 +1,21 @@
 INJECT:law_revolutionary_guard = {
 	modifier = {
-        state_building_conscription_center_max_level_add = 100
+		state_building_conscription_center_max_level_add = 100
 	}
 	is_visible = {
-		NOT = {
+		NOR = {
 			is_china_tag_trigger = yes
+			is_india_tag_trigger = yes
 			c:JAP ?= this
 		}
-	}	
+	}
+	can_enact = {
+		NOR = {
+			is_china_tag_trigger = yes
+			is_india_tag_trigger = yes
+			c:JAP ?= this
+		}
+	}
 }
 
 REPLACE:law_peasant_levies = {
@@ -529,7 +537,15 @@ law_chi_early_modernization = {
 		is_china_tag_trigger = yes
 	}
 	can_enact = {
+		is_china_tag_trigger = yes
+		custom_tooltip = {
+			text = tyr_army_modernization_required_tt
 			has_variable = chi_early_army_early_law_unlocked
+		}
+		custom_tooltip = {
+			text = tyr_self_strengthening_required_tt
+			has_variable = tyr_ssm_started
+		}
 	}
 
 	modifier = {
@@ -548,10 +564,7 @@ law_chi_national_militia = {
 
 	progressiveness = 0
 
-	is_visible = {
-		is_china_tag_trigger = yes
-		has_variable = chi_early_army_militia_law_unlocked
-	}
+	is_visible = { is_china_tag_trigger = yes }
 
 	modifier = {
 		unit_morale_loss_mult = -0.20
@@ -564,11 +577,18 @@ law_chi_national_militia = {
 	}
 
 	can_enact = {
+		is_china_tag_trigger = yes
+		custom_tooltip = {
+			text = tyr_army_modernization_required_tt
+			has_variable = chi_early_army_militia_law_unlocked
+		}
+		custom_tooltip = {
+			text = tyr_self_strengthening_required_tt
+			has_variable = tyr_ssm_started
+		}
 		OR = {
 			is_power_bloc_leader = no
-			power_bloc ?= {
-				NOT = { has_identity = identity:identity_military_treaty_organization }
-			}
+			power_bloc ?= { NOT = { has_identity = identity:identity_military_treaty_organization } }
 		}
 	}
 
@@ -630,10 +650,16 @@ law_chi_mass_conscription = {
 		is_china_tag_trigger = yes
 	}
 	can_enact = {
-		NOR = { 
-			has_law_or_variant = law_type:peasant_levies
-			}
-		has_variable = chi_early_army_early_law_unlocked
+		is_china_tag_trigger = yes
+		custom_tooltip = {
+			text = tyr_army_modernization_required_tt
+			has_variable = chi_early_army_early_law_unlocked
+		}
+		custom_tooltip = {
+			text = tyr_self_strengthening_required_tt
+			has_variable = tyr_ssm_started
+		}
+		NOT = { has_law_or_variant = law_type:law_peasant_levies }
 	}
 
 	can_impose = {
