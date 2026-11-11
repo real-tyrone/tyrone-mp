@@ -64,6 +64,15 @@
 
 	on_weekly_pulse = {
 		effect = {
+			# Recalculate existing save-game payments once using the reduced script value.
+			if = {
+				limit = { NOT = { has_variable = tyrone_privy_purse_rebalanced } }
+				if = {
+					limit = { has_modifier = modifier_privy_purse_payments }
+					set_variable = update_privy_purse
+				}
+				set_variable = tyrone_privy_purse_rebalanced
+			}
 			if = {
 				limit = {
 					var:indian_states_annexed > 0
@@ -131,8 +140,14 @@
 			}
 		}
 	}
-		effect = {
-		remove_modifier = modifier_privy_purse_payments
+
+	effect = {
+		if = {
+			limit = {
+				has_modifier = modifier_privy_purse_payments
+			}
+			remove_modifier = modifier_privy_purse_payments
+		}
 		trigger_event = { id = federation_of_india.2 popup = yes }
 	}
 		event_outcome_desc = {

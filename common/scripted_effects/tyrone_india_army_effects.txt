@@ -1,0 +1,21 @@
+﻿# Country scope. Select the destination law during enactment, as with patent reliance.
+tyrone_india_reapply_training_restrictions = {
+	if = {
+		limit = { is_india_tag_trigger = yes has_variable = bic_army_training_restricted_var }
+		random_law = {
+			limit = { type = law_type:$LAW$ NOT = { has_amendment = amendment_type:amendment_company_training_restrictions } }
+			add_amendment = { type = amendment_company_training_restrictions sponsor = prev.ig:ig_industrialists }
+		}
+	}
+}
+# Country scope. Clear the persistent restriction and remove only this amendment.
+tyrone_promise_remove_training_restrictions = {
+	remove_variable = bic_army_training_restricted_var
+	every_law = {
+		limit = { has_amendment = amendment_type:amendment_company_training_restrictions }
+		random_scope_amendment = {
+			limit = { amendment_type:amendment_company_training_restrictions ?= this.type }
+			remove_amendment = yes
+		}
+	}
+}

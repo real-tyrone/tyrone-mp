@@ -1,0 +1,315 @@
+﻿namespace = chi_mandate
+
+chi_mandate.1 = {
+	type = country_event
+	placement = ROOT
+	cooldown = { years = 10 }
+
+	title = chi_mandate.1.t
+	desc = chi_mandate.1.d
+	flavor = chi_mandate.1.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	duration = 3
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		ig:ig_intelligentsia ?= {
+			ig_approval < 0
+		}
+	}
+
+	option = {
+		name = chi_mandate.1.a
+		trigger = {
+			authority >= 150
+		}
+		add_modifier = {
+			name = chi_mandate_funding
+			years = 10
+		}
+	}
+
+	option = {
+		name = chi_mandate.1.b
+		default_option = yes
+		add_radicals = {
+			value = small_radicals
+		}
+		add_modifier = {
+			name = chi_mandate_suppressed_innovation
+			years = 3
+		}
+	}
+
+	option = {
+		name = chi_mandate.1.c
+		add_radicals = {
+			value = large_radicals
+		}
+		add_modifier = {
+			name = chi_mandate_crackdown
+			years = 5
+		}
+	}
+}
+
+chi_mandate.2 = {
+	type = country_event
+	placement = ROOT
+
+	title = chi_mandate.2.t
+	desc = chi_mandate.2.d
+	flavor = chi_mandate.2.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	duration = 3
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		je:je_mandate_of_heaven = {
+			"scripted_bar_progress(chi_centralisation_progress_bar)" <= 3
+		}
+	}
+
+	option = {
+		name = chi_mandate.2.a
+		default_option = yes
+		add_modifier = {
+			name = chi_mandate_low_centralisation_landowners
+			years = 10
+			is_decaying = yes
+		}
+
+
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 1 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+
+	option = {
+		name = chi_mandate.2.b
+		add_technology_researched = empiricism
+		add_modifier = {
+			name = chi_mandate_empiricism
+			years = 5
+		}
+
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_2_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 2 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+
+	option = {
+		name = chi_mandate.2.c
+		add_modifier = {
+			name = chi_mandate_medical_degrees
+			years = 5
+		}
+	}
+
+	option = {
+		name = chi_mandate.2.d_option
+		add_modifier = {
+			name = chi_mandate_three_groups_discontent
+			years = 10
+		}
+	}
+}
+
+chi_mandate.3 = {
+	type = country_event
+	hidden = yes
+	placement = ROOT
+
+	duration = 3
+
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+	}
+
+	immediate = {
+		je:je_mandate_of_heaven = {
+			add_progress = {
+				value = 1
+				name = chi_centralisation_progress_bar
+			}
+		}
+	}
+}
+
+chi_mandate.4 = {
+	type = country_event
+	placement = ROOT
+
+	title = chi_mandate.4.t
+	desc = chi_mandate.4.d
+	flavor = chi_mandate.4.f
+
+	duration = 3
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		is_china_tag_trigger = yes
+		has_technology_researched = mass_communication
+	}
+
+	option = {
+		name = chi_mandate.4.a
+		default_option = yes
+		add_modifier = {
+			name = chi_mandate_mass_communication_decrees
+			years = 5
+		}
+	}
+
+	option = {
+		name = chi_mandate.4.b
+		add_modifier = {
+			name = chi_mandate_mass_communication_research
+			years = 5
+		}
+	}
+}
+
+chi_mandate.5 = {
+	type = country_event
+	placement = ROOT
+	title = chi_mandate.5.t
+	desc = chi_mandate.5.d
+	flavor = chi_mandate.5.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/central_banking.dds"
+	duration = 3
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		has_technology_researched = central_banking
+		NOT = { has_variable = chi_mandate_central_banking_rewarded }
+	}
+	immediate = { set_variable = chi_mandate_central_banking_rewarded }
+	option = {
+		name = chi_mandate.5.a
+		default_option = yes
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 1 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+}
+
+chi_mandate.6 = {
+	type = country_event
+	placement = ROOT
+	title = chi_mandate.6.t
+	desc = chi_mandate.6.d
+	flavor = chi_mandate.6.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/identification_documents.dds"
+	duration = 3
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		has_technology_researched = identification_documents
+		NOT = { has_variable = chi_mandate_identification_documents_rewarded }
+	}
+	immediate = { set_variable = chi_mandate_identification_documents_rewarded }
+	option = {
+		name = chi_mandate.6.a
+		default_option = yes
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 1 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+}
+
+chi_mandate.7 = {
+	type = country_event
+	placement = ROOT
+	title = chi_mandate.7.t
+	desc = chi_mandate.7.d
+	flavor = chi_mandate.7.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/philosophical_pragmatism.dds"
+	duration = 3
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		has_technology_researched = philosophical_pragmatism
+		NOT = { has_variable = chi_mandate_philosophical_pragmatism_rewarded }
+	}
+	immediate = { set_variable = chi_mandate_philosophical_pragmatism_rewarded }
+	option = {
+		name = chi_mandate.7.a
+		default_option = yes
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 1 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+}
+
+chi_mandate.8 = {
+	type = country_event
+	placement = ROOT
+	title = chi_mandate.8.t
+	desc = chi_mandate.8.d
+	flavor = chi_mandate.8.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/central_planning.dds"
+	duration = 3
+	trigger = {
+		has_journal_entry = je_mandate_of_heaven
+		has_technology_researched = central_planning
+		NOT = { has_variable = chi_mandate_central_planning_rewarded }
+	}
+	immediate = { set_variable = chi_mandate_central_planning_rewarded }
+	option = {
+		name = chi_mandate.8.a
+		default_option = yes
+		custom_tooltip = {
+			text = chi_mandate_centralisation_gain_tt
+			je:je_mandate_of_heaven = {
+				add_progress = { name = chi_centralisation_progress_bar value = 1 }
+			}
+		}
+		hidden_effect = { chi_mandate_update_centralisation_modifier = yes }
+	}
+}

@@ -1,0 +1,587 @@
+﻿REPLACE:je_consolidate_colonial_rule = {
+	icon = "gfx/interface/icons/event_icons/tyrone_unified_subcontinent.png"
+	group = je_group_tyrone_india_subcontinent
+	highlight = yes
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { tyrone_subcontinent_participant = yes }
+
+	is_shown_when_inactive = {
+		OR = { exists = c:BIC exists = c:BHT }
+		NOT = { has_global_variable = tyrone_subcontinent_resolved_var }
+	}
+	possible = {
+		OR = {
+			AND = { exists = c:BIC c:BIC ?= { has_technology_researched = general_staff } }
+			AND = { exists = c:BHT c:BHT ?= { has_technology_researched = general_staff } }
+		}
+	}
+	
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+		set_global_variable = tyrone_subcontinent_active_var
+		set_global_variable = { name = tyrone_subcontinent_progress_var value = 0 }
+		add_contextless_journal_entry = je_tyrone_conquer_burma
+		add_contextless_journal_entry = je_tyrone_conquer_sindh
+		add_contextless_journal_entry = je_tyrone_conquer_punjab
+		add_contextless_journal_entry = je_tyrone_conquer_himalayas
+	}
+	immediate_all_involved = {
+		if = {
+			limit = { is_india_tag_trigger = yes }
+			add_modifier = { name = tyrone_subcontinent_conquest_ambition }
+		}
+	}
+	on_become_involved_after_activation = {
+		if = {
+			limit = { is_india_tag_trigger = yes }
+			add_modifier = { name = tyrone_subcontinent_conquest_ambition }
+		}
+	}
+	on_no_longer_involved = {
+		if = {
+			limit = { has_modifier = tyrone_subcontinent_conquest_ambition }
+			remove_modifier = tyrone_subcontinent_conquest_ambition
+		}
+	}
+
+	current_value = {
+		value = 0
+		if = {
+			limit = { has_global_variable = tyrone_subcontinent_progress_var }
+			value = global_var:tyrone_subcontinent_progress_var
+		}
+	}
+	goal_add_value = { add = 5 }
+	progress_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_global_variable = tyrone_subcontinent_progress_var }
+				desc = tyrone_subcontinent_progress
+			}
+			desc = tyrone_subcontinent_progress_zero
+		}
+	}
+	progressbar = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+	weight = 100
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { exists = c:GBR }
+				AND = { NOT = { exists = c:BIC } NOT = { exists = c:BHT } }
+			}
+		}
+		effect = {
+			set_global_variable = tyrone_subcontinent_resolved_var
+			remove_global_variable = tyrone_subcontinent_active_var
+			remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+		}
+		effect_all_involved = {
+			if = {
+				limit = { has_modifier = tyrone_subcontinent_conquest_ambition }
+				remove_modifier = tyrone_subcontinent_conquest_ambition
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:journal_entry = { is_goal_complete = yes }
+		}
+		effect = {
+			set_global_variable = tyrone_subcontinent_resolved_var
+			remove_global_variable = tyrone_subcontinent_active_var
+		}
+		effect_all_involved = {
+			if = {
+				limit = { has_modifier = tyrone_subcontinent_conquest_ambition }
+				remove_modifier = tyrone_subcontinent_conquest_ambition
+			}
+			if = {
+				limit = { is_india_tag_trigger = yes }
+				set_variable = consolidated_colonial_rule
+				add_modifier = {
+					name = tyrone_subcontinent_consolidated_administration
+					days = 3650
+					is_decaying = yes
+				}
+			}
+			trigger_event = { id = tyrone_subcontinent.5 days = 0 popup = yes }
+		}
+		event_outcome_desc = {
+			first_valid = { triggered_desc = { desc = tyrone_subcontinent_completion_desc } }
+		}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			exists = c:GBR
+			OR = { exists = c:BIC exists = c:BHT }
+			NOT = { tyrone_subcontinent_empire_intact = yes }
+		}
+		effect = {
+			set_global_variable = tyrone_subcontinent_resolved_var
+			remove_global_variable = tyrone_subcontinent_active_var
+			remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+		}
+		effect_all_involved = {
+			if = {
+				limit = { has_modifier = tyrone_subcontinent_conquest_ambition }
+				remove_modifier = tyrone_subcontinent_conquest_ambition
+			}
+			trigger_event = { id = tyrone_subcontinent.7 days = 0 popup = yes }
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_india_native_subentries.gui"
+		name = "tyrone_india_active_subentries_subcontinent"
+		container = "custom_widget_container_3"
+	}
+}
+
+je_tyrone_conquer_burma = {
+	scripted_button = tyrone_subcontinent_attack_burma
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+	}
+
+	immediate_all_involved = {
+		if = { limit = { is_india_tag_trigger = yes } add_modifier = { name = tyrone_burma_colonial_growth } }
+	}
+	on_become_involved_after_activation = {
+		if = { limit = { is_india_tag_trigger = yes } add_modifier = { name = tyrone_burma_colonial_growth } }
+	}
+	on_no_longer_involved = { if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth } }
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+		effect_all_involved = {
+			if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_burma_controlled = yes
+			hidden_trigger = {
+				has_global_variable = tyrone_subcontinent_active_var
+			}
+		}
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+			}
+
+			change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
+		}
+		effect_all_involved = {
+			if = { limit = { has_modifier = tyrone_burma_colonial_growth } remove_modifier = tyrone_burma_colonial_growth }
+			trigger_event = { id = tyrone_subcontinent.1 days = 0 popup = yes }
+		}
+	}
+}
+
+je_tyrone_conquer_sindh = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+	}
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_sindh_controlled = yes
+			hidden_trigger = {
+				has_global_variable = tyrone_subcontinent_active_var
+			}
+		}
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+			}
+
+			change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
+		}
+		effect_all_involved = {
+			trigger_event = { id = tyrone_subcontinent.2 days = 0 popup = yes }
+		}
+	}
+}
+
+je_tyrone_conquer_punjab = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	scripted_button = tyrone_subcontinent_attack_khalsa
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+	}
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_punjab_controlled = yes
+			hidden_trigger = {
+				has_global_variable = tyrone_subcontinent_active_var
+			}
+		}
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+			}
+
+			change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
+			add_contextless_journal_entry = je_tyrone_conquer_western_frontier
+		}
+		effect_all_involved = {
+			trigger_event = { id = tyrone_subcontinent.3 days = 0 popup = yes }
+		}
+	}
+}
+
+je_tyrone_conquer_western_frontier = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+	}
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_western_frontier_controlled = yes
+			hidden_trigger = {
+				has_global_variable = tyrone_subcontinent_active_var
+			}
+		}
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+			}
+
+			change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
+			set_global_variable = tyrone_subcontinent_afghanistan_active_var
+			add_contextless_journal_entry = je_tyrone_conquer_afghanistan
+		}
+		effect_all_involved = {
+			trigger_event = { id = tyrone_subcontinent.4 days = 0 popup = yes }
+		}
+	}
+}
+
+# Shared Himalayan objective. Completion advances the main entry once, not per participant.
+je_tyrone_conquer_himalayas = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+	}
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_himalayas_controlled = yes
+			hidden_trigger = { has_global_variable = tyrone_subcontinent_active_var }
+		}
+		effect = {
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+			}
+
+			change_global_variable = { name = tyrone_subcontinent_progress_var add = 1 }
+		}
+	}
+}
+
+# Optional sequel: does not contribute to the main entry's progress.
+je_tyrone_conquer_afghanistan = {
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	group = je_group_tyrone_india_subcontinent
+	should_be_involved = { tyrone_subcontinent_participant = yes }
+	should_show_when_not_involved = { always = no }
+
+	immediate = {
+		if = {
+			limit = { exists = c:BIC }
+			c:BIC = { save_scope_as = tyrone_subcontinent_india }
+		}
+		else_if = {
+			limit = { exists = c:BHT }
+			c:BHT = { save_scope_as = tyrone_subcontinent_india }
+		}
+		c:GBR ?= {
+			save_scope_as = GBR_scope
+			ruler ?= { save_scope_as = british_ruler }
+		}
+		c:BUR ?= { save_scope_as = BUR_scope }
+		c:SIN ?= { save_scope_as = SIN_scope }
+		c:PAN ?= { save_scope_as = PAN_scope }
+		c:RUS ?= { save_scope_as = RUS_scope }
+	}
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 10
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { has_global_variable = tyrone_subcontinent_afghanistan_active_var }
+				NOT = { tyrone_subcontinent_empire_intact = yes }
+			}
+		}
+		effect = {
+			remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			tyrone_subcontinent_afghanistan_controlled = yes
+			hidden_trigger = {
+				has_global_variable = tyrone_subcontinent_afghanistan_active_var
+			}
+		}
+		effect = {
+			hidden_effect = {
+						if = {
+							limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+							set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+						}
+						set_global_variable = {
+							name = tyrone_subcontinent_presidency_bonus
+							value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+						}
+					}
+			 remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+		}
+		effect_all_involved = {
+			trigger_event = { id = tyrone_subcontinent.6 days = 0 popup = yes }
+		}
+	}
+}

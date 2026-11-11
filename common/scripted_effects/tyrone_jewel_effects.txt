@@ -1,0 +1,81 @@
+# Country scope: the country which clicked. The journal entry supplies csr_india.
+tyrone_jewel_begin_negotiation = {
+	# Recheck the locks before opening an event, including queued multiplayer clicks.
+	if = {
+		limit = {
+			tyrone_jewel_is_actor = yes
+			NOT = { has_variable = tyrone_jewel_personal_cooldown }
+			scope:csr_india = {
+				NOT = { has_variable = tyrone_jewel_$KEY$_cooldown }
+				NOT = { has_variable = tyrone_jewel_pending }
+			}
+		}
+		hidden_effect = {
+			save_scope_as = jewel_proposer
+			set_variable = { name = tyrone_jewel_personal_cooldown days = tyrone_jewel_personal_cooldown_time }
+			scope:csr_india = {
+				overlord = { save_scope_as = jewel_overlord }
+				if = {
+					limit = { scope:jewel_proposer = this }
+					overlord = { save_scope_as = jewel_partner }
+				}
+				else = { save_scope_as = jewel_partner }
+				set_variable = { name = tyrone_jewel_$KEY$_cooldown days = normal_modifier_time }
+				set_variable = { name = tyrone_jewel_pending value = $NUMBER$ days = tyrone_jewel_personal_cooldown_time }
+				set_variable = { name = tyrone_jewel_stage value = 0 }
+				remove_variable = tyrone_jewel_imperial
+			}
+		}
+		trigger_event = { id = $EVENT$ popup = yes }
+	}
+}
+
+# Saved countries receive the agreed package; no effects are applied on proposal.
+tyrone_jewel_apply_agreement = {
+	scope:csr_india = {
+		add_modifier = { name = tyrone_jewel_$KEY$_$PATH$_india days = normal_modifier_time }
+	}
+	scope:jewel_overlord = {
+		if = {
+			limit = { always = $IMPERIAL$ }
+			add_modifier = { name = tyrone_jewel_$KEY$_imperial_overlord days = normal_modifier_time }
+		}
+		add_modifier = {
+			name = tyrone_jewel_$KEY$_funding_overlord
+			multiplier = tyrone_jewel_weekly_obligation
+			days = normal_modifier_time
+		}
+	}
+}
+
+tyrone_jewel_apply_selected_agreement = {
+	if = {
+		limit = { scope:csr_india = { has_variable = tyrone_jewel_imperial } }
+		tyrone_jewel_apply_agreement = { KEY = $KEY$ PATH = imperial IMPERIAL = yes }
+	}
+	else = {
+		tyrone_jewel_apply_agreement = { KEY = $KEY$ PATH = development IMPERIAL = no }
+	}
+}
+
+tyrone_jewel_apply_concession = {
+	scope:jewel_partner = {
+		add_modifier = { name = tyrone_jewel_$KEY$_concession_benefit days = normal_modifier_time }
+	}
+	scope:jewel_proposer = {
+		# Imperial costs are covered by the agreement's weekly obligation.
+		if = {
+			limit = { scope:csr_india = this }
+			add_modifier = { name = tyrone_jewel_$KEY$_concession_cost days = normal_modifier_time }
+		}
+	}
+}
+
+# Pending negotiation only. Timed agreements and cooldowns keep their own expiry.
+tyrone_jewel_clear_negotiation = {
+	scope:csr_india ?= {
+		remove_variable = tyrone_jewel_pending
+		remove_variable = tyrone_jewel_stage
+		remove_variable = tyrone_jewel_imperial
+	}
+}

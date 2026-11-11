@@ -1,0 +1,82 @@
+﻿# Country scope, called once by the British timeout outcome.
+tyr_opium_british_failure_effect = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyr_opium_british_failed } } }
+		hidden_effect = {
+			set_variable = tyr_opium_british_failed
+			remove_variable = opium_wars_aggressor
+		}
+		add_modifier = { name = tyr_opium_british_failure years = 5 }
+		add_radicals = { value = 0.10 }
+		every_interest_group = {
+			limit = { is_in_government = yes }
+			add_modifier = { name = tyr_opium_cabinet_disgrace years = 5 }
+		}
+		every_country = {
+			limit = { is_india_tag_trigger = yes is_subject_of = c:GBR }
+			add_modifier = { name = tyr_opium_indian_trade_collapse years = 5 }
+			custom_tooltip = {
+				text = tyr_opium_indian_subjects_collapse_tt
+				every_subject_or_below = {
+					add_modifier = { name = tyr_opium_indian_trade_collapse years = 5 }
+				}
+			}
+		}
+	}
+}
+
+# British victory option scope. Select the Chinese portion of the port region.
+tyr_opium_grant_british_concessions = {
+	if = {
+		limit = { exists = c:CHI exists = c:GBR exists = scope:treaty_port_state }
+		scope:treaty_port_state.state_region = {
+			random_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:CHI ?= this
+							any_overlord_or_above = { c:CHI ?= this }
+						}
+					}
+				}
+				save_scope_as = tyr_opium_concession_state
+			}
+		}
+		if = {
+			limit = { exists = scope:tyr_opium_concession_state }
+			create_treaty = {
+				first_country = c:CHI
+				second_country = c:GBR
+				is_draft = no
+				binding_period = { days = 0 }
+				articles_to_create = {
+					{
+						article = regional_investment_rights
+						source_country = c:CHI
+						target_country = c:GBR
+						inputs = { { state = scope:tyr_opium_concession_state } }
+					}
+					{
+						article = building_investment_rights
+						source_country = c:CHI
+						target_country = c:GBR
+						inputs = { { building_type = bt:building_railway } }
+					}
+					{
+						article = building_investment_rights
+						source_country = c:CHI
+						target_country = c:GBR
+						inputs = { { building_type = bt:building_trade_center } }
+					}
+					{
+						article = building_investment_rights
+						source_country = c:CHI
+						target_country = c:GBR
+						inputs = { { building_type = bt:building_port } }
+					}
+				}
+			}
+			hidden_effect = { c:GBR = { chi_legation_refresh_rights = yes } }
+		}
+	}
+}

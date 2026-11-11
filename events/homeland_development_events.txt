@@ -1,0 +1,42 @@
+namespace = homeland_development
+
+homeland_development.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = homeland_development.1.t
+	desc = homeland_development.1.d
+	flavor = homeland_development.1.f
+
+	event_image = {
+		video = "asia_union_leader"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		has_journal_entry = je_homeland_development
+	}
+
+	immediate = {
+		every_scope_state = {
+			limit = {
+				owner = ROOT
+				OR = {
+					state_region = s:STATE_NORTHERN_MANCHURIA
+					state_region = s:STATE_SOUTHERN_MANCHURIA
+					state_region = s:STATE_OUTER_MANCHURIA
+					state_region = s:STATE_SHANDONG
+				}
+			}
+			add_modifier = homeland_development_state
+		}
+		add_modifier = homeland_development_national_debuff
+	}
+
+	option = {
+		name = homeland_development.1.a
+		default_option = yes
+	}
+}

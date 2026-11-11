@@ -1,0 +1,218 @@
+﻿je_tyr_self_strengthening = {
+	icon = "gfx/interface/icons/ideology_icons/modernizer.dds"
+	group = je_group_tyr_self_strengthening
+	context = country
+	highlight = yes
+	activation_description = { always = yes }
+	is_shown_when_inactive = {
+		tyr_ssm_is_chinese_country = yes
+		NOT = { has_variable = tyr_ssm_started }
+	}
+	possible = {
+		literacy_rate >= 0.10
+		has_technology_researched = nationalism
+		ig:ig_intelligentsia = { ig_counts_as_marginal = no }
+	}
+	immediate = {
+		set_variable = tyr_ssm_started
+		custom_tooltip = tyr_self_strengthening_army_unlock_tt
+		set_variable = tyr_ssm_active
+		set_variable = tyr_ssm_naval_unlocked
+		set_variable = { name = tyr_ssm_industrial_rounds value = 0 }
+		set_variable = { name = tyr_ssm_industry_levels value = tyr_ssm_industry_levels }
+		set_variable = { name = tyr_ssm_industry_target value = tyr_ssm_industry_next_target }
+		create_political_movement = { type = movement_tyr_self_strengthening }
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_self_strengthening.gui"
+		name = "tyr_ssm_active_subentries"
+		container = "custom_widget_container_3"
+	}
+	timeout = tyr_ssm_duration
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	transferable = no
+	can_revolution_inherit = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_ssm_main_success_desc
+		color = "gold_positive"
+		trigger = {
+			hidden_trigger = { OR = { has_variable = tyr_ssm_succeeded NOT = { has_variable = tyr_ssm_finished } } }
+			custom_tooltip = {
+				text = tyr_ssm_literacy_completed_tt
+				OR = { has_variable = tyr_ssm_literacy_done tyr_ssm_literacy_ready = yes }
+			}
+			custom_tooltip = {
+				text = tyr_ssm_army_completed_tt
+				OR = { has_variable = tyr_ssm_army_done tyr_ssm_army_ready = yes }
+			}
+			custom_tooltip = {
+				text = tyr_ssm_navy_completed_tt
+				OR = { has_variable = tyr_ssm_navy_done tyr_ssm_navy_ready = yes }
+			}
+			custom_tooltip = { text = tyr_ssm_industry_completed_tt tyr_ssm_industry_rounds >= 5 }
+		}
+		effect = { tyr_ssm_success = yes }
+	}
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		conclusion_desc = tyr_ssm_main_timeout_desc
+		flags = { timeout }
+		effect = {
+			tyr_ssm_deadline = yes
+		}
+	}
+	weight = 1000
+}
+
+je_tyr_ssm_literacy = {
+	icon = "gfx/interface/icons/invention_icons/academia.dds"
+	group = je_group_tyr_self_strengthening
+	context = country
+	activation_description = { always = yes }
+	is_shown_when_inactive = { has_variable = tyr_ssm_active }
+	possible = { always = yes }
+	transferable = no
+	can_revolution_inherit = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = je_standard_completion_conclusion_desc
+		color = "gold_positive"
+		trigger = {
+			hidden_trigger = {
+				OR = { has_variable = tyr_ssm_literacy_done NOT = { has_variable = tyr_ssm_finished } }
+			}
+			trigger_if = {
+				limit = { NOT = { has_variable = tyr_ssm_literacy_done } }
+				tyr_ssm_literacy_ready = yes
+			}
+		}
+		effect = { hidden_effect = { set_variable = tyr_ssm_literacy_done } }
+	}
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = tyr_ssm_child_closed_desc
+		trigger = { has_variable = tyr_ssm_finished }
+	}
+}
+
+je_tyr_ssm_army = {
+	icon = "gfx/interface/icons/invention_icons/enlistment_offices.dds"
+	group = je_group_tyr_self_strengthening
+	context = country
+	activation_description = { always = yes }
+	is_shown_when_inactive = { has_variable = tyr_ssm_active }
+	possible = { always = yes }
+	transferable = no
+	can_revolution_inherit = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = je_standard_completion_conclusion_desc
+		color = "gold_positive"
+		trigger = {
+			hidden_trigger = {
+				OR = { has_variable = tyr_ssm_army_done NOT = { has_variable = tyr_ssm_finished } }
+			}
+			trigger_if = {
+				limit = { NOT = { has_variable = tyr_ssm_army_done } }
+				tyr_ssm_army_ready = yes
+			}
+		}
+		effect = { hidden_effect = { set_variable = tyr_ssm_army_done } }
+	}
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = tyr_ssm_child_closed_desc
+		trigger = { has_variable = tyr_ssm_finished }
+	}
+}
+
+je_tyr_ssm_navy = {
+	icon = "gfx/interface/icons/invention_icons/admiralty.dds"
+	group = je_group_tyr_self_strengthening
+	context = country
+	activation_description = { always = yes }
+	is_shown_when_inactive = { has_variable = tyr_ssm_active }
+	possible = { always = yes }
+	transferable = no
+	can_revolution_inherit = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = je_standard_completion_conclusion_desc
+		color = "gold_positive"
+		trigger = {
+			hidden_trigger = {
+				OR = { has_variable = tyr_ssm_navy_done NOT = { has_variable = tyr_ssm_finished } }
+			}
+			trigger_if = {
+				limit = { NOT = { has_variable = tyr_ssm_navy_done } }
+				tyr_ssm_navy_ready = yes
+			}
+		}
+		effect = { hidden_effect = { set_variable = tyr_ssm_navy_done } }
+	}
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = tyr_ssm_child_closed_desc
+		trigger = { has_variable = tyr_ssm_finished }
+	}
+}
+
+je_tyr_ssm_industry = {
+	icon = "gfx/interface/icons/invention_icons/bessemer_process.dds"
+	group = je_group_tyr_self_strengthening
+	context = country
+	activation_description = { always = yes }
+	is_shown_when_inactive = { has_variable = tyr_ssm_active }
+	possible = { always = yes }
+	immediate = {
+		save_scope_as = tyr_ssm_owner
+		scope:journal_entry = {
+			set_bar_progress = { name = tyr_ssm_industry_bar value = scope:tyr_ssm_owner.var:tyr_ssm_industry_levels }
+		}
+	}
+	on_monthly_pulse = { effect = { tyr_ssm_refresh_industry = yes } }
+	scripted_progress_bar = tyr_ssm_industry_bar
+	modifiers_while_active = { tyr_ssm_industry_construction }
+	scaling_modifiers_while_active = {
+		modifier = tyr_ssm_industry_research
+		value = { value = tyr_ssm_industry_rounds }
+	}
+	timeout = tyr_ssm_duration
+	transferable = no
+	can_revolution_inherit = yes
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_ssm_industry_success_desc
+		color = "gold_positive"
+		trigger = { custom_tooltip = { text = tyr_ssm_industry_completed_tt tyr_ssm_industry_rounds >= 5 } }
+		effect = {
+			if = {
+				limit = { hidden_trigger = { NOT = { has_variable = tyr_ssm_industry_rewarded } } }
+				add_modifier = { name = tyr_ssm_industry_spread_5 years = 5 }
+				hidden_effect = { set_variable = tyr_ssm_industry_rewarded }
+			}
+		}
+	}
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = tyr_ssm_child_closed_desc
+		trigger = { has_variable = tyr_ssm_finished }
+		effect = { hidden_effect = { tyr_ssm_award_industry = yes } }
+	}
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		conclusion_desc = tyr_ssm_industry_timeout_desc
+		flags = { timeout }
+		effect = {
+			hidden_effect = { tyr_ssm_deadline = yes }
+		}
+	}
+}

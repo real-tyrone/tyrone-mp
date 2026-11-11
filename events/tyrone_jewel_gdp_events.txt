@@ -1,0 +1,68 @@
+namespace = tyrone_jewel_gdp
+
+tyrone_jewel_gdp.1 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_gdp.1.t
+	desc = tyrone_jewel_gdp.1.d
+	flavor = tyrone_jewel_gdp.1.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_country_active = yes
+		has_variable = tyrone_jewel_gdp_started
+		NOT = { has_variable = tyrone_jewel_gdp_policy }
+	}
+	cancellation_trigger = { NOT = { tyrone_jewel_country_active = yes } }
+	option = {
+		name = tyrone_jewel_gdp.1.a
+		default_option = yes
+		ai_chance = { base = 1 }
+		custom_tooltip = tyrone_jewel_gdp_construction_choice_tt
+		hidden_effect = { set_variable = { name = tyrone_jewel_gdp_policy value = 1 } }
+	}
+	option = {
+		name = tyrone_jewel_gdp.1.b
+		ai_chance = { base = 1 }
+		custom_tooltip = tyrone_jewel_gdp_impact_choice_tt
+		hidden_effect = { set_variable = { name = tyrone_jewel_gdp_policy value = 2 } }
+	}
+	option = {
+		name = tyrone_jewel_gdp.1.c
+		ai_chance = { base = 1 }
+		custom_tooltip = tyrone_jewel_gdp_cost_choice_tt
+		hidden_effect = { set_variable = { name = tyrone_jewel_gdp_policy value = 3 } }
+	}
+}
+
+tyrone_jewel_gdp.2 = {
+	type = country_event
+	placement = root
+	title = tyrone_jewel_gdp.2.t
+	desc = tyrone_jewel_gdp.2.d
+	flavor = tyrone_jewel_gdp.2.f
+	event_image = { video = "ip2_india_urban_scene" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/invention_icons/railways.dds"
+	duration = 1
+	trigger = {
+		tyrone_jewel_country_active = yes
+		has_variable = tyrone_jewel_gdp_reward_pending
+	}
+	cancellation_trigger = { NOT = { tyrone_jewel_country_active = yes } }
+	option = {
+		name = tyrone_jewel_gdp.2.a
+		default_option = yes
+		show_as_tooltip = {
+			tyrone_jewel_gdp_apply_bonus = { COUNT = tyrone_jewel_gdp_next_successes }
+		}
+		hidden_effect = {
+			change_variable = { name = tyrone_jewel_gdp_successes add = 1 }
+			remove_variable = tyrone_jewel_gdp_reward_pending
+			tyrone_jewel_gdp_apply_bonus = { COUNT = var:tyrone_jewel_gdp_successes }
+		}
+		add_loyalists = { value = 0.02 }
+	}
+}

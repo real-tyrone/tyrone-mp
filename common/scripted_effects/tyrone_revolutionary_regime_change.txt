@@ -1,0 +1,43 @@
+﻿# Country scope: the regime-change enforcer. Requires scope:target_country (country).
+# The target receives every law required by has_all_revolutionary_laws.
+tyrone_enforce_revolutionary_regime_laws_effect = {
+	if = {
+		limit = {
+			has_law_or_variant = law_type:law_council_republic
+		}
+		scope:target_country ?= {
+			if = {
+				limit = { NOT = { has_law_or_variant = law_type:law_council_republic } }
+				activate_law = law_type:law_council_republic
+			}
+			if = {
+				limit = { NOT = { has_law_or_variant = law_type:law_factory_councils } }
+				activate_law = law_type:law_factory_councils
+			}
+			if = {
+				limit = { NOT = { has_law_or_variant = law_type:law_communal_administration } }
+				if = {
+					limit = { is_india_tag_trigger = yes }
+					activate_law = law_type:law_india_communal_administration
+				}
+				else = {
+					activate_law = law_type:law_communal_administration
+				}
+			}
+			if = {
+				limit = { NOT = { has_law_or_variant = law_type:law_revolutionary_guard } }
+				if = {
+					limit = { is_india_tag_trigger = yes }
+					activate_law = law_type:law_india_peoples_army
+				}
+				else_if = {
+					limit = { is_china_tag_trigger = yes }
+					activate_law = law_type:law_chi_peoples_liberation_army
+				}
+				else = {
+					activate_law = law_type:law_revolutionary_guard
+				}
+			}
+		}
+	}
+}

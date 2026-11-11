@@ -1,0 +1,273 @@
+﻿# Selective overrides for Oppressors and Oppressed and the vanguardist path requirement.
+namespace = communism
+
+communism.10 = {
+	type = country_event
+	placement = root
+	title = communism.10.t
+	desc = communism.10.d
+	flavor = communism.10.f
+
+	duration = 3
+
+	event_image = {
+		video = "europenorthamerica_political_extremism"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	trigger = {
+		# triggered by communsim JE 1
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				NOT = {
+					any_political_movement = {
+						is_political_movement_type = movement_socialist
+					}
+				}
+			}
+			create_political_movement = { type = movement_socialist }
+		}
+	}
+
+	option = {
+		name = communism.10.a
+		default_option = yes
+		capital = {
+			add_radicals_in_state = {
+				value = medium_radicals
+				pop_type = laborers
+			}
+		}
+
+		every_political_movement = {
+			limit = {
+				law_stance = {
+					law = law_type:law_factory_councils
+					value > neutral
+				}
+			}
+			add_modifier = {
+				name = tyr_oppressors_and_oppressed_movement
+				years = 5
+			}
+		}
+		if = {
+			limit = { NOT = { has_technology_researched = socialism } }
+			add_technology_progress = { progress = 4150 technology = socialism }
+		}
+	}
+	option = {
+		name = communism.10.b
+		trigger = {
+			any_interest_group = {
+				is_in_government = yes
+				OR = {
+					has_ideology = ideology:ideology_socialist
+					leader = {
+						has_socialist_ideology = yes
+					}
+				}
+			}
+		}
+		capital = {
+			add_radicals_in_state = {
+				value = small_radicals
+				pop_type = laborers
+			}
+		}
+		custom_tooltip = {
+			text = communism_var_tick_05_tt
+			set_variable = { name = communism_progress_var_add value = 0.5 }
+		}
+
+		every_political_movement = {
+			limit = {
+				law_stance = {
+					law = law_type:law_factory_councils
+					value > neutral
+				}
+			}
+			add_modifier = {
+				name = tyr_oppressors_and_oppressed_movement
+				years = 5
+			}
+		}
+		if = {
+			limit = { NOT = { has_technology_researched = socialism } }
+			add_technology_progress = { progress = 4150 technology = socialism }
+		}
+	}
+}
+
+communism.2 = {
+	type = country_event
+	placement = root
+	title = communism.2.t
+	desc = communism.2.d
+	flavor = communism.2.f
+
+	duration = 3
+
+	event_image = {
+		video = "ip5_soviet_deliberation"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# triggered by communsim JE 2
+	}
+
+	fire_only_once = yes
+
+	immediate = {
+		ig:ig_trade_unions ?= {
+			save_scope_as = unions
+			leader = {
+				save_scope_as = union_leader
+				set_temporary_event_immortality = { DURATION = 3 }
+			}
+		}
+	}
+
+	option = { # communism
+		name = communism.2.b
+		default_option = yes
+		ig:ig_trade_unions ?= {
+			set_variable = chose_communism
+		}
+		custom_tooltip = chose_communism.tt
+		if = {
+			limit = {
+				scope:union_leader = {
+					NOT = { has_ideology = ideology:ideology_communist_leader }
+				}
+			}
+			scope:union_leader = {
+				set_ideology = ideology:ideology_communist_leader
+			}
+		}
+		ai_chance = {
+			base = 50
+		}
+	}
+	option = { # vanguardism
+		name = communism.2.a
+		trigger = {
+			OR = {
+				AND = {
+					has_technology_researched = political_agitation
+					custom_tooltip = {
+						text = vanguardism_viable_tt
+						vanguardism_coefficient > 1
+					}
+				}
+				has_law_or_variant = law_type:law_single_party_state
+				has_law_or_variant = law_type:law_oligarchy
+				has_law_or_variant = law_type:law_technocracy
+				has_law_or_variant = law_type:law_autocracy
+			}
+		}
+		highlighted_option = yes
+		ig:ig_trade_unions ?= {
+			set_variable = chose_vanguardism
+		}
+		custom_tooltip = chose_vanguardism.tt
+		if = {
+			limit = {
+				scope:union_leader = {
+					NOT = { has_ideology = ideology:ideology_vanguardist }
+				}
+			}
+			scope:union_leader = {
+				set_ideology = ideology:ideology_vanguardist
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				trigger = {
+					vanguardism_coefficient >= 2
+				}
+				add = 40
+			}
+		}
+	}
+	option = { # anarchism
+		name = communism.2.c
+		trigger = {
+			any_political_movement = {
+				is_political_movement_type = movement_anarchist
+			}
+		}
+		show_as_unavailable = {
+			has_technology_researched = anarchism
+		}
+		highlighted_option = yes
+		ig:ig_trade_unions ?= {
+			set_variable = chose_anarchism
+		}
+		custom_tooltip = chose_anarchism.tt
+		if = {
+			limit = {
+				scope:union_leader = {
+					NOT = { has_ideology = ideology:ideology_anarchist }
+				}
+			}
+			scope:union_leader = {
+				set_ideology = ideology:ideology_anarchist
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				trigger = {
+					any_political_movement = {
+						is_political_movement_type = movement_anarchist
+						political_movement_support >= 0.1
+					}
+				}
+				add = 25
+			}
+		}
+	}
+
+	after = {
+		revoke_temporary_event_immortality = { CHARACTER = scope:union_leader }
+		if = {
+			limit = {
+				NOT = { has_global_variable = socialist_world_republic }
+			}
+			add_journal_entry = {
+				type = je_state_and_revolution
+			}
+		}
+		add_journal_entry = {
+			type = je_social_revolution
+		}
+		custom_tooltip = {
+			text = form_white_movement_tt
+			if = {
+				limit = {
+					NOT = {
+						any_political_movement = {
+							is_political_movement_type = movement_anti_communist
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_anti_communist
+				}
+			}
+		}
+		je_communism_2_cleanup = yes
+	}
+}

@@ -1,0 +1,159 @@
+# Country scope unless stated otherwise. No periodic effects in this file.
+chi_legation_chinese_government = {
+    OR = {
+        country_has_primary_culture = cu:han
+        country_has_primary_culture = cu:manchu
+    }
+}
+# State-region scope; frozen from the installed 1836 Han/Manchu homelands.
+chi_legation_region = {
+    OR = {
+        this = s:STATE_BEIJING
+        this = s:STATE_CHONGQING
+        this = s:STATE_EASTERN_HUBEI
+        this = s:STATE_FORMOSA
+        this = s:STATE_FUJIAN
+        this = s:STATE_GANSU
+        this = s:STATE_GUANGDONG
+        this = s:STATE_GUANGXI
+        this = s:STATE_GUIZHOU
+        this = s:STATE_HENAN
+        this = s:STATE_HUNAN
+        this = s:STATE_JIANGSU
+        this = s:STATE_JIANGXI
+        this = s:STATE_NANJING
+        this = s:STATE_NINGXIA
+        this = s:STATE_NORTHERN_ANHUI
+        this = s:STATE_NORTHERN_MANCHURIA
+        this = s:STATE_OUTER_MANCHURIA
+        this = s:STATE_SHANDONG
+        this = s:STATE_SHANXI
+        this = s:STATE_SHAOZHOU
+        this = s:STATE_SHENGJING
+        this = s:STATE_SICHUAN
+        this = s:STATE_SOUTHERN_ANHUI
+        this = s:STATE_SOUTHERN_MANCHURIA
+        this = s:STATE_SUZHOU
+        this = s:STATE_WESTERN_HUBEI
+        this = s:STATE_XIAN
+        this = s:STATE_YUNNAN
+        this = s:STATE_ZHEJIANG
+        this = s:STATE_ZHILI
+    }
+}
+# Country scope. A port anywhere in the fixed perimeter supports all concessions.
+chi_legation_has_port = {
+    any_scope_state = {
+        is_treaty_port = yes
+        state_region = { chi_legation_region = yes }
+    }
+}
+chi_legation_eligible = {
+    NOT = { chi_legation_chinese_government = yes }
+    OR = {
+        country_rank >= rank_value:great_power
+        has_variable = chi_legation_admitted
+    }
+    chi_legation_has_port = yes
+}
+# State scope; investor passed by the native construction system.
+# Native investment access still handles subjects/blocs/pre-existing ordinary rights.
+# The restrictive branch only applies to investors relying on concession articles.
+chi_legation_building_allowed = {
+    trigger_if = {
+        limit = {
+            exists = scope:investor_country
+            owner = {
+                OR = {
+                    chi_legation_chinese_government = yes
+                    AND = {
+                        exists = top_overlord
+                        top_overlord = { chi_legation_chinese_government = yes }
+                    }
+                }
+            }
+            scope:investor_country = { NOT = { chi_legation_chinese_government = yes } }
+        }
+        owner = { save_temporary_scope_as = chi_legation_build_owner }
+        state_region = { save_temporary_scope_as = chi_legation_build_region }
+        OR = {
+            owner = scope:investor_country
+            scope:investor_country = {
+                any_scope_treaty = {
+                    binds = scope:chi_legation_build_owner
+                    any_scope_article = {
+                        trigger_if = {
+                            limit = { has_type = foreign_investment_rights }
+                            source_country = scope:chi_legation_build_owner
+                            target_country = scope:investor_country
+                        }
+                        trigger_else = { always = no }
+                    }
+                }
+            }
+            AND = {
+                owner = { exists = top_overlord }
+                owner.top_overlord = {
+                save_temporary_scope_as = chi_legation_build_overlord
+                any_scope_treaty = {
+                    binds = scope:investor_country
+                    any_scope_article = {
+                        trigger_if = {
+                            limit = { has_type = foreign_investment_rights }
+                            source_country = scope:chi_legation_build_overlord
+                            target_country = scope:investor_country
+                        }
+                        trigger_else = { always = no }
+                    }
+                }
+            }
+            }
+            owner = { is_subject_of = scope:investor_country }
+            scope:investor_country = {
+                is_subject_of = scope:chi_legation_build_owner
+                any_scope_diplomatic_pact = {
+                    OR = {
+                        is_diplomatic_action_type = da_overlord_grant_investment_rights
+                        is_diplomatic_action_type = da_subject_request_investment_rights
+                    }
+                    "diplomatic_pact_other_country(scope:investor_country)" = scope:chi_legation_build_owner
+                }
+            }
+            scope:investor_country.power_bloc ?= {
+                has_principle = principle:principle_foreign_investment_3
+                any_power_bloc_member = { this = scope:chi_legation_build_owner }
+            }
+            AND = {
+                # Concessions never inherit into foreign subjects such as Korea.
+                owner = { chi_legation_chinese_government = yes }
+                state_region = { chi_legation_region = yes }
+                scope:investor_country = {
+                    chi_legation_has_port = yes
+                    is_target_in_variable_list = { name = chi_legation_industries target = $BUILDING_TYPE$ }
+                }
+                scope:investor_country = {
+                    is_target_in_variable_list = { name = chi_legation_regions target = scope:chi_legation_build_region }
+                }
+            }
+        }
+    }
+}
+
+# Country scope. Optional comparison is essential before the global JE initializes.
+# Same global-country comparison form used by vanilla's Chinese central government.
+chi_legation_is_central = {
+    exists = global_var:chi_legation_central
+    global_var:chi_legation_central ?= this
+}
+
+# Foreign country scope; current owner determines whether a port blocks completion.
+chi_boxer_port_holder = {
+    has_variable = chi_legation_admitted
+    NOT = { chi_legation_chinese_government = yes }
+    chi_legation_has_port = yes
+}
+# Chinese country scope. Peace is required even if the final port changes hands.
+chi_boxer_can_complete = {
+    is_at_war = no
+    NOT = { any_country = { chi_boxer_port_holder = yes } }
+}

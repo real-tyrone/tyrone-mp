@@ -1,0 +1,96 @@
+namespace = chi_legation
+
+# Console only; never attached to a random pulse. Future Boxer success calls the same effect.
+chi_legation.100 = {
+    type = country_event
+    placement = ROOT
+    title = chi_legation.100.t
+    desc = chi_legation.100.d
+    flavor = chi_legation.100.f
+    event_image = { video = "asia_union_leader" }
+    icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+    trigger = { chi_legation_chinese_government = yes }
+    option = {
+        name = chi_legation.100.a
+        default_option = yes
+        chi_legation_boxer_victory = yes
+        if = {
+            limit = { NOT = { has_global_variable = chi_legation_active } }
+            set_global_variable = { name = chi_legation_debug_activate value = 1 }
+            add_contextless_journal_entry = je_chi_legation_system
+            chi_legation_boxer_victory = yes
+        }
+    }
+}
+
+namespace = chi_boxer
+chi_boxer.1 = {
+    type = country_event
+    placement = ROOT
+    title = chi_boxer.1.t
+    desc = chi_boxer.1.d
+    flavor = chi_boxer.1.f
+    event_image = { video = "asia_union_leader" }
+    icon = "gfx/interface/icons/event_icons/event_fire.dds"
+    option = { name = chi_boxer.1.a default_option = yes }
+}
+chi_boxer.2 = {
+    type = country_event
+    placement = ROOT
+    duration = 1
+    title = chi_boxer.2.t
+    desc = chi_boxer.2.d
+    flavor = chi_boxer.2.f
+    event_image = { video = "asia_union_leader" }
+    icon = "gfx/interface/icons/event_icons/event_fire.dds"
+    trigger = { chi_legation_is_central = yes has_journal_entry = je_boxer_rebellion }
+    option = {
+        name = chi_boxer.2.a
+        trigger = {
+            exists = scope:chi_boxer_power
+            scope:chi_boxer_power = { chi_boxer_port_holder = yes NOT = { has_war_with = root } }
+        }
+        custom_tooltip = chi_boxer_declare_tt
+        hidden_effect = {
+            chi_boxer_declare_war = yes
+            trigger_event = { id = chi_boxer.5 days = 1 popup = no }
+        }
+    }
+    option = {
+        name = chi_boxer.2.b
+        default_option = yes
+        if = {
+            limit = { exists = scope:chi_boxer_power scope:chi_boxer_power = { chi_boxer_port_holder = yes NOT = { has_war_with = root } } }
+            add_radicals = { value = 0.01 }
+        }
+        hidden_effect = {
+            trigger_event = { id = chi_boxer.5 days = 1 popup = no }
+        }
+    }
+}
+chi_boxer.5 = {
+    type = country_event
+    hidden = yes
+    immediate = { chi_boxer_next_power = yes }
+}
+chi_boxer.3 = {
+    type = country_event
+    placement = ROOT
+    title = chi_boxer.3.t
+    desc = chi_boxer.3.d
+    flavor = chi_boxer.3.f
+    event_image = { video = "asia_union_leader" }
+    icon = "gfx/interface/icons/event_icons/event_fire.dds"
+    option = { name = chi_boxer.3.a default_option = yes }
+}
+chi_boxer.4 = {
+    type = country_event
+    placement = ROOT
+    title = chi_boxer.4.t
+    desc = chi_boxer.4.d
+    flavor = chi_boxer.4.f
+    event_image = { video = "asia_union_leader" }
+    icon = "gfx/interface/icons/event_icons/event_fire.dds"
+    option = { name = chi_boxer.4.a default_option = yes }
+}

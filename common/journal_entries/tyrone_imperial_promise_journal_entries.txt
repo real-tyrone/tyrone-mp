@@ -1,0 +1,522 @@
+﻿# Replaces the original utilitarian arc with an open-ended reform portfolio.
+# Shared between India and its current overlord; only India must satisfy the requirements.
+# Requirements are inline. State/building checks follow Vic Century's
+# bangladesh_industrialize entry, retaining Tyrone's own objectives and thresholds.
+REPLACE:je_imperialism_of_promise = {
+	icon = "gfx/interface/icons/invention_icons/central_planning.dds"
+	group = je_group_tyrone_india_promise
+	highlight = yes
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { tyrone_promise_is_actor = yes }
+	is_shown_when_inactive = { tyrone_promise_india_exists = yes }
+	possible = { tyrone_promise_india_exists = yes }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		set_global_variable = tyrone_promise_active_var
+		add_contextless_journal_entry = je_tyrone_promise_naval_industry
+		add_contextless_journal_entry = je_tyrone_promise_plantation_labor
+		add_contextless_journal_entry = je_tyrone_promise_manufacturing_monopoly
+		add_contextless_journal_entry = je_tyrone_promise_bonded_labor
+		add_contextless_journal_entry = je_tyrone_promise_british_patents
+		add_contextless_journal_entry = je_tyrone_promise_army_training
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_imperialism_of_promise
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			if = {
+				limit = {
+					scope:tyrone_promise_india ?= {
+						has_variable = bic_army_training_restricted_var
+						NOT = { has_variable = tyrone_training_entry_started }
+					}
+				}
+				add_contextless_journal_entry = je_tyrone_promise_army_training
+			}
+			# Add the new objective to an Imperialism of Promise already active in a save.
+			if = {
+				limit = {
+					exists = scope:tyrone_promise_india
+					scope:tyrone_promise_india ?= {
+						NOT = { has_variable = tyrone_patents_entry_started }
+						any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+					}
+				}
+				add_contextless_journal_entry = je_tyrone_promise_british_patents
+			}
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_imperialism_of_promise
+			}
+		}
+	}
+	
+	# Deliberately unfinished: more reforms will be added to this portfolio.
+
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+	weight = 100
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = { tyrone_promise_india_exists = yes }
+		}
+		effect = {
+			remove_global_variable = tyrone_promise_active_var
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			always = no
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyrone_india_native_subentries.gui"
+		name = "tyrone_india_active_subentries_promise"
+		container = "custom_widget_container_3"
+	}
+}
+
+je_tyrone_promise_naval_industry = {
+	icon = "gfx/interface/icons/invention_icons/paddle_steamer.dds"
+	group = je_group_tyrone_india_promise
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_naval_industry
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_naval_industry
+			}
+		}
+	}
+
+	# Manual repeal and removal through law changes remain valid alternatives.
+	# Once the restriction is gone, this objective silently disappears.
+	
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = {
+					AND = {
+						has_global_variable = tyrone_promise_active_var
+						exists = scope:tyrone_promise_india
+						scope:tyrone_promise_india ?= { is_country_alive = yes }
+					}
+				}
+				NOT = {
+					scope:tyrone_promise_india ?= {
+						OR = {
+							has_variable = bic_naval_restricted_var
+							any_active_law = { has_amendment = amendment_type:amendment_royal_navy_supremacy }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+				scope:tyrone_promise_india ?= {
+					OR = {
+						has_variable = bic_naval_restricted_var
+						any_active_law = { has_amendment = amendment_type:amendment_royal_navy_supremacy }
+					}
+				}
+			}
+			scope:tyrone_promise_india ?= {
+				has_technology_researched = gantry_cranes
+				any_scope_state = {
+					state_region = s:STATE_EAST_BENGAL
+					any_scope_building = {
+						is_building_type = building_shipyard
+						level >= 25
+					}
+					any_scope_building = {
+						is_building_type = building_urban_center
+						level >= 50
+					}
+					any_scope_building = {
+						is_building_type = building_logging_camp
+						level >= 20
+						has_active_production_method = pm_mech_mills
+					}
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= { tyrone_promise_remove_naval_industry_restriction = yes }
+		}
+		event_outcome_desc = {
+			first_valid = { triggered_desc = { desc = tyrone_promise_naval_industry_completed } }
+		}
+	}
+}
+
+je_tyrone_promise_plantation_labor = {
+	scripted_button = tyrone_promise_plantation_reform_1
+	scripted_button = tyrone_promise_plantation_reform_2
+	icon = "gfx/interface/icons/invention_icons/mechanized_farming.dds"
+	group = je_group_tyrone_india_promise
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_plantation_labor
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_plantation_labor
+			}
+		}
+	}
+
+	# Manual repeal and removal through law changes remain valid alternatives.
+	# Once the restriction is gone, this objective silently disappears.
+	
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = {
+					AND = {
+						has_global_variable = tyrone_promise_active_var
+						exists = scope:tyrone_promise_india
+						scope:tyrone_promise_india ?= { is_country_alive = yes }
+					}
+				}
+				NOT = {
+					scope:tyrone_promise_india ?= {
+						any_active_law = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations has_amendment = amendment_type:amendment_plantation_labor_obligations_regulated has_amendment = amendment_type:amendment_plantation_labor_obligations_relief } }
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+				scope:tyrone_promise_india ?= {
+					any_active_law = { OR = { has_amendment = amendment_type:amendment_plantation_labor_obligations has_amendment = amendment_type:amendment_plantation_labor_obligations_regulated has_amendment = amendment_type:amendment_plantation_labor_obligations_relief } }
+				}
+			}
+			scope:tyrone_promise_india ?= {
+				market_capital.market = {
+					mg:grain = { market_goods_pricier <= -0.05 }
+					mg:groceries = { market_goods_pricier <= -0.05 }
+				}
+				any_scope_state = {
+					count >= 3
+					any_scope_building = {
+						is_building_type = building_rice_farm
+						level >= 200
+						has_active_production_method = pm_fertilization_building_rice_farm
+						has_active_production_method = pm_steam_threshers_building_rice_farm
+					}
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= { tyrone_promise_remove_plantation_labor_restriction = yes }
+		}
+		event_outcome_desc = {
+			first_valid = { triggered_desc = { desc = tyrone_promise_plantation_labor_completed } }
+		}
+	}
+}
+
+je_tyrone_promise_manufacturing_monopoly = {
+	icon = "gfx/interface/icons/invention_icons/joint_stock_companies.dds"
+	group = je_group_tyrone_india_promise
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_manufacturing_monopoly
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_manufacturing_monopoly
+			}
+		}
+	}
+
+	# Manual repeal and removal through law changes remain valid alternatives.
+	# Once the restriction is gone, this objective silently disappears.
+	
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = {
+					AND = {
+						has_global_variable = tyrone_promise_active_var
+						exists = scope:tyrone_promise_india
+						scope:tyrone_promise_india ?= { is_country_alive = yes }
+					}
+				}
+				NOT = {
+					scope:tyrone_promise_india ?= {
+						any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly }
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+				scope:tyrone_promise_india ?= {
+					any_active_law = { has_amendment = amendment_type:amendment_british_manufacturing_monopoly }
+				}
+			}
+			scope:tyrone_promise_india ?= {
+				OR = {
+					AND = {
+						exists = c:GBR
+						is_subject_type = subject_type_colony
+						overlord ?= { c:GBR ?= this }
+					}
+					has_law = law_type:law_chartered_industrialization
+				}
+				has_technology_researched = mechanized_workshops
+				NOT = { has_law = law_type:law_chartered_no_schools }
+				custom_tooltip = {
+					text = tyrone_promise_no_british_patents_tt
+					NOT = {
+						any_active_law = { has_amendment = amendment_type:amendment_reliance_on_british_patents }
+					}
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= { tyrone_promise_remove_manufacturing_monopoly_restriction = yes }
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_bengal
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_bombay
+			add_contextless_journal_entry = je_tyrone_promise_industrialize_carnatic_malabar
+		}
+		event_outcome_desc = {
+			first_valid = { triggered_desc = { desc = tyrone_promise_manufacturing_monopoly_completed } }
+		}
+	}
+}
+
+je_tyrone_promise_bonded_labor = {
+	icon = "gfx/interface/icons/invention_icons/human_rights.dds"
+	group = je_group_tyrone_india_promise
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		tyrone_india_portfolio_refresh_involvement = {
+			INDIA = scope:tyrone_promise_india
+			ENTRY = je_tyrone_promise_bonded_labor
+		}
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = {
+				INDIA = scope:tyrone_promise_india
+				ENTRY = je_tyrone_promise_bonded_labor
+			}
+		}
+	}
+
+	# Manual repeal and removal through law changes remain valid alternatives.
+	# Once the restriction is gone, this objective silently disappears.
+	
+	progressbar = no
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 20
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = {
+					AND = {
+						has_global_variable = tyrone_promise_active_var
+						exists = scope:tyrone_promise_india
+						scope:tyrone_promise_india ?= { is_country_alive = yes }
+					}
+				}
+				NOT = {
+					scope:tyrone_promise_india ?= {
+						any_active_law = { has_amendment = amendment_type:amendment_company_bonded_labor_guarantees }
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { is_country_alive = yes }
+				scope:tyrone_promise_india ?= {
+					any_active_law = { has_amendment = amendment_type:amendment_company_bonded_labor_guarantees }
+				}
+			}
+			scope:tyrone_promise_india ?= {
+				OR = {
+					ig:ig_intelligentsia ?= { is_powerful = yes }
+					ig:ig_petty_bourgeoisie ?= { is_powerful = yes }
+					ig:ig_rural_folk ?= { is_powerful = yes }
+					AND = {
+						exists = c:GBR
+						is_subject_type = subject_type_colony
+						overlord ?= { c:GBR ?= this }
+					}
+				}
+				NOT = { has_law = law_type:law_chartered_appointed_bureaucrats }
+				country_has_building_group_levels = {
+					type = bg_manufacturing
+					value >= 300
+				}
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= { tyrone_promise_remove_bonded_labor_restriction = yes }
+		}
+		event_outcome_desc = {
+			first_valid = { triggered_desc = { desc = tyrone_promise_bonded_labor_completed } }
+		}
+	}
+}
+
+je_tyrone_promise_army_training = {
+	icon = "gfx/interface/icons/invention_icons/military_drill.dds"
+	group = je_group_tyrone_india_promise
+	should_be_involved = { tyrone_promise_is_actor = yes }
+	should_show_when_not_involved = { always = no }
+	immediate = {
+		tyrone_promise_bind_india = yes
+		scope:tyrone_promise_india ?= { set_variable = tyrone_training_entry_started }
+		tyrone_india_portfolio_refresh_involvement = { INDIA = scope:tyrone_promise_india ENTRY = je_tyrone_promise_army_training }
+	}
+	on_monthly_pulse = {
+		effect = {
+			tyrone_promise_bind_india = yes
+			tyrone_india_portfolio_refresh_involvement = { INDIA = scope:tyrone_promise_india ENTRY = je_tyrone_promise_army_training }
+		}
+	}
+
+	progressbar = no
+	weight = 20
+	can_revolution_inherit = yes
+
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = { has_global_variable = tyrone_promise_active_var }
+				NOT = { tyrone_promise_india_exists = yes }
+				scope:tyrone_promise_india ?= { NOT = { has_variable = bic_army_training_restricted_var } }
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			hidden_trigger = {
+				has_global_variable = tyrone_promise_active_var
+				exists = scope:tyrone_promise_india
+				scope:tyrone_promise_india ?= { has_variable = bic_army_training_restricted_var }
+			}
+			scope:tyrone_promise_india ?= {
+				NOT = { has_law_or_variant = law_type:law_peasant_levies }
+				army_size >= 250
+				NOT = { has_law = law_type:law_chartered_appointed_bureaucrats }
+			}
+		}
+		effect = {
+			scope:tyrone_promise_india ?= { tyrone_promise_remove_training_restrictions = yes }
+		}
+	}
+}

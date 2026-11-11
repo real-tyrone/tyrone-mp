@@ -1,0 +1,127 @@
+﻿chi_early_army_napoleonic_button = {
+	name = chi_early_army_napoleonic_button
+	desc = chi_early_army_napoleonic_button_desc
+
+	visible = {
+		has_journal_entry = je_early_army_modernization
+		NOT = { has_variable = chi_early_army_napoleonic_done }
+	}
+
+	possible = {
+		has_technology_researched = napoleonic_warfare
+		NOT = {
+			any_scope_building = {
+				filter = { is_building_type = building_barrack }
+				has_active_production_method = pm_no_organization
+			}
+		}
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
+	}
+
+	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
+		set_variable = chi_early_army_napoleonic_done
+		trigger_event = { id = chi_early_army.1 popup = yes }
+	}
+}
+
+chi_early_army_rifling_button = {
+	name = chi_early_army_rifling_button
+	desc = chi_early_army_rifling_button_desc
+
+	visible = {
+		has_journal_entry = je_early_army_modernization
+		NOT = { has_variable = chi_early_army_rifling_done }
+	}
+
+	possible = {
+		has_technology_researched = rifling
+		market_capital.market = {
+			mg:small_arms = { market_goods_pricier <= 0 }
+		}
+		NOT = {
+			any_scope_building = {
+				is_building_type = building_barrack
+				has_active_production_method = pm_no_organization
+			}
+		}
+		country_army_unit_type_fraction = {
+			target = unit_type:combat_unit_type_irregular_infantry
+			value = 0
+		}
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
+	}
+
+	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			if = { limit = { has_modifier = chi_early_army_line_artillery_penalty } remove_modifier = chi_early_army_line_artillery_penalty }
+			chi_early_army_advance_stage = yes
+		}
+		set_variable = chi_early_army_rifling_done
+		trigger_event = { id = chi_early_army.2 popup = yes }
+	}
+}
+
+chi_early_army_general_staff_button = {
+	name = chi_early_army_general_staff_button
+	desc = chi_early_army_general_staff_button_desc
+
+	visible = {
+		has_journal_entry = je_early_army_modernization
+		NOT = { has_variable = chi_early_army_general_staff_done }
+	}
+
+	possible = {
+		has_technology_researched = general_staff
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
+	}
+
+	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
+		set_variable = chi_early_army_general_staff_done
+		trigger_event = { id = chi_early_army.3 popup = yes }
+	}
+}
+
+chi_early_army_screw_frigates_button = {
+	name = chi_early_army_screw_frigates_button
+	desc = chi_early_army_screw_frigates_button_desc
+
+	visible = {
+		has_journal_entry = je_early_army_modernization
+		NOT = { has_variable = chi_early_army_screw_frigates_done }
+	}
+
+	possible = {
+		has_technology_researched = screw_frigate
+		custom_tooltip = { text = chi_early_army_stage_remaining_tt var:chi_early_army_stages > 0 }
+	}
+
+	effect = {
+		hidden_effect = {
+			if = {
+				limit = { var:chi_early_army_stages > 0 }
+				change_variable = { name = chi_early_army_stages subtract = 1 }
+			}
+			chi_early_army_advance_stage = yes
+		}
+		set_variable = chi_early_army_screw_frigates_done
+		trigger_event = { id = chi_early_army.4 popup = yes }
+	}
+}

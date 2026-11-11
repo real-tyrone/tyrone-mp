@@ -1,0 +1,914 @@
+﻿tyrone_cp_apply_amendments = {
+	save_scope_as = cp_india
+	if = {
+		limit = {
+			has_law = law_type:law_india_cooperative_ownership
+		}
+		active_law:lawgroup_economic_system = {
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_heavy_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_heavy
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_heavy
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_food_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_food
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_food
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_light_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_light
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_light
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_infrastructure_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_infrastructure
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_infrastructure
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_extraction_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_extraction
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_extraction
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+			if = {
+				limit = {
+					scope:cp_india = {
+						has_variable = tyrone_cp_military_done
+					}
+					NOT = {
+						has_amendment = amendment_type:amendment_tyrone_cp_military
+					}
+				}
+				add_amendment = {
+					type = amendment_tyrone_cp_military
+					sponsor = scope:cp_india.ig:ig_trade_unions
+				}
+			}
+		}
+	}
+}
+tyrone_cp_start = {
+	if = {
+		limit = {
+			has_variable = tyrone_nim_civil_war_done
+			NOT = {
+				has_variable = tyrone_cp_started
+			}
+		}
+		set_variable = tyrone_cp_started
+		add_journal_entry = {
+			type = je_tyrone_cp_village
+		}
+	}
+	tyrone_cp_apply_amendments = yes
+	tyrone_ch_start = yes
+}
+tyrone_cp_start_heavy = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_heavy_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_heavy_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_heavy_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_heavy
+		}
+	}
+}
+tyrone_cp_resolve_heavy = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_heavy_mobilization
+			}
+			remove_modifier = tyrone_cp_heavy_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_heavy_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_heavy_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.1
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.11
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_food = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_food_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_food_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_food_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_food
+		}
+	}
+}
+tyrone_cp_resolve_food = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_food_mobilization
+			}
+			remove_modifier = tyrone_cp_food_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_food_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_food_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.2
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.12
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_light = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_light_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_light_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_light_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_light
+		}
+	}
+}
+tyrone_cp_resolve_light = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_light_mobilization
+			}
+			remove_modifier = tyrone_cp_light_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_light_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_light_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.3
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.13
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_infrastructure = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_infrastructure_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_infrastructure_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_infrastructure_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_infrastructure
+		}
+	}
+}
+tyrone_cp_resolve_infrastructure = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_infrastructure_mobilization
+			}
+			remove_modifier = tyrone_cp_infrastructure_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_infrastructure_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_infrastructure_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.4
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.14
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_extraction = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_extraction_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_extraction_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_extraction_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_extraction
+		}
+	}
+}
+tyrone_cp_resolve_extraction = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_extraction_mobilization
+			}
+			remove_modifier = tyrone_cp_extraction_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_extraction_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_extraction_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.5
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.15
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_military = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOR = {
+				has_variable = tyrone_cp_plan_active
+				has_variable = tyrone_cp_military_done
+			}
+		}
+		hidden_effect = {
+			set_variable = {
+				name = tyrone_cp_target
+				value = tyrone_cp_military_target
+			}
+			set_variable = tyrone_cp_plan_active
+		}
+		add_modifier = {
+			name = tyrone_cp_military_mobilization
+			days = tyrone_cp_five_years
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_plan_military
+		}
+	}
+}
+tyrone_cp_resolve_military = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_plan_active
+		}
+		remove_variable = tyrone_cp_plan_active
+		if = {
+			limit = {
+				has_modifier = tyrone_cp_military_mobilization
+			}
+			remove_modifier = tyrone_cp_military_mobilization
+		}
+		if = {
+			limit = {
+				tyrone_cp_military_levels >= var:tyrone_cp_target
+			}
+			set_variable = tyrone_cp_military_done
+			tyrone_cp_apply_amendments = yes
+			trigger_event = {
+				id = tyrone_cp.6
+				popup = yes
+			}
+		}
+		else = {
+			trigger_event = {
+				id = tyrone_cp.16
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_start_forced = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_started
+			NOT = {
+				has_variable = tyrone_cp_forced_attempted
+			}
+		}
+		hidden_effect = {
+			set_variable = tyrone_cp_forced_attempted
+			set_variable = tyrone_cp_forced_active
+		}
+		add_modifier = {
+			name = tyrone_cp_forced_mobilization
+		}
+		add_journal_entry = {
+			type = je_tyrone_cp_forced
+		}
+		trigger_event = {
+			id = tyrone_cp.21
+			popup = yes
+		}
+	}
+}
+tyrone_cp_end_forced = {
+	remove_variable = tyrone_cp_forced_active
+	if = {
+		limit = {
+			has_modifier = tyrone_cp_forced_mobilization
+		}
+		remove_modifier = tyrone_cp_forced_mobilization
+	}
+}
+tyrone_cp_check_famine = {
+	ordered_scope_state = {
+		limit = {
+			tyrone_cp_famine_candidate = yes
+		}
+		order_by = tyrone_cp_state_unemployed
+		position = 0
+		check_range_bounds = no
+		save_scope_as = cp_famine_state
+		state_region = {
+			save_scope_as = cp_famine_region
+			set_variable = {
+				name = tyrone_cp_famine_pending
+				days = 10
+			}
+		}
+		owner = {
+			trigger_event = {
+				id = tyrone_cp.24
+				popup = yes
+			}
+		}
+	}
+}
+tyrone_cp_begin_famine = {
+	if = {
+		limit = {
+			has_variable = tyrone_cp_forced_active
+			exists = scope:cp_famine_region
+		}
+		save_scope_as = cp_india
+		if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 548
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 548
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 517
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 517
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 487
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 487
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 457
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 457
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 426
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 426
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_raj_famine_duration_days >= 396
+			}
+			tyrone_cp_apply_disease = {
+				DAYS = 396
+			}
+		}
+		else = {
+			tyrone_cp_apply_disease = {
+				DAYS = 365
+			}
+		}
+	}
+}
+tyrone_cp_apply_disease = {
+	scope:cp_famine_region = {
+		remove_variable = tyrone_cp_famine_pending
+		set_variable = tyrone_cp_famine_active
+		set_variable = tyrone_cp_famine_end
+		start_harvest_condition_with_params = {
+			type = disease_outbreak
+			intensity = 7
+			duration = $DAYS$
+		}
+		every_scope_state = {
+			add_modifier = {
+				name = tyrone_cp_famine_mortality
+				days = $DAYS$
+			}
+		}
+	}
+	hidden_effect = {
+		scope:cp_famine_state = {
+			tyrone_cp_open_local_famine = yes
+		}
+	}
+}
+tyrone_cp_open_local_famine = {
+	if = {
+		limit = {
+			state_region = s:STATE_AGRA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_agra
+				target = s:STATE_AGRA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ASSAM
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_assam
+				target = s:STATE_ASSAM
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_AWADH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_awadh
+				target = s:STATE_AWADH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BALUCHISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_baluchistan
+				target = s:STATE_BALUCHISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BIHAR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bihar
+				target = s:STATE_BIHAR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BOMBAY
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bombay
+				target = s:STATE_BOMBAY
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_BUNDELKHAND
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_bundelkhand
+				target = s:STATE_BUNDELKHAND
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CENTRAL_PROVINCES
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_central_provinces
+				target = s:STATE_CENTRAL_PROVINCES
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CEYLON
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_ceylon
+				target = s:STATE_CEYLON
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_CIRCARS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_circars
+				target = s:STATE_CIRCARS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_DELHI
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_delhi
+				target = s:STATE_DELHI
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_EAST_BENGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_east_bengal
+				target = s:STATE_EAST_BENGAL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_GUJARAT
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_gujarat
+				target = s:STATE_GUJARAT
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HILL_PUNJAB
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hill_punjab
+				target = s:STATE_HILL_PUNJAB
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_HYDERABAD
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_hyderabad
+				target = s:STATE_HYDERABAD
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KASHMIR
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kashmir
+				target = s:STATE_KASHMIR
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_KURNOOL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_kurnool
+				target = s:STATE_KURNOOL
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MADRAS
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_madras
+				target = s:STATE_MADRAS
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MALWA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_malwa
+				target = s:STATE_MALWA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_MYSORE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_mysore
+				target = s:STATE_MYSORE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_ORISSA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_orissa
+				target = s:STATE_ORISSA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PASHTUNISTAN
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_pashtunistan
+				target = s:STATE_PASHTUNISTAN
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_PUNJAB
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_punjab
+				target = s:STATE_PUNJAB
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_QUETTA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_quetta
+				target = s:STATE_QUETTA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_RAJPUTANA
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_rajputana
+				target = s:STATE_RAJPUTANA
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_SINDH
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_sindh
+				target = s:STATE_SINDH
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_TRAVANCORE
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_travancore
+				target = s:STATE_TRAVANCORE
+			}
+		}
+	}
+	if = {
+		limit = {
+			state_region = s:STATE_WEST_BENGAL
+		}
+		owner = {
+			add_journal_entry = {
+				type = je_tyrone_cp_famine_west_bengal
+				target = s:STATE_WEST_BENGAL
+			}
+		}
+	}
+}
+tyrone_cp_maintain_famine_cooldowns = {
+	every_state_region = {
+		limit = {
+			has_variable = tyrone_cp_famine_end
+			NOT = {
+				has_harvest_condition = disease_outbreak
+			}
+		}
+		remove_variable = tyrone_cp_famine_end
+		remove_variable = tyrone_cp_famine_active
+		set_variable = {
+			name = tyrone_cp_famine_cooldown
+			days = tyrone_cp_three_years
+		}
+	}
+}

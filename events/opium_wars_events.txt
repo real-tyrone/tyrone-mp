@@ -1,0 +1,555 @@
+﻿namespace = opium_wars
+
+# Start event for obsessed country
+opium_wars.1 = {
+	type = country_event
+	placement = root
+	title = tyr_opium_china.t
+	desc = tyr_opium_china.d
+	flavor = tyr_opium_china.f
+	event_image = { video = "europenorthamerica_opium_smoker" }
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	duration = 3
+
+	fire_only_once = yes
+	trigger = { c:CHI ?= this has_variable = tyr_opium_chinese_dispatch NOT = { has_variable = tyr_opium_chinese_started } }
+	immediate = {
+		remove_variable = tyr_opium_chinese_dispatch
+		set_variable = tyr_opium_chinese_started
+		set_variable = opium_wars_start_var
+		set_variable = opium_wars_target
+		set_variable = { name = opium_wars_completion_tracker value = 0 }
+		c:GBR = { save_scope_as = opium_exporter save_scope_as = opium_wars_aggressor_country }
+		random_primary_culture = { limit = { has_cultural_obsession = opium } save_scope_as = addicted_culture }
+		if = { limit = { NOT = { has_modifier = opium_wars_addiction_modifier } } add_modifier = { name = opium_wars_addiction_modifier days = long_modifier_time } }
+	}
+	option = { name = tyr_opium_china.a default_option = yes }
+}
+
+# Start event for opium importer
+opium_wars.2 = {
+	type = country_event
+	placement = root
+	title = tyr_opium_britain.t
+	desc = tyr_opium_britain.d
+	flavor = tyr_opium_britain.f
+	event_image = { video = "europenorthamerica_opium_smoker" }
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	duration = 3
+
+	fire_only_once = yes
+	trigger = { c:GBR ?= this has_variable = tyr_opium_british_dispatch NOT = { has_variable = tyr_opium_british_started } exists = c:CHI }
+	immediate = {
+		remove_variable = tyr_opium_british_dispatch
+		set_variable = tyr_opium_british_started
+		set_variable = opium_wars_aggressor
+		save_scope_as = opium_wars_aggressor_country
+		c:CHI = {
+			save_scope_as = opium_wars_target_country
+			set_variable = tyr_opium_chinese_dispatch
+			trigger_event = { id = opium_wars.1 }
+		}
+		add_involvement = { strategic_region = sr:region_south_china value = 2500 }
+		change_relations = { country = c:CHI value = -30 }
+	}
+	option = { name = tyr_opium_britain.a default_option = yes }
+}
+
+# Obssessed country succeeds
+opium_wars.3 = {
+	type = country_event
+	placement = ROOT
+
+	title = opium_wars.3.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = opium_wars.3.d
+				trigger = {
+					any_country = {
+						has_variable = opium_wars_aggressor
+					}
+				}
+			}
+			triggered_desc = {
+				desc = opium_wars.3.d2
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	flavor = opium_wars.3.f
+
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# triggered by JE complete
+	}
+
+	immediate = {
+		set_variable = opium_wars_won
+		hidden_effect = { remove_variable = opium_wars_unresolved }
+		if = {
+			limit = { has_modifier = opium_wars_addiction_modifier }
+			remove_modifier = opium_wars_addiction_modifier
+		}
+		random_primary_culture = {
+			limit = {
+				has_cultural_obsession = opium
+			}
+			save_scope_as = addicted_culture
+		}
+		if = {
+			limit = {
+				any_country = {
+					has_variable = opium_wars_aggressor
+				}
+			}
+			random_country = {
+				limit = {
+					has_variable = opium_wars_aggressor
+				}
+				save_scope_as = opium_wars_aggressor_country
+			}
+		}
+		if = {
+			limit = { has_journal_entry = je_warlord_china }
+			chi_add_1_fragile_unity = yes
+		}
+		hidden_effect = { add_banned_goods = g:opium }
+	}
+
+	option = {
+		name = opium_wars.3.a
+		default_option = yes
+		every_primary_culture = {
+			remove_cultural_obsession = opium
+		}
+		add_modifier = {
+			name = china_authority
+			days = very_long_modifier_time
+		}
+		if = {
+			limit = { has_modifier = opium_wars_addiction_modifier }
+			remove_modifier = opium_wars_addiction_modifier
+		}
+	}
+
+	option = {
+		name = opium_wars.3.b
+		every_primary_culture = {
+			remove_cultural_obsession = opium
+		}
+		add_modifier = {
+			name = china_welfare
+			days = very_long_modifier_time
+		}
+		if = {
+			limit = { has_modifier = opium_wars_addiction_modifier }
+			remove_modifier = opium_wars_addiction_modifier
+		}
+	}
+}
+
+# Obsessed country fails
+opium_wars.4 = {
+	type = country_event
+	placement = ROOT
+
+	title = opium_wars.4.t
+	desc = tyr_opium_chinese_defeat.d
+	flavor = opium_wars.4.f
+
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# triggered by JE complete
+	}
+
+	immediate = {
+		save_scope_as = opium_wars_defeated_country
+		if = {
+			limit = { has_modifier = opium_wars_addiction_modifier }
+			remove_modifier = opium_wars_addiction_modifier
+		}
+		c:GBR = {
+			save_scope_as = opium_wars_treaty_port_winner
+			random_scope_state = { limit = { tyr_opium_is_british_port = yes } save_scope_as = treaty_port_state }
+		}
+		if = {
+			limit = {
+				scope:opium_wars_defeated_country ?= c:CHI
+				OR = {
+					scope:opium_wars_treaty_port_winner ?= c:GBR
+					c:CHI ?= { has_law_or_variant = law_type:law_free_trade }
+				}
+			}
+			c:JAP ?= {
+				trigger_event = {
+					id = tenpo_events.6
+					popup = yes
+				}
+			}
+		}
+		if = {
+			limit = { has_journal_entry = je_warlord_china }
+			set_variable = lost_opium_wars
+			chi_remove_1_fragile_unity = yes
+		}
+	}
+
+	option = {
+		name = opium_wars.4.a
+		default_option = yes
+		add_modifier = {
+			name = opium_wars_lost
+			days = very_long_modifier_time
+			is_decaying = yes
+		}
+		add_radicals = {
+			value = large_radicals
+		}
+		if = {
+			limit = {
+				is_banning_goods = g:opium
+			}
+			remove_banned_goods = g:opium
+		}
+		if = {
+			limit = {
+				has_modifier = opium_ban_authority
+			}
+			remove_modifier = opium_ban_authority
+		}
+	}
+	after = {
+		hidden_effect = { remove_variable = opium_wars_unresolved }
+	}
+}
+
+# Importer country succeeds
+opium_wars.5 = {
+	type = country_event
+	placement = ROOT
+
+	title = opium_wars.5.t
+	desc = tyr_opium_british_success.d
+
+	flavor = opium_wars.5.f
+
+	duration = 3
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		# triggered by JE complete
+	}
+
+	immediate = {
+		c:CHI = { save_scope_as = opium_wars_target_country }
+		save_scope_as = opium_wars_aggressor_country
+		random_scope_state = { limit = { tyr_opium_is_british_port = yes } save_scope_as = treaty_port_state }
+		set_variable = tyr_opium_british_won
+	}
+
+	option = {
+		name = opium_wars.5.a
+		default_option = yes
+		add_modifier = {
+			name = opium_wars_navy_modifier
+			days = normal_modifier_time
+		}
+		tyr_opium_grant_british_concessions = yes
+		#remove_variable = opium_wars_aggressor
+	}
+
+	option = {
+		name = opium_wars.5.b
+		add_modifier = {
+			name = opium_wars_export_modifier
+			days = normal_modifier_time
+		}
+		tyr_opium_grant_british_concessions = yes
+		#remove_variable = opium_wars_aggressor
+	}
+}
+
+# Smugglers caught - triggered by embargo
+opium_wars.6 = {
+	type = country_event
+	placement = ROOT
+
+	title = opium_wars.6.t
+	desc = opium_wars.6.d
+	flavor = opium_wars.6.f
+
+	duration = 3
+
+	cooldown = { days = stupidly_long_modifier_time }
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		is_banning_goods = opium
+		any_country = {
+			has_variable = opium_wars_aggressor
+		}
+		NOR = {
+			has_modifier = executed_opium_smugglers
+			has_modifier = returned_opium_smugglers
+		}
+	}
+
+	immediate = {
+		random_country = {
+			limit = {
+				has_variable = opium_wars_aggressor
+			}
+			save_scope_as = smuggler_country
+		}
+	}
+
+	option = { # execute the smuggler
+		name = opium_wars.6.a
+		default_option = yes
+		change_relations = {
+			country = scope:smuggler_country
+			value = -20
+		}
+		add_modifier = {
+			name = executed_opium_smugglers
+			days = normal_modifier_time
+		}
+	}
+
+	option = { # negotiate return
+		name = opium_wars.6.b
+		add_modifier = {
+			name = returned_opium_smugglers
+			days = normal_modifier_time
+		}
+		change_relations = {
+			country = scope:smuggler_country
+			value = -10
+		}
+	}
+}
+
+# Addiction recovery
+opium_wars.7 = {
+	type = country_event
+	placement = scope:recovry_state
+
+	title = opium_wars.7.t
+	desc = opium_wars.7.d
+	flavor = opium_wars.7.f
+
+	duration = 3
+
+	cooldown = { days = normal_modifier_time }
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		is_banning_goods = opium
+		has_modifier = opium_wars_addiction_modifier
+		any_scope_state = {
+			NOR = {
+				has_modifier = opium_health_focus
+				has_modifier = opium_loyalty_focus
+			}
+			any_scope_pop = {
+				culture = {
+					has_cultural_obsession = opium
+				}
+			}
+		}
+	}
+
+	immediate = {
+		random_scope_state = {
+			limit = {
+				NOR = {
+					has_modifier = opium_health_focus
+					has_modifier = opium_loyalty_focus
+				}
+				any_scope_pop = {
+					culture = {
+						has_cultural_obsession = opium
+					}
+				}
+			}
+			save_scope_as = recovry_state
+			random_scope_pop = {
+				limit = {
+					culture = {
+						has_cultural_obsession = opium
+					}
+				}
+				save_scope_as = recovery_pop
+			}
+		}
+	}
+
+	option = {
+		name = opium_wars.7.a
+		default_option = yes
+		scope:recovry_state = {
+			add_modifier = {
+				name = opium_health_focus
+				days = normal_modifier_time
+				multiplier = 2
+			}
+		}
+	}
+
+	option = {
+		name = opium_wars.7.b
+		scope:recovry_state = {
+			add_loyalists_in_state = {
+				value = 0.35
+			}
+			add_modifier = {
+				name = opium_loyalty_focus
+				days = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Addiction Ravages State
+opium_wars.8 = {
+	type = country_event
+	placement = scope:opium_addiction_state
+
+	title = opium_wars.8.t
+	desc = opium_wars.8.d
+	flavor = opium_wars.8.f
+
+	duration = 3
+
+	cooldown = { days = normal_modifier_time }
+
+	event_image = {
+		video = "europenorthamerica_opium_smoker"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		any_scope_state = {
+			NOR = {
+				has_modifier = opium_addiction_state_mod
+				has_modifier = lesser_opium_addiction_state_mod
+			}
+			any_scope_pop = {
+				culture = {
+					has_cultural_obsession = opium
+				}
+			}
+		}
+		NOT = { is_banning_goods = opium }
+	}
+
+	immediate = {
+		random_scope_state = {
+			limit = {
+				any_scope_pop = {
+					culture = {
+						has_cultural_obsession = opium
+					}
+				}
+			}
+			save_scope_as = opium_addiction_state
+			random_scope_pop = {
+				limit = {
+					culture = {
+						has_cultural_obsession = opium
+					}
+				}
+				culture = { save_scope_as = opium_addiction_pop }
+			}
+		}
+	}
+
+	option = {
+		name = opium_wars.8.a
+		default_option = yes
+		trigger = {
+			NOT = {
+				institution_investment_level = {
+					institution = institution_health_system
+					value >= 2
+				}
+			}
+		}
+		scope:opium_addiction_state = {
+			add_modifier = {
+				name = opium_addiction_state_mod
+				days = normal_modifier_time
+			}
+			add_culture_standard_of_living_modifier = {
+				culture = scope:opium_addiction_pop
+				days = long_modifier_time
+				multiplier = -2
+			}
+		}
+	}
+	option = {
+		name = opium_wars.8.b
+		trigger = {
+			institution_investment_level = {
+				institution = institution_health_system
+				value >= 2
+			}
+		}
+		scope:opium_addiction_state = {
+			add_culture_standard_of_living_modifier = {
+				culture = scope:opium_addiction_pop
+				days = long_modifier_time
+				multiplier = -1
+			}
+		}
+	}
+}

@@ -4,6 +4,10 @@
 
 law_traditionalism = {
 	group = lawgroup_economic_system
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+	}
 	
 	icon = "gfx/interface/icons/law_icons/traditionalism.dds"
 	
@@ -24,6 +28,8 @@ law_traditionalism = {
 		state_shopkeepers_investment_pool_efficiency_mult = -0.5
 		state_bureaucrats_investment_pool_efficiency_mult = -0.5
 		state_capitalists_investment_pool_efficiency_mult = -0.5
+		building_group_bg_light_industry_construction_efficiency_add = -0.25
+		building_group_bg_heavy_industry_construction_efficiency_add = -0.5
 		state_farmers_investment_pool_efficiency_mult = -0.5
 		state_clergymen_investment_pool_efficiency_mult = -0.5
 		state_aristocrats_investment_pool_efficiency_mult = -0.5
@@ -37,6 +43,8 @@ law_traditionalism = {
 		state_market_access_price_impact = -0.15
 		building_self_investment_chance_add = 0.25
 		country_disable_nationalization_without_compensation_bool = yes
+		building_group_bg_subsistence_agriculture_employee_mult = 0.25
+		building_group_bg_subsistence_agriculture_throughput_add = 0.20
 	}
 
 	# AI should never switch back to traditionalism
@@ -67,7 +75,14 @@ law_interventionism = {
 		law_factory_councils
 		law_women_in_the_fields
 	}
-	
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT ={
+			is_china_tag_trigger = yes
+		}
+	}	
+
 	on_activate = {
 	}
 	
@@ -155,7 +170,14 @@ law_agrarianism = {
 		law_factory_councils
 		law_women_in_the_fields
 	}	
-	
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT ={
+			is_china_tag_trigger = yes
+		}
+	}	
+
 	unlocking_technologies = {
 		romanticism
 	}
@@ -255,7 +277,14 @@ law_industry_banned = {
 		law_anarchy
 		law_factory_councils
 	}
-	
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT ={
+			is_china_tag_trigger = yes
+		}
+	}
+
 	can_enact = {
 		NOT = {
 			has_modifier = modifier_india_company_rule
@@ -367,6 +396,315 @@ law_industry_banned = {
 	}
 }
 
+law_chi_industry_banned = {
+	group = lawgroup_economic_system
+	parent = law_industry_banned
+
+	icon = "gfx/interface/icons/law_icons/law_chi_industry_banned.dds"
+
+	progressiveness = 0 
+
+	is_visible = {
+		is_china_tag_trigger = yes
+	}
+
+	can_enact = { 
+	}
+
+	on_enact = {
+	}
+
+	unlocking_technologies = {
+		romanticism
+	}
+
+	modifier = {
+		state_import_advantage_mult = -0.1
+		state_export_advantage_mult = 0.3
+		tax_land_add = 0.1
+		state_bureaucracy_population_base_cost_factor_mult = -0.3
+		state_expected_sol_mult = -0.2
+		interest_group_ig_landowners_pol_str_mult = 0.5
+		country_production_tech_research_speed_mult = -0.25
+		building_group_bg_light_industry_construction_efficiency_add = -0.25
+		building_group_bg_heavy_industry_construction_efficiency_add = -0.5
+		building_group_bg_light_industry_throughput_add = -0.30
+		building_group_bg_heavy_industry_throughput_add = -0.75
+		building_group_bg_agriculture_throughput_add = 0.30
+		state_clergymen_investment_pool_efficiency_mult = 0.75
+		state_farmers_investment_pool_efficiency_mult = 0.75
+		building_nationalization_cost_mult = 1.5
+		state_capitalists_investment_pool_efficiency_mult = -0.5
+		country_private_construction_allocation_mult = 0.6
+		building_nationalization_investment_return_add = 0.30
+		country_government_dividends_reinvestment_add = 0.35
+		country_government_dividends_efficiency_add = 0.35
+		country_free_charters_add = 2
+		country_forbid_monopoly_bool = yes
+		country_disable_nationalization_without_compensation_bool = yes
+		building_group_bg_subsistence_agriculture_employee_mult = 1
+		building_group_bg_subsistence_agriculture_throughput_add = 0.25
+	}
+
+}
+
+law_chi_mixed_economic_policy = { 
+	group = lawgroup_economic_system 
+	parent = law_agrarianism 
+
+	icon = "gfx/interface/icons/law_icons/law_chi_agrarianism.dds"
+
+	progressiveness = 0 
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+
+	unlocking_technologies = {
+		romanticism
+	}
+
+	can_enact = { 
+	}
+
+	on_enact = {
+		if = {
+			limit = {
+				has_journal_entry = je_mandate_of_heaven
+			}
+			je:je_mandate_of_heaven = {
+				add_progress = {
+					value = 1
+					name = chi_centralisation_progress_bar
+				}
+			}
+		}
+	}
+
+	disallowing_laws = {
+		law_serfdom
+	}
+
+	modifier = {
+		state_import_advantage_mult = 0.1
+		state_export_advantage_mult = 0.1
+		building_group_bg_light_industry_throughput_add = -0.15
+		building_group_bg_heavy_industry_throughput_add = -0.25
+		building_group_bg_light_industry_construction_efficiency_add = -0.20
+		building_group_bg_heavy_industry_construction_efficiency_add = -0.30
+		building_group_bg_agriculture_throughput_add = 0.15
+		state_clergymen_investment_pool_efficiency_mult = 0.5
+		state_farmers_investment_pool_efficiency_mult = 0.5
+		building_nationalization_cost_mult = 0.75
+		state_capitalists_investment_pool_efficiency_mult = -0.20
+		country_private_construction_allocation_mult = 0.6
+		building_nationalization_investment_return_add = 0.25
+		country_government_dividends_reinvestment_add = 0.35
+		country_government_dividends_efficiency_add = 0.30
+		country_free_charters_add = 2
+		country_disable_nationalization_without_compensation_bool = yes
+		building_group_bg_subsistence_agriculture_employee_mult = 0.5
+		building_group_bg_subsistence_agriculture_throughput_add = 0.10
+	}
+
+	ai_enact_weight_modifier = { 
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+
+law_chi_offical_supervision = {
+	group = lawgroup_economic_system 
+	parent = law_interventionism 
+
+	icon = "gfx/interface/icons/law_icons/law_chi_interventionism.dds"
+
+	progressiveness = 0 
+
+	is_visible = {
+		is_china_tag_trigger = yes
+	}
+
+	unlocking_technologies = {
+	mutual_funds
+	}
+	
+	can_enact = { 
+	}
+
+	modifier = {
+		country_max_companies_add = 1
+		country_disable_nationalization_without_compensation_bool = yes
+		state_shopkeepers_investment_pool_efficiency_mult = 0.5
+		country_private_construction_allocation_mult = 0.65
+		building_nationalization_investment_return_add = 0.5
+		country_government_dividends_reinvestment_add = 0.50
+		country_government_dividends_efficiency_add = 0.30
+		building_group_bg_subsistence_agriculture_employee_mult = 0.25
+		building_group_bg_subsistence_agriculture_throughput_add = 0.05
+		country_free_charters_add = 3
+	}
+
+	ai_enact_weight_modifier = { 
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+
+law_chi_national_resources_commission = { 
+	group = lawgroup_economic_system 
+	parent = law_command_economy 
+
+	icon = "gfx/interface/icons/law_icons/law_chi_command_economy.dds"
+
+	progressiveness = 0 
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+
+	can_enact = { 
+		NOT = {
+			has_law_or_variant = law_type:law_monarchy
+		}
+	}
+
+	on_activate = {
+	}
+
+	unlocking_technologies = {
+		central_planning
+	}
+
+	modifier = {
+
+		state_bureaucrats_investment_pool_efficiency_mult = 0.50
+		country_bureaucrats_pol_str_mult = 0.75
+		building_nationalization_cost_mult = -0.5
+		building_nationalization_radicals_mult = 2.5
+		country_government_dividends_efficiency_add = 0.4
+		country_private_construction_allocation_mult = 0.5
+		building_company_government_dividends_add = 0.75
+		building_group_bg_subsistence_agriculture_employee_mult = 0.75
+		country_free_charters_add = 3
+
+		country_leverage_resistance_mult = 0.25
+
+	}
+
+	ai_enact_weight_modifier = {
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+
+law_chi_cooperative_ownership = {
+	group = lawgroup_economic_system
+	parent = law_cooperative_ownership
+	
+	icon = "gfx/interface/icons/law_icons/cooperative_ownership.dds"
+	
+	progressiveness = 100
+	
+	disallowing_laws = {
+		law_serfdom
+		law_women_in_the_fields
+	}
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+	
+	unlocking_laws = {
+		law_council_republic	
+		law_corporate_state			
+	}
+	
+	on_activate = {		
+		custom_tooltip = {
+			text = enact_law_radical_leftist_economy_warning_desc
+		}	
+	}
+	
+	modifier = {
+		state_shopkeepers_investment_pool_efficiency_mult = 0.50 #0.25
+		state_farmers_investment_pool_efficiency_mult = 0.25
+		state_machinists_investment_pool_efficiency_mult = 0.50 
+		state_engineers_investment_pool_efficiency_mult = 0.50 
+		state_clerks_investment_pool_efficiency_mult = 0.5
+		country_private_construction_allocation_mult = 0.5
+		country_government_dividends_reinvestment_add = 1.0
+		building_company_worker_dividends_add = 0.75
+		country_free_charters_add = 2	# 1
+		country_max_companies_add = 1
+		building_group_bg_manufacturing_allowed_collectivization_add = 1.0
+		building_group_bg_mining_allowed_collectivization_add = 1.0
+		building_group_bg_extraction_allowed_collectivization_add = 1.0
+		building_group_bg_power_allowed_collectivization_add = 1.0
+		building_group_bg_private_infrastructure_allowed_collectivization_add = 1.0
+		building_group_bg_arts_allowed_collectivization_add = 1.0
+		building_group_bg_manufacturing_employee_mult = -0.15
+		building_group_bg_mining_employee_mult = -0.1
+		building_group_bg_service_employee_mult = -0.20
+		country_foreign_collectivization_bool = yes
+	}
+	
+	ai_enact_weight_modifier = { #Petitions
+		value = 0
+		
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+		
+		if = {
+			limit = { 
+				has_law_or_variant = law_type:law_council_republic
+			}
+			add = 400
+		}
+	}
+	
+	ai_impose_chance = {
+		value = 0
+		
+		if = {
+			limit = {
+				has_law = law_type:law_cooperative_ownership			
+			}
+			
+			add = base_impose_law_weight
+			multiply = 10.0
+		}
+			
+		if = {
+			limit = {
+				scope:target_country = {
+					is_india_tag_trigger = yes
+					OR = {	
+						has_journal_entry = je_british_dictate_plantations
+						has_journal_entry = je_british_dictate_military
+						has_journal_entry = je_british_dictate_universities
+					}
+				}
+			}
+			multiply = 0
+		}
+	}	
+}
+
 law_extraction_economy = {
 	group = lawgroup_economic_system
 	
@@ -374,7 +712,8 @@ law_extraction_economy = {
 	progressiveness = -50
 
 	is_visible = {
-		NOT = { c:BIC ?= this }
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
 	}
 
 	disallowing_laws = {
@@ -484,7 +823,7 @@ law_company_exploitation = {
 	progressiveness = -50
 
 	is_visible = {
-		c:BIC ?= this
+		is_india_tag_trigger = yes
 	}
 
 	disallowing_laws = {
@@ -499,7 +838,7 @@ law_company_exploitation = {
 
 	can_enact = {
 		is_subject = yes
-		c:BIC ?= this
+		is_india_tag_trigger = yes
 	}
 
 	on_activate = {
@@ -550,6 +889,7 @@ law_company_exploitation = {
 		building_nationalization_investment_return_add = 0.5
 		country_disable_nationalization_without_compensation_bool = yes
 		country_economic_dependence_on_overlord_add = 0.5
+		state_tax_capacity_mult = 2
 	}
 
 	ai_will_do = {
@@ -571,10 +911,15 @@ law_laissez_faire = {
 	icon = "gfx/interface/icons/law_icons/laissez_faire.dds"
 	
 	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
 		NOT = {
 			has_law = law_type:law_laissez_faire_plus
 		}
+		NOT = {
+			is_china_tag_trigger = yes
+		}
 	}
+
 
 	progressiveness = 50
 	
@@ -658,7 +1003,7 @@ law_laissez_faire_subject = {
 	is_visible = {
 		is_subject = yes
 		NOT = {
-			c:BIC ?= this
+			is_india_tag_trigger = yes
 		}
 	}
 	
@@ -734,11 +1079,16 @@ law_laissez_faire_subject = {
 }
 law_cooperative_ownership = {
 	group = lawgroup_economic_system
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}
 	
 	icon = "gfx/interface/icons/law_icons/cooperative_ownership.dds"
 	
 	progressiveness = 100
-	
+
 	disallowing_laws = {
 		law_serfdom
 		law_women_in_the_fields
@@ -822,7 +1172,7 @@ law_cooperative_ownership = {
 		if = {
 			limit = {
 				scope:target_country = {
-					c:BIC ?= this
+					is_india_tag_trigger = yes
 					OR = {	
 						has_journal_entry = je_british_dictate_plantations
 						has_journal_entry = je_british_dictate_military
@@ -847,7 +1197,12 @@ law_command_economy = {
 		law_anarchy
 		law_women_in_the_fields
 	}
-	
+
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}	
+
 	unlocking_technologies = {
 		socialism
 	}
@@ -957,7 +1312,7 @@ law_command_economy = {
 		if = {
 			limit = {
 				scope:target_country = {
-					c:BIC ?= this
+					is_india_tag_trigger = yes
 					OR = {	
 						has_journal_entry = je_british_dictate_plantations
 						has_journal_entry = je_british_dictate_military
@@ -1005,6 +1360,7 @@ law_sic_agrarian_reform = {
 		building_group_bg_agriculture_construction_efficiency_add = 0.10
 		building_group_bg_plantations_construction_efficiency_add = 0.10
 		building_group_bg_ranching_construction_efficiency_add = 0.10
+		building_group_bg_subsistence_agriculture_employee_mult = -0.5
 	}
 
 	ai_will_do = {

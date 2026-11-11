@@ -1,22 +1,179 @@
-﻿INJECT:law_hereditary_bureaucrats = {
-    modifer = {
+﻿INJECT:law_crownland_diets = {
+    modifier = {
 		country_authority_add = 50
     }
 }
+law_chi_republic_corruption = {
+	icon = "gfx/interface/icons/law_icons/law_chi_rampent_corruption.dds"
 
-INJECT:law_crownland_diets = {
-    modifer = {
-		country_authority_add = 50
-    }
+	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
+	parent = law_hereditary_bureaucrats
+	
+	is_visible = {
+		AND = {
+			is_china_tag_trigger = yes
+			NOR = { 
+				has_law_or_variant = law_type:law_monarchy
+				has_law_or_variant = law_type:law_theocracy
+				has_law_or_variant = law_type:law_social_monarchy
+			}
+		}
+	}
+	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
+		NOR = { 
+			has_law_or_variant = law_type:law_monarchy
+			has_law_or_variant = law_type:law_theocracy
+			has_law_or_variant = law_type:law_social_monarchy
+		}
+	}
+		disallowing_laws = {
+		law_multicultural
+		law_cultural_exclusion
+		}
+
+	modifier = {
+		country_legitimacy_govt_size_add = 1
+		country_legitimacy_govt_total_clout_add = -15
+		tax_land_add = -0.02
+		country_bureaucracy_investment_cost_factor_mult = 0.40
+		state_tax_capacity_mult = 0.15
+		country_aristocrats_pol_str_mult = 0.10
+		country_bureaucrats_pol_str_mult = 0.75
+		state_decree_cost_mult = 5.0
+		country_consumption_tax_cost_mult = 2.5
+		country_law_enactment_max_setbacks_add = -2
+		tax_waste_add = -0.10
+	}
+
+	on_enact = {
+	}
+
+	ai_enact_weight_modifier = {
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+law_chi_yinpriv = { 
+	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+	}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	parent = law_hereditary_bureaucrats
+	
+	icon = "gfx/interface/icons/law_icons/law_chi_hereditary_bureaucrats.dds"
+
+	progressiveness = 0
+
+	is_visible = {
+		is_china_tag_trigger = yes
+		OR = {
+			has_law_or_variant = law_type:law_monarchy
+			has_law_or_variant = law_type:law_theocracy
+			has_law_or_variant = law_type:law_social_monarchy
+		}
+	}
+
+	disallowing_laws = {
+		law_multicultural
+		law_cultural_exclusion
+		law_racial_segregation
+		law_national_supremacy
+		law_ethnostate
+	}
+
+	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
+		OR = {
+			has_law_or_variant = law_type:law_monarchy
+			has_law_or_variant = law_type:law_theocracy
+		}
+	}
+
+	modifier = {
+		tax_land_add = -0.08
+		country_bureaucracy_investment_cost_factor_mult = 0.5
+		state_tax_capacity_mult = 0.25
+		country_aristocrats_pol_str_mult = 0.50
+		state_decree_cost_mult = 5.0
+		country_consumption_tax_cost_mult = 3.0
+		country_law_enactment_max_setbacks_add = -2
+		tax_waste_add = -0.05
+	}
+
+	on_enact = {
+		custom_tooltip = urban_aristocrats_int_ig_shift_effect_tt
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_elected_bureaucrats
+			}
+			custom_tooltip = bureaucrats_pb_ig_shift_effect_negative_tt
+		}
+	}
+
+	ai_enact_weight_modifier = {
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
 }
 
 REPLACE:law_appointed_bureaucrats = {
 	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
+	can_enact = { tyrone_cr_can_leave_civil_service = yes }
 	
 	icon = "gfx/interface/icons/law_icons/appointed_bureaucrats.dds"
 	
 	progressiveness = 0
 	
+	is_visible = {
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}
+
 	modifier = {
 		country_bureaucrats_pol_str_mult = 0.25
 		state_tax_capacity_mult = 0.25
@@ -65,14 +222,103 @@ REPLACE:law_appointed_bureaucrats = {
 	}
 }
 
+law_chi_purchaseof_office = { 
+	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
+	parent = law_appointed_bureaucrats 
+
+	icon = "gfx/interface/icons/law_icons/law_chi_appointed_bureaucrats.dds"
+
+	progressiveness = 0 
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+
+	disallowing_laws = {
+		law_traditionalism
+		law_chi_industry_banned
+		law_multicultural
+		law_cultural_exclusion
+	}
+	
+	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
+	}
+
+	modifier = {
+		country_bureaucracy_investment_cost_factor_mult = 0.25
+		country_bureaucrats_pol_str_mult = 0.30
+		state_tax_capacity_mult = 0.45
+		state_decree_cost_mult = 1.5
+		country_law_enactment_max_setbacks_add = -1
+		country_consumption_tax_cost_mult = 1.5
+	}
+
+	on_enact = {
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_elected_bureaucrats
+			}
+			custom_tooltip = bureaucrats_pb_ig_shift_effect_negative_tt
+		}
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_hereditary_bureaucrats
+			}
+			custom_tooltip = urban_aristocrats_int_ig_shift_effect_negative_tt
+		}
+	}
+
+	ai_enact_weight_modifier = { 
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+
 REPLACE:law_elected_bureaucrats = {
 	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
 
 	icon = "gfx/interface/icons/law_icons/elected_bureaucrats.dds"
 
 	progressiveness = 50
 
+	is_visible = { 
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}
+	
 	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
 		country_has_voting_franchise = yes
 	}
 
@@ -105,10 +351,137 @@ INJECT:law_communal_administration = {
 	modifier = {
 		state_decree_cost_mult = -0.1
 	}
+
+	is_visible = { 
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}
+
 }
 
 INJECT:law_military_bureaucrats = {
+
+	is_visible = { 
+		NOT = { is_india_tag_trigger = yes }
+		NOT = { is_china_tag_trigger = yes }
+	}
+
 	modifier = {
 		building_training_rate_mult = 0.20
+	}
+}
+
+
+
+law_chi_cadres = { 
+	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
+	parent = law_communal_administration
+
+	icon = "gfx/interface/icons/law_icons/law_chi_elected_bureaucrats.dds"
+
+	progressiveness = 0 
+
+	is_visible = { 
+		is_china_tag_trigger = yes
+	}
+
+	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
+		has_law_or_variant = law_type:law_council_republic 
+	}
+
+	modifier = {
+		interest_group_ig_trade_unions_pol_str_mult = 0.25
+		country_bureaucracy_investment_cost_factor_mult = -0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.10
+		country_bureaucrats_pol_str_mult = 0.25
+		state_tax_capacity_mult = 0.50
+	}
+
+	on_enact = {
+		custom_tooltip = bureaucrats_pb_ig_shift_effect_tt
+		if = {
+			limit = {
+				has_law_or_variant = law_type:law_hereditary_bureaucrats
+			}
+			custom_tooltip = urban_aristocrats_int_ig_shift_effect_negative_tt
+		}
+	}
+
+	ai_enact_weight_modifier = { 
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+
+}
+
+
+law_chi_state_directorate = {
+	group = lawgroup_bureaucracy
+	can_impose = {
+		OR = {
+			AND = {
+				is_in_same_power_bloc = scope:target_country
+				modifier:country_can_impose_same_lawgroup_bureaucracy_in_power_bloc_bool = yes
+				has_law = scope:law
+			}
+			can_impose_law_default = yes
+		}
+		scope:target_country = {
+			tyrone_cr_can_leave_civil_service = yes
+		}
+	}
+	icon = "gfx/interface/icons/law_icons/law_chi_elected_bureaucrats.dds"
+	progressiveness = 0
+	modifier = {
+		interest_group_ig_trade_unions_pol_str_mult = 0.25
+		country_bureaucracy_investment_cost_factor_mult = -0.15
+		country_bureaucracy_investment_cost_factor_mult = 0.10
+		country_bureaucrats_pol_str_mult = 0.25
+		state_tax_capacity_mult = 0.50
+	}
+	ai_enact_weight_modifier = {
+		value = 0
+		if = {
+			limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+			add = 750
+		}
+	}
+	parent = law_military_bureaucrats
+	unlocking_technologies = { central_planning }
+	is_visible = {
+		is_china_tag_trigger = yes
+		OR = {
+			has_law_or_variant = law_type:law_monarchy
+			has_law_or_variant = law_type:law_social_monarchy
+			has_law_or_variant = law_type:law_presidential_republic
+			has_law_or_variant = law_type:law_parliamentary_republic
+		}
+	}
+	can_enact = {
+		tyrone_cr_can_leave_civil_service = yes
+		has_technology_researched = central_planning
+		OR = {
+			has_law_or_variant = law_type:law_monarchy
+			has_law_or_variant = law_type:law_social_monarchy
+			has_law_or_variant = law_type:law_presidential_republic
+			has_law_or_variant = law_type:law_parliamentary_republic
+		}
 	}
 }

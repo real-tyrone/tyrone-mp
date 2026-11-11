@@ -1,0 +1,108 @@
+﻿tyr_ssm_refresh_industry = {
+	if = {
+		limit = { NOT = { has_variable = tyr_ssm_finished } tyr_ssm_industry_rounds < 5 }
+		set_variable = { name = tyr_ssm_industry_levels value = tyr_ssm_industry_levels }
+		if = {
+			limit = { tyr_ssm_cached_industry_levels >= tyr_ssm_industry_bar_max }
+			change_variable = { name = tyr_ssm_industrial_rounds add = 1 }
+			if = {
+				limit = { tyr_ssm_industry_rounds < 5 }
+				set_variable = { name = tyr_ssm_industry_target value = tyr_ssm_industry_next_target }
+			}
+		}
+		if = {
+			limit = { has_journal_entry = je_tyr_ssm_industry }
+			save_scope_as = tyr_ssm_owner
+			je:je_tyr_ssm_industry = {
+				set_bar_progress = { name = tyr_ssm_industry_bar value = scope:tyr_ssm_owner.var:tyr_ssm_industry_levels }
+			}
+		}
+	}
+}
+
+tyr_ssm_award_industry = {
+	if = {
+		limit = { NOT = { has_variable = tyr_ssm_industry_rewarded } }
+		set_variable = tyr_ssm_industry_rewarded
+		if = {
+			limit = { tyr_ssm_industry_rounds >= 5 }
+			add_modifier = { name = tyr_ssm_industry_spread_5 years = 5 }
+		}
+		else_if = {
+			limit = { tyr_ssm_industry_rounds >= 4 }
+			add_modifier = { name = tyr_ssm_industry_spread_4 years = 5 }
+		}
+		else_if = {
+			limit = { tyr_ssm_industry_rounds >= 3 }
+			add_modifier = { name = tyr_ssm_industry_spread_3 years = 5 }
+		}
+		else_if = {
+			limit = { tyr_ssm_industry_rounds >= 2 }
+			add_modifier = { name = tyr_ssm_industry_spread_2 years = 5 }
+		}
+		else_if = {
+			limit = { tyr_ssm_industry_rounds >= 1 }
+			add_modifier = { name = tyr_ssm_industry_spread_1 years = 5 }
+		}
+	}
+}
+
+tyr_ssm_record_ready_reforms = {
+	if = { limit = { tyr_ssm_literacy_ready = yes } set_variable = tyr_ssm_literacy_done }
+	if = { limit = { tyr_ssm_army_ready = yes } set_variable = tyr_ssm_army_done }
+	if = { limit = { tyr_ssm_navy_ready = yes } set_variable = tyr_ssm_navy_done }
+}
+
+tyr_ssm_success = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyr_ssm_finished } } }
+		hidden_effect = {
+			tyr_ssm_record_ready_reforms = yes
+			tyr_ssm_award_industry = yes
+			set_variable = tyr_ssm_finished
+			set_variable = tyr_ssm_succeeded
+			remove_variable = tyr_ssm_active
+		}
+		add_modifier = { name = tyr_ssm_enduring_movement }
+		add_loyalists = { value = 0.05 }
+		ordered_interest_group = {
+			limit = { exists = leader }
+			order_by = ig_clout
+			position = 0
+			check_range_bounds = no
+			leader = { set_ideology = ideology:ideology_modernizer_leader }
+		}
+	}
+}
+
+tyr_ssm_deadline = {
+	if = {
+		limit = { hidden_trigger = { NOT = { has_variable = tyr_ssm_finished } } }
+		# Resolve today's actual requirements before the parent can fail.
+		hidden_effect = {
+			tyr_ssm_refresh_industry = yes
+			tyr_ssm_record_ready_reforms = yes
+		}
+		if = {
+			limit = { hidden_trigger = { tyr_ssm_all_reforms_ready = yes } }
+			tyr_ssm_success = yes
+		}
+		else = {
+			hidden_effect = {
+				tyr_ssm_award_industry = yes
+				set_variable = tyr_ssm_finished
+				remove_variable = tyr_ssm_active
+			}
+			if = {
+				limit = {
+					hidden_trigger = {
+						has_journal_entry = je_warlord_china
+						has_variable = china_warlord_explosion
+					}
+				}
+				chi_remove_1_fragile_unity = yes
+			}
+			add_radicals = { value = 0.05 }
+		}
+	}
+}

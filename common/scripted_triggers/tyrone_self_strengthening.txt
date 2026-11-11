@@ -1,0 +1,62 @@
+﻿tyr_ssm_is_chinese_country = {
+	OR = {
+		c:CHI ?= this
+		c:BEI ?= this
+		c:TPG ?= this
+		c:HNA ?= this
+		c:AHU ?= this
+		c:ZHI ?= this
+		c:SHN ?= this
+		c:GUI ?= this
+		c:GNG ?= this
+		c:SIH ?= this
+		c:SHA ?= this
+		c:XIB ?= this
+		c:YUN ?= this
+		c:YUE ?= this
+		c:XIN ?= this
+		c:MCH ?= this
+		c:MGL ?= this
+		c:TUV ?= this
+		c:ALI ?= this
+	}
+}
+
+tyr_ssm_literacy_ready = {
+	literacy_rate >= 0.30
+	NOT = { has_law_or_variant = law_type:law_no_schools }
+	institution_investment_level = { institution = institution_schools value >= 3 }
+}
+
+tyr_ssm_army_ready = {
+	army_size >= 500
+	NOT = {
+		any_military_formation = {
+			is_army = yes
+			any_combat_unit = {
+				OR = {
+					has_unit_type = unit_type:combat_unit_type_irregular_infantry
+					has_unit_type = unit_type:combat_unit_type_line_infantry
+				}
+			}
+		}
+	}
+	market = {
+		mg:small_arms = { market_goods_cheaper > 0 market_goods_sell_orders >= 2500 }
+		mg:ammunition = { market_goods_cheaper > 0 market_goods_sell_orders >= 2500 }
+		mg:artillery = { market_goods_cheaper > 0 }
+	}
+}
+
+tyr_ssm_navy_ready = {
+	custom_tooltip = { text = tyr_ssm_cruisers_ready_tt tyr_ssm_cruisers >= 200 }
+	custom_tooltip = { text = tyr_ssm_capital_ships_ready_tt tyr_ssm_capital_ships >= 50 }
+	naval_power_projection >= 25000
+}
+
+tyr_ssm_all_reforms_ready = {
+	OR = { has_variable = tyr_ssm_literacy_done tyr_ssm_literacy_ready = yes }
+	OR = { has_variable = tyr_ssm_army_done tyr_ssm_army_ready = yes }
+	OR = { has_variable = tyr_ssm_navy_done tyr_ssm_navy_ready = yes }
+	tyr_ssm_industry_rounds >= 5
+}

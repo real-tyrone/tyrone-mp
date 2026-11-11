@@ -1,0 +1,22 @@
+# Country scope. LAW is the Indian education law being enacted.
+tyrone_india_reapply_patent_reliance = {
+	if = {
+		limit = {
+			is_india_tag_trigger = yes
+			has_variable = bic_patent_reliant_var
+		}
+		# Select the destination law explicitly, not the outgoing active law.
+		random_law = {
+			limit = {
+				type = law_type:$LAW$
+				NOT = {
+					has_amendment = amendment_type:amendment_reliance_on_british_patents
+				}
+			}
+			add_amendment = {
+				type = amendment_reliance_on_british_patents
+				sponsor = PREV.ig:ig_industrialists
+			}
+		}
+	}
+}

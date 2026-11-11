@@ -1,0 +1,67 @@
+﻿tyrone_raj_nation_ensure_started = {
+	if = {
+		limit = {
+			has_variable = tyrone_unstable_raj_active
+			NOR = {
+				has_variable = tyrone_raj_nation_started
+				has_variable = tyrone_raj_nation_done
+				has_variable = tyrone_unstable_raj_failed
+			}
+		}
+		set_variable = tyrone_raj_nation_started
+		add_contextless_journal_entry = je_tyrone_raj_nation
+	}
+}
+
+tyrone_raj_nation_end = {
+	scope:raj_scope ?= {
+		remove_variable = tyrone_raj_nation_active
+		remove_variable = tyrone_raj_nation_intervention
+		remove_variable = tyrone_raj_nation_event_cooldown
+		remove_variable = tyrone_raj_nation_event_pending
+	}
+}
+
+tyrone_raj_nation_remove_informal_classes = {
+	if = {
+		limit = {
+			any_active_law = {
+				has_amendment = amendment_type:amendment_informal_class_system
+			}
+		}
+		random_active_law = {
+			limit = {
+				has_amendment = amendment_type:amendment_informal_class_system
+			}
+			random_scope_amendment = {
+				limit = {
+					amendment_type:amendment_informal_class_system ?= this.type
+				}
+				remove_amendment = yes
+			}
+		}
+	}
+}
+
+tyrone_raj_nation_intervene = {
+	if = {
+		limit = {
+			tyrone_raj_nation_can_intervene = yes
+			$ACTOR_TRIGGER$ = yes
+		}
+		hidden_effect = {
+			scope:raj_scope = {
+				set_variable = {
+					name = tyrone_raj_nation_intervention
+					value = $DIRECTION$
+					days = very_short_modifier_time
+				}
+			}
+		}
+		custom_tooltip = $TOOLTIP$
+		add_modifier = {
+			name = tyrone_raj_nation_intervention_cost
+			days = very_short_modifier_time
+		}
+	}
+}

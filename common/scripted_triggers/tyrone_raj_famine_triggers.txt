@@ -1,0 +1,176 @@
+﻿# State scope; raj_scope is the India bound by the parent entry.
+tyrone_raj_famine_eligible_state = {
+	is_in_geographic_region = geographic_region_india
+	owner = {
+		OR = {
+			this = scope:raj_scope
+			is_subject_of = scope:raj_scope
+		}
+	}
+	state_region = {
+		NOR = {
+			has_harvest_condition = disease_outbreak
+			has_variable = tyrone_raj_famine_pending
+			has_variable = tyrone_raj_famine_active
+		}
+	}
+}
+
+# Clicking country, with the local JE's saved scopes.
+tyrone_raj_famine_can_fund = {
+	OR = {
+		this = scope:raj_scope
+		AND = {
+			exists = scope:raj_scope.overlord
+			scope:raj_scope.overlord = this
+		}
+	}
+	scope:raj_scope = {
+		has_variable = tyrone_unstable_raj_active
+	}
+	exists = scope:famine_state
+	scope:famine_state ?= {
+		owner = {
+			OR = {
+				this = scope:raj_scope
+				is_subject_of = scope:raj_scope
+			}
+		}
+	}
+	scope:famine_region = {
+		has_harvest_condition = disease_outbreak
+		has_variable = tyrone_raj_famine_active
+	}
+}
+
+# State scope: shared by activation checks on India and its subjects.
+tyrone_raj_famine_candidate_region = {
+	is_in_geographic_region = geographic_region_india
+	state_region = {
+		NOR = {
+			has_harvest_condition = disease_outbreak
+			has_variable = tyrone_raj_famine_pending
+			has_variable = tyrone_raj_famine_active
+		}
+	}
+}
+
+# Country scope: checked by both the monthly caller and the onset event.
+tyrone_raj_famine_can_start_wave = {
+	is_india_tag_trigger = yes
+	has_variable = tyrone_unstable_raj_active
+	is_subject = yes
+	# Standard campaign begins on 1836.1.1; first onset is after twelve months.
+	game_date >= 1837.1.1
+	NOR = {
+		has_variable = tyrone_raj_famine_cooldown
+		has_variable = tyrone_raj_famine_region_1
+		has_variable = tyrone_raj_famine_region_2
+		has_variable = tyrone_raj_famine_region_3
+		has_variable = tyrone_raj_famine_region_4
+	}
+	OR = {
+		any_scope_state = {
+			tyrone_raj_famine_candidate_region = yes
+		}
+		any_subject_or_below = {
+			any_scope_state = {
+				tyrone_raj_famine_candidate_region = yes
+			}
+		}
+	}
+}
+
+# Shared JE/event scopes. Pending events also occupy one of the four slots.
+tyrone_raj_famine_can_spread = {
+	exists = scope:famine_region
+	scope:raj_scope = {
+		has_variable = tyrone_unstable_raj_active
+		OR = {
+			NOT = {
+				has_variable = tyrone_raj_famine_region_1
+			}
+			NOT = {
+				has_variable = tyrone_raj_famine_region_2
+			}
+			NOT = {
+				has_variable = tyrone_raj_famine_region_3
+			}
+			NOT = {
+				has_variable = tyrone_raj_famine_region_4
+			}
+		}
+	}
+	scope:famine_region = {
+		has_variable = tyrone_raj_famine_active
+		has_harvest_condition = disease_outbreak
+	}
+}
+
+# State scope. Any Indian/subject presence qualifies; ownership of the whole region is not required.
+tyrone_raj_famine_spread_target = {
+	owner = {
+		OR = {
+			this = scope:raj_scope
+			is_subject_of = scope:raj_scope
+		}
+	}
+	state_region = {
+		NOT = {
+			this = scope:famine_source_region
+		}
+		NOR = {
+			has_harvest_condition = disease_outbreak
+			has_variable = tyrone_raj_famine_pending
+			has_variable = tyrone_raj_famine_active
+		}
+		any_scope_state = {
+			any_neighbouring_state = {
+				state_region = scope:famine_source_region
+			}
+		}
+	}
+}
+
+# Clicking country. Keep invoices and state relief independent when a JE slot is reused.
+tyrone_raj_famine_bank_available = {
+	NOT = {
+		has_modifier = tyrone_raj_famine_$AID$_cost_$SLOT$_$BANK$
+	}
+	scope:famine_region = {
+		NOT = {
+			any_scope_state = {
+				has_modifier = tyrone_raj_famine_$AID$_relief_$BANK$
+			}
+		}
+	}
+}
+
+tyrone_raj_famine_funding_available = {
+	OR = {
+		tyrone_raj_famine_bank_available = {
+			AID = $AID$
+			SLOT = $SLOT$
+			BANK = a
+		}
+		tyrone_raj_famine_bank_available = {
+			AID = $AID$
+			SLOT = $SLOT$
+			BANK = b
+		}
+		tyrone_raj_famine_bank_available = {
+			AID = $AID$
+			SLOT = $SLOT$
+			BANK = c
+		}
+	}
+}
+
+# State scope. Prefer India's direct ownership of at least half the region's provinces.
+tyrone_raj_famine_preferred_state = {
+	owner = scope:raj_scope
+	num_provinces >= {
+		value = state_region.num_provinces
+		multiply = 0.5
+	}
+}
