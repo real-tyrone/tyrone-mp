@@ -1,0 +1,156 @@
+# ROOT is the overlord; scope:tyr_regional_colony is the receiving country.
+# No annex effect: only regional states move, preserving external holdings.
+tyr_regional_colony_transfer = {
+    every_scope_state = {
+        limit = { region = $REGION$ is_under_colonization = no is_treaty_port = no }
+        set_state_owner = scope:tyr_regional_colony
+    }
+    every_subject_or_below = {
+        limit = {
+            NOT = { this = scope:tyr_regional_colony }
+            is_at_war = no
+            is_diplomatic_play_committed_participant = no
+        }
+        every_scope_state = {
+            limit = { region = $REGION$ is_under_colonization = no is_treaty_port = no }
+            set_state_owner = scope:tyr_regional_colony
+        }
+    }
+    scope:tyr_regional_colony = {
+        every_scope_state = {
+            limit = { region = $REGION$ }
+            remove_variable = state_to_cede
+            set_state_type = incorporated
+        }
+    }
+}
+
+# ROOT is the founding overlord. Link survives independence and overlord changes.
+tyr_create_arabia_colony = {
+    if = {
+        limit = { tyr_arabia_colony_can_create = yes }
+        ordered_primary_culture = {
+            order_by = "root.culture_percent_country(this)"
+            position = 0
+            save_scope_as = tyr_regional_colony_culture
+        }
+        if = {
+            limit = { any_scope_state = { region = sr:region_arabia is_under_colonization = no is_treaty_port = no } }
+            random_scope_state = {
+                limit = { region = sr:region_arabia is_under_colonization = no is_treaty_port = no }
+                save_scope_as = tyr_regional_colony_seed
+            }
+        }
+        else = {
+            random_subject_or_below = {
+                limit = {
+                    is_at_war = no
+                    is_diplomatic_play_committed_participant = no
+                    any_scope_state = { region = sr:region_arabia is_under_colonization = no is_treaty_port = no }
+                }
+                random_scope_state = {
+                    limit = { region = sr:region_arabia is_under_colonization = no is_treaty_port = no }
+                    save_scope_as = tyr_regional_colony_seed
+                    set_state_owner = root
+                }
+            }
+        }
+        create_dynamic_country = {
+            origin = root
+            country_type = colonial
+            tier = principality
+            culture = scope:tyr_regional_colony_culture
+            capital = scope:tyr_regional_colony_seed
+            cede_state_trigger = {
+                owner = root
+                region = sr:region_arabia
+                is_under_colonization = no
+                is_treaty_port = no
+            }
+            on_created = {
+                save_scope_as = tyr_regional_colony
+                set_variable = tyr_arabia_colony
+                tyr_colonial_tech_initialize = yes
+                activate_law = law_type:law_frontier_colonization
+                activate_law = law_type:law_extraction_economy
+                activate_law = law_type:law_colonial_administration
+                activate_law = law_type:law_subjecthood
+                set_state_religion = root.religion
+                add_modifier = { name = colonial_administration }
+                add_modifier = { name = tyr_arabia_workforce }
+                every_scope_state = { set_state_type = incorporated }
+            }
+        }
+        set_variable = { name = tyr_arabia_colony_country value = scope:tyr_regional_colony }
+        create_diplomatic_pact = { country = scope:tyr_regional_colony type = colony }
+        tyr_regional_colony_transfer = { REGION = sr:region_arabia }
+        trigger_event = { id = tyr_regional_colonies.1 popup = yes }
+    }
+}
+
+# ROOT is the founding overlord. Link survives independence and overlord changes.
+tyr_create_indochina_colony = {
+    if = {
+        limit = { tyr_indochina_colony_can_create = yes }
+        ordered_primary_culture = {
+            order_by = "root.culture_percent_country(this)"
+            position = 0
+            save_scope_as = tyr_regional_colony_culture
+        }
+        if = {
+            limit = { any_scope_state = { region = sr:region_indochina is_under_colonization = no is_treaty_port = no } }
+            random_scope_state = {
+                limit = { region = sr:region_indochina is_under_colonization = no is_treaty_port = no }
+                save_scope_as = tyr_regional_colony_seed
+            }
+        }
+        else = {
+            random_subject_or_below = {
+                limit = {
+                    is_at_war = no
+                    is_diplomatic_play_committed_participant = no
+                    any_scope_state = { region = sr:region_indochina is_under_colonization = no is_treaty_port = no }
+                }
+                random_scope_state = {
+                    limit = { region = sr:region_indochina is_under_colonization = no is_treaty_port = no }
+                    save_scope_as = tyr_regional_colony_seed
+                    set_state_owner = root
+                }
+            }
+        }
+        create_dynamic_country = {
+            origin = root
+            country_type = colonial
+            tier = principality
+            culture = scope:tyr_regional_colony_culture
+            capital = scope:tyr_regional_colony_seed
+            cede_state_trigger = {
+                owner = root
+                region = sr:region_indochina
+                is_under_colonization = no
+                is_treaty_port = no
+            }
+            on_created = {
+                save_scope_as = tyr_regional_colony
+                set_variable = tyr_gcol_ki_ICH_colony
+                activate_law = law_type:law_slave_trade
+                activate_law = law_type:law_militarized_police
+                activate_law = law_type:law_total_separation
+                tyr_colonial_tech_initialize = yes
+                activate_law = law_type:law_frontier_colonization
+                activate_law = law_type:law_extraction_economy
+                activate_law = law_type:law_colonial_administration
+                activate_law = law_type:law_subjecthood
+                set_state_religion = root.religion
+                add_modifier = { name = colonial_administration }
+                
+                every_scope_state = { set_state_type = incorporated }
+            }
+        }
+        set_variable = { name = tyr_indochina_colony_country value = scope:tyr_regional_colony }
+        create_diplomatic_pact = { country = scope:tyr_regional_colony type = colony }
+        tyr_regional_colony_transfer = { REGION = sr:region_indochina }
+        trigger_event = { id = tyr_gcol_founding.3 popup = yes }
+    }
+}
+
