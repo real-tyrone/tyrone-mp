@@ -175,8 +175,8 @@ ita_ai_transfer_lmv_from_austria = {
 				civil_war_progress > 0
 			}
 		}
-		# Keep the original weak-Austria opportunity, and always open the
-		# decision while Austria is committed to a German leadership play.
+		# Keep the weak-Austria opportunity and allow NGF-backed plays without an
+		# Italian army advantage while NGF is at war with Austria or Austria-Hungary.
 		OR = {
 			OR = {
 				c:AUS ?= {
@@ -190,6 +190,24 @@ ita_ai_transfer_lmv_from_austria = {
 					is_at_war = yes
 					army_power_projection < ROOT.army_power_projection
 					NOT = { has_war_with = ROOT }
+				}
+			}
+			OR = {
+				AND = {
+					c:NGF ?= { has_war_with = c:AUS }
+					c:AUS ?= {
+						tyrone_ai_attack_country_allowed = yes
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+				AND = {
+					c:NGF ?= { has_war_with = c:KUK }
+					c:KUK ?= {
+						tyrone_ai_attack_country_allowed = yes
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
 				}
 			}
 			any_diplomatic_play = {
@@ -259,6 +277,24 @@ ita_ai_transfer_lmv_from_austria = {
 					NOT = { has_truce_with = ROOT }
 				}
 			}
+			OR = {
+				AND = {
+					c:NGF ?= { has_war_with = c:AUS }
+					c:AUS ?= {
+						tyrone_ai_attack_country_allowed = yes
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+				AND = {
+					c:NGF ?= { has_war_with = c:KUK }
+					c:KUK ?= {
+						tyrone_ai_attack_country_allowed = yes
+						NOT = { has_war_with = ROOT }
+						NOT = { has_truce_with = ROOT }
+					}
+				}
+			}
 			any_diplomatic_play = {
 				is_diplomatic_play_type = dp_leadership_germany
 				OR = {
@@ -308,6 +344,74 @@ ita_ai_transfer_lmv_from_austria = {
 
 	when_taken = {
 		if = {
+			limit = {
+				exists = c:LMV
+				OR = {
+					AND = {
+						c:NGF ?= { has_war_with = c:AUS }
+						c:LMV = {
+							tyrone_ai_attack_country_allowed = yes
+							is_subject_of = c:AUS
+						}
+					}
+					AND = {
+						c:NGF ?= { has_war_with = c:KUK }
+						c:LMV = {
+							tyrone_ai_attack_country_allowed = yes
+							is_subject_of = c:KUK
+						}
+					}
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_transfer_subject
+				target_country = c:LMV
+				add_initiator_backers = { c:NGF }
+			}
+		}
+		else_if = {
+			limit = {
+				c:NGF ?= { has_war_with = c:AUS }
+				c:AUS = {
+					tyrone_ai_attack_country_allowed = yes
+					owns_entire_state_region = STATE_VENETIA
+					owns_entire_state_region = STATE_LOMBARDY
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:AUS
+				target_state = s:STATE_VENETIA.region_state:AUS
+				add_initiator_backers = { c:NGF }
+				add_war_goal = {
+					holder = ROOT
+					type = return_state
+					target_state = s:STATE_LOMBARDY.region_state:AUS
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				c:NGF ?= { has_war_with = c:KUK }
+				c:KUK = {
+					tyrone_ai_attack_country_allowed = yes
+					owns_entire_state_region = STATE_VENETIA
+					owns_entire_state_region = STATE_LOMBARDY
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_return_state
+				target_country = c:KUK
+				target_state = s:STATE_VENETIA.region_state:KUK
+				add_initiator_backers = { c:NGF }
+				add_war_goal = {
+					holder = ROOT
+					type = return_state
+					target_state = s:STATE_LOMBARDY.region_state:KUK
+				}
+			}
+		}
+		else_if = {
 			limit = {
 				exists = c:LMV
 				c:LMV = {

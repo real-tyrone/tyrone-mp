@@ -1,0 +1,60 @@
+REPLACE:CHI_deport_missionaries_button = {
+	name = "CHI_deport_missionaries_button"
+	desc = "CHI_deport_missionaries_button_desc"
+
+	visible = { always = yes }
+
+	possible = {
+		NOT = {
+			any_neighbouring_state = {
+				is_treaty_port = yes
+				owner = {
+					religion = {
+						has_discrimination_trait = heritage_christian
+					}
+				}
+			}
+		}
+		NOT = {
+			any_subject_or_below = {
+				any_neighbouring_state = {
+					is_treaty_port = yes
+					owner = {
+						religion = {
+							has_discrimination_trait = heritage_christian
+						}
+					}
+				}
+			}
+		}
+		authority >= 200
+	}
+
+	selected = {
+		has_variable = CHI_deported_missionaries
+	}
+
+	effect = {
+		add_modifier = {
+			name = modifier_chi_deporting_missionaries
+			days = normal_modifier_time
+		}
+		every_country = {
+			limit = {
+				has_diplomatic_relevance = root
+				religion = {
+					has_discrimination_trait = heritage_christian
+				}
+				OR = {
+					has_law_or_variant = law_type:law_state_religion
+					has_law_or_variant = law_type:law_freedom_of_conscience
+				}
+			}
+			change_relations = {
+				country = root
+				value = -25
+			}
+		}
+		set_variable = CHI_deported_missionaries
+	}
+}

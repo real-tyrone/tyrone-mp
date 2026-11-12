@@ -143,8 +143,19 @@ chi_legation_building_allowed = {
 # Country scope. Optional comparison is essential before the global JE initializes.
 # Same global-country comparison form used by vanilla's Chinese central government.
 chi_legation_is_central = {
-    exists = global_var:chi_legation_central
-    global_var:chi_legation_central ?= this
+    OR = {
+        AND = {
+            exists = global_var:chi_legation_central
+            global_var:chi_legation_central ?= this
+        }
+        AND = {
+            exists = global_var:chi_legation_central
+            top_overlord ?= { global_var:chi_legation_central ?= this }
+			any_neighbouring_state = {
+				is_treaty_port = yes
+			}
+        }
+    }
 }
 
 # Foreign country scope; current owner determines whether a port blocks completion.
