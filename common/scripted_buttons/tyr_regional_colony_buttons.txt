@@ -71,39 +71,41 @@ tyr_colony_arabia_create_button = {
 				save_scope_as = newly_formed_colonial_nation_capital_scope
 			}
 		}
-		every_scope_state = {
-			limit = {
-				region = sr:region_arabia
-			}
-			set_variable = state_to_cede
-		}
+
 		create_dynamic_country = {
 			origin = root
 			country_type = colonial
 			tier = principality
 			culture = scope:colony_culture_scope
 			capital = scope:newly_formed_colonial_nation_capital_scope
-			cede_state_trigger = {
-				owner = scope:overlord_country
-				region = sr:region_arabia
-				has_variable = state_to_cede
+
+
+		}
+		hidden_effect = {
+			every_scope_state = {
+				limit = {
+					region = sr:region_arabia
+				}
+				remove_variable = state_to_cede
+				set_state_owner = scope:newly_formed_colonial_nation_capital_scope.owner
 			}
-			on_created = {
-				tyr_colonial_tech_initialize = yes
-				add_modifier = { name = tyr_arabia_workforce }
-				set_variable = tyr_arabia_colony
-				set_variable = {
-					name = newly_formed_colonial_nation_var
-					months = 3
-				}
-				every_scope_state = {
-					remove_variable = state_to_cede
-				}
-				activate_law = law_type:law_frontier_colonization
-				activate_law = law_type:law_colonial_administration
-				add_modifier = {
-					name = colonial_administration
-				}
+			scope:newly_formed_colonial_nation_capital_scope.owner = {
+					tyr_colonial_tech_initialize = yes
+					add_modifier = { name = tyr_arabia_workforce }
+					set_variable = tyr_arabia_colony
+					set_variable = {
+						name = newly_formed_colonial_nation_var
+						months = 3
+					}
+					every_scope_state = {
+						remove_variable = state_to_cede
+					}
+					activate_law = law_type:law_frontier_colonization
+					activate_law = law_type:law_colonial_administration
+					add_modifier = {
+						name = colonial_administration
+					}
+
 			}
 		}
 		hidden_effect = {
