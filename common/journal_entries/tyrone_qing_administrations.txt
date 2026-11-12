@@ -1,0 +1,45 @@
+je_qing_imperial_administrations = {
+ icon = "gfx/interface/icons/event_icons/Mandate_Heaven.dds"
+ group = je_group_tyrone_china_mandate
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ should_be_pinned_by_default_uninvolved_or_context = yes
+ weight = 900
+ scripted_button = chi_qing_integrate_ZHI
+ scripted_button = chi_qing_integrate_QLJ
+ scripted_button = chi_qing_integrate_QHG
+ scripted_button = chi_qing_integrate_YUE
+ scripted_button = chi_qing_integrate_QMZ
+ scripted_button = chi_qing_integrate_QSG
+ scripted_button = chi_qing_integrate_YUN
+ scripted_button = chi_qing_integrate_SIH
+ scripted_button = chi_qing_integrate_QSX
+ scripted_button = chi_qing_integrate_SHA
+ scripted_button = chi_qing_integrate_QHN
+ scripted_button = chi_qing_integrate_MGL
+ scripted_button = chi_qing_integrate_QIM
+ scripted_button = chi_qing_integrate_XIN
+ scripted_button = chi_qing_integrate_QXN
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } }
+    set_variable = chi_qing_centralisation_unlocked
+   }
+   else_if = {
+    limit = { has_modifier = chi_mandate_consolidated_authority }
+    set_variable = chi_qing_centralisation_unlocked
+   }
+   else = { remove_variable = chi_qing_centralisation_unlocked }
+  }
+ }
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  color = "gold_positive"
+  conclusion_desc = je_standard_completion_conclusion_desc
+  trigger = { NOT = { any_country = { is_direct_subject_of = root chi_qing_administrative_subject = yes } } }
+  effect = { remove_variable = chi_qing_centralisation_unlocked }
+ }
+}

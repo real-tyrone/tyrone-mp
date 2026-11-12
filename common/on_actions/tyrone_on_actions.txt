@@ -1,4 +1,4 @@
-﻿on_monthly_pulse_country = {
+on_monthly_pulse_country = {
     on_actions = {
     }
     random_events = {
@@ -123,7 +123,7 @@ tyrone_apply_large_population_nation_nerf_on_start = {
 			every_country = {
 				limit = {
 					OR = {
-						c:CHI ?= this
+						OR = { c:CHI ?= this AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI } }
 						c:BIC ?= this
 					}
 					NOT = { has_modifier = large_population_nation_modifier }
@@ -140,7 +140,7 @@ tyrone_apply_large_population_nation_nerf_on_start = {
 			every_country = {
 				limit = {
 					OR = {
-						c:CHI ?= this
+						OR = { c:CHI ?= this AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI } }
 						c:BIC ?= this
 					}
 					has_modifier = large_population_nation_modifier
@@ -152,25 +152,24 @@ tyrone_apply_large_population_nation_nerf_on_start = {
 }
 
 tyrone_apply_china_nerf_day_on = {
-	effect = {
-		if = {
-			NOT = { has_modifier = chi_mandate_centralisation_low }
-			every_country = {
-				limit = {
-					c:CHI ?= this
-				}
-				add_modifier = { name =  chi_mandate_centralisation_low }
-			}
-		}
-	}
+ effect = {
+  c:CHI ?= {
+   if = {
+    limit = { has_journal_entry = je_mandate_of_heaven }
+    chi_mandate_update_centralisation_modifier = yes
+   }
+   chi_qing_share_army_reforms = yes
+  }
+ }
 }
+
 
 tyrone_apply_large_population_nation_nerf_yearly = {
 	effect = {
 		if = {
 			limit = {
 				OR = {
-					c:CHI ?= this
+					OR = { c:CHI ?= this AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI } }
 					c:BIC ?= this
 				}
 				has_game_rule = large_population_nation_nerf_enabled
@@ -183,7 +182,7 @@ tyrone_apply_large_population_nation_nerf_yearly = {
 		else_if = {
 			limit = {
 				OR = {
-					c:CHI ?= this
+					OR = { c:CHI ?= this AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI } }
 					c:BIC ?= this
 				}
 				has_game_rule = large_population_nation_nerf_disabled

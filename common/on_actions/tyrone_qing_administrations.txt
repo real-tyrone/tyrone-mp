@@ -1,0 +1,28 @@
+on_law_activated = {
+ on_actions = { chi_qing_apply_imperial_law }
+}
+chi_qing_apply_imperial_law = {
+ trigger = { owner = { c:CHI ?= this has_variable = chi_qing_1836_setup NOT = { has_variable = tyr_chi_fragmented } } }
+ effect = {
+  save_scope_as = chi_qing_imperial_law
+  owner = {
+   every_subject_or_below = {
+    limit = { OR = { is_subject_type = subject_type_qing_viceroyalty_administration is_subject_type = subject_type_qing_civil_administration is_subject_type = subject_type_qing_military_administration } }
+    activate_law = scope:chi_qing_imperial_law.type
+   }
+  }
+ }
+}
+on_monthly_pulse_country = {
+ on_actions = { chi_qing_coordinate_reforms }
+}
+on_game_started_after_lobby = {
+ on_actions = { chi_qing_start_reforms }
+}
+chi_qing_start_reforms = {
+ effect = { c:CHI ?= { chi_qing_share_army_reforms = yes } }
+}
+chi_qing_coordinate_reforms = {
+ trigger = { c:CHI ?= this has_variable = chi_qing_1836_setup NOT = { has_variable = tyr_chi_fragmented } }
+ effect = { chi_qing_share_army_reforms = yes }
+}

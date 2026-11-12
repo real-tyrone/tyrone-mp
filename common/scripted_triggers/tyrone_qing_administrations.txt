@@ -1,0 +1,43 @@
+# Country scope. The marker survives independence; subject status does not.
+chi_qing_administration_tag = {
+ OR = {
+  c:ZHI ?= this
+  c:QLJ ?= this
+  c:QHG ?= this
+  c:YUE ?= this
+  c:QMZ ?= this
+  c:QSG ?= this
+  c:YUN ?= this
+  c:SIH ?= this
+  c:QSX ?= this
+  c:SHA ?= this
+  c:QHN ?= this
+  c:MGL ?= this
+  c:QIM ?= this
+  c:XIN ?= this
+  c:QXN ?= this
+ }
+}
+
+chi_qing_administrative_subject = {
+ OR = {
+  is_subject_type = subject_type_qing_viceroyalty_administration
+  is_subject_type = subject_type_qing_civil_administration
+  is_subject_type = subject_type_qing_military_administration
+  is_subject_type = subject_type_qing_frontier_administration
+ }
+}
+chi_qing_realm = {
+ OR = {
+  c:CHI ?= this
+  AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI }
+ }
+}
+# State scope, inside a global state iterator. PREV is the country whose story
+# is running; only the imperial court expands its state search into subjects.
+chi_qing_story_state = {
+ OR = {
+  owner = prev
+  AND = { prev = { c:CHI ?= this } owner = { chi_qing_realm = yes } }
+ }
+}
