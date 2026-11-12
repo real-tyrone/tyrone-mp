@@ -1,0 +1,34 @@
+on_acquired_technology = {
+    on_actions = { tyr_colonial_tech_distribute }
+}
+
+# ROOT is the acquiring country. Tech grants may fire this hook again for the
+# recipient, but only its own direct marked subjects are eligible for that pass.
+tyr_colonial_tech_distribute = {
+    effect = {
+        every_subject_or_below = {
+            limit = {
+                is_subject_of = root
+                has_variable = tyr_colonial_tech_dependent
+            }
+            tyr_colonial_tech_sync_from_root = yes
+        }
+    }
+}
+
+on_become_independent = {
+    on_actions = { tyr_colonial_tech_end_dependency }
+}
+
+tyr_colonial_tech_end_dependency = {
+    effect = {
+        if = {
+            limit = {
+                has_variable = tyr_colonial_tech_dependent
+                is_subject = no
+            }
+            remove_modifier = tyr_colonial_tech_dependency
+            remove_variable = tyr_colonial_tech_dependent
+        }
+    }
+}
