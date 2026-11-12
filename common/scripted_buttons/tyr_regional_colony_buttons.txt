@@ -1,72 +1,186 @@
 tyr_colony_arabia_create_button = {
-    name = tyr_colony_arabia_create_button
-    desc = tyr_colony_arabia_create_button_desc
-    visible = {
-        always = yes
-        NOT = { any_subject_or_below = { has_variable = tyr_arabia_colony } }
-    }
-    cooldown = { days = 90 }
-    possible = {
-        tyr_arabia_colony_can_create = yes
-    }
-    ai_chance = { value = 100 }
-    effect = {
-        if = {
-            limit = { tyr_arabia_colony_can_create = yes }
-            tyr_create_arabia_colony = yes
-        }
-        custom_tooltip = tyr_regional_colony_transfer_tt
-        custom_tooltip = tyr_arabia_workforce_tt
-    }
+	name = "tyr_colony_arabia_create_button"
+	desc = "tyr_colony_arabia_create_button_desc"
+
+	visible = {
+		any_scope_state = {
+			region = sr:region_arabia
+		}
+		NOT = {
+			any_subject_or_below = {
+				has_variable = tyr_arabia_colony
+			}
+		}
+	}
+
+	cooldown = { days = 90 }
+
+	possible = {
+		hidden_trigger = { is_subject = no NOT = { exists = var:tyr_arabia_colony_country } }
+		any_scope_state = {
+			region = sr:region_arabia
+			is_largest_state_in_region = yes
+			count >= 2
+		}
+
+		#prevents splitting off during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
+
+		custom_tooltip = {
+			text = colonial_administration_cooldown
+			NOT = {
+				any_subject_or_below = {
+					has_variable = newly_formed_colonial_nation_var
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+
+	effect = {
+		save_scope_as = overlord_country
+		ordered_primary_culture = {
+			order_by = "root.culture_percent_country(this)"
+			position = 0
+			save_scope_as = colony_culture_scope
+		}
+		if = {
+			limit = {
+				any_scope_state = {
+					region = sr:region_arabia
+					state_has_decree_variant = { DECREE = decree_greener_grass_campaign }
+				}
+			}
+			random_scope_state = {
+				limit = {
+					region = sr:region_arabia
+					state_has_decree_variant = { DECREE = decree_greener_grass_campaign }
+				}
+				save_scope_as = newly_formed_colonial_nation_capital_scope
+			}
+		}
+		else = {
+			random_scope_state = {
+				limit = {
+					region = sr:region_arabia
+				}
+				save_scope_as = newly_formed_colonial_nation_capital_scope
+			}
+		}
+		every_scope_state = {
+			limit = {
+				region = sr:region_arabia
+			}
+			set_variable = state_to_cede
+		}
+		create_dynamic_country = {
+			origin = root
+			country_type = colonial
+			tier = principality
+			culture = scope:colony_culture_scope
+			capital = scope:newly_formed_colonial_nation_capital_scope
+			cede_state_trigger = {
+				owner = scope:overlord_country
+				region = sr:region_arabia
+				has_variable = state_to_cede
+			}
+			on_created = {
+				tyr_colonial_tech_initialize = yes
+				add_modifier = { name = tyr_arabia_workforce }
+				set_variable = tyr_arabia_colony
+				set_variable = {
+					name = newly_formed_colonial_nation_var
+					months = 3
+				}
+				every_scope_state = {
+					remove_variable = state_to_cede
+				}
+				activate_law = law_type:law_frontier_colonization
+				activate_law = law_type:law_colonial_administration
+				add_modifier = {
+					name = colonial_administration
+				}
+			}
+		}
+		hidden_effect = {
+			scope:newly_formed_colonial_nation_capital_scope.owner = {
+				save_scope_as = tyr_regional_colony
+				save_scope_as = newly_formed_colonial_administration_scope
+			}
+			set_variable = { name = tyr_arabia_colony_country value = scope:tyr_regional_colony }
+			create_diplomatic_pact = {
+				country = scope:newly_formed_colonial_nation_capital_scope.owner
+				type = colony
+			}
+			scope:overlord_country ?= {
+				every_primary_culture = { # ROOT's primary cultures
+					limit = {
+						NOT = {
+							is_primary_culture_of = scope:newly_formed_colonial_nation_capital_scope.owner
+						}
+					}
+					save_temporary_scope_as = temp_primary_culture
+					scope:newly_formed_colonial_nation_capital_scope.owner ?= {
+						add_primary_culture = scope:temp_primary_culture
+					}
+				}
+			}
+		}
+		hidden_effect = { tyr_regional_colony_transfer = { REGION = sr:region_arabia } }
+		trigger_event = { id = colonial_administration_events.1 days = 1 popup = yes }
+		custom_tooltip = je_colonial_administration_button_tt_1
+		custom_tooltip = je_colonial_administration_button_tt_2
+	}
 }
 
 tyr_colony_arabia_expand_button = {
     name = tyr_colony_arabia_expand_button
     desc = tyr_colony_arabia_expand_button_desc
-    visible = {
-        always = yes
-        any_subject_or_below = { has_variable = tyr_arabia_colony }
-    }
+    visible = { any_subject_or_below = { has_variable = tyr_arabia_colony } }
     cooldown = { days = 90 }
     possible = {
-        is_subject = no
-        is_at_war = no
-        is_diplomatic_play_committed_participant = no
+		#prevents expanding during diplo play or war as it invalidates wargoals. is_at_war is there for clarity for players even though it's technically included in the former
+		is_diplomatic_play_committed_participant = no
+		is_at_war = no
 
-        custom_tooltip = { text = tyr_regional_colony_land_tt tyr_arabia_colony_territory = yes }
-        custom_tooltip = {
-            text = tyr_regional_colony_subject_tt
-            any_subject_or_below = {
-                has_variable = tyr_arabia_colony
-                is_at_war = no
-                is_diplomatic_play_committed_participant = no
-            }
-        }
-    }
+		OR = {
+			any_scope_state = {
+				region = sr:region_arabia
+				is_under_colonization = no
+			}
+
+			any_subject_or_below = {
+				NOT = { has_variable = tyr_arabia_colony }
+				is_at_war = no
+				is_diplomatic_play_committed_participant = no
+				any_scope_state = { region = sr:region_arabia is_under_colonization = no is_treaty_port = no }
+			}
+			custom_tooltip = {
+				text = colonial_transfer_two_subjects_tt
+				any_subject_or_below = {
+					has_variable = tyr_arabia_colony
+					count >= 2
+				}
+			}
+		}
+	}
     ai_chance = { value = 100 }
     effect = {
-        if = {
-            limit = { is_subject = no
-                is_at_war = no
-                is_diplomatic_play_committed_participant = no
-
-                custom_tooltip = { text = tyr_regional_colony_land_tt tyr_arabia_colony_territory = yes }
-                custom_tooltip = {
-                    text = tyr_regional_colony_subject_tt
-                    any_subject_or_below = {
-                        has_variable = tyr_arabia_colony
-                        is_at_war = no
-                        is_diplomatic_play_committed_participant = no
-                    }
-                } }
+        custom_tooltip = { text = transfer_stuff_to_subject_tt }
+        hidden_effect = {
             random_subject_or_below = {
                 limit = { has_variable = tyr_arabia_colony is_at_war = no is_diplomatic_play_committed_participant = no }
                 save_scope_as = tyr_regional_colony
             }
-            tyr_regional_colony_transfer = { REGION = sr:region_arabia }
+            if = {
+                limit = { exists = scope:tyr_regional_colony }
+                tyr_regional_colony_transfer = { REGION = sr:region_arabia }
+            }
         }
-        custom_tooltip = tyr_regional_colony_transfer_tt
-
     }
 }
 
