@@ -486,6 +486,7 @@ je_sepoy_mutiny = {
 	group = je_group_british_india
 
 	immediate = {
+		remove_variable = tyrone_sepoy_mutiny_setup_complete
 		ig:ig_industrialists ?= {
 			save_scope_as = eic_ig
 		}
@@ -514,6 +515,7 @@ je_sepoy_mutiny = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
+		hidden_trigger = { has_variable = tyrone_sepoy_mutiny_setup_complete }
 		trigger_if = {
 			limit = {
 				c:MUG ?= {
@@ -559,6 +561,7 @@ je_sepoy_mutiny = {
 		is_at_war = no
 	}
 		effect = {
+		hidden_effect = { remove_variable = tyrone_sepoy_mutiny_setup_complete }
 		if = {
 			limit = {
 				exists = c:GBR
@@ -609,67 +612,63 @@ je_sepoy_mutiny = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
+		hidden_trigger = { has_variable = tyrone_sepoy_mutiny_setup_complete }
 		OR = {
-			trigger_if = {
-				limit = {
-					c:MUG ?= {
-						has_variable = sepoy_mutiny_revolter_var
-					}
-				}
+			AND = {
 				exists = c:MUG
+				c:MUG ?= {
+					has_variable = sepoy_mutiny_revolter_var
+					is_country_alive = yes
+				}
+				NOT = { has_war_with = c:MUG }
 				NOT = {
-					has_war_with = c:MUG
 					has_state_in_state_region = STATE_DELHI
 					has_state_in_state_region = STATE_AGRA
 				}
 			}
-			trigger_if = {
-				limit = {
-					c:BGL ?= {
-						has_variable = sepoy_mutiny_revolter_var
-					}
-				}
+			AND = {
 				exists = c:BGL
+				c:BGL ?= {
+					has_variable = sepoy_mutiny_revolter_var
+					is_country_alive = yes
+				}
+				NOT = { has_war_with = c:BGL }
 				NOT = {
-					has_war_with = c:BGL
 					has_state_in_state_region = STATE_EAST_BENGAL
 					has_state_in_state_region = STATE_WEST_BENGAL
 				}
 			}
-			trigger_if = {
-				limit = {
-					c:SAT ?= {
-						has_variable = sepoy_mutiny_revolter_var
-					}
-				}
+			AND = {
 				exists = c:SAT
+				c:SAT ?= {
+					has_variable = sepoy_mutiny_revolter_var
+					is_country_alive = yes
+				}
+				NOT = { has_war_with = c:SAT }
 				NOT = {
-					has_war_with = c:SAT
 					has_state_in_state_region = STATE_BOMBAY
 				}
 			}
-			trigger_if = {
-				limit = {
-					c:PAN ?= {
-						has_variable = sepoy_mutiny_revolter_var
-					}
-				}
+			AND = {
 				exists = c:PAN
+				c:PAN ?= {
+					has_variable = sepoy_mutiny_revolter_var
+					is_country_alive = yes
+				}
+				NOT = { has_war_with = c:PAN }
 				NOT = {
-					has_war_with = c:PAN
 					has_state_in_state_region = STATE_PUNJAB
 					has_state_in_state_region = STATE_HILL_PUNJAB
 				}
 			}
-			trigger_if = {
-				limit = {
-					c:KNO ?= {
-						has_variable = sepoy_mutiny_revolter_var
-					}
-				}
+			AND = {
 				exists = c:KNO
+				c:KNO ?= {
+					has_variable = sepoy_mutiny_revolter_var
+					is_country_alive = yes
+				}
+				NOT = { has_war_with = c:KNO }
 				NOT = {
-					has_war_with = c:KNO
 					has_state_in_state_region = STATE_MADRAS
 				}
 			}
@@ -679,19 +678,12 @@ je_sepoy_mutiny = {
 				any_diplomatic_play = {
 					any_scope_play_involved = { this = root }
 					is_diplomatic_play_type = dp_sepoy_mutiny
-					target = {
-						capital = {
-							OR = {
-								region = sr:region_north_india
-								region = sr:region_south_india
-							}
-						}
-					}
 				}
 			}
 		}
 	}
 		effect = {
+		hidden_effect = { remove_variable = tyrone_sepoy_mutiny_setup_complete }
 		trigger_event = { id = sepoy_mutiny_events.2 days = 0 popup = yes }
 	}
 		event_outcome_desc = {
