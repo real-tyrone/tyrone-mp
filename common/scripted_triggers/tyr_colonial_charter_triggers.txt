@@ -1,0 +1,32 @@
+# Country scope. Existing administration flags allow use in older saves.
+tyr_colonial_charter_administration = {
+    is_subject = yes
+    OR = {
+        has_variable = senegal_subject_var
+        has_variable = ethiopia_subject_var
+        has_variable = zanj_subject_var
+        has_variable = southern_africa_subject_var
+        has_variable = congo_subject_var
+        has_variable = pacific_subject_var
+        has_variable = tyr_gcol_maf_colony
+        has_variable = tyr_gcol_dea_colony
+        has_variable = tyr_gcol_ki_ICH_colony
+        c:MAF ?= this
+        c:DEA ?= this
+        c:ki_ICH ?= this
+        c:ki_RDS ?= this
+        AND = {
+            is_country_type = colonial
+            has_law = law_type:law_colonial_administration
+        }
+    }
+}
+
+# ROOT is the player overlord; the target is retained in the event chain.
+tyr_colonial_charter_target_valid = {
+    is_ai = no
+    scope:tyr_charter_colony ?= {
+        is_subject_of = root
+        tyr_colonial_charter_administration = yes
+    }
+}

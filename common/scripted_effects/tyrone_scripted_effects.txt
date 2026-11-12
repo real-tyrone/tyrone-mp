@@ -29,17 +29,12 @@ tyr_gcol_create_ki_ICH = {
 			}
 		}
 	}
-	every_scope_state = {
-		limit = {
-			region = sr:region_indochina
-		}
-		set_variable = state_to_cede
-	}
 	create_country = {
 		tag = ki_ICH
 		origin = root
 		state = scope:tyr_gcol_founding_state
 		on_created = {
+			tyr_colonial_tech_initialize = yes
 			set_variable = tyr_gcol_ki_ICH_colony
 			hidden_effect = {
 				activate_law = law_type:law_slave_trade
@@ -49,14 +44,19 @@ tyr_gcol_create_ki_ICH = {
 					set_state_type = incorporated
 				}
 			}
-			cede_state_trigger = {
-				has_variable = state_to_cede
-			}
 			activate_law = law_type:law_frontier_colonization
 			activate_law = law_type:law_extraction_economy
 			activate_law = law_type:law_colonial_administration
 			activate_law = law_type:law_subjecthood
 		}
+	}
+
+	# Transfer only the founding country's own Indochinese states. Do not use
+	# the shared colonial-release marker, which can outlive this effect.
+	every_scope_state = {
+		limit = { region = sr:region_indochina }
+		remove_variable = state_to_cede
+		set_state_owner = c:ki_ICH
 	}
 
 	every_country = {
@@ -84,6 +84,13 @@ tyr_gcol_create_ki_ICH = {
 					}
 				}
 			}
+		}
+	}
+
+	c:ki_ICH = {
+		every_scope_state = {
+			remove_variable = state_to_cede
+			set_state_type = incorporated
 		}
 	}
 
