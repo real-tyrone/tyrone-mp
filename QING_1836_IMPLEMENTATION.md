@@ -2,7 +2,7 @@
 
 Start a **new 1836 campaign**. This setup runs in global history after the existing population, building, character, and military histories; it does not migrate an existing save.
 
-The Qing imperial court (`CHI`) directly owns **Beijing and all five Manchurian state regions**: Shengjing, Southern Manchuria, Northern Manchuria, Amur, and Outer Manchuria. All other original Qing provinces are assigned to 15 subordinate administrations. Portugal's Macau province, Kokand's provinces, and all other foreign ownership remain unchanged. Tibet retains its existing separate Qing-dependent government.
+The Qing imperial court (`CHI`) directly owns **Beijing and all five Manchurian state regions**: Shengjing, Southern Manchuria, Northern Manchuria, Amur, and Outer Manchuria. All other original Qing provinces are assigned to 15 subordinate administrations. Portugal's Macau province, Kokand's provinces, and all other foreign ownership remain unchanged. Portugal's country history schedules a delayed startup event to create the Macau treaty port after `YUE` is initialized. Tibet retains its existing separate Qing-dependent government.
 
 All starting states owned by Qing, its 15 administrations, and Tibet are **incorporated**. This is applied after the administrative transfers, including Mongolia, Tuva, Altai, Manchuria, Inner Mongolia, Xinjiang, and Qinghai. Foreign-owned state parts retain their existing incorporation status.
 
@@ -65,3 +65,13 @@ The Fragile Unity counter starts at 0, matching the main mod. Later crises can s
 Missionaries, Taiping unrest and state transfers, Opium War state events, and homeland development can reach appointed administrations' territory. National military, industrial, literacy, and fleet requirements count the administrative realm. Relevant imperial modifiers and military reform unlocks reach subjects. Viceroyalties participate in imperial law propagation alongside provincial and military administrations.
 
 The imperial administrations journal offers peaceful integration after Central Archives, at least 25% relative bureaucracy, centralisation of 6 or consolidated imperial authority, peace, and subject liberty desire at most 25. One administration can be integrated every six months. Tibet is outside this integration system.
+
+## Verification
+
+Run `python tools/validate_qing.py`. It checks country-tag reuse and collisions, script structure, database references, assigned capitals, all province transfers, foreign ownership, 30% payments, and compulsory participation in Qing's wars. It simulates both possible seed-state transfer behaviors and requires identical final ownership.
+
+Validation passes: 3,422 original Qing provinces, 15 landed administrations, and 772 provinces in Beijing and Manchuria retained by `CHI`. Foreign ownership is unchanged. Starting laws, state religions, primary cultures, incorporation, and subject tooltip keys are verified. The validator separately reports 61 pre-existing duplicate province entries outside Qing; this revision does not change them.
+
+Run `python tools/test_qing_modifiers.py` for the modifier regression test. It interprets the actual sharing and army-stage scripts, clears pre-existing stacks, and checks 240 monthly pulses plus reform transitions and resolved penalties. Existing modifiers receive no repeated additions, and all shared copies are indefinite.
+
+In-game startup and campaign testing has **not** been performed. Runtime military formations, subject budgets, and AI behavior still need observation in a new game. Earlier edited files are archived under `tools/qing_originals/`; the immediately preceding setup is archived under `tools/qing_revision_originals/`. The latest pre-fix sources are archived under `tools/qing_start_fix_originals/`. All archives use `.bak` extensions outside the game's loaded script directories.
