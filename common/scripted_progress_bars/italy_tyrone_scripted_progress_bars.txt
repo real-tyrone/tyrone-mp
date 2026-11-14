@@ -17,11 +17,38 @@ italy_aus_fra_stance_bar = {
 	start_value = 50
 	min_value = 0
 	max_value = 100
+
 	monthly_progress = {
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						exists = c:AUS
+						c:AUS ?= { has_modifier = ita_arc_austrian_guarantees }
+					}
+					AND = {
+						exists = c:KUK
+						c:KUK ?= { has_modifier = ita_arc_austrian_guarantees }
+					}
+				}
+			}
+			subtract = {
+				desc = ita_stance_progress_ita_stance_austrian_guarantees_tt_france
+				value = 1
+			}
+		}
+		if = {
+			limit = { ita_arc_rome_is_garrisoned = yes }
+			add = {
+				desc = ita_stance_progress_ita_stance_french_rome_garrison_tt_austria
+				value = 1
+			}
+		}
+
 		# Defensive pact with France â†’ +1 towards France (left)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:FRA
 						any_scope_article = {
@@ -31,14 +58,14 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			subtract = {
-				desc = "italy_stance_defensive_pact_france_tt"
+				desc = ita_stance_progress_italy_stance_defensive_pact_france_tt_france
 				value = 1
 			}
 		}
 		# Defensive pact with Austria â†’ +1 towards Austria (right)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:AUS
 						any_scope_article = {
@@ -48,14 +75,14 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			add = {
-				desc = "italy_stance_defensive_pact_austria_tt"
+				desc = ita_stance_progress_italy_stance_defensive_pact_austria_tt_austria
 				value = 1
 			}
 		}
 		# Alliance with France â†’ +1 towards France (left)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:FRA
 						any_scope_article = {
@@ -65,14 +92,14 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			subtract = {
-				desc = "italy_stance_alliance_france_tt"
+				desc = ita_stance_progress_italy_stance_alliance_france_tt_france
 				value = 1
 			}
 		}
 		# Alliance with Austria â†’ +1 towards Austria (right)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:AUS
 						any_scope_article = {
@@ -82,14 +109,14 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			add = {
-				desc = "italy_stance_alliance_austria_tt"
+				desc = ita_stance_progress_italy_stance_alliance_austria_tt_austria
 				value = 1
 			}
 		}
 		# Military assistance with France â†’ +1 towards France (left)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:FRA
 						any_scope_article = {
@@ -99,14 +126,14 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			subtract = {
-				desc = "italy_stance_military_assistance_france_tt"
+				desc = ita_stance_progress_italy_stance_military_assistance_france_tt_france
 				value = 1
 			}
 		}
 		# Military assistance with Austria â†’ +1 towards Austria (right)
 		if = {
 			limit = {
-				owner = {
+				c:SAR ?= {
 					any_scope_treaty = {
 						binds = c:AUS
 						any_scope_article = {
@@ -116,7 +143,7 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			add = {
-				desc = "italy_stance_military_assistance_austria_tt"
+				desc = ita_stance_progress_italy_stance_military_assistance_austria_tt_austria
 				value = 1
 			}
 		}
@@ -124,11 +151,13 @@ italy_aus_fra_stance_bar = {
 		if = {
 			limit = {
 				c:SAR ?= {
-					NOT = { owns_entire_state_region = STATE_SAVOY }
+					NOT = {
+						owns_entire_state_region = STATE_SAVOY
+					}
 				}
 			}
 			subtract = {
-				desc = "italy_stance_savoy_lost_france_tt"
+				desc = ita_stance_progress_italy_stance_savoy_lost_france_tt_france
 				value = 1
 			}
 		}
@@ -140,64 +169,81 @@ italy_aus_fra_stance_bar = {
 				}
 			}
 			add = {
-				desc = "italy_stance_lombardy_austria_tt"
+				desc = ita_stance_progress_italy_stance_lombardy_austria_tt_austria
 				value = 1
 			}
 		}
 		# NIF: pull bar toward middle (50) by 1 â€” bar > 50 â†’ move left
 		if = {
 			limit = {
-				owner = { has_variable = NIF_formed }
+				c:SAR ?= {
+					custom_tooltip = {
+						text = ita_shared_federation_formed_tt
+						has_variable = NIF_formed
+					}
+				}
 				je:italy_diplo_stance = {
 					"scripted_bar_progress(italy_aus_fra_stance_bar)" > 50
 				}
 			}
 			subtract = {
-				desc = "italy_stance_nif_toward_center_tt"
+				desc = ita_stance_progress_italy_stance_nif_toward_center_tt_france
 				value = 1
 			}
 		}
 		# NIF: pull bar toward middle (50) by 1 â€” bar < 50 â†’ move right
 		if = {
 			limit = {
-				owner = { has_variable = NIF_formed }
+				c:SAR ?= {
+					custom_tooltip = {
+						text = ita_shared_federation_formed_tt
+						has_variable = NIF_formed
+					}
+				}
 				je:italy_diplo_stance = {
 					"scripted_bar_progress(italy_aus_fra_stance_bar)" < 50
 				}
 			}
 			add = {
-				desc = "italy_stance_nif_toward_center_tt"
+				desc = ita_stance_progress_italy_stance_nif_toward_center_tt_austria
 				value = 1
 			}
 		}
 		# Bloc leader: pull bar toward middle (50) by 2 â€” bar > 50 â†’ move left
 		if = {
 			limit = {
-				owner = { is_power_bloc_leader = yes }
+				c:SAR ?= {
+					is_power_bloc_leader = yes
+				}
 				je:italy_diplo_stance = {
 					"scripted_bar_progress(italy_aus_fra_stance_bar)" > 50
 				}
 			}
 			subtract = {
-				desc = "italy_stance_bloc_leader_toward_center_tt"
+				desc = ita_stance_progress_italy_stance_bloc_leader_toward_center_tt_france
 				value = 1
 			}
 		}
 		# Bloc leader: pull bar toward middle (50) by 2 â€” bar < 50 â†’ move right
 		if = {
 			limit = {
-				owner = { is_power_bloc_leader = yes }
+				c:SAR ?= {
+					is_power_bloc_leader = yes
+				}
 				je:italy_diplo_stance = {
 					"scripted_bar_progress(italy_aus_fra_stance_bar)" < 50
 				}
 			}
 			add = {
-				desc = "italy_stance_bloc_leader_toward_center_tt"
+				desc = ita_stance_progress_italy_stance_bloc_leader_toward_center_tt_austria
 				value = 1
 			}
 		}
 	}
+
 }
+
+
 
 ################################################################################
 # Patti lateranensi: fills over 3 years (36 months), then JE on_complete annexes Papal State.

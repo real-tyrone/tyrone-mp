@@ -439,7 +439,7 @@ types journal_entry_panel_types
 
 					item = {
 						container = {
-							visible = "[Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_nim_assembly')), ScriptedProgressBar.IsDefaultBad)), GetScriptedGui('tyrone_nim_show_socialism').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+							visible = "[And(And(And(And(And(And(And(And(And(And(And(And(Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyrone_nim_assembly')), ScriptedProgressBar.IsDefaultBad)), GetScriptedGui('tyrone_nim_show_socialism').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_yug')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_yug_aus_bar_desc')))), GetScriptedGui('tyr_bt_yug_aus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_yug')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_yug_rus_bar_desc')))), GetScriptedGui('tyr_bt_yug_rus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_yug')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_yug_tur_bar_desc')))), GetScriptedGui('tyr_bt_yug_tur_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_rom')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_rom_aus_bar_desc')))), GetScriptedGui('tyr_bt_rom_aus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_rom')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_rom_rus_bar_desc')))), GetScriptedGui('tyr_bt_rom_rus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_rom')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_rom_tur_bar_desc')))), GetScriptedGui('tyr_bt_rom_tur_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_gre')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_gre_aus_bar_desc')))), GetScriptedGui('tyr_bt_gre_aus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_gre')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_gre_rus_bar_desc')))), GetScriptedGui('tyr_bt_gre_rus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_gre')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_gre_tur_bar_desc')))), GetScriptedGui('tyr_bt_gre_tur_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_bul')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_bul_aus_bar_desc')))), GetScriptedGui('tyr_bt_bul_aus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_bul')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_bul_rus_bar_desc')))), GetScriptedGui('tyr_bt_bul_rus_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))), Or(Not(And(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_bul')), EqualTo_string(ScriptedProgressBar.GetDesc, Localize('tyr_bt_bul_tur_bar_desc')))), GetScriptedGui('tyr_bt_bul_tur_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 
 							# Default
 							default_progressbar_horizontal = {
@@ -517,6 +517,12 @@ types journal_entry_panel_types
 								size = { 520 45 }
 								parentanchor = center
 								visible = "[ScriptedProgressBar.IsDynamic]"
+
+								state = {
+									name = "tyr_bt_compact_colored_bar"
+									trigger_when = "[Or(Or(Or(Or(EqualTo_string(JournalEntry.GetName, Localize('je_tyr_balkan_theater')), EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_yug'))), EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_rom'))), EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_gre'))), EqualTo_string(JournalEntry.GetName, Localize('je_tyr_bt_bul')))]"
+									size = { 504 30 }
+								}
 
 								hbox = {
 									size = { 100% 100% }
@@ -723,7 +729,7 @@ types journal_entry_panel_types
 					}
 
 					flowcontainer = {
-						visible = "[Not( IsDataModelEmpty( JournalEntry.GetInvolvedCountries ) )]"
+						visible = "[And(Not(IsDataModelEmpty(JournalEntry.GetInvolvedCountries)), Or(Not(EqualTo_string(JournalEntry.GetName, Localize('italy_diplo_stance'))), GetScriptedGui('ita_diplo_is_sardinia').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)))]"
 						direction = vertical
 						using = default_list_position
 						min_width = @panel_width_minus_30
@@ -770,6 +776,7 @@ types journal_entry_panel_types
 						max_update_rate = 8
 						using = default_list_position
 						name = "complete_text"
+						visible = "[Or(Not(EqualTo_string(JournalEntry.GetName, Localize('italy_diplo_stance'))), GetScriptedGui('ita_diplo_is_sardinia').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
 
 						spacing = 5
 

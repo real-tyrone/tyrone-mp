@@ -1,0 +1,2912 @@
+tyr_bt_refresh = {
+
+	c:AUS ?= {
+		set_global_variable = {
+			name = tyr_bt_aus_country
+			value = this
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				exists = c:AUS
+			}
+		}
+		c:KUK ?= {
+			set_global_variable = {
+				name = tyr_bt_aus_country
+				value = this
+			}
+		}
+	}
+
+	c:RUS ?= {
+		set_global_variable = {
+			name = tyr_bt_rus_country
+			value = this
+		}
+	}
+
+	c:TUR ?= {
+		set_global_variable = {
+			name = tyr_bt_tur_country
+			value = this
+		}
+	}
+
+	every_country = {
+		remove_variable = tyr_bt_faction
+		if = {
+			limit = {
+				tyr_bt_faction_aus = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 1
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_rus = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 2
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_tur = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 3
+			}
+		}
+	}
+
+}
+
+tyr_bt_gdp = {
+	# Refresh faction identities before counting their current possessions.
+	tyr_bt_refresh = yes
+
+	set_global_variable = {
+		name = tyr_bt_aus_gdp
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_gdp
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_gdp
+		value = 0
+	}
+
+	every_country = {
+		if = {
+			limit = {
+				tyr_bt_faction_aus = yes
+			}
+			every_scope_state = {
+				limit = {
+					tyr_bt_region = yes
+				}
+				change_global_variable = {
+					name = tyr_bt_aus_gdp
+					add = this.gdp
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_rus = yes
+			}
+			every_scope_state = {
+				limit = {
+					tyr_bt_region = yes
+				}
+				change_global_variable = {
+					name = tyr_bt_rus_gdp
+					add = this.gdp
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_tur = yes
+			}
+			every_scope_state = {
+				limit = {
+					tyr_bt_region = yes
+				}
+				change_global_variable = {
+					name = tyr_bt_tur_gdp
+					add = this.gdp
+				}
+			}
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_total_gdp
+		value = {
+			value = global_var:tyr_bt_aus_gdp
+			add = global_var:tyr_bt_rus_gdp
+			add = global_var:tyr_bt_tur_gdp
+		}
+	}
+
+
+	set_global_variable = {
+		name = tyr_bt_aus_gdp_percent
+		value = 0
+	}
+	if = {
+		limit = {
+			global_var:tyr_bt_total_gdp > 0
+		}
+		set_global_variable = {
+			name = tyr_bt_aus_gdp_percent
+			value = {
+				value = global_var:tyr_bt_aus_gdp
+				multiply = 100
+				divide = global_var:tyr_bt_total_gdp
+			}
+		}
+	}
+	set_global_variable = {
+		name = tyr_bt_rus_gdp_percent
+		value = 0
+	}
+	if = {
+		limit = {
+			global_var:tyr_bt_total_gdp > 0
+		}
+		set_global_variable = {
+			name = tyr_bt_rus_gdp_percent
+			value = {
+				value = global_var:tyr_bt_rus_gdp
+				multiply = 100
+				divide = global_var:tyr_bt_total_gdp
+			}
+		}
+	}
+	set_global_variable = {
+		name = tyr_bt_tur_gdp_percent
+		value = 0
+	}
+	if = {
+		limit = {
+			global_var:tyr_bt_total_gdp > 0
+		}
+		set_global_variable = {
+			name = tyr_bt_tur_gdp_percent
+			value = {
+				value = global_var:tyr_bt_tur_gdp
+				multiply = 100
+				divide = global_var:tyr_bt_total_gdp
+			}
+		}
+	}
+}
+
+tyr_bt_initialize = {
+	set_global_variable = tyr_bt_started
+
+	c:AUS ?= {
+		set_global_variable = {
+			name = tyr_bt_aus_country
+			value = this
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				exists = c:AUS
+			}
+		}
+		c:KUK ?= {
+			set_global_variable = {
+				name = tyr_bt_aus_country
+				value = this
+			}
+		}
+	}
+
+	c:RUS ?= {
+		set_global_variable = {
+			name = tyr_bt_rus_country
+			value = this
+		}
+	}
+
+	c:TUR ?= {
+		set_global_variable = {
+			name = tyr_bt_tur_country
+			value = this
+		}
+	}
+
+	every_country = {
+		remove_variable = tyr_bt_faction
+		if = {
+			limit = {
+				tyr_bt_faction_aus = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 1
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_rus = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 2
+			}
+		}
+		else_if = {
+			limit = {
+				tyr_bt_faction_tur = yes
+			}
+			set_variable = {
+				name = tyr_bt_faction
+				value = 3
+			}
+		}
+	}
+
+	tyr_bt_gdp = yes
+
+	if = {
+		limit = {
+			trigger_if = {
+				limit = {
+					has_global_variable = tyr_bt_total_gdp
+				}
+				global_var:tyr_bt_total_gdp <= 0
+			}
+			trigger_else = {
+				always = no
+			}
+		}
+		set_global_variable = {
+			name = tyr_bt_aus_gdp
+			value = 0
+		}
+		set_global_variable = {
+			name = tyr_bt_rus_gdp
+			value = 0
+		}
+		set_global_variable = {
+			name = tyr_bt_tur_gdp
+			value = 0
+		}
+		if = {
+			limit = {
+				tyr_bt_active_aus = yes
+			}
+			set_global_variable = {
+				name = tyr_bt_aus_gdp
+				value = 1
+			}
+			change_global_variable = {
+				name = tyr_bt_total_gdp
+				add = 1
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_rus = yes
+			}
+			set_global_variable = {
+				name = tyr_bt_rus_gdp
+				value = 1
+			}
+			change_global_variable = {
+				name = tyr_bt_total_gdp
+				add = 1
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_tur = yes
+			}
+			set_global_variable = {
+				name = tyr_bt_tur_gdp
+				value = 1
+			}
+			change_global_variable = {
+				name = tyr_bt_total_gdp
+				add = 1
+			}
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_influence
+		value = tyr_bt_aus_share
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_hegemony
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_influence
+		value = tyr_bt_rus_share
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_hegemony
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_influence
+		value = tyr_bt_tur_share
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_hegemony
+		value = 0
+	}
+
+	scope:journal_entry = {
+		set_bar_progress = {
+			name = tyr_bt_aus_bar
+			value = global_var:tyr_bt_aus_influence
+		}
+	}
+
+	scope:journal_entry = {
+		set_bar_progress = {
+			name = tyr_bt_rus_bar
+			value = global_var:tyr_bt_rus_influence
+		}
+	}
+
+	scope:journal_entry = {
+		set_bar_progress = {
+			name = tyr_bt_tur_bar
+			value = global_var:tyr_bt_tur_influence
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_target
+		value = global_var:tyr_bt_aus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_target
+		value = global_var:tyr_bt_rus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_target
+		value = global_var:tyr_bt_tur_influence
+	}
+
+}
+
+tyr_bt_reward_aus = {
+
+	global_var:tyr_bt_aus_country ?= {
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_bt_wins
+				}
+			}
+			set_variable = {
+				name = tyr_bt_wins
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_bt_wins
+			add = 1
+		}
+		if = {
+			limit = {
+				has_modifier = tyr_bt_consolidations
+			}
+			remove_modifier = tyr_bt_consolidations
+		}
+		add_modifier = {
+			name = tyr_bt_consolidations
+			multiplier = tyr_bt_reward_levels
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_transfer
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_aus_influence
+			max = 25
+			min = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rivals
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_aus_influence
+			min = 0.00001
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_rus_influence
+		subtract = {
+			value = global_var:tyr_bt_rus_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_tur_influence
+		subtract = {
+			value = global_var:tyr_bt_tur_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_aus_influence
+		add = global_var:tyr_bt_transfer
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_target
+		value = global_var:tyr_bt_aus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_target
+		value = global_var:tyr_bt_rus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_target
+		value = global_var:tyr_bt_tur_influence
+	}
+
+	global_var:tyr_bt_aus_country ?= {
+		je:je_tyr_balkan_theater ?= {
+			set_bar_progress = {
+				name = tyr_bt_aus_bar
+				value = global_var:tyr_bt_aus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_rus_bar
+				value = global_var:tyr_bt_rus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_tur_bar
+				value = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+}
+
+tyr_bt_reward_rus = {
+
+	global_var:tyr_bt_rus_country ?= {
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_bt_wins
+				}
+			}
+			set_variable = {
+				name = tyr_bt_wins
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_bt_wins
+			add = 1
+		}
+		if = {
+			limit = {
+				has_modifier = tyr_bt_consolidations
+			}
+			remove_modifier = tyr_bt_consolidations
+		}
+		add_modifier = {
+			name = tyr_bt_consolidations
+			multiplier = tyr_bt_reward_levels
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_transfer
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_rus_influence
+			max = 25
+			min = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rivals
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_rus_influence
+			min = 0.00001
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_aus_influence
+		subtract = {
+			value = global_var:tyr_bt_aus_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_tur_influence
+		subtract = {
+			value = global_var:tyr_bt_tur_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_rus_influence
+		add = global_var:tyr_bt_transfer
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_target
+		value = global_var:tyr_bt_aus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_target
+		value = global_var:tyr_bt_rus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_target
+		value = global_var:tyr_bt_tur_influence
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		je:je_tyr_balkan_theater ?= {
+			set_bar_progress = {
+				name = tyr_bt_aus_bar
+				value = global_var:tyr_bt_aus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_rus_bar
+				value = global_var:tyr_bt_rus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_tur_bar
+				value = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+}
+
+tyr_bt_reward_tur = {
+
+	global_var:tyr_bt_tur_country ?= {
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_bt_wins
+				}
+			}
+			set_variable = {
+				name = tyr_bt_wins
+				value = 0
+			}
+		}
+		change_variable = {
+			name = tyr_bt_wins
+			add = 1
+		}
+		if = {
+			limit = {
+				has_modifier = tyr_bt_consolidations
+			}
+			remove_modifier = tyr_bt_consolidations
+		}
+		add_modifier = {
+			name = tyr_bt_consolidations
+			multiplier = tyr_bt_reward_levels
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_transfer
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_tur_influence
+			max = 25
+			min = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rivals
+		value = {
+			value = 150
+			subtract = global_var:tyr_bt_tur_influence
+			min = 0.00001
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_aus_influence
+		subtract = {
+			value = global_var:tyr_bt_aus_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_rus_influence
+		subtract = {
+			value = global_var:tyr_bt_rus_influence
+			divide = global_var:tyr_bt_rivals
+			multiply = global_var:tyr_bt_transfer
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_tur_influence
+		add = global_var:tyr_bt_transfer
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_target
+		value = global_var:tyr_bt_aus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_target
+		value = global_var:tyr_bt_rus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_target
+		value = global_var:tyr_bt_tur_influence
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		je:je_tyr_balkan_theater ?= {
+			set_bar_progress = {
+				name = tyr_bt_aus_bar
+				value = global_var:tyr_bt_aus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_rus_bar
+				value = global_var:tyr_bt_rus_influence
+			}
+			set_bar_progress = {
+				name = tyr_bt_tur_bar
+				value = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+}
+
+tyr_bt_stalemate_end = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_stalemate
+			days = 1825
+		}
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_stalemate
+			days = 1825
+		}
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_stalemate
+			days = 1825
+		}
+	}
+
+}
+
+tyr_bt_end_aus = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_victory
+		}
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_end_aus_limited = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_limited_victory
+		}
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_end_rus = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_victory
+		}
+	}
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_end_rus_limited = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_limited_victory
+		}
+	}
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_end_tur = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_victory
+		}
+	}
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1825
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_end_tur_limited = {
+	set_global_variable = tyr_bt_finished
+
+	global_var:tyr_bt_tur_country ?= {
+		add_modifier = {
+			name = tyr_bt_limited_victory
+		}
+	}
+
+	global_var:tyr_bt_aus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+	global_var:tyr_bt_rus_country ?= {
+		add_modifier = {
+			name = tyr_bt_defeat
+			days = 1095
+			is_decaying = yes
+		}
+	}
+
+}
+
+tyr_bt_tick = {
+
+	set_global_variable = {
+		name = tyr_bt_aus_current
+		value = "scope:journal_entry.scripted_bar_progress(tyr_bt_aus_bar)"
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_influence
+		value = global_var:tyr_bt_aus_current
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_current
+		value = "scope:journal_entry.scripted_bar_progress(tyr_bt_rus_bar)"
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_influence
+		value = global_var:tyr_bt_rus_current
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_current
+		value = "scope:journal_entry.scripted_bar_progress(tyr_bt_tur_bar)"
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_influence
+		value = global_var:tyr_bt_tur_current
+	}
+
+	tyr_bt_gdp = yes
+
+	set_global_variable = {
+		name = tyr_bt_active_points
+		value = 0
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_aus = no
+		}
+		set_global_variable = {
+			name = tyr_bt_aus_influence
+			value = 0
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_active_points
+		add = global_var:tyr_bt_aus_influence
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_rus = no
+		}
+		set_global_variable = {
+			name = tyr_bt_rus_influence
+			value = 0
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_active_points
+		add = global_var:tyr_bt_rus_influence
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_tur = no
+		}
+		set_global_variable = {
+			name = tyr_bt_tur_influence
+			value = 0
+		}
+	}
+
+	change_global_variable = {
+		name = tyr_bt_active_points
+		add = global_var:tyr_bt_tur_influence
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_active_points > 0
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_influence
+			multiply = {
+				value = 150
+				divide = global_var:tyr_bt_active_points
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_influence
+			multiply = {
+				value = 150
+				divide = global_var:tyr_bt_active_points
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_influence
+			multiply = {
+				value = 150
+				divide = global_var:tyr_bt_active_points
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_aus = yes
+			global_var:tyr_bt_total_gdp > 0
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_influence
+			add = {
+				value = tyr_bt_aus_share
+				subtract = global_var:tyr_bt_aus_influence
+				divide = 753.277773108
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_rus = yes
+			global_var:tyr_bt_total_gdp > 0
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_influence
+			add = {
+				value = tyr_bt_rus_share
+				subtract = global_var:tyr_bt_rus_influence
+				divide = 753.277773108
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_tur = yes
+			global_var:tyr_bt_total_gdp > 0
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_influence
+			add = {
+				value = tyr_bt_tur_share
+				subtract = global_var:tyr_bt_tur_influence
+				divide = 753.277773108
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_aus = yes
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_influence
+			add = {
+				value = 150
+				subtract = global_var:tyr_bt_aus_influence
+				subtract = global_var:tyr_bt_rus_influence
+				subtract = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+	else_if = {
+		limit = {
+			tyr_bt_active_rus = yes
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_influence
+			add = {
+				value = 150
+				subtract = global_var:tyr_bt_aus_influence
+				subtract = global_var:tyr_bt_rus_influence
+				subtract = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+	else_if = {
+		limit = {
+			tyr_bt_active_tur = yes
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_influence
+			add = {
+				value = 150
+				subtract = global_var:tyr_bt_aus_influence
+				subtract = global_var:tyr_bt_rus_influence
+				subtract = global_var:tyr_bt_tur_influence
+			}
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_areas
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLOVENIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CROATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLAVONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DALMATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BOSNIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MONTENEGRO = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_EASTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 6
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_WALLACHIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MOLDAVIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DOBRUDJA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SOUTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BESSARABIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 4
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_PELOPONNESE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_IONIAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_ATTICA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_THESSALIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CRETE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WEST_AEGEAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 5
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_BULGARIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MACEDONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SKOPIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_aus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 3
+		}
+		change_global_variable = {
+			name = tyr_bt_aus_areas
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_aus = yes
+			global_var:tyr_bt_aus_current >= 100
+			global_var:tyr_bt_aus_areas >= 3
+		}
+		if = {
+			limit = {
+				global_var:tyr_bt_aus_country ?= {
+					is_at_war = no
+				}
+			}
+			change_global_variable = {
+				name = tyr_bt_aus_hegemony
+				add = 0.229979466119
+			}
+		}
+	}
+
+	else = {
+		set_global_variable = {
+			name = tyr_bt_aus_hegemony
+			value = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_areas
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLOVENIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CROATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLAVONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DALMATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BOSNIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MONTENEGRO = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_EASTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 6
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_WALLACHIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MOLDAVIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DOBRUDJA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SOUTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BESSARABIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 4
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_PELOPONNESE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_IONIAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_ATTICA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_THESSALIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CRETE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WEST_AEGEAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 5
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_BULGARIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MACEDONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SKOPIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_rus = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 3
+		}
+		change_global_variable = {
+			name = tyr_bt_rus_areas
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_rus = yes
+			global_var:tyr_bt_rus_current >= 100
+			global_var:tyr_bt_rus_areas >= 3
+		}
+		if = {
+			limit = {
+				global_var:tyr_bt_rus_country ?= {
+					is_at_war = no
+				}
+			}
+			change_global_variable = {
+				name = tyr_bt_rus_hegemony
+				add = 0.229979466119
+			}
+		}
+	}
+
+	else = {
+		set_global_variable = {
+			name = tyr_bt_rus_hegemony
+			value = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_areas
+		value = 0
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLOVENIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CROATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SLAVONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DALMATIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BOSNIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MONTENEGRO = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_EASTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_SERBIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 6
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_WALLACHIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MOLDAVIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_DOBRUDJA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SOUTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_TRANSYLVANIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_BESSARABIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 4
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_PELOPONNESE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_IONIAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_ATTICA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_THESSALIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WESTERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_CRETE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_WEST_AEGEAN_ISLANDS = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 5
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_areas
+			add = 1
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_count
+		value = 0
+	}
+
+	if = {
+		limit = {
+			s:STATE_BULGARIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_NORTHERN_THRACE = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_MACEDONIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			s:STATE_SKOPIA = {
+				NOT = {
+					any_scope_state = {
+						owner = {
+							NOT = {
+								tyr_bt_faction_tur = yes
+							}
+						}
+					}
+				}
+			}
+		}
+		change_global_variable = {
+			name = tyr_bt_count
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			global_var:tyr_bt_count >= 3
+		}
+		change_global_variable = {
+			name = tyr_bt_tur_areas
+			add = 1
+		}
+	}
+
+	if = {
+		limit = {
+			tyr_bt_active_tur = yes
+			global_var:tyr_bt_tur_current >= 100
+			global_var:tyr_bt_tur_areas >= 3
+		}
+		if = {
+			limit = {
+				global_var:tyr_bt_tur_country ?= {
+					is_at_war = no
+				}
+			}
+			change_global_variable = {
+				name = tyr_bt_tur_hegemony
+				add = 0.229979466119
+			}
+		}
+	}
+
+	else = {
+		set_global_variable = {
+			name = tyr_bt_tur_hegemony
+			value = 0
+		}
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_target
+		value = global_var:tyr_bt_aus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_aus_influence
+		value = global_var:tyr_bt_aus_current
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_target
+		value = global_var:tyr_bt_rus_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_rus_influence
+		value = global_var:tyr_bt_rus_current
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_target
+		value = global_var:tyr_bt_tur_influence
+	}
+
+	set_global_variable = {
+		name = tyr_bt_tur_influence
+		value = global_var:tyr_bt_tur_current
+	}
+
+}

@@ -1,0 +1,665 @@
+﻿# World setup. The saved country survives Sardinia changing its tag to Italy.
+ita_arc_resolve_actor = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = ita_risorgimento_sardinia
+			}
+			exists = c:SAR
+		}
+		c:SAR = {
+			set_global_variable = {
+				name = ita_risorgimento_sardinia
+				value = this
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = c:AUS
+		}
+		c:AUS = {
+			set_global_variable = {
+				name = ita_arc_austria
+				value = this
+			}
+		}
+	}
+
+	else = {
+		c:KUK ?= {
+			set_global_variable = {
+				name = ita_arc_austria
+				value = this
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = ita_risorgimento_sardinia
+			}
+		}
+		random_country = {
+			limit = {
+				tyr_italian_content_country = yes
+				has_variable = italian_sentiment_var
+			}
+			set_global_variable = {
+				name = ita_risorgimento_sardinia
+				value = this
+			}
+		}
+	}
+
+}
+
+# Called from FRA, AUS and SAR history. World flags prevent duplicate JE creation.
+# Country history records participants. World JEs are created after all country history.
+ita_arc_history_register = {
+	set_variable = ita_arc_history_participant
+}
+
+# Global history and the actor's weekly repair share the same actual-instance checks.
+ita_arc_ensure_started = {
+	ita_arc_resolve_actor = yes
+
+	if = {
+		limit = {
+			has_global_variable = ita_risorgimento_sardinia
+			NOT = {
+				has_global_variable = ita_arc_ended
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					exists = je:italy_risorgimento_stage
+				}
+			}
+			add_contextless_journal_entry = italy_risorgimento_stage
+		}
+		if = {
+			limit = {
+				NOT = {
+					tyr_italian_content_exists = yes
+				}
+				NOT = {
+					exists = je:italy_diplo_stance
+				}
+			}
+			add_contextless_journal_entry = italy_diplo_stance
+		}
+		every_country = {
+			limit = {
+				has_variable = ita_arc_history_participant
+			}
+			save_scope_as = ita_arc_history_country
+			if = {
+				limit = {
+					NOT = {
+						is_involved_in_journal_entry = italy_risorgimento_stage
+					}
+				}
+				je:italy_risorgimento_stage ?= {
+					add_involved_country = scope:ita_arc_history_country
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						tyr_italian_content_exists = yes
+					}
+					NOT = {
+						is_involved_in_journal_entry = italy_diplo_stance
+					}
+				}
+				je:italy_diplo_stance ?= {
+					add_involved_country = scope:ita_arc_history_country
+				}
+			}
+		}
+	}
+
+}
+
+# World scope. GDP uses direct owned states only; guarantee count is per AI country.
+ita_arc_refresh_economy = {
+	set_global_variable = { name = ita_arc_austrian_italian_state_count value = 0 }
+
+	set_global_variable = { name = ita_arc_guarantee_extra_authority value = 0 }
+
+
+	set_global_variable = {
+		name = ita_arc_guarantee_count
+		value = 0
+	}
+
+	set_global_variable = {
+		name = ita_arc_total_gdp
+		value = 0
+	}
+
+	set_global_variable = {
+		name = ita_arc_owned_gdp
+		value = 0
+	}
+
+	every_country = {
+		if = {
+			limit = { ita_risorgimento_austrian_direct_or_subject = yes }
+			every_scope_state = {
+				limit = {
+					state_region = { is_in_geographic_region = geographic_region_italy_old }
+				}
+				change_global_variable = { name = ita_arc_austrian_italian_state_count add = 1 }
+			}
+		}
+
+		if = {
+			limit = {
+				ita_arc_counted_guarantee = yes
+			}
+			change_global_variable = {
+				name = ita_arc_guarantee_count
+				add = 1
+			}
+		
+			if = {
+				limit = { exists = c:PAP c:PAP ?= this }
+				change_global_variable = { name = ita_arc_guarantee_extra_authority add = 1 }
+			}
+			else_if = {
+				limit = { exists = c:SIC c:SIC ?= this }
+				change_global_variable = { name = ita_arc_guarantee_extra_authority add = 3 }
+			}
+}
+		every_scope_state = {
+			limit = {
+				ita_arc_gdp_region = yes
+			}
+			change_global_variable = {
+				name = ita_arc_total_gdp
+				add = this.gdp
+			}
+			if = {
+				limit = {
+					owner = {
+						ita_arc_actor = yes
+					}
+				}
+				change_global_variable = {
+					name = ita_arc_owned_gdp
+					add = this.gdp
+				}
+			}
+		}
+	}
+
+	set_global_variable = {
+		name = ita_arc_gdp_share
+		value = 0
+	}
+
+	if = {
+		limit = {
+			global_var:ita_arc_total_gdp > 0
+		}
+		set_global_variable = {
+			name = ita_arc_gdp_share
+			value = {
+				value = global_var:ita_arc_owned_gdp
+				multiply = 100
+				divide = global_var:ita_arc_total_gdp
+			}
+		}
+	}
+
+}
+
+# Country scope, on the Austrian national actor. Reapply one scaled cost modifier.
+ita_arc_refresh_guarantee_cost = {
+	if = {
+		limit = { has_modifier = ita_arc_austrian_guarantee_authority }
+		remove_modifier = ita_arc_austrian_guarantee_authority
+	}
+
+
+	if = {
+		limit = {
+			has_modifier = ita_arc_austrian_guarantees
+		}
+		remove_modifier = ita_arc_austrian_guarantees
+	}
+
+	if = {
+		limit = {
+			ita_arc_is_active = yes
+			global_var:ita_arc_guarantee_count > 0
+		}
+		add_modifier = {
+			name = ita_arc_austrian_guarantees
+			multiplier = ita_arc_guarantee_levels
+		}
+	}
+
+
+	if = {
+		limit = {
+			ita_arc_is_active = yes
+			has_global_variable = ita_arc_guarantee_extra_authority
+			global_var:ita_arc_guarantee_extra_authority > 0
+		}
+		add_modifier = {
+			name = ita_arc_austrian_guarantee_authority
+			multiplier = global_var:ita_arc_guarantee_extra_authority
+		}
+	}
+}
+
+# Country scope, AI only. The country owns the accumulator; only its national movement receives the bonus.
+ita_arc_add_national_pressure = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_variable = ita_arc_pressure_months
+			}
+		}
+		set_variable = {
+			name = ita_arc_pressure_months
+			value = 0
+		}
+	}
+
+	change_variable = {
+		name = ita_arc_pressure_months
+		add = 1
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				any_political_movement = {
+					is_political_movement_type = movement_italian_national
+				}
+			}
+		}
+		create_political_movement = {
+			type = movement_italian_national
+		}
+	}
+
+	every_political_movement = {
+		limit = {
+			is_political_movement_type = movement_italian_national
+		}
+		if = {
+			limit = {
+				has_modifier = ita_arc_national_pressure
+			}
+			remove_modifier = ita_arc_national_pressure
+		}
+		add_modifier = {
+			name = ita_arc_national_pressure
+			multiplier = ita_arc_pressure_levels
+		}
+	}
+
+}
+
+# World scope, once per month from the main JE. The next-day check uses recalculated movement activism.
+ita_arc_monthly_tick = {
+	ita_arc_resolve_actor = yes
+
+	if = {
+		limit = {
+			ita_arc_is_active = yes
+		}
+		if = {
+			limit = {
+				has_global_variable = ita_arc_rome_garrison
+				OR = {
+					NOT = {
+						ita_arc_rome_is_garrisoned = yes
+					}
+					ita_arc_france_ai_withdraws_from_rome = yes
+				}
+			}
+			ita_arc_end_garrison = yes
+		}
+		ita_arc_refresh_economy = yes
+		global_var:ita_arc_austria ?= {
+			ita_arc_refresh_guarantee_cost = yes
+		}
+		every_country = {
+			limit = {
+				ita_arc_italian_ai = yes
+			}
+			if = {
+				limit = {
+					ita_arc_counted_guarantee = yes
+					ita_arc_national_takeover_allowed = yes
+				}
+				ita_arc_add_national_pressure = yes
+			}
+			if = {
+				limit = { NOT = { ita_arc_national_takeover_allowed = yes } }
+				every_political_movement = {
+					limit = { has_modifier = ita_arc_national_pressure }
+					remove_modifier = ita_arc_national_pressure
+				}
+			}
+			trigger_event = {
+				id = ita_arc.90
+				days = 1
+			}
+		}
+		global_var:ita_risorgimento_sardinia ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = italian_sentiment_var
+					}
+				}
+				set_variable = {
+					name = italian_sentiment_var
+					value = 10
+				}
+			}
+			change_variable = {
+				name = italian_sentiment_var
+				add = ita_arc_monthly_delta
+			}
+			set_variable = {
+				name = italian_sentiment_var
+				value = {
+					value = var:italian_sentiment_var
+					min = 0
+					max = 100
+				}
+			}
+			ita_refresh_sentiment_modifier = yes
+		}
+	}
+
+}
+
+# World scope. No expiry on accumulated movement pressure: it is deliberately not removed here.
+ita_arc_end_garrison = {
+
+	if = {
+		limit = {
+			has_global_variable = ita_arc_rome_garrison
+		}
+		global_var:ita_risorgimento_sardinia ?= {
+			post_notification = ita_arc_rome_garrison_departed
+		}
+		remove_global_variable = ita_arc_rome_garrison
+	}
+
+	c:FRA ?= {
+		if = {
+			limit = {
+				has_modifier = ita_arc_french_rome_garrison
+			}
+			remove_modifier = ita_arc_french_rome_garrison
+		}
+	}
+
+}
+
+ita_arc_cleanup = {
+	global_var:ita_arc_austria ?= {
+		if = {
+			limit = { has_modifier = ita_arc_austrian_guarantee_authority }
+			remove_modifier = ita_arc_austrian_guarantee_authority
+		}
+	}
+
+
+	global_var:ita_arc_austria ?= {
+		if = {
+			limit = {
+				has_modifier = ita_arc_austrian_guarantees
+			}
+			remove_modifier = ita_arc_austrian_guarantees
+		}
+	}
+
+	set_global_variable = ita_arc_ended
+
+	if = {
+		limit = {
+			has_global_variable = ita_arc_active
+		}
+		remove_global_variable = ita_arc_active
+	}
+
+	c:AUS ?= {
+		if = {
+			limit = {
+				has_modifier = ita_arc_austrian_guarantees
+			}
+			remove_modifier = ita_arc_austrian_guarantees
+		}
+	}
+
+	c:KUK ?= {
+		if = {
+			limit = {
+				has_modifier = ita_arc_austrian_guarantees
+			}
+			remove_modifier = ita_arc_austrian_guarantees
+		}
+	}
+
+	ita_arc_end_garrison = yes
+
+	global_var:ita_risorgimento_sardinia ?= {
+		ita_clear_sentiment_modifier = yes
+	}
+
+}
+
+ita_arc_finish = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = ita_arc_completed
+			}
+		}
+		set_global_variable = ita_arc_completed
+		
+		ita_arc_cleanup = yes
+	}
+
+}
+
+# World scope, called by the accepting country in the Treaty of Turin event.
+ita_arc_sign_turin = {
+
+	if = {
+		limit = {
+			ita_arc_turin_available = yes
+		}
+		set_global_variable = ita_arc_turin_signed
+		global_var:ita_risorgimento_sardinia ?= {
+			every_scope_state = {
+				limit = {
+					OR = {
+						state_region = s:STATE_SAVOY
+						state_region = s:STATE_PROVENCE
+					}
+				}
+				set_state_owner = c:FRA
+			}
+			ita_stance_increase_toward_france_effect = yes
+		}
+		c:FRA = {
+			if = {
+				limit = {
+					is_owed_obligation_by = global_var:ita_risorgimento_sardinia
+				}
+				global_var:ita_risorgimento_sardinia = {
+					set_owes_obligation_to = {
+						country = c:FRA
+						setting = no
+					}
+				}
+			}
+			set_owes_obligation_to = {
+				country = global_var:ita_risorgimento_sardinia
+				setting = yes
+			}
+		}
+	}
+
+}
+
+# Actor country scope. Select an eligible state and its real owner, so Austrian subjects are valid targets.
+ita_arc_start_independence_war = {
+	save_scope_as = ita_arc_war_actor
+	# Lombardy is the first demand whenever it remains under Austrian control.
+
+	s:STATE_LOMBARDY = {
+		random_scope_state = {
+			limit = {
+				owner = {
+					ita_risorgimento_austrian_direct_or_subject = yes
+					NOT = {
+						ita_arc_actor = yes
+					}
+				}
+			}
+			save_scope_as = ita_arc_first_target
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				exists = scope:ita_arc_first_target
+			}
+		}
+		s:STATE_VENETIA = {
+			random_scope_state = {
+				limit = {
+					owner = {
+						ita_risorgimento_austrian_direct_or_subject = yes
+						NOT = {
+							ita_arc_actor = yes
+						}
+					}
+				}
+				save_scope_as = ita_arc_first_target
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = scope:ita_arc_first_target
+		}
+		create_diplomatic_play = {
+			name = ita_arc_independence_war
+			type = dp_ita_arc_independence
+			target_country = scope:ita_arc_first_target.owner
+			target_state = scope:ita_arc_first_target
+		}
+		random_diplomatic_play = {
+			limit = {
+				is_diplomatic_play_type = dp_ita_arc_independence
+				initiator = scope:ita_arc_war_actor
+			}
+			save_scope_as = ita_arc_independence_play
+			add_initiator_backers = {
+				c:FRA
+			}
+		}
+		s:STATE_LOMBARDY = {
+			ita_arc_add_independence_goals = yes
+		}
+		s:STATE_VENETIA = {
+			ita_arc_add_independence_goals = yes
+		}
+	}
+
+}
+
+# State-region scope. The first state already supplies the primary demand.
+ita_arc_add_independence_goals = {
+
+	every_scope_state = {
+		limit = {
+			NOT = {
+				this = scope:ita_arc_first_target
+			}
+			owner = {
+				ita_risorgimento_austrian_direct_or_subject = yes
+				NOT = {
+					ita_arc_actor = yes
+				}
+			}
+		}
+		save_scope_as = ita_arc_additional_state
+		scope:ita_arc_independence_play ?= {
+			if = {
+				limit = {
+					scope:ita_arc_additional_state.owner = {
+						NOT = {
+							is_diplomatic_play_enemy_of = scope:ita_arc_war_actor
+						}
+					}
+				}
+				add_target_backers = {
+					scope:ita_arc_additional_state.owner
+				}
+			}
+			add_war_goal = {
+				holder = scope:ita_arc_war_actor
+				type = ita_arc_independence_conquest
+				target_country = scope:ita_arc_additional_state.owner
+				target_state = scope:ita_arc_additional_state
+				primary_demand = yes
+			}
+		}
+	}
+
+}
+
+ita_arc_migrate_turin = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = ita_arc_turin_signed
+			}
+			exists = c:FRA
+			c:FRA = {
+				owns_entire_state_region = STATE_SAVOY
+			}
+			global_var:ita_risorgimento_sardinia ?= {
+				has_variable = turin_done
+				NOT = {
+					any_scope_state = {
+						state_region = s:STATE_SAVOY
+					}
+				}
+			}
+			has_global_variable = ita_risorgimento_sardinia
+		}
+		set_global_variable = ita_arc_turin_signed
+		c:FRA = {
+			set_owes_obligation_to = {
+				country = global_var:ita_risorgimento_sardinia
+				setting = yes
+			}
+		}
+	}
+
+}

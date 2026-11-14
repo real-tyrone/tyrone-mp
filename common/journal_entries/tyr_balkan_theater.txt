@@ -1,0 +1,4768 @@
+je_tyr_balkan_theater = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/generic_icons/secession_culture_ongoing.dds"
+
+	should_be_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	should_show_when_not_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	highlight = yes
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						OR = {
+							AND = {
+								global_var:tyr_bt_aus_influence = global_var:tyr_bt_rus_influence
+								global_var:tyr_bt_aus_influence >= global_var:tyr_bt_tur_influence
+							}
+							AND = {
+								global_var:tyr_bt_aus_influence = global_var:tyr_bt_tur_influence
+								global_var:tyr_bt_aus_influence >= global_var:tyr_bt_rus_influence
+							}
+							AND = {
+								global_var:tyr_bt_rus_influence = global_var:tyr_bt_tur_influence
+								global_var:tyr_bt_rus_influence >= global_var:tyr_bt_aus_influence
+							}
+						}
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_tied
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_aus_influence > global_var:tyr_bt_rus_influence
+						global_var:tyr_bt_aus_influence > global_var:tyr_bt_tur_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_aus_ahead
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_rus_influence > global_var:tyr_bt_aus_influence
+						global_var:tyr_bt_rus_influence > global_var:tyr_bt_tur_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_rus_ahead
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_tur_influence > global_var:tyr_bt_aus_influence
+						global_var:tyr_bt_tur_influence > global_var:tyr_bt_rus_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_tur_ahead
+			}
+			desc = tyr_bt_status_waiting
+		}
+	}
+
+	scripted_button = je_eastern_question_russia_free_balkans_button
+
+	is_shown_when_inactive = {
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+	}
+
+	possible = {
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_started
+				has_global_variable = tyr_bt_started
+			}
+		}
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_crimean_war_starting
+				has_global_variable = crimean_war_starting
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_eastern_crisis_happened
+				has_global_variable = eastern_crisis_happened
+			}
+		}
+	}
+
+	immediate = {
+		tyr_bt_initialize = yes
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_initialize_preview
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			tyr_bt_tick = yes
+		}
+	}
+
+	timeout = 14610
+
+	map_color = {
+		if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_aus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_aus_direct"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_rus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_rus_direct"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_tur_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_tur_direct"
+		}
+		else_if = {
+			limit = {
+				tyr_bt_region = yes
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+	map_color_second = {
+		if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_aus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_aus"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_rus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_rus"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_tur_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_tur"
+		}
+	}
+
+	map_tooltip = {
+		owner ?= {
+			save_scope_as = tyr_bt_map_owner
+		}
+		if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_aus = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_aus_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_aus_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_aus_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_aus_bloc_tt
+			}
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_rus = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_rus_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_rus_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_rus_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_rus_bloc_tt
+			}
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_tur = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_tur_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_tur_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_tur_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_tur_bloc_tt
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					exists = scope:tyr_bt_map_owner
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_unaligned_tt
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_aus = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_aus = yes
+						}
+					}
+				}
+				global_var:tyr_bt_aus_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_aus_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_rus = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_rus = yes
+						}
+					}
+				}
+				global_var:tyr_bt_rus_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_rus_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_tur = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_tur = yes
+						}
+					}
+				}
+				global_var:tyr_bt_tur_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_tur_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_region = yes
+			}
+			custom_tooltip_no_bullet = tyr_bt_map_inside_tt
+		}
+		else = {
+			custom_tooltip_no_bullet = tyr_bt_map_outside_tt
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_balkan_theater.gui"
+		name = "widget_tyr_bt_children"
+		container = "custom_widget_container_3"
+	}
+
+	scripted_progress_bar = tyr_bt_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_hegemony
+					}
+					global_var:tyr_bt_aus_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			tyr_bt_end_aus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_hegemony
+					}
+					global_var:tyr_bt_rus_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			tyr_bt_end_rus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_hegemony
+					}
+					global_var:tyr_bt_tur_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			tyr_bt_end_tur = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = tyr_bt_stalemate
+		effect_header = je_standard_on_failure_header
+		conclusion_desc = tyr_bt_stalemate_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = no
+			}
+		}
+		effect = {
+			tyr_bt_stalemate_end = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_stalemate_preview
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			timeout
+		}
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		conclusion_desc = tyr_bt_timeout_desc
+		effect = {
+			if = {
+				limit = {
+					tyr_bt_active_aus = yes
+					global_var:tyr_bt_aus_influence >= 80
+				}
+				tyr_bt_end_aus_limited = yes
+			}
+			else_if = {
+				limit = {
+					tyr_bt_active_rus = yes
+					global_var:tyr_bt_rus_influence >= 80
+				}
+				tyr_bt_end_rus_limited = yes
+			}
+			else_if = {
+				limit = {
+					tyr_bt_active_tur = yes
+					global_var:tyr_bt_tur_influence >= 80
+				}
+				tyr_bt_end_tur_limited = yes
+			}
+			else = {
+				tyr_bt_stalemate_end = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_timeout_preview
+				}
+			}
+		}
+	}
+
+}
+
+je_tyr_bt_yug = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/yugoslavia_flag.png"
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					tyr_bt_yug_aus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_yug_aus_bar)" < 84
+					}
+				}
+				desc = tyr_bt_settlement_aus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_yug_rus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_yug_rus_bar)" < 84
+					}
+				}
+				desc = tyr_bt_settlement_rus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_yug_tur_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_yug_tur_bar)" < 84
+					}
+				}
+				desc = tyr_bt_settlement_tur_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_aus_yug_full = yes
+				}
+				desc = tyr_bt_settlement_aus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rus_yug_full = yes
+				}
+				desc = tyr_bt_settlement_rus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_tur_yug_full = yes
+				}
+				desc = tyr_bt_settlement_tur_controls
+			}
+			desc = tyr_bt_settlement_contested
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			tyr_bt_yug_candidate = yes
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			tyr_bt_yug_candidate = yes
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_yug_done
+				has_global_variable = tyr_bt_yug_done
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+	}
+
+	immediate = {
+		global_var:tyr_bt_aus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_yug_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_rus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_yug_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_tur_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_yug_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = 0
+				}
+			}
+		}
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_settlement_activate_preview
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_yug_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_yug_full
+				tyr_bt_aus_yug_full = yes
+			}
+			NOT = {
+				any_country = {
+					tyr_bt_yug_candidate = yes
+					custom_tooltip = {
+						text = tyr_bt_req_tyr_bt_faction_aus
+						tyr_bt_faction_aus = yes
+					}
+					is_at_war = yes
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_country_yug_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_country
+					}
+					global_var:tyr_bt_aus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_yug_months
+							}
+							var:tyr_bt_yug_months >= 84
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_yug_done
+			tyr_bt_reward_aus = yes
+			global_var:tyr_bt_aus_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			ordered_country = {
+				limit = {
+					tyr_bt_yug_candidate = yes
+					tyr_bt_faction_aus = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_country = {
+					limit = {
+						tyr_bt_yug_candidate = yes
+						tyr_bt_faction_aus = yes
+						NOR = {
+							this = scope:tyr_bt_sponsor
+							this = scope:tyr_bt_union
+						}
+					}
+					scope:tyr_bt_union = {
+						annex = prev
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = YUG
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+				scope:tyr_bt_sponsor = {
+					if = {
+						limit = {
+							calc_true_if = {
+								amount >= 2
+								cultural_acceptance_base = {
+									target = cu:serb
+									value >= acceptance_status_4
+								}
+								cultural_acceptance_base = {
+									target = cu:croat
+									value >= acceptance_status_4
+								}
+								cultural_acceptance_base = {
+									target = cu:slovene
+									value >= acceptance_status_4
+								}
+								cultural_acceptance_base = {
+									target = cu:bosniak
+									value >= acceptance_status_4
+								}
+							}
+						}
+						trigger_event = {
+							id = tyr_balkan_theater.1
+							popup = yes
+						}
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_yug_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_yug_full
+				tyr_bt_rus_yug_full = yes
+			}
+			NOT = {
+				any_country = {
+					tyr_bt_yug_candidate = yes
+					custom_tooltip = {
+						text = tyr_bt_req_tyr_bt_faction_rus
+						tyr_bt_faction_rus = yes
+					}
+					is_at_war = yes
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_country_yug_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_country
+					}
+					global_var:tyr_bt_rus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_yug_months
+							}
+							var:tyr_bt_yug_months >= 84
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_yug_done
+			tyr_bt_reward_rus = yes
+			global_var:tyr_bt_rus_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			ordered_country = {
+				limit = {
+					tyr_bt_yug_candidate = yes
+					tyr_bt_faction_rus = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_country = {
+					limit = {
+						tyr_bt_yug_candidate = yes
+						tyr_bt_faction_rus = yes
+						NOR = {
+							this = scope:tyr_bt_sponsor
+							this = scope:tyr_bt_union
+						}
+					}
+					scope:tyr_bt_union = {
+						annex = prev
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = YUG
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_yug_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_yug_full
+				tyr_bt_tur_yug_full = yes
+			}
+			NOT = {
+				any_country = {
+					tyr_bt_yug_candidate = yes
+					custom_tooltip = {
+						text = tyr_bt_req_tyr_bt_faction_tur
+						tyr_bt_faction_tur = yes
+					}
+					is_at_war = yes
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_country_yug_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_country
+					}
+					global_var:tyr_bt_tur_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_yug_months
+							}
+							var:tyr_bt_yug_months >= 84
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_yug_done
+			tyr_bt_reward_tur = yes
+			global_var:tyr_bt_tur_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			ordered_country = {
+				limit = {
+					tyr_bt_yug_candidate = yes
+					tyr_bt_faction_tur = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_country = {
+					limit = {
+						tyr_bt_yug_candidate = yes
+						tyr_bt_faction_tur = yes
+						NOR = {
+							this = scope:tyr_bt_sponsor
+							this = scope:tyr_bt_union
+						}
+					}
+					scope:tyr_bt_union = {
+						annex = prev
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = YUG
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			global_var:tyr_bt_aus_country ?= {
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_yug_aus_bar)"
+				}
+			}
+			global_var:tyr_bt_rus_country ?= {
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_yug_rus_bar)"
+				}
+			}
+			global_var:tyr_bt_tur_country ?= {
+				set_variable = {
+					name = tyr_bt_yug_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_yug_tur_bar)"
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_finished
+					has_global_variable = tyr_bt_finished
+				}
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_yug_done
+					has_global_variable = tyr_bt_yug_done
+				}
+			}
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				OR = {
+					state_region = s:STATE_SLOVENIA
+					state_region = s:STATE_CROATIA
+					state_region = s:STATE_SLAVONIA
+					state_region = s:STATE_DALMATIA
+					state_region = s:STATE_BOSNIA
+					state_region = s:STATE_MONTENEGRO
+					state_region = s:STATE_EASTERN_SERBIA
+					state_region = s:STATE_WESTERN_SERBIA
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+}
+
+je_tyr_bt_rom = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/romania_flag.png"
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rom_aus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_rom_aus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_aus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rom_rus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_rom_rus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_rus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rom_tur_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_rom_tur_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_tur_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_aus_rom_full = yes
+				}
+				desc = tyr_bt_settlement_aus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rus_rom_full = yes
+				}
+				desc = tyr_bt_settlement_rus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_tur_rom_full = yes
+				}
+				desc = tyr_bt_settlement_tur_controls
+			}
+			desc = tyr_bt_settlement_contested
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			tyr_bt_rom_candidate = yes
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			tyr_bt_rom_candidate = yes
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rom_done
+				has_global_variable = tyr_bt_rom_done
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+	}
+
+	immediate = {
+		global_var:tyr_bt_aus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_rom_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_rus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_rom_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_tur_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_rom_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = 0
+				}
+			}
+		}
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_settlement_activate_preview
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_rom_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_rom_full
+				tyr_bt_aus_rom_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_rom_aus_candidates_at_peace_tt
+				NOT = {
+					any_country = {
+						tyr_bt_rom_candidate = yes
+						custom_tooltip = {
+							text = tyr_bt_req_tyr_bt_faction_aus
+							tyr_bt_faction_aus = yes
+						}
+						is_at_war = yes
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_country_rom_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_country
+					}
+					global_var:tyr_bt_aus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_rom_months
+							}
+							var:tyr_bt_rom_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_rom_done
+			tyr_bt_reward_aus = yes
+			global_var:tyr_bt_aus_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			every_country = {
+				limit = {
+					tyr_bt_rom_candidate = yes
+					tyr_bt_faction_aus = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				add_to_temporary_list = tyr_bt_rom_union_aus_candidates
+			}
+			ordered_in_list = {
+				list = tyr_bt_rom_union_aus_candidates
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_in_list = {
+					list = tyr_bt_rom_union_aus_candidates
+					limit = {
+						NOT = {
+							this = scope:tyr_bt_union
+						}
+					}
+					save_scope_as = tyr_bt_absorbed_romanian_candidate
+					scope:tyr_bt_union = {
+						annex = scope:tyr_bt_absorbed_romanian_candidate
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = ROM
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_rom_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_rom_full
+				tyr_bt_rus_rom_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_rom_rus_candidates_at_peace_tt
+				NOT = {
+					any_country = {
+						tyr_bt_rom_candidate = yes
+						custom_tooltip = {
+							text = tyr_bt_req_tyr_bt_faction_rus
+							tyr_bt_faction_rus = yes
+						}
+						is_at_war = yes
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_country_rom_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_country
+					}
+					global_var:tyr_bt_rus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_rom_months
+							}
+							var:tyr_bt_rom_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_rom_done
+			tyr_bt_reward_rus = yes
+			global_var:tyr_bt_rus_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			every_country = {
+				limit = {
+					tyr_bt_rom_candidate = yes
+					tyr_bt_faction_rus = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				add_to_temporary_list = tyr_bt_rom_union_rus_candidates
+			}
+			ordered_in_list = {
+				list = tyr_bt_rom_union_rus_candidates
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_in_list = {
+					list = tyr_bt_rom_union_rus_candidates
+					limit = {
+						NOT = {
+							this = scope:tyr_bt_union
+						}
+					}
+					save_scope_as = tyr_bt_absorbed_romanian_candidate
+					scope:tyr_bt_union = {
+						annex = scope:tyr_bt_absorbed_romanian_candidate
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = ROM
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_rom_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_rom_full
+				tyr_bt_tur_rom_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_rom_tur_candidates_at_peace_tt
+				NOT = {
+					any_country = {
+						tyr_bt_rom_candidate = yes
+						custom_tooltip = {
+							text = tyr_bt_req_tyr_bt_faction_tur
+							tyr_bt_faction_tur = yes
+						}
+						is_at_war = yes
+					}
+				}
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_country_rom_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_country
+					}
+					global_var:tyr_bt_tur_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_rom_months
+							}
+							var:tyr_bt_rom_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_rom_done
+			tyr_bt_reward_tur = yes
+			global_var:tyr_bt_tur_country = {
+				save_scope_as = tyr_bt_sponsor
+			}
+			every_country = {
+				limit = {
+					tyr_bt_rom_candidate = yes
+					tyr_bt_faction_tur = yes
+					NOT = {
+						this = scope:tyr_bt_sponsor
+					}
+				}
+				add_to_temporary_list = tyr_bt_rom_union_tur_candidates
+			}
+			ordered_in_list = {
+				list = tyr_bt_rom_union_tur_candidates
+				order_by = gdp
+				position = 0
+				check_range_bounds = no
+				save_scope_as = tyr_bt_union
+			}
+			if = {
+				limit = {
+					exists = scope:tyr_bt_union
+				}
+				every_in_list = {
+					list = tyr_bt_rom_union_tur_candidates
+					limit = {
+						NOT = {
+							this = scope:tyr_bt_union
+						}
+					}
+					save_scope_as = tyr_bt_absorbed_romanian_candidate
+					scope:tyr_bt_union = {
+						annex = scope:tyr_bt_absorbed_romanian_candidate
+					}
+				}
+				scope:tyr_bt_union = {
+					change_tag = ROM
+				}
+				scope:tyr_bt_sponsor = {
+					create_diplomatic_pact = {
+						country = scope:tyr_bt_union
+						type = protectorate
+					}
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					tyr_bt_aus_rom_full = no
+				}
+				scope:journal_entry = {
+					set_bar_progress = {
+						name = tyr_bt_rom_aus_bar
+						value = 0
+					}
+				}
+			}
+			global_var:tyr_bt_aus_country ?= {
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_rom_aus_bar)"
+				}
+			}
+			if = {
+				limit = {
+					tyr_bt_rus_rom_full = no
+				}
+				scope:journal_entry = {
+					set_bar_progress = {
+						name = tyr_bt_rom_rus_bar
+						value = 0
+					}
+				}
+			}
+			global_var:tyr_bt_rus_country ?= {
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_rom_rus_bar)"
+				}
+			}
+			if = {
+				limit = {
+					tyr_bt_tur_rom_full = no
+				}
+				scope:journal_entry = {
+					set_bar_progress = {
+						name = tyr_bt_rom_tur_bar
+						value = 0
+					}
+				}
+			}
+			global_var:tyr_bt_tur_country ?= {
+				set_variable = {
+					name = tyr_bt_rom_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_rom_tur_bar)"
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_finished
+					has_global_variable = tyr_bt_finished
+				}
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_rom_done
+					has_global_variable = tyr_bt_rom_done
+				}
+			}
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				OR = {
+					state_region = s:STATE_WALLACHIA
+					state_region = s:STATE_MOLDAVIA
+					state_region = s:STATE_DOBRUDJA
+					state_region = s:STATE_BESSARABIA
+					state_region = s:STATE_SOUTHERN_TRANSYLVANIA
+					state_region = s:STATE_NORTHERN_TRANSYLVANIA
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+}
+
+je_tyr_bt_gre = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/greek_flag.png"
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					tyr_bt_gre_aus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_gre_aus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_aus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_gre_rus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_gre_rus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_rus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_gre_tur_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_gre_tur_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_tur_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_aus_gre_full = yes
+				}
+				desc = tyr_bt_settlement_aus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rus_gre_full = yes
+				}
+				desc = tyr_bt_settlement_rus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_tur_gre_full = yes
+				}
+				desc = tyr_bt_settlement_tur_controls
+			}
+			desc = tyr_bt_settlement_contested
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			country_has_primary_culture = cu:greek
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			country_has_primary_culture = cu:greek
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_gre_done
+				has_global_variable = tyr_bt_gre_done
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		c:GRE ?= {
+			OR = {
+				has_technology_researched = nationalism
+				power_bloc ?= {
+					power_bloc_leader = {
+						has_technology_researched = nationalism
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		global_var:tyr_bt_aus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_gre_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_rus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_gre_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_tur_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_gre_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = 0
+				}
+			}
+		}
+		s:STATE_PELOPONNESE = {
+			add_claim = c:GRE
+		}
+		s:STATE_IONIAN_ISLANDS = {
+			add_claim = c:GRE
+		}
+		s:STATE_ATTICA = {
+			add_claim = c:GRE
+		}
+		s:STATE_THESSALIA = {
+			add_claim = c:GRE
+		}
+		s:STATE_WESTERN_THRACE = {
+			add_claim = c:GRE
+		}
+		s:STATE_CRETE = {
+			add_claim = c:GRE
+		}
+		s:STATE_WEST_AEGEAN_ISLANDS = {
+			add_claim = c:GRE
+		}
+		s:STATE_MACEDONIA = {
+			add_claim = c:GRE
+		}
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_settlement_activate_preview
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_gre_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = yes
+			}
+			c:GRE ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_aus
+					tyr_bt_faction_aus = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_gre_faction_territory_tt
+				tyr_bt_aus_gre_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_country_gre_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_country
+					}
+					global_var:tyr_bt_aus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_gre_months
+							}
+							var:tyr_bt_gre_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_gre_done
+			tyr_bt_reward_aus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_gre_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = yes
+			}
+			c:GRE ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_rus
+					tyr_bt_faction_rus = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_gre_faction_territory_tt
+				tyr_bt_rus_gre_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_country_gre_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_country
+					}
+					global_var:tyr_bt_rus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_gre_months
+							}
+							var:tyr_bt_gre_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_gre_done
+			tyr_bt_reward_rus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_gre_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = yes
+			}
+			c:GRE ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_tur
+					tyr_bt_faction_tur = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_gre_faction_territory_tt
+				tyr_bt_tur_gre_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_country_gre_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_country
+					}
+					global_var:tyr_bt_tur_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_gre_months
+							}
+							var:tyr_bt_gre_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_gre_done
+			tyr_bt_reward_tur = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			global_var:tyr_bt_aus_country ?= {
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_gre_aus_bar)"
+				}
+			}
+			global_var:tyr_bt_rus_country ?= {
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_gre_rus_bar)"
+				}
+			}
+			global_var:tyr_bt_tur_country ?= {
+				set_variable = {
+					name = tyr_bt_gre_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_gre_tur_bar)"
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_finished
+					has_global_variable = tyr_bt_finished
+				}
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_gre_done
+					has_global_variable = tyr_bt_gre_done
+				}
+			}
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				OR = {
+					state_region = s:STATE_PELOPONNESE
+					state_region = s:STATE_ATTICA
+					state_region = s:STATE_THESSALIA
+					state_region = s:STATE_WESTERN_THRACE
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+}
+
+je_tyr_bt_bul = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/bulgaria_flag.png"
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					tyr_bt_bul_aus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_bul_aus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_aus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_bul_rus_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_bul_rus_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_rus_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_bul_tur_can_advance = yes
+					scope:journal_entry = {
+						"scripted_bar_progress(tyr_bt_bul_tur_bar)" < 60
+					}
+				}
+				desc = tyr_bt_settlement_tur_advancing
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_aus_bul_full = yes
+				}
+				desc = tyr_bt_settlement_aus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_rus_bul_full = yes
+				}
+				desc = tyr_bt_settlement_rus_controls
+			}
+			triggered_desc = {
+				trigger = {
+					tyr_bt_tur_bul_full = yes
+				}
+				desc = tyr_bt_settlement_tur_controls
+			}
+			desc = tyr_bt_settlement_contested
+		}
+	}
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			country_has_primary_culture = cu:bulgarian
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			country_has_primary_culture = cu:bulgarian
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_bul_done
+				has_global_variable = tyr_bt_bul_done
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+		c:BUL ?= {
+			OR = {
+				has_technology_researched = nationalism
+				power_bloc ?= {
+					power_bloc_leader = {
+						has_technology_researched = nationalism
+					}
+				}
+			}
+		}
+	}
+
+	immediate = {
+		global_var:tyr_bt_aus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_bul_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_rus_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_bul_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = 0
+				}
+			}
+		}
+		global_var:tyr_bt_tur_country ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_variable = tyr_bt_bul_months
+					}
+				}
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = 0
+				}
+			}
+		}
+		s:STATE_BULGARIA = {
+			add_claim = c:BUL
+		}
+		s:STATE_NORTHERN_THRACE = {
+			add_claim = c:BUL
+		}
+		s:STATE_MACEDONIA = {
+			add_claim = c:BUL
+		}
+		s:STATE_SKOPIA = {
+			add_claim = c:BUL
+		}
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_settlement_activate_preview
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_bul_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = yes
+			}
+			c:BUL ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_aus
+					tyr_bt_faction_aus = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_bul_faction_territory_tt
+				tyr_bt_aus_bul_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_country_bul_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_country
+					}
+					global_var:tyr_bt_aus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_bul_months
+							}
+							var:tyr_bt_bul_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_bul_done
+			tyr_bt_reward_aus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_bul_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = yes
+			}
+			c:BUL ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_rus
+					tyr_bt_faction_rus = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_bul_faction_territory_tt
+				tyr_bt_rus_bul_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_country_bul_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_country
+					}
+					global_var:tyr_bt_rus_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_bul_months
+							}
+							var:tyr_bt_bul_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_bul_done
+			tyr_bt_reward_rus = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_bul_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_settlement_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = yes
+			}
+			c:BUL ?= {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_faction_tur
+					tyr_bt_faction_tur = yes
+				}
+				is_at_war = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_bul_faction_territory_tt
+				tyr_bt_tur_bul_full = yes
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_country_bul_peace
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_country
+					}
+					global_var:tyr_bt_tur_country = {
+						is_at_war = no
+						trigger_if = {
+							limit = {
+								has_variable = tyr_bt_bul_months
+							}
+							var:tyr_bt_bul_months >= 60
+						}
+						trigger_else = {
+							always = no
+						}
+					}
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+		effect = {
+			set_global_variable = tyr_bt_bul_done
+			tyr_bt_reward_tur = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_outcome_preview
+				}
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			global_var:tyr_bt_aus_country ?= {
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_bul_aus_bar)"
+				}
+			}
+			global_var:tyr_bt_rus_country ?= {
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_bul_rus_bar)"
+				}
+			}
+			global_var:tyr_bt_tur_country ?= {
+				set_variable = {
+					name = tyr_bt_bul_months
+					value = "scope:journal_entry.scripted_bar_progress(tyr_bt_bul_tur_bar)"
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_finished
+					has_global_variable = tyr_bt_finished
+				}
+				custom_tooltip = {
+					text = tyr_bt_req_tyr_bt_bul_done
+					has_global_variable = tyr_bt_bul_done
+				}
+			}
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				OR = {
+					state_region = s:STATE_BULGARIA
+					state_region = s:STATE_NORTHERN_THRACE
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+}
+
+je_tyr_bt_national_awakenings = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/generic_icons/battalions.dds"
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_balkan_theater.gui"
+		name = "widget_tyr_bt_ottoman_balkan_movements"
+		container = "custom_widget_container_3"
+	}
+
+	should_be_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	should_show_when_not_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+	}
+
+	immediate = {
+		# One-time activation effect; no ownership, technology or political requirements.
+		cu:serb = {
+			add_fervor = 25
+		}
+		cu:croat = {
+			add_fervor = 25
+		}
+		cu:slovene = {
+			add_fervor = 25
+		}
+		cu:bosniak = {
+			add_fervor = 25
+		}
+		cu:albanian = {
+			add_fervor = 25
+		}
+		cu:bulgarian = {
+			add_fervor = 25
+		}
+		cu:romanian = {
+			add_fervor = 25
+		}
+		cu:greek = {
+			add_fervor = 25
+		}
+		# Vanilla cultural-minority movements for directly owned Balkan homelands.
+		c:TUR ?= {
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:serb
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:serb
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:serb
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:croat
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:croat
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:croat
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:slovene
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:slovene
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:slovene
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:bosniak
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:bosniak
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:bosniak
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:albanian
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:albanian
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:albanian
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:bulgarian
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:bulgarian
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:bulgarian
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:romanian
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:romanian
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:romanian
+				}
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+						state_region = {
+							is_homeland = cu:greek
+						}
+					}
+					NOT = {
+						any_political_movement = {
+							culture ?= cu:greek
+						}
+					}
+				}
+				create_political_movement = {
+					type = movement_cultural_minority
+					culture = cu:greek
+				}
+			}
+		}
+		global_var:tyr_bt_aus_country ?= {
+			every_subject_or_below = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+					}
+					radical_fraction = {
+						value > 0.10
+					}
+					NOT = {
+						is_subject_type = subject_type_protectorate
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_national_liberty
+					days = 370
+					multiplier = 1
+				}
+			}
+			if = {
+				limit = {
+					radical_fraction = {
+						value > 0.10
+					}
+				}
+				every_political_movement = {
+					limit = {
+						is_political_movement_type = movement_cultural_minority
+						OR = {
+							culture ?= cu:serb
+							culture ?= cu:croat
+							culture ?= cu:slovene
+							culture ?= cu:bosniak
+							culture ?= cu:albanian
+							culture ?= cu:bulgarian
+							culture ?= cu:romanian
+							culture ?= cu:greek
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_agitation
+						days = 370
+						multiplier = 1
+					}
+				}
+			}
+		}
+		global_var:tyr_bt_rus_country ?= {
+			every_subject_or_below = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+					}
+					radical_fraction = {
+						value > 0.10
+					}
+					NOT = {
+						is_subject_type = subject_type_protectorate
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_national_liberty
+					days = 370
+					multiplier = 1
+				}
+			}
+			if = {
+				limit = {
+					radical_fraction = {
+						value > 0.10
+					}
+				}
+				every_political_movement = {
+					limit = {
+						is_political_movement_type = movement_cultural_minority
+						OR = {
+							culture ?= cu:serb
+							culture ?= cu:croat
+							culture ?= cu:slovene
+							culture ?= cu:bosniak
+							culture ?= cu:albanian
+							culture ?= cu:bulgarian
+							culture ?= cu:romanian
+							culture ?= cu:greek
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_agitation
+						days = 370
+						multiplier = 1
+					}
+				}
+			}
+		}
+		global_var:tyr_bt_tur_country ?= {
+			every_subject_or_below = {
+				limit = {
+					any_scope_state = {
+						tyr_bt_region = yes
+					}
+					radical_fraction = {
+						value > 0.10
+					}
+					NOT = {
+						is_subject_type = subject_type_protectorate
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_national_liberty
+					days = 370
+					multiplier = 2
+				}
+			}
+			if = {
+				limit = {
+					radical_fraction = {
+						value > 0.10
+					}
+				}
+				every_political_movement = {
+					limit = {
+						is_political_movement_type = movement_cultural_minority
+						OR = {
+							culture ?= cu:serb
+							culture ?= cu:croat
+							culture ?= cu:slovene
+							culture ?= cu:bosniak
+							culture ?= cu:albanian
+							culture ?= cu:bulgarian
+							culture ?= cu:romanian
+							culture ?= cu:greek
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_agitation
+						days = 370
+						multiplier = 2
+					}
+				}
+			}
+		}
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_awakening_activate_preview
+			}
+		}
+	}
+
+	on_yearly_pulse = {
+		effect = {
+			global_var:tyr_bt_aus_country ?= {
+				every_subject_or_below = {
+					limit = {
+						any_scope_state = {
+							tyr_bt_region = yes
+						}
+						radical_fraction = {
+							value > 0.10
+						}
+						NOT = {
+							is_subject_type = subject_type_protectorate
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_liberty
+						days = 370
+						multiplier = 1
+					}
+				}
+				if = {
+					limit = {
+						radical_fraction = {
+							value > 0.10
+						}
+					}
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_cultural_minority
+							OR = {
+								culture ?= cu:serb
+								culture ?= cu:croat
+								culture ?= cu:slovene
+								culture ?= cu:bosniak
+								culture ?= cu:albanian
+								culture ?= cu:bulgarian
+								culture ?= cu:romanian
+								culture ?= cu:greek
+							}
+						}
+						add_modifier = {
+							name = tyr_bt_national_agitation
+							days = 370
+							multiplier = 1
+						}
+					}
+				}
+			}
+			global_var:tyr_bt_rus_country ?= {
+				every_subject_or_below = {
+					limit = {
+						any_scope_state = {
+							tyr_bt_region = yes
+						}
+						radical_fraction = {
+							value > 0.10
+						}
+						NOT = {
+							is_subject_type = subject_type_protectorate
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_liberty
+						days = 370
+						multiplier = 1
+					}
+				}
+				if = {
+					limit = {
+						radical_fraction = {
+							value > 0.10
+						}
+					}
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_cultural_minority
+							OR = {
+								culture ?= cu:serb
+								culture ?= cu:croat
+								culture ?= cu:slovene
+								culture ?= cu:bosniak
+								culture ?= cu:albanian
+								culture ?= cu:bulgarian
+								culture ?= cu:romanian
+								culture ?= cu:greek
+							}
+						}
+						add_modifier = {
+							name = tyr_bt_national_agitation
+							days = 370
+							multiplier = 1
+						}
+					}
+				}
+			}
+			global_var:tyr_bt_tur_country ?= {
+				every_subject_or_below = {
+					limit = {
+						any_scope_state = {
+							tyr_bt_region = yes
+						}
+						radical_fraction = {
+							value > 0.10
+						}
+						NOT = {
+							is_subject_type = subject_type_protectorate
+						}
+					}
+					add_modifier = {
+						name = tyr_bt_national_liberty
+						days = 370
+						multiplier = 2
+					}
+				}
+				if = {
+					limit = {
+						radical_fraction = {
+							value > 0.10
+						}
+					}
+					every_political_movement = {
+						limit = {
+							is_political_movement_type = movement_cultural_minority
+							OR = {
+								culture ?= cu:serb
+								culture ?= cu:croat
+								culture ?= cu:slovene
+								culture ?= cu:bosniak
+								culture ?= cu:albanian
+								culture ?= cu:bulgarian
+								culture ?= cu:romanian
+								culture ?= cu:greek
+							}
+						}
+						add_modifier = {
+							name = tyr_bt_national_agitation
+							days = 370
+							multiplier = 2
+						}
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_finished
+				has_global_variable = tyr_bt_finished
+			}
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				tyr_bt_state_high_balkan_activism = yes
+			}
+			value = "tyr_bt_awakening_red_base"
+		}
+	}
+
+	map_color_second = {
+		if = {
+			limit = {
+				tyr_bt_state_high_balkan_activism = yes
+			}
+			value = "tyr_bt_awakening_red_stripes"
+		}
+	}
+
+	map_tooltip = {
+		if = {
+			limit = {
+				tyr_bt_state_high_balkan_activism = yes
+			}
+			custom_tooltip_no_bullet = tyr_bt_awakening_map_high_activism_tt
+		}
+	}
+
+}
+
+je_tyr_bt_collapse_observer = {
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	should_be_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	should_show_when_not_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	is_shown_when_inactive = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_started
+			has_global_variable = tyr_bt_started
+		}
+	}
+
+	possible = {
+		c:TUR ?= {
+			has_journal_entry = je_the_grand_collapse
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_collapse_observer_desc
+		trigger = {
+			NOT = {
+				c:TUR ?= {
+					has_journal_entry = je_the_grand_collapse
+				}
+			}
+		}
+	}
+
+}
+
+je_crimean_war = {
+
+	activation_description = {
+		always = yes
+	}
+
+	group = je_group_balkan_theater
+	context = none
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			OR = {
+				c:TUR ?= this
+				c:WAL ?= this
+				c:MOL ?= this
+				c:RUS ?= this
+			}
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			is_in_geographic_region = geographic_region_balkans_old
+			is_in_geographic_region = geographic_region_megali_greece
+			# Proxy for Anatolia
+			country_has_interest_marker_in_great_eastern_crisis_region = yes
+			top_overlord ?= {
+				capital = {
+					OR = {
+						is_in_geographic_region = geographic_region_balkans_old
+						is_in_geographic_region = geographic_region_megali_greece
+					}
+				}
+			}
+		}
+	}
+
+	is_shown_in_lobby = {
+		has_dlc_feature = ip3_content
+		#National Awakening
+		c:TUR ?= this
+	}
+
+	is_shown_when_inactive = {
+		#Now failure effect of sick man, and separatism tanzimat, so should be visible at game start.
+		has_dlc_feature = ip3_content
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_crimean_war_starting
+				has_global_variable = crimean_war_starting
+			}
+		}
+	}
+
+	possible = {
+		c:TUR ?= {
+			country_or_subject_owns_entire_state_region = STATE_MOLDAVIA
+			country_or_subject_owns_entire_state_region = STATE_WALLACHIA
+		}
+		c:RUS ?= {
+			OR = {
+				has_technology_researched = nationalism
+				game_date >= 1853.1.1
+			}
+			"relations(c:TUR)" <= relations_threshold:cold
+			NOT = {
+				has_truce_with = c:TUR
+			}
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+	}
+
+	scripted_button = je_crimean_war_begin_war_button
+
+	modifiers_while_active = {
+	}
+
+	immediate = {
+		set_global_variable = crimean_war_starting
+		c:TUR ?= {
+			save_scope_as = ottoman_scope
+			set_variable = crimean_war_ottoman_side
+		}
+		c:RUS ?= {
+			save_scope_as = russia_scope
+			set_variable = crimean_war_russian_side
+		}
+		c:WAL ?= {
+			save_scope_as = wallachia_scope
+		}
+		c:MOL ?= {
+			save_scope_as = moldavia_scope
+		}
+		c:FRA ?= {
+			trigger_event = {
+				id = crimean_war.1
+				popup = yes
+			}
+		}
+		c:GBR ?= {
+			trigger_event = {
+				id = crimean_war.2
+				popup = yes
+			}
+		}
+		c:AUS ?= {
+			trigger_event = {
+				id = crimean_war.3
+				popup = yes
+			}
+		}
+		c:KUK ?= {
+			trigger_event = {
+				id = crimean_war.3
+				popup = yes
+			}
+		}
+	}
+
+	immediate_all_involved = {
+		trigger_event = {
+			id = crimean_war.7
+			popup = yes
+		}
+	}
+
+	on_monthly_pulse = {
+	}
+
+	timeout = 1825
+	# 5 years
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+	weight = 1000
+	transferable = no
+	can_revolution_inherit = yes
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			OR = {
+				custom_tooltip = {
+					text = crimean_war_russian_victory_tt
+					has_global_variable = crimean_war_russian_victory
+				}
+				custom_tooltip = {
+					text = crimean_war_ottoman_victory_tt
+					has_global_variable = crimean_war_ottoman_victory
+				}
+			}
+			NOT = {
+				any_diplomatic_play = {
+					is_diplomatic_play_type = dp_crimean_war
+				}
+			}
+			c:TUR ?= {
+				NOT = {
+					has_war_with = c:RUS
+				}
+			}
+		}
+		effect_all_involved = {
+			trigger_event = {
+				id = crimean_war.5
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_crimean_war.5_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			OR = {
+				NOT = {
+					exists = c:TUR
+				}
+				custom_tooltip = {
+					text = tyr_bt_req_crimean_war_russian_intent_declined
+					has_global_variable = crimean_war_russian_intent_declined
+				}
+			}
+		}
+		effect_all_involved = {
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = {
+			timeout
+		}
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+		}
+		effect_all_involved = {
+			trigger_event = {
+				id = crimean_war.6
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+		}
+	}
+
+}
+
+je_great_eastern_crisis = {
+	group = je_group_balkan_theater
+	context = none
+	dlc = dlc014
+
+	activation_description = {
+		always = yes
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+	scripted_progress_bar = control_eastern_crisis_bar
+
+	should_be_involved = {
+		OR = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_participant
+				tyr_bt_participant = yes
+			}
+			OR = {
+				c:TUR ?= this
+				any_subject_or_below = {
+					is_in_geographic_region = geographic_region_balkans_old
+				}
+				is_in_geographic_region = geographic_region_balkans_old
+				AND = {
+					c:RUS ?= this
+					has_interest_marker_in_region = sr:region_balkans
+				}
+			}
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			is_in_geographic_region = geographic_region_balkans_old
+			is_in_geographic_region = geographic_region_megali_greece
+			# Proxy for Anatolia
+			country_has_interest_marker_in_great_eastern_crisis_region = yes
+			top_overlord ?= {
+				capital = {
+					OR = {
+						is_in_geographic_region = geographic_region_balkans_old
+						is_in_geographic_region = geographic_region_megali_greece
+					}
+				}
+			}
+		}
+	}
+
+	is_shown_in_lobby = {
+		has_dlc_feature = ip3_content
+		#National Awakening
+		c:TUR ?= this
+	}
+
+	is_shown_when_inactive = {
+		#Now failure effect of sick man, and separatism tanzimat, so should be visible at game start.
+		has_dlc_feature = ip3_content
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_eastern_crisis_happened
+				has_global_variable = eastern_crisis_happened
+			}
+		}
+	}
+
+	possible = {
+		c:TUR ?= {
+			OR = {
+				custom_tooltip = {
+					text = tyr_bt_crimea_opening_ottoman_defeat_tt
+					has_global_variable = crimean_war_russian_victory
+				}
+				AND = {
+					has_technology_researched = nationalism
+					highest_secession_progress >= 0.50
+				}
+				custom_tooltip = {
+					text = failed_sick_man_main_tt
+					OR = {
+						has_variable = failed_sick_man_main
+						has_variable = failed_sick_man_separatism
+					}
+				}
+			}
+		}
+	}
+
+	modifiers_while_active = {
+	}
+
+	immediate = {
+		set_global_variable = eastern_crisis_happened
+		c:TUR ?= {
+			save_scope_as = ottoman_scope
+			add_modifier = negative_crisis_influence
+			custom_tooltip = {
+				text = crisis_modifier_if_activated_tt
+				if = {
+					limit = {
+						any_political_movement = {
+							OR = {
+								is_political_movement_type = movement_religious_majority
+								is_political_movement_type = movement_religious_minority
+								is_political_movement_type = movement_cultural_majority
+								is_political_movement_type = movement_cultural_minority
+							}
+						}
+					}
+					every_political_movement = {
+						limit = {
+							OR = {
+								is_political_movement_type = movement_religious_majority
+								is_political_movement_type = movement_religious_minority
+								is_political_movement_type = movement_cultural_majority
+								is_political_movement_type = movement_cultural_minority
+							}
+						}
+						set_variable = political_movement_has_modifiers_var
+						add_modifier = {
+							name = eastern_crisis_movement_attraction
+						}
+					}
+				}
+			}
+		}
+	}
+
+	immediate_all_involved = {
+		trigger_event = {
+			id = eastern_crisis.1
+			popup = yes
+		}
+	}
+
+	on_monthly_pulse = {
+		effect = {
+			c:TUR ?= {
+				if = {
+					#add modifier to any new movements.
+					limit = {
+						any_political_movement = {
+							OR = {
+								is_political_movement_type = movement_religious_majority
+								is_political_movement_type = movement_religious_minority
+								is_political_movement_type = movement_cultural_majority
+								is_political_movement_type = movement_cultural_minority
+							}
+							NOR = {
+								has_variable = political_movement_has_modifiers_var
+								has_modifier = eastern_crisis_movement_attraction
+							}
+						}
+					}
+					every_political_movement = {
+						limit = {
+							OR = {
+								is_political_movement_type = movement_religious_majority
+								is_political_movement_type = movement_religious_minority
+								is_political_movement_type = movement_cultural_majority
+								is_political_movement_type = movement_cultural_minority
+							}
+							NOR = {
+								has_variable = political_movement_has_modifiers_var
+								has_modifier = eastern_crisis_movement_attraction
+							}
+						}
+						set_variable = political_movement_has_modifiers_var
+						add_modifier = {
+							name = eastern_crisis_movement_attraction
+						}
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = eastern_crisis_complete_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(control_eastern_crisis_bar)" >= control_eastern_crisis_upper_bound
+				}
+			}
+			c:TUR ?= {
+				has_any_secessionists_broken_out = no
+				has_any_secessionists_growing = no
+				is_at_war = no
+			}
+		}
+		effect = {
+			c:TUR ?= {
+				custom_tooltip = {
+					text = crisis_modifier_when_done_tt
+					if = {
+						limit = {
+							any_political_movement = {
+								OR = {
+									has_variable = political_movement_has_modifiers_var
+									has_modifier = eastern_crisis_movement_attraction
+								}
+							}
+						}
+						every_political_movement = {
+							limit = {
+								OR = {
+									has_variable = political_movement_has_modifiers_var
+									has_modifier = eastern_crisis_movement_attraction
+								}
+							}
+							if = {
+								limit = {
+									has_variable = political_movement_has_modifiers_var
+								}
+								remove_variable = political_movement_has_modifiers_var
+							}
+							if = {
+								limit = {
+									has_modifier = eastern_crisis_movement_attraction
+								}
+								remove_modifier = eastern_crisis_movement_attraction
+							}
+						}
+					}
+				}
+			}
+			je_great_eastern_crisis_cleanup = yes
+		}
+		effect_all_involved = {
+			trigger_event = {
+				id = eastern_crisis.2
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_eastern_crisis.2_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOT = {
+				exists = c:TUR
+			}
+		}
+		effect = {
+			je_great_eastern_crisis_cleanup = yes
+		}
+		effect_all_involved = {
+			custom_tooltip = {
+				text = crisis_modifier_when_done_tt
+				if = {
+					limit = {
+						any_political_movement = {
+							OR = {
+								has_variable = political_movement_has_modifiers_var
+								has_modifier = eastern_crisis_movement_attraction
+							}
+						}
+					}
+					every_political_movement = {
+						limit = {
+							OR = {
+								has_variable = political_movement_has_modifiers_var
+								has_modifier = eastern_crisis_movement_attraction
+							}
+						}
+						if = {
+							limit = {
+								has_variable = political_movement_has_modifiers_var
+							}
+							remove_variable = political_movement_has_modifiers_var
+						}
+						if = {
+							limit = {
+								has_modifier = eastern_crisis_movement_attraction
+							}
+							remove_modifier = eastern_crisis_movement_attraction
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_modifier = positive_crisis_influence
+				}
+				remove_modifier = positive_crisis_influence
+			}
+			if = {
+				limit = {
+					has_modifier = negative_crisis_influence
+				}
+				remove_modifier = negative_crisis_influence
+			}
+			if = {
+				limit = {
+					has_modifier = eastern_crisis_balkan_nations
+				}
+				remove_modifier = eastern_crisis_balkan_nations
+			}
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = {
+			timeout
+		}
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			c:TUR ?= {
+				custom_tooltip = {
+					text = crisis_modifier_when_done_tt
+					if = {
+						limit = {
+							any_political_movement = {
+								OR = {
+									has_variable = political_movement_has_modifiers_var
+									has_modifier = eastern_crisis_movement_attraction
+								}
+							}
+						}
+						every_political_movement = {
+							limit = {
+								OR = {
+									has_variable = political_movement_has_modifiers_var
+									has_modifier = eastern_crisis_movement_attraction
+								}
+							}
+							if = {
+								limit = {
+									has_variable = political_movement_has_modifiers_var
+								}
+								remove_variable = political_movement_has_modifiers_var
+							}
+							if = {
+								limit = {
+									has_modifier = eastern_crisis_movement_attraction
+								}
+								remove_modifier = eastern_crisis_movement_attraction
+							}
+						}
+					}
+				}
+			}
+			je_great_eastern_crisis_cleanup = yes
+		}
+		effect_all_involved = {
+			trigger_event = {
+				id = eastern_crisis.3
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_eastern_crisis.3_tt
+				}
+			}
+		}
+	}
+
+	timeout = 3650
+	# 10 years
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = no
+	weight = 1000
+	transferable = no
+	can_revolution_inherit = yes
+}
+
+je_the_grand_collapse = {
+
+	should_be_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	group = je_group_balkan_theater
+
+	activation_description = {
+		always = yes
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+	scripted_button = je_the_grand_collapse_bribe_politicians_button
+	scripted_button = je_the_grand_collapse_issue_khutbah_button
+	scripted_button = je_the_grand_collapse_law_speed_start_button
+	scripted_button = je_the_grand_collapse_law_speed_stop_button
+	scripted_button = je_the_grand_collapse_relation_speed_start_button
+	scripted_button = je_the_grand_collapse_relation_Speed_stop_button
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	weight = 10000
+
+	is_shown_when_inactive = {
+		c:TUR ?= this
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_sick_man_complete
+				has_variable = sick_man_complete
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			200 = 0
+			20 = the_grand_collapse.2
+			#Any Port in a Storm
+		}
+	}
+
+	possible = {
+		c:TUR ?= this
+		custom_tooltip = {
+			NOT = {
+				has_variable = sick_man_complete
+			}
+			text = the_grand_collapse_not_succeeded_tanzimat_tt
+		}
+		OR = {
+			NOR = {
+				has_law = law_type:law_monarchy
+				has_law_or_variant = law_type:law_theocracy
+			}
+			AND = {
+				is_country_type = unrecognized
+				any_civil_war = {
+					civil_war_progress >= 0.75
+					is_civil_war_type = revolution
+				}
+			}
+		}
+	}
+
+	immediate = {
+		custom_tooltip = ten_years_to_collapse_tt
+		trigger_event = the_grand_collapse.1
+		set_variable = grand_collapse_started
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = is_not_in_civil_war_tt
+				any_civil_war = {
+					count = 0
+				}
+			}
+			trigger_if = {
+				limit = {
+					is_player = yes
+				}
+				OR = {
+					has_law = law_type:law_monarchy
+					has_law_or_variant = law_type:law_theocracy
+				}
+				radical_fraction = {
+					value < 0.1
+				}
+				ig:ig_intelligentsia ?= {
+					is_in_government = no
+				}
+			}
+			government_legitimacy > 80
+			trigger_if = {
+				limit = {
+					any_subject_or_below = {
+						count > 0
+					}
+				}
+				any_subject_or_below = {
+					relations:root >= relations_threshold:cordial
+				}
+			}
+			any_interest_group = {
+				ig_approval >= happy
+				count >= 3
+			}
+		}
+		effect = {
+			trigger_event = the_grand_collapse.4
+			hidden_effect = {
+				the_grand_collapse_mod_cleanser = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_the_grand_collapse.4_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			is_at_war = no
+			any_scope_state = {
+				NOT = {
+					region = sr:region_near_east
+				}
+				count = 0
+			}
+		}
+		effect = {
+			je_the_grand_collapse_cleanup = yes
+			the_grand_collapse_mod_cleanser = yes
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = {
+			timeout
+		}
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			trigger_event = the_grand_collapse.5
+			hidden_effect = {
+				the_grand_collapse_mod_cleanser = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					trigger = {
+						has_law = law_type:law_autocracy
+					}
+					desc = event_effects_the_grand_collapse.5_autocracy_tt
+				}
+				triggered_desc = {
+					trigger = {
+						NOT = {
+							has_law = law_type:law_autocracy
+						}
+					}
+					desc = event_effects_the_grand_collapse.5_tt
+				}
+			}
+		}
+	}
+
+	timeout = 3650
+}
+
+je_balkan_national_awakenings = {
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+	group = je_group_internal_affairs
+	dlc = dlc014
+
+	activation_description = {
+		always = yes
+	}
+
+	is_shown_when_inactive = {
+		has_dlc_feature = ip3_content
+		is_in_geographic_region = geographic_region_balkans
+	}
+
+	possible = {
+		NOT = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_started
+				has_global_variable = tyr_bt_started
+			}
+		}
+		has_technology_researched = nationalism
+		NOT = {
+			has_law_or_variant = law_type:law_subjecthood
+		}
+		OR = {
+			is_subject_type = subject_type_protectorate
+			is_subject_type = subject_type_personal_union
+			is_subject = no
+		}
+	}
+
+	immediate = {
+		random_primary_culture = {
+			save_scope_as = primary_culture_scope
+		}
+		if = {
+			limit = {
+				scope:primary_culture_scope ?= {
+					culture_national_awakening_occurred = no
+				}
+			}
+			start_national_awakening = {
+				culture = scope:primary_culture_scope
+				months = 120
+				state_region = capital.state_region
+			}
+		}
+		set_variable = {
+			name = fervour_bar_var
+			value = 0
+		}
+		ig:ig_armed_forces ?= {
+			save_scope_as = armed_forces_ig
+		}
+		je:je_balkan_national_awakenings ?= {
+			add_modifier = {
+				name = support_separatism_nationalist_propaganda
+				multiplier = 5
+			}
+		}
+	}
+
+	on_weekly_pulse = {
+		effect = {
+			set_variable = {
+				name = fervour_bar_var
+				value = scope:primary_culture_scope.culture_current_fervor
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			60 = 0
+			1 = national_awakening.2
+			1 = national_awakening.3
+			1 = national_awakening.4
+			1 = national_awakening.5
+			1 = national_awakening.6
+			1 = national_awakening.7
+		}
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_started
+				has_global_variable = tyr_bt_started
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			is_subject = no
+			NOT = {
+				has_law_or_variant = law_type:law_subjecthood
+			}
+			scope:primary_culture_scope ?= {
+				culture_current_fervor >= 75
+			}
+		}
+		effect = {
+			trigger_event = {
+				id = national_awakening.1
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_national_awakening.1_tt
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			trigger_if = {
+				limit = {
+					OR = {
+						country_has_primary_culture = cu:slovene
+						country_has_primary_culture = cu:croat
+						country_has_primary_culture = cu:serb
+						country_has_primary_culture = cu:bosniak
+						country_has_primary_culture = cu:bulgarian
+					}
+				}
+				custom_tooltip = {
+					text = has_formed_yugoslavia_tt
+					c:YUG ?= ROOT
+				}
+			}
+		}
+		effect = {
+			je_balkan_national_awakenings_cleanup = yes
+		}
+	}
+
+	current_value = {
+		value = var:fervour_bar_var
+	}
+
+	goal_add_value = {
+		add = 100
+	}
+
+	progressbar = yes
+	weight = 100
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}
+
+je_eastern_question_austria = {
+
+	activation_description = {
+		always = yes
+	}
+
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	icon = "gfx/interface/icons/relations_icons/hostile.dds"
+	scripted_progress_bar = control_eastern_crisis_bar
+	group = je_group_balkan_theater
+	timeout = 3650
+
+	modifiers_while_active = {
+		positive_crisis_influence
+	}
+
+	immediate = {
+		c:TUR ?= {
+			save_scope_as = bosnia_owner_scope
+		}
+		random_political_lobby = {
+			limit = {
+				is_political_lobby_type = lobby_anti_country
+				target = {
+					c:RUS ?= this
+				}
+			}
+			save_scope_as = relevant_lobby
+			target = {
+				save_scope_as = relevant_country
+			}
+		}
+		if = {
+			limit = {
+				exists = scope:relevant_country
+			}
+			set_variable = {
+				name = anti_lobby_demand_target
+				value = scope:relevant_country
+			}
+		}
+	}
+
+	weight = 1000
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_austria_controls_bosnia_tt
+				OR = {
+					owns_entire_state_region = STATE_BOSNIA
+					any_subject_or_below = {
+						owns_entire_state_region = STATE_BOSNIA
+					}
+					trigger_if = {
+						limit = {
+							is_power_bloc_leader = yes
+						}
+						power_bloc ?= {
+							any_power_bloc_member = {
+								owns_entire_state_region = STATE_BOSNIA
+							}
+						}
+					}
+				}
+			}
+		}
+		effect = {
+			scope:relevant_lobby ?= {
+				change_appeasement = {
+					amount = 3
+					factor = appeasement_lobby_request_accepted
+				}
+			}
+			trigger_event = {
+				id = eastern_question_austria.2
+				popup = yes
+			}
+			clear_anti_lobby_vars = yes
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_bosnian_settlement_preview
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = je_standard_failure_header
+		effect_header = je_standard_on_failure_header
+		color = "blue_negative"
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			NOR = {
+				any_scope_state = {
+					state_region = {
+						is_homeland = cu:croat
+					}
+				}
+				any_subject_or_below = {
+					any_scope_state = {
+						state_region = {
+							is_homeland = cu:croat
+						}
+					}
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		flags = {
+			timeout
+		}
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			scope:relevant_lobby ?= {
+				change_appeasement = {
+					amount = -5
+					factor = appeasement_lobby_request_ignored
+				}
+			}
+			clear_anti_lobby_vars = yes
+		}
+	}
+
+}

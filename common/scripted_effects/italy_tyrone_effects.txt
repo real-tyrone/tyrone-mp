@@ -32,7 +32,7 @@ ita_austria_laws_effect = {
 
 ita_stance_increase_toward_austria_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		custom_tooltip = {
 			text = ita_stance_toward_austria_tt
 			je:italy_diplo_stance = {
@@ -51,7 +51,7 @@ ita_stance_increase_toward_austria_effect = {
 
 ita_stance_increase_toward_france_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		custom_tooltip = {
 			text = ita_stance_toward_france_tt
 			je:italy_diplo_stance = {
@@ -71,7 +71,7 @@ ita_stance_increase_toward_france_effect = {
 # Used by 07_italyEntries.txt (French military JE + French economy JE on_complete). +20 toward France.
 ita_stance_france_20_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		je:italy_diplo_stance = {
 			set_bar_progress = {
 				value = {
@@ -88,7 +88,7 @@ ita_stance_france_20_effect = {
 # Used by 07_italyEntries.txt (French military JE + French economy JE on_complete). +5 toward France.
 ita_stance_france_5_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		je:italy_diplo_stance = {
 			set_bar_progress = {
 				value = {
@@ -105,7 +105,7 @@ ita_stance_france_5_effect = {
 # Used by 07_italyEntries.txt (Austria military JE on_complete). +20 toward Austria (easy/button path).
 ita_stance_austria_20_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		je:italy_diplo_stance = {
 			set_bar_progress = {
 				value = {
@@ -122,7 +122,7 @@ ita_stance_austria_20_effect = {
 # Used by 07_italyEntries.txt (Austria military JE on_complete). +5 toward Austria (hard path).
 ita_stance_austria_5_effect = {
 	if = {
-		limit = { has_journal_entry = italy_diplo_stance }
+		limit = { ita_arc_actor = yes is_involved_in_journal_entry = italy_diplo_stance }
 		je:italy_diplo_stance = {
 			set_bar_progress = {
 				value = {
@@ -175,8 +175,8 @@ ita_industry_calculate_sluggish_effect = {
 			subtract = var:investment_in_north_ita_var
 			}
 		}
-		
-	
+
+
 
 	clamp_variable = { name = sluggish_south_ita_var max = 20 min = -20 }
 	clamp_variable = { name = industrious_north_ita_var max = 20 min = -20 }
@@ -529,3 +529,199 @@ ita_emigration_improve_italy_complete_effect = {
 
 
 
+
+
+# Root: country. Refresh the multiplier only when sentiment changes or the modifier is missing.
+ita_refresh_sentiment_modifier = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_variable = italian_sentiment_var
+			}
+		}
+		set_variable = {
+			name = italian_sentiment_var
+			value = 10
+		}
+	}
+
+	if = {
+		limit = {
+			trigger_if = {
+				limit = {
+					has_variable = ita_sentiment_modifier_value
+					has_modifier = italy_tension_modifier
+				}
+				NOT = {
+					var:ita_sentiment_modifier_value = var:italian_sentiment_var
+				}
+			}
+			trigger_else = {
+				always = yes
+			}
+		}
+		if = {
+			limit = {
+				has_modifier = italy_tension_modifier
+			}
+			remove_modifier = italy_tension_modifier
+		}
+		add_modifier = {
+			name = italy_tension_modifier
+			multiplier = {
+				value = var:italian_sentiment_var
+			}
+		}
+		set_variable = {
+			name = ita_sentiment_modifier_value
+			value = var:italian_sentiment_var
+		}
+	}
+
+	set_global_variable = {
+		name = ita_risorgimento_sentiment
+		value = var:italian_sentiment_var
+	}
+
+	set_global_variable = {
+		name = ita_risorgimento_sardinia
+		value = this
+	}
+
+}
+
+
+# Root: country. The sentiment modifier belongs only to the first Risorgimento JE.
+ita_clear_sentiment_modifier = {
+
+	if = {
+		limit = {
+			has_modifier = italy_tension_modifier
+		}
+		remove_modifier = italy_tension_modifier
+	}
+
+	if = {
+		limit = {
+			has_variable = ita_sentiment_modifier_value
+		}
+		remove_variable = ita_sentiment_modifier_value
+	}
+
+}
+
+
+# Root: none. scope:journal_entry is the shared Risorgimento JE. Reuse the existing Mazzini.
+ita_risorgimento_sync_mazzini = {
+
+	if = {
+		limit = {
+			NOT = {
+				has_global_variable = ita_risorgimento_mazzini
+			}
+		}
+		random_character = {
+			limit = {
+				has_variable = mazzini_var
+			}
+			set_global_variable = {
+				name = ita_risorgimento_mazzini
+				value = this
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			has_global_variable = ita_risorgimento_mazzini
+		}
+		scope:journal_entry = {
+			clear_variable_list = com_risorgimento_mazzini
+			add_to_variable_list = {
+				name = com_risorgimento_mazzini
+				target = global_var:ita_risorgimento_mazzini
+			}
+		}
+	}
+
+}
+
+
+
+# Root: none, scope:journal_entry = shared diplomatic stance JE.
+ita_diplo_sync_characters = {
+
+	c:SAR ?= {
+		ruler ?= {
+			save_scope_as = ita_diplo_monarch
+		}
+		random_scope_character = {
+			limit = {
+				has_variable = italy_cavour
+			}
+			save_scope_as = ita_diplo_cavour
+		}
+	}
+
+	scope:journal_entry = {
+		clear_variable_list = com_journal_characters
+	}
+
+	if = {
+		limit = {
+			exists = scope:ita_diplo_monarch
+		}
+		scope:journal_entry = {
+			add_to_variable_list = {
+				name = com_journal_characters
+				target = scope:ita_diplo_monarch
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = scope:ita_diplo_cavour
+		}
+		scope:journal_entry = {
+			add_to_variable_list = {
+				name = com_journal_characters
+				target = scope:ita_diplo_cavour
+			}
+		}
+	}
+
+	clear_global_variable_list = ita_diplo_france_flags
+
+	c:FRA ?= {
+		add_to_global_variable_list = {
+			name = ita_diplo_france_flags
+			target = this
+		}
+	}
+
+	clear_global_variable_list = ita_diplo_austria_flags
+
+	if = {
+		limit = {
+			exists = c:AUS
+		}
+		c:AUS = {
+			add_to_global_variable_list = {
+				name = ita_diplo_austria_flags
+				target = this
+			}
+		}
+	}
+
+	else = {
+		c:KUK ?= {
+			add_to_global_variable_list = {
+				name = ita_diplo_austria_flags
+				target = this
+			}
+		}
+	}
+
+}

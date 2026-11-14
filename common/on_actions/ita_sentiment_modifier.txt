@@ -1,0 +1,115 @@
+﻿# Country pulse also repairs modifiers in existing saves.
+on_weekly_pulse_country = {
+
+	on_actions = {
+		ita_sync_sentiment_modifier
+		ita_risorgimento_weekly_events
+		ita_diplo_sync_modifier
+		ita_arc_save_repair
+	}
+
+}
+
+ita_sync_sentiment_modifier = {
+
+	trigger = {
+		OR = {
+			AND = {
+				ita_arc_actor = yes
+				is_involved_in_journal_entry = italy_risorgimento_stage
+			}
+			has_modifier = italy_tension_modifier
+			has_variable = ita_sentiment_modifier_value
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				ita_arc_actor = yes
+				is_involved_in_journal_entry = italy_risorgimento_stage
+			}
+			ita_arc_refresh_economy = yes
+			ita_refresh_sentiment_modifier = yes
+		}
+		else = {
+			ita_clear_sentiment_modifier = yes
+		}
+	}
+
+}
+
+ita_risorgimento_weekly_events = {
+
+	trigger = {
+		ita_arc_actor = yes
+		is_involved_in_journal_entry = italy_risorgimento_stage
+	}
+
+	random_events = {
+		50 = 0
+		50 = italyEventsTyrone.5
+	}
+
+}
+
+# Repair active saves, and clean up on separate termination or Italian formation.
+ita_diplo_sync_modifier = {
+
+	trigger = {
+		OR = {
+			AND = {
+				ita_arc_actor = yes
+				is_involved_in_journal_entry = italy_diplo_stance
+			}
+			has_modifier = italy_diplo_stance_leverage_resistance
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				ita_arc_actor = yes
+				is_involved_in_journal_entry = italy_diplo_stance
+			}
+			set_global_variable = {
+				name = ita_diplo_sardinia
+				value = this
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = italy_diplo_stance_leverage_resistance
+					}
+				}
+				add_modifier = {
+					name = italy_diplo_stance_leverage_resistance
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_modifier = italy_diplo_stance_leverage_resistance
+			}
+			remove_modifier = italy_diplo_stance_leverage_resistance
+		}
+	}
+
+}
+
+# Backfill the new arc state on existing active saves without resetting sentiment.
+ita_arc_save_repair = {
+
+	trigger = {
+		ita_arc_actor = yes
+		NOT = {
+			has_global_variable = ita_arc_ended
+		}
+	}
+
+	effect = {
+		ita_arc_ensure_started = yes
+		ita_arc_migrate_turin = yes
+	}
+
+}

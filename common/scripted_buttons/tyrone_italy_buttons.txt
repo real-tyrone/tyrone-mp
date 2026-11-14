@@ -1,6 +1,5 @@
 ﻿# Italy Tyrone â€“ all scripted buttons
 # Join bloc, treaty (Turin / Lombardy), French path (military/economy/laws), French path complete buttons
-
 # ========== Join France's bloc / Join Austria's bloc ==========
 # Require 25-point stance difference: bar <= 25 for France, bar >= 75 for Austria
 ita_join_france_bloc_button = {
@@ -8,27 +7,44 @@ ita_join_france_bloc_button = {
 	desc = ita_join_france_bloc_button_desc
 
 	visible = {
+		ita_arc_actor = yes
 		is_player = yes
-		NOT = { has_variable = ita_nif_stand_alone }
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_independent_path_tt
+				has_variable = ita_nif_stand_alone
+			}
+		}
 	}
 
 	possible = {
-		is_subject = no
-		NOT = { is_in_same_power_bloc = c:FRA }
-		c:FRA ?= {
-			is_power_bloc_leader = yes
-		}
-		custom_tooltip = {
-			text = enough_sway_France_tt
-			je:italy_diplo_stance = {
-				"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 25
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
 			}
+			is_subject = no
+			NOT = {
+				is_in_same_power_bloc = c:FRA
+			}
+			c:FRA ?= {
+				is_power_bloc_leader = yes
+			}
+			custom_tooltip = {
+				text = enough_sway_France_tt
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 25
+				}
+			}
+		}
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
 		join_power_bloc = c:FRA
 	}
+
 }
 
 ita_join_austria_bloc_button = {
@@ -36,27 +52,44 @@ ita_join_austria_bloc_button = {
 	desc = ita_join_austria_bloc_button_desc
 
 	visible = {
+		ita_arc_actor = yes
 		is_player = yes
-		NOT = { has_variable = ita_nif_stand_alone }
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_independent_path_tt
+				has_variable = ita_nif_stand_alone
+			}
+		}
 	}
 
 	possible = {
-		is_subject = no
-		NOT = { is_in_same_power_bloc = c:AUS }
-		c:AUS ?= {
-			is_power_bloc_leader = yes
-		}
-		custom_tooltip = {
-			text = enough_sway_Austria_tt
-			je:italy_diplo_stance = {
-				"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 75
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
 			}
+			is_subject = no
+			NOT = {
+				is_in_same_power_bloc = c:AUS
+			}
+			c:AUS ?= {
+				is_power_bloc_leader = yes
+			}
+			custom_tooltip = {
+				text = enough_sway_Austria_tt
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 75
+				}
+			}
+		}
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
 		join_power_bloc = c:AUS
 	}
+
 }
 
 # ========== Treaty of Turin (Savoy & Provence) / Lombardy cession ==========
@@ -64,75 +97,103 @@ ita_treaty_turin_button = {
 	name = ita_treaty_turin_button
 	desc = ita_treaty_turin_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		is_player = yes
-		NOT = {
-			has_variable = turin_done
-		}
+		ita_arc_actor = yes
+		ita_arc_is_active = yes
+		ita_arc_turin_available = yes
 	}
 
 	possible = {
-		OR = {
-			is_in_same_power_bloc = c:FRA
-			is_power_bloc_leader = yes
-			custom_tooltip = {
-				text = ita_treaty_sway_france_10_tt
-				je:italy_diplo_stance = {
-					"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 40
-				}
-			}
-		}
-		c:FRA ?= { exists = yes }
-		any_scope_state = {
-			state_region = s:STATE_SAVOY
+		custom_tooltip = {
+			text = ita_arc_turin_available_tt
+			ita_arc_turin_available = yes
 		}
 	}
 
 	effect = {
-		c:FRA ?= {
-			trigger_event = { id = italyEventsTyrone.3 popup = yes }
+		custom_tooltip = {
+			text = ita_arc_turin_request_france_tt
+			hidden_effect = {
+				c:FRA ?= {
+					trigger_event = {
+						id = ita_arc.2
+						popup = yes
+					}
+				}
+			}
 		}
-		set_variable = turin_done
 	}
+
 }
 
 ita_lombardy_cession_button = {
 	name = ita_lombardy_cession_button
 	desc = ita_lombardy_cession_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
+		ita_arc_actor = yes
 		is_player = yes
 		NOT = {
-			has_variable = lombardy_done
+			custom_tooltip = {
+				text = ita_shared_lombardy_negotiated_tt
+				has_variable = lombardy_done
+			}
 		}
 	}
 
 	possible = {
-		OR = {
-			is_in_same_power_bloc = c:AUS
-			is_power_bloc_leader = yes
-			custom_tooltip = {
-				text = ita_treaty_sway_austria_10_tt
-				je:italy_diplo_stance = {
-					"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 60
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			OR = {
+				is_in_same_power_bloc = c:AUS
+				is_power_bloc_leader = yes
+				custom_tooltip = {
+					text = ita_treaty_sway_austria_10_tt
+					je:italy_diplo_stance = {
+						"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 60
+					}
 				}
 			}
+			c:AUS ?= {
+				exists = yes
+			}
+			c:AUS ?= {
+				country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+			}
 		}
-		c:AUS ?= { exists = yes }
-		c:AUS ?= { country_or_subject_owns_entire_state_region = STATE_LOMBARDY }
+		trigger_else = {
+			always = no
+		}
 	}
 
 	effect = {
-		set_variable = { name = italy_treaty_lombardy_proposer days = 1 }
-		c:AUS ?= {
-			trigger_event = { id = italyEventsTyrone.4 popup = yes }
+		hidden_effect = {
+			set_variable = {
+				name = italy_treaty_lombardy_proposer
+				days = 1
+			}
 		}
-		set_variable = lombardy_done
+		c:AUS ?= {
+			trigger_event = {
+				id = italyEventsTyrone.4
+				popup = yes
+			}
+		}
+		hidden_effect = {
+			set_variable = lombardy_done
+		}
 	}
+
 }
 
 # ========== Annex Romagna only (unincorporated) â€“ bar 40â€“60, not in bloc, bad relations with Pope ==========
@@ -141,52 +202,90 @@ ita_annex_romagna_only_button = {
 	name = ita_annex_romagna_only_button
 	desc = ita_annex_romagna_only_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		NOT = { has_variable = NIF_formed }
-		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
+		ita_arc_actor = yes
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_federation_formed_tt
+				has_variable = NIF_formed
+			}
+		}
+		c:PAP ?= {
+			country_or_subject_owns_entire_state_region = STATE_ROMAGNA
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
+
 	possible = {
-		custom_tooltip = {
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			custom_tooltip = {
 				text = ita_talks_with_the_pope_sentiment_tt
 				var:italian_sentiment_var >= 30
 			}
-		custom_tooltip = {
-			text = ita_annex_romagna_stance_tt
-			je:italy_diplo_stance = {
-				"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 40
-				"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 60
+			custom_tooltip = {
+				text = ita_annex_romagna_stance_tt
+				je:italy_diplo_stance = {
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" >= 40
+					"scripted_bar_progress(italy_aus_fra_stance_bar)" <= 60
+				}
+			}
+			AND = {
+				NOT = {
+					is_in_same_power_bloc = c:FRA
+				}
+				NOT = {
+					is_in_same_power_bloc = c:AUS
+				}
+			}
+			AND = {
+				c:PAP ?= {
+					exists = yes
+				}
+				c:PAP ?= {
+					country_or_subject_owns_entire_state_region = STATE_ROMAGNA
+				}
+			}
+			s:STATE_ROMAGNA = {
+				any_scope_state = {
+					ROOT = {
+						is_adjacent_to_state = PREV
+					}
+				}
+			}
+			custom_tooltip = {
+				text = ita_arc_afford_papal_15_tt
+				var:italian_sentiment_var >= ita_arc_papal_15
 			}
 		}
-		AND = { 
-			NOT = { is_in_same_power_bloc = c:FRA }
-			NOT = { is_in_same_power_bloc = c:AUS }
-		}
-		AND = {
-			c:PAP ?= { exists = yes }
-			c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
-		}
-		s:STATE_ROMAGNA = {
-			any_scope_state = {
-				ROOT = { is_adjacent_to_state = PREV }
-			}
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
 		custom_tooltip = {
-			text = ita_occupy_romagna_umbria_sentiment_penalty_tt
+			text = ita_arc_pay_papal_15_tt
+			change_variable = {
+				name = italian_sentiment_var
+				subtract = ita_arc_papal_15
+			}
 		}
-		change_variable = {
-			name = italian_sentiment_var
-			subtract = 15
+		trigger_event = {
+			id = italyEventsTyrone.11
+			popup = yes
 		}
-		trigger_event = { id = italyEventsTyrone.11 popup = yes }
 	}
+
 }
 
 # ========== Occupy Umbria ==========
@@ -195,33 +294,60 @@ ita_occupy_abruzzi_button = {
 	name = ita_occupy_abruzzi_button
 	desc = ita_occupy_abruzzi_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		c:PAP ?= { exists = yes }
-		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
+		ita_arc_actor = yes
+		c:PAP ?= {
+			exists = yes
+		}
+		c:PAP ?= {
+			country_or_subject_owns_entire_state_region = STATE_UMBRIA
+		}
 	}
 
 	possible = {
-		owns_entire_state_region = STATE_ROMAGNA
-		c:PAP ?= { exists = yes }
-		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
-		s:STATE_UMBRIA = {
-			any_scope_state = {
-				ROOT = { is_adjacent_to_state = PREV }
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			owns_entire_state_region = STATE_ROMAGNA
+			c:PAP ?= {
+				exists = yes
+			}
+			c:PAP ?= {
+				country_or_subject_owns_entire_state_region = STATE_UMBRIA
+			}
+			s:STATE_UMBRIA = {
+				any_scope_state = {
+					ROOT = {
+						is_adjacent_to_state = PREV
+					}
+				}
+			}
+			custom_tooltip = {
+				text = ita_arc_afford_papal_15_tt
+				var:italian_sentiment_var >= ita_arc_papal_15
 			}
 		}
+		trigger_else = {
+			always = no
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
+
 	effect = {
 		custom_tooltip = {
-			text = ita_occupy_romagna_umbria_sentiment_penalty_tt
-		}
-		change_variable = {
-			name = italian_sentiment_var
-			subtract = 15
+			text = ita_arc_pay_papal_15_tt
+			change_variable = {
+				name = italian_sentiment_var
+				subtract = ita_arc_papal_15
+			}
 		}
 		transfer_state = {
 			STATE = s:STATE_UMBRIA
@@ -232,6 +358,7 @@ ita_occupy_abruzzi_button = {
 			set_state_type = unincorporated
 		}
 	}
+
 }
 
 # ========== Talks with the Pope â€“ in French or Austrian bloc, sentiment >= 40 ==========
@@ -240,32 +367,56 @@ ita_talks_with_the_pope_button = {
 	name = ita_talks_with_the_pope_button
 	desc = ita_talks_with_the_pope_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		NOT = { has_variable = NIF_formed }
+		ita_arc_actor = yes
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_federation_formed_tt
+				has_variable = NIF_formed
+			}
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
+
 	possible = {
-		c:PAP = {
-			relations:root >= 30
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			c:PAP ?= {
+				relations:root >= 30
+			}
+			OR = {
+				is_in_same_power_bloc = c:FRA
+				is_in_same_power_bloc = c:AUS
+			}
+			custom_tooltip = {
+				text = ita_talks_with_the_pope_sentiment_tt
+				var:italian_sentiment_var >= 30
+			}
+			c:PAP ?= {
+				exists = yes
+			}
 		}
-		OR = {
-			is_in_same_power_bloc = c:FRA
-			is_in_same_power_bloc = c:AUS
+		trigger_else = {
+			always = no
 		}
-		custom_tooltip = {
-			text = ita_talks_with_the_pope_sentiment_tt
-			var:italian_sentiment_var >= 30
-		}
-		c:PAP ?= { exists = yes }
 	}
 
 	effect = {
-		trigger_event = { id = italyEventsTyrone.9 popup = yes }
+		trigger_event = {
+			id = italyEventsTyrone.9
+			popup = yes
+		}
 	}
+
 }
 
 # ========== Italian Concordat â€“ sentiment >= 60, Pope has Umbria and Romagna ==========
@@ -274,36 +425,72 @@ ita_italian_concordat_button = {
 	name = ita_italian_concordat_button
 	desc = ita_italian_concordat_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
+		ita_arc_actor = yes
 		is_player = yes
-		NOT = { has_variable = NIF_formed }
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_federation_formed_tt
+				has_variable = NIF_formed
+			}
+		}
 	}
 
 	possible = {
-		c:PAP = {
-			relations:root >= 50
-		}
 		custom_tooltip = {
-			text = ita_italian_concordat_sentiment_tt
-			var:italian_sentiment_var >= 60
+			text = ita_arc_no_garrison_tt
+			NOT = {
+				ita_arc_rome_is_garrisoned = yes
+			}
 		}
-		c:PAP ?= { exists = yes }
-		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_UMBRIA }
-		c:PAP ?= { country_or_subject_owns_entire_state_region = STATE_ROMAGNA }
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			c:PAP ?= {
+				relations:root >= 50
+			}
+			custom_tooltip = {
+				text = ita_italian_concordat_sentiment_tt
+				var:italian_sentiment_var >= 60
+			}
+			c:PAP ?= {
+				exists = yes
+			}
+			c:PAP ?= {
+				country_or_subject_owns_entire_state_region = STATE_UMBRIA
+			}
+			c:PAP ?= {
+				country_or_subject_owns_entire_state_region = STATE_ROMAGNA
+			}
+			custom_tooltip = {
+				text = ita_arc_afford_papal_30_tt
+				var:italian_sentiment_var >= ita_arc_papal_30
+			}
+		}
+		trigger_else = {
+			always = no
+		}
 	}
 
 	effect = {
 		custom_tooltip = {
-			text = minus30sentiment_ita_tt
+			text = ita_arc_pay_papal_30_tt
 			change_variable = {
 				name = italian_sentiment_var
-				subtract = 30
+				subtract = ita_arc_papal_30
 			}
 		}
-		trigger_event = { id = italyEventsTyrone.10 popup = yes }
+		trigger_event = {
+			id = italyEventsTyrone.10
+			popup = yes
+		}
 	}
+
 }
 
 # ========== Invite the Pope to the Italian sphere ==========
@@ -312,47 +499,67 @@ ita_invite_pope_sphere_button = {
 	name = ita_invite_pope_sphere_button
 	desc = ita_invite_pope_sphere_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		has_variable = NIF_formed
-		c:PAP ?= { exists = yes }
-		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
+		ita_arc_actor = yes
+		custom_tooltip = {
+			text = ita_shared_federation_formed_tt
+			has_variable = NIF_formed
+		}
+		c:PAP ?= {
+			exists = yes
+		}
+		NOT = {
+			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
+
 	possible = {
-		c:PAP ?= { exists = yes }
-		c:PAP = {
-			relations:root > 50
-		}
-		is_power_bloc_leader = yes
-		any_scope_treaty = {
-			binds = c:PAP
-			OR = {
-				any_scope_article = {
-					has_type = defensive_pact
-				}
-				any_scope_article = {
-					has_type = alliance
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			c:PAP ?= {
+				exists = yes
+			}
+			c:PAP ?= {
+				relations:root > 50
+			}
+			is_power_bloc_leader = yes
+			any_scope_treaty = {
+				binds = c:PAP
+				OR = {
+					any_scope_article = {
+						has_type = defensive_pact
+					}
+					any_scope_article = {
+						has_type = alliance
+					}
 				}
 			}
-
+		}
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
-		c:SAR ?= {
+		ROOT = {
 			create_diplomatic_pact = {
 				country = c:PAP
 				type = protectorate
 			}
 		}
 	}
+
 }
-
-
 
 # ========== Request Italian Recognition ==========
 # Pope exists, own Abruzzi and Rome (Lazio). Activates journal entry Pap_recognition_for_italy (3 concessions from 4).
@@ -360,22 +567,57 @@ ita_request_italian_recognition_button = {
 	name = ita_request_italian_recognition_button
 	desc = ita_request_italian_recognition_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	visible = {
-		has_variable = NIF_formed
-		c:PAP ?= { exists = yes }
-		NOT = { country_or_subject_owns_entire_state_region = STATE_LAZIO }
+		ita_arc_actor = yes
+		custom_tooltip = {
+			text = ita_shared_federation_formed_tt
+			has_variable = NIF_formed
+		}
+		c:PAP ?= {
+			exists = yes
+		}
+		NOT = {
+			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		}
 	}
+
 	ai_chance = {
 		value = 10
 	}
+
 	possible = {
-		c:PAP ?= { exists = yes }
-		owns_entire_state_region = STATE_UMBRIA
-		owns_entire_state_region = STATE_ROMAGNA
-		NOT = { has_journal_entry = Pap_recognition_for_italy }
-		NOT = { has_variable = annex_pap }
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			c:PAP ?= {
+				exists = yes
+			}
+			owns_entire_state_region = STATE_UMBRIA
+			owns_entire_state_region = STATE_ROMAGNA
+			NOT = {
+				has_journal_entry = Pap_recognition_for_italy
+			}
+			NOT = {
+				custom_tooltip = {
+					text = ita_shared_papal_annexation_demanded_tt
+					has_variable = annex_pap
+				}
+			}
+			custom_tooltip = {
+				text = ita_arc_no_garrison_tt
+				NOT = {
+					ita_arc_rome_is_garrisoned = yes
+				}
+			}
+		}
+		trigger_else = {
+			always = no
+		}
 	}
 
 	effect = {
@@ -383,6 +625,7 @@ ita_request_italian_recognition_button = {
 			type = Pap_recognition_for_italy
 		}
 	}
+
 }
 
 # ========== Papal Recognition concessions (select 3 of 4; JE Pap_recognition_for_italy) ==========
@@ -391,20 +634,29 @@ ita_pap_rec_concession_1_button = {
 	name = ita_pap_rec_concession_1_button
 	desc = ita_pap_rec_concession_1_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
 	}
 
 	effect = {
-		set_variable = { name = pap_rec_concession_1_chosen value = 1 }
-		change_variable = { name = concession_to_pope_var add = 1 }
+		set_variable = {
+			name = pap_rec_concession_1_chosen
+			value = 1
+		}
+		change_variable = {
+			name = concession_to_pope_var
+			add = 1
+		}
 		add_modifier = {
 			name = papal_recognition_concession_clergy_power
 			years = 10
 		}
 	}
+
 }
 
 # Concession 2: Tax cuts from clergymen (-25% clergymen investment pool contribution, 10 yrs)
@@ -412,22 +664,33 @@ ita_pap_rec_concession_2_button = {
 	name = ita_pap_rec_concession_2_button
 	desc = ita_pap_rec_concession_2_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
 	}
+
 	ai_chance = {
 		value = 10
 	}
+
 	effect = {
-		set_variable = { name = pap_rec_concession_2_chosen value = 1 }
-		change_variable = { name = concession_to_pope_var add = 1 }
+		set_variable = {
+			name = pap_rec_concession_2_chosen
+			value = 1
+		}
+		change_variable = {
+			name = concession_to_pope_var
+			add = 1
+		}
 		add_modifier = {
 			name = papal_recognition_concession_clergy_tax_cuts
 			years = 10
 		}
 	}
+
 }
 
 # Concession 3: Papal subsidies (7500 expenses, 10 yrs)
@@ -435,22 +698,33 @@ ita_pap_rec_concession_3_button = {
 	name = ita_pap_rec_concession_3_button
 	desc = ita_pap_rec_concession_3_button_desc
 
-	cooldown = { years = 99 }
-	
+	cooldown = {
+		years = 99
+	}
+
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
 	}
+
 	ai_chance = {
 		value = 10
 	}
+
 	effect = {
-		set_variable = { name = pap_rec_concession_3_chosen value = 1 }
-		change_variable = { name = concession_to_pope_var add = 1 }
+		set_variable = {
+			name = pap_rec_concession_3_chosen
+			value = 1
+		}
+		change_variable = {
+			name = concession_to_pope_var
+			add = 1
+		}
 		add_modifier = {
 			name = papal_recognition_concession_papal_subsidies
 			years = 10
 		}
 	}
+
 }
 
 # Concession 4: State religion (if missing) + -10% authority (church-law style, 10 yrs)
@@ -458,7 +732,9 @@ ita_pap_rec_concession_4_button = {
 	name = ita_pap_rec_concession_4_button
 	desc = ita_pap_rec_concession_4_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	possible = {
 		has_journal_entry = Pap_recognition_for_italy
@@ -469,10 +745,20 @@ ita_pap_rec_concession_4_button = {
 	}
 
 	effect = {
-		set_variable = { name = pap_rec_concession_4_chosen value = 1 }
-		change_variable = { name = concession_to_pope_var add = 1 }
+		set_variable = {
+			name = pap_rec_concession_4_chosen
+			value = 1
+		}
+		change_variable = {
+			name = concession_to_pope_var
+			add = 1
+		}
 		if = {
-			limit = { NOT = { has_law = law_type:law_state_religion } }
+			limit = {
+				NOT = {
+					has_law = law_type:law_state_religion
+				}
+			}
 			activate_law = law_type:law_state_religion
 		}
 		# Add amendment to current church-and-state law (State Religion or variant).
@@ -484,6 +770,7 @@ ita_pap_rec_concession_4_button = {
 			}
 		}
 	}
+
 }
 
 # ========== Annex the Pope (diplomatic play + No Papal Recognition debuff) ==========
@@ -492,13 +779,27 @@ ita_annex_pope_war_goal_button = {
 	name = ita_annex_pope_war_goal_button
 	desc = ita_annex_pope_war_goal_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
-		has_variable = NIF_formed
-		c:PAP ?= { exists = yes }
-		NOT = { has_variable = annex_pap }
+		ita_arc_actor = yes
+		custom_tooltip = {
+			text = ita_shared_federation_formed_tt
+			has_variable = NIF_formed
+		}
+		c:PAP ?= {
+			exists = yes
+		}
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_papal_annexation_demanded_tt
+				has_variable = annex_pap
+			}
+		}
 	}
+
 	ai_chance = {
 		value = 50
 		if = {
@@ -508,70 +809,119 @@ ita_annex_pope_war_goal_button = {
 			subtract = 100
 		}
 	}
-	
+
 	possible = {
-		c:PAP ?= { exists = yes }
-		is_at_war = no
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			c:PAP ?= {
+				exists = yes
+			}
+			is_at_war = no
+			custom_tooltip = {
+				text = ita_arc_no_garrison_tt
+				NOT = {
+					ita_arc_rome_is_garrisoned = yes
+				}
+			}
+		}
+		trigger_else = {
+			always = no
+		}
 	}
 
 	effect = {
-		set_variable = annex_pap
+		hidden_effect = {
+			set_variable = annex_pap
+		}
 		create_diplomatic_play = {
 			name = ita_annex_pope_war
 			target_country = c:PAP
 			type = dp_annex_war
 		}
-		trigger_event = { id = italyEventsTyrone.15 popup = yes }
+		trigger_event = {
+			id = italyEventsTyrone.15
+			popup = yes
+		}
 	}
+
 }
 
 # ========== Form Italy ==========
-# At least 12 states in Italy (owned or by subject), must own Romagna, Naples (Campania), Piedmont; have either Lombardy or Rome (Lazio). Changes tag to Italy and fires "Italian Formation" event.
+# At least 11 states in Italy (owned or by subject), must own Romagna, Naples (Campania), Piedmont; have either Lombardy or Rome (Lazio). Changes tag to Italy and fires "Italian Formation" event.
 ita_form_italy_button = {
 	name = ita_form_italy_button
 	desc = ita_form_italy_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
+		ita_arc_actor = yes
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
+
 	possible = {
-		custom_tooltip = {
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			custom_tooltip = {
 				text = is_nif_tt
 				has_variable = NIF_formed
 			}
-		# At least 12 state regions in Italy, entirely owned by us or a subject
-		any_state = {
-				state_region = { is_in_geographic_region = geographic_region_italy_old }
+			# At least 11 state regions in Italy, entirely owned by us or a subject
+			any_state = {
+				state_region = {
+					is_in_geographic_region = geographic_region_italy_old
+				}
 				OR = {
 					owner = root
-					owner = { is_subject_of = root }
+					owner = {
+						is_subject_of = root
+					}
 				}
-			count >= 12
+				count >= 11
+			}
+			country_or_subject_owns_entire_state_region = STATE_ABRUZZO
+			country_or_subject_owns_entire_state_region = STATE_CAMPANIA
+			country_or_subject_owns_entire_state_region = STATE_PIEDMONT
+			OR = {
+				country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+				country_or_subject_owns_entire_state_region = STATE_LAZIO
+			}
 		}
-		country_or_subject_owns_entire_state_region = STATE_ABRUZZO
-		country_or_subject_owns_entire_state_region = STATE_CAMPANIA
-		country_or_subject_owns_entire_state_region = STATE_PIEDMONT
-		OR = {
-			country_or_subject_owns_entire_state_region = STATE_LOMBARDY
-			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
 		change_tag = ITA
-		set_variable = italy_failsafe_decision_var
+		hidden_effect = {
+			set_variable = italy_failsafe_decision_var
+		}
 		hidden_effect = {
 			annex = c:XNP
-			annex = c:SIC	
+			annex = c:SIC
 		}
 		add_primary_culture = cu:south_italian
-		trigger_event = { id = italyEventsTyrone.16 popup = yes }
+		trigger_event = {
+			id = italyEventsTyrone.16
+			popup = yes
+		}
 	}
+
 }
 
 # Form Italy (Garibaldi path): visible when the leader of the Garibaldi republic has garibaldi_char_var and the special trait. Effect: kill Southern Garibaldi (hidden), kill true Garibaldi in Sardinia (hidden), enact Presidential Republic in SAR, fire formation event, then follow-up event 17 makes Garibaldi ruler.
@@ -579,74 +929,116 @@ ita_form_italy_garibaldi_button = {
 	name = ita_form_italy_garibaldi_button
 	desc = ita_form_italy_garibaldi_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
-		has_global_variable = garibaldi_republic_established
+		ita_arc_actor = yes
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
+		custom_tooltip = {
+			text = ita_shared_garibaldi_republic_tt
+			has_global_variable = garibaldi_republic_established
+		}
 	}
 
 	possible = {
-		custom_tooltip = {
-			text = is_nif_tt
-			has_variable = NIF_formed
-		}
-		any_state = {
-				state_region = { is_in_geographic_region = geographic_region_italy_old }
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			custom_tooltip = {
+				text = is_nif_tt
+				has_variable = NIF_formed
+			}
+			any_state = {
+				state_region = {
+					is_in_geographic_region = geographic_region_italy_old
+				}
 				OR = {
 					owner = root
-					owner = { is_subject_of = root }
+					owner = {
+						is_subject_of = root
+					}
 				}
-			count >= 12
+				count >= 11
+			}
+			country_or_subject_owns_entire_state_region = STATE_ABRUZZO
+			country_or_subject_owns_entire_state_region = STATE_CAMPANIA
+			country_or_subject_owns_entire_state_region = STATE_PIEDMONT
+			OR = {
+				country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+				country_or_subject_owns_entire_state_region = STATE_LAZIO
+			}
+			custom_tooltip = {
+				text = ita_form_garibaldi_tension_tt
+				var:italian_sentiment_var >= 90
+			}
 		}
-		country_or_subject_owns_entire_state_region = STATE_ABRUZZO
-		country_or_subject_owns_entire_state_region = STATE_CAMPANIA
-		country_or_subject_owns_entire_state_region = STATE_PIEDMONT
-		OR = {
-			country_or_subject_owns_entire_state_region = STATE_LOMBARDY
-			country_or_subject_owns_entire_state_region = STATE_LAZIO
+		trigger_else = {
+			always = no
 		}
-		custom_tooltip = {
-			text = ita_form_garibaldi_tension_tt
-			var:italian_sentiment_var >= 90
-		}
-
 	}
 
 	effect = {
 		random_country = {
 			limit = {
-				has_variable = garibaldi_exp_country
+				hidden_trigger = {
+					has_variable = garibaldi_exp_country
+				}
 				ruler = {
-					has_variable = garibaldi_char_var
+					hidden_trigger = {
+						has_variable = garibaldi_char_var
+					}
 				}
 			}
 			save_scope_as = garibaldi_republic
 		}
 		scope:garibaldi_republic = {
 			ruler = {
-				kill_character = { hidden = yes }
+				kill_character = {
+					hidden = yes
+				}
 			}
 		}
-		set_variable = italy_failsafe_decision_var
+		hidden_effect = {
+			set_variable = italy_failsafe_decision_var
+		}
 		hidden_effect = {
 			annex = c:XNP
-			annex = c:SIC	
+			annex = c:SIC
 		}
-
 		# Kill the true Garibaldi (the general in Sardinia from the expedition)
 		random_character = {
-			limit = { has_variable = garibaldi_char_var }
-			kill_character = { hidden = yes }
+			limit = {
+				hidden_trigger = {
+					has_variable = garibaldi_char_var
+				}
+			}
+			kill_character = {
+				hidden = yes
+			}
 		}
 		c:SAR = {
 			change_tag = ITA
 			add_primary_culture = cu:south_italian
 			activate_law = law_type:law_presidential_republic
-			trigger_event = { id = italyEventsTyrone.16 popup = yes }
-			trigger_event = { id = italyEventsTyrone.17 days = 1 popup = yes }
+			trigger_event = {
+				id = italyEventsTyrone.16
+				popup = yes
+			}
+			trigger_event = {
+				id = italyEventsTyrone.17
+				days = 1
+				popup = yes
+			}
 		}
 	}
+
 }
 
 # ========== Declare the North Italian Federation ==========
@@ -655,41 +1047,66 @@ ita_declare_north_italian_federation_button = {
 	name = ita_declare_north_italian_federation_button
 	desc = ita_declare_north_italian_federation_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	visible = {
-		NOT = { has_variable = NIF_formed }
+		ita_arc_actor = yes
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_federation_formed_tt
+				has_variable = NIF_formed
+			}
+		}
 	}
+
 	ai_chance = {
 		value = 50
 	}
 
 	possible = {
-		OR = {
-			c:PAP = {
-				relations:root > 30
-			}
-			owns_entire_state_region = STATE_ROMAGNA
-		}
-		owns_entire_state_region = STATE_EMILIA
-		owns_entire_state_region = STATE_TUSCANY
 		custom_tooltip = {
-			text = ita_declare_north_italian_federation_tension_tt
-			var:italian_sentiment_var >= 60
+			text = ita_arc_afford_papal_30_tt
+			var:italian_sentiment_var >= ita_arc_papal_30
+		}
+
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			OR = {
+				c:PAP ?= {
+					relations:root > 30
+				}
+				owns_entire_state_region = STATE_ROMAGNA
+			}
+			owns_entire_state_region = STATE_EMILIA
+			owns_entire_state_region = STATE_TUSCANY
+			custom_tooltip = {
+				text = ita_declare_north_italian_federation_tension_tt
+				var:italian_sentiment_var >= 60
+			}
+		}
+		trigger_else = {
+			always = no
 		}
 	}
 
 	effect = {
 		custom_tooltip = {
-				text = minus30sentiment_ita_tt
-				change_variable = {
-					name = italian_sentiment_var
-					subtract = 30
-				}
+			text = ita_arc_pay_papal_30_tt
+			change_variable = {
+				name = italian_sentiment_var
+				subtract = ita_arc_papal_30
 			}
-		trigger_event = { id = italyEventsTyrone.12 popup = yes }
-
+		}
+		trigger_event = {
+			id = italyEventsTyrone.12
+			popup = yes
+		}
 	}
+
 }
 
 # ========== Garibaldi's Thousand Expedition â€“ Prepare the Expedition ==========
@@ -698,7 +1115,9 @@ ita_garibaldi_prepare_expedition_button = {
 	name = ita_garibaldi_prepare_expedition_button
 	desc = ita_garibaldi_prepare_expedition_button_desc
 
-	cooldown = { years = 100 }
+	cooldown = {
+		years = 100
+	}
 
 	ai_chance = {
 		value = 50
@@ -710,7 +1129,7 @@ ita_garibaldi_prepare_expedition_button = {
 
 	possible = {
 		exists = c:SIC
-		c:SIC = { 
+		c:SIC ?= {
 			is_player = no
 			country_or_subject_owns_entire_state_region = STATE_SICILY
 		}
@@ -728,13 +1147,15 @@ ita_garibaldi_prepare_expedition_button = {
 				var:italian_sentiment_var >= 90
 			}
 		}
-		
-		
 	}
 
 	effect = {
-		trigger_event = { id = garibaldi_expedition.1 popup = yes }
+		trigger_event = {
+			id = garibaldi_expedition.1
+			popup = yes
+		}
 	}
+
 }
 
 # ========== North Italian Manifesto â€“ annex PAR, MOD, LUC, TUS with incorporation ==========
@@ -743,25 +1164,41 @@ ita_north_italian_manifesto_button = {
 	name = ita_north_italian_manifesto_button
 	desc = ita_north_italian_manifesto_button_desc
 
-	cooldown = { years = 100 }
+	cooldown = {
+		years = 100
+	}
 
 	visible = {
-		NOT = { has_variable = NIF_formed }
+		ita_arc_actor = yes
+		NOT = {
+			custom_tooltip = {
+				text = ita_shared_federation_formed_tt
+				has_variable = NIF_formed
+			}
+		}
 		OR = {
-			c:PAR ?= { exists = yes }
-			c:MOD ?= { exists = yes }
-			c:LUC ?= { exists = yes }
-			c:TUS ?= { exists = yes }
+			c:PAR ?= {
+				exists = yes
+			}
+			c:MOD ?= {
+				exists = yes
+			}
+			c:LUC ?= {
+				exists = yes
+			}
+			c:TUS ?= {
+				exists = yes
+			}
 		}
 		NOT = {
 			OR = {
-				c:SIC = {
+				c:SIC ?= {
 					is_player = yes
 				}
-				c:LMV = {
+				c:LMV ?= {
 					is_player = yes
 				}
-				c:PAP = {
+				c:PAP ?= {
 					is_player = yes
 				}
 			}
@@ -769,15 +1206,35 @@ ita_north_italian_manifesto_button = {
 	}
 
 	possible = {
-		custom_tooltip = {
-			text = ita_north_italian_manifesto_sentiment_tt
-			var:italian_sentiment_var >= 30
+		trigger_if = {
+			limit = {
+				ita_arc_actor = yes
+			}
+			custom_tooltip = {
+				text = ita_north_italian_manifesto_sentiment_tt
+				var:italian_sentiment_var >= 30
+			}
+			OR = {
+				c:PAR ?= {
+					exists = yes
+				}
+				c:MOD ?= {
+					exists = yes
+				}
+				c:LUC ?= {
+					exists = yes
+				}
+				c:TUS ?= {
+					exists = yes
+				}
+			}
+			custom_tooltip = {
+				text = ita_arc_afford_manifesto_tt
+				var:italian_sentiment_var >= ita_arc_manifesto_15
+			}
 		}
-		OR = {
-			c:PAR ?= { exists = yes }
-			c:MOD ?= { exists = yes }
-			c:LUC ?= { exists = yes }
-			c:TUS ?= { exists = yes }
+		trigger_else = {
+			always = no
 		}
 	}
 
@@ -786,9 +1243,12 @@ ita_north_italian_manifesto_button = {
 	}
 
 	effect = {
-		trigger_event = { id = italyEventsTyrone.6 popup = yes }
-
+		trigger_event = {
+			id = italyEventsTyrone.6
+			popup = yes
+		}
 	}
+
 }
 
 # ========== French path â€“ start (military, economy, laws) ==========
@@ -796,7 +1256,9 @@ ita_french_military_button = {
 	name = ita_french_military_button
 	desc = ita_french_military_button_desc
 
-	cooldown = { years = 99 }
+	cooldown = {
+		years = 99
+	}
 
 	visible = {
 		always = yes
@@ -805,13 +1267,18 @@ ita_french_military_button = {
 	possible = {
 		has_technology_researched = logistics
 		has_technology_researched = field_works
-		NOT = { has_journal_entry = ITA_French_militaryJE }
-		NOT = { has_variable = ita_french_military_done }
+		NOT = {
+			has_journal_entry = ITA_French_militaryJE
+		}
+		NOT = {
+			has_variable = ita_french_military_done
+		}
 	}
 
 	effect = {
 		ita_french_military_effect = yes
 	}
+
 }
 
 ita_austria_military_button = {
@@ -823,13 +1290,18 @@ ita_austria_military_button = {
 	}
 
 	possible = {
-		NOT = { has_journal_entry = ITA_Austria_militaryJE }
-		NOT = { has_variable = ita_austria_military_done }
+		NOT = {
+			has_journal_entry = ITA_Austria_militaryJE
+		}
+		NOT = {
+			has_variable = ita_austria_military_done
+		}
 	}
 
 	effect = {
 		ita_austria_military_effect = yes
 	}
+
 }
 
 ita_austria_economy_button = {
@@ -841,13 +1313,18 @@ ita_austria_economy_button = {
 	}
 
 	possible = {
-		NOT = { has_journal_entry = ITA_Austria_economyJE }
-		NOT = { has_variable = ita_austria_economy_done }
+		NOT = {
+			has_journal_entry = ITA_Austria_economyJE
+		}
+		NOT = {
+			has_variable = ita_austria_economy_done
+		}
 	}
 
 	effect = {
 		ita_austria_economy_effect = yes
 	}
+
 }
 
 ita_french_economy_button = {
@@ -859,13 +1336,18 @@ ita_french_economy_button = {
 	}
 
 	possible = {
-		NOT = { has_journal_entry = ITA_French_economyJE }
-		NOT = { has_variable = ita_french_economy_done }
+		NOT = {
+			has_journal_entry = ITA_French_economyJE
+		}
+		NOT = {
+			has_variable = ita_french_economy_done
+		}
 	}
 
 	effect = {
 		ita_french_economy_effect = yes
 	}
+
 }
 
 ita_french_laws_button = {
@@ -877,13 +1359,18 @@ ita_french_laws_button = {
 	}
 
 	possible = {
-		NOT = { has_journal_entry = ITA_French_lawsJE }
-		NOT = { has_variable = ita_french_laws_done }
+		NOT = {
+			has_journal_entry = ITA_French_lawsJE
+		}
+		NOT = {
+			has_variable = ita_french_laws_done
+		}
 	}
 
 	effect = {
 		ita_french_laws_effect = yes
 	}
+
 }
 
 # Austria path â€“ add Austrian laws JE (constitutional tension + Statuto events; complete via census/wealth or Grant the Statuto button).
@@ -896,13 +1383,18 @@ ita_austria_laws_button = {
 	}
 
 	possible = {
-		NOT = { has_journal_entry = ITA_Austria_lawsJE }
-		NOT = { has_variable = ita_austria_laws_done }
+		NOT = {
+			has_journal_entry = ITA_Austria_lawsJE
+		}
+		NOT = {
+			has_variable = ita_austria_laws_done
+		}
 	}
 
 	effect = {
 		ita_austria_laws_effect = yes
 	}
+
 }
 
 # ========== French path â€“ complete (in JE panel). Easy way: 30 units + all barracks fully employed, no shortages ==========
@@ -917,7 +1409,6 @@ ita_french_military_complete_button = {
 	possible = {
 		has_technology_researched = rifling
 		has_technology_researched = shell_gun
-
 	}
 
 	effect = {
@@ -926,6 +1417,7 @@ ita_french_military_complete_button = {
 			text = worse_rewards_itainv_tt
 		}
 	}
+
 }
 
 # ========== Austria path â€“ complete (in JE panel). Easy: button + 30 + barracks. Hard: National Guard + Home Affairs lvl 2 ==========
@@ -948,13 +1440,16 @@ ita_austria_military_complete_button = {
 			text = worse_rewards_itainv_tt
 		}
 	}
+
 }
 
 ita_french_economy_complete_button = {
 	name = ita_french_economy_complete_button
 	desc = ita_french_economy_complete_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
 		has_journal_entry = ITA_French_economyJE
@@ -977,13 +1472,16 @@ ita_french_economy_complete_button = {
 			text = worse_rewards_itainv_tt
 		}
 	}
+
 }
 
 ita_austria_economy_complete_button = {
 	name = ita_austria_economy_complete_button
 	desc = ita_austria_economy_complete_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
 
 	visible = {
 		has_journal_entry = ITA_Austria_economyJE
@@ -1006,19 +1504,25 @@ ita_austria_economy_complete_button = {
 			text = worse_rewards_itainv_tt
 		}
 	}
+
 }
 
 ita_french_laws_complete_button = {
 	name = ita_french_laws_complete_button
 	desc = ita_french_laws_complete_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
+
 	visible = {
 		has_journal_entry = ITA_French_lawsJE
 	}
 
 	possible = {
-		NOT = { has_law = law_type:law_census_voting }
+		NOT = {
+			has_law = law_type:law_census_voting
+		}
 		OR = {
 			AND = {
 				legitimacy >= 50
@@ -1032,8 +1536,12 @@ ita_french_laws_complete_button = {
 								has_ideology = ideology:ideology_liberal_modern
 							}
 						}
-						leader = { has_ideology = ideology:ideology_radical }
-						leader = { has_ideology = ideology:ideology_market_liberal }
+						leader = {
+							has_ideology = ideology:ideology_radical
+						}
+						leader = {
+							has_ideology = ideology:ideology_market_liberal
+						}
 					}
 				}
 			}
@@ -1045,13 +1553,13 @@ ita_french_laws_complete_button = {
 				value >= 0.25
 			}
 		}
-			
 	}
 
 	effect = {
 		set_variable = ita_french_laws_complete_clicked
 		activate_law = law_type:law_wealth_voting
 	}
+
 }
 
 # ========== Austria path â€“ laws JE: button grants Oligarchy + Concessione Albertina amendment ==========
@@ -1059,13 +1567,18 @@ ita_austria_laws_complete_button = {
 	name = ita_austria_laws_complete_button
 	desc = ita_austria_laws_complete_button_desc
 
-	cooldown = { months = 24 }
+	cooldown = {
+		months = 24
+	}
+
 	visible = {
 		has_journal_entry = ITA_Austria_lawsJE
 	}
 
 	possible = {
-		NOT = { has_law = law_type:law_census_voting }
+		NOT = {
+			has_law = law_type:law_census_voting
+		}
 		OR = {
 			radical_fraction = {
 				value >= 0.25
@@ -1089,21 +1602,27 @@ ita_austria_laws_complete_button = {
 			}
 		}
 	}
+
 }
 
 # ========== Italian Irredentism â€“ Jewel Colony (only one choice; var hides all after use) ==========
 ita_jewel_colony_morocco_button = {
 	name = ita_jewel_colony_morocco_button
 	desc = ita_jewel_colony_morocco_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_FEZ
 		country_or_subject_owns_entire_state_region = STATE_MARRAKECH
 		country_or_subject_owns_entire_state_region = STATE_INNER_MOROCCO
 		country_or_subject_owns_entire_state_region = STATE_AL_RIF
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1124,18 +1643,24 @@ ita_jewel_colony_morocco_button = {
 			set_state_type = incorporated
 		}
 	}
+
 }
 
 ita_jewel_colony_madagascar_button = {
 	name = ita_jewel_colony_madagascar_button
 	desc = ita_jewel_colony_madagascar_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_NORTH_MADAGASCAR
 		country_or_subject_owns_entire_state_region = STATE_SOUTH_MADAGASCAR
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1154,19 +1679,25 @@ ita_jewel_colony_madagascar_button = {
 			set_state_type = incorporated
 		}
 	}
+
 }
 
 ita_jewel_colony_ethiopia_button = {
 	name = ita_jewel_colony_ethiopia_button
 	desc = ita_jewel_colony_ethiopia_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_AMHARA
 		country_or_subject_owns_entire_state_region = STATE_GONDER
 		country_or_subject_owns_entire_state_region = STATE_OROMIA
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1188,19 +1719,25 @@ ita_jewel_colony_ethiopia_button = {
 			set_state_type = incorporated
 		}
 	}
+
 }
 
 ita_jewel_colony_zanzibar_button = {
 	name = ita_jewel_colony_zanzibar_button
 	desc = ita_jewel_colony_zanzibar_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_ZANZIBAR
 		country_or_subject_owns_entire_state_region = STATE_TANGANYIKA
 		country_or_subject_owns_entire_state_region = STATE_LINDI
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1220,17 +1757,23 @@ ita_jewel_colony_zanzibar_button = {
 			set_state_type = incorporated
 		}
 	}
+
 }
 
 ita_jewel_colony_yemen_button = {
 	name = ita_jewel_colony_yemen_button
 	desc = ita_jewel_colony_yemen_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_YEMEN
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1248,19 +1791,25 @@ ita_jewel_colony_yemen_button = {
 			set_state_type = incorporated
 		}
 	}
+
 }
 
 ita_jewel_colony_lybia_button = {
 	name = ita_jewel_colony_lybia_button
 	desc = ita_jewel_colony_lybia_button_desc
+
 	visible = {
-		NOT = { has_variable = italy_jewel_colony_var }
+		NOT = {
+			has_variable = italy_jewel_colony_var
+		}
 	}
+
 	possible = {
 		country_or_subject_owns_entire_state_region = STATE_TRIPOLI
 		country_or_subject_owns_entire_state_region = STATE_LIBYA
 		country_or_subject_owns_entire_state_region = STATE_LIBYAN_DESERT
 	}
+
 	effect = {
 		set_variable = {
 			name = italy_jewel_colony_var
@@ -1279,6 +1828,7 @@ ita_jewel_colony_lybia_button = {
 			}
 		}
 	}
+
 }
 
 # ========== Italian Irredentism â€“ Proclaim the Italian Empire ==========
@@ -1289,7 +1839,10 @@ ita_proclaim_italian_empire_button = {
 
 	visible = {
 	}
-	cooldown = { years = 100 }
+
+	cooldown = {
+		years = 100
+	}
 
 	possible = {
 		custom_tooltip = {
@@ -1307,32 +1860,42 @@ ita_proclaim_italian_empire_button = {
 			days = very_long_modifier_time
 		}
 	}
+
 }
 
 # ========== Lombardo Venezia  ==========
-
 LV_fix_economy_button = {
 	name = LV_fix_economy_button
 	desc = LV_fix_economy_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_fixed_economy }
+		NOT = {
+			has_variable = LV_fixed_economy
+		}
 	}
 
 	possible = {
-		NOT = { has_law_or_variant = law_type:law_serfdom }
-		NOT = { has_law_or_variant = law_type:law_traditionalism }
-		NOT = { has_law_or_variant = law_type:law_guild_system }
-		NOT = { has_modifier = ita_LV_fixing_smt }
+		NOT = {
+			has_law_or_variant = law_type:law_serfdom
+		}
+		NOT = {
+			has_law_or_variant = law_type:law_traditionalism
+		}
+		NOT = {
+			has_law_or_variant = law_type:law_guild_system
+		}
+		NOT = {
+			has_modifier = ita_LV_fixing_smt
+		}
 		OR = {
 			country_has_building_group_levels = {
-                type = bg_mining
-                value  >= 20
-            }
-            country_has_building_group_levels = {
-                type = bg_light_industry
-                value  >= 30
-            }
+				type = bg_mining
+				value >= 20
+			}
+			country_has_building_group_levels = {
+				type = bg_light_industry
+				value >= 30
+			}
 		}
 	}
 
@@ -1347,6 +1910,7 @@ LV_fix_economy_button = {
 			is_decaying = yes
 		}
 	}
+
 }
 
 LV_fix_burocrazia_button = {
@@ -1354,14 +1918,20 @@ LV_fix_burocrazia_button = {
 	desc = LV_fix_burocrazia_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_fixed_burocrazia }
+		NOT = {
+			has_variable = LV_fixed_burocrazia
+		}
 	}
 
 	possible = {
-		NOT = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+		NOT = {
+			has_law_or_variant = law_type:law_hereditary_bureaucrats
+		}
 		bureaucracy >= 0
 		approaching_bureaucracy_shortage = no
-		NOT = { has_modifier = ita_LV_fixing_smt }
+		NOT = {
+			has_modifier = ita_LV_fixing_smt
+		}
 	}
 
 	effect = {
@@ -1375,6 +1945,7 @@ LV_fix_burocrazia_button = {
 			is_decaying = yes
 		}
 	}
+
 }
 
 LV_fix_railways_button = {
@@ -1382,11 +1953,15 @@ LV_fix_railways_button = {
 	desc = LV_fix_railways_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_fixed_railways }
+		NOT = {
+			has_variable = LV_fixed_railways
+		}
 	}
 
 	possible = {
-		NOT = { has_modifier = ita_LV_fixing_smt }
+		NOT = {
+			has_modifier = ita_LV_fixing_smt
+		}
 		any_scope_state = {
 			filter = {
 				is_incorporated = yes
@@ -1414,6 +1989,7 @@ LV_fix_railways_button = {
 			is_decaying = yes
 		}
 	}
+
 }
 
 LV_fix_legittimacy_button = {
@@ -1421,11 +1997,13 @@ LV_fix_legittimacy_button = {
 	desc = LV_fix_legittimacy_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_fixed_legittimacy }
+		NOT = {
+			has_variable = LV_fixed_legittimacy
+		}
 	}
 
 	possible = {
-		OR = { 
+		OR = {
 			AND = {
 				OR = {
 					has_law_or_variant = law_type:law_national_guard
@@ -1437,9 +2015,7 @@ LV_fix_legittimacy_button = {
 					institution:institution_police.investment >= 2
 					institution:institution_home_affairs.investment >= 2
 				}
-				
 			}
-
 			AND = {
 				OR = {
 					has_law_or_variant = law_type:law_wealth_voting
@@ -1448,9 +2024,9 @@ LV_fix_legittimacy_button = {
 				}
 			}
 		}
-		
-		
-		NOT = { has_modifier = ita_LV_fixing_smt }
+		NOT = {
+			has_modifier = ita_LV_fixing_smt
+		}
 	}
 
 	effect = {
@@ -1458,15 +2034,13 @@ LV_fix_legittimacy_button = {
 		je:italy_LV_startingout = {
 			remove_modifier = LV_weak_legittimacy
 		}
-
 		if = {
-			limit = { 
+			limit = {
 				OR = {
 					has_law_or_variant = law_type:law_wealth_voting
 					has_law_or_variant = law_type:law_census_voting
 					has_law_or_variant = law_type:law_universal_suffrage
 				}
-				 
 			}
 			add_journal_entry = {
 				type = italy_LV_ageofliberty
@@ -1477,13 +2051,13 @@ LV_fix_legittimacy_button = {
 				type = italy_LV_neoautocracy
 			}
 		}
-
 		add_modifier = {
 			name = ita_LV_fixing_smt
 			months = 13
 			is_decaying = yes
 		}
 	}
+
 }
 
 italy_LV_federationPo_monarchy_button = {
@@ -1491,12 +2065,15 @@ italy_LV_federationPo_monarchy_button = {
 	desc = italy_LV_federationPo_monarchy_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_accepted_republic }
-		NOT = { has_variable = LV_accepted_monarchy }
+		NOT = {
+			has_variable = LV_accepted_republic
+		}
+		NOT = {
+			has_variable = LV_accepted_monarchy
+		}
 	}
 
 	possible = {
-
 	}
 
 	effect = {
@@ -1504,8 +2081,8 @@ italy_LV_federationPo_monarchy_button = {
 			text = LV_under_monarchy_tt
 			set_variable = LV_accepted_monarchy
 		}
-		
 	}
+
 }
 
 italy_LV_federationPo_republic_button = {
@@ -1513,12 +2090,15 @@ italy_LV_federationPo_republic_button = {
 	desc = italy_LV_federationPo_republic_button_desc
 
 	visible = {
-		NOT = { has_variable = LV_accepted_republic }
-		NOT = { has_variable = LV_accepted_monarchy }
+		NOT = {
+			has_variable = LV_accepted_republic
+		}
+		NOT = {
+			has_variable = LV_accepted_monarchy
+		}
 	}
 
 	possible = {
-
 	}
 
 	effect = {
@@ -1527,6 +2107,7 @@ italy_LV_federationPo_republic_button = {
 			set_variable = LV_accepted_republic
 		}
 	}
+
 }
 
 italy_LV_federationPo_PAPenvoy_button = {
@@ -1538,7 +2119,9 @@ italy_LV_federationPo_PAPenvoy_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_envoy }
+		NOT = {
+			has_modifier = LV_send_envoy
+		}
 	}
 
 	effect = {
@@ -1553,10 +2136,14 @@ italy_LV_federationPo_PAPenvoy_button = {
 		custom_tooltip = {
 			text = LV_papal_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_papal }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_papal
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_federationPo_SARenvoy_button = {
@@ -1568,7 +2155,9 @@ italy_LV_federationPo_SARenvoy_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_envoy }
+		NOT = {
+			has_modifier = LV_send_envoy
+		}
 	}
 
 	effect = {
@@ -1583,10 +2172,14 @@ italy_LV_federationPo_SARenvoy_button = {
 		custom_tooltip = {
 			text = LV_sar_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_sardinia }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_sardinia
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_federationPo_SARinvestment_button = {
@@ -1598,7 +2191,9 @@ italy_LV_federationPo_SARinvestment_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_investment }
+		NOT = {
+			has_modifier = LV_send_investment
+		}
 	}
 
 	effect = {
@@ -1619,10 +2214,14 @@ italy_LV_federationPo_SARinvestment_button = {
 		custom_tooltip = {
 			text = LV_sar_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_sardinia }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_sardinia
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_federationPo_PAPinvestment_button = {
@@ -1634,7 +2233,9 @@ italy_LV_federationPo_PAPinvestment_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_investment }
+		NOT = {
+			has_modifier = LV_send_investment
+		}
 	}
 
 	effect = {
@@ -1655,10 +2256,14 @@ italy_LV_federationPo_PAPinvestment_button = {
 		custom_tooltip = {
 			text = LV_pap_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_papal }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_papal
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_federationPo_AUSenvoy_button = {
@@ -1670,7 +2275,9 @@ italy_LV_federationPo_AUSenvoy_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_envoy }
+		NOT = {
+			has_modifier = LV_send_envoy
+		}
 	}
 
 	effect = {
@@ -1686,10 +2293,14 @@ italy_LV_federationPo_AUSenvoy_button = {
 		custom_tooltip = {
 			text = LV_aus_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_main }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_main
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_federationPo_AUSinvestment_button = {
@@ -1701,7 +2312,9 @@ italy_LV_federationPo_AUSinvestment_button = {
 	}
 
 	possible = {
-		NOT = { has_modifier = LV_send_investment }
+		NOT = {
+			has_modifier = LV_send_investment
+		}
 	}
 
 	effect = {
@@ -1722,10 +2335,14 @@ italy_LV_federationPo_AUSinvestment_button = {
 		custom_tooltip = {
 			text = LV_aus_envoy_tt
 			je:italy_LV_federationPo = {
-				add_progress = { value = 15 name = ita_LV_confPO_main }
+				add_progress = {
+					value = 15
+					name = ita_LV_confPO_main
+				}
 			}
 		}
 	}
+
 }
 
 italy_LV_itafed_piedmont_button = {
@@ -1733,8 +2350,14 @@ italy_LV_itafed_piedmont_button = {
 	desc = italy_LV_itafed_piedmont_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
-		NOT = { exists = c:SAR }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
+		NOT = {
+			exists = c:SAR
+		}
 	}
 
 	possible = {
@@ -1760,7 +2383,6 @@ italy_LV_itafed_piedmont_button = {
 				}
 			}
 		}
-
 		custom_tooltip = {
 			text = LV_create_piedmont_tt
 			create_country = {
@@ -1770,7 +2392,7 @@ italy_LV_itafed_piedmont_button = {
 				state = s:STATE_SAVOY.region_state:LMV
 				state = s:STATE_PROVENCE.region_state:LMV
 				on_created = {
-					c:LMV = {
+					c:LMV ?= {
 						create_diplomatic_pact = {
 							country = root
 							type = puppet
@@ -1784,6 +2406,7 @@ italy_LV_itafed_piedmont_button = {
 			}
 		}
 	}
+
 }
 
 italy_LV_itafed_sardinia_button = {
@@ -1791,8 +2414,14 @@ italy_LV_itafed_sardinia_button = {
 	desc = italy_LV_itafed_sardinia_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
-		NOT = { exists = c:ki_SRD }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
+		NOT = {
+			exists = c:ki_SRD
+		}
 	}
 
 	possible = {
@@ -1818,7 +2447,6 @@ italy_LV_itafed_sardinia_button = {
 				}
 			}
 		}
-
 		custom_tooltip = {
 			text = LV_create_sardinia_tt
 			create_country = {
@@ -1826,7 +2454,7 @@ italy_LV_itafed_sardinia_button = {
 				origin = root
 				state = s:STATE_SARDINIA.region_state:LMV
 				on_created = {
-					c:LMV = {
+					c:LMV ?= {
 						create_diplomatic_pact = {
 							country = root
 							type = puppet
@@ -1840,6 +2468,7 @@ italy_LV_itafed_sardinia_button = {
 			}
 		}
 	}
+
 }
 
 italy_LV_itafed_rome_button = {
@@ -1847,8 +2476,14 @@ italy_LV_itafed_rome_button = {
 	desc = italy_LV_itafed_rome_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
-		NOT = { exists = c:PAP }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
+		NOT = {
+			exists = c:PAP
+		}
 	}
 
 	possible = {
@@ -1874,7 +2509,6 @@ italy_LV_itafed_rome_button = {
 				}
 			}
 		}
-
 		custom_tooltip = {
 			text = LV_create_rome_tt
 			create_country = {
@@ -1882,7 +2516,7 @@ italy_LV_itafed_rome_button = {
 				origin = root
 				state = s:STATE_LAZIO.region_state:LMV
 				on_created = {
-					c:LMV = {
+					c:LMV ?= {
 						create_diplomatic_pact = {
 							country = root
 							type = puppet
@@ -1896,6 +2530,7 @@ italy_LV_itafed_rome_button = {
 			}
 		}
 	}
+
 }
 
 italy_LV_itafed_tuscany_button = {
@@ -1903,8 +2538,14 @@ italy_LV_itafed_tuscany_button = {
 	desc = italy_LV_itafed_tuscany_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
-		NOT = { exists = c:TUS }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
+		NOT = {
+			exists = c:TUS
+		}
 	}
 
 	possible = {
@@ -1930,7 +2571,6 @@ italy_LV_itafed_tuscany_button = {
 				}
 			}
 		}
-
 		custom_tooltip = {
 			text = LV_create_tuscany_tt
 			create_country = {
@@ -1938,7 +2578,7 @@ italy_LV_itafed_tuscany_button = {
 				origin = root
 				state = s:STATE_TUSCANY.region_state:LMV
 				on_created = {
-					c:LMV = {
+					c:LMV ?= {
 						create_diplomatic_pact = {
 							country = root
 							type = puppet
@@ -1952,6 +2592,7 @@ italy_LV_itafed_tuscany_button = {
 			}
 		}
 	}
+
 }
 
 italy_LV_itafed_sicily_button = {
@@ -1959,17 +2600,31 @@ italy_LV_itafed_sicily_button = {
 	desc = italy_LV_itafed_sicily_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
 		exists = c:SIC
-		NOT = { c:SIC = { is_subject_of = c:LMV } }
+		NOT = {
+			c:SIC ?= {
+				is_subject_of = c:LMV
+			}
+		}
 	}
 
 	possible = {
-		c:SIC = { owns_entire_state_region = STATE_SICILY }
-		c:SIC = { owns_entire_state_region = STATE_CAMPANIA }
-		c:SIC = { is_subject = no }
+		c:SIC ?= {
+			owns_entire_state_region = STATE_SICILY
+		}
+		c:SIC ?= {
+			owns_entire_state_region = STATE_CAMPANIA
+		}
+		c:SIC ?= {
+			is_subject = no
+		}
 		OR = {
-			c:SIC = {
+			c:SIC ?= {
 				relations:root >= 50
 			}
 			is_in_same_power_bloc = c:LMV
@@ -1995,17 +2650,18 @@ italy_LV_itafed_sicily_button = {
 				}
 			}
 		}
-		c:LMV = {
+		c:LMV ?= {
 			create_diplomatic_pact = {
 				country = c:SIC
 				type = puppet
 			}
 		}
 		change_relations = {
-				country = c:SIC
-				value = 100
-			}
+			country = c:SIC
+			value = 100
+		}
 	}
+
 }
 
 italy_LV_itafed_naples_button = {
@@ -2013,14 +2669,24 @@ italy_LV_itafed_naples_button = {
 	desc = italy_LV_itafed_naples_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
 		exists = c:SIC
-		NOT = { exists = c:XNP }
-		c:SIC = { is_subject_of = c:LMV }
+		NOT = {
+			exists = c:XNP
+		}
+		c:SIC ?= {
+			is_subject_of = c:LMV
+		}
 	}
 
 	possible = {
-		c:SIC = { owns_entire_state_region = STATE_SICILY }
+		c:SIC ?= {
+			owns_entire_state_region = STATE_SICILY
+		}
 	}
 
 	effect = {
@@ -2052,7 +2718,7 @@ italy_LV_itafed_naples_button = {
 				state = s:STATE_APULIA.region_state:SIC
 				state = s:STATE_CALABRIA.region_state:SIC
 				on_created = {
-					c:LMV = {
+					c:LMV ?= {
 						create_diplomatic_pact = {
 							country = root
 							type = puppet
@@ -2066,10 +2732,11 @@ italy_LV_itafed_naples_button = {
 			}
 		}
 		change_relations = {
-				country = c:SIC
-				value = -20
-			}
+			country = c:SIC
+			value = -20
+		}
 	}
+
 }
 
 italy_LV_itacentr_sicily_button = {
@@ -2077,17 +2744,31 @@ italy_LV_itacentr_sicily_button = {
 	desc = italy_LV_itacentr_sicily_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
 		exists = c:SIC
-		NOT = { c:SIC = { is_subject_of = c:LMV } }
+		NOT = {
+			c:SIC ?= {
+				is_subject_of = c:LMV
+			}
+		}
 	}
 
 	possible = {
-		c:SIC = { owns_entire_state_region = STATE_SICILY }
-		c:SIC = { owns_entire_state_region = STATE_CAMPANIA }
-		c:SIC = { is_subject = no }
+		c:SIC ?= {
+			owns_entire_state_region = STATE_SICILY
+		}
+		c:SIC ?= {
+			owns_entire_state_region = STATE_CAMPANIA
+		}
+		c:SIC ?= {
+			is_subject = no
+		}
 		OR = {
-			c:SIC = {
+			c:SIC ?= {
 				relations:root >= 50
 			}
 			is_in_same_power_bloc = c:LMV
@@ -2095,17 +2776,18 @@ italy_LV_itacentr_sicily_button = {
 	}
 
 	effect = {
-		c:LMV = {
+		c:LMV ?= {
 			create_diplomatic_pact = {
 				country = c:SIC
 				type = puppet
 			}
 		}
 		change_relations = {
-				country = c:SIC
-				value = 100
-			}
+			country = c:SIC
+			value = 100
+		}
 	}
+
 }
 
 italy_LV_itacentr_sway_sicily_button = {
@@ -2113,14 +2795,22 @@ italy_LV_itacentr_sway_sicily_button = {
 	desc = italy_LV_itacentr_sway_sicily_button_desc
 
 	visible = {
-		NOT = { root = { tyr_italian_content_country = yes } }
+		NOT = {
+			root = {
+				tyr_italian_content_country = yes
+			}
+		}
 		exists = c:SIC
 	}
 
-	cooldown = { months = 12 }
+	cooldown = {
+		months = 12
+	}
 
 	possible = {
-		c:SIC = { is_subject = no }
+		c:SIC ?= {
+			is_subject = no
+		}
 	}
 
 	effect = {
@@ -2129,7 +2819,9 @@ italy_LV_itacentr_sway_sicily_button = {
 			value = 20
 		}
 	}
+
 }
+
 # ========== Stop Italian Emigration JE ==========
 ita_emigration_close_borders_button = {
 	name = ita_emigration_close_borders_button
@@ -2137,17 +2829,25 @@ ita_emigration_close_borders_button = {
 
 	visible = {
 		has_journal_entry = ita_stop_emigration
-		NOT = { has_variable = ita_emigration_path_var }
+		NOT = {
+			has_variable = ita_emigration_path_var
+		}
 	}
 
 	possible = {
 		is_player = yes
-		NOT = { has_variable = ita_emigration_path_var }
+		NOT = {
+			has_variable = ita_emigration_path_var
+		}
 	}
 
 	effect = {
-		set_variable = { name = ita_emigration_path_var value = 1 }
+		set_variable = {
+			name = ita_emigration_path_var
+			value = 1
+		}
 	}
+
 }
 
 ita_emigration_improve_italy_button = {
@@ -2156,26 +2856,35 @@ ita_emigration_improve_italy_button = {
 
 	visible = {
 		has_journal_entry = ita_stop_emigration
-		NOT = { has_variable = ita_emigration_path_var }
+		NOT = {
+			has_variable = ita_emigration_path_var
+		}
 	}
 
 	possible = {
 		is_player = yes
-		NOT = { has_variable = ita_emigration_path_var }
+		NOT = {
+			has_variable = ita_emigration_path_var
+		}
 	}
 
 	effect = {
-		set_variable = { name = ita_emigration_path_var value = 2 }
+		set_variable = {
+			name = ita_emigration_path_var
+			value = 2
+		}
 	}
+
 }
 
 # ========== Two Sicilies: Fate of the Kingdom stance buttons ==========
-
 sic_fate_support_absolutist_button = {
 	name = sic_fate_support_absolutist_button
 	desc = sic_fate_support_absolutist_button_desc
 
-	cooldown = { months = 12 }
+	cooldown = {
+		months = 12
+	}
 
 	visible = {
 		has_journal_entry = sic_fate_of_kingdom
@@ -2186,16 +2895,22 @@ sic_fate_support_absolutist_button = {
 
 	effect = {
 		je:sic_fate_of_kingdom = {
-			add_progress = { value = -25 name = sic_political_balance_bar }
+			add_progress = {
+				value = -25
+				name = sic_political_balance_bar
+			}
 		}
 	}
+
 }
 
 sic_fate_support_nationalist_button = {
 	name = sic_fate_support_nationalist_button
 	desc = sic_fate_support_nationalist_button_desc
 
-	cooldown = { months = 12 }
+	cooldown = {
+		months = 12
+	}
 
 	visible = {
 		has_journal_entry = sic_fate_of_kingdom
@@ -2206,9 +2921,13 @@ sic_fate_support_nationalist_button = {
 
 	effect = {
 		je:sic_fate_of_kingdom = {
-			add_progress = { value = 25 name = sic_political_balance_bar }
+			add_progress = {
+				value = 25
+				name = sic_political_balance_bar
+			}
 		}
 	}
+
 }
 
 # ========== sic_bourbon_monarchy_constitution â€“ Offer census suffrage / right of assembly ==========
@@ -2227,7 +2946,7 @@ sic_bourbon_offer_census_suffrage_button = {
 		}
 	}
 
-	possible = { 
+	possible = {
 		OR = {
 			AND = {
 				government_legitimacy >= 50
@@ -2241,10 +2960,14 @@ sic_bourbon_offer_census_suffrage_button = {
 								has_ideology = ideology:ideology_liberal_modern
 							}
 						}
-						leader = { has_ideology = ideology:ideology_radical }
-						leader = { has_ideology = ideology:ideology_market_liberal }
+						leader = {
+							has_ideology = ideology:ideology_radical
+						}
+						leader = {
+							has_ideology = ideology:ideology_market_liberal
+						}
 					}
-				} 
+				}
 			}
 			AND = {
 				has_journal_entry = je_springtime_of_the_peoples
@@ -2258,19 +2981,21 @@ sic_bourbon_offer_census_suffrage_button = {
 				}
 			}
 		}
-		
 	}
 
 	effect = {
 		activate_law = law_type:law_census_voting
 		random_political_movement = {
-			limit = { is_political_movement_type = movement_italian_national }
+			limit = {
+				is_political_movement_type = movement_italian_national
+			}
 			add_modifier = {
 				name = sic_ita_movement_suppressed
 				days = long_modifier_time
 			}
 		}
 	}
+
 }
 
 sic_bourbon_offer_right_of_assembly_button = {
@@ -2301,10 +3026,14 @@ sic_bourbon_offer_right_of_assembly_button = {
 								has_ideology = ideology:ideology_liberal_modern
 							}
 						}
-						leader = { has_ideology = ideology:ideology_radical }
-						leader = { has_ideology = ideology:ideology_market_liberal }
+						leader = {
+							has_ideology = ideology:ideology_radical
+						}
+						leader = {
+							has_ideology = ideology:ideology_market_liberal
+						}
 					}
-				} 
+				}
 			}
 			AND = {
 				has_journal_entry = je_springtime_of_the_peoples
@@ -2323,6 +3052,7 @@ sic_bourbon_offer_right_of_assembly_button = {
 	effect = {
 		activate_law = law_type:law_right_of_assembly
 	}
+
 }
 
 # ========== sic_bourbon_monarchy_economy â€“ Skip entry, grant variable without on_complete ==========
@@ -2341,6 +3071,7 @@ sic_bourbon_economy_skip_button = {
 		set_variable = sic_fix_economy
 		set_variable = sic_bourbon_economy_skipped
 	}
+
 }
 
 # ========== garibaldi_presidency_JE â€“ Step down: make Garibaldi general, call election ==========
@@ -2364,10 +3095,15 @@ garibaldi_steps_down_button = {
 			set_variable = garibaldi_stepped_down_var
 		}
 		random_scope_character = {
-			limit = { has_trait = ita_grande_generale }
+			limit = {
+				has_trait = ita_grande_generale
+			}
 		}
-		call_election = { months = 6 }
+		call_election = {
+			months = 6
+		}
 	}
+
 }
 
 # ========== ita_stop_emigration â€“ AI only: instantly pass closed borders ==========
@@ -2378,7 +3114,9 @@ ita_stop_emigration_ai_button = {
 	visible = {
 		is_player = no
 		has_journal_entry = ita_stop_emigration
-		NOT = { has_law = law_type:law_closed_borders }
+		NOT = {
+			has_law = law_type:law_closed_borders
+		}
 	}
 
 	possible = {
@@ -2391,6 +3129,7 @@ ita_stop_emigration_ai_button = {
 	effect = {
 		activate_law = law_type:law_closed_borders
 	}
+
 }
 
 # ========== sic_ruler_of_italy â€“ Request cession of Lombardo-Venetia from Austria ==========
@@ -2398,7 +3137,9 @@ sic_request_lmv_cession_button = {
 	name = sic_request_lmv_cession_button
 	desc = sic_request_lmv_cession_button_desc
 
-	cooldown = { months = 12 }
+	cooldown = {
+		months = 12
+	}
 
 	visible = {
 		is_player = yes
@@ -2421,9 +3162,11 @@ sic_request_lmv_cession_button = {
 
 	effect = {
 		c:AUS ?= {
-			trigger_event = { id = sic_tyrone.20 popup = yes }
+			trigger_event = {
+				id = sic_tyrone.20
+				popup = yes
+			}
 		}
 	}
+
 }
-
-

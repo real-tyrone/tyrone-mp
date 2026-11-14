@@ -1,0 +1,131 @@
+# Immediate application and cleanup use the code-fired diplomatic play hooks.
+on_diplo_play_war_start = {
+
+	on_actions = {
+		tyr_bt_balkan_war_started
+	}
+
+}
+
+on_war_end = {
+
+	on_actions = {
+		tyr_bt_balkan_war_ended
+	}
+
+}
+
+# Also repairs wars already running when a save is loaded and catches separate exits.
+on_weekly_pulse_country = {
+
+	on_actions = {
+		tyr_bt_sync_balkan_war_mobilization
+	}
+
+}
+
+tyr_bt_balkan_war_started = {
+
+	trigger = {
+		is_diplomatic_play_type = dp_crimean_war
+		initiator = c:RUS
+		target = c:TUR
+	}
+
+	effect = {
+		c:RUS ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_bt_balkan_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_balkan_war_mobilization
+				}
+			}
+		}
+		c:TUR ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_bt_balkan_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_balkan_war_mobilization
+				}
+			}
+		}
+	}
+
+}
+
+tyr_bt_balkan_war_ended = {
+
+	trigger = {
+		is_diplomatic_play_type = dp_crimean_war
+	}
+
+	effect = {
+		c:RUS ?= {
+			if = {
+				limit = {
+					has_modifier = tyr_bt_balkan_war_mobilization
+				}
+				remove_modifier = tyr_bt_balkan_war_mobilization
+			}
+		}
+		c:TUR ?= {
+			if = {
+				limit = {
+					has_modifier = tyr_bt_balkan_war_mobilization
+				}
+				remove_modifier = tyr_bt_balkan_war_mobilization
+			}
+		}
+	}
+
+}
+
+# Root: country. The bonus applies only to Russia and the Ottoman Empire in this war.
+tyr_bt_sync_balkan_war_mobilization = {
+
+	trigger = {
+		OR = {
+			c:RUS ?= this
+			c:TUR ?= this
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				any_scope_war = {
+					diplomatic_play = {
+						is_diplomatic_play_type = dp_crimean_war
+						initiator = c:RUS
+						target = c:TUR
+					}
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_bt_balkan_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_bt_balkan_war_mobilization
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_modifier = tyr_bt_balkan_war_mobilization
+			}
+			remove_modifier = tyr_bt_balkan_war_mobilization
+		}
+	}
+
+}

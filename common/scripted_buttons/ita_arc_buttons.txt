@@ -1,0 +1,208 @@
+﻿
+ita_arc_france_turin_button = {
+	name = ita_arc_france_turin_button
+	desc = ita_arc_france_turin_button_desc
+
+	cooldown = {
+		months = 24
+	}
+
+	visible = {
+		c:FRA ?= this
+		ita_arc_is_active = yes
+		ita_arc_turin_available = yes
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = ita_arc_turin_available_tt
+			ita_arc_turin_available = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_arc_turin_request_tt
+			hidden_effect = {
+				global_var:ita_risorgimento_sardinia ?= {
+					trigger_event = {
+						id = ita_arc.1
+						popup = yes
+					}
+				}
+			}
+		}
+	}
+
+}
+
+
+ita_arc_garrison_rome_button = {
+	name = ita_arc_garrison_rome_button
+	desc = ita_arc_garrison_rome_button_desc
+
+	cooldown = {
+		months = 24
+	}
+
+	visible = {
+		c:FRA ?= this
+		ita_arc_is_active = yes
+		exists = c:PAP
+		NOT = {
+			ita_arc_rome_is_garrisoned = yes
+		}
+	}
+
+	possible = {
+		is_at_war = no
+		c:PAP ?= {
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		s:STATE_LAZIO = {
+			any_scope_state = {
+				owner = c:PAP
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_arc_garrison_effect_tt
+			hidden_effect = {
+				set_global_variable = ita_arc_rome_garrison
+				global_var:ita_risorgimento_sardinia ?= {
+					post_notification = ita_arc_rome_garrison_arrived
+				}
+				add_modifier = {
+					name = ita_arc_french_rome_garrison
+				}
+			}
+		}
+	}
+
+}
+
+
+ita_arc_withdraw_rome_button = {
+	name = ita_arc_withdraw_rome_button
+	desc = ita_arc_withdraw_rome_button_desc
+
+	cooldown = {
+		days = 1
+	}
+
+	visible = {
+		c:FRA ?= this
+		ita_arc_rome_is_garrisoned = yes
+	}
+
+	possible = {
+		always = yes
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_arc_withdraw_effect_tt
+			hidden_effect = {
+				ita_arc_end_garrison = yes
+			}
+		}
+	}
+
+}
+
+
+ita_arc_independence_war_button = {
+	name = ita_arc_independence_war_button
+	desc = ita_arc_independence_war_button_desc
+
+	cooldown = {
+		months = 24
+	}
+
+	visible = {
+		exists = c:FRA
+		ita_arc_actor = yes
+		ita_arc_is_active = yes
+		has_global_variable = ita_arc_turin_signed
+		ita_arc_independence_target_exists = yes
+	}
+
+	possible = {
+		is_at_war = no
+		is_subject = no
+		is_diplomatic_play_committed_participant = no
+		c:FRA ?= {
+			is_subject = no
+			is_diplomatic_play_committed_participant = no
+			NOT = {
+				has_war_with = ROOT
+			}
+			NOT = {
+				has_war_with = global_var:ita_arc_austria
+			}
+			NOT = {
+				has_truce_with = global_var:ita_arc_austria
+			}
+		}
+		NOT = {
+			has_truce_with = global_var:ita_arc_austria
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_arc_independence_effect_tt
+			hidden_effect = {
+				ita_arc_start_independence_war = yes
+			}
+		}
+	}
+
+}
+
+
+ita_arc_invade_rome_button = {
+	name = ita_arc_invade_rome_button
+	desc = ita_arc_invade_rome_button_desc
+
+	cooldown = {
+		months = 24
+	}
+
+	visible = {
+		ita_arc_actor = yes
+		ita_arc_is_active = yes
+		ita_arc_rome_is_garrisoned = yes
+	}
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:PAP ?= {
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+		}
+		custom_tooltip = {
+			text = ita_arc_rome_bypass_tt
+			ita_arc_rome_bypass = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = {
+			text = ita_arc_invade_rome_effect_tt
+			hidden_effect = {
+				ita_arc_end_garrison = yes
+				create_diplomatic_play = {
+					name = ita_arc_rome_war
+					type = dp_ita_arc_rome
+					target_country = c:PAP
+				}
+			}
+		}
+	}
+
+}

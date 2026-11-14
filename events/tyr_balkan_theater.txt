@@ -1,0 +1,107 @@
+namespace = tyr_balkan_theater
+tyr_balkan_theater.1 = {
+	type = country_event
+	placement = root
+	title = tyr_balkan_theater.1.t
+	desc = tyr_balkan_theater.1.d
+	flavor = tyr_balkan_theater.1.f
+
+	event_image = {
+		video = "unspecific_signed_contract"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	option = {
+		name = tyr_balkan_theater.1.a
+		default_option = yes
+		trigger = {
+			exists = scope:tyr_bt_union
+		}
+		custom_tooltip = {
+			text = tyr_bt_austrian_annex_preview
+			scope:tyr_bt_union = {
+				every_scope_state = {
+					set_state_type = incorporated
+				}
+			}
+			annex = scope:tyr_bt_union
+		}
+	}
+
+	option = {
+		name = tyr_balkan_theater.1.b
+	}
+
+}
+
+tyr_balkan_theater.2 = {
+	type = country_event
+	placement = root
+	title = tyr_balkan_theater.2.t
+	desc = tyr_balkan_theater.2.d
+	flavor = tyr_balkan_theater.2.f
+
+	event_image = {
+		video = "ep1_clandestine_meeting"
+	}
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+		OR = {
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+		NOT = {
+			has_variable = tyr_bt_austrian_claim_route_chosen
+		}
+	}
+
+	option = {
+		name = tyr_balkan_theater.2.a
+		default_option = yes
+		ai_chance = {
+			base = 50
+		}
+		set_variable = tyr_bt_austrian_claim_route_chosen
+		custom_tooltip = {
+			text = tyr_bt_claim_all_romanian_homelands_tt
+			every_state_region = {
+				limit = {
+					is_homeland = cu:romanian
+				}
+				add_claim = ROOT
+			}
+		}
+	}
+
+	option = {
+		name = tyr_balkan_theater.2.b
+		ai_chance = {
+			base = 50
+		}
+		set_variable = tyr_bt_austrian_claim_route_chosen
+		custom_tooltip = {
+			text = tyr_bt_claim_all_serb_homelands_tt
+			every_state_region = {
+				limit = {
+					is_homeland = cu:serb
+				}
+				add_claim = ROOT
+			}
+		}
+	}
+
+}
+
+# Compatibility stub for checks already queued by an earlier version.
+# War support no longer forces capitulation in the current war system.
+tyr_balkan_theater.3 = {
+	type = country_event
+	hidden = yes
+
+	immediate = {
+	}
+
+}

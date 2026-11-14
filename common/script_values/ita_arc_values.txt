@@ -1,0 +1,209 @@
+﻿# Values evaluated on the national actor, unless otherwise noted.
+ita_arc_base = {
+	value = 1
+}
+
+ita_arc_nationalism = {
+	value = 0
+
+	if = {
+		limit = {
+			has_technology_researched = nationalism
+		}
+		add = 2
+	}
+
+}
+
+ita_arc_guarantees = {
+	value = 0
+
+	if = {
+		limit = {
+			has_global_variable = ita_arc_guarantee_count
+		}
+		add = {
+			value = global_var:ita_arc_guarantee_count
+			multiply = -0.5
+		}
+	}
+
+}
+
+ita_arc_garrison = {
+	value = 0
+
+	if = {
+		limit = {
+			ita_arc_rome_is_garrisoned = yes
+		}
+		subtract = 0.5
+	}
+
+}
+
+ita_arc_major = {
+	value = 0
+
+	if = {
+		limit = {
+			country_rank >= rank_value:major_power
+		}
+		add = 1
+	}
+
+}
+
+ita_arc_great = {
+	value = 0
+
+	if = {
+		limit = {
+			country_rank >= rank_value:great_power
+		}
+		add = 2
+	}
+
+}
+
+ita_arc_bloc = {
+	value = 0
+
+	if = {
+		limit = {
+			is_power_bloc_leader = yes
+		}
+		add = 2
+	}
+
+}
+
+ita_arc_foreign_bloc = {
+	value = 0
+
+	if = {
+		limit = {
+			is_in_power_bloc = yes
+			is_power_bloc_leader = no
+		}
+		subtract = 1
+	}
+
+}
+
+ita_arc_gdp_share_value = {
+	value = 0
+
+	if = {
+		limit = {
+			has_global_variable = ita_arc_gdp_share
+		}
+		add = global_var:ita_arc_gdp_share
+	}
+
+}
+
+ita_arc_gdp = {
+	value = ita_arc_gdp_share_value
+	divide = 25
+}
+
+ita_arc_monthly_delta = {
+	value = ita_arc_base
+	add = ita_arc_nationalism
+	add = ita_arc_guarantees
+	add = ita_arc_garrison
+	add = ita_arc_major
+	add = ita_arc_bloc
+	add = ita_arc_foreign_bloc
+	add = ita_arc_gdp
+	add = ita_arc_savoy
+	add = ita_arc_austrian_italian_states
+}
+
+ita_arc_papal_15 = {
+	value = 15
+
+	if = {
+		limit = {
+			exists = c:PAP
+			c:PAP ?= {
+				ita_arc_cost_target_guaranteed = yes
+			}
+		}
+		value = 30
+	}
+
+}
+
+ita_arc_papal_30 = {
+	value = 30
+
+	if = {
+		limit = {
+			exists = c:PAP
+			c:PAP ?= {
+				ita_arc_cost_target_guaranteed = yes
+			}
+		}
+		value = 60
+	}
+
+}
+
+ita_arc_manifesto_15 = {
+	value = 30
+
+	if = {
+		limit = {
+			ita_arc_manifesto_guaranteed = yes
+		}
+		value = 60
+	}
+
+}
+
+# Political movement scope: safe in previews before any pressure has accumulated.
+ita_arc_pressure_levels = {
+	value = 0
+
+	if = {
+		limit = {
+			owner ?= {
+				has_variable = ita_arc_pressure_months
+			}
+		}
+		add = owner.var:ita_arc_pressure_months
+	}
+
+}
+
+ita_arc_guarantee_levels = {
+	value = 0
+
+	if = {
+		limit = {
+			has_global_variable = ita_arc_guarantee_count
+		}
+		add = global_var:ita_arc_guarantee_count
+	}
+
+}
+
+ita_arc_savoy = {
+	value = 0
+	if = {
+		limit = { NOT = { owns_entire_state_region = STATE_SAVOY } }
+		subtract = 0.5
+	}
+}
+ita_arc_austrian_italian_states = {
+	value = 0
+	if = {
+		limit = { has_global_variable = ita_arc_austrian_italian_state_count }
+		add = {
+			value = global_var:ita_arc_austrian_italian_state_count
+			multiply = 0.1
+		}
+	}
+}

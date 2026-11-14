@@ -35,11 +35,9 @@ italy_tyrone_characters.1 = {
 	immediate = {	
 		set_variable = {
 			name = italian_sentiment_var
-			value = 0
+			value = 10
 		}
-		add_journal_entry = {
-			type = italy_risorgimento_stage
-		}
+		# The shared Risorgimento JE activates after this initialization.
 
 		every_state = {
 			limit = {
@@ -88,19 +86,14 @@ italy_tyrone_characters.1 = {
 italy_tyrone_characters.2 = {
 	type = country_event
 	placement = root
-
 	title = italy_tyrone_characters.2.t
 	desc = italy_tyrone_characters.2.d
 	flavor = italy_tyrone_characters.2.f
-
 	gui_window = event_window_1char_tabloid
 	left_icon = scope:cavour_scope
-
 	icon = "gfx/interface/icons/event_icons/casaSavoia1.dds"
-
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/political_extremism"
-
 	duration = 3
 
 	trigger = {
@@ -110,7 +103,6 @@ italy_tyrone_characters.2 = {
 		ruler = {
 			save_scope_as = italy_king_scope
 		}
-
 		create_character = {
 			template = ecchi_ita_cavour_character_template
 			ig_leader = yes
@@ -125,36 +117,28 @@ italy_tyrone_characters.2 = {
 			}
 			save_scope_as = cavour_scope
 		}
-		add_journal_entry = {
-			type = italy_diplo_stance
+		set_variable = ita_diplo_stance_started
+		je:italy_diplo_stance ?= {
+			save_scope_as = journal_entry
+			ita_diplo_sync_characters = yes
 		}
 	}
 
 	option = {
 		name = italy_tyrone_characters.2.a
 		default_option = yes
-
-		je:italy_diplo_stance = {
-			add_to_variable_list = {
-				name = com_journal_characters
-				target = scope:italy_king_scope
-			}
-			add_to_variable_list = {
-				name = com_journal_characters
-				target = scope:cavour_scope
-			}
-			# Involved countries for flag widgets (order: first = France left, second = Austria right)
-			add_involved_country = c:FRA
-			add_involved_country = c:AUS
-		}
-
 		add_modifier = {
 			name = cavour_society_research
 			months = 60
 		}
-		create_bidirectional_truce = { country = c:PAP months = 360 }
+		create_bidirectional_truce = {
+			country = c:PAP
+			months = 360
+		}
 	}
+
 }
+
 
 # Treaty of Turin (France receives). Root = France. Sardinia (c:SAR) cedes Savoy/Provence.
 # Only fire when the mod context is active (Sardinia has diplo stance JE), so it does not proc from vanilla/other triggers.
@@ -176,18 +160,18 @@ italyEventsTyrone.3 = {
 	duration = 3
 
 	trigger = {
-		this = c:FRA
-		exists = c:SAR
-		c:SAR = { has_journal_entry = italy_diplo_stance }
+		c:FRA ?= this
+		ita_arc_turin_available = yes
 	}
 
 	option = {
 		name = italyEventsTyrone.3.a
-		# Sardinia gives Savoy and (if owned) Provence to France — base game pattern
-		c:SAR ?= {
-			ita_stance_increase_toward_france_effect = yes
+		custom_tooltip = {
+			text = ita_arc_turin_effect_tt
+			hidden_effect = {
+				ita_arc_sign_turin = yes
+			}
 		}
-		trigger_event = { id = natural_borders.3 popup = yes }
 	}
 	option = {
 		name = italyEventsTyrone.3.b
@@ -195,13 +179,19 @@ italyEventsTyrone.3 = {
 			change_relations = { country = root value = -15 }
 		}
 	}
+
+	cancellation_trigger = {
+		NOT = {
+			ita_arc_turin_available = yes
+		}
+	}
 }
+
 
 # Lombardy cession (Austria receives). Root = Austria. Proposer = country with italy_treaty_lombardy_proposer.
 italyEventsTyrone.4 = {
 	type = country_event
 	placement = root
-
 	title = italyEventsTyrone.4.t
 	desc = italyEventsTyrone.4.d
 	flavor = italyEventsTyrone.4.f
@@ -211,11 +201,11 @@ italyEventsTyrone.4 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/event_default.dds"
 	duration = 3
 
-	trigger = { }
+	trigger = {
+	}
 
 	option = {
 		name = italyEventsTyrone.4.a
@@ -235,10 +225,10 @@ italyEventsTyrone.4 = {
 				limit = {
 					state_region = s:STATE_LOMBARDY
 				}
-				set_state_owner = c:SAR
+				set_state_owner = global_var:ita_risorgimento_sardinia
 			}
 		}
-		c:SAR ?= {
+		global_var:ita_risorgimento_sardinia ?= {
 			ita_stance_increase_toward_austria_effect = yes
 			remove_variable = italy_treaty_lombardy_proposer
 		}
@@ -246,17 +236,23 @@ italyEventsTyrone.4 = {
 			limit = {
 				state_region = s:STATE_LOMBARDY
 			}
-			set_state_owner = c:SAR
+			set_state_owner = global_var:ita_risorgimento_sardinia
 		}
 	}
+
 	option = {
 		name = italyEventsTyrone.4.b
-		c:SAR ?= {
-			change_relations = { country = root value = -15 }
+		global_var:ita_risorgimento_sardinia ?= {
+			change_relations = {
+				country = root
+				value = -15
+			}
 			remove_variable = italy_treaty_lombardy_proposer
 		}
 	}
+
 }
+
 
 # Savoy lost – Italian sentiment penalty. Fires on monthly pulse for countries with the Italian sentiment JE when Sardinia does not own Savoy.
 italyEventsTyrone.5 = {
@@ -276,7 +272,8 @@ italyEventsTyrone.5 = {
 	cooldown = { days = stupidly_long_modifier_time }
 
 	trigger = {
-		has_journal_entry = italy_risorgimento_stage
+		ita_arc_actor = yes
+		is_involved_in_journal_entry = italy_risorgimento_stage
 		exists = c:SAR
 		c:SAR = {
 			NOT = { owns_entire_state_region = STATE_SAVOY }
@@ -301,7 +298,6 @@ italyEventsTyrone.5 = {
 italyEventsTyrone.6 = {
 	type = country_event
 	placement = root
-
 	title = italyEventsTyrone.6.t
 	desc = italyEventsTyrone.6.d
 	flavor = italyEventsTyrone.6.f
@@ -314,24 +310,29 @@ italyEventsTyrone.6 = {
 	icon = "gfx/interface/icons/event_icons/event_default.dds"
 	duration = 3
 
-	trigger = { }
+	trigger = {
+	}
 
 	option = {
 		name = italyEventsTyrone.6.a
 		default_option = yes
-		custom_tooltip = italyEventsTyrone.6.a_sentiment_tt
-		change_variable = {
-			name = italian_sentiment_var
-			subtract = 15
+		custom_tooltip = ita_arc_pay_manifesto_tt
+		hidden_effect = {
+			change_variable = {
+				name = italian_sentiment_var
+				subtract = ita_arc_manifesto_15
+			}
 		}
-		c:SAR = {
+		ROOT = {
 			annex_with_incorporation = c:PAR
 			annex_with_incorporation = c:MOD
 			annex_with_incorporation = c:TUS
 			annex_with_incorporation = c:LUC
 		}
 	}
+
 }
+
 
 # Industrialists pushing for Laissez-Faire (when not enacting any law)
 italyEventsTyrone.7 = {
@@ -508,7 +509,6 @@ italyEventsTyrone.9 = {
 italyEventsTyrone.10 = {
 	type = country_event
 	placement = root
-
 	title = italyEventsTyrone.10.t
 	desc = italyEventsTyrone.10.d
 	flavor = italyEventsTyrone.10.f
@@ -516,10 +516,12 @@ italyEventsTyrone.10 = {
 	event_image = {
 		video = "votp_monarch_holding_court"
 	}
+
 	icon = "gfx/interface/icons/event_icons/event_default.dds"
 	duration = 3
 
-	trigger = { }
+	trigger = {
+	}
 
 	option = {
 		name = italyEventsTyrone.10.a
@@ -529,13 +531,22 @@ italyEventsTyrone.10 = {
 		activate_law = law_type:law_religious_schools
 		activate_law = law_type:law_charitable_health_system
 		annex_with_incorporation = c:PAP
-		ruler = { set_ideology = ideology:ideology_theocrat }
+		ita_arc_end_garrison = yes
+		ruler = {
+			set_ideology = ideology:ideology_theocrat
+		}
 		every_interest_group = {
-			limit = { is_interest_group_type = ig_devout }
-			leader = { set_ideology = ideology:ideology_theocrat }
+			limit = {
+				is_interest_group_type = ig_devout
+			}
+			leader = {
+				set_ideology = ideology:ideology_theocrat
+			}
 		}
 	}
+
 }
+
 
 # Annex Romagna only (unincorporated) – triggered by ita_annex_romagna_only_button. Bar 40–60, not in bloc, relations with Pope < -20.
 italyEventsTyrone.11 = {
@@ -1090,7 +1101,6 @@ italyEventsTyrone.12 = {
 italyEventsTyrone.13 = {
 	type = country_event
 	placement = root
-
 	title = italyEventsTyrone.13.t
 	desc = italyEventsTyrone.13.d
 	flavor = italyEventsTyrone.13.f
@@ -1098,10 +1108,12 @@ italyEventsTyrone.13 = {
 	event_image = {
 		video = "ip3_official_reading_dictate"
 	}
+
 	icon = "gfx/interface/icons/event_icons/event_default.dds"
 	duration = 3
 
-	trigger = { }
+	trigger = {
+	}
 
 	option = {
 		name = italyEventsTyrone.13.a
@@ -1110,7 +1122,7 @@ italyEventsTyrone.13 = {
 			OR = {
 				country_or_subject_owns_entire_state_region = STATE_VENETIA
 				country_or_subject_owns_entire_state_region = STATE_LOMBARDY
-			}	
+			}
 		}
 		every_state = {
 			limit = {
@@ -1120,17 +1132,22 @@ italyEventsTyrone.13 = {
 				}
 				OR = {
 					owner = c:AUS
-					owner = { is_subject_of = c:AUS }
+					owner = {
+						is_subject_of = c:AUS
+					}
 				}
 			}
-			set_state_owner = c:SAR
+			set_state_owner = global_var:ita_risorgimento_sardinia
 			set_state_type = incorporated
 		}
 	}
+
 	option = {
 		name = italyEventsTyrone.13.b
 	}
+
 }
+
 
 # No Papal Recognition: fired when player uses "Annex the Pope" button. Applies permanent debuff (Devout -500% pol str, clergymen -300 vote power, -2% birth rate).
 italyEventsTyrone.15 = {
@@ -1388,7 +1405,7 @@ garibaldi_expedition.4 = {
 					provinces = { xF0AF66 }
 					}
 				}
-				
+
 			}
 		}
 		trigger_event = { id = garibaldi_expedition.5 popup = yes days = 24 }
@@ -1563,7 +1580,7 @@ garibaldi_expedition.7 = {
 				text = garibaldi_expedition.7.b.char.tt
 			}
 		}
-		
+
 		hidden_effect = { # Kill fake Garibaldi (ruler of Naples/XNP)
 			random_character = {
 				limit = { has_variable = fake_garibaldi_char_var }
@@ -1573,8 +1590,8 @@ garibaldi_expedition.7 = {
 				kill_character = yes
 			}
 		}
-		
-		
+
+
 		# Create new Garibaldi as ruler of Naples (no Primo Cittadino trait)
 		c:XNP ?= {
 			create_character = {
@@ -1651,7 +1668,7 @@ garibaldi_expedition.8 = {
 				value = 0.2
 				culture = cu:south_italian
 			}
-		
+
 	}
 }
 
@@ -2414,7 +2431,7 @@ italian_development.1 = {
 				name = south_gdp_ita_var
 				value = ita_south_states_gdp
 			}
-			
+
 			if = {
 				limit = {
 					var:north_gdp_ita_var >= var:north_gdp_objective_ita_var
@@ -2569,7 +2586,7 @@ italyEventsTyroneLV.2 = {
 					cooldown = 20
 				}
 			}
-		
+
 		capital = {
 			create_mass_migration = {
 				origin = scope:LV_overlord_country
@@ -2909,7 +2926,7 @@ italyEventsTyroneLV.6 = {
 			limit = { exists = c:XNP }
 			annex_with_incorporation = c:XNP
 		}
-		
+
 	}
 
 	option = {
@@ -2931,7 +2948,7 @@ italyEventsTyroneLV.6 = {
 				}
 			}
 		}
-		
+
 		add_loyalists = {
 			value = 0.10
 			culture = cu:north_italian
@@ -2961,7 +2978,7 @@ italyEventsTyroneLV.6 = {
 				}
 			}
 		}
-		
+
 		add_loyalists = {
 			value = 0.10
 			culture = cu:north_italian
@@ -2990,7 +3007,7 @@ italyEventsTyroneLV.6 = {
 				}
 			}
 		}
-		
+
 		add_loyalists = {
 			value = 0.10
 			culture = cu:north_italian
@@ -3192,7 +3209,7 @@ sic_tyrone.4 = {
 	event_image = { video = "europenorthamerica_russian_serfs" }
 
 	left_icon = scope:lo_leader
-	
+
 
 	duration = 3
 
@@ -3289,7 +3306,7 @@ sic_tyrone.5 = {
 		# Begin gradual land reform
 		ig:ig_intelligentsia = { add_modifier = { name = sic_ig_approved days = normal_modifier_time } }
 		ig:ig_landowners = { add_modifier = { name = sic_ig_disapproved days = normal_modifier_time } }
-		
+
 	}
 }
 
@@ -4135,7 +4152,7 @@ sic_tyrone.20 = {
 				is_player = yes
 				c:SIC = { relations:root < 10 }
 			}
-			
+
 		}
 		change_relations = {
 			country = c:SIC
@@ -4503,7 +4520,7 @@ sic_tyrone.25 = {
 			}
 			save_scope_as = garibaldi
 		}
-		
+
 	}
 
 	option = {
@@ -4851,6 +4868,3 @@ sic_tyrone.31 = {
 		}
 	}
 }
-
-
-
