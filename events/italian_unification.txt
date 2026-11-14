@@ -196,8 +196,8 @@ italian_unification.2 = {
 italian_unification.4 = {
 	type = country_event
 	placement = ROOT
-
 	title = italian_unification.4.t
+
 	desc = {
 		first_valid = {
 			triggered_desc = {
@@ -221,6 +221,7 @@ italian_unification.4 = {
 			}
 		}
 	}
+
 	flavor = italian_unification.4.f
 
 	event_image = {
@@ -228,41 +229,66 @@ italian_unification.4 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
-
 	duration = 3
 
-	cooldown = { months = 3 }
+	cooldown = {
+		years = 2
+	}
 
 	trigger = {
-		NOT = { has_variable = italian_unification_5_happened_here }
-		capital = {
-			radical_fraction = {
-				value >= 0.10
-			}
-		}
-		any_civil_war = {
-			this.political_movement ?= {
-				is_political_movement_type = movement_italian_national
-			}
-			is_civil_war_type = revolution
+		ita_arc_national_takeover_allowed = yes
+		is_player = no
+		ita_risorgimento_capital_in_italy = yes
+		NOT = {
+			has_variable = ita_arc_tricolore_cooldown
 		}
 		any_country = {
+			ita_risorgimento_capital_in_italy = yes
 			NOT = {
-				this = root
+				this = ROOT
 			}
-			NOT = {
-				is_subject = yes
+		}
+		OR = {
+			AND = {
+				ita_arc_is_active = yes
+				any_political_movement = {
+					is_political_movement_type = movement_italian_national
+					political_movement_radicalism >= 0.75
+				}
 			}
-			OR = {
-				country_has_primary_culture = cu:north_italian
-				country_has_primary_culture = cu:south_italian
-			}
-			NOR = {
-				c:AUS ?= this
-				c:KUK ?= this
-				c:HRE ?= this
+			AND = {
+				NOT = {
+					has_variable = italian_unification_5_happened_here
+				}
+				capital = {
+					radical_fraction = {
+						value >= 0.10
+					}
+				}
+				any_civil_war = {
+					this.political_movement ?= {
+						is_political_movement_type = movement_italian_national
+					}
+					is_civil_war_type = revolution
+				}
+				any_country = {
+					NOT = {
+						this = root
+					}
+					NOT = {
+						is_subject = yes
+					}
+					OR = {
+						country_has_primary_culture = cu:north_italian
+						country_has_primary_culture = cu:south_italian
+					}
+					NOR = {
+						c:AUS ?= this
+						c:KUK ?= this
+						c:HRE ?= this
+					}
+				}
 			}
 		}
 	}
@@ -279,27 +305,20 @@ italian_unification.4 = {
 		capital = {
 			save_scope_as = capital_scope
 		}
-		ordered_country = { # Why is this structured so strangely? So that the ordering always gets at least one country.
+		save_scope_as = italian_pannational_country
+		set_variable = {
+			name = ita_arc_tricolore_cooldown
+			years = 2
+		}
+		ordered_country = {
 			limit = {
-				OR = {
-					country_has_primary_culture = cu:north_italian
-					country_has_primary_culture = cu:south_italian
-				}
-				NOR = {
-					c:AUS ?= this
-					c:KUK ?= this
-					c:HRE ?= this
-				}
-				is_adjacent_to_country = ROOT
+				is_player = yes
+				ita_risorgimento_capital_in_italy = yes
 				NOT = {
-					is_subject = yes
-				}
-				has_variable = risorgimento_unifying_stance
-				NOT = {
-					THIS = ROOT
+					this = ROOT
 				}
 			}
-			order_by = country_rank
+			order_by = gdp
 			position = 0
 			check_range_bounds = no
 			save_scope_as = italian_leader
@@ -312,60 +331,17 @@ italian_unification.4 = {
 			}
 			ordered_country = {
 				limit = {
-					OR = {
-						country_has_primary_culture = cu:north_italian
-						country_has_primary_culture = cu:south_italian
-					}
-					NOR = {
-						c:AUS ?= this
-						c:KUK ?= this
-						c:HRE ?= this
-					}
+					ita_arc_italian_ai = yes
 					NOT = {
-						is_subject = yes
-					}
-					has_variable = risorgimento_unifying_stance
-					NOT = {
-						THIS = ROOT
+						this = ROOT
 					}
 				}
-				order_by = country_rank
+				order_by = gdp
 				position = 0
 				check_range_bounds = no
 				save_scope_as = italian_leader
 			}
 		}
-		if = {
-			limit = {
-				NOT = {
-					exists = scope:italian_leader
-				}
-			}
-			ordered_country = {
-				limit = {
-					OR = {
-						country_has_primary_culture = cu:north_italian
-						country_has_primary_culture = cu:south_italian
-					}
-					NOR = {
-						c:AUS ?= this
-						c:KUK ?= this
-						c:HRE ?= this
-					}
-					NOT = {
-						is_subject = yes
-					}
-					NOT = {
-						THIS = ROOT
-					}
-				}
-				order_by = country_rank
-				position = 0
-				check_range_bounds = no
-				save_scope_as = italian_leader
-			}
-		}
-		save_scope_as = italian_pannational_country
 	}
 
 	option = {
@@ -377,7 +353,10 @@ italian_unification.4 = {
 			}
 		}
 		scope:italian_leader = {
-			trigger_event = { id = italian_unification.5 popup = yes }
+			trigger_event = {
+				id = italian_unification.5
+				popup = yes
+			}
 		}
 	}
 
@@ -417,7 +396,10 @@ italian_unification.4 = {
 			culture = cu:south_italian
 		}
 		scope:italian_leader = {
-			trigger_event = { id = italian_unification.6 popup = yes }
+			trigger_event = {
+				id = italian_unification.6
+				popup = yes
+			}
 		}
 	}
 
@@ -431,16 +413,27 @@ italian_unification.4 = {
 		}
 		default_option = yes
 		scope:italian_leader = {
-			trigger_event = { id = italian_unification.5 popup = yes }
+			trigger_event = {
+				id = italian_unification.5
+				popup = yes
+			}
 		}
 	}
+
+	cancellation_trigger = {
+		OR = {
+			is_player = yes
+			NOT = { ita_arc_national_takeover_allowed = yes }
+		}
+	}
+
 }
+
 
 # Country gets taken over by pan-nationalists and wants to join us
 italian_unification.5 = {
 	type = country_event
 	placement = ROOT
-
 	title = italian_unification.5.t
 	desc = italian_unification.5.d
 	flavor = italian_unification.5.f
@@ -450,9 +443,7 @@ italian_unification.5 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
-
 	duration = 1
 
 	trigger = {
@@ -460,7 +451,6 @@ italian_unification.5 = {
 	}
 
 	immediate = {
-
 	}
 
 	option = {
@@ -483,7 +473,8 @@ italian_unification.5 = {
 				play_as = root
 			}
 		}
-		hidden_effect = { # remove all Italian radicals in country that's being annexed pre-annexation, to prevent chain annexations
+		hidden_effect = {
+			# remove all Italian radicals in country that's being annexed pre-annexation, to prevent chain annexations
 			scope:italian_pannational_country = {
 				add_radicals = {
 					value = -1
@@ -496,7 +487,16 @@ italian_unification.5 = {
 			}
 		}
 		annex_with_incorporation = scope:italian_pannational_country
+		if = {
+			limit = {
+				NOT = {
+					exists = c:PAP
+				}
+			}
+			ita_arc_end_garrison = yes
+		}
 	}
+
 	option = {
 		name = italian_unification.5.b
 		ai_chance = {
@@ -513,7 +513,26 @@ italian_unification.5 = {
 			}
 		}
 	}
+
+	cancellation_trigger = {
+		OR = {
+			scope:italian_pannational_country ?= {
+				NOT = { ita_arc_national_takeover_allowed = yes }
+			}
+			NOT = {
+				exists = scope:italian_pannational_country
+			}
+			scope:italian_pannational_country ?= {
+				OR = {
+					is_player = yes
+					is_country_alive = no
+				}
+			}
+		}
+	}
+
 }
+
 
 # Country gets taken over by pan-nationalists - becomes a fraternal republic
 italian_unification.6 = {

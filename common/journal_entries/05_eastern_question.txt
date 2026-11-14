@@ -1,17 +1,21 @@
-﻿je_eastern_question_russia = {
+je_eastern_question_russia = {
+
+	disable_evaluation = {
+		always = yes
+	}
+
 	activation_description = {
 		always = yes
 	}
 
 	group = je_group_crises
 	icon = "gfx/interface/icons/event_icons/event_skull.dds"
-
 	scripted_progress_bar = control_eastern_crisis_bar
 	scripted_button = je_eastern_question_russia_free_balkans_button
 
 	is_shown_when_inactive = {
 		has_dlc_feature = ip3_content
-			c:RUS ?= this
+		c:RUS ?= this
 		NOT = {
 			exists = c:BUL
 		}
@@ -31,7 +35,10 @@
 	}
 
 	immediate = {
-		trigger_event = { id = eastern_crisis.1 popup = yes }
+		trigger_event = {
+			id = eastern_crisis.1
+			popup = yes
+		}
 		c:TUR ?= {
 			save_scope_as = ottoman_scope
 		}
@@ -60,23 +67,11 @@
 		}
 	}
 
-
-
-
-	
-
-
-	timeout = 3650 # 10 years
-
-
-
-
-
-		
+	timeout = 3650
+	# 10 years
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	weight = 100
 	transferable = no
-
 
 	outcome = {
 		header = je_standard_completion_header
@@ -84,50 +79,53 @@
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = bulgaria_is_independent_tt
-			any_diplomatically_relevant_country = {
-				country_has_primary_culture = cu:bulgarian
-				NOR = {
-					is_diplomatic_play_enemy_of = c:TUR
-					has_war_with = c:TUR
+			custom_tooltip = {
+				text = bulgaria_is_independent_tt
+				any_diplomatically_relevant_country = {
+					country_has_primary_culture = cu:bulgarian
+					NOR = {
+						is_diplomatic_play_enemy_of = c:TUR
+						has_war_with = c:TUR
+					}
 				}
 			}
-		}
-		trigger_if = {
-			limit = {
-				has_variable = ottomans_own_kars_at_start
+			trigger_if = {
+				limit = {
+					has_variable = ottomans_own_kars_at_start
+				}
+				owns_entire_state_region = STATE_KARS
 			}
-			owns_entire_state_region = STATE_KARS
-		}
-		trigger_if = {
-			limit = {
-				has_variable = ottomans_own_dobrudja_at_start
-			}
-			custom_tooltip = {
-				text = ottomans_not_owns_dobruja_tt
-				s:STATE_DOBRUDJA = {
-					NOT = {
-						any_scope_state = {
-							c:TUR ?= owner
+			trigger_if = {
+				limit = {
+					has_variable = ottomans_own_dobrudja_at_start
+				}
+				custom_tooltip = {
+					text = ottomans_not_owns_dobruja_tt
+					s:STATE_DOBRUDJA = {
+						NOT = {
+							any_scope_state = {
+								c:TUR ?= owner
+							}
 						}
 					}
 				}
 			}
 		}
-	}
 		effect = {
-		set_global_variable = eastern_crisis_ottoman_defeat
-		set_variable = russia_eastern_question_victory
-		trigger_event = { id = eastern_question_russia.1 popup = yes }
-	}
-		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = event_effects_eastern_question_russia.1_tt
+			set_global_variable = eastern_crisis_ottoman_defeat
+			set_variable = russia_eastern_question_victory
+			trigger_event = {
+				id = eastern_question_russia.1
+				popup = yes
 			}
 		}
-	}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = event_effects_eastern_question_russia.1_tt
+				}
+			}
+		}
 	}
 
 	outcome = {
@@ -136,191 +134,42 @@
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = bulgaria_is_not_free_tt
-			NOT = {
-				exists = c:BUL
+			custom_tooltip = {
+				text = bulgaria_is_not_free_tt
+				NOT = {
+					exists = c:BUL
+				}
 			}
-		}
-		c:TUR ?= {
-			NOT = {
-				has_journal_entry = je_great_eastern_crisis
-			}
-		}
-	}
-	}
-
-	outcome = {
-		flags = { hidden invalid_outcome }
-		conclusion_desc = je_standard_failure_conclusion_desc
-		trigger = {
-		NOT = {
-			exists = c:TUR
-		}
-	}
-	}
-
-	outcome = {
-		header = JOURNAL_ENTRY_TIMEOUT
-		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
-		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
-	}
-}
-
-je_eastern_question_austria = {
-	activation_description = {
-		always = yes
-	}
-
-		
-	should_be_pinned_by_default_uninvolved_or_context = yes
-	icon = "gfx/interface/icons/relations_icons/hostile.dds"
-
-	scripted_progress_bar = control_eastern_crisis_bar
-
-	group = je_group_crises
-
-	timeout = 3650
-
-	modifiers_while_active = {
-		positive_crisis_influence
-	}
-
-	immediate = {
-		if = {
-			limit = {
-				c:TUR ?= {
+			c:TUR ?= {
+				NOT = {
 					has_journal_entry = je_great_eastern_crisis
 				}
 			}
-			trigger_event = { id = eastern_crisis.1 }
 		}
-		random_political_lobby = {
-			limit = {
-				target = {
-						c:RUS ?= this
-				}
-				is_political_lobby_type = lobby_anti_country
-			}
-			save_scope_as = relevant_lobby
-			target = {
-				save_scope_as = relevant_country
-			}
-		}
-		random_diplomatically_relevant_country = {
-			limit = {
-				owns_entire_state_region = STATE_BOSNIA
-			}
-			if = {
-				limit = {
-					is_subject = yes
-				}
-				top_overlord = {
-					save_scope_as = bosnia_owner_scope
-				}
-			}
-			else = {
-				save_scope_as = bosnia_owner_scope
-			}
-		}
-		ROOT = {
-			set_variable = { name = anti_lobby_demand_target value = scope:relevant_country }
-		}
-	}
-
-
-	
-
-
-
-
-
-
-
-
-
-
-	weight = 1000
-
-	outcome = {
-		header = je_standard_completion_header
-		effect_header = je_standard_on_completion_header
-		color = "gold_positive"
-		conclusion_desc = je_standard_completion_conclusion_desc
-		trigger = {
-		OR = {
-			owns_entire_state_region = STATE_BOSNIA
-			any_subject_or_below = {
-				owns_entire_state_region = STATE_BOSNIA
-			}
-			trigger_if = {
-				limit = {
-					is_power_bloc_leader = yes
-				}
-				scope:power_bloc ?= {
-					any_power_bloc_member = {
-						owns_entire_state_region = STATE_BOSNIA
-					}
-				}
-			}
-		}
-	}
-		effect = {
-		scope:relevant_lobby = {
-			change_appeasement = {
-				amount = 3
-				factor = appeasement_lobby_request_accepted
-			}
-		}
-		trigger_event = { id = eastern_question_austria.2 popup = yes }
-		clear_anti_lobby_vars = yes
-	}
-		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = event_effects_eastern_question_austria.2_tt
-			}
-		}
-	}
 	}
 
 	outcome = {
-		header = je_standard_failure_header
-		effect_header = je_standard_on_failure_header
-		color = "blue_negative"
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOR = {
-			any_scope_state = {
-				state_region = {
-					is_homeland = cu:croat
-				}
-			}
-			any_subject_or_below = {
-				any_scope_state = {
-					state_region = {
-					is_homeland = cu:croat
-					}
-				}
+			NOT = {
+				exists = c:TUR
 			}
 		}
-	}
 	}
 
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
-		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
-		effect = {
-		scope:relevant_lobby = {
-			change_appeasement = {
-				amount = -5
-				factor = appeasement_lobby_request_ignored
-			}
+		flags = {
+			timeout
 		}
-		clear_anti_lobby_vars = yes
+		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
 	}
-	}
+
 }
+
+# je_eastern_question_austria is defined in tyr_balkan_theater.txt.

@@ -1,40 +1,95 @@
-﻿free_the_balkans_release_subject_effect = {
+ï»¿free_the_balkans_release_subject_effect = {
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = puppet }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = puppet
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = puppet } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = puppet
+			}
+		}
 	}
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = vassal }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = vassal
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = vassal } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = vassal
+			}
+		}
 	}
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = protectorate }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = protectorate
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = protectorate } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = protectorate
+			}
+		}
 	}
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = tributary }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = tributary
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = tributary } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = tributary
+			}
+		}
 	}
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = personal_union }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = personal_union
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = personal_union } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = personal_union
+			}
+		}
 	}
+
 	if = {
 		limit = {
-			has_diplomatic_pact = { who = c:TUR type = crown_land }
+			has_diplomatic_pact = {
+				who = c:TUR
+				type = crown_land
+			}
 		}
-		c:TUR = { remove_diplomatic_pact = { country = PREV type = crown_land } }
+		c:TUR = {
+			remove_diplomatic_pact = {
+				country = PREV
+				type = crown_land
+			}
+		}
 	}
+
 }
 
 free_the_balkans_settlement_effect = {
@@ -53,6 +108,7 @@ free_the_balkans_settlement_effect = {
 			set_state_owner = ROOT
 		}
 	}
+
 	s:STATE_KARS = {
 		every_scope_state = {
 			limit = {
@@ -67,6 +123,84 @@ free_the_balkans_settlement_effect = {
 		}
 	}
 
+	if = {
+		limit = {
+			exists = c:SER
+		}
+		s:STATE_EASTERN_SERBIA = {
+			every_scope_state = {
+				limit = {
+					c:TUR ?= owner
+				}
+				set_state_owner = c:SER
+			}
+		}
+
+	}
+
+	# Settle these territories before Ottoman subjects are released.
+
+	if = {
+		limit = {
+			NOT = {
+				exists = c:BOS
+			}
+		}
+		s:STATE_BOSNIA = {
+			random_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:TUR ?= this
+							is_subject_of = c:TUR
+						}
+					}
+				}
+				save_scope_as = free_balkans_bosnia_seed
+			}
+		}
+		if = {
+			limit = {
+				exists = scope:free_balkans_bosnia_seed
+			}
+			create_country = {
+				origin = ROOT
+				tag = BOS
+				state = scope:free_balkans_bosnia_seed
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			exists = c:BOS
+		}
+		s:STATE_BOSNIA = {
+			every_scope_state = {
+				limit = {
+					owner = {
+						OR = {
+							c:TUR ?= this
+							is_subject_of = c:TUR
+						}
+					}
+					NOT = {
+						c:BOS ?= owner
+					}
+				}
+				set_state_owner = c:BOS
+			}
+		}
+		c:BOS = {
+			if = {
+				limit = {
+					is_subject_of = c:TUR
+				}
+				make_independent = yes
+			}
+		}
+	}
+
 	c:TUR ?= {
 		every_subject_or_below = {
 			limit = {
@@ -78,7 +212,9 @@ free_the_balkans_settlement_effect = {
 
 	if = {
 		limit = {
-			NOT = { exists = c:BUL }
+			NOT = {
+				exists = c:BUL
+			}
 			exists = s:STATE_BULGARIA.region_state:TUR
 		}
 		create_country = {
@@ -87,9 +223,12 @@ free_the_balkans_settlement_effect = {
 			state = s:STATE_BULGARIA.region_state:TUR
 		}
 	}
+
 	else_if = {
 		limit = {
-			NOT = { exists = c:BUL }
+			NOT = {
+				exists = c:BUL
+			}
 			exists = s:STATE_NORTHERN_THRACE.region_state:TUR
 		}
 		create_country = {
@@ -106,7 +245,9 @@ free_the_balkans_settlement_effect = {
 		s:STATE_BULGARIA = {
 			every_scope_state = {
 				limit = {
-					NOT = { c:BUL ?= owner }
+					NOT = {
+						c:BUL ?= owner
+					}
 				}
 				set_state_owner = c:BUL
 			}
@@ -114,7 +255,9 @@ free_the_balkans_settlement_effect = {
 		s:STATE_NORTHERN_THRACE = {
 			every_scope_state = {
 				limit = {
-					NOT = { c:BUL ?= owner }
+					NOT = {
+						c:BUL ?= owner
+					}
 				}
 				set_state_owner = c:BUL
 			}
@@ -139,19 +282,7 @@ free_the_balkans_settlement_effect = {
 			}
 		}
 	}
-	if = {
-		limit = {
-			exists = c:SER
-		}
-		s:STATE_EASTERN_SERBIA = {
-			every_scope_state = {
-				limit = {
-					c:TUR ?= owner
-				}
-				set_state_owner = c:SER
-			}
-		}
-	}
+
 	if = {
 		limit = {
 			exists = c:MON
@@ -165,6 +296,7 @@ free_the_balkans_settlement_effect = {
 			}
 		}
 	}
+
 	if = {
 		limit = {
 			exists = c:ROM
@@ -183,6 +315,7 @@ free_the_balkans_settlement_effect = {
 			}
 		}
 	}
+
 	else_if = {
 		limit = {
 			exists = c:WAL
@@ -210,10 +343,13 @@ free_the_balkans_settlement_effect = {
 		s:STATE_DOBRUDJA = {
 			set_owner_of_provinces = {
 				country = c:ROM
-				provinces = { x50F5CB }
+				provinces = {
+					x50F5CB
+				}
 			}
 		}
 	}
+
 	else_if = {
 		limit = {
 			exists = c:WAL
@@ -227,8 +363,11 @@ free_the_balkans_settlement_effect = {
 		s:STATE_DOBRUDJA = {
 			set_owner_of_provinces = {
 				country = c:WAL
-				provinces = { x50F5CB }
+				provinces = {
+					x50F5CB
+				}
 			}
 		}
 	}
+
 }

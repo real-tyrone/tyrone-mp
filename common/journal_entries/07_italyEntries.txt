@@ -1,48 +1,34 @@
-﻿# GUI in italy_journal_entry.eui shows quote + Mazzini portrait when this JE has list com_risorgimento_mazzini. When adding this JE, add the Mazzini character to that list so the portrait appears.
+﻿# Shared Risorgimento entry; Sardinia owns the sentiment and country effects.
 italy_risorgimento_stage = {
+
 	activation_description = {
 		always = yes
 	}
 
-	# Tyrone widgets injected into the vanilla journal panel.
+	group = je_group_italy_tyrone
+	context = none
+	icon = "gfx/interface/icons/invention_icons/nationalism.dds"
+	highlight = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+
 	widget = {
-		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
-		name = "tyr_italy_content"
+		gui = "gui/journal_entry_widgets/ita_risorgimento_shared.gui"
+		name = "ita_risorgimento_shared_content"
 		container = "custom_widget_container_1"
 	}
 
-	icon = "gfx/interface/icons/invention_icons/nationalism.dds"
-	group = je_group_italy_tyrone
+	should_be_involved = {
+		ita_risorgimento_participant = yes
+	}
+
+	should_show_when_not_involved = {
+		ita_risorgimento_participant = yes
+	}
 
 	status_desc = {
 		first_valid = {
-			triggered_desc = {
-				desc = italy_risorgimento_stage_status_60_90
-				trigger = {
-					var:italian_sentiment_var >= 60
-					var:italian_sentiment_var < 90
-				}
-			}
-			triggered_desc = {
-				desc = italy_risorgimento_stage_status_40_60
-				trigger = {
-					var:italian_sentiment_var >= 40
-					var:italian_sentiment_var < 60
-				}
-			}
-			triggered_desc = {
-				desc = italy_risorgimento_stage_status_25_40
-				trigger = {
-					var:italian_sentiment_var >= 25
-					var:italian_sentiment_var < 40
-				}
-			}
-			triggered_desc = {
-				desc = italy_risorgimento_stage_status_fallback
-				trigger = {
-					always = yes
-				}
-			}
+			desc = ita_risorgimento_shared_status
 		}
 	}
 
@@ -58,72 +44,187 @@ italy_risorgimento_stage = {
 	scripted_button = ita_form_italy_button
 	scripted_button = ita_form_italy_garibaldi_button
 
-	on_weekly_pulse = {
-		random_events = {
-			50 = 0
-			50 = italyEventsTyrone.5
+	immediate = {
+		set_global_variable = ita_arc_active
+		ita_arc_resolve_actor = yes
+		global_var:ita_risorgimento_sardinia ?= {
+			ita_refresh_sentiment_modifier = yes
 		}
+		ita_arc_refresh_economy = yes
+		ita_risorgimento_sync_mazzini = yes
+	}
+
+	on_weekly_pulse = {
 		effect = {
-			remove_modifier = italy_tension_modifier
-			add_modifier = {
-				name = italy_tension_modifier
-				months = 1
-				multiplier = {
-					value = var:italian_sentiment_var
-				}
-			}
+			ita_risorgimento_sync_mazzini = yes
 		}
 	}
 
 	on_monthly_pulse = {
 		effect = {
-			change_variable = {
-				name = italian_sentiment_var
-				add = 2
+			ita_arc_monthly_tick = yes
+		}
+	}
+
+	map_color = {
+		if = {
+			limit = {
+				state_region = s:STATE_LAZIO
+				owner ?= {
+					c:PAP ?= this
+				}
+				ita_arc_rome_is_garrisoned = yes
+			}
+			value = "ita_arc_france_blue"
+		}
+		else_if = {
+			limit = {
+				ita_risorgimento_map_region = yes
 			}
 			if = {
 				limit = {
-					has_technology_researched = nationalism
+					owner ?= {
+						ita_risorgimento_austrian_direct_or_subject = yes
+					}
 				}
-				change_variable = {
-					name = italian_sentiment_var
-					add = 1
+				value = "tyr_bt_aus"
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						ita_risorgimento_austrian_guarantee = yes
+					}
 				}
+				value = "ita_risorgimento_guarantee_base"
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						ita_risorgimento_austrian_bloc = yes
+					}
+				}
+				value = "tyr_bt_aus_direct"
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						is_subject = no
+						ita_risorgimento_capital_in_italy = yes
+					}
+				}
+				value = "ita_risorgimento_green"
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+	map_color_second = {
+		if = {
+			limit = {
+				state_region = s:STATE_LAZIO
+				owner ?= {
+					c:PAP ?= this
+				}
+				ita_arc_rome_is_garrisoned = yes
+			}
+			value = "ita_arc_france_blue"
+		}
+		else_if = {
+			limit = {
+				ita_risorgimento_map_region = yes
+				owner ?= {
+					NOT = {
+						ita_risorgimento_austrian_direct_or_subject = yes
+					}
+					ita_risorgimento_austrian_guarantee = yes
+				}
+			}
+			value = "ita_risorgimento_guarantee_stripes"
+		}
+		else_if = {
+			limit = {
+				ita_risorgimento_map_region = yes
+				owner ?= {
+					NOT = {
+						ita_risorgimento_austrian_direct_or_subject = yes
+					}
+					ita_risorgimento_austrian_bloc = yes
+				}
+			}
+			value = "tyr_bt_aus"
+		}
+	}
+
+	map_tooltip = {
+		if = {
+			limit = {
+				ita_risorgimento_map_region = yes
+				exists = owner
+			}
+			owner = {
+				save_scope_as = ita_risorgimento_map_owner
 			}
 			if = {
 				limit = {
-					var:italian_sentiment_var > 100
+					state_region = s:STATE_LAZIO
+					owner ?= {
+						c:PAP ?= this
+					}
+					ita_arc_rome_is_garrisoned = yes
 				}
-				set_variable = {
-					name = italian_sentiment_var
-					value = 100
+				custom_tooltip_no_bullet = ita_arc_rome_map_tt
+			}
+			else_if = {
+				limit = {
+					owner = {
+						OR = {
+							c:AUS ?= this
+							c:KUK ?= this
+						}
+					}
 				}
+				custom_tooltip_no_bullet = ita_risorgimento_map_austrian_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner = {
+						ita_risorgimento_austrian_direct_or_subject = yes
+					}
+				}
+				custom_tooltip_no_bullet = ita_risorgimento_map_austrian_subject_tt
+			}
+			else_if = {
+				limit = {
+					owner = {
+						ita_risorgimento_austrian_guarantee = yes
+					}
+				}
+				custom_tooltip_no_bullet = ita_risorgimento_map_austrian_guarantee_tt
+			}
+			else_if = {
+				limit = {
+					owner = {
+						ita_risorgimento_austrian_bloc = yes
+					}
+				}
+				custom_tooltip_no_bullet = ita_risorgimento_map_austrian_bloc_tt
+			}
+			else_if = {
+				limit = {
+					owner = {
+						is_subject = no
+						ita_risorgimento_capital_in_italy = yes
+					}
+				}
+				custom_tooltip_no_bullet = ita_risorgimento_map_independent_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = ita_risorgimento_map_other_tt
 			}
 		}
 	}
-
-	possible = {
-	}
-
-	immediate = {
-		set_variable = {
-			name = italian_sentiment_var
-			value = 10
-		}
-		add_modifier = {
-			name = italy_tension_modifier
-			days = 8
-			multiplier = {
-				value = var:italian_sentiment_var
-			}
-		}
-	}
-
-
-
-
-
-	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
 		header = je_standard_completion_header
@@ -131,84 +232,138 @@ italy_risorgimento_stage = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = ita_italy_exists_complete_tt
-			tyr_italian_content_exists = yes
+			global_var:ita_risorgimento_sardinia = {
+				owns_entire_state_region = STATE_LAZIO
+				owns_entire_state_region = STATE_LOMBARDY
+				owns_entire_state_region = STATE_VENETIA
+				any_scope_state = {
+					state_region = {
+						is_in_geographic_region = geographic_region_italy_old
+					}
+					count >= 12
+				}
+			}
+		}
+		effect = {
+			global_var:ita_risorgimento_sardinia = {
+				add_modifier = {
+					name = ita_arc_completed_italy
+					years = 5
+				}
+			}
+			hidden_effect = {
+				ita_arc_finish = yes
+			}
+		}
+		
+	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			desc = ita_shared_risorgimento_activation_tt
 		}
 	}
+
+	scripted_button = ita_arc_france_turin_button
+	scripted_button = ita_arc_garrison_rome_button
+	scripted_button = ita_arc_withdraw_rome_button
+	scripted_button = ita_arc_independence_war_button
+	scripted_button = ita_arc_invade_rome_button
+
+	widget = {
+		gui = "gui/journal_entry_widgets/ita_arc_children.gui"
+		name = "ita_arc_children"
+		container = "custom_widget_container_3"
+	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			has_global_variable = ita_risorgimento_sardinia
+			global_var:ita_risorgimento_sardinia ?= {
+				is_country_alive = no
+			}
+		}
 		effect = {
+			ita_arc_cleanup = yes
+		}
 	}
-	}
+
+	scripted_button = ita_treaty_turin_button
 }
 
 italy_diplo_stance = {
+
 	activation_description = {
 		always = yes
 	}
 
-	# Tyrone widgets injected into the vanilla journal panel.
+	group = je_group_italy_tyrone
+	context = none
+	icon = "gfx/interface/icons/invention_icons/international_diplomacy.dds"
+	scripted_progress_bar = italy_aus_fra_stance_bar
+	should_be_pinned_by_default_uninvolved_or_context = yes
+	should_be_pinned_by_default_involved = yes
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
 		container = "custom_widget_container_1"
 	}
 
-	icon = "gfx/interface/icons/invention_icons/international_diplomacy.dds"
-	group = je_group_italy_tyrone
-	scripted_progress_bar = italy_aus_fra_stance_bar
+	should_be_involved = {
+		OR = {
+			c:SAR ?= this
+			c:FRA ?= this
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+	}
+
+	should_show_when_not_involved = {
+		OR = {
+			c:SAR ?= this
+			c:FRA ?= this
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+	}
 
 	scripted_button = ita_join_france_bloc_button
 	scripted_button = ita_join_austria_bloc_button
-	scripted_button = ita_treaty_turin_button
 	scripted_button = ita_lombardy_cession_button
 
-	modifiers_while_active = {
-		italy_diplo_stance_leverage_resistance
-	}
-
 	immediate = {
+		set_global_variable = ita_arc_diplomacy_started
+		ita_arc_resolve_actor = yes
 		c:SAR ?= {
-			create_bidirectional_truce = {
-				country = c:PAP
-				months = 360
+			set_global_variable = {
+				name = ita_diplo_sardinia
+				value = this
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = italy_diplo_stance_leverage_resistance
+					}
+				}
+				add_modifier = {
+					name = italy_diplo_stance_leverage_resistance
+				}
 			}
 		}
+		ita_diplo_sync_characters = yes
 	}
 
-	# Refresh com_journal_characters so only the current monarch is shown (Cavour is no loneer in the list).
 	on_monthly_pulse = {
 		effect = {
-			random_scope_character = {
-					limit = {
-						has_variable = italy_cavour
-					}
-					save_scope_as = cavour_scope
-				}
-			ruler = { save_scope_as = current_monarch_scope }
-			je:italy_diplo_stance = {
-				clear_variable_list = com_journal_characters
-				add_to_variable_list = {
-					name = com_journal_characters
-					target = scope:current_monarch_scope
-				}
-				add_to_variable_list = {
-					name = com_journal_characters
-					target = scope:cavour_scope
-				}
-			}
+			ita_diplo_sync_characters = yes
 		}
 	}
-
-	possible = {
-	}
-
-
-
-
-
-
-
-	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
 		header = je_standard_completion_header
@@ -216,91 +371,104 @@ italy_diplo_stance = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = ita_italy_exists_complete_tt
-			tyr_italian_content_exists = yes
+			custom_tooltip = {
+				text = ita_italy_exists_complete_tt
+				tyr_italian_content_exists = yes
+			}
+		}
+		effect = {
+			global_var:ita_diplo_sardinia ?= {
+				if = {
+					limit = {
+						has_modifier = italy_diplo_stance_leverage_resistance
+					}
+					remove_modifier = italy_diplo_stance_leverage_resistance
+				}
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				desc = ita_shared_unification_completion_tt
+			}
 		}
 	}
-		effect = {
-	}
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			desc = ita_shared_diplomacy_activation_tt
+		}
 	}
 
-	outcome = {
-		flags = { hidden invalid_outcome }
-		conclusion_desc = je_standard_failure_conclusion_desc
-		trigger = {
-		tyr_italian_content_exists = yes
-	}
-	}
 }
 
 # ========== Spenna la gallina austriaca (skeleton – Italian Formation army path, bloc leader) ==========
 Spenna_la_gallina_austriaca = {
-	activation_description = {
-		always = yes
-	}
-
-	# Tyrone widgets injected into the vanilla journal panel.
-	widget = {
-		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
-		name = "tyr_italy_content"
-		container = "custom_widget_container_1"
-	}
-
-	icon = "gfx/interface/icons/event_icons/Lombardy-Venetia.dds"
 	group = je_group_italy_tyrone
+	context = none
+	icon = "gfx/interface/icons/event_icons/Lombardy-Venetia.dds"
+	timeout = 3650
+	should_be_pinned_by_default_involved = yes
+	should_be_pinned_by_default_uninvolved_or_context = yes
 
-	timeout = 3650 
+	should_be_involved = {
+		ita_risorgimento_participant = yes
+	}
+
+	should_show_when_not_involved = {
+		ita_risorgimento_participant = yes
+	}
 
 	is_shown_when_inactive = {
-		root = { tyr_italian_content_country = yes }
+		custom_tooltip = {
+			text = ita_arc_lombardy_available_tt
+			ita_arc_is_active = yes
+			has_global_variable = ita_risorgimento_sardinia
+			global_var:ita_risorgimento_sardinia ?= {
+				tyr_italian_content_country = yes
+			}
+		}
 	}
+
 	possible = {
 		custom_tooltip = {
-			text = ita_spenna_gallina_not_italy_tt
-			tyr_italian_content_exists = yes 
-		}
-		OR = {
-			NOT = { country_or_subject_owns_entire_state_region = STATE_LOMBARDY }
-			NOT = { country_or_subject_owns_entire_state_region = STATE_VENETIA }
-		}
-	}
-
-	modifiers_while_active = {
-		spenna_gallina_offense
-	}
-
-	immediate = {
-		s:STATE_LOMBARDY = {
-			add_claim = root
-		}
-		s:STATE_VENETIA = {
-			add_claim = root
+			text = ita_arc_lombardy_available_tt
+			ita_arc_is_active = yes
+			global_var:ita_risorgimento_sardinia ?= {
+				tyr_italian_content_country = yes
+			}
+			global_var:ita_risorgimento_sardinia ?= {
+				OR = {
+					NOT = {
+						country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+					}
+					NOT = {
+						country_or_subject_owns_entire_state_region = STATE_VENETIA
+					}
+				}
+			}
+			has_global_variable = ita_risorgimento_sardinia
 		}
 	}
 
 	status_desc = {
 		first_valid = {
-			triggered_desc = {
-				desc = Spenna_la_gallina_austriaca_status_austria_owns
-				trigger = {
-					c:AUS = { country_or_subject_owns_entire_state_region = STATE_LOMBARDY }
-					c:AUS = { country_or_subject_owns_entire_state_region = STATE_VENETIA }
-				}
-			}
-			triggered_desc = {
-				desc = Spenna_la_gallina_austriaca_status_escape
-				trigger = {
-					always = yes
-				}
-			}
+			desc = ita_arc_lombardy_status
 		}
 	}
 
-
-
-
-	should_be_pinned_by_default_uninvolved_or_context = yes
+	immediate = {
+		global_var:ita_risorgimento_sardinia ?= {
+			s:STATE_LOMBARDY = {
+				add_claim = PREV
+			}
+			s:STATE_VENETIA = {
+				add_claim = PREV
+			}
+			add_modifier = {
+				name = spenna_gallina_offense
+			}
+		}
+	}
 
 	outcome = {
 		header = je_standard_completion_header
@@ -308,32 +476,82 @@ Spenna_la_gallina_austriaca = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_LOMBARDY
-		country_or_subject_owns_entire_state_region = STATE_VENETIA
-	}
-		effect = {
-		add_loyalists = {
-			value = 0.10
-			culture = cu:north_italian
+			custom_tooltip = {
+				text = ita_arc_lombardy_owned_tt
+				global_var:ita_risorgimento_sardinia ?= {
+					country_or_subject_owns_entire_state_region = STATE_LOMBARDY
+					country_or_subject_owns_entire_state_region = STATE_VENETIA
+				}
+				has_global_variable = ita_risorgimento_sardinia
+			}
 		}
-	}
+		effect = {
+			global_var:ita_risorgimento_sardinia ?= {
+				add_loyalists = {
+					value = 0.10
+					culture = cu:north_italian
+				}
+				if = {
+					limit = {
+						has_modifier = spenna_gallina_offense
+					}
+					remove_modifier = spenna_gallina_offense
+				}
+			}
+		}
 	}
 
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
+		flags = {
+			timeout
+		}
 		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
+		effect = {
+			global_var:ita_risorgimento_sardinia ?= {
+				if = {
+					limit = {
+						has_modifier = spenna_gallina_offense
+					}
+					remove_modifier = spenna_gallina_offense
+				}
+			}
+		}
 	}
+
+	outcome = {
+		flags = {
+			hidden
+			invalid_outcome
+		}
+		conclusion_desc = je_standard_failure_conclusion_desc
+		trigger = {
+			has_global_variable = ita_arc_ended
+		}
+		effect = {
+			global_var:ita_risorgimento_sardinia ?= {
+				if = {
+					limit = {
+						has_modifier = spenna_gallina_offense
+					}
+					remove_modifier = spenna_gallina_offense
+				}
+			}
+		}
+	}
+
 }
 
 # ========== Patti lateranensi – progress bar 3 yrs then annex Papal State with incorporation ==========
 Patti_lateranensi = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -342,7 +560,6 @@ Patti_lateranensi = {
 
 	icon = "gfx/interface/icons/law_icons/state_religion.dds"
 	group = je_group_italy_tyrone
-
 	progressbar = yes
 
 	goal_add_value = {
@@ -350,11 +567,17 @@ Patti_lateranensi = {
 	}
 
 	immediate = {
-		set_variable = { name = patti_lateranensi_months value = 0 }
+		set_variable = {
+			name = patti_lateranensi_months
+			value = 0
+		}
 	}
 
 	on_monthly_pulse = {
-		change_variable = { name = patti_lateranensi_months add = 1 }
+		change_variable = {
+			name = patti_lateranensi_months
+			add = 1
+		}
 	}
 
 	is_shown_when_inactive = {
@@ -372,13 +595,12 @@ Patti_lateranensi = {
 		}
 		custom_tooltip = {
 			text = ita_patti_lateranensi_italy_tt
-			root = { tyr_italian_content_country = yes } 
+			root = {
+				tyr_italian_content_country = yes
+			}
 		}
 		has_technology_researched = pan-nationalism
 	}
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -388,28 +610,35 @@ Patti_lateranensi = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = ita_patti_lateranensi_complete_tt
-			var:patti_lateranensi_months >= 36
+			custom_tooltip = {
+				text = ita_patti_lateranensi_complete_tt
+				var:patti_lateranensi_months >= 36
+			}
+			has_law_or_variant = law_type:law_state_religion
 		}
-		has_law_or_variant = law_type:law_state_religion
-	}
 		effect = {
-		if = {
-			limit = { c:PAP = { exists = yes } }
-			annex_with_incorporation = c:PAP
+			if = {
+				limit = {
+					c:PAP = {
+						exists = yes
+					}
+				}
+				annex_with_incorporation = c:PAP
+			}
 		}
 	}
-	}
+
 }
 
 # ========== Italian Irredentism ==========
 Italian_Irredentism_main = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -419,11 +648,13 @@ Italian_Irredentism_main = {
 	# Unique icon so GUI can show illustration block only for this JE
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = ita_proclaim_italian_empire_button
 
 	immediate = {
-		trigger_event = { id = italyEventsTyrone.18 popup = no }
+		trigger_event = {
+			id = italyEventsTyrone.18
+			popup = no
+		}
 	}
 
 	status_desc = {
@@ -438,19 +669,18 @@ Italian_Irredentism_main = {
 	}
 
 	is_shown_when_inactive = {
-		root = { tyr_italian_content_country = yes }
+		root = {
+			tyr_italian_content_country = yes
+		}
 	}
 
 	possible = {
-		has_technology_researched = pan-nationalism	
+		has_technology_researched = pan-nationalism
 		country_or_subject_owns_entire_state_region = STATE_VENETIA
 		country_or_subject_owns_entire_state_region = STATE_LOMBARDY
 		country_or_subject_owns_entire_state_region = STATE_LAZIO
 		is_power_bloc_leader = yes
-		}
-
-
-
+	}
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -460,22 +690,25 @@ Italian_Irredentism_main = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = italian_empire_irredentism_complete_tt
-			has_variable = italian_empire_has_formed
+			custom_tooltip = {
+				text = italian_empire_irredentism_complete_tt
+				has_variable = italian_empire_has_formed
+			}
+		}
+		effect = {
 		}
 	}
-		effect = {
-	}
-	}
+
 }
 
 Italian_Irredentism_lybia = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -500,9 +733,6 @@ Italian_Irredentism_lybia = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -511,25 +741,28 @@ Italian_Irredentism_lybia = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_TRIPOLI
-		country_or_subject_owns_entire_state_region = STATE_LIBYA
-		country_or_subject_owns_entire_state_region = STATE_LIBYAN_DESERT
-	}
+			country_or_subject_owns_entire_state_region = STATE_TRIPOLI
+			country_or_subject_owns_entire_state_region = STATE_LIBYA
+			country_or_subject_owns_entire_state_region = STATE_LIBYAN_DESERT
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.30
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.30
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 Italian_Irredentism_egypt = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -560,9 +793,6 @@ Italian_Irredentism_egypt = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -571,27 +801,30 @@ Italian_Irredentism_egypt = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_LOWER_EGYPT
-		country_or_subject_owns_entire_state_region = STATE_MIDDLE_EGYPT
-		country_or_subject_owns_entire_state_region = STATE_UPPER_EGYPT
-		country_or_subject_owns_entire_state_region = STATE_MATRUH
-		country_or_subject_owns_entire_state_region = STATE_EGYPTIAN_DESERT
-	}
+			country_or_subject_owns_entire_state_region = STATE_LOWER_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_MIDDLE_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_UPPER_EGYPT
+			country_or_subject_owns_entire_state_region = STATE_MATRUH
+			country_or_subject_owns_entire_state_region = STATE_EGYPTIAN_DESERT
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.31
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.31
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 Italian_Irredentism_mediterranean_islands = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -619,9 +852,6 @@ Italian_Irredentism_mediterranean_islands = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -630,26 +860,29 @@ Italian_Irredentism_mediterranean_islands = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_CRETE
-		country_or_subject_owns_entire_state_region = STATE_CYPRUS
-		country_or_subject_owns_entire_state_region = STATE_EAST_AEGEAN_ISLANDS
-		country_or_subject_owns_entire_state_region = STATE_WEST_AEGEAN_ISLANDS
-	}
+			country_or_subject_owns_entire_state_region = STATE_CRETE
+			country_or_subject_owns_entire_state_region = STATE_CYPRUS
+			country_or_subject_owns_entire_state_region = STATE_EAST_AEGEAN_ISLANDS
+			country_or_subject_owns_entire_state_region = STATE_WEST_AEGEAN_ISLANDS
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.32
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.32
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 Italian_Irredentism_holy_city = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -668,9 +901,6 @@ Italian_Irredentism_holy_city = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -679,23 +909,26 @@ Italian_Irredentism_holy_city = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_PALESTINE
-	}
+			country_or_subject_owns_entire_state_region = STATE_PALESTINE
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.33
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.33
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 Italian_Irredentism_jewel_colony = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -704,7 +937,6 @@ Italian_Irredentism_jewel_colony = {
 
 	icon = "gfx/interface/icons/invention_icons/navigation.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = ita_jewel_colony_morocco_button
 	scripted_button = ita_jewel_colony_madagascar_button
 	scripted_button = ita_jewel_colony_ethiopia_button
@@ -713,7 +945,9 @@ Italian_Irredentism_jewel_colony = {
 	scripted_button = ita_jewel_colony_lybia_button
 
 	is_shown_when_inactive = {
-		root = { tyr_italian_content_country = yes }
+		root = {
+			tyr_italian_content_country = yes
+		}
 	}
 
 	immediate = {
@@ -723,9 +957,6 @@ Italian_Irredentism_jewel_colony = {
 		has_technology_researched = civilizing_mission
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -734,22 +965,25 @@ Italian_Irredentism_jewel_colony = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = italian_jewel_colony_complete_tt
-			has_variable = italy_jewel_colony_var
+			custom_tooltip = {
+				text = italian_jewel_colony_complete_tt
+				has_variable = italy_jewel_colony_var
+			}
+		}
+		effect = {
 		}
 	}
-		effect = {
-	}
-	}
+
 }
 
 Italian_Irredentism_balkans = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -765,9 +999,6 @@ Italian_Irredentism_balkans = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -776,25 +1007,28 @@ Italian_Irredentism_balkans = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_ALBANIA
-		country_or_subject_owns_entire_state_region = STATE_MONTENEGRO
-		country_or_subject_owns_entire_state_region = STATE_DALMATIA
-	}
+			country_or_subject_owns_entire_state_region = STATE_ALBANIA
+			country_or_subject_owns_entire_state_region = STATE_MONTENEGRO
+			country_or_subject_owns_entire_state_region = STATE_DALMATIA
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.34
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.34
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 Italian_Irredentism_italian_land = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -810,9 +1044,6 @@ Italian_Irredentism_italian_land = {
 	possible = {
 	}
 
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -821,26 +1052,29 @@ Italian_Irredentism_italian_land = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		country_or_subject_owns_entire_state_region = STATE_ISTRIA
-		country_or_subject_owns_entire_state_region = STATE_SOUTH_TYROL
-	}
+			country_or_subject_owns_entire_state_region = STATE_ISTRIA
+			country_or_subject_owns_entire_state_region = STATE_SOUTH_TYROL
+		}
 		effect = {
-		trigger_event = {
-			id = italyEventsTyrone.35
-			popup = yes
+			trigger_event = {
+				id = italyEventsTyrone.35
+				popup = yes
+			}
 		}
 	}
-	}
+
 }
 
 # ========== French path journal entries (military, economy, laws) ==========
 # French military JE: hard way = 100 battalions with ≥40% artillery; easy way = button with 30 battalions + all barracks fully employed, no shortages
 ITA_French_militaryJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -849,19 +1083,11 @@ ITA_French_militaryJE = {
 
 	icon = "gfx/interface/icons/invention_icons/shell_gun.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = ita_french_military_complete_button
 
 	possible = {
 	}
 
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -870,86 +1096,96 @@ ITA_French_militaryJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			country_army_unit_type_fraction = {
-				target = unit_type:combat_unit_type_mobile_artillery
-				value >= 0.4
+			OR = {
+				country_army_unit_type_fraction = {
+					target = unit_type:combat_unit_type_mobile_artillery
+					value >= 0.4
+				}
+				country_army_unit_type_fraction = {
+					target = unit_type:combat_unit_type_shrapnel_artillery
+					value >= 0.4
+				}
 			}
-			country_army_unit_type_fraction = {
-				target = unit_type:combat_unit_type_shrapnel_artillery
-				value >= 0.4
+			OR = {
+				# Hard way: 100 troops, at least 40% artillery (cannon or mobile)
+				AND = {
+					army_size >= 100
+					any_scope_building = {
+						filter = {
+							is_building_type = building_barrack
+						}
+						NOT = {
+							building_has_goods_shortage = yes
+						}
+						occupancy >= 0.9
+						percent = 1
+					}
+				}
+				# Easy way: click button + 30 units + all barracks fully employed, no shortages
+				AND = {
+					army_size >= 30
+					any_scope_building = {
+						filter = {
+							is_building_type = building_barrack
+						}
+						NOT = {
+							building_has_goods_shortage = yes
+						}
+						occupancy >= 0.9
+						percent = 1
+					}
+					custom_tooltip = {
+						text = ita_french_military_barracks_ok_tt
+						has_variable = ita_french_military_complete_clicked
+					}
+				}
 			}
 		}
-		OR = {
-			# Hard way: 100 troops, at least 40% artillery (cannon or mobile)
-			AND = {
-				army_size >= 100
-				any_scope_building = {
-					filter = {
-						is_building_type = building_barrack
-					}
-					NOT = { building_has_goods_shortage = yes }
-					occupancy >= 0.9
-					percent = 1
-				}
-			}
-			
-
-			# Easy way: click button + 30 units + all barracks fully employed, no shortages
-			AND = {
-				army_size >= 30
-				any_scope_building = {
-					filter = {
-						is_building_type = building_barrack
-					}
-					NOT = { building_has_goods_shortage = yes }
-					occupancy >= 0.9
-					percent = 1
-				}
-				custom_tooltip = {
-					text = ita_french_military_barracks_ok_tt
+		effect = {
+			set_variable = ita_french_military_done
+			if = {
+				limit = {
 					has_variable = ita_french_military_complete_clicked
 				}
+				ita_stance_france_20_effect = yes
+				add_modifier = {
+					name = french_military_complete_easy_reward
+					days = long_modifier_time
+				}
+			}
+			else = {
+				ita_stance_france_5_effect = yes
+				add_modifier = {
+					name = french_military_complete_artillery_reward
+					days = long_modifier_time
+				}
 			}
 		}
-	}
-		effect = {
-		set_variable = ita_french_military_done
-		if = {
-			limit = { has_variable = ita_french_military_complete_clicked }
-			ita_stance_france_20_effect = yes
-			add_modifier = {
-				name = french_military_complete_easy_reward
-				days = long_modifier_time
-			}
-		}
-		else = {
-			ita_stance_france_5_effect = yes
-			add_modifier = {
-				name = french_military_complete_artillery_reward
-				days = long_modifier_time				
-			}
-		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
+			tyr_italian_content_exists = yes
+		}
 	}
-	}
+
 }
 
 # ========== Austria path journal entry (military): bar moves toward Austria ==========
 # Easy way: button + 30 battalions + all barracks fully employed, no shortages. Hard way: National Guard law + Home Affairs institution level 2. Rewards placeholder (stance only).
 ITA_Austria_militaryJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -958,18 +1194,10 @@ ITA_Austria_militaryJE = {
 
 	icon = "gfx/interface/icons/invention_icons/shell_gun.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = ita_austria_military_complete_button
 
 	possible = {
 	}
-
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -979,84 +1207,95 @@ ITA_Austria_militaryJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			# Hard way: National Guard and Home Affairs (internal ministry) level 2
-			AND = {
-				has_law_or_variant = law_type:law_national_guard
-				institution_investment_level = {
-					institution = institution_home_affairs
-					value >= 2
-				}
-				army_size >= 100
-				any_scope_building = {
-					filter = {
-						is_building_type = building_barrack
+			OR = {
+				# Hard way: National Guard and Home Affairs (internal ministry) level 2
+				AND = {
+					has_law_or_variant = law_type:law_national_guard
+					institution_investment_level = {
+						institution = institution_home_affairs
+						value >= 2
 					}
-					NOT = { building_has_goods_shortage = yes }
-					occupancy >= 0.9
-					percent = 1
+					army_size >= 100
+					any_scope_building = {
+						filter = {
+							is_building_type = building_barrack
+						}
+						NOT = {
+							building_has_goods_shortage = yes
+						}
+						occupancy >= 0.9
+						percent = 1
+					}
+				}
+				# Easy way: click button + 30 units + all barracks fully employed, no shortages
+				AND = {
+					army_size >= 30
+					any_scope_building = {
+						filter = {
+							is_building_type = building_barrack
+						}
+						NOT = {
+							building_has_goods_shortage = yes
+						}
+						occupancy >= 0.9
+						percent = 1
+					}
+					custom_tooltip = {
+						text = ita_austria_military_barracks_ok_tt
+						has_variable = ita_austria_military_complete_clicked
+					}
 				}
 			}
-
-			# Easy way: click button + 30 units + all barracks fully employed, no shortages
-			AND = {
-				army_size >= 30
-				any_scope_building = {
-					filter = {
-						is_building_type = building_barrack
-					}
-					NOT = { building_has_goods_shortage = yes }
-					occupancy >= 0.9
-					percent = 1
-				}
-				custom_tooltip = {
-					text = ita_austria_military_barracks_ok_tt
+		}
+		effect = {
+			set_variable = ita_austria_military_done
+			if = {
+				limit = {
 					has_variable = ita_austria_military_complete_clicked
 				}
+				ita_stance_austria_20_effect = yes
+				add_modifier = {
+					name = french_military_complete_easy_reward
+					years = 5
+				}
 			}
-		}
-	}
-		effect = {
-		set_variable = ita_austria_military_done
-		if = {
-			limit = { has_variable = ita_austria_military_complete_clicked }
-			ita_stance_austria_20_effect = yes
-			add_modifier = {
-				name = french_military_complete_easy_reward
-				years = 5
-			}
-		}
-		else = {
-			ita_stance_austria_5_effect = yes
-			# Current law of the same type (internal security) gets the amendment.
-			active_law:lawgroup_internal_security ?= {
-				add_amendment = {
-					type = amendment_italian_gendarme
-					sponsor = PREV.ig:ig_armed_forces
-					cooldown = 240
+			else = {
+				ita_stance_austria_5_effect = yes
+				# Current law of the same type (internal security) gets the amendment.
+				active_law:lawgroup_internal_security ?= {
+					add_amendment = {
+						type = amendment_italian_gendarme
+						sponsor = PREV.ig:ig_armed_forces
+						cooldown = 240
+					}
 				}
 			}
 		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
+			tyr_italian_content_exists = yes
+		}
 	}
-	}
+
 }
 
 # French economy JE: Sardinia GDP must grow 5% every 6 months for 5 periods in a row (Gründerzeit-style).
 # Progress 0–5; miss one deadline = -1 progress. Variables on owner: baseline + 6‑month counter.
 ITA_French_economyJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1065,7 +1304,6 @@ ITA_French_economyJE = {
 
 	icon = "gfx/interface/icons/event_icons/ita_dev_JEs.png"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = ita_french_economy_progress_bar
 	scripted_button = ita_french_economy_complete_button
 
@@ -1097,35 +1335,46 @@ ITA_French_economyJE = {
 		effect = {
 			# Advance 6‑month counter (month_1 -> … -> month_6 -> check then back to month_1)
 			if = {
-				limit = { has_variable = ita_french_economy_month_1 }
+				limit = {
+					has_variable = ita_french_economy_month_1
+				}
 				remove_variable = ita_french_economy_month_1
 				set_variable = ita_french_economy_month_2
 			}
 			else_if = {
-				limit = { has_variable = ita_french_economy_month_2 }
+				limit = {
+					has_variable = ita_french_economy_month_2
+				}
 				remove_variable = ita_french_economy_month_2
 				set_variable = ita_french_economy_month_3
 			}
 			else_if = {
-				limit = { has_variable = ita_french_economy_month_3 }
+				limit = {
+					has_variable = ita_french_economy_month_3
+				}
 				remove_variable = ita_french_economy_month_3
 				set_variable = ita_french_economy_month_4
 			}
 			else_if = {
-				limit = { has_variable = ita_french_economy_month_4 }
+				limit = {
+					has_variable = ita_french_economy_month_4
+				}
 				remove_variable = ita_french_economy_month_4
 				set_variable = ita_french_economy_month_5
 			}
 			else_if = {
-				limit = { has_variable = ita_french_economy_month_5 }
+				limit = {
+					has_variable = ita_french_economy_month_5
+				}
 				remove_variable = ita_french_economy_month_5
 				set_variable = ita_french_economy_month_6
 			}
 			else_if = {
-				limit = { has_variable = ita_french_economy_month_6 }
+				limit = {
+					has_variable = ita_french_economy_month_6
+				}
 				remove_variable = ita_french_economy_month_6
 				set_variable = ita_french_economy_month_1
-
 				# Goal = baseline × 1.05
 				set_variable = {
 					name = ita_french_economy_sar_goal
@@ -1180,14 +1429,6 @@ ITA_French_economyJE = {
 		}
 	}
 
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1196,71 +1437,80 @@ ITA_French_economyJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			AND = {
-				gdp > 5000000
-				custom_tooltip = {
-					text = ita_french_economy_complete_progress_tt
-					scope:journal_entry = {
-						"scripted_bar_progress(ita_french_economy_progress_bar)" >= 5
+			OR = {
+				AND = {
+					gdp > 5000000
+					custom_tooltip = {
+						text = ita_french_economy_complete_progress_tt
+						scope:journal_entry = {
+							"scripted_bar_progress(ita_french_economy_progress_bar)" >= 5
+						}
 					}
 				}
+				AND = {
+					custom_tooltip = {
+						text = ita_french_economy_complete_button_tt
+						has_variable = ita_french_economy_complete_clicked
+					}
+					has_law = law_type:law_laissez_faire
+				}
 			}
-			AND = {
-				custom_tooltip = {
-					text = ita_french_economy_complete_button_tt
+		}
+		effect = {
+			set_variable = ita_french_economy_done
+			if = {
+				limit = {
 					has_variable = ita_french_economy_complete_clicked
 				}
-				has_law = law_type:law_laissez_faire
-			}
-			
-		}
-	}
-		effect = {
-		set_variable = ita_french_economy_done
-		if = {
-			limit = { has_variable = ita_french_economy_complete_clicked }
-			ita_stance_france_20_effect = yes
-			add_modifier = {
-				name = french_economy_complete_button_reward
-				days = long_modifier_time
-			}
-		}
-		else = {
-			ita_stance_france_5_effect = yes
-			add_modifier = {
-				name = french_economy_complete_gdp_reward
-				days = long_modifier_time
-			}
-		}
-		show_as_tooltip = {
-			if = {
-				limit = { has_variable = ita_french_economy_complete_clicked }
-				custom_tooltip = ita_french_economy_complete_effects_button_tt
+				ita_stance_france_20_effect = yes
+				add_modifier = {
+					name = french_economy_complete_button_reward
+					days = long_modifier_time
+				}
 			}
 			else = {
-				custom_tooltip = ita_french_economy_complete_effects_gdp_tt
+				ita_stance_france_5_effect = yes
+				add_modifier = {
+					name = french_economy_complete_gdp_reward
+					days = long_modifier_time
+				}
+			}
+			show_as_tooltip = {
+				if = {
+					limit = {
+						has_variable = ita_french_economy_complete_clicked
+					}
+					custom_tooltip = ita_french_economy_complete_effects_button_tt
+				}
+				else = {
+					custom_tooltip = ita_french_economy_complete_effects_gdp_tt
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
+			tyr_italian_content_exists = yes
+		}
 	}
-	}
+
 }
 
 # Austria economy JE: same as French (5% GDP growth every 6 months, 5 periods). Bar moves toward Austria; treaty with Austria; easy path requires Interventionism.
 ITA_Austria_economyJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1269,7 +1519,6 @@ ITA_Austria_economyJE = {
 
 	icon = "gfx/interface/icons/event_icons/ita_dev_JEs.png"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = ita_austria_economy_progress_bar
 	scripted_button = ita_austria_economy_complete_button
 
@@ -1297,35 +1546,46 @@ ITA_Austria_economyJE = {
 		}
 		effect = {
 			if = {
-				limit = { has_variable = ita_austria_economy_month_1 }
+				limit = {
+					has_variable = ita_austria_economy_month_1
+				}
 				remove_variable = ita_austria_economy_month_1
 				set_variable = ita_austria_economy_month_2
 			}
 			else_if = {
-				limit = { has_variable = ita_austria_economy_month_2 }
+				limit = {
+					has_variable = ita_austria_economy_month_2
+				}
 				remove_variable = ita_austria_economy_month_2
 				set_variable = ita_austria_economy_month_3
 			}
 			else_if = {
-				limit = { has_variable = ita_austria_economy_month_3 }
+				limit = {
+					has_variable = ita_austria_economy_month_3
+				}
 				remove_variable = ita_austria_economy_month_3
 				set_variable = ita_austria_economy_month_4
 			}
 			else_if = {
-				limit = { has_variable = ita_austria_economy_month_4 }
+				limit = {
+					has_variable = ita_austria_economy_month_4
+				}
 				remove_variable = ita_austria_economy_month_4
 				set_variable = ita_austria_economy_month_5
 			}
 			else_if = {
-				limit = { has_variable = ita_austria_economy_month_5 }
+				limit = {
+					has_variable = ita_austria_economy_month_5
+				}
 				remove_variable = ita_austria_economy_month_5
 				set_variable = ita_austria_economy_month_6
 			}
 			else_if = {
-				limit = { has_variable = ita_austria_economy_month_6 }
+				limit = {
+					has_variable = ita_austria_economy_month_6
+				}
 				remove_variable = ita_austria_economy_month_6
 				set_variable = ita_austria_economy_month_1
-
 				set_variable = {
 					name = ita_austria_economy_sar_goal
 					value = {
@@ -1376,15 +1636,6 @@ ITA_Austria_economyJE = {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1393,67 +1644,77 @@ ITA_Austria_economyJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			AND = {
-				gdp > 5000000
-				custom_tooltip = {
-					text = ita_austria_economy_complete_progress_tt
-					scope:journal_entry = {
-						"scripted_bar_progress(ita_austria_economy_progress_bar)" >= 5
+			OR = {
+				AND = {
+					gdp > 5000000
+					custom_tooltip = {
+						text = ita_austria_economy_complete_progress_tt
+						scope:journal_entry = {
+							"scripted_bar_progress(ita_austria_economy_progress_bar)" >= 5
+						}
 					}
 				}
+				AND = {
+					custom_tooltip = {
+						text = ita_austria_economy_complete_button_tt
+						has_variable = ita_austria_economy_complete_clicked
+					}
+					has_law = law_type:law_interventionism
+				}
 			}
-			AND = {
-				custom_tooltip = {
-					text = ita_austria_economy_complete_button_tt
+		}
+		effect = {
+			set_variable = ita_austria_economy_done
+			if = {
+				limit = {
 					has_variable = ita_austria_economy_complete_clicked
 				}
-				has_law = law_type:law_interventionism
-			}
-		}
-	}
-		effect = {
-		set_variable = ita_austria_economy_done
-		if = {
-			limit = { has_variable = ita_austria_economy_complete_clicked }
-			ita_stance_austria_20_effect = yes
-			# reward placeholder (easy path)
-		}
-		else = {
-			ita_stance_austria_5_effect = yes
-			add_modifier = {
-				name = austria_economy_complete_gdp_reward
-				days = long_modifier_time
-			}
-		}
-		show_as_tooltip = {
-			if = {
-				limit = { has_variable = ita_austria_economy_complete_clicked }
-				custom_tooltip = ita_austria_economy_complete_effects_button_tt
+				ita_stance_austria_20_effect = yes
+				# reward placeholder (easy path)
 			}
 			else = {
-				custom_tooltip = ita_austria_economy_complete_effects_gdp_tt
+				ita_stance_austria_5_effect = yes
+				add_modifier = {
+					name = austria_economy_complete_gdp_reward
+					days = long_modifier_time
+				}
+			}
+			show_as_tooltip = {
+				if = {
+					limit = {
+						has_variable = ita_austria_economy_complete_clicked
+					}
+					custom_tooltip = ita_austria_economy_complete_effects_button_tt
+				}
+				else = {
+					custom_tooltip = ita_austria_economy_complete_effects_gdp_tt
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
+			tyr_italian_content_exists = yes
+		}
 	}
-	}
+
 }
 
 # French laws JE: constitutional tension 0–5 (autocratic → Statuto by king → by the people). Events push the bar; trade-off: democracy = buffs, autocratic = debuff + radicals + Italian unification sentiment.
 ITA_French_lawsJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1462,18 +1723,22 @@ ITA_French_lawsJE = {
 
 	icon = "gfx/interface/icons/map_mode_icons/radicals.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = constitutional_ita_tension_bar
 	scripted_button = ita_french_laws_complete_button
-
 	timeout = 1460
 
 	possible = {
 	}
 
 	immediate = {
-		set_variable = { name = constitutional_ita_tension_var value = 0 }
-		set_variable = { name = constitutional_ita_tension_bar_sync value = 0 }
+		set_variable = {
+			name = constitutional_ita_tension_var
+			value = 0
+		}
+		set_variable = {
+			name = constitutional_ita_tension_bar_sync
+			value = 0
+		}
 	}
 
 	on_monthly_pulse = {
@@ -1498,14 +1763,6 @@ ITA_French_lawsJE = {
 		}
 	}
 
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1514,45 +1771,53 @@ ITA_French_lawsJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			has_law_or_variant = law_type:law_census_voting
-			custom_tooltip = {
-				text = ita_has_granted_voting_tt
-				has_law_or_variant = law_type:law_wealth_voting
+			OR = {
+				has_law_or_variant = law_type:law_census_voting
+				custom_tooltip = {
+					text = ita_has_granted_voting_tt
+					has_law_or_variant = law_type:law_wealth_voting
+				}
 			}
 		}
-	}
 		effect = {
-		set_variable = ita_french_laws_done
-	}
+			set_variable = ita_french_laws_done
+		}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
-	}
+			tyr_italian_content_exists = yes
+		}
 	}
 
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
+		flags = {
+			timeout
+		}
 		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
 		effect = {
-		set_variable = ita_french_laws_done	
+			set_variable = ita_french_laws_done
+		}
 	}
-	}
+
 }
 
 # Austrian laws JE: same constitutional tension bar and Statuto events; complete via census/wealth voting OR button that grants Oligarchy + Concessione Albertina amendment.
 ITA_Austria_lawsJE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1561,18 +1826,22 @@ ITA_Austria_lawsJE = {
 
 	icon = "gfx/interface/icons/map_mode_icons/radicals.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = constitutional_ita_tension_bar
 	scripted_button = ita_austria_laws_complete_button
-
 	timeout = 1460
 
 	possible = {
 	}
 
 	immediate = {
-		set_variable = { name = constitutional_ita_tension_var value = 0 }
-		set_variable = { name = constitutional_ita_tension_bar_sync value = 0 }
+		set_variable = {
+			name = constitutional_ita_tension_var
+			value = 0
+		}
+		set_variable = {
+			name = constitutional_ita_tension_bar_sync
+			value = 0
+		}
 	}
 
 	on_monthly_pulse = {
@@ -1597,14 +1866,6 @@ ITA_Austria_lawsJE = {
 		}
 	}
 
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1613,37 +1874,42 @@ ITA_Austria_lawsJE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			has_law_or_variant = law_type:law_census_voting
-			custom_tooltip = {
-				text = ita_has_granted_voting_tt
-				has_variable = ita_austria_laws_complete_clicked
+			OR = {
+				has_law_or_variant = law_type:law_census_voting
+				custom_tooltip = {
+					text = ita_has_granted_voting_tt
+					has_variable = ita_austria_laws_complete_clicked
+				}
 			}
-			
 		}
-	}
 		effect = {
-		set_variable = ita_austria_laws_done
-	}
+			set_variable = ita_austria_laws_done
+		}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		tyr_italian_content_exists = yes
-	}
+			tyr_italian_content_exists = yes
+		}
 	}
 
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
+		flags = {
+			timeout
+		}
 		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
 		effect = {
-		set_variable = ita_austria_laws_done
+			set_variable = ita_austria_laws_done
+		}
 	}
-	}
+
 }
 
 # ========== Garibaldi's Thousand Expedition ==========
@@ -1651,11 +1917,13 @@ ITA_Austria_lawsJE = {
 # Creates Garibaldi (garibaldi_char_var), inits garibaldi_taking_sic_var = 0 for progress bar (1–5).
 # Button "Prepare the Expedition" fires garibaldi_expedition.1.
 ita_garibaldi_thousand_expedition_JE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1664,11 +1932,12 @@ ita_garibaldi_thousand_expedition_JE = {
 
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 	group = je_group_italy_tyrone
-
 	progressbar = yes
+
 	current_value = {
 		value = root.var:garibaldi_taking_sic_var
 	}
+
 	goal_add_value = {
 		value = 5
 	}
@@ -1718,10 +1987,6 @@ ita_garibaldi_thousand_expedition_JE = {
 		}
 	}
 
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1730,24 +1995,27 @@ ita_garibaldi_thousand_expedition_JE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = ita_italy_exists_complete_tt
-			tyr_italian_content_exists = yes
+			custom_tooltip = {
+				text = ita_italy_exists_complete_tt
+				tyr_italian_content_exists = yes
+			}
+		}
+		effect = {
 		}
 	}
-		effect = {
-	}
-	}
+
 }
 
 # ========== Consolidating the South ==========
 # Shown when Sardinia owns more than 3 South Italian homeland states. Progress bar ticks +1 each month while the south is held; goal 24 months.
 ita_consolidating_south_JE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1756,29 +2024,33 @@ ita_consolidating_south_JE = {
 
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
 	group = je_group_italy_tyrone
-
 	progressbar = yes
+
 	current_value = {
 		value = root.var:consolidating_south_months
 	}
+
 	goal_add_value = {
 		value = 24
 	}
 
 	is_shown_when_inactive = {
 		OR = {
-			c:SAR ?= root 
-			root = { tyr_italian_content_country = yes }
+			c:SAR ?= root
+			root = {
+				tyr_italian_content_country = yes
+			}
 		}
-		
 	}
 
 	possible = {
-		NOT = { country_has_primary_culture = cu:south_italian }
+		NOT = {
+			country_has_primary_culture = cu:south_italian
+		}
 		any_scope_state = {
 			state_region = {
-					is_homeland = cu:south_italian
-				}
+				is_homeland = cu:south_italian
+			}
 			count >= 4
 			owner = root
 		}
@@ -1816,10 +2088,6 @@ ita_consolidating_south_JE = {
 		}
 	}
 
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1828,38 +2096,42 @@ ita_consolidating_south_JE = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = placating_south_ita_tt
-			root = { tyr_italian_content_country = yes }
-			var:consolidating_south_months >= 24
+			custom_tooltip = {
+				text = placating_south_ita_tt
+				root = {
+					tyr_italian_content_country = yes
+				}
+				var:consolidating_south_months >= 24
+			}
 		}
-		
-	}
 		effect = {
-		add_loyalists = {
+			add_loyalists = {
 				value = 0.25
 				culture = cu:south_italian
 			}
-		# Remove the consolidating_south debuff from every state in the world
-		every_state = {
-			limit = {
-				has_modifier = ita_consolidating_south_debuff
+			# Remove the consolidating_south debuff from every state in the world
+			every_state = {
+				limit = {
+					has_modifier = ita_consolidating_south_debuff
+				}
+				remove_modifier = ita_consolidating_south_debuff
+				set_state_type = incorporated
 			}
-			remove_modifier = ita_consolidating_south_debuff
-			set_state_type = incorporated
 		}
 	}
-	}
+
 }
 
 # ========== Papal Recognition for Italy ==========
 # Progress bar: concession_to_pope_var 0–3; player selects 3 of 4 concessions via scripted buttons.
 Pap_recognition_for_italy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1868,11 +2140,12 @@ Pap_recognition_for_italy = {
 
 	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
 	group = je_group_italy_tyrone
-
 	progressbar = yes
+
 	current_value = {
 		value = root.var:concession_to_pope_var
 	}
+
 	goal_add_value = {
 		value = 3
 	}
@@ -1889,10 +2162,6 @@ Pap_recognition_for_italy = {
 		}
 	}
 
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -1901,20 +2170,29 @@ Pap_recognition_for_italy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		var:concession_to_pope_var >= 3
-	}
+			custom_tooltip = {
+				text = ita_arc_no_garrison_tt
+				NOT = {
+					ita_arc_rome_is_garrisoned = yes
+				}
+			}
+			var:concession_to_pope_var >= 3
+		}
 		effect = {
-		annex_with_incorporation = c:PAP
+			annex_with_incorporation = c:PAP
+		}
 	}
-	}
+
 }
 
 italy_developing_industry = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -1925,7 +2203,9 @@ italy_developing_industry = {
 	group = je_group_italy_tyrone
 
 	is_shown_when_inactive = {
-		root = { tyr_italian_content_country = yes }
+		root = {
+			tyr_italian_content_country = yes
+		}
 	}
 
 	modifiers_while_active = {
@@ -1933,7 +2213,6 @@ italy_developing_industry = {
 	}
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
-
 	timeout = 4015
 
 	status_desc = {
@@ -1941,7 +2220,9 @@ italy_developing_industry = {
 			triggered_desc = {
 				desc = ita_dev_status_noentry_desc
 				trigger = {
-					NOT = { has_journal_entry = italy_developing_industry }
+					NOT = {
+						has_journal_entry = italy_developing_industry
+					}
 				}
 			}
 			triggered_desc = {
@@ -1955,11 +2236,10 @@ italy_developing_industry = {
 
 	possible = {
 		OR = {
-		has_technology_researched = steel_frame_buildings
-		gdp > 50000000
+			has_technology_researched = steel_frame_buildings
+			gdp > 50000000
 		}
 	}
-
 
 	immediate = {
 		set_variable = {
@@ -1974,19 +2254,23 @@ italy_developing_industry = {
 			name = investment_in_south_ita_var
 			value = 0
 		}
-		set_variable = { #debuff/buff counter
+		set_variable = {
+			#debuff/buff counter
 			name = sluggish_south_ita_var
 			value = -5
 		}
-		set_variable = { #debuff/buff counter
+		set_variable = {
+			#debuff/buff counter
 			name = industrious_north_ita_var
 			value = 5
 		}
-		set_variable = { #agripadana dev, goes to 50 and then gives a modifier
+		set_variable = {
+			#agripadana dev, goes to 50 and then gives a modifier
 			name = agri_padana_ita_var
 			value = 0
 		}
-		set_variable = { #assign investment counter
+		set_variable = {
+			#assign investment counter
 			name = ita_investment_power_var
 			value = 0
 		}
@@ -1998,7 +2282,6 @@ italy_developing_industry = {
 			name = south_gdp_ita_var
 			value = ita_south_states_gdp
 		}
-
 		set_variable = {
 			name = north_gdp_objective_ita_var
 			value = var:north_gdp_ita_var
@@ -2018,7 +2301,7 @@ italy_developing_industry = {
 		set_variable = {
 			name = north_gdp_ita_updated_var
 			value = ita_north_states_gdp
-			}
+		}
 		set_variable = {
 			name = south_gdp_ita_updated_var
 			value = ita_south_states_gdp
@@ -2054,12 +2337,14 @@ italy_developing_industry = {
 							state_region = s:STATE_ABRUZZO
 						}
 					}
-					state_region = { remove_state_trait = state_trait_sluggish_south }
+					state_region = {
+						remove_state_trait = state_trait_sluggish_south
+					}
 				}
 			}
 		}
 	}
-	
+
 	on_weekly_pulse = {
 		random_events = {
 			1 = 0
@@ -2067,36 +2352,32 @@ italy_developing_industry = {
 		}
 	}
 
-
-
-
-
-
-
-
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
+		flags = {
+			timeout
+		}
 		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
 		effect = {
-		custom_tooltip = {
-			text = ita_last_dev_industry_tt
-			ita_last_industry_proc_effect = yes
+			custom_tooltip = {
+				text = ita_last_dev_industry_tt
+				ita_last_industry_proc_effect = yes
+			}
 		}
-		
 	}
-	}
+
 }
 
 #------------------ Lombardo Venezia Entries here ----------------------
-
 italy_LV_startingout = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2126,7 +2407,7 @@ italy_LV_startingout = {
 	scripted_button = LV_fix_legittimacy_button
 
 	modifiers_while_active = {
-		LV_weak_burocrazia 
+		LV_weak_burocrazia
 		LV_weak_economy
 		LV_weak_legittimacy
 		LV_weak_railways
@@ -2143,12 +2424,6 @@ italy_LV_startingout = {
 		}
 	}
 
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2157,36 +2432,42 @@ italy_LV_startingout = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = LV_fully_reformed
-			has_variable = LV_fixed_legittimacy
-			has_variable = LV_fixed_railways
-			has_variable = LV_fixed_burocrazia
-			has_variable = LV_fixed_economy
+			custom_tooltip = {
+				text = LV_fully_reformed
+				has_variable = LV_fixed_legittimacy
+				has_variable = LV_fixed_railways
+				has_variable = LV_fixed_burocrazia
+				has_variable = LV_fixed_economy
+			}
 		}
-	}
 		effect = {
-		trigger_event = { id = italyEventsTyroneLV.1 popup = yes }
-		add_journal_entry = {
-			type = italy_LV_federationPo
+			trigger_event = {
+				id = italyEventsTyroneLV.1
+				popup = yes
+			}
+			add_journal_entry = {
+				type = italy_LV_federationPo
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = italyEventsTyroneLV.1_tt
+				}
+			}
 		}
 	}
-		event_outcome_desc = {
-        first_valid = {
-            triggered_desc = {
-                desc = italyEventsTyroneLV.1_tt
-            }
-        }
-    }
-	}
+
 }
 
 italy_LV_ageofliberty = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2205,12 +2486,6 @@ italy_LV_ageofliberty = {
 	possible = {
 	}
 
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2219,23 +2494,25 @@ italy_LV_ageofliberty = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		root.average_sol >= 12
-		has_law_or_variant = law_type:law_guaranteed_liberties
-		has_law_or_variant = law_type:law_protected_speech
-		has_law_or_variant = law_type:law_total_separation
-		OR = {
-			has_law_or_variant = law_type:law_cultural_exclusion
-			has_law_or_variant = law_type:law_multicultural
+			root.average_sol >= 12
+			has_law_or_variant = law_type:law_guaranteed_liberties
+			has_law_or_variant = law_type:law_protected_speech
+			has_law_or_variant = law_type:law_total_separation
+			OR = {
+				has_law_or_variant = law_type:law_cultural_exclusion
+				has_law_or_variant = law_type:law_multicultural
+			}
+			custom_tooltip = {
+				text = is_democratic_tt
+				country_has_voting_franchise = yes
+			}
 		}
-		custom_tooltip = {
-			text = is_democratic_tt
-			country_has_voting_franchise = yes
-		}	
-		
-	}
 		effect = {
-		trigger_event = { id = italyEventsTyroneLV.2 popup = yes }
-	}
+			trigger_event = {
+				id = italyEventsTyroneLV.2
+				popup = yes
+			}
+		}
 	}
 
 	outcome = {
@@ -2244,28 +2521,31 @@ italy_LV_ageofliberty = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		any_political_movement = {
-			is_insurrectionary = yes
-		}
-		OR = {
-			any_civil_war = {
-				is_civil_war_type = revolution
-				civil_war_progress >= 0.90
+			any_political_movement = {
+				is_insurrectionary = yes
 			}
-			capital = {
-				is_in_revolt = yes
+			OR = {
+				any_civil_war = {
+					is_civil_war_type = revolution
+					civil_war_progress >= 0.90
+				}
+				capital = {
+					is_in_revolt = yes
+				}
 			}
 		}
 	}
-	}
+
 }
 
 italy_LV_neoautocracy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2284,12 +2564,6 @@ italy_LV_neoautocracy = {
 	possible = {
 	}
 
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2298,26 +2572,29 @@ italy_LV_neoautocracy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		has_law_or_variant = law_type:law_state_religion
-		has_law_or_variant = law_type:law_ethnostate
-		OR = {
-			has_law_or_variant = law_type:law_autocracy
-			has_law_or_variant = law_type:law_oligarchy
-			has_law_or_variant = law_type:law_technocracy
-		}
-		OR = {
-			has_law_or_variant = law_type:law_secret_police
-			has_law_or_variant = law_type:law_national_guard
-		}
-		NOT = {
-			any_civil_war = {
-				civil_war_progress >= 0.90
+			has_law_or_variant = law_type:law_state_religion
+			has_law_or_variant = law_type:law_ethnostate
+			OR = {
+				has_law_or_variant = law_type:law_autocracy
+				has_law_or_variant = law_type:law_oligarchy
+				has_law_or_variant = law_type:law_technocracy
+			}
+			OR = {
+				has_law_or_variant = law_type:law_secret_police
+				has_law_or_variant = law_type:law_national_guard
+			}
+			NOT = {
+				any_civil_war = {
+					civil_war_progress >= 0.90
+				}
 			}
 		}
-	}
 		effect = {
-		trigger_event = { id = italyEventsTyroneLV.3 popup = yes }
-	}
+			trigger_event = {
+				id = italyEventsTyroneLV.3
+				popup = yes
+			}
+		}
 	}
 
 	outcome = {
@@ -2326,32 +2603,35 @@ italy_LV_neoautocracy = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		any_political_movement = {
+			any_political_movement = {
+				OR = {
+					movement_is_liberal = yes
+					movement_is_socialist = yes
+				}
+				is_insurrectionary = yes
+			}
 			OR = {
-				movement_is_liberal = yes
-				movement_is_socialist = yes
-			}
-			is_insurrectionary = yes
-		}
-		OR = {
-			any_civil_war = {
-				is_civil_war_type = revolution
-				civil_war_progress >= 0.75
-			}
-			capital = {
-				is_in_revolt = yes
+				any_civil_war = {
+					is_civil_war_type = revolution
+					civil_war_progress >= 0.75
+				}
+				capital = {
+					is_in_revolt = yes
+				}
 			}
 		}
 	}
-	}
+
 }
 
 italy_LV_federationPo = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2360,11 +2640,9 @@ italy_LV_federationPo = {
 
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = ita_LV_confPO_main
 	scripted_progress_bar = ita_LV_confPO_sardinia
 	scripted_progress_bar = ita_LV_confPO_papal
-
 	scripted_button = italy_LV_federationPo_monarchy_button
 	scripted_button = italy_LV_federationPo_republic_button
 	scripted_button = italy_LV_federationPo_AUSenvoy_button
@@ -2375,9 +2653,15 @@ italy_LV_federationPo = {
 	scripted_button = italy_LV_federationPo_SARinvestment_button
 
 	immediate = {
-		c:SAR = { save_scope_as = sarpied_scope }
-		c:PAP = { save_scope_as = papal_scope }
-		c:AUS = { save_scope_as = austria_scope }
+		c:SAR = {
+			save_scope_as = sarpied_scope
+		}
+		c:PAP = {
+			save_scope_as = papal_scope
+		}
+		c:AUS = {
+			save_scope_as = austria_scope
+		}
 	}
 
 	modifiers_while_active = {
@@ -2386,14 +2670,6 @@ italy_LV_federationPo = {
 	possible = {
 	}
 
-
-
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2402,47 +2678,54 @@ italy_LV_federationPo = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = { #All 3 bars up to 100
-			text = LV_fedPO_complete_tt
-			je:italy_LV_federationPo ?= {
-				"scripted_bar_progress(ita_LV_confPO_papal)" >= 100
-				"scripted_bar_progress(ita_LV_confPO_sardinia)" >= 100
-				"scripted_bar_progress(ita_LV_confPO_main)" >= 100
+			custom_tooltip = {
+				#All 3 bars up to 100
+				text = LV_fedPO_complete_tt
+				je:italy_LV_federationPo ?= {
+					"scripted_bar_progress(ita_LV_confPO_papal)" >= 100
+					"scripted_bar_progress(ita_LV_confPO_sardinia)" >= 100
+					"scripted_bar_progress(ita_LV_confPO_main)" >= 100
+				}
+				OR = {
+					has_variable = LV_accepted_republic
+					has_variable = LV_accepted_monarchy
+				}
 			}
-			OR = {
-				has_variable = LV_accepted_republic 
-				has_variable = LV_accepted_monarchy 
+		}
+		effect = {
+			trigger_event = {
+				id = italyEventsTyroneLV.4
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = italyEventsTyroneLV.4_tt
+				}
 			}
 		}
 	}
-		effect = {
-		trigger_event = { id = italyEventsTyroneLV.4 popup = yes }
-	}
-		event_outcome_desc = {
-        first_valid = {
-            triggered_desc = {
-                desc = italyEventsTyroneLV.4_tt
-            }
-        }
-    }
-	}
+
 }
 
 italy_LV_federationItaly = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
 		container = "custom_widget_container_1"
 	}
- #Slow but better way of forming
+
+	#Slow but better way of forming
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = italy_LV_itafed_piedmont_button
 	scripted_button = italy_LV_itafed_rome_button
 	scripted_button = italy_LV_itafed_tuscany_button
@@ -2463,7 +2746,10 @@ italy_LV_federationItaly = {
 	}
 
 	immediate = {
-		set_variable = { name = italian_fed_var value = 0 }
+		set_variable = {
+			name = italian_fed_var
+			value = 0
+		}
 	}
 
 	modifiers_while_active = {
@@ -2474,12 +2760,6 @@ italy_LV_federationItaly = {
 	possible = {
 	}
 
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2488,25 +2768,33 @@ italy_LV_federationItaly = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		has_technology_researched = pan-nationalism
-		any_country = {
-			filter = {
-				capital = { is_in_geographic_region = geographic_region_italy_old }
-				NOT = { this = ROOT }
+			has_technology_researched = pan-nationalism
+			any_country = {
+				filter = {
+					capital = {
+						is_in_geographic_region = geographic_region_italy_old
+					}
+					NOT = {
+						this = ROOT
+					}
+				}
+				percent = 1
+				is_subject_of = ROOT
+				relations:ROOT >= relations_threshold:cordial
 			}
-			percent = 1
-			is_subject_of = ROOT
-			relations:ROOT >= relations_threshold:cordial
+			custom_tooltip = {
+				text = italyFederalized_tt
+				var:italian_fed_var >= 3
+				#at least 3 subjects
+			}
 		}
-		custom_tooltip = {
-			text = italyFederalized_tt
-			var:italian_fed_var >= 3 #at least 3 subjects
-		}
-	}
 		effect = {
-		trigger_event = { id = italyEventsTyroneLV.6 popup = yes }
-		add_primary_culture = cu:south_italian
-	}
+			trigger_event = {
+				id = italyEventsTyroneLV.6
+				popup = yes
+			}
+			add_primary_culture = cu:south_italian
+		}
 	}
 
 	outcome = {
@@ -2515,30 +2803,34 @@ italy_LV_federationItaly = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = is_italy_tt
-			root = { tyr_italian_content_country = yes }
+			custom_tooltip = {
+				text = is_italy_tt
+				root = {
+					tyr_italian_content_country = yes
+				}
+			}
 		}
 	}
-	}
+
 }
 
 italy_LV_centralizedItaly = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
 		container = "custom_widget_container_1"
 	}
- #Faster way
+
+	#Faster way
 	icon = "gfx/interface/icons/event_icons/italyFlag.dds"
 	group = je_group_italy_tyrone
-
-
 	scripted_button = italy_LV_itacentr_sicily_button
 	scripted_button = italy_LV_itacentr_sway_sicily_button
 
@@ -2559,12 +2851,6 @@ italy_LV_centralizedItaly = {
 		}
 	}
 
-
-
-
-
-
-	
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -2573,23 +2859,32 @@ italy_LV_centralizedItaly = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = is_italy_tt
-			root = { tyr_italian_content_country = yes }
+			custom_tooltip = {
+				text = is_italy_tt
+				root = {
+					tyr_italian_content_country = yes
+				}
+			}
+		}
+		effect = {
+			trigger_event = {
+				id = italyEventsTyrone.16
+				popup = yes
+			}
 		}
 	}
-		effect = {
-		trigger_event = { id = italyEventsTyrone.16 popup = yes }
-	}
-	}
+
 }
+
 # ========== Two Sicilies: The Fate of the Kingdom ==========
 sic_fate_of_kingdom = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2598,9 +2893,7 @@ sic_fate_of_kingdom = {
 
 	icon = "gfx/interface/icons/event_icons/two_sic_flag.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = sic_political_balance_bar
-
 	scripted_button = sic_fate_support_absolutist_button
 	scripted_button = sic_fate_support_nationalist_button
 
@@ -2613,7 +2906,6 @@ sic_fate_of_kingdom = {
 			has_journal_entry = je_springtime_of_the_peoples
 			has_technology_researched = nationalism
 		}
-		
 		is_player = yes
 	}
 
@@ -2621,7 +2913,11 @@ sic_fate_of_kingdom = {
 		first_valid = {
 			triggered_desc = {
 				desc = sic_fate_status_noentry
-				trigger = { NOT = { has_journal_entry = sic_fate_of_kingdom } }
+				trigger = {
+					NOT = {
+						has_journal_entry = sic_fate_of_kingdom
+					}
+				}
 			}
 			triggered_desc = {
 				desc = sic_fate_absolutist_dominant_desc
@@ -2641,31 +2937,22 @@ sic_fate_of_kingdom = {
 			}
 			triggered_desc = {
 				desc = sic_fate_balanced_desc
-				trigger = { always = yes }
+				trigger = {
+					always = yes
+				}
 			}
 		}
 	}
 
 	immediate = {
-		set_variable = { name = sic_fate_stance_var value = 0 }
+		set_variable = {
+			name = sic_fate_stance_var
+			value = 0
+		}
 	}
 
 	on_monthly_pulse = {
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -2675,24 +2962,27 @@ sic_fate_of_kingdom = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		has_technology_researched = nationalism
-		custom_tooltip = {
-			text = fate_sic_Complete_tt
-			scope:journal_entry = {
-				"scripted_bar_progress(sic_political_balance_bar)" >= 200
+			has_technology_researched = nationalism
+			custom_tooltip = {
+				text = fate_sic_Complete_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(sic_political_balance_bar)" >= 200
+				}
 			}
 		}
-	}
 		effect = {
-		trigger_event = { id = sic_tyrone.102 popup = yes }
-	}
-		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = sic_fate_nationalist_outcome_tt
+			trigger_event = {
+				id = sic_tyrone.102
+				popup = yes
 			}
 		}
-	}
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = sic_fate_nationalist_outcome_tt
+				}
+			}
+		}
 	}
 
 	outcome = {
@@ -2701,46 +2991,54 @@ sic_fate_of_kingdom = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		has_technology_researched = nationalism
-		custom_tooltip = {
-			text = fate_sic_fail_tt
-			scope:journal_entry = {
-				"scripted_bar_progress(sic_political_balance_bar)" <= 0
-			} 
-			has_journal_entry = sic_fate_of_kingdom
+			has_technology_researched = nationalism
+			custom_tooltip = {
+				text = fate_sic_fail_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(sic_political_balance_bar)" <= 0
+				}
+				has_journal_entry = sic_fate_of_kingdom
+			}
 		}
-	}
 		effect = {
-		
-		trigger_event = { id = sic_tyrone.101 popup = yes }
-	}
+			trigger_event = {
+				id = sic_tyrone.101
+				popup = yes
+			}
+		}
 		event_outcome_desc = {
-		
-
-		first_valid = {
-			triggered_desc = {
-				desc = sic_fate_absolutist_outcome_tt
+			first_valid = {
+				triggered_desc = {
+					desc = sic_fate_absolutist_outcome_tt
+				}
 			}
 		}
 	}
-	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { c:SIC ?= root }
+			NOT = {
+				c:SIC ?= root
+			}
+		}
 	}
-	}
+
 }
 
 # ========== Two Sicilies: Conqueror of Italy (Absolutist path) ==========
 sic_conqueror_of_italy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2762,8 +3060,6 @@ sic_conqueror_of_italy = {
 		}
 	}
 
-
-
 	immediate = {
 		every_country = {
 			limit = {
@@ -2771,16 +3067,16 @@ sic_conqueror_of_italy = {
 					is_in_geographic_region = geographic_region_italy_old
 				}
 			}
-			change_relations = { country = ROOT value = -100 }
+			change_relations = {
+				country = ROOT
+				value = -100
+			}
 		}
-		trigger_event = { id = sic_tyrone.13 popup = yes }
+		trigger_event = {
+			id = sic_tyrone.13
+			popup = yes
+		}
 	}
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -2790,31 +3086,41 @@ sic_conqueror_of_italy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		any_state = {
+			any_state = {
 				OR = {
-					state_region = { is_homeland = cu:north_italian }
-					state_region = { is_homeland = cu:south_italian }
+					state_region = {
+						is_homeland = cu:north_italian
+					}
+					state_region = {
+						is_homeland = cu:south_italian
+					}
 				}
-			owner = root
-			count >= 12
+				owner = root
+				count >= 12
+			}
+		}
+		effect = {
+			trigger_event = {
+				id = sic_tyrone.14
+				popup = yes
+			}
+		}
+		event_outcome_desc = {
+			desc = sic_conqueror_of_italy_completed_desc
 		}
 	}
-		effect = {
-		trigger_event = { id = sic_tyrone.14 popup = yes }
-	}
-		event_outcome_desc = {
-		desc = sic_conqueror_of_italy_completed_desc
-	}
-	}
+
 }
 
 # ========== Two Sicilies: Ruler of Italy (Nationalist path) ==========
 sic_ruler_of_italy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2840,26 +3146,17 @@ sic_ruler_of_italy = {
 		}
 	}
 
-
-
-
-
-
-
-
-
 	scripted_button = sic_request_lmv_cession_button
 
 	on_monthly_pulse = {
-			random_events = {
-				50 = 0
-				25 = sic_tyrone.15
-				25 = sic_tyrone.16
-				10 = sic_tyrone.17
-				10 = sic_tyrone.18
-				25 = sic_tyrone.19
-			}
-		
+		random_events = {
+			50 = 0
+			25 = sic_tyrone.15
+			25 = sic_tyrone.16
+			10 = sic_tyrone.17
+			10 = sic_tyrone.18
+			25 = sic_tyrone.19
+		}
 	}
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
@@ -2870,31 +3167,39 @@ sic_ruler_of_italy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = is_italy_tt
-			root = { tyr_italian_content_country = yes }
+			custom_tooltip = {
+				text = is_italy_tt
+				root = {
+					tyr_italian_content_country = yes
+				}
+			}
 		}
-	}
 		effect = {
-		trigger_event = { id = sic_tyrone.21 popup = yes }
-	}
+			trigger_event = {
+				id = sic_tyrone.21
+				popup = yes
+			}
+		}
 		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = sic_ruler_of_italy_outcome_tt
+			first_valid = {
+				triggered_desc = {
+					desc = sic_ruler_of_italy_outcome_tt
+				}
 			}
 		}
 	}
-	}
+
 }
 
 # ========== Stop Italian Emigration ==========
 ita_stop_emigration = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2903,7 +3208,6 @@ ita_stop_emigration = {
 
 	icon = "gfx/interface/icons/decree/decree_greener_grass_campaign.dds"
 	group = je_group_italy_tyrone
-
 	scripted_button = ita_stop_emigration_ai_button
 
 	is_shown_when_inactive = {
@@ -2916,22 +3220,20 @@ ita_stop_emigration = {
 		first_valid = {
 			triggered_desc = {
 				desc = ita_stop_emigration_status_inactive_desc
-				trigger = { NOT = { has_journal_entry = ita_stop_emigration } }
+				trigger = {
+					NOT = {
+						has_journal_entry = ita_stop_emigration
+					}
+				}
 			}
 			triggered_desc = {
 				desc = ita_stop_emigration_status_desc
-				trigger = { always = yes }
+				trigger = {
+					always = yes
+				}
 			}
 		}
 	}
-
-
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
@@ -2941,31 +3243,37 @@ ita_stop_emigration = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			has_law = law_type:law_closed_borders
-			average_sol >= 12
+			OR = {
+				has_law = law_type:law_closed_borders
+				average_sol >= 12
+			}
 		}
-	}
 		effect = {
-		trigger_event = { id = sic_tyrone.10 popup = yes }
-	}
+			trigger_event = {
+				id = sic_tyrone.10
+				popup = yes
+			}
+		}
 		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = ita_stop_emigration_outcome_both_tt
+			first_valid = {
+				triggered_desc = {
+					desc = ita_stop_emigration_outcome_both_tt
+				}
 			}
 		}
 	}
-	}
+
 }
 
 # ========== Two Sicilies: Reform the Latifundia (main chain JE) ==========
 sic_latifundia_reform = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -2974,7 +3282,6 @@ sic_latifundia_reform = {
 
 	icon = "gfx/interface/icons/invention_icons/enclosure.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = sic_latifundia_reform_bar
 
 	is_shown_when_inactive = {
@@ -2999,28 +3306,24 @@ sic_latifundia_reform = {
 		first_valid = {
 			triggered_desc = {
 				desc = sic_latifundia_reform_base_desc
-				trigger = { always = yes }
+				trigger = {
+					always = yes
+				}
 			}
 		}
 	}
 
 	on_monthly_pulse = {
-			random_events = {
-				80 = 0
-				5 = sic_tyrone.3
-				5 = sic_tyrone.4
-				5 = sic_tyrone.5
-				5 = sic_tyrone.6
-				20 = sic_tyrone.7
-				40 = sic_tyrone.11
-			}
+		random_events = {
+			80 = 0
+			5 = sic_tyrone.3
+			5 = sic_tyrone.4
+			5 = sic_tyrone.5
+			5 = sic_tyrone.6
+			20 = sic_tyrone.7
+			40 = sic_tyrone.11
+		}
 	}
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	transferable = yes
@@ -3031,54 +3334,57 @@ sic_latifundia_reform = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = sic_latifundia_agri_tt
-			sic_latifundia_agri_levels >= 150
-		}
-		custom_tooltip = {
-			text = sic_latifundia_reform_bar_complete_tt
-			scope:journal_entry = {
-				"scripted_bar_progress(sic_latifundia_reform_bar)" >= 100
-			}
-		}
-		OR = {
 			custom_tooltip = {
-				text = sic_latifundia_modernizer_complete_tt
-				OR = {
-					has_journal_entry = sic_modernizer_king
-					has_variable = sic_modernizer_king_done
+				text = sic_latifundia_agri_tt
+				sic_latifundia_agri_levels >= 150
+			}
+			custom_tooltip = {
+				text = sic_latifundia_reform_bar_complete_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(sic_latifundia_reform_bar)" >= 100
+				}
+			}
+			OR = {
+				custom_tooltip = {
+					text = sic_latifundia_modernizer_complete_tt
+					OR = {
+						has_journal_entry = sic_modernizer_king
+						has_variable = sic_modernizer_king_done
+					}
+				}
+				custom_tooltip = {
+					text = sic_latifundia_slavery_complete_tt
+					OR = {
+						has_journal_entry = sic_slavery_path
+						has_variable = sic_slavery_je_done
+					}
 				}
 			}
 			custom_tooltip = {
-				text = sic_latifundia_slavery_complete_tt
-				OR = {
-					has_journal_entry = sic_slavery_path
-					has_variable = sic_slavery_je_done
-				}
+				text = sic_latifundia_exports_complete_tt
+				total_country_exports > sic_latifundia_export_target
 			}
 		}
-		custom_tooltip = {
-			text = sic_latifundia_exports_complete_tt
-			total_country_exports > sic_latifundia_export_target
-		}
-	}
 		effect = {
-		set_variable = sic_latifundia_reform_done
-		add_modifier = { 
-			name = sic_latifundia_dismantled 
-			days = long_modifier_time
+			set_variable = sic_latifundia_reform_done
+			add_modifier = {
+				name = sic_latifundia_dismantled
+				days = long_modifier_time
+			}
 		}
 	}
-	}
+
 }
 
 # ========== Two Sicilies: Slavery Path ==========
 sic_slavery_path = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3107,30 +3413,26 @@ sic_slavery_path = {
 		first_valid = {
 			triggered_desc = {
 				desc = sic_slavery_path_noentry_desc
-				trigger = { NOT = { has_journal_entry = sic_slavery_path } }
+				trigger = {
+					NOT = {
+						has_journal_entry = sic_slavery_path
+					}
+				}
 			}
 			triggered_desc = {
 				desc = sic_slavery_path_enacted_desc
-				trigger = { has_law = law_type:law_sic_serfdom }
+				trigger = {
+					has_law = law_type:law_sic_serfdom
+				}
 			}
 			triggered_desc = {
 				desc = sic_slavery_path_pending_desc
-				trigger = { always = yes }
+				trigger = {
+					always = yes
+				}
 			}
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	transferable = yes
@@ -3141,28 +3443,34 @@ sic_slavery_path = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		has_law = law_type:law_sic_serfdom
-	}
+			has_law = law_type:law_sic_serfdom
+		}
 		effect = {
-		set_variable = sic_slavery_je_done
-		add_journal_entry = {
-			type = sic_slavery_system_je
-		}
-		trigger_event = { id = sic_tyrone.12 popup = yes }
-		custom_tooltip = {
-			text = sic_dismantle_latifundia_bar_progress_tt
-			je:sic_latifundia_reform = {
-				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			set_variable = sic_slavery_je_done
+			add_journal_entry = {
+				type = sic_slavery_system_je
+			}
+			trigger_event = {
+				id = sic_tyrone.12
+				popup = yes
+			}
+			custom_tooltip = {
+				text = sic_dismantle_latifundia_bar_progress_tt
+				je:sic_latifundia_reform = {
+					add_progress = {
+						value = 25
+						name = sic_latifundia_reform_bar
+					}
+				}
 			}
 		}
-	}
 		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = sic_slavery_outcome_tt
+			first_valid = {
+				triggered_desc = {
+					desc = sic_slavery_outcome_tt
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
@@ -3171,21 +3479,26 @@ sic_slavery_path = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { is_enacting_law = law_type:law_sic_serfdom }
-	}
+			NOT = {
+				is_enacting_law = law_type:law_sic_serfdom
+			}
+		}
 		effect = {
-		set_variable = sic_slavery_je_failed
+			set_variable = sic_slavery_je_failed
+		}
 	}
-	}
+
 }
 
 # ========== Two Sicilies: The Modernizer King ==========
 sic_modernizer_king = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3194,7 +3507,6 @@ sic_modernizer_king = {
 
 	icon = "gfx/interface/icons/law_icons/monarchy.dds"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = sic_modernizer_king_bar
 
 	is_shown_when_inactive = {
@@ -3213,7 +3525,11 @@ sic_modernizer_king = {
 	}
 
 	immediate = {
-		ig:ig_landowners = { leader = { set_ideology = ideology:ideology_modernizer_leader } }
+		ig:ig_landowners = {
+			leader = {
+				set_ideology = ideology:ideology_modernizer_leader
+			}
+		}
 	}
 
 	status_desc = {
@@ -3221,7 +3537,9 @@ sic_modernizer_king = {
 			triggered_desc = {
 				desc = sic_modernizer_king_status_noentry_desc
 				trigger = {
-					NOT = { has_journal_entry = sic_modernizer_king }
+					NOT = {
+						has_journal_entry = sic_modernizer_king
+					}
 				}
 			}
 			triggered_desc = {
@@ -3233,14 +3551,6 @@ sic_modernizer_king = {
 		}
 	}
 
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	transferable = yes
 
@@ -3250,48 +3560,62 @@ sic_modernizer_king = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = sic_modernizer_king_bar_complete_tt
-			scope:journal_entry = {
-				"scripted_bar_progress(sic_modernizer_king_bar)" >= 100
+			custom_tooltip = {
+				text = sic_modernizer_king_bar_complete_tt
+				scope:journal_entry = {
+					"scripted_bar_progress(sic_modernizer_king_bar)" >= 100
+				}
 			}
 		}
-	}
 		effect = {
-		set_variable = sic_modernizer_king_done
-		trigger_event = { id = sic_tyrone.9 popup = yes }
-		custom_tooltip = {
-			text = sic_dismantle_latifundia_bar_progress_tt
-			je:sic_latifundia_reform = {
-				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			set_variable = sic_modernizer_king_done
+			trigger_event = {
+				id = sic_tyrone.9
+				popup = yes
+			}
+			custom_tooltip = {
+				text = sic_dismantle_latifundia_bar_progress_tt
+				je:sic_latifundia_reform = {
+					add_progress = {
+						value = 25
+						name = sic_latifundia_reform_bar
+					}
+				}
 			}
 		}
-	}
 		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = sic_modernizer_king_outcome_tt
+			first_valid = {
+				triggered_desc = {
+					desc = sic_modernizer_king_outcome_tt
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { has_law_or_variant = law_type:law_monarchy }
+			NOT = {
+				has_law_or_variant = law_type:law_monarchy
+			}
+		}
 	}
-	}
+
 }
 
 # ========== Two Sicilies: Dismantle Latifundia ==========
 sic_dismantle_latifundia = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3303,13 +3627,12 @@ sic_dismantle_latifundia = {
 
 	immediate = {
 		set_variable = {
-				name = sic_latifundia_fertilizer_var
-				value = 0
-			}
+			name = sic_latifundia_fertilizer_var
+			value = 0
+		}
 	}
 
 	progressbar = yes
-	
 
 	current_value = {
 		value = root.var:sic_latifundia_fertilizer_var
@@ -3322,38 +3645,41 @@ sic_dismantle_latifundia = {
 	on_monthly_pulse = {
 		effect = {
 			if = {
-                    limit = {
-                        any_scope_building = {
-                            filter = {
-                                is_building_group = bg_staple_crops
-                                state = {
-                                    state_region = {
-                                        is_homeland = cu:south_italian
-                                    }
-                                }
-                            }
-                            OR = {
-                                has_active_production_method = pm_soil_enriching_farming
-                            }
-                            percent >= 0.8
-                        }
-                        any_scope_building = {
-                            filter = {
-                                is_building_group = bg_staple_crops
-                                state = {
-                                    state_region = {
-                                        is_homeland = cu:south_italian
-                                    }
-                                }
-                            }
-                            OR = {
-                                has_active_production_method = pm_tools
-                            }
-                            percent >= 0.8
-                        }
-                    }
-                    change_variable = { name = sic_latifundia_fertilizer_var add = 1 }
-                }
+				limit = {
+					any_scope_building = {
+						filter = {
+							is_building_group = bg_staple_crops
+							state = {
+								state_region = {
+									is_homeland = cu:south_italian
+								}
+							}
+						}
+						OR = {
+							has_active_production_method = pm_soil_enriching_farming
+						}
+						percent >= 0.8
+					}
+					any_scope_building = {
+						filter = {
+							is_building_group = bg_staple_crops
+							state = {
+								state_region = {
+									is_homeland = cu:south_italian
+								}
+							}
+						}
+						OR = {
+							has_active_production_method = pm_tools
+						}
+						percent >= 0.8
+					}
+				}
+				change_variable = {
+					name = sic_latifundia_fertilizer_var
+					add = 1
+				}
+			}
 		}
 	}
 
@@ -3372,22 +3698,18 @@ sic_dismantle_latifundia = {
 		first_valid = {
 			triggered_desc = {
 				desc = sic_dismantle_latifundia_active_status_desc
-				trigger = { has_journal_entry = sic_dismantle_latifundia }
+				trigger = {
+					has_journal_entry = sic_dismantle_latifundia
+				}
 			}
 			triggered_desc = {
 				desc = sic_dismantle_latifundia_status_desc
-				trigger = { always = yes }
+				trigger = {
+					always = yes
+				}
 			}
 		}
 	}
-
-
-
-
-
-
-
-
 
 	should_be_pinned_by_default_uninvolved_or_context = yes
 	transferable = yes
@@ -3398,72 +3720,85 @@ sic_dismantle_latifundia = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = sic_latfundia_fer_complete_tt
-			scope:journal_entry = { is_goal_complete = yes }
+			custom_tooltip = {
+				text = sic_latfundia_fer_complete_tt
+				scope:journal_entry = {
+					is_goal_complete = yes
+				}
+			}
+			any_scope_building = {
+				filter = {
+					is_building_group = bg_staple_crops
+					state = {
+						state_region = {
+							is_homeland = cu:south_italian
+						}
+					}
+				}
+				OR = {
+					has_active_production_method = pm_soil_enriching_farming
+				}
+				percent >= 0.8
+			}
+			any_scope_building = {
+				filter = {
+					is_building_group = bg_staple_crops
+					state = {
+						state_region = {
+							is_homeland = cu:south_italian
+						}
+					}
+				}
+				OR = {
+					has_active_production_method = pm_tools
+				}
+				percent >= 0.8
+			}
 		}
-		any_scope_building = {
-                filter = {
-                    is_building_group = bg_staple_crops
-                    state = {
-                        state_region = {
-                            is_homeland = cu:south_italian
-                        }
-                    }
-                }
-                OR = {
-                    has_active_production_method = pm_soil_enriching_farming
-                }
-                percent >= 0.8
-            }
-            any_scope_building = {
-                filter = {
-                    is_building_group = bg_staple_crops
-                    state = {
-                        state_region = {
-                            is_homeland = cu:south_italian
-                        }
-                    }
-                }
-                OR = {
-                    has_active_production_method = pm_tools
-                }
-                percent >= 0.8
-            }
-	}
 		effect = {
-		set_variable = sic_dismantle_latifundia_done
-		trigger_event = { id = sic_tyrone.8 popup = yes }
-		custom_tooltip = {
-			text = sic_dismantle_latifundia_bar_progress_tt
-			je:sic_latifundia_reform = {
-				add_progress = { value = 25 name = sic_latifundia_reform_bar }
+			set_variable = sic_dismantle_latifundia_done
+			trigger_event = {
+				id = sic_tyrone.8
+				popup = yes
+			}
+			custom_tooltip = {
+				text = sic_dismantle_latifundia_bar_progress_tt
+				je:sic_latifundia_reform = {
+					add_progress = {
+						value = 25
+						name = sic_latifundia_reform_bar
+					}
+				}
+			}
+			every_scope_state = {
+				limit = {
+					state_region = {
+						is_homeland = cu:south_italian
+					}
+				}
+				add_state_trait = state_trait_blessed_soils_south
 			}
 		}
-		every_scope_state = {
-			limit = {
-				state_region = { is_homeland = cu:south_italian }
-			}
-			add_state_trait = state_trait_blessed_soils_south
-		}
-	}
 		event_outcome_desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = sic_dismantle_latifundia_outcome_tt
+			first_valid = {
+				triggered_desc = {
+					desc = sic_dismantle_latifundia_outcome_tt
+				}
 			}
 		}
 	}
-	}
+
 }
 
 # ========== Sicilian Sulphur Monopoly — given by sic_sulphur_company_decision ==========
 sic_sulphur_monopoly_je = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3483,28 +3818,32 @@ sic_sulphur_monopoly_je = {
 	possible = {
 	}
 
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { has_company = company_type:company_anglo_sicilian_sulphur_company }
+			NOT = {
+				has_company = company_type:company_anglo_sicilian_sulphur_company
+			}
+		}
 	}
-	}
+
 }
 
 # ========== Sicilian Slave System — reverts if the Sicilian serfdom law is removed ==========
 sic_slavery_system_je = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3523,12 +3862,6 @@ sic_slavery_system_je = {
 	possible = {
 	}
 
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3537,21 +3870,26 @@ sic_slavery_system_je = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		NOT = { has_law = law_type:law_sic_serfdom }
-	}
+			NOT = {
+				has_law = law_type:law_sic_serfdom
+			}
+		}
 		effect = {
-		activate_law = law_type:law_expanded_latifundias
+			activate_law = law_type:law_expanded_latifundias
+		}
 	}
-	}
+
 }
 
 # ========== Italy: The Metternich System ==========
 ita_metternich_system = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3567,14 +3905,6 @@ ita_metternich_system = {
 	possible = {
 	}
 
-
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3583,22 +3913,29 @@ ita_metternich_system = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = is_italy_tt
-			root = { tyr_italian_content_country = yes }
+			custom_tooltip = {
+				text = is_italy_tt
+				root = {
+					tyr_italian_content_country = yes
+				}
+			}
+			is_in_power_bloc = yes
+			c:AUS ?= {
+				is_in_power_bloc = yes
+			}
+			power_bloc = c:AUS.power_bloc
 		}
-		is_in_power_bloc = yes
-		c:AUS ?= { is_in_power_bloc = yes }
-		power_bloc = c:AUS.power_bloc
-	}
 		effect = {
-		custom_tooltip = {
-			text = ita_metternich_complete_tt
-			power_bloc = {
-				add_modifier = { name = ita_metternich_mandate_boost years = 5 }
+			custom_tooltip = {
+				text = ita_metternich_complete_tt
+				power_bloc = {
+					add_modifier = {
+						name = ita_metternich_mandate_boost
+						years = 5
+					}
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
@@ -3607,47 +3944,65 @@ ita_metternich_system = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		custom_tooltip = {
-			text = is_italy_tt
-			root = { tyr_italian_content_country = yes }
-		}
-		is_in_power_bloc = yes
-		NOT = { power_bloc = c:AUS.power_bloc }
-	}
-		effect = {
-		if = {
-			limit = { is_power_bloc_leader = yes }
 			custom_tooltip = {
-				text = ita_metternich_fail_leader_bloc_tt
-				power_bloc = {
-					add_modifier = { name = ita_metternich_defiance_mandate years = 5 }
+				text = is_italy_tt
+				root = {
+					tyr_italian_content_country = yes
 				}
 			}
-			custom_tooltip = {
-				text = ita_metternich_fail_leader_country_tt
-				add_modifier = { name = ita_metternich_independence_bonus years = 5 }
+			is_in_power_bloc = yes
+			NOT = {
+				power_bloc = c:AUS.power_bloc
 			}
 		}
-		else = {
-			custom_tooltip = {
-				text = ita_metternich_fail_member_tt
-				power_bloc = {
-					every_power_bloc_member = {
-						add_modifier = { name = ita_metternich_liberal_spread years = 5 }
+		effect = {
+			if = {
+				limit = {
+					is_power_bloc_leader = yes
+				}
+				custom_tooltip = {
+					text = ita_metternich_fail_leader_bloc_tt
+					power_bloc = {
+						add_modifier = {
+							name = ita_metternich_defiance_mandate
+							years = 5
+						}
+					}
+				}
+				custom_tooltip = {
+					text = ita_metternich_fail_leader_country_tt
+					add_modifier = {
+						name = ita_metternich_independence_bonus
+						years = 5
+					}
+				}
+			}
+			else = {
+				custom_tooltip = {
+					text = ita_metternich_fail_member_tt
+					power_bloc = {
+						every_power_bloc_member = {
+							add_modifier = {
+								name = ita_metternich_liberal_spread
+								years = 5
+							}
+						}
 					}
 				}
 			}
 		}
 	}
-	}
+
 }
 
 sic_bourbon_monarchy_main = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3656,7 +4011,6 @@ sic_bourbon_monarchy_main = {
 
 	icon = "gfx/interface/icons/event_icons/bourbon_two_sic.png"
 	group = je_group_italy_tyrone
-
 	scripted_progress_bar = bourbon_legitimacy_bar
 
 	modifiers_while_active = {
@@ -3668,9 +4022,11 @@ sic_bourbon_monarchy_main = {
 	}
 
 	possible = {
-		hidden_trigger = { is_player = yes }
+		hidden_trigger = {
+			is_player = yes
+		}
 	}
-	
+
 	immediate = {
 		add_journal_entry = {
 			type = sic_bourbon_monarchy_bureaucracy
@@ -3685,15 +4041,6 @@ sic_bourbon_monarchy_main = {
 			type = sic_bourbon_monarchy_constitution
 		}
 	}
-
-
-
-
-
-
-
-
-
 
 	on_weekly_pulse = {
 		random_events = {
@@ -3711,11 +4058,12 @@ sic_bourbon_monarchy_main = {
 				add_modifier = {
 					name = sic_bourbon_legittimacy
 					multiplier = {
-						je:sic_bourbon_monarchy_main = { add = "scripted_bar_progress(bourbon_legitimacy_bar)" }
+						je:sic_bourbon_monarchy_main = {
+							add = "scripted_bar_progress(bourbon_legitimacy_bar)"
+						}
 					}
 				}
 			}
-			
 		}
 	}
 
@@ -3728,8 +4076,6 @@ sic_bourbon_monarchy_main = {
 		}
 	}
 
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3738,36 +4084,42 @@ sic_bourbon_monarchy_main = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			custom_tooltip = {
-				text = sic_bourbon_monarchy_main_complete_tt
-				has_variable = sic_fix_police
-				has_variable = sic_fix_constitution
-				has_variable = sic_fix_economy
-				has_variable = sic_fix_bureaucracy
-			}
-			custom_tooltip = {
-				text = is_italy_tt
-				root = { tyr_italian_content_country = yes }
+			OR = {
+				custom_tooltip = {
+					text = sic_bourbon_monarchy_main_complete_tt
+					has_variable = sic_fix_police
+					has_variable = sic_fix_constitution
+					has_variable = sic_fix_economy
+					has_variable = sic_fix_bureaucracy
+				}
+				custom_tooltip = {
+					text = is_italy_tt
+					root = {
+						tyr_italian_content_country = yes
+					}
+				}
 			}
 		}
-		
-	}
 		effect = {
-		add_modifier = {
+			add_modifier = {
 				name = sic_bourbon_legittimacy
 				multiplier = {
-					je:sic_bourbon_monarchy_main = { add = "scripted_bar_progress(bourbon_legitimacy_bar)" }
+					je:sic_bourbon_monarchy_main = {
+						add = "scripted_bar_progress(bourbon_legitimacy_bar)"
+					}
 				}
 				days = long_modifier_time
 			}
-		custom_tooltip = {
-			text = sic_fate_kingdom_instabourbon_tt
-			je:sic_fate_of_kingdom = {
-				add_progress = { value = -200 name = sic_political_balance_bar }
+			custom_tooltip = {
+				text = sic_fate_kingdom_instabourbon_tt
+				je:sic_fate_of_kingdom = {
+					add_progress = {
+						value = -200
+						name = sic_political_balance_bar
+					}
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
@@ -3776,39 +4128,46 @@ sic_bourbon_monarchy_main = {
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		OR = {
-			custom_tooltip = {
-				text = sic_bourbon_fail_tt
-				scope:journal_entry = {
-					"scripted_bar_progress(bourbon_legitimacy_bar)" <= 0
+			OR = {
+				custom_tooltip = {
+					text = sic_bourbon_fail_tt
+					scope:journal_entry = {
+						"scripted_bar_progress(bourbon_legitimacy_bar)" <= 0
 					}
+				}
+				custom_tooltip = {
+					text = sic_bourbongaribaldi_fail_tt
+					#fail anyway cuz Garibaldi enstablishes the Republic
+					always = no
+				}
+				NOT = {
+					has_law_or_variant = law_type:law_monarchy
+				}
 			}
-			custom_tooltip = {
-				text = sic_bourbongaribaldi_fail_tt
-				#fail anyway cuz Garibaldi enstablishes the Republic
-				always = no
-			}
-			NOT = { has_law_or_variant = law_type:law_monarchy }
 		}
-		
-	}
 		effect = {
-		custom_tooltip = {
-			text = sic_fate_kingdom_instanationalist_tt
-			je:sic_fate_of_kingdom = {
-				add_progress = { value = 200 name = sic_political_balance_bar }
+			custom_tooltip = {
+				text = sic_fate_kingdom_instanationalist_tt
+				je:sic_fate_of_kingdom = {
+					add_progress = {
+						value = 200
+						name = sic_political_balance_bar
+					}
+				}
 			}
 		}
 	}
-	}
+
 }
 
 sic_bourbon_monarchy_bureaucracy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3828,12 +4187,6 @@ sic_bourbon_monarchy_bureaucracy = {
 	possible = {
 	}
 
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3842,42 +4195,55 @@ sic_bourbon_monarchy_bureaucracy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		any_scope_state = {
-			is_incorporated = yes
-			any_scope_building = {
-				is_building_type = building_government_administration
-				level >= 5
+			any_scope_state = {
+				is_incorporated = yes
+				any_scope_building = {
+					is_building_type = building_government_administration
+					level >= 5
+				}
+				percent >= 0.75
 			}
-			percent >= 0.75
+			NOT = {
+				has_law_or_variant = law_type:law_hereditary_bureaucrats
+			}
 		}
-		NOT = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
-	}
 		effect = {
-		set_variable = sic_fix_bureaucracy
-		custom_tooltip = {
-			text = sic_bourbon_bar_progress_tt
-			je:sic_bourbon_monarchy_main = {
-				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			set_variable = sic_fix_bureaucracy
+			custom_tooltip = {
+				text = sic_bourbon_bar_progress_tt
+				je:sic_bourbon_monarchy_main = {
+					add_progress = {
+						value = 25
+						name = bourbon_legitimacy_bar
+					}
+				}
 			}
 		}
-	}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { has_journal_entry = sic_bourbon_monarchy_main }
+			NOT = {
+				has_journal_entry = sic_bourbon_monarchy_main
+			}
+		}
 	}
-	}
+
 }
 
 sic_bourbon_monarchy_police = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3897,12 +4263,6 @@ sic_bourbon_monarchy_police = {
 	possible = {
 	}
 
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3911,37 +4271,48 @@ sic_bourbon_monarchy_police = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		institution_investment_level = {
-			institution = institution_police
-			value = 2
+			institution_investment_level = {
+				institution = institution_police
+				value = 2
+			}
 		}
-	}
 		effect = {
-		set_variable = sic_fix_police
-		custom_tooltip = {
-			text = sic_bourbon_bar_progress_tt
-			je:sic_bourbon_monarchy_main = {
-				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			set_variable = sic_fix_police
+			custom_tooltip = {
+				text = sic_bourbon_bar_progress_tt
+				je:sic_bourbon_monarchy_main = {
+					add_progress = {
+						value = 25
+						name = bourbon_legitimacy_bar
+					}
+				}
 			}
 		}
 	}
-	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { has_journal_entry = sic_bourbon_monarchy_main }
+			NOT = {
+				has_journal_entry = sic_bourbon_monarchy_main
+			}
+		}
 	}
-	}
+
 }
 
 sic_bourbon_monarchy_constitution = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -3964,12 +4335,6 @@ sic_bourbon_monarchy_constitution = {
 	possible = {
 	}
 
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -3978,42 +4343,53 @@ sic_bourbon_monarchy_constitution = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			has_law_or_variant = law_type:law_wealth_voting
-			has_law_or_variant = law_type:law_census_voting
-			has_law_or_variant = law_type:law_universal_suffrage
+			OR = {
+				has_law_or_variant = law_type:law_wealth_voting
+				has_law_or_variant = law_type:law_census_voting
+				has_law_or_variant = law_type:law_universal_suffrage
+			}
+			OR = {
+				has_law_or_variant = law_type:law_right_of_assembly
+				has_law_or_variant = law_type:law_protected_speech
+			}
 		}
-		OR = {
-			has_law_or_variant = law_type:law_right_of_assembly
-			has_law_or_variant = law_type:law_protected_speech
-		}
-	}
 		effect = {
-		set_variable = sic_fix_constitution
-		custom_tooltip = {
-			text = sic_bourbon_bar_progress_tt
-			je:sic_bourbon_monarchy_main = {
-				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			set_variable = sic_fix_constitution
+			custom_tooltip = {
+				text = sic_bourbon_bar_progress_tt
+				je:sic_bourbon_monarchy_main = {
+					add_progress = {
+						value = 25
+						name = bourbon_legitimacy_bar
+					}
+				}
 			}
 		}
 	}
-	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		NOT = { has_journal_entry = sic_bourbon_monarchy_main }
+			NOT = {
+				has_journal_entry = sic_bourbon_monarchy_main
+			}
+		}
 	}
-	}
+
 }
 
 sic_bourbon_monarchy_economy = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -4033,16 +4409,7 @@ sic_bourbon_monarchy_economy = {
 	possible = {
 	}
 
-
-
 	scripted_button = sic_bourbon_economy_skip_button
-
-
-
-
-
-
-
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
@@ -4051,98 +4418,109 @@ sic_bourbon_monarchy_economy = {
 		color = "gold_positive"
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
-		OR = {
-			any_scope_state = {
-                OR = {
-                    state_has_building_group_levels = {
-                        type = bg_light_industry
-                        value >= 10
-                    }
-                    state_has_building_group_levels = {
-                        type = bg_heavy_industry
-                        value >= 5
-                    }
-                }
-				market_access = 1
-                count >= 3
-            }
-
-			any_scope_state = {
-                OR = {
-                    state_has_building_group_levels = {
-                        type = bg_light_industry
-                        value >= 20
-                    }
-                    state_has_building_group_levels = {
-                        type = bg_heavy_industry
-                        value >= 15
-                    }
-                }
-				market_access = 1
-                count >= 1
-            }
-		}
-		
-            any_company = {
-                company_is_prosperous = yes
-                count >= 1
-            }
-	}
-		effect = {
-		set_variable = sic_fix_economy
-		custom_tooltip = {
-			text = sic_bourbon_bar_progress_tt
-			je:sic_bourbon_monarchy_main = {
-				add_progress = { value = 25 name = bourbon_legitimacy_bar }
+			OR = {
+				any_scope_state = {
+					OR = {
+						state_has_building_group_levels = {
+							type = bg_light_industry
+							value >= 10
+						}
+						state_has_building_group_levels = {
+							type = bg_heavy_industry
+							value >= 5
+						}
+					}
+					market_access = 1
+					count >= 3
+				}
+				any_scope_state = {
+					OR = {
+						state_has_building_group_levels = {
+							type = bg_light_industry
+							value >= 20
+						}
+						state_has_building_group_levels = {
+							type = bg_heavy_industry
+							value >= 15
+						}
+					}
+					market_access = 1
+					count >= 1
+				}
+			}
+			any_company = {
+				company_is_prosperous = yes
+				count >= 1
 			}
 		}
-		hidden_effect = {
-			every_state = {
-			limit = {
-				OR = {
-					state_region = s:STATE_SICILY
-					state_region = s:STATE_CALABRIA
-					state_region = s:STATE_CAMPANIA
-					state_region = s:STATE_APULIA
-					state_region = s:STATE_ABRUZZO
+		effect = {
+			set_variable = sic_fix_economy
+			custom_tooltip = {
+				text = sic_bourbon_bar_progress_tt
+				je:sic_bourbon_monarchy_main = {
+					add_progress = {
+						value = 25
+						name = bourbon_legitimacy_bar
 					}
 				}
-				state_region = { remove_state_trait = state_trait_sluggish_south }
-				add_modifier = {
-					name = bourbon_fix_sluggish_mod
-					days = long_modifier_time
-					is_decaying = yes
+			}
+			hidden_effect = {
+				every_state = {
+					limit = {
+						OR = {
+							state_region = s:STATE_SICILY
+							state_region = s:STATE_CALABRIA
+							state_region = s:STATE_CAMPANIA
+							state_region = s:STATE_APULIA
+							state_region = s:STATE_ABRUZZO
+						}
+					}
+					state_region = {
+						remove_state_trait = state_trait_sluggish_south
+					}
+					add_modifier = {
+						name = bourbon_fix_sluggish_mod
+						days = long_modifier_time
+						is_decaying = yes
+					}
 				}
 			}
 		}
-	}
 		event_outcome_desc = {
-        first_valid = {
-            triggered_desc = {
-                desc = sic_bourbon_monarchy_economy_outcome_tt
-            }
-        }
-    }
+			first_valid = {
+				triggered_desc = {
+					desc = sic_bourbon_monarchy_economy_outcome_tt
+				}
+			}
+		}
 	}
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		OR = {
-			NOT = { has_journal_entry = sic_bourbon_monarchy_main }
-			has_variable = sic_bourbon_economy_skipped
+			OR = {
+				NOT = {
+					has_journal_entry = sic_bourbon_monarchy_main
+				}
+				has_variable = sic_bourbon_economy_skipped
+			}
 		}
 	}
-	}
+
 }
 
 garibaldi_presidency_JE = {
+
 	activation_description = {
 		always = yes
 	}
 
 	# Tyrone widgets injected into the vanilla journal panel.
+
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_legacy_widgets.gui"
 		name = "tyr_italy_content"
@@ -4151,7 +4529,6 @@ garibaldi_presidency_JE = {
 
 	icon = "gfx/interface/icons/event_icons/garibaldi_republic.dds"
 	group = je_group_italy_tyrone
-
 	timeout = 9125
 
 	is_shown_when_inactive = {
@@ -4160,15 +4537,13 @@ garibaldi_presidency_JE = {
 	possible = {
 	}
 
-
-
 	scripted_button = garibaldi_steps_down_button
-
-
 
 	immediate = {
 		random_scope_character = {
-			limit = { has_trait = ita_grande_generale }
+			limit = {
+				has_trait = ita_grande_generale
+			}
 			save_scope_as = garibaldi_president
 		}
 		scope:garibaldi_president = {
@@ -4180,13 +4555,15 @@ garibaldi_presidency_JE = {
 		effect = {
 			if = {
 				limit = {
-					any_scope_character = { 
-						has_trait = ita_grande_generale 
+					any_scope_character = {
+						has_trait = ita_grande_generale
 						is_ruler_of_own_country = no
 					}
 				}
 				random_scope_character = {
-					limit = { has_trait = ita_grande_generale }
+					limit = {
+						has_trait = ita_grande_generale
+					}
 					set_character_as_ruler = yes
 				}
 			}
@@ -4196,20 +4573,30 @@ garibaldi_presidency_JE = {
 	should_be_pinned_by_default_uninvolved_or_context = yes
 
 	outcome = {
-		flags = { hidden invalid_outcome }
+		flags = {
+			hidden
+			invalid_outcome
+		}
 		conclusion_desc = je_standard_failure_conclusion_desc
 		trigger = {
-		OR = {
-			NOT = { any_scope_character = { has_trait = ita_grande_generale } }
-			has_variable = garibaldi_stepped_down_var
+			OR = {
+				NOT = {
+					any_scope_character = {
+						has_trait = ita_grande_generale
+					}
+				}
+				has_variable = garibaldi_stepped_down_var
+			}
 		}
-	}
 	}
 
 	outcome = {
 		header = JOURNAL_ENTRY_TIMEOUT
 		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
-		flags = { timeout }
+		flags = {
+			timeout
+		}
 		conclusion_desc = JOURNAL_ENTRY_TIMEOUT_CONCLUSION_DESC
 	}
+
 }

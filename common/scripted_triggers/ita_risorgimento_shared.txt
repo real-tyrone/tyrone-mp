@@ -1,0 +1,145 @@
+﻿ita_risorgimento_core_region = {
+
+	OR = {
+		state_region = s:STATE_PIEDMONT
+		state_region = s:STATE_EMILIA
+		state_region = s:STATE_TUSCANY
+		state_region = s:STATE_LAZIO
+		state_region = s:STATE_CAMPANIA
+		state_region = s:STATE_CALABRIA
+		state_region = s:STATE_SICILY
+		state_region = s:STATE_SARDINIA
+		state_region = s:STATE_UMBRIA
+		state_region = s:STATE_APULIA
+		state_region = s:STATE_ABRUZZO
+		state_region = s:STATE_ROMAGNA
+		state_region = s:STATE_VENETIA
+		state_region = s:STATE_ISTRIA
+		state_region = s:STATE_LOMBARDY
+		state_region = s:STATE_SOUTH_TYROL
+		state_region = s:STATE_SAVOY
+	}
+
+}
+
+
+# Country scope. Provence counts only for an Italian-culture capital, not Marseille under a French state.
+ita_risorgimento_capital_in_italy = {
+
+	capital ?= {
+		OR = {
+			ita_risorgimento_core_region = yes
+			AND = {
+				state_region = s:STATE_PROVENCE
+				owner ?= {
+					OR = {
+						country_has_primary_culture = cu:north_italian
+						country_has_primary_culture = cu:south_italian
+					}
+				}
+			}
+		}
+	}
+
+}
+
+
+ita_risorgimento_participant = {
+
+	OR = {
+		ita_arc_actor = yes
+		c:FRA ?= this
+		c:AUS ?= this
+		c:KUK ?= this
+		c:SAR ?= this
+		ita_risorgimento_capital_in_italy = yes
+		AND = {
+			country_rank = rank_value:great_power
+			has_interest_marker_in_region = sr:region_southern_europe
+		}
+	}
+
+}
+
+
+# State scope. Exclude France's split-state share of Provence.
+ita_risorgimento_map_region = {
+
+	OR = {
+		ita_risorgimento_core_region = yes
+		AND = {
+			state_region = s:STATE_PROVENCE
+			owner ?= {
+				ita_risorgimento_capital_in_italy = yes
+			}
+		}
+	}
+
+}
+
+
+ita_risorgimento_austrian_direct_or_subject = {
+
+	OR = {
+		c:AUS ?= this
+		c:KUK ?= this
+		any_overlord_or_above = {
+			OR = {
+				c:AUS ?= this
+				c:KUK ?= this
+			}
+		}
+	}
+
+}
+
+
+ita_risorgimento_austrian_bloc = {
+
+	power_bloc ?= {
+		power_bloc_leader = {
+			OR = {
+				c:AUS ?= this
+				c:KUK ?= this
+			}
+		}
+	}
+
+	is_in_power_bloc = yes
+}
+
+
+
+# Country scope. Exclude all human-controlled countries and Sardinia from the guarantee overlay.
+ita_risorgimento_austrian_guarantee = {
+	is_player = no
+
+	NOT = {
+		c:SAR ?= this
+	}
+
+	ita_risorgimento_capital_in_italy = yes
+
+	trigger_if = {
+		limit = {
+			exists = c:AUS
+		}
+		has_treaty_guarantee_independence_with = {
+			TARGET = c:AUS
+		}
+	}
+
+	trigger_else_if = {
+		limit = {
+			exists = c:KUK
+		}
+		has_treaty_guarantee_independence_with = {
+			TARGET = c:KUK
+		}
+	}
+
+	trigger_else = {
+		always = no
+	}
+
+}

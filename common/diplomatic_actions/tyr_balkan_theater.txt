@@ -1,0 +1,16 @@
+da_tyr_bt_claim = {
+groups = { general }
+requires_approval = no
+should_notify_third_parties = no
+show_effect_in_tooltip = yes
+state_selection = second_required
+second_state_list = second_country
+selectable = { has_global_variable = tyr_bt_started NOT = { has_global_variable = tyr_bt_finished } OR = { c:AUS ?= this c:KUK ?= this c:RUS ?= this c:TUR ?= this } has_variable = tyr_bt_faction }
+potential = { scope:target_country = { NOT = { this = root } } }
+possible = { NOT = { custom_tooltip = { text = tyr_bt_req_tyr_bt_claim_cooldown has_variable = tyr_bt_claim_cooldown } } scope:target_country = { NOT = { AND = { custom_tooltip = { text = tyr_bt_req_tyr_bt_faction has_variable = tyr_bt_faction } custom_tooltip = { text = tyr_bt_req_same_faction var:tyr_bt_faction = root.var:tyr_bt_faction } } } } }
+second_state_trigger = { tyr_bt_region = yes NOT = { has_claim_by = scope:country } }
+accept_effect = { if = { limit = { exists = scope:second_state } set_variable = { name = tyr_bt_claim_cooldown days = 1825 } scope:second_state.state_region = { add_claim = root } create_incident = { country = scope:target_country value = 10 } } }
+is_hostile = yes
+ai = { evaluation_chance = { value = 0.05 } will_select_as_second_state = { always = yes } will_propose_with_states = { exists = scope:second_state } }
+
+}

@@ -1,15 +1,11 @@
-﻿namespace = eastern_question_austria
-
+namespace = eastern_question_austria
 eastern_question_austria.1 = {
 	type = country_event
 	placement = root
-
 	title = eastern_question_austria.1.t
-	desc = eastern_question_austria.1.d
-	flavor = eastern_question_austria.1.f
-
+	desc = tyr_bt_moving_frontier.d
+	flavor = tyr_bt_moving_frontier.f
 	dlc = dlc014
-
 	duration = 3
 
 	event_image = {
@@ -17,13 +13,21 @@ eastern_question_austria.1 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
 		has_dlc_feature = ip3_content
-		c:AUS ?= this
+		OR = {
+			c:AUS ?= this
+			c:KUK ?= this
+		}
+		has_diplomatic_pact = {
+			who = c:TUR
+			type = rivalry
+		}
+		c:RUS ?= {
+			has_war_with = c:TUR
+		}
 		c:TUR ?= {
 			OR = {
 				owns_entire_state_region = STATE_BOSNIA
@@ -32,68 +36,22 @@ eastern_question_austria.1 = {
 				}
 			}
 		}
-		
-		OR = {
-			c:RUS ?= {
-				is_diplomatic_play_enemy_of = c:TUR
-			}
-			has_diplomatic_pact = {
-				who = c:TUR
-				type = rivalry
-			}
+		NOT = {
+			has_journal_entry = je_eastern_question_austria
 		}
-		
-		OR = {
-			has_variable = trialism_achieved_var
-			has_variable = empire_of_austria_variable
-		}
-		
 	}
 
-	cooldown = { days = never_fire_again_modifier_time }
+	cooldown = {
+		days = never_fire_again_modifier_time
+	}
 
 	immediate = {
-		random_political_lobby = {
-			limit = {
-				is_political_lobby_type = lobby_anti_country
-				target = {
-						c:RUS ?= this
-				}
-			}
-			save_scope_as = relevant_lobby
-			target = {
-				save_scope_as = relevant_country
-				random_primary_culture = {
-					save_scope_as = relevant_country_culture
-				}
-			}
-			random_lobby_member = {
-				leader = {
-					save_scope_as = lobby_politician_scope
-					set_character_immortal = yes
-				}
-			}
-		}
-		random_diplomatically_relevant_country = {
-			limit = {
-				owns_entire_state_region = STATE_BOSNIA
-			}
-			if = {
-				limit = {
-					is_subject = yes
-				}
-				top_overlord = {
-					save_scope_as = bosnia_owner_scope
-				}
-			}
-			else = {
-				save_scope_as = bosnia_owner_scope
-			}
+		c:TUR ?= {
+			save_scope_as = bosnia_owner_scope
 		}
 	}
 
 	cancellation_trigger = {
-	
 	}
 
 	option = {
@@ -109,11 +67,12 @@ eastern_question_austria.1 = {
 			country = scope:bosnia_owner_scope
 			secret_goal = conquer
 		}
+		set_variable = tyr_bt_austrian_bosnian_ambition
 		add_journal_entry = {
 			type = je_eastern_question_austria
 		}
 		hidden_effect = {
-			scope:lobby_politician_scope = {
+			scope:lobby_politician_scope ?= {
 				set_character_immortal = no
 			}
 		}
@@ -132,18 +91,19 @@ eastern_question_austria.1 = {
 		}
 		clear_anti_lobby_vars = yes
 		hidden_effect = {
-			scope:lobby_politician_scope = {
+			scope:lobby_politician_scope ?= {
 				set_character_immortal = no
 			}
 		}
 	}
+
 }
 
 eastern_question_austria.2 = {
 	type = country_event
 	placement = root
-
 	title = eastern_question_austria.2.t
+
 	desc = {
 		first_valid = {
 			triggered_desc = {
@@ -162,10 +122,9 @@ eastern_question_austria.2 = {
 			}
 		}
 	}
+
 	flavor = eastern_question_austria.2.f
-
 	dlc = dlc014
-
 	duration = 3
 
 	event_image = {
@@ -173,15 +132,15 @@ eastern_question_austria.2 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
 		# Triggered by JE completion
 	}
 
-	cooldown = { days = normal_modifier_time }
+	cooldown = {
+		days = normal_modifier_time
+	}
 
 	immediate = {
 		cu:bosniak = {
@@ -195,8 +154,8 @@ eastern_question_austria.2 = {
 		}
 		s:STATE_BOSNIA ?= {
 			random_scope_state = {
-			save_scope_as = bosnia_state_scope
-		}
+				save_scope_as = bosnia_state_scope
+			}
 		}
 		generate_3_noble_name = {
 			CULTURE_1 = primary_culture
@@ -215,7 +174,7 @@ eastern_question_austria.2 = {
 				limit = {
 					is_power_bloc_leader = yes
 				}
-				scope:power_bloc ?= {
+				power_bloc ?= {
 					any_power_bloc_member = {
 						owns_entire_state_region = STATE_BOSNIA
 					}
@@ -225,6 +184,9 @@ eastern_question_austria.2 = {
 	}
 
 	option = {
+		trigger = {
+			owns_entire_state_region = STATE_BOSNIA
+		}
 		name = eastern_question_austria.2.a
 		default_option = yes
 		custom_tooltip = {
@@ -238,11 +200,11 @@ eastern_question_austria.2 = {
 			create_country = {
 				origin = root
 				tag = BOS
-				state = s:STATE_BOSNIA.region_state:AUS
+				state = scope:bosnia_state_scope
 				on_created = {
 					activate_law = law_type:law_national_supremacy
 					activate_law = law_type:law_total_separation
-					c:AUS ?= {
+					ROOT = {
 						create_diplomatic_pact = {
 							country = PREV
 							type = protectorate
@@ -252,38 +214,12 @@ eastern_question_austria.2 = {
 			}
 		}
 		clear_generated_names = yes
-		every_state = {
-			limit = {
-				c:TUR ?= owner
-				region = sr:region_balkans
-				state_region = {
-					is_homeland = cu:serb
-				}
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
-		every_state = {
-			limit = {
-				NOT = { c:AUS ?= owner }
-				region = sr:region_balkans
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
 	}
 
 	option = {
 		name = eastern_question_austria.2.b
 		trigger = {
+			owns_entire_state_region = STATE_BOSNIA
 			NOT = {
 				any_subject_or_below = {
 					has_variable = transleithania_var
@@ -310,38 +246,12 @@ eastern_question_austria.2 = {
 			set_state_type = incorporated
 		}
 		clear_generated_names = yes
-		every_state = {
-			limit = {
-				c:TUR ?= owner
-				region = sr:region_balkans
-				state_region = {
-					is_homeland = cu:serb
-				}
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
-		every_state = {
-			limit = {
-				NOT = { c:AUS ?= owner }
-				region = sr:region_balkans
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
 	}
 
 	option = {
 		name = eastern_question_austria.2.c
 		trigger = {
+			owns_entire_state_region = STATE_BOSNIA
 			any_subject_or_below = {
 				has_variable = transleithania_var
 			}
@@ -351,11 +261,11 @@ eastern_question_austria.2 = {
 			create_country = {
 				origin = root
 				tag = BOS
-				state = s:STATE_BOSNIA.region_state:AUS
+				state = scope:bosnia_state_scope
 				on_created = {
 					activate_law = law_type:law_national_supremacy
 					activate_law = law_type:law_total_separation
-					c:AUS ?= {
+					ROOT = {
 						create_diplomatic_pact = {
 							country = PREV
 							type = puppet
@@ -365,38 +275,12 @@ eastern_question_austria.2 = {
 			}
 		}
 		clear_generated_names = yes
-		every_state = {
-			limit = {
-				c:TUR ?= owner
-				region = sr:region_balkans
-				state_region = {
-					is_homeland = cu:serb
-				}
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
-		every_state = {
-			limit = {
-				NOT = { c:AUS ?= owner }
-				region = sr:region_balkans
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
 	}
 
 	option = {
 		name = eastern_question_austria.2.e
 		trigger = {
+			owns_entire_state_region = STATE_BOSNIA
 			exists = scope:croatia_scope
 		}
 		random_scope_state = {
@@ -416,48 +300,46 @@ eastern_question_austria.2 = {
 					has_variable = transleithania_var
 				}
 				add_liberty_desire = 15
-				change_relations = { country = ROOT value = -20 }
+				change_relations = {
+					country = ROOT
+					value = -20
+				}
 			}
 		}
 		clear_generated_names = yes
-		every_state = {
-			limit = {
-				c:TUR ?= owner
-				region = sr:region_balkans
-				state_region = {
-					is_homeland = cu:serb
-				}
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
-			}
-		}
-		every_state = {
-			limit = {
-				NOT = { c:AUS ?= owner }
-				region = sr:region_balkans
-				NOT = {
-					has_claim_by = c:AUS
-				}
-			}
-			state_region = {
-				add_claim = c:AUS
+	}
+
+	option = {
+		name = tyr_bt_bosnia_retain_administration
+		trigger = {
+			NOT = {
+				owns_entire_state_region = STATE_BOSNIA
 			}
 		}
 	}
+
+	after = {
+		if = {
+			limit = {
+				NOT = {
+					has_variable = tyr_bt_austrian_claim_route_chosen
+				}
+			}
+			trigger_event = {
+				id = tyr_balkan_theater.2
+				popup = yes
+			}
+		}
+	}
+
 }
 
 eastern_question_austria.3 = {
 	type = country_event
 	placement = root
-
 	title = eastern_question_austria.3.t
 	desc = eastern_question_austria.3.d
 	flavor = eastern_question_austria.3.f
-
 	dlc = dlc014
 	duration = 3
 
@@ -466,8 +348,6 @@ eastern_question_austria.3 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
@@ -475,7 +355,9 @@ eastern_question_austria.3 = {
 			c:AUS ?= this
 			c:KUK ?= this
 		}
-		NOT = { owns_entire_state_region = STATE_BOSNIA }
+		NOT = {
+			owns_entire_state_region = STATE_BOSNIA
+		}
 		NOT = {
 			any_subject_or_below = {
 				owns_entire_state_region = STATE_BOSNIA
@@ -521,7 +403,9 @@ eastern_question_austria.3 = {
 				limit = {
 					c:AUS ?= root
 				}
-				add_initiator_backers = { c:AUS }
+				add_initiator_backers = {
+					c:AUS
+				}
 				if = {
 					limit = {
 						exists = s:STATE_BOSNIA.region_state:TUR
@@ -538,7 +422,9 @@ eastern_question_austria.3 = {
 				limit = {
 					c:KUK ?= root
 				}
-				add_initiator_backers = { c:KUK }
+				add_initiator_backers = {
+					c:KUK
+				}
 				if = {
 					limit = {
 						exists = s:STATE_BOSNIA.region_state:TUR
@@ -560,10 +446,10 @@ eastern_question_austria.3 = {
 			base = 20
 		}
 	}
+
 }
 
 namespace = eastern_question_russia
-
 eastern_question_russia.1 = {
 	type = country_event
 	placement = root
@@ -587,6 +473,7 @@ eastern_question_russia.1 = {
 			}
 		}
 	}
+
 	desc = {
 		first_valid = {
 			triggered_desc = {
@@ -603,10 +490,9 @@ eastern_question_russia.1 = {
 			}
 		}
 	}
+
 	flavor = eastern_question_russia.1.f
-
 	dlc = dlc014
-
 	duration = 3
 
 	event_image = {
@@ -614,15 +500,15 @@ eastern_question_russia.1 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
 		# Fired by JE
 	}
 
-	cooldown = { days = normal_modifier_time }
+	cooldown = {
+		days = normal_modifier_time
+	}
 
 	immediate = {
 		random_diplomatically_relevant_country = {
@@ -656,7 +542,10 @@ eastern_question_russia.1 = {
 		}
 		scope:bulgaria_scope ?= {
 			ROOT.power_bloc ?= {
-				add_leverage = { target = PREV value = 1000 }
+				add_leverage = {
+					target = PREV
+					value = 1000
+				}
 			}
 			change_relations = {
 				country = ROOT
@@ -687,7 +576,10 @@ eastern_question_russia.1 = {
 				}
 			}
 			ROOT.power_bloc ?= {
-				add_leverage = { target = PREV value = 750 }
+				add_leverage = {
+					target = PREV
+					value = 750
+				}
 			}
 			change_relations = {
 				country = ROOT
@@ -707,7 +599,10 @@ eastern_question_russia.1 = {
 		}
 		scope:bulgaria_scope ?= {
 			ROOT.power_bloc ?= {
-				add_leverage = { target = PREV value = 500 }
+				add_leverage = {
+					target = PREV
+					value = 500
+				}
 			}
 			change_relations = {
 				country = ROOT
@@ -725,16 +620,15 @@ eastern_question_russia.1 = {
 		play_as = scope:bulgaria_scope
 		clear_generated_names = yes
 	}
+
 }
 
 eastern_question_russia.2 = {
 	type = country_event
 	placement = root
-
 	title = eastern_question_russia.2.t
 	desc = eastern_question_russia.2.d
 	flavor = eastern_question_russia.2.f
-
 	dlc = dlc014
 	duration = 3
 
@@ -743,7 +637,6 @@ eastern_question_russia.2 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
@@ -784,16 +677,15 @@ eastern_question_russia.2 = {
 			text = free_the_balkans_settlement_effect_tt
 		}
 	}
+
 }
 
 eastern_question_russia.3 = {
 	type = country_event
 	placement = root
-
 	title = eastern_question_russia.3.t
 	desc = eastern_question_russia.3.d
 	flavor = eastern_question_russia.3.f
-
 	dlc = dlc014
 	duration = 3
 
@@ -802,7 +694,6 @@ eastern_question_russia.3 = {
 	}
 
 	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 
 	trigger = {
@@ -846,4 +737,5 @@ eastern_question_russia.3 = {
 			text = free_the_balkans_settlement_effect_tt
 		}
 	}
+
 }

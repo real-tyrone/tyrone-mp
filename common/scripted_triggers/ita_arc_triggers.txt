@@ -1,0 +1,288 @@
+﻿# Country and state predicates for the shared Italian unification arc.
+ita_arc_actor = {
+
+	trigger_if = {
+		limit = {
+			has_global_variable = ita_risorgimento_sardinia
+		}
+		this = global_var:ita_risorgimento_sardinia
+	}
+
+	trigger_else = {
+		OR = {
+			c:SAR ?= this
+			AND = {
+				tyr_italian_content_country = yes
+				has_variable = italian_sentiment_var
+			}
+		}
+	}
+
+}
+
+ita_arc_is_active = {
+	has_global_variable = ita_arc_active
+
+	NOT = {
+		has_global_variable = ita_arc_completed
+	}
+
+}
+
+ita_arc_italian_ai = {
+	is_player = no
+	ita_risorgimento_capital_in_italy = yes
+
+	OR = {
+		country_has_primary_culture = cu:north_italian
+		country_has_primary_culture = cu:south_italian
+	}
+
+}
+
+ita_arc_counted_guarantee = {
+	ita_arc_italian_ai = yes
+
+	trigger_if = {
+		limit = {
+			exists = c:AUS
+		}
+		has_treaty_guarantee_independence_with = {
+			TARGET = c:AUS
+		}
+	}
+
+	trigger_else_if = {
+		limit = {
+			exists = c:KUK
+		}
+		has_treaty_guarantee_independence_with = {
+			TARGET = c:KUK
+		}
+	}
+
+	trigger_else = {
+		always = no
+	}
+
+}
+
+ita_arc_turin_available = {
+	ita_arc_is_active = yes
+	exists = c:FRA
+
+	NOT = {
+		has_global_variable = ita_arc_turin_signed
+	}
+
+	global_var:ita_risorgimento_sardinia ?= {
+		any_scope_state = {
+			state_region = s:STATE_SAVOY
+		}
+	}
+
+	has_global_variable = ita_risorgimento_sardinia
+}
+
+ita_arc_rome_is_garrisoned = {
+	has_global_variable = ita_arc_rome_garrison
+	exists = c:FRA
+	exists = c:PAP
+
+	s:STATE_LAZIO = {
+		any_scope_state = {
+			owner = c:PAP
+		}
+	}
+
+}
+
+ita_arc_rome_bypass = {
+
+	OR = {
+		global_var:ita_risorgimento_sardinia ?= {
+			has_technology_researched = pan-nationalism
+		}
+		c:FRA ?= {
+			any_enemy_in_war = {
+				country_rank >= rank_value:great_power
+			}
+		}
+		trigger_if = {
+			limit = {
+				exists = c:FRA
+			}
+			c:FRA = {
+				NOT = {
+					owns_entire_state_region = STATE_ALSACE_LORRAINE
+				}
+			}
+		}
+		trigger_else = {
+			always = yes
+		}
+	}
+
+}
+
+ita_arc_independence_target_exists = {
+
+	OR = {
+		s:STATE_LOMBARDY = {
+			any_scope_state = {
+				owner = {
+					ita_risorgimento_austrian_direct_or_subject = yes
+					NOT = {
+						ita_arc_actor = yes
+					}
+				}
+			}
+		}
+		s:STATE_VENETIA = {
+			any_scope_state = {
+				owner = {
+					ita_risorgimento_austrian_direct_or_subject = yes
+					NOT = {
+						ita_arc_actor = yes
+					}
+				}
+			}
+		}
+	}
+
+}
+
+ita_arc_manifesto_guaranteed = {
+	any_country = {
+		OR = {
+			c:PAR ?= this
+			c:MOD ?= this
+			c:LUC ?= this
+			c:TUS ?= this
+		}
+	}
+	NOT = {
+		any_country = {
+			OR = {
+			c:PAR ?= this
+			c:MOD ?= this
+			c:LUC ?= this
+			c:TUS ?= this
+		}
+			NOT = { ita_arc_cost_target_guaranteed = yes }
+		}
+	}
+}
+
+ita_arc_unification_territory = {
+	tyr_italian_content_country = yes
+	owns_entire_state_region = STATE_PIEDMONT
+	owns_entire_state_region = STATE_EMILIA
+	owns_entire_state_region = STATE_TUSCANY
+	owns_entire_state_region = STATE_LAZIO
+	owns_entire_state_region = STATE_CAMPANIA
+	owns_entire_state_region = STATE_CALABRIA
+	owns_entire_state_region = STATE_SICILY
+	owns_entire_state_region = STATE_SARDINIA
+	owns_entire_state_region = STATE_UMBRIA
+	owns_entire_state_region = STATE_APULIA
+	owns_entire_state_region = STATE_ABRUZZO
+	owns_entire_state_region = STATE_ROMAGNA
+	owns_entire_state_region = STATE_VENETIA
+	owns_entire_state_region = STATE_ISTRIA
+	owns_entire_state_region = STATE_LOMBARDY
+	owns_entire_state_region = STATE_SOUTH_TYROL
+}
+
+ita_arc_gdp_region = {
+
+	OR = {
+		state_region = s:STATE_PIEDMONT
+		state_region = s:STATE_EMILIA
+		state_region = s:STATE_TUSCANY
+		state_region = s:STATE_LAZIO
+		state_region = s:STATE_CAMPANIA
+		state_region = s:STATE_CALABRIA
+		state_region = s:STATE_SICILY
+		state_region = s:STATE_SARDINIA
+		state_region = s:STATE_UMBRIA
+		state_region = s:STATE_APULIA
+		state_region = s:STATE_ABRUZZO
+		state_region = s:STATE_ROMAGNA
+		state_region = s:STATE_VENETIA
+		state_region = s:STATE_ISTRIA
+		state_region = s:STATE_LOMBARDY
+		state_region = s:STATE_SOUTH_TYROL
+	}
+
+}
+
+ita_arc_tricolore_ready = {
+	ita_arc_national_takeover_allowed = yes
+	ita_arc_italian_ai = yes
+
+	NOT = {
+		has_variable = ita_arc_tricolore_cooldown
+	}
+
+	any_political_movement = {
+		is_political_movement_type = movement_italian_national
+		political_movement_radicalism >= 0.75
+	}
+
+	any_country = {
+		ita_risorgimento_capital_in_italy = yes
+		NOT = {
+			this = ROOT
+		}
+	}
+
+}
+
+# World scope. The saved Italian actor survives Sardinia forming Italy.
+ita_arc_france_ai_withdraws_from_rome = {
+	ita_arc_rome_is_garrisoned = yes
+	has_global_variable = ita_risorgimento_sardinia
+	c:FRA ?= {
+		is_player = no
+		owns_entire_state_region = STATE_SAVOY
+	}
+	global_var:ita_risorgimento_sardinia ?= {
+		relations:c:FRA >= 30
+	}
+}
+
+# Country scope: the Papacy and Two Sicilies retain their separate political paths.
+ita_arc_national_takeover_allowed = {
+	NOR = {
+		AND = { exists = c:PAP c:PAP ?= this }
+		AND = { exists = c:SIC c:SIC ?= this }
+	}
+}
+
+# Country scope: cost checks use the actual guarantee article, independently of movement eligibility.
+ita_arc_cost_target_guaranteed = {
+	is_player = no
+	OR = {
+		AND = {
+			exists = c:AUS
+			any_scope_treaty = {
+				binds = c:AUS
+				any_scope_article = {
+					has_type = guarantee_independence
+					source_country = c:AUS
+				}
+			}
+		}
+		AND = {
+			exists = c:KUK
+			any_scope_treaty = {
+				binds = c:KUK
+				any_scope_article = {
+					has_type = guarantee_independence
+					source_country = c:KUK
+				}
+			}
+		}
+	}
+}
