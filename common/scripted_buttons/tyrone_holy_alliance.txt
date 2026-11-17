@@ -1,0 +1,119 @@
+tyr_holy_alliance_withdraw = {
+    name = tyr_holy_alliance_withdraw
+    desc = tyr_holy_alliance_withdraw_desc
+    visible = { is_involved_in_journal_entry = je_tyr_holy_alliance }
+    possible = {
+        is_ai = no
+        is_involved_in_journal_entry = je_tyr_holy_alliance
+        NOT = { exists = c:GER }
+        custom_tooltip = {
+            text = tyr_holy_alliance_has_founding_treaty_tt
+            OR = {
+                AND = {
+                    exists = scope:tyr_holy_treaty_pru_aus
+                    scope:tyr_holy_treaty_pru_aus = {
+                        binds = ROOT
+                        any_scope_article = { has_type = defensive_pact }
+                    }
+                }
+                AND = {
+                    exists = scope:tyr_holy_treaty_pru_rus
+                    scope:tyr_holy_treaty_pru_rus = {
+                        binds = ROOT
+                        any_scope_article = { has_type = defensive_pact }
+                    }
+                }
+                AND = {
+                    exists = scope:tyr_holy_treaty_rus_aus
+                    scope:tyr_holy_treaty_rus_aus = {
+                        binds = ROOT
+                        any_scope_article = { has_type = defensive_pact }
+                    }
+                }
+            }
+        }
+    }
+    effect = {
+        change_infamy = 25
+        if = {
+            limit = {
+                exists = scope:tyr_holy_treaty_pru_aus
+                scope:tyr_holy_treaty_pru_aus = { binds = ROOT }
+            }
+            scope:tyr_holy_treaty_pru_aus = {
+                withdraw = { country = ROOT apply_break_penalties = no }
+            }
+        }
+        if = {
+            limit = {
+                exists = scope:tyr_holy_treaty_pru_rus
+                scope:tyr_holy_treaty_pru_rus = { binds = ROOT }
+            }
+            scope:tyr_holy_treaty_pru_rus = {
+                withdraw = { country = ROOT apply_break_penalties = no }
+            }
+        }
+        if = {
+            limit = {
+                exists = scope:tyr_holy_treaty_rus_aus
+                scope:tyr_holy_treaty_rus_aus = { binds = ROOT }
+            }
+            scope:tyr_holy_treaty_rus_aus = {
+                withdraw = { country = ROOT apply_break_penalties = no }
+            }
+        }
+        scope:journal_entry = { remove_involved_country = ROOT }
+    }
+    ai_chance = { value = 0 }
+}
+
+tyr_holy_alliance_brothers_war = {
+    name = tyr_holy_alliance_brothers_war
+    desc = tyr_holy_alliance_brothers_war_desc
+    visible = {
+        is_involved_in_journal_entry = je_tyr_holy_alliance
+        OR = { scope:tyr_holy_prussia ?= this scope:tyr_holy_austria ?= this }
+    }
+    possible = {
+ NOT = { has_variable = tyr_ga_active }
+
+        is_ai = no
+        is_involved_in_journal_entry = je_tyr_holy_alliance
+        NOT = { exists = c:GER }
+        has_technology_researched = nationalism
+        is_unification_candidate = GER
+        is_at_war = no
+        is_diplomatic_play_committed_participant = no
+        trigger_if = {
+            limit = { scope:tyr_holy_prussia ?= this }
+            tyr_holy_brothers_war_target_ready = { TARGET = scope:tyr_holy_austria }
+        }
+        trigger_else_if = {
+            limit = { scope:tyr_holy_austria ?= this }
+            tyr_holy_brothers_war_target_ready = { TARGET = scope:tyr_holy_prussia }
+        }
+        trigger_else = { always = no }
+    }
+    effect = {
+        if = {
+            limit = { scope:tyr_holy_prussia ?= this }
+            scope:tyr_holy_austria = { save_scope_as = tyr_holy_brothers_war_target }
+        }
+        else = {
+            scope:tyr_holy_prussia = { save_scope_as = tyr_holy_brothers_war_target }
+        }
+        # Break only bilateral defensive treaties, without the voluntary-exit fee.
+        every_scope_treaty = {
+            limit = {
+                binds = scope:tyr_holy_brothers_war_target
+                any_scope_article = { has_type = defensive_pact }
+            }
+            withdraw = { country = ROOT apply_break_penalties = no }
+        }
+        create_diplomatic_play = {
+            type = dp_leadership_germany
+            target_country = scope:tyr_holy_brothers_war_target
+        }
+    }
+    ai_chance = { value = 0 }
+}

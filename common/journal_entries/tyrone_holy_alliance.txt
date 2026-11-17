@@ -1,0 +1,128 @@
+je_tyr_holy_alliance = {
+    icon = "gfx/interface/icons/invention_icons/napoleonic_warfare.dds"
+    group = je_group_global_international_situations
+    context = none
+    activation_description = { always = yes }
+    is_shown_when_inactive = {
+        NOT = { has_global_variable = tyr_holy_alliance_concluded }
+    }
+    possible = {
+        exists = c:AUS
+        exists = c:PRU
+        exists = c:RUS
+        NOT = { exists = c:GER }
+    }
+    should_be_involved = {
+        OR = { c:AUS ?= this c:PRU ?= this c:RUS ?= this }
+    }
+    should_show_when_not_involved = {
+        capital ?= { is_in_geographic_region = geographic_region_europe }
+    }
+    should_be_pinned_by_default_involved = yes
+    should_be_pinned_by_default_uninvolved_or_context = no
+    transferable = no
+    can_revolution_inherit = no
+    weight = 10000
+    scripted_button = tyr_holy_alliance_withdraw
+    scripted_button = tyr_holy_alliance_brothers_war
+
+    immediate = {
+        # Keep country identities through tag changes, including PRU -> NGF.
+        c:AUS = { save_scope_as = tyr_holy_austria }
+        c:PRU = { save_scope_as = tyr_holy_prussia }
+        c:RUS = { save_scope_as = tyr_holy_russia }
+        # Capture the existing founding treaties once; never target later replacements.
+        c:PRU = {
+            random_scope_treaty = {
+                limit = { binds = c:AUS any_scope_article = { has_type = defensive_pact } }
+                save_scope_as = tyr_holy_treaty_pru_aus
+            }
+        }
+        c:PRU = {
+            random_scope_treaty = {
+                limit = { binds = c:RUS any_scope_article = { has_type = defensive_pact } }
+                save_scope_as = tyr_holy_treaty_pru_rus
+            }
+        }
+        c:RUS = {
+            random_scope_treaty = {
+                limit = { binds = c:AUS any_scope_article = { has_type = defensive_pact } }
+                save_scope_as = tyr_holy_treaty_rus_aus
+            }
+        }
+    }
+
+    map_color = {
+        if = {
+            limit = {
+                owner ?= {
+                    OR = {
+                        is_involved_in_journal_entry = je_tyr_holy_alliance
+                        AND = {
+                            is_subject = yes
+                            top_overlord ?= { is_involved_in_journal_entry = je_tyr_holy_alliance }
+                        }
+                    }
+                }
+            }
+            value = "tyr_holy_alliance_gold"
+        }
+    }
+    map_color_second = {
+        if = {
+            limit = {
+                owner ?= {
+                    is_subject = yes
+                    NOT = { is_involved_in_journal_entry = je_tyr_holy_alliance }
+                    top_overlord ?= { is_involved_in_journal_entry = je_tyr_holy_alliance }
+                }
+            }
+            value = "tyr_holy_alliance_stripes"
+        }
+    }
+    map_tooltip = {
+        owner ?= {
+            save_scope_as = tyr_holy_map_country
+            if = {
+                limit = { is_involved_in_journal_entry = je_tyr_holy_alliance }
+                custom_tooltip_no_bullet = tyr_holy_alliance_member_map_tt
+            }
+            else_if = {
+                limit = {
+                    is_subject = yes
+                    top_overlord ?= { is_involved_in_journal_entry = je_tyr_holy_alliance }
+                }
+                top_overlord = { save_scope_as = tyr_holy_map_overlord }
+                custom_tooltip_no_bullet = tyr_holy_alliance_subject_map_tt
+            }
+        }
+    }
+
+    outcome = {
+        header = tyr_holy_alliance_completion_header
+        effect_header = je_standard_on_completion_header
+        conclusion_desc = je_tyr_holy_alliance_conclusion
+        color = "gold_positive"
+        trigger = {
+            custom_tooltip = {
+                text = tyr_holy_alliance_germany_exists_tt
+                exists = c:GER
+            }
+        }
+        effect = {
+            custom_tooltip = tyr_holy_alliance_disbanded_tt
+            hidden_effect = {
+                set_global_variable = tyr_holy_alliance_concluded
+                scope:tyr_holy_treaty_pru_aus ?= {
+                    withdraw = { country = scope:tyr_holy_prussia apply_break_penalties = no }
+                }
+                scope:tyr_holy_treaty_pru_rus ?= {
+                    withdraw = { country = scope:tyr_holy_prussia apply_break_penalties = no }
+                }
+                scope:tyr_holy_treaty_rus_aus ?= {
+                    withdraw = { country = scope:tyr_holy_russia apply_break_penalties = no }
+                }
+            }
+        }
+    }
+}

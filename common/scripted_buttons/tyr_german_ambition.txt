@@ -1,0 +1,87 @@
+﻿tyr_ga_launch_first = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_leadership }
+	short_desc = tyr_ga_gui_leadership
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+ name = tyr_ga_launch_first
+ desc = tyr_ga_launch_first_desc
+ visible = { global_var:tyr_ga_phase = 1 OR = { has_variable = tyr_ga_austrian_actor has_variable = tyr_ga_northern_actor } }
+ possible = {
+  has_technology_researched = nationalism
+  custom_tooltip = { text = tyr_ga_gui_south_unified_tt global_var:tyr_ga_austria = { has_variable = proposed_south_german_unification_var } }
+  global_var:tyr_ga_north = { country_definition = cd:NGF }
+  trigger_if = { limit = { has_variable = tyr_ga_austrian_actor } tyr_ga_can_fight = { TARGET = global_var:tyr_ga_north } }
+  trigger_else = { tyr_ga_can_fight = { TARGET = global_var:tyr_ga_austria } }
+ }
+ effect = {
+  if = { limit = { has_variable = tyr_ga_austrian_actor } global_var:tyr_ga_north = { save_scope_as = tyr_ga_target } }
+  else = { global_var:tyr_ga_austria = { save_scope_as = tyr_ga_target } }
+  every_scope_treaty = { limit = { binds = scope:tyr_ga_target any_scope_article = { OR = { has_type = defensive_pact has_type = alliance } } } withdraw = { country = ROOT apply_break_penalties = no } }
+  # Set both maneuver budgets before creating the play; expire after one week.
+  add_modifier = { name = tyr_ga_limited_war_maneuvers days = 7 }
+  scope:tyr_ga_target = { add_modifier = { name = tyr_ga_limited_war_maneuvers days = 7 } }
+  create_diplomatic_play = { type = tyr_ga_first_war target_country = scope:tyr_ga_target }
+ }
+ ai_chance = { value = 10 }
+}
+tyr_ga_launch_final = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_final }
+	short_desc = tyr_ga_gui_final
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+ name = tyr_ga_launch_final
+ desc = tyr_ga_launch_final_desc
+ visible = { global_var:tyr_ga_phase = 3 OR = { has_variable = tyr_ga_austrian_actor has_variable = tyr_ga_northern_actor } }
+ possible = {
+  has_technology_researched = nationalism
+  trigger_if = { limit = { has_variable = tyr_ga_austrian_actor } tyr_ga_can_fight = { TARGET = global_var:tyr_ga_north } }
+  trigger_else = { tyr_ga_can_fight = { TARGET = global_var:tyr_ga_austria } }
+ }
+ effect = {
+  if = { limit = { has_variable = tyr_ga_austrian_actor } global_var:tyr_ga_north = { save_scope_as = tyr_ga_target } }
+  else = { global_var:tyr_ga_austria = { save_scope_as = tyr_ga_target } }
+  every_scope_treaty = { limit = { binds = scope:tyr_ga_target any_scope_article = { OR = { has_type = defensive_pact has_type = alliance } } } withdraw = { country = ROOT apply_break_penalties = no } }
+  # Set both maneuver budgets before creating the play; expire after one week.
+  add_modifier = { name = tyr_ga_limited_war_maneuvers days = 7 }
+  scope:tyr_ga_target = { add_modifier = { name = tyr_ga_limited_war_maneuvers days = 7 } }
+  create_diplomatic_play = { type = tyr_ga_final_war target_country = scope:tyr_ga_target }
+ }
+ ai_chance = { value = 10 }
+}
+
+tyr_ga_form_confederations = {
+ short_desc = tyr_ga_gui_form_confederations
+ icon = "gfx/interface/icons/event_icons/event_imperial_eagle.dds"
+ selected = { always = no }
+ name = tyr_ga_form_confederations
+ desc = tyr_ga_form_confederations_desc
+ tags = { tyr_ga_gui_form_confederations }
+ visible = {
+  country_definition = cd:PRU
+  has_variable = tyr_ga_northern_actor
+  global_var:tyr_ga_phase = 1
+ }
+ possible = {
+  has_technology_researched = nationalism
+  has_journal_entry = je_north_german_unification
+  custom_tooltip = { text = tyr_ga_schleswig_solved_tt has_global_variable = schleswig_holstein_question_solved }
+  is_at_war = no
+  is_diplomatic_play_committed_participant = no
+  hidden_trigger = { NOT = { exists = c:NGF } }
+  global_var:tyr_ga_austria = {
+   hidden_trigger = { NOT = { has_variable = proposed_south_german_unification_var } }
+   is_at_war = no
+   is_diplomatic_play_committed_participant = no
+  }
+ }
+ effect = {
+  global_var:tyr_ga_austria = {
+   tyr_ga_form_south_immediately = yes
+   hidden_effect = { set_variable = proposed_south_german_unification_var }
+  }
+  create_bidirectional_truce = { country = global_var:tyr_ga_austria months = 36 }
+ }
+ ai_chance = { value = 10 }
+}

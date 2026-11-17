@@ -1,0 +1,416 @@
+﻿tyr_sj_annex_korea = {
+ name = tyr_sj_annex_korea
+ desc = tyr_sj_annex_korea_desc
+ visible = { tyr_sj_is_japan = yes tyr_sj_active = yes exists = c:KOR }
+ possible = {
+ exists = c:KOR
+ c:KOR = { is_subject_of = ROOT }
+ is_at_war = no
+ is_diplomatic_play_committed_participant = no
+ }
+ effect = {
+ change_infamy = 30
+ annex = c:KOR
+ }
+ ai_chance = { value = 10 }
+}
+tyr_sj_integrate_korea = {
+ name = tyr_sj_integrate_korea
+ desc = tyr_sj_integrate_korea_desc
+ visible = { tyr_sj_is_japan = yes tyr_sj_active = yes  }
+ possible = {
+ owns_entire_state_region = STATE_YANGHO
+ owns_entire_state_region = STATE_BUSAN
+ owns_entire_state_region = STATE_SEOUL
+ owns_entire_state_region = STATE_PYONGYANG
+ owns_entire_state_region = STATE_SARIWON
+ hidden_trigger = { NOT = { has_variable = tyr_sj_integrated_korea } }
+ any_scope_state = { OR = {  state_region = s:STATE_YANGHO
+ state_region = s:STATE_BUSAN
+ state_region = s:STATE_SEOUL
+ state_region = s:STATE_PYONGYANG
+ state_region = s:STATE_SARIWON } is_incorporated = no }
+ }
+ effect = {
+
+ add_radicals = { culture = cu:korean value = 0.15 }
+ every_scope_state = {
+  limit = { OR = {  state_region = s:STATE_YANGHO
+ state_region = s:STATE_BUSAN
+ state_region = s:STATE_SEOUL
+ state_region = s:STATE_PYONGYANG
+ state_region = s:STATE_SARIWON } is_incorporated = no }
+  add_modifier = { name = tyr_sj_incorporating years = 10 }
+ }
+ hidden_effect = { set_variable = tyr_sj_integrated_korea }
+ }
+ ai_chance = { value = 10 }
+}
+tyr_sj_integrate_manchuria = {
+ name = tyr_sj_integrate_manchuria
+ desc = tyr_sj_integrate_manchuria_desc
+ visible = { tyr_sj_is_japan = yes tyr_sj_active = yes  }
+ possible = {
+ owns_entire_state_region = STATE_SHENGJING
+ owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+ owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+ hidden_trigger = { NOT = { has_variable = tyr_sj_integrated_manchuria } }
+ any_scope_state = { OR = {  state_region = s:STATE_SHENGJING
+ state_region = s:STATE_SOUTHERN_MANCHURIA
+ state_region = s:STATE_NORTHERN_MANCHURIA } is_incorporated = no }
+ }
+ effect = {
+
+ add_radicals = { culture = cu:manchu value = 0.15 }
+ every_scope_state = {
+  limit = { OR = {  state_region = s:STATE_SHENGJING
+ state_region = s:STATE_SOUTHERN_MANCHURIA
+ state_region = s:STATE_NORTHERN_MANCHURIA } is_incorporated = no }
+  add_modifier = { name = tyr_sj_incorporating years = 10 }
+ }
+ hidden_effect = { set_variable = tyr_sj_integrated_manchuria }
+ }
+ ai_chance = { value = 10 }
+}
+tyr_sj_japanese_claims = {
+ name = tyr_sj_japanese_claims
+ desc = tyr_sj_japanese_claims_desc
+ visible = { tyr_sj_is_japan = yes tyr_sj_active = yes  }
+ possible = {
+
+ custom_tooltip = { text = tyr_sj_japan_humiliation_tt tyr_sj_japan_humiliates_russia = yes }
+ hidden_trigger = { NOT = { has_variable = tyr_sj_claims_bought_this_victory } }
+ custom_tooltip = { text = tyr_sj_latest_victory_tt global_var:tyr_sj_last_rus_jap_victor ?= THIS }
+ }
+ effect = {
+
+ change_infamy = 20
+ s:STATE_SHENGJING = { remove_claim = global_var:tyr_sj_russia }
+ s:STATE_SOUTHERN_MANCHURIA = { remove_claim = global_var:tyr_sj_russia }
+ s:STATE_NORTHERN_MANCHURIA = { remove_claim = global_var:tyr_sj_russia }
+ s:STATE_SHENGJING = { add_claim = ROOT }
+ s:STATE_SOUTHERN_MANCHURIA = { add_claim = ROOT }
+ s:STATE_NORTHERN_MANCHURIA = { add_claim = ROOT }
+ hidden_effect = { set_variable = tyr_sj_claims_bought_this_victory }
+ }
+ ai_chance = { value = 10 }
+}
+tyr_sj_russian_claims = {
+ name = tyr_sj_russian_claims
+ desc = tyr_sj_russian_claims_desc
+ visible = { tyr_sj_is_russia = yes tyr_sj_active = yes  }
+ possible = {
+
+ custom_tooltip = { text = tyr_sj_russia_humiliation_tt tyr_sj_russia_humiliates_japan = yes }
+ hidden_trigger = { NOT = { has_variable = tyr_sj_claims_bought_this_victory } }
+ custom_tooltip = { text = tyr_sj_latest_victory_tt global_var:tyr_sj_last_rus_jap_victor ?= THIS }
+ }
+ effect = {
+
+ change_infamy = 20
+ s:STATE_SHENGJING = { remove_claim = global_var:tyr_sj_japan }
+ s:STATE_SOUTHERN_MANCHURIA = { remove_claim = global_var:tyr_sj_japan }
+ s:STATE_NORTHERN_MANCHURIA = { remove_claim = global_var:tyr_sj_japan }
+ s:STATE_SHENGJING = { add_claim = ROOT }
+ s:STATE_SOUTHERN_MANCHURIA = { add_claim = ROOT }
+ s:STATE_NORTHERN_MANCHURIA = { add_claim = ROOT }
+ hidden_effect = { set_variable = tyr_sj_claims_bought_this_victory }
+ }
+ ai_chance = { value = 10 }
+}
+tyr_sj_port_arthur = {
+ name = tyr_sj_port_arthur
+ desc = tyr_sj_port_arthur_desc
+ visible = { tyr_sj_is_russia = yes tyr_sj_active = yes  }
+ possible = {
+
+ hidden_trigger = { NOT = { has_variable = tyr_sj_port_arthur_taken } }
+ s:STATE_SHENGJING = { any_scope_state = { owner = global_var:tyr_sj_china controls_treaty_port_province = yes } }
+ is_at_war = no
+ }
+ effect = {
+
+ change_infamy = 25
+ tyr_sj_take_port_arthur = yes
+ hidden_effect = { set_variable = tyr_sj_port_arthur_taken }
+ }
+ ai_chance = { value = 10 }
+}
+
+tyr_sj_outer_manchuria = {
+	name = "je_the_eastern_border_treaty_of_beijing"
+	desc = "je_the_eastern_border_treaty_of_beijing_desc"
+
+	visible = {
+ tyr_sj_is_russia = yes
+ tyr_sj_active = yes
+		exists = c:RUS
+		c:RUS = ROOT
+		is_subject = no
+		has_technology_researched = nationalism
+		NOR = {
+			owns_entire_state_region = STATE_OUTER_MANCHURIA
+			has_global_variable = rus_bought_outer_manchuria
+		}
+		AND = {
+			any_scope_state = {
+				state_region = s:STATE_TRANS_BAIKAL
+			}
+			any_scope_state = {
+				state_region = s:STATE_OKHOTSK
+			}
+		}
+		s:STATE_OUTER_MANCHURIA = {
+			any_scope_state = {
+				is_split_state = no
+				is_capital = no
+				owner = {
+
+					is_country_type = unrecognized
+					OR = {
+						country_has_primary_culture = cu:manchu
+						country_has_primary_culture = cu:han
+					}
+				}
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		c:RUS ?= {
+			country_rank >= rank_value:great_power
+		}
+		any_neighbouring_state = {
+			state_region = s:STATE_OUTER_MANCHURIA
+		}
+		any_country = {
+			OR = {
+				country_has_primary_culture = cu:manchu
+				country_has_primary_culture = cu:han
+			}
+			OR = {
+				trigger_if = {
+					limit = {
+						has_journal_entry = je_warlord_china
+					}
+					custom_tooltip = {
+						text = china_explosion_point_2_tt
+						var:china_warlord_explosion <= 3
+					}
+				}
+				country_rank < rank_value:unrecognized_major_power
+			}
+			OR = {
+				is_subject = no
+				is_subject_of = ROOT
+			}
+			trigger_if = {
+				limit = {
+					country_rank >= rank_value:unrecognized_major_power
+				}
+				OR = {
+					custom_tooltip = {
+						text = war_with_china_not_russia_tt
+						any_enemy_in_war = {
+							NOT = {
+								c:RUS ?= this
+							}
+						}
+					}
+					custom_tooltip = {
+						text = owes_russia_obligation_tt
+						c:RUS ?= {
+							is_owed_obligation_by = PREV
+						}
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		random_country = {
+			limit = {
+				OR = {
+					country_has_primary_culture = cu:manchu
+					country_has_primary_culture = cu:han
+				}
+				any_scope_state = {
+					state_region = s:STATE_OUTER_MANCHURIA
+					is_split_state = no
+					is_capital = no
+				}
+				is_country_type = unrecognized
+
+			}
+			save_scope_as = donor_scope
+		}
+		if = {
+			limit = {
+				scope:donor_scope = {
+					owes_obligation_to = ROOT
+				}
+			}
+			custom_tooltip = obligation_for_outer_manchuria_tt
+		}
+		else_if = {
+			limit = {
+				scope:donor_scope = {
+					is_subject_of = ROOT
+				}
+			}
+			custom_tooltip = transfer_of_outer_manchuria_tt
+		}
+		else = {
+			c:RUS ?= {
+				
+			}
+			custom_tooltip = transfer_of_outer_manchuria_tt
+		}
+		set_global_variable = rus_bought_outer_manchuria
+		trigger_event = { id = russo_chinese.1 popup = yes }
+	}
+}
+
+
+tyr_sj_amur = {
+	name = "je_the_eastern_border_treaty_of_aigun"
+	desc = "je_the_eastern_border_treaty_of_aigun_desc"
+
+	visible = {
+ tyr_sj_is_russia = yes
+ tyr_sj_active = yes
+		has_technology_researched = nationalism
+		NOR = {
+			owns_entire_state_region = STATE_AMUR
+			has_global_variable = rus_bought_amur
+		}
+		AND = {
+			any_scope_state = {
+				state_region = s:STATE_TRANS_BAIKAL
+			}
+			any_scope_state = {
+				state_region = s:STATE_OKHOTSK
+			}
+		}
+		s:STATE_AMUR = {
+			any_scope_state = {
+				is_split_state = no
+				is_capital = no
+				owner = {
+
+					is_country_type = unrecognized
+			OR = {
+				country_has_primary_culture = cu:manchu
+				country_has_primary_culture = cu:han
+			}
+			}
+		}
+	}
+	}
+
+	ai_chance = {
+		value = 10
+	}
+
+	possible = {
+		sr:region_siberia = {
+			save_temporary_scope_as = east_siberia_region
+		}
+		any_country = {
+			OR = {
+				is_subject = no
+				is_subject_of = ROOT
+			}
+			OR = {
+				custom_tooltip = {
+					text = war_with_china_not_russia_tt
+					any_enemy_in_war = {
+						NOT = {
+							c:RUS ?= this
+						}
+					}
+				}
+				custom_tooltip = {
+					text = owes_russia_obligation_tt
+					c:RUS ?= {
+						is_owed_obligation_by = PREV
+					}
+				}
+				trigger_if = {
+					limit = {
+						has_journal_entry = je_warlord_china
+					}
+					custom_tooltip = {
+						text = china_explosion_point_2_tt
+						var:china_warlord_explosion <= 3
+					}
+				}
+				country_rank < rank_value:unrecognized_major_power
+			}
+		}
+		c:RUS ?= {
+			country_rank >= rank_value:great_power
+		}
+		custom_tooltip = {
+			text = east_siberia_formation_tt
+			OR = {
+				is_ai = yes
+				any_military_formation = {
+					is_army = yes
+					current_hq.region ?= sr:region_siberia
+					any_combat_unit = {
+						count >= 20
+					}
+				}
+			}
+		}
+	}
+
+	effect = {
+		random_country = {
+			limit = {
+				OR = {
+					country_has_primary_culture = cu:manchu
+					country_has_primary_culture = cu:han
+				}
+				any_scope_state = {
+					state_region = s:STATE_AMUR
+					is_split_state = no
+					is_capital = no
+				}
+				is_country_type = unrecognized
+
+			}
+			save_scope_as = donor_scope
+		}
+		if = {
+			limit = {
+				scope:donor_scope = {
+					owes_obligation_to = ROOT
+				}
+			}
+			custom_tooltip = obligation_for_amur_tt
+		}
+		else_if = {
+			limit = {
+				scope:donor_scope = {
+					is_subject_of = ROOT
+				}
+			}
+			custom_tooltip = transfer_of_amur_tt
+		}
+		else = {
+			c:RUS ?= {
+				
+			}
+			custom_tooltip = transfer_of_amur_tt
+		}
+		set_global_variable = rus_bought_amur
+		trigger_event = { id = russo_chinese.4 popup = yes }
+	}
+}
