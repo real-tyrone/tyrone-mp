@@ -39,10 +39,8 @@ homeland_development_labour_program_button = {
 			}
 			add_modifier = homeland_labour_program_landowner_penalty
 			s:STATE_NORTHERN_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				if = {
-					limit = { OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } } }
+					limit = { owner = root }
 					add_modifier = homeland_labour_program
 					add_radicals_in_state = {
 						culture = cu:manchu
@@ -70,14 +68,10 @@ homeland_development_labour_program_button = {
 						value = 0.10
 					}
 				}
-			
- }
-}
+			}
 			s:STATE_SOUTHERN_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				if = {
-					limit = { OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } } }
+					limit = { owner = root }
 					add_modifier = homeland_labour_program
 					add_radicals_in_state = {
 						culture = cu:manchu
@@ -105,14 +99,10 @@ homeland_development_labour_program_button = {
 						value = 0.10
 					}
 				}
-			
- }
-}
+			}
 			s:STATE_OUTER_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				if = {
-					limit = { OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } } }
+					limit = { owner = root }
 					add_modifier = homeland_labour_program
 					add_radicals_in_state = {
 						culture = cu:manchu
@@ -140,52 +130,30 @@ homeland_development_labour_program_button = {
 						value = 0.10
 					}
 				}
-			
- }
-}
+			}
 			s:STATE_SHANDONG = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				if = {
-					limit = { OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } } }
+					limit = { owner = root }
 					add_modifier = homeland_labour_program
 				}
-			
- }
-}
+			}
 		}
 		else = {
 			change_authority = 400
 			remove_variable = homeland_labour_program_active
 			remove_modifier = homeland_labour_program_landowner_penalty
 			s:STATE_NORTHERN_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				remove_modifier = homeland_labour_program
-			
- }
-}
+			}
 			s:STATE_SOUTHERN_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				remove_modifier = homeland_labour_program
-			
- }
-}
+			}
 			s:STATE_OUTER_MANCHURIA = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				remove_modifier = homeland_labour_program
-			
- }
-}
+			}
 			s:STATE_SHANDONG = {
- every_scope_state = { limit = { owner = { chi_qing_realm = yes } }
-
 				remove_modifier = homeland_labour_program
-			
- }
-}
+			}
 		}
 	}
 }
@@ -193,16 +161,15 @@ homeland_development_labour_program_button = {
 homeland_development_repose_assets_button = {
 	name = homeland_development_repose_assets_button
 	desc = homeland_development_repose_assets_button_desc
+	cooldown = { years = 1 }
 
 	visible = {
 		has_journal_entry = je_homeland_development
 	}
 
 	possible = {
-		any_state = {
- chi_qing_story_state = yes
-
-			OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
+		any_scope_state = {
+			owner = root
 			OR = {
 				region = sr:region_north_china
 				region = sr:region_south_china
@@ -211,15 +178,49 @@ homeland_development_repose_assets_button = {
 	}
 
 	effect = {
-		random_state = {
-			limit = { chi_qing_story_state = yes 
-				OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
-				OR = {
-					region = sr:region_north_china
-					region = sr:region_south_china
+		if = {
+			limit = {
+				any_scope_state = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					NOT = { has_variable = homeland_repose_assets_last_selected }
 				}
 			}
-			save_scope_as = homeland_repose_assets_state
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					NOT = { has_variable = homeland_repose_assets_last_selected }
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		else = {
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		every_scope_state = {
+			limit = {
+				has_variable = homeland_repose_assets_last_selected
+			}
+			remove_variable = homeland_repose_assets_last_selected
+		}
+		scope:homeland_repose_assets_state = {
+			set_variable = homeland_repose_assets_last_selected
 		}
 		set_variable = {
 			name = homeland_manor_house_levels
@@ -240,15 +241,19 @@ homeland_development_repose_assets_button = {
 			}
 			add_modifier = {
 				name = homeland_repose_assets
-				months = 12
+				months = 60
+				is_decaying = yes
 			}
 			add_radicals_in_state = {
 				value = 0.10
 			}
 		}
-		add_treasury = {
-			value = var:homeland_manor_house_levels
-			multiply = 1000
+		custom_tooltip = {
+			add_treasury = {
+				value = var:homeland_manor_house_levels
+				multiply = 9000
+			}
+			text = homeland_manor_house_level
 		}
 		remove_variable = homeland_manor_house_levels
 	}
