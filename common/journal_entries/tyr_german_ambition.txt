@@ -1,0 +1,94 @@
+﻿je_tyr_german_question = {
+	# Own only this entry's artwork and buttons; retain the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_ga_widgets.gui"
+		name = "tyr_ga_observers"
+		container = "custom_widget_container_1"
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_ga_widgets.gui"
+		name = "tyr_ga_native_buttons_replaced"
+		container = "custom_widget_container_buttons"
+	}
+
+ group = je_group_global_international_situations
+ context = none
+ icon = "gfx/interface/icons/war_goals/unify_germany.dds"
+ activation_description = { always = yes }
+ is_shown_when_inactive = { has_global_variable = tyr_ga_started }
+ possible = { global_var:tyr_ga_phase < 4 }
+ should_be_involved = { OR = { has_variable = tyr_ga_austrian_actor has_variable = tyr_ga_northern_actor } }
+ should_show_when_not_involved = {
+  OR = {
+   AND = { country_rank = rank_value:great_power capital = { is_in_geographic_region = geographic_region_europe } }
+   has_interest_marker_in_region = sr:region_central_europe
+  }
+ }
+ should_be_pinned_by_default_involved = yes
+ transferable = no
+ can_revolution_inherit = no
+ immediate = {
+  global_var:tyr_ga_austria ?= { save_scope_as = tyr_ga_austria }
+  global_var:tyr_ga_north ?= { save_scope_as = tyr_ga_north }
+ }
+ status_desc = {
+  first_valid = {
+   triggered_desc = { trigger = { global_var:tyr_ga_phase = 1 } desc = tyr_ga_phase_first }
+   triggered_desc = { trigger = { global_var:tyr_ga_phase = 2 } desc = tyr_ga_phase_choice }
+   triggered_desc = { trigger = { global_var:tyr_ga_phase = 3 } desc = tyr_ga_phase_final }
+   desc = tyr_ga_finished
+  }
+ }
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { OR = { NOT = { exists = global_var:tyr_ga_austria } NOT = { exists = global_var:tyr_ga_north } } }
+    set_global_variable = { name = tyr_ga_phase value = 6 }
+   }
+  }
+ }
+
+ # State scope; country references survive AUS/PRU becoming SGF/NGF/GER.
+ map_color = {
+  if = { limit = { owner ?= { global_var:tyr_ga_austria ?= THIS } } value = "tyr_ga_austria_gold" }
+  else_if = { limit = { owner ?= { global_var:tyr_ga_north ?= THIS } } value = "tyr_ga_prussia_blue" }
+  else_if = { limit = { owner ?= { tyr_ga_map_southern_candidate = yes } } value = "tyr_ga_austria_gold" }
+  else_if = { limit = { owner ?= { tyr_ga_map_northern_candidate = yes } } value = "tyr_ga_prussia_blue" }
+ }
+ map_color_second = {
+  if = {
+   limit = { owner ?= { OR = { tyr_ga_map_southern_candidate = yes tyr_ga_map_northern_candidate = yes } } }
+   value = "tyr_ga_candidate_stripes"
+  }
+ }
+ map_tooltip = {
+  owner ?= {
+   save_scope_as = tyr_ga_map_country
+   if = {
+    limit = { OR = { global_var:tyr_ga_austria ?= THIS global_var:tyr_ga_north ?= THIS } }
+    custom_tooltip_no_bullet = tyr_ga_map_rival_tt
+   }
+   else_if = {
+    limit = { tyr_ga_map_southern_candidate = yes }
+    global_var:tyr_ga_austria ?= { save_scope_as = tyr_ga_map_destination }
+    custom_tooltip_no_bullet = tyr_ga_map_candidate_tt
+   }
+   else_if = {
+    limit = { tyr_ga_map_northern_candidate = yes }
+    global_var:tyr_ga_north ?= { save_scope_as = tyr_ga_map_destination }
+    custom_tooltip_no_bullet = tyr_ga_map_candidate_tt
+   }
+  }
+ }
+ scripted_button = tyr_ga_form_confederations
+ scripted_button = tyr_ga_launch_first
+ scripted_button = tyr_ga_launch_final
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_ga_finished
+  color = "gold_positive"
+  trigger = { global_var:tyr_ga_phase >= 4 }
+  effect = { custom_tooltip = tyr_ga_finished }
+ }
+}

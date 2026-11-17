@@ -1,0 +1,65 @@
+﻿namespace = tyr_sj
+tyr_sj.1 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_sj.1.t
+ desc = tyr_sj.1.d
+ flavor = tyr_sj.1.f
+ event_image = { video = "unspecific_signed_contract" }
+ icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ trigger = { NOT = { has_variable = tyr_sj_reward_taken } }
+ option = {
+  name = tyr_sj.1.a
+  default_option = yes
+  ai_chance = { base = 50 }
+  add_modifier = { name = tyr_sj_japan_population_victory years = 20 }
+  hidden_effect = { set_variable = tyr_sj_reward_taken }
+ }
+ option = {
+  name = tyr_sj.1.b
+  
+  ai_chance = { base = 50 }
+  add_modifier = { name = tyr_sj_japan_military_victory years = 20 }
+  hidden_effect = { set_variable = tyr_sj_reward_taken }
+ }
+}
+tyr_sj.2 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_sj.2.t
+ desc = tyr_sj.2.d
+ flavor = tyr_sj.2.f
+ event_image = { video = "unspecific_signed_contract" }
+ icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ trigger = { NOT = { has_variable = tyr_sj_reward_taken } }
+ option = {
+  name = tyr_sj.2.a
+  default_option = yes
+  ai_chance = { base = 50 }
+  add_modifier = { name = tyr_sj_china_construction_victory years = 20 }
+  hidden_effect = { set_variable = tyr_sj_reward_taken }
+ }
+ option = {
+  name = tyr_sj.2.b
+  
+  ai_chance = { base = 50 }
+  add_modifier = { name = tyr_sj_china_investment_victory years = 20 }
+  hidden_effect = { set_variable = tyr_sj_reward_taken }
+ }
+}
+
+# One hidden daily watchdog for the two exact victory clocks; stops with the JE.
+tyr_sj.3 = {
+ type = country_event
+ hidden = yes
+ trigger = { tyr_sj_active = yes exists = global_var:tyr_sj_japan exists = global_var:tyr_sj_china }
+ immediate = {
+  global_var:tyr_sj_japan = { tyr_sj_update_japan_clock = yes }
+  global_var:tyr_sj_china = { tyr_sj_update_china_clock = yes }
+  trigger_event = { id = tyr_sj.3 days = 1 }
+ }
+}

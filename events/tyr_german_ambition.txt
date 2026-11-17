@@ -1,0 +1,99 @@
+﻿namespace = tyr_ga
+tyr_ga.1 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_ga.1.t
+ desc = tyr_ga.1.d
+ event_image = { video = "ep1_transfer_of_authority" }
+ icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ option = { name = tyr_ga.1.a default_option = yes tyr_ga_return_to_danube = yes ai_chance = { base = 75 } }
+ option = { name = tyr_ga.1.b set_global_variable = { name = tyr_ga_phase value = 3 } ai_chance = { base = 25 } }
+}
+tyr_ga.2 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_ga.2.t
+ desc = tyr_ga.2.d
+ event_image = { video = "ep1_transfer_of_authority" }
+ icon = "gfx/interface/icons/event_icons/waving_flag.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ option = { name = tyr_ga.2.a default_option = yes }
+}
+
+tyr_ga.3 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_ga.3.t
+ desc = tyr_ga.3.d
+ flavor = tyr_ga.3.f
+ event_image = { video = "unspecific_signed_contract" }
+ icon = "gfx/interface/icons/event_icons/event_map.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ trigger = {
+  global_var:tyr_ga_phase = 5
+  exists = global_var:tyr_ga_austria
+  NOT = { has_variable = tyr_ga_settlement_decided }
+ }
+ immediate = {
+  global_var:tyr_ga_austria = { save_scope_as = tyr_ga_settlement_austria }
+ }
+ option = {
+  name = tyr_ga.3.a
+  default_option = yes
+  ai_chance = { base = 50 }
+  s:STATE_AUSTRIA = { add_claim = ROOT }
+  s:STATE_TYROL = { add_claim = ROOT }
+  s:STATE_STYRIA = { add_claim = ROOT }
+  hidden_effect = {
+   set_variable = tyr_ga_settlement_decided
+   tyr_ga_post_settlement_news = { NOTIFICATION = tyr_ga_claims_austria_news }
+  }
+  trigger_event = { id = tyr_ga.4 days = 1 popup = yes }
+ }
+ option = {
+  name = tyr_ga.3.b
+  ai_chance = { base = 50 }
+  change_relations = { country = global_var:tyr_ga_austria value = 200 }
+  global_var:tyr_ga_austria = { add_modifier = { name = tyr_ga_austrian_reapproach years = 5 } }
+  hidden_effect = {
+   set_variable = tyr_ga_settlement_decided
+   tyr_ga_post_settlement_news = { NOTIFICATION = tyr_ga_reapproach_news }
+  }
+ }
+}
+tyr_ga.4 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_ga.4.t
+ desc = tyr_ga.4.d
+ flavor = tyr_ga.4.f
+ event_image = { video = "unspecific_signed_contract" }
+ icon = "gfx/interface/icons/event_icons/event_map.dds"
+ on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+ duration = 14
+ trigger = { NOT = { has_variable = tyr_ga_bohemian_claims_decided } }
+ immediate = {
+  global_var:tyr_ga_austria ?= { save_scope_as = tyr_ga_settlement_austria }
+ }
+ option = {
+  name = tyr_ga.4.a
+  ai_chance = { base = 10 }
+  change_infamy = 60
+  s:STATE_BOHEMIA = { add_claim = ROOT }
+  s:STATE_MORAVIA = { add_claim = ROOT }
+  hidden_effect = {
+   set_variable = tyr_ga_bohemian_claims_decided
+   tyr_ga_post_settlement_news = { NOTIFICATION = tyr_ga_claims_all_news }
+  }
+ }
+ option = {
+  name = tyr_ga.4.b
+  default_option = yes
+  ai_chance = { base = 90 }
+  hidden_effect = { set_variable = tyr_ga_bohemian_claims_decided }
+ }
+}

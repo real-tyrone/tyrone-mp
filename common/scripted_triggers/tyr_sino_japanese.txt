@@ -1,0 +1,42 @@
+﻿# All predicates below have country scope unless explicitly noted.
+tyr_sj_is_japan = { global_var:tyr_sj_japan ?= THIS }
+tyr_sj_is_china = { global_var:tyr_sj_china ?= THIS }
+tyr_sj_is_russia = { global_var:tyr_sj_russia ?= THIS }
+tyr_sj_active = { has_global_variable = tyr_sj_started NOT = { has_global_variable = tyr_sj_finished } }
+tyr_sj_japan_humiliates_russia = {
+ global_var:tyr_sj_japan ?= { has_diplomatic_pact = { who = global_var:tyr_sj_russia type = humiliation is_initiator = yes } }
+}
+tyr_sj_russia_humiliates_japan = {
+ global_var:tyr_sj_russia ?= { has_diplomatic_pact = { who = global_var:tyr_sj_japan type = humiliation is_initiator = yes } }
+}
+tyr_sj_china_humiliates_japan = {
+ global_var:tyr_sj_china ?= { has_diplomatic_pact = { who = global_var:tyr_sj_japan type = humiliation is_initiator = yes } }
+}
+# These two predicates do not depend on ROOT; used by a contextless JE.
+tyr_sj_japan_winning = {
+ tyr_sj_japan_humiliates_russia = yes
+ global_var:tyr_sj_japan ?= {
+ owns_entire_state_region = STATE_YANGHO
+ owns_entire_state_region = STATE_BUSAN
+ owns_entire_state_region = STATE_SEOUL
+ owns_entire_state_region = STATE_PYONGYANG
+ owns_entire_state_region = STATE_SARIWON
+ owns_entire_state_region = STATE_SHENGJING
+ owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+ owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+ owns_entire_state_region = STATE_FORMOSA
+ }
+}
+tyr_sj_china_winning = {
+ tyr_sj_china_humiliates_japan = yes
+ global_var:tyr_sj_china ?= {
+ owns_entire_state_region = STATE_YANGHO
+ owns_entire_state_region = STATE_BUSAN
+ owns_entire_state_region = STATE_SEOUL
+ owns_entire_state_region = STATE_PYONGYANG
+ owns_entire_state_region = STATE_SARIWON
+ owns_entire_state_region = STATE_SHENGJING
+ owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
+ owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+ }
+}

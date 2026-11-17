@@ -1,0 +1,298 @@
+﻿# German Ambition: the original paintings supplied by the player.
+# Decree construction follows tsarpoints_decree_button (Emperor and Autocrat).
+# No effect is duplicated here: every click executes the native ScriptedButton.
+types tyr_ga_widget_types {
+	# Central action displays only the supplied crest; no backing or visible caption.
+	# Explicit alpha is exactly 1 when possible and 0.5 when blocked.
+	type tyr_ga_war_action = button {
+		size = { 200 146 }
+		texture = "gfx/interface/illustrations/tyr_ga/war_crest.dds"
+		gfxtype = buttongfx
+		using = select_button_sound
+		visible = "[And(Or(ScriptedButton.HasTag('tyr_ga_gui_leadership'), ScriptedButton.HasTag('tyr_ga_gui_final')), ScriptedButton.IsVisible)]"
+		enabled = "[IsValid( ScriptedButton.ExecuteEffect )]"
+		alpha = "[Select_float(IsValid( ScriptedButton.ExecuteEffect ), '(float)1.0', '(float)0.5')]"
+		onclick = "[Execute( ScriptedButton.ExecuteEffect )]"
+		tooltip = "tyr_ga_gui_decree_tt"
+	}
+
+	type tyr_ga_decree = widget {
+		size = { 148 112 }
+		# Keep decree text and paper readable; only the action button is disabled.
+		alpha = 1
+		tooltip = "tyr_ga_gui_decree_tt"
+		background = {
+			using = entry_bg_fancy_dark
+			modify_texture = {
+				spriteType = Corneredstretched
+				spriteborder = { 0 0 }
+				blend_mode = add
+				alpha = 0.3
+				texture = "gfx/interface/backgrounds/paper_texture.dds"
+			}
+		}
+		background = {
+			alpha = 0.2
+			using = top_illu_properties
+			texture = "[ScriptedButton.GetIcon]"
+		}
+		default_header_clean = {
+			position = { 4 3 }
+			blockoverride "size" { size = { 140 41 } }
+			blockoverride "margin" { margin = { 3 0 } }
+			blockoverride "text_mod" { max_width = 134 multiline = yes }
+			blockoverride "text_size" { fontsize = 17 }
+			blockoverride "header_background" {
+				background = {
+					using = entry_bg_mask_top
+					color = { 0 0 0 1 }
+					alpha = 0.3
+					texture = "gfx/interface/backgrounds/white.dds"
+					modify_texture = {
+						spriteType = Corneredstretched
+						spriteborder = { 0 0 }
+						blend_mode = alphamultiply
+						texture = "gfx/interface/masks/fade_vertical_top.dds"
+					}
+				}
+			}
+			blockoverride "text" { raw_text = "#b [ScriptedButton.GetShortDesc]#!" }
+		}
+		icon = {
+			position = { 61 45 }
+			size = { 26 26 }
+			texture = "[ScriptedButton.GetIcon]"
+			alwaystransparent = yes
+		}
+		button = {
+			position = { 8 76 }
+			size = { 132 30 }
+			using = default_button_action
+			enabled = "[IsValid( ScriptedButton.ExecuteEffect )]"
+			onclick = "[Execute( ScriptedButton.ExecuteEffect )]"
+			tooltip = "tyr_ga_gui_decree_tt"
+			textbox = {
+				parentanchor = center
+				autoresize = yes
+				align = center|nobaseline
+				raw_text = "[SelectLocalization(ScriptedButton.IsSelected, 'tyr_ga_gui_completed', 'tyr_ga_gui_enact')]"
+			}
+		}
+	
+		# Completion is persistent and the native possible gate prevents repeat rewards.
+		icon = {
+			visible = "[ScriptedButton.IsSelected]"
+			position = { 50 34 }
+			size = { 48 48 }
+			texture = "gfx/interface/icons/generic_icons/green_checkmark.dds"
+			alwaystransparent = yes
+		}
+	}
+
+	type tyr_ga_painted_chamber = widget {
+		size = { 528 652 }
+		scissor = yes
+		# Native character-panel blur: cropping, blur and tint happen in engine.
+		background = {
+			texture = "gfx/interface/illustrations/tyr_ga/frankfurt.dds"
+			fittype = centercrop
+			mipmaplodbias = 1.8
+			shaderfile = "gfx/FX/gui_blur.shader"
+			effectname = "GuiBlur"
+		}
+		background = {
+			texture = "gfx/interface/backgrounds/white.dds"
+			color = { 0.09 0.075 0.055 1 }
+			alpha = 0.48
+		}
+		# A separate, unblurred layer preserves Germania's face and embroidery.
+		icon = {
+			position = { 74 22 }
+			size = { 380 578 }
+			texture = "gfx/interface/illustrations/tyr_ga/germania.dds"
+			fittype = centercrop
+			alwaystransparent = yes
+			modify_texture = {
+				texture = "gfx/interface/masks/fade_horizontal_center.dds"
+				spriteType = Corneredstretched
+				spriteborder = { 0 0 }
+				blend_mode = alphamultiply
+			}
+			modify_texture = {
+				texture = "gfx/interface/masks/fade_vertical_center.dds"
+				spriteType = Corneredstretched
+				spriteborder = { 0 0 }
+				blend_mode = alphamultiply
+			}
+		}
+		# Frame follows the full Parliament background, not Germania's inset image.
+		icon = {
+			position = { 0 0 }
+			size = { 528 652 }
+			using = simple_frame
+			alwaystransparent = yes
+		}
+
+		textbox = {
+			position = { 24 604 }
+			size = { 480 28 }
+			align = center|nobaseline
+			fontsize = 20
+			text = "tyr_ga_gui_motto"
+			alwaystransparent = yes
+		}
+	}
+}
+
+flowcontainer = {
+	name = "tyr_ga_court"
+	parentanchor = hcenter
+	margin_bottom = 8
+	widget = {
+		size = { 528 652 }
+		tyr_ga_painted_chamber = {
+			# The first and final wars share one central location; visibility selects the phase.
+			flowcontainer = {
+				name = "tyr_ga_central_war"
+				position = { 164 251 }
+				size = { 200 146 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = { tyr_ga_war_action = {} }
+			}
+
+			flowcontainer = {
+				name = "tyr_ga_slot_government"
+				position = { 44 64 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_government'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+			flowcontainer = {
+				name = "tyr_ga_slot_minorities"
+				position = { 336 64 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_minorities'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+
+			flowcontainer = {
+				name = "tyr_ga_slot_autocracy"
+				position = { 14 268 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_autocracy'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+
+			flowcontainer = {
+				name = "tyr_ga_slot_diplomacy"
+				position = { 366 268 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_diplomacy'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+			flowcontainer = {
+				name = "tyr_ga_slot_metternich"
+				position = { 44 472 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_metternich'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+			flowcontainer = {
+				name = "tyr_ga_slot_unification"
+				position = { 336 472 }
+				size = { 148 112 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_unification'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+		}
+	}
+}
+
+# Observers see the same composition. Country visibility of war actions is
+# controlled by the existing scripted buttons, including the current war phase.
+flowcontainer = {
+	name = "tyr_ga_observers"
+	parentanchor = hcenter
+	margin_bottom = 8
+	widget = {
+		size = { 528 652 }
+		tyr_ga_painted_chamber = {
+			flowcontainer = {
+				name = "tyr_ga_form_confederations_action"
+				position = { 190 440 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				item = {
+					tyr_ga_decree = {
+						visible = "[And(ScriptedButton.HasTag('tyr_ga_gui_form_confederations'), ScriptedButton.IsVisible)]"
+					}
+				}
+			}
+
+			# The first and final wars share one central location; visibility selects the phase.
+			flowcontainer = {
+				name = "tyr_ga_central_war"
+				position = { 164 251 }
+				size = { 200 146 }
+				datamodel = "[JournalEntry.GetScriptedButtons]"
+				direction = vertical
+				ignoreinvisible = yes
+				spacing = 0
+				item = { tyr_ga_war_action = {} }
+			}
+
+		}
+	}
+}
+
+# Same injection mechanism as Emperor and Autocrat: suppress duplicate controls.
+flowcontainer = {
+	name = "tyr_ga_native_buttons_replaced"
+	widget = { size = { 0 0 } }
+}

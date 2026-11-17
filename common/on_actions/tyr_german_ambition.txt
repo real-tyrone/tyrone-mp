@@ -1,0 +1,153 @@
+﻿# Immediate application and cleanup use the code-fired diplomatic play hooks.
+on_diplo_play_war_start = {
+
+	on_actions = {
+		tyr_ga_balkan_war_started
+	}
+
+}
+
+on_war_end = {
+
+	on_actions = {
+		tyr_ga_balkan_war_ended
+	}
+
+}
+
+# Also repairs wars already running when a save is loaded and catches separate exits.
+on_weekly_pulse_country = {
+
+	on_actions = {
+		tyr_ga_sync_radetzky
+		tyr_ga_sync_balkan_war_mobilization
+	}
+
+}
+
+tyr_ga_balkan_war_started = {
+
+	trigger = {
+		OR = { is_diplomatic_play_type = tyr_ga_first_war is_diplomatic_play_type = tyr_ga_final_war }
+		OR = { initiator = global_var:tyr_ga_austria initiator = global_var:tyr_ga_north }
+		OR = { target = global_var:tyr_ga_austria target = global_var:tyr_ga_north }
+	}
+
+	effect = {
+		global_var:tyr_ga_austria ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_ga_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_ga_war_mobilization
+				}
+			}
+		}
+		global_var:tyr_ga_north ?= {
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_ga_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_ga_war_mobilization
+				}
+			}
+		}
+	}
+
+}
+
+tyr_ga_balkan_war_ended = {
+
+	trigger = {
+		OR = { is_diplomatic_play_type = tyr_ga_first_war is_diplomatic_play_type = tyr_ga_final_war }
+	}
+
+	effect = {
+		global_var:tyr_ga_austria ?= {
+			if = {
+				limit = {
+					has_modifier = tyr_ga_war_mobilization
+				}
+				remove_modifier = tyr_ga_war_mobilization
+			}
+		}
+		global_var:tyr_ga_north ?= {
+			if = {
+				limit = {
+					has_modifier = tyr_ga_war_mobilization
+				}
+				remove_modifier = tyr_ga_war_mobilization
+			}
+		}
+	}
+
+}
+
+# Root: country. The bonus applies only to Russia and the Ottoman Empire in this war.
+tyr_ga_sync_balkan_war_mobilization = {
+
+	trigger = {
+		OR = {
+			global_var:tyr_ga_austria ?= this
+			global_var:tyr_ga_north ?= this
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				any_scope_war = {
+					diplomatic_play = {
+						OR = { is_diplomatic_play_type = tyr_ga_first_war is_diplomatic_play_type = tyr_ga_final_war }
+						OR = { initiator = global_var:tyr_ga_austria initiator = global_var:tyr_ga_north }
+						OR = { target = global_var:tyr_ga_austria target = global_var:tyr_ga_north }
+					}
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_modifier = tyr_ga_war_mobilization
+					}
+				}
+				add_modifier = {
+					name = tyr_ga_war_mobilization
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_modifier = tyr_ga_war_mobilization
+			}
+			remove_modifier = tyr_ga_war_mobilization
+		}
+	}
+
+}
+
+on_monthly_pulse_country = { on_actions = { tyr_ga_cleanup_finished } }
+tyr_ga_cleanup_finished = {
+ trigger = { has_variable = tyr_ga_active global_var:tyr_ga_phase >= 4 }
+ effect = { remove_variable = tyr_ga_active remove_modifier = tyr_ga_war_mobilization }
+}
+
+# Covers active saves, external JE removal and invalidated/annexed paths.
+# The trigger is cheap; only the active Austrian country searches for Radetzky.
+tyr_ga_sync_radetzky = {
+ trigger = {
+  OR = { has_journal_entry = je_german_ambition has_variable = tyr_ga_radetzky_character }
+ }
+ effect = {
+  if = {
+   limit = { has_journal_entry = je_german_ambition global_var:tyr_ga_phase < 4 }
+   tyr_ga_protect_radetzky = yes
+  }
+  else = { tyr_ga_release_radetzky = yes }
+ }
+}

@@ -1,0 +1,309 @@
+﻿# Country scope: Austrian actor. Global country references survive tag changes.
+tyr_ga_begin = {
+ hidden_effect = {
+ set_variable = tyr_ga_active
+ set_variable = tyr_ga_austrian_actor
+ set_global_variable = { name = tyr_ga_austria value = THIS }
+ set_global_variable = tyr_ga_started
+ set_global_variable = { name = tyr_ga_phase value = 1 }
+ c:PRU ?= { set_variable = tyr_ga_active set_variable = tyr_ga_northern_actor set_global_variable = { name = tyr_ga_north value = THIS } }
+ if = { limit = { NOT = { exists = c:PRU } } c:NGF ?= { set_variable = tyr_ga_active set_variable = tyr_ga_northern_actor set_global_variable = { name = tyr_ga_north value = THIS } } }
+ }
+
+ tyr_ga_settle_crowns = yes
+}
+tyr_ga_settle_crowns = {
+ hidden_effect = {
+ save_scope_as = tyr_ga_crown_overlord
+ if = {
+  limit = { NOT = { exists = c:HUN } }
+  release_hungarian_states = yes
+  if = { limit = { exists = c:HUN } create_diplomatic_pact = { country = c:HUN type = tyr_habsburg_autonomous } }
+ }
+ # Preserve market membership by changing the existing subject relationship.
+ every_subject_or_below = {
+  limit = { capital = { is_not_in_geographic_region = geographic_region_german_confederation } }
+  change_subject_type = subject_type_tyr_habsburg_autonomous
+ }
+ }
+
+ custom_tooltip = {
+  text = tyr_ga_opening_galicia_tt
+ if = {
+  limit = { NOT = { exists = c:GAL } }
+  s:STATE_EAST_GALICIA = { random_scope_state = { limit = { owner = ROOT } save_scope_as = tyr_ga_galicia_seed } }
+  if = { limit = { exists = scope:tyr_ga_galicia_seed }
+   create_country = { origin = ROOT tag = GAL state = scope:tyr_ga_galicia_seed }
+   create_diplomatic_pact = { country = c:GAL type = tyr_habsburg_autonomous }
+  }
+ }
+ if = { limit = { exists = c:GAL c:GAL = { is_subject_of = ROOT } }
+s:STATE_EAST_GALICIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+s:STATE_WEST_GALICIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+s:STATE_BUKOVINA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+ }
+ }
+
+ custom_tooltip = {
+  text = tyr_ga_opening_hungary_tt
+ if = { limit = { exists = c:HUN c:HUN = { is_subject_of = ROOT } }
+  c:CRO ?= { if = { limit = { is_subject_of = scope:tyr_ga_crown_overlord } c:HUN = { annex_with_incorporation = c:CRO } } }
+  c:TRS ?= { if = { limit = { is_subject_of = scope:tyr_ga_crown_overlord } c:HUN = { annex_with_incorporation = c:TRS } } }
+s:STATE_DALMATIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_MONTENEGRO = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+  c:HUN = { add_modifier = { name = tyr_ga_hungarian_settlement years = 10 } }
+ }
+ }
+
+ custom_tooltip = {
+  text = tyr_ga_opening_italy_tt
+ every_subject_or_below = {
+  limit = { country_has_primary_culture = cu:north_italian }
+  add_modifier = { name = tyr_ga_italian_discontent years = 10 }
+ }
+
+ }
+}
+
+tyr_ga_resolve_first = {
+ if = { limit = { global_var:tyr_ga_phase = 1 }
+  set_variable = tyr_ga_won_first
+  if = { limit = { has_variable = tyr_ga_austrian_actor }
+   global_var:tyr_ga_north = { set_variable = tyr_ga_lost_leadership }
+   set_global_variable = { name = tyr_ga_phase value = 3 }
+  }
+  else = {
+   save_scope_as = tyr_ga_north_winner
+   global_var:tyr_ga_austria = {
+    every_scope_state = { limit = { has_variable = tyr_ga_southern_state } set_state_owner = scope:tyr_ga_north_winner set_state_type = incorporated }
+    set_variable = tyr_ga_lost_leadership
+   }
+   change_tag = GER
+   set_global_variable = { name = tyr_ga_phase value = 2 }
+   global_var:tyr_ga_austria = { trigger_event = { id = tyr_ga.1 popup = yes } }
+  }
+ }
+}
+tyr_ga_return_to_danube = {
+ tyr_ga_release_radetzky = yes
+ set_global_variable = { name = tyr_ga_phase value = 5 }
+ remove_variable = tyr_ga_active
+ remove_modifier = modifier_german_ambition
+ change_tag = AUS
+ # Restore the ordinary Austrian settlement before reopening the Hungarian question.
+ if = {
+  limit = { exists = c:GAL c:GAL = { is_subject_of = ROOT } }
+  annex_with_incorporation = c:GAL
+ }
+ every_subject_or_below = {
+  limit = { is_subject_of = ROOT country_has_primary_culture = cu:north_italian }
+  change_subject_type = subject_type_crown_land
+ }
+ remove_variable = finished_hungary_var
+ remove_variable = established_austria_hungary_var
+ remove_variable = reclaiming_empire_aus_var
+ if = { limit = { NOT = { has_journal_entry = je_matter_of_hungary } } add_journal_entry = { type = je_matter_of_hungary } }
+ if = { limit = { exists = c:HUN } trigger_event = { id = austria_events.4 popup = yes } }
+ hidden_effect = {
+  global_var:tyr_ga_north ?= {
+   if = {
+    limit = { NOT = { has_variable = tyr_ga_settlement_event_queued } }
+    set_variable = tyr_ga_settlement_event_queued
+    trigger_event = { id = tyr_ga.3 days = 1 popup = yes }
+   }
+  }
+ }
+}
+tyr_ga_resolve_final = {
+ global_var:tyr_ga_austria ?= { tyr_ga_release_radetzky = yes }
+ if = { limit = { global_var:tyr_ga_phase = 3 }
+  set_global_variable = { name = tyr_ga_phase value = 4 }
+  if = { limit = { has_variable = tyr_ga_austrian_actor }
+   set_variable = tyr_ga_austrian_final_victory
+   remove_variable = tyr_ga_active
+   global_var:tyr_ga_north ?= { ROOT = { annex_with_incorporation = prev } }
+   change_tag = GER
+   add_primary_culture = cu:north_german
+   trigger_event = { id = austria_germany.1 days = 1 popup = yes }
+  }
+  else = {
+   save_scope_as = tyr_ga_northern_victor
+   global_var:tyr_ga_austria = {
+    # Transfer every directly held German homeland, including additional acquisitions.
+    every_scope_state = {
+     limit = {
+      state_region = {
+       OR = {
+        is_homeland = cu:south_german
+        is_homeland = cu:north_german
+       }
+      }
+     }
+     set_state_owner = scope:tyr_ga_northern_victor
+     set_state_type = incorporated
+    }
+    # Preserve the Austrian player, ruler, institutions, and treasury while moving the crown to Budapest.
+    tyr_ga_exile = yes
+   }
+   if = { limit = { NOT = { country_definition = cd:GER } } change_tag = GER }
+  }
+ }
+}
+tyr_ga_exile = {
+ save_scope_as = tyr_ga_exiled_court
+ every_subject_or_below = { scope:tyr_ga_exiled_court = { annex_with_incorporation = prev } }
+ hidden_effect = { set_variable = tyr_ga_exiled }
+ change_tag = HUN
+ add_primary_culture = cu:hungarian
+ add_primary_culture = cu:south_german
+ set_capital = STATE_CENTRAL_HUNGARY
+ remove_variable = tyr_ga_active
+ remove_modifier = modifier_german_ambition
+ remove_modifier = tyr_ga_war_mobilization
+ add_modifier = { name = tyr_ga_habsburgs_in_exile }
+ if = { limit = { NOT = { has_journal_entry = je_tyr_ga_danubian_federation } } add_journal_entry = { type = je_tyr_ga_danubian_federation } }
+ trigger_event = { id = tyr_ga.2 popup = yes }
+}
+tyr_ga_release_settlement = {
+ # Reconstitute annexed crowns using their existing vanilla release routines.
+ release_hungarian_states = yes
+ release_polish_states = yes
+ release_north_italian_states = yes
+ save_scope_as = tyr_ga_german_court
+ c:HUN ?= {
+  if = { limit = { is_subject_of = scope:tyr_ga_german_court } make_independent = yes }
+ }
+ c:CRO ?= { if = { limit = { is_subject_of = scope:tyr_ga_german_court exists = c:HUN } c:HUN = { annex_with_incorporation = c:CRO } } }
+ c:TRS ?= { if = { limit = { is_subject_of = scope:tyr_ga_german_court exists = c:HUN } c:HUN = { annex_with_incorporation = c:TRS } } }
+s:STATE_DALMATIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_MONTENEGRO = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_SLOVENIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_ISTRIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_NORTHERN_TRANSYLVANIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_SOUTHERN_TRANSYLVANIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_CROATIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+s:STATE_SLAVONIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:HUN set_state_type = incorporated } }
+ c:GAL ?= { if = { limit = { is_subject_of = scope:tyr_ga_german_court } make_independent = yes } }
+s:STATE_EAST_GALICIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+s:STATE_WEST_GALICIA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+s:STATE_BUKOVINA = { every_scope_state = { limit = { OR = { owner = ROOT owner = { is_subject_of = ROOT } } } set_state_owner = c:GAL set_state_type = incorporated } }
+ every_subject_or_below = {
+  limit = { OR = { country_has_primary_culture = cu:north_italian is_subject_type = subject_type_tyr_habsburg_autonomous } }
+  make_independent = yes
+ }
+ set_variable = tyr_ga_forced_release_done
+}
+
+# Called by the Austrian south-German unification event, in Austrian country scope.
+# Use the same primary-culture/rank exclusions as the existing German confederation events.
+# The Prussian country object (including the arc's saved reference) survives the tag change.
+tyr_ga_form_north_immediately = {
+ c:PRU ?= {
+  if = {
+   limit = { NOT = { exists = c:NGF } }
+   hidden_effect = { save_scope_as = tyr_ga_north_unifier }
+   every_country = {
+    limit = {
+     country_has_primary_culture = cu:north_german
+     country_rank < rank_value:great_power
+     capital = { is_in_geographic_region = geographic_region_german_confederation }
+     NOR = {
+      THIS = scope:tyr_ga_north_unifier
+      THIS = ROOT
+      c:HOH ?= THIS
+      is_subject_type = subject_type_colony
+      is_subject_type = subject_type_dominion
+      is_subject_type = subject_type_chartered_company
+     }
+    }
+    scope:tyr_ga_north_unifier = { annex_with_incorporation = PREV }
+   }
+   hidden_effect = { set_variable = je_german_confederate_unifier }
+   change_tag = NGF
+  }
+ }
+}
+
+# Country scope: protect only the historical Radetzky and retain a direct
+# character reference, so cleanup still reaches him after a country/tag change.
+tyr_ga_protect_radetzky = {
+ hidden_effect = {
+  if = {
+   limit = { NOT = { has_variable = tyr_ga_radetzky_character } }
+   random_scope_character = {
+    limit = { has_template = aus_general_radetzky_von_radetz }
+    save_scope_as = tyr_ga_radetzky
+    set_character_immortal = yes
+   }
+   if = {
+    limit = { exists = scope:tyr_ga_radetzky }
+    set_variable = { name = tyr_ga_radetzky_character value = scope:tyr_ga_radetzky }
+   }
+  }
+ }
+}
+tyr_ga_release_radetzky = {
+ hidden_effect = {
+  var:tyr_ga_radetzky_character ?= { set_character_immortal = no }
+  remove_variable = tyr_ga_radetzky_character
+ }
+}
+
+# Country scope: Austrian actor. Same settlement used by both unification buttons.
+tyr_ga_form_south_immediately = {
+
+        hidden_effect = {
+            if = { limit = { has_variable = tyr_ga_austrian_actor }
+                c:BAD ?= { every_scope_state = { set_variable = tyr_ga_southern_state } }
+                c:BAV ?= { every_scope_state = { set_variable = tyr_ga_southern_state } }
+                c:WUR ?= { every_scope_state = { set_variable = tyr_ga_southern_state } }
+                c:HOH ?= { every_scope_state = { set_variable = tyr_ga_southern_state } }
+            }
+        }
+
+		annex_with_incorporation = c:BAD
+		annex_with_incorporation = c:BAV
+		annex_with_incorporation = c:WUR
+		if = { limit = { exists = c:HOH } annex_with_incorporation = c:HOH }
+		change_tag = SGF
+		tyr_ga_form_north_immediately = yes
+	
+}
+
+# Country scope: Germany. Same audience as The German Question, even after it ends.
+tyr_ga_post_settlement_news = {
+ save_scope_as = tyr_ga_news_germany
+ global_var:tyr_ga_austria ?= { save_scope_as = tyr_ga_news_austria }
+ every_country = {
+  limit = {
+   OR = {
+    global_var:tyr_ga_austria ?= THIS
+    global_var:tyr_ga_north ?= THIS
+    AND = { country_rank = rank_value:great_power capital = { is_in_geographic_region = geographic_region_europe } }
+    has_interest_marker_in_region = sr:region_central_europe
+   }
+  }
+  post_notification = $NOTIFICATION$
+ }
+}
+
+# Wargoal holder is ROOT; the loser is the explicit target, never a JE candidate.
+tyr_ga_brothers_defeat_on_enforced = {
+ hidden_effect = {
+  if = {
+   limit = {
+    OR = { country_has_primary_culture = cu:north_german country_has_primary_culture = cu:south_german }
+   }
+   scope:target_country = {
+    if = {
+     limit = {
+      OR = { country_definition = cd:PRU country_definition = cd:NGF country_definition = cd:AUS country_definition = cd:SGF has_variable = tyr_ga_austrian_actor has_variable = tyr_ga_northern_actor }
+      NOT = { has_variable = tyr_ga_brothers_defeat_pending }
+     }
+     set_variable = tyr_ga_brothers_defeat_pending
+     trigger_event = { id = germany_rework.1 days = 1 popup = yes }
+    }
+   }
+  }
+ }
+}

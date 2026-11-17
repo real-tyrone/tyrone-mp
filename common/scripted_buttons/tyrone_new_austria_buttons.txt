@@ -1,77 +1,54 @@
-﻿fix_administration_button = {
-	name = fix_administration_button
-	desc = fix_administration_button_desc
-
-	visible = {
-		NOT = {
-			has_variable = fixed_administration_var
-		}
-		has_modifier = modifier_overstretched_administration
-	}
-
-	possible = {
-		has_law_or_variant = law_type:law_appointed_bureaucrats
-		bureaucracy >= 0
-		approaching_bureaucracy_shortage = no
-	}
-
-	selected = {
-	}
-
-	effect = {
-		remove_modifier = modifier_overstretched_administration
-		set_variable = fixed_administration_var
-	}
-
-}
+﻿
 
 support_metternich_button = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_metternich }
+	short_desc = tyr_ga_gui_metternich
+	icon = "gfx/interface/icons/event_icons/event_portrait.dds"
+
 	name = support_metternich_button
 	desc = support_metternich_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = support_metternich_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		hidden_trigger = { NOT = { has_variable = support_metternich_var } }
 		custom_tooltip = {
 			text = metternich_button_possible_2_tt
 			metternich_agenda_value >= 6
 		}
 	}
 
-	selected = {
-	}
+	selected = { has_variable = support_metternich_var }
 
 	effect = {
 		custom_tooltip = {
 			text = metternich_supported
-			set_variable = support_metternich_var
+			hidden_effect = { set_variable = support_metternich_var }
 		}
 	}
 }
 
 appease_minorities_button = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_minorities }
+	short_desc = tyr_ga_gui_minorities
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
 	name = appease_minorities_button
 	desc = appease_minorities_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = appeased_minorities_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		hidden_trigger = { NOT = { has_variable = appeased_minorities_var } }
 		OR = {
 			has_law_or_variant = law_type:law_cultural_exclusion
 			has_law_or_variant = law_type:law_multicultural
 		}
 	}
 
-	selected = {
-	}
+	selected = { has_variable = appeased_minorities_var }
 
 	effect = {
 		add_loyalists = {
@@ -102,22 +79,32 @@ appease_minorities_button = {
 			culture = cu:south_german
 			value = medium_radicals
 		}		
-		set_variable = appeased_minorities_var
+		hidden_effect = { set_variable = appeased_minorities_var }
 	}
 
 }
 
 modernize_government_button = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_government }
+	short_desc = tyr_ga_gui_government
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
 	name = modernize_government_button
 	desc = modernize_government_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = modernize_government_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		# The old completion flag could be set by a failed application; allow one verified repair.
+		hidden_trigger = {
+			NOT = { has_variable = tyr_ga_modernization_verified }
+			NOT = { active_law:lawgroup_distribution_of_power = { has_amendment = amendment_type:amendment_geheime_staatskonferenz_modernized } }
+		}
+		OR = {
+			has_law = law_type:law_autocracy
+			has_law = law_type:law_neo_absolutism
+		}
 		NOR = {
 			has_law_or_variant = law_type:law_hereditary_bureaucrats
 			has_law_or_variant = law_type:law_land_based_taxation
@@ -126,6 +113,10 @@ modernize_government_button = {
 	}
 
 	selected = {
+		OR = {
+			has_variable = tyr_ga_modernization_verified
+			active_law:lawgroup_distribution_of_power = { has_amendment = amendment_type:amendment_geheime_staatskonferenz_modernized }
+		}
 	}
 
 	effect = {
@@ -137,25 +128,34 @@ modernize_government_button = {
 		active_law:lawgroup_distribution_of_power ?= { # Autocracy
 			add_amendment = {
 				type = amendment_geheime_staatskonferenz_modernized
-				sponsor = PREV.ig:ig_landowners
+				sponsor = ROOT.ig:ig_landowners
 				cooldown = 120
 			}
 		}
-		set_variable = modernize_government_var
+		# Only consume the action after the amendment is actually attached.
+		if = {
+			limit = { active_law:lawgroup_distribution_of_power = { has_amendment = amendment_type:amendment_geheime_staatskonferenz_modernized } }
+			hidden_effect = {
+				set_variable = modernize_government_var
+				set_variable = tyr_ga_modernization_verified
+			}
+		}
 	}
 }
 
 autocratic_reforms_button = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_autocracy }
+	short_desc = tyr_ga_gui_autocracy
+	icon = "gfx/interface/icons/event_icons/event_imperial_eagle.dds"
+
 	name = autocratic_reforms_button
 	desc = autocratic_reforms_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = autocratic_reforms_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		hidden_trigger = { NOT = { has_variable = autocratic_reforms_var } }
 		has_law_or_variant = law_type:law_autocracy
 		has_law_or_variant = law_type:law_secret_police
 		has_law_or_variant = law_type:law_censorship
@@ -166,79 +166,31 @@ autocratic_reforms_button = {
 		}
 	}
 
-	selected = {
-	}
+	selected = { has_variable = autocratic_reforms_var }
 
 	effect = {
 		custom_tooltip = {
 			text = autocratic_reforms_completed
-			set_variable = autocratic_reforms_var
+			hidden_effect = { set_variable = autocratic_reforms_var }
 		}
 	}
 }
 
-military_reforms_button = {
-	name = military_reforms_button
-	desc = military_reforms_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = military_reforms_var
-		}
-	}
-
-	possible = {
-		has_technology_researched = shell_gun
-		army_size >= 125
-		any_scope_building = {
-			filter = {
-				is_building_type = building_barrack
-			}
-			NOR = {
-				building_has_goods_shortage = yes
-				has_active_production_method = pm_no_organization
-			}
-			percent = 1
-		}
-		NOT = {
-			any_military_formation = {
-				filter = {
-					is_army = yes
-				}
-				any_combat_unit = {
-					OR = {
-						has_unit_type = unit_type:combat_unit_type_line_infantry
-						has_unit_type = unit_type:combat_unit_type_irregular_infantry
-					}
-				}
-				percent >= 0.25
-			}
-		}
-	}
-
-	selected = {
-	}
-
-	effect = {
-		add_modifier = {
-			name = modifier_ottoman_army_modernization
-			days = long_modifier_time
-		}		
-		set_variable = military_reforms_var
-	}
-}
 
 invite_south_germany_button = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_diplomacy }
+	short_desc = tyr_ga_gui_diplomacy
+	icon = "gfx/interface/icons/event_icons/event_map.dds"
+
 	name = invite_south_germany_button
 	desc = invite_south_germany_button_desc
 
-	visible = {
-		NOT = {
-			has_variable = invited_south_germany_button_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		hidden_trigger = { NOT = { has_variable = invited_south_germany_button_var } }
 		c:BAD = {
 			relations:root >= relations_threshold:amicable
 		}
@@ -250,8 +202,7 @@ invite_south_germany_button = {
 		}
 	}
 
-	selected = {
-	}
+	selected = { has_variable = invited_south_germany_button_var }
 
 	effect = {
 		every_country = {
@@ -269,24 +220,26 @@ invite_south_germany_button = {
 				}
 			}
 			c:AUS.power_bloc ?= {
-				add_leverage = { target = prev value = 200 }
+				add_leverage = { target = prev value = 1500 }
 			}
 		}
-		set_variable = invited_south_germany_button_var
+		hidden_effect = { set_variable = invited_south_germany_button_var }
 	}
 }
 
 propose_south_german_unification = {
+	# Presentation metadata for the German Ambition hemicycle.
+	tags = { tyr_ga_gui_unification }
+	short_desc = tyr_ga_gui_unification
+	icon = "gfx/interface/icons/event_icons/event_imperial_eagle.dds"
+
 	name = propose_south_german_unification
 	desc = propose_south_german_unification_desc
 
-	visible = {
-		NOT = {
-			has_variable = proposed_south_german_unification_var
-		}
-	}
+	visible = { always = yes }
 
 	possible = {
+		hidden_trigger = { NOT = { has_variable = proposed_south_german_unification_var } }
 		has_technology_researched = nationalism
 		country_rank >= rank_value:great_power
 		is_power_bloc_leader = yes
@@ -296,12 +249,11 @@ propose_south_german_unification = {
 		has_journal_entry = je_south_german_unification
 	}
 
-	selected = {
-	}
+	selected = { has_variable = proposed_south_german_unification_var }
 
 	effect = {
 		trigger_event = { id = austria_events.8 } # South German Confederation
-		set_variable = proposed_south_german_unification_var
+		hidden_effect = { set_variable = proposed_south_german_unification_var }
 	}
 }
 

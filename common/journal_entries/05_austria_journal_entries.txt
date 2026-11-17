@@ -617,6 +617,18 @@ je_hungarian_revolution_aus = {
 }
 
 je_german_ambition = {
+	# Own only this entry's artwork and buttons; retain the vanilla journal panel.
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_ga_widgets.gui"
+		name = "tyr_ga_court"
+		container = "custom_widget_container_1"
+	}
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_ga_widgets.gui"
+		name = "tyr_ga_native_buttons_replaced"
+		container = "custom_widget_container_buttons"
+	}
+
 	activation_description = {
 		always = yes
 	}
@@ -625,6 +637,7 @@ je_german_ambition = {
 	icon = "gfx/interface/icons/event_icons/event_scales.dds"
 
 	immediate = {
+		tyr_ga_protect_radetzky = yes
 		c:AUS ?= { save_scope_as = austria_scope }
 		c:PRU ?= { save_scope_as = prussia_scope }
 	}
@@ -638,14 +651,16 @@ je_german_ambition = {
 
 	scripted_button = modernize_government_button
 	scripted_button = appease_minorities_button
-	scripted_button = fix_administration_button
+
 	scripted_button = autocratic_reforms_button
-	scripted_button = military_reforms_button
+
 	scripted_button = invite_south_germany_button
 	scripted_button = support_metternich_button
 	scripted_button = propose_south_german_unification
-	scripted_button = unify_germany_button
-	scripted_button = abandon_germany_button
+	scripted_button = tyr_ga_launch_first
+	scripted_button = tyr_ga_launch_final
+
+
 
 
 	group = je_group_historical_content
@@ -660,42 +675,12 @@ je_german_ambition = {
 	}	
 
 
-	outcome = {
-		header = je_standard_completion_header
-		effect_header = je_standard_on_completion_header
-		color = "gold_positive"
-		conclusion_desc = je_standard_completion_conclusion_desc
-		trigger = {
-		custom_tooltip = {
-			OR = {
-				c:GER ?= this
-				owns_entire_state_region = STATE_BRANDENBURG
-			}
-			text = je_german_unification_complete_trigger_desc
-		}
-	}
-	}
-
-	outcome = {
-		header = je_standard_failure_header
-		effect_header = je_standard_on_failure_header
-		color = "blue_negative"
-		conclusion_desc = je_standard_failure_conclusion_desc
-		trigger = {
-		OR = {
-			has_modifier = brothers_war_defeat_aus
-			custom_tooltip = {
-				text = abandoned_germany_fail
-				has_variable = abandoned_germany_button_var
-			}
-			has_global_variable = ngf_defeated_sgf
-		}
-	}
-		effect = {
-		trigger_event = { id = austria_events.9 popup = yes }
-		set_variable = reclaiming_empire_aus_var
-	}
-	}
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = je_standard_completion_conclusion_desc
+  trigger = { global_var:tyr_ga_phase >= 4 }
+  effect = { tyr_ga_release_radetzky = yes }
+ }
 }
 
 je_austrian_reclamation = {

@@ -49,18 +49,17 @@ germany_rework.1 = {
 
 	duration = 3
 
-	trigger = {
-	}
+	trigger = { has_variable = tyr_ga_brothers_defeat_pending }
 
 	immediate = {
-		set_variable = je_unification_fail
+		if = { limit = { NOT = { has_variable = tyr_ga_brothers_modded_loss } } set_variable = je_unification_fail }
 	}
 
 	option = {
 		name = germany_rework.1.a
 		default_option = yes
 		trigger = {
-			c:PRU ?= THIS
+			OR = { country_definition = cd:PRU country_definition = cd:NGF has_variable = tyr_ga_northern_actor }
 		}
 		add_modifier = {
 			name = brothers_war_defeat_pru
@@ -73,6 +72,7 @@ germany_rework.1 = {
 		default_option = yes
 		trigger = {
 			c:AUS ?= THIS
+			NOT = { has_variable = tyr_ga_brothers_modded_loss }
 			has_law_or_variant = law_type:law_monarchy
 			NOT = {
 				has_variable = empire_of_austria_variable
@@ -126,6 +126,7 @@ germany_rework.1 = {
 		default_option = yes
 		trigger = {
 			c:AUS ?= THIS
+			NOT = { has_variable = tyr_ga_brothers_modded_loss }
 		}
 		if = {
 			limit = {
@@ -194,6 +195,19 @@ germany_rework.1 = {
 			}
 		}
 	}
+
+ option = {
+  name = germany_rework.1.c
+  default_option = yes
+  trigger = { has_variable = tyr_ga_brothers_modded_loss has_variable = tyr_ga_austrian_actor }
+  add_modifier = { name = brothers_war_defeat_aus days = long_modifier_time is_decaying = yes }
+ }
+ after = {
+  hidden_effect = {
+   remove_variable = tyr_ga_brothers_defeat_pending
+   remove_variable = tyr_ga_brothers_modded_loss
+  }
+ }
 }
 
 germany_rework.2 = {

@@ -1,126 +1,120 @@
 ﻿je_sino_japanese_wars = {
-	activation_description = {
-		always = yes
-	}
-
-	icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
-	group = je_group_historical_content
-	
-
-	is_shown_when_inactive = {
-		exists = c:JAP
-		c:JAP = ROOT
-		has_variable = japan_restoration_complete
-	}
-
-	possible = {
-		c:JAP = ROOT
-		custom_tooltip = has_meiji_TT
-		NOT = { is_country_type = unrecognized }
-        has_technology_researched = nationalism		
-	}
-
-	immediate = {
-		c:CHI ?= {
-			save_scope_as = chi_scope
-		}
-		c:RUS ?= {
-			save_scope_as = rus_scope
-		}
-		c:JAP ?= {
-			save_scope_as = jap_scope
-		}
-		c:KOR ?= {
-			save_scope_as = kor_scope
-		}
-		s:STATE_FORMOSA.region_state:CHI ?= {
-			save_scope_as = taiwan_scope
-		}		
-		
-		ig:ig_armed_forces = {
-			save_scope_as = military_scope
-		}
-		ig:ig_intelligentsia = {
-			save_scope_as = intellectual_scope
-		}
-	}
-
-	on_monthly_pulse = {
-
-	}
-	
-
-
-
-
-
-
-	weight = 1000
-	should_be_pinned_by_default_uninvolved_or_context = yes
-	
-	scripted_button = korean_question_button
-	scripted_button = korean_influence_button
-	scripted_button = manchurian_question_button
-	scripted_button = japan_korea_annexation_button
-	scripted_button = integrate_korea_button
-	scripted_button = integrate_manchu_button
-	scripted_button = taiwan_question_button
-	scripted_button = integrate_taiwan_button
-	scripted_button = korean_protection_button
-
-	outcome = {
-		header = je_standard_completion_header
-		effect_header = je_standard_on_completion_header
-		color = "gold_positive"
-		conclusion_desc = je_standard_completion_conclusion_desc
-		trigger = {
-		custom_tooltip = {
-			text = has_completed_meiji_main_je_tt
-			OR = {
-			has_variable = meiji_reforms_complete_var
-			has_variable = shogunate_supreme
-			}
-		}
-		country_or_subject_owns_entire_state_region = STATE_YANGHO
-		country_or_subject_owns_entire_state_region = STATE_BUSAN
-		country_or_subject_owns_entire_state_region = STATE_SEOUL
-		country_or_subject_owns_entire_state_region = STATE_PYONGYANG
-		country_or_subject_owns_entire_state_region = STATE_SARIWON
-		country_or_subject_owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
-		country_or_subject_owns_entire_state_region = STATE_NORTHERN_MANCHURIA
-		country_or_subject_owns_entire_state_region = STATE_SHENGJING
-		country_or_subject_owns_entire_state_region = STATE_FORMOSA
-		any_scope_state = {
-			state_region = {
-				OR = { 
-					is_homeland = cu:korean
-					is_homeland = cu:manchu
-				}
-			}
-			count >= 8
-			is_incorporated = yes
-		}
-		any_scope_state = {
-			state_region = s:STATE_FORMOSA
-			is_incorporated = yes
-		}
-	}
-		effect = {
-		trigger_event = {
-			id = sino_japan_events.8
-			days = 0
-		}
-	}
-	}
-
-	outcome = {
-		header = je_standard_failure_header
-		effect_header = je_standard_on_failure_header
-		color = "blue_negative"
-		conclusion_desc = je_standard_failure_conclusion_desc
-		trigger = {
-		country_rank <= rank_value:minor_power
-	}
-	}
+ group = je_group_global_international_situations
+ context = none
+ icon = "gfx/interface/icons/event_icons/sino_japan_icon.dds"
+ activation_description = { always = yes }
+ is_shown_when_inactive = { NOT = { has_global_variable = tyr_sj_finished } }
+ possible = {
+  hidden_trigger = { NOT = { has_global_variable = tyr_sj_started } }
+  exists = c:JAP
+  exists = c:CHI
+  exists = c:RUS
+  c:JAP = { NOT = { is_country_type = unrecognized } country_rank = rank_value:great_power }
+ }
+ should_be_involved = { OR = { tyr_sj_is_japan = yes tyr_sj_is_china = yes tyr_sj_is_russia = yes c:JAP ?= THIS c:CHI ?= THIS c:RUS ?= THIS } }
+ should_show_when_not_involved = { OR = { country_rank = rank_value:great_power has_interest_marker_in_region = sr:region_northeast_asia } }
+ should_be_pinned_by_default_involved = yes
+ transferable = no
+ can_revolution_inherit = no
+ immediate = {
+  hidden_effect = {
+   set_global_variable = tyr_sj_started
+   set_global_variable = { name = tyr_sj_japan value = c:JAP }
+   set_global_variable = { name = tyr_sj_china value = c:CHI }
+   set_global_variable = { name = tyr_sj_russia value = c:RUS }
+   if = { limit = { tyr_sj_japan_humiliates_russia = yes } set_global_variable = { name = tyr_sj_last_rus_jap_victor value = c:JAP } }
+   else_if = { limit = { tyr_sj_russia_humiliates_japan = yes } set_global_variable = { name = tyr_sj_last_rus_jap_victor value = c:RUS } }
+   c:JAP = { save_scope_as = tyr_sj_japan }
+   c:CHI = { save_scope_as = tyr_sj_china }
+   c:RUS = { save_scope_as = tyr_sj_russia }
+  }
+  global_var:tyr_sj_japan ?= { tyr_sj_opening_claims = yes }
+  tyr_sj_grant_russian_concessions = yes
+  hidden_effect = {
+   global_var:tyr_sj_japan ?= {
+    tyr_sj_update_japan_clock = yes
+    trigger_event = { id = tyr_sj.3 days = 1 }
+   }
+   global_var:tyr_sj_china ?= { tyr_sj_update_china_clock = yes }
+  }
+ }
+ status_desc = je_sino_japanese_wars_status
+ scripted_progress_bar = tyr_sj_japan_bar
+ scripted_progress_bar = tyr_sj_china_bar
+ scripted_button = tyr_sj_annex_korea
+ scripted_button = tyr_sj_integrate_korea
+ scripted_button = tyr_sj_integrate_manchuria
+ scripted_button = tyr_sj_japanese_claims
+ scripted_button = tyr_sj_russian_claims
+ scripted_button = tyr_sj_port_arthur
+ scripted_button = tyr_sj_outer_manchuria
+ scripted_button = tyr_sj_amur
+ # The visible monthly count is backed by an exact 48-month country timer.
+ on_monthly_pulse = {
+  effect = {
+   scope:journal_entry = {
+    if = { limit = { tyr_sj_japan_winning = yes } add_progress = { name = tyr_sj_japan_bar value = 1 } }
+    else = { set_bar_progress = { name = tyr_sj_japan_bar value = 0 } }
+    if = { limit = { tyr_sj_china_winning = yes } add_progress = { name = tyr_sj_china_bar value = 1 } }
+    else = { set_bar_progress = { name = tyr_sj_china_bar value = 0 } }
+    if = { limit = { "scripted_bar_progress(tyr_sj_japan_bar)" >= 48 global_var:tyr_sj_japan ?= { NOT = { has_variable = tyr_sj_clock_ready } } } set_bar_progress = { name = tyr_sj_japan_bar value = 47 } }
+    if = { limit = { "scripted_bar_progress(tyr_sj_china_bar)" >= 48 global_var:tyr_sj_china ?= { NOT = { has_variable = tyr_sj_clock_ready } } } set_bar_progress = { name = tyr_sj_china_bar value = 47 } }
+   }
+  }
+ }
+ on_weekly_pulse = {
+  effect = {
+   scope:journal_entry = {
+    if = { limit = { NOT = { tyr_sj_japan_winning = yes } } set_bar_progress = { name = tyr_sj_japan_bar value = 0 } }
+    if = { limit = { NOT = { tyr_sj_china_winning = yes } } set_bar_progress = { name = tyr_sj_china_bar value = 0 } }
+   }
+  }
+ }
+ outcome = {
+  header = tyr_sj_japanese_victory
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_sj_japanese_victory_desc
+  color = "gold_positive"
+  trigger = { tyr_sj_japan_winning = yes hidden_trigger = { global_var:tyr_sj_japan ?= { has_variable = tyr_sj_clock_ready } } }
+  effect = {
+   # Preview event choices with native modifier tooltips; never grant both rewards.
+   # Country tags also resolve before immediate initializes the global actors.
+   show_as_tooltip = {
+    c:JAP ?= {
+     custom_tooltip = tyr_sj_choose_reward_tt
+     add_modifier = { name = tyr_sj_japan_population_victory years = 20 }
+     custom_tooltip = tyr_sj_alternative_reward_tt
+     add_modifier = { name = tyr_sj_japan_military_victory years = 20 }
+    }
+    c:CHI ?= { add_modifier = { name = tyr_sj_china_defeat years = 20 } }
+   }
+   hidden_effect = { tyr_sj_japanese_victory_effect = yes }
+  }
+ }
+ outcome = {
+  header = tyr_sj_chinese_victory
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_sj_chinese_victory_desc
+  color = "gold_positive"
+  trigger = { tyr_sj_china_winning = yes hidden_trigger = { global_var:tyr_sj_china ?= { has_variable = tyr_sj_clock_ready } } }
+  effect = {
+   # Preview event choices with native modifier tooltips; never grant both rewards.
+   # Country tags also resolve before immediate initializes the global actors.
+   show_as_tooltip = {
+    c:CHI ?= {
+     custom_tooltip = tyr_sj_choose_reward_tt
+     add_modifier = { name = tyr_sj_china_construction_victory years = 20 }
+     custom_tooltip = tyr_sj_alternative_reward_tt
+     add_modifier = { name = tyr_sj_china_investment_victory years = 20 }
+    }
+   }
+   hidden_effect = { tyr_sj_chinese_victory_effect = yes }
+  }
+ }
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = je_standard_failure_conclusion_desc
+  trigger = { OR = { NOT = { exists = global_var:tyr_sj_japan } NOT = { exists = global_var:tyr_sj_china } NOT = { exists = global_var:tyr_sj_russia } } }
+  effect = { hidden_effect = { set_global_variable = tyr_sj_finished } }
+ }
 }
-

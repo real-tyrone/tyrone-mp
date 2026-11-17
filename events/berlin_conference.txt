@@ -477,47 +477,6 @@ berlin_conference.3 = {
 			}
 		}
 		if = {
-			limit = { root = { has_variable = claimed_morocco_var } }
-			custom_tooltip = claim_morocco_TT
-			every_state = {
-				limit = {
-					OR = {
-						state_region = s:STATE_INNER_MOROCCO
-						state_region = s:STATE_MARRAKECH
-						state_region = s:STATE_FEZ
-						state_region = s:STATE_AL_RIF
-						state_region = s:STATE_WEST_SAHARA
-					}
-				}
-				state_region = {
-						add_claim = ROOT
-					}
-			}
-			if = {
-				limit = {
-					has_game_rule = berlin_conf_territory_grant_enabled
-					NOT = {
-						any_country = {
-							NOT = { this = ROOT }
-							has_variable = claimed_morocco_var
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						OR = {
-							state_region = s:STATE_INNER_MOROCCO
-							state_region = s:STATE_MARRAKECH
-							state_region = s:STATE_FEZ
-							state_region = s:STATE_AL_RIF
-							state_region = s:STATE_WEST_SAHARA
-						}
-					}
-					set_state_owner = ROOT
-				}
-			}
-		}
-		if = {
 			limit = { root = { has_variable = claimed_togo_var } }
 			custom_tooltip = claim_togo_TT
 			every_state = {
@@ -1158,10 +1117,14 @@ berlin_conference.49 = {
 	duration = 3
 
 	trigger = {
+		tyr_berlin_country_can_claim = yes
+		tyr_berlin_negotiation_open = yes
 		is_player = no
 	}
 
 	immediate = {
+		if = {
+			limit = { tyr_berlin_negotiation_open = yes tyr_berlin_country_can_claim = yes }
 		# --- Snatch claims always, regardless of gamerule ---
 		if = {
 			limit = {
@@ -1468,6 +1431,8 @@ berlin_conference.49 = {
 				add_to_global_variable_list = { name = mozambique_claimed_countries_list target = this }
 			}
 		}
+
+		}
 	}
 
 	option = {
@@ -1498,6 +1463,8 @@ berlin_conference.50 = {
 	duration = 3
 
 	trigger = {
+		tyr_berlin_country_can_claim = yes
+		tyr_berlin_negotiation_open = yes
 		is_player = no
 		is_ai = yes
 		is_involved_in_journal_entry = je_berlin_conference
@@ -1518,6 +1485,8 @@ berlin_conference.50 = {
 	}
 
 	immediate = {
+		if = {
+			limit = { tyr_berlin_negotiation_open = yes tyr_berlin_country_can_claim = yes }
 		random_list = {
 			# --- West Africa (Algeria owners get priority; bundles Equatorial Africa) ---
 			10 = {
@@ -1664,6 +1633,8 @@ berlin_conference.50 = {
 			}
 		}
 		change_global_variable = { name = berlin_claims_this_month add = 1 }
+
+		}
 	}
 
 	option = { name = berlin_conference.50.a }
@@ -1691,6 +1662,7 @@ berlin_conference.51 = {
 	duration = 3
 
 	trigger = {
+		tyr_berlin_negotiation_open = yes
 		is_player = no
 		is_ai = yes
 		is_involved_in_journal_entry = je_berlin_conference
@@ -1699,6 +1671,8 @@ berlin_conference.51 = {
 	}
 
 	immediate = {
+		if = {
+			limit = { tyr_berlin_negotiation_open = yes }
 		set_variable = accepted_conf_var
 				add_to_global_variable_list = { name = berlin_accept_conf_list target = this }
 		random_list = {
@@ -1708,6 +1682,8 @@ berlin_conference.51 = {
 				set_variable = accepted_conf_var
 				add_to_global_variable_list = { name = berlin_accept_conf_list target = this }
 			}
+		}
+
 		}
 	}
 
@@ -1737,9 +1713,13 @@ berlin_conference.52 = {
 
 	duration = 3
 
-	trigger = { is_player = no }
+	trigger = {
+		tyr_berlin_country_can_claim = yes
+		tyr_berlin_negotiation_open = yes is_player = no }
 
 	immediate = {
+		if = {
+			limit = { tyr_berlin_negotiation_open = yes tyr_berlin_country_can_claim = yes }
 		# Distribute unclaimed areas first, then force-accept
 		if = {
 			limit = { NOT = { any_country = { has_variable = claimed_west_africa_var } } }
@@ -1990,6 +1970,8 @@ berlin_conference.52 = {
 			}
 		}
 		# Force-accept all AI countries that haven't accepted yet
+
+		}
 	}
 
 	option = { name = berlin_conference.52.a }
