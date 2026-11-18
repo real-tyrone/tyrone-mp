@@ -1,4 +1,5 @@
 ﻿je_chinese_missions = {
+	can_revolution_inherit = yes
 	icon = "gfx/interface/icons/religion_icons/protestant.dds"
 
 	group = je_group_qing
@@ -10,8 +11,8 @@
 	scripted_button = CHI_deport_missionaries_button
 
 	is_shown_when_inactive = {
-		exists = c:CHI
-		c:CHI ?= THIS
+		is_china_tag_trigger = yes
+		NOT = { c:TPG ?= this }
 	}
 
 	possible = {
@@ -139,6 +140,7 @@
 }
 
 je_heavenly_kingdom_main = {
+	can_revolution_inherit = yes
 	context = country
 
 	icon = "gfx/interface/icons/event_icons/event_protest.dds"
@@ -254,6 +256,7 @@ je_heavenly_kingdom_main = {
 }
 
 je_taiping = {
+	can_revolution_inherit = yes
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
 	group = je_group_qing
@@ -276,6 +279,11 @@ je_taiping = {
 			}
 		}
 		effect = {
+			if = {
+				limit = { NOT = { has_variable = chi_mandate_taiping_victory_rewarded } }
+				hidden_effect = { set_variable = chi_mandate_taiping_victory_rewarded }
+				chi_mandate_gain_centralisation = { AMOUNT = 1 TOOLTIP = chi_mandate_centralisation_reward_1_tt }
+			}
 			trigger_event = { id = heavenly.5 days = 0 }
 			hidden_effect = {
 				remove_modifier = taiping_taiping_rebellion
