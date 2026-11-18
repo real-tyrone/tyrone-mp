@@ -186,7 +186,7 @@ homeland_development_repose_assets_button = {
 						region = sr:region_north_china
 						region = sr:region_south_china
 					}
-					NOT = { has_variable = homeland_repose_assets_last_selected }
+					has_variable = homeland_repose_assets_selected
 				}
 			}
 			random_scope_state = {
@@ -196,7 +196,7 @@ homeland_development_repose_assets_button = {
 						region = sr:region_north_china
 						region = sr:region_south_china
 					}
-					NOT = { has_variable = homeland_repose_assets_last_selected }
+					has_variable = homeland_repose_assets_selected
 				}
 				save_scope_as = homeland_repose_assets_state
 			}
@@ -215,12 +215,12 @@ homeland_development_repose_assets_button = {
 		}
 		every_scope_state = {
 			limit = {
-				has_variable = homeland_repose_assets_last_selected
+				has_variable = homeland_repose_assets_selected
 			}
-			remove_variable = homeland_repose_assets_last_selected
+			remove_variable = homeland_repose_assets_selected
 		}
 		scope:homeland_repose_assets_state = {
-			set_variable = homeland_repose_assets_last_selected
+			set_variable = homeland_repose_assets_selected
 		}
 		set_variable = {
 			name = homeland_manor_house_levels
@@ -256,5 +256,147 @@ homeland_development_repose_assets_button = {
 			text = homeland_manor_house_level
 		}
 		remove_variable = homeland_manor_house_levels
+	}
+}
+
+homeland_development_repose_assets_change_state_button = {
+	name = homeland_development_repose_assets_change_state_button
+	desc = homeland_development_repose_assets_change_state_button_desc
+	cooldown = { months = 2 }
+
+	visible = {
+		has_journal_entry = je_homeland_development
+	}
+
+	possible = {
+		any_scope_state = {
+			owner = root
+			OR = {
+				region = sr:region_north_china
+				region = sr:region_south_china
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				any_scope_state = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					NOT = { has_variable = homeland_repose_assets_selected }
+				}
+			}
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					NOT = { has_variable = homeland_repose_assets_selected }
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		else = {
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		every_scope_state = {
+			limit = {
+				has_variable = homeland_repose_assets_selected
+			}
+			remove_variable = homeland_repose_assets_selected
+		}
+		scope:homeland_repose_assets_state = {
+			set_variable = homeland_repose_assets_selected
+		}
+	}
+}
+
+homeland_development_local_loyalists_button = {
+	name = homeland_development_local_loyalists_button
+	desc = homeland_development_local_loyalists_button_desc
+	cooldown = { years = 1 }
+
+	visible = {
+		has_journal_entry = je_homeland_development
+	}
+
+	possible = {
+		any_scope_state = {
+			owner = root
+			OR = {
+				region = sr:region_north_china
+				region = sr:region_south_china
+			}
+		}
+	}
+
+	effect = {
+		if = {
+			limit = {
+				any_scope_state = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					has_variable = homeland_repose_assets_selected
+				}
+			}
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+					has_variable = homeland_repose_assets_selected
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		else = {
+			random_scope_state = {
+				limit = {
+					owner = root
+					OR = {
+						region = sr:region_north_china
+						region = sr:region_south_china
+					}
+				}
+				save_scope_as = homeland_repose_assets_state
+			}
+		}
+		every_scope_state = {
+			limit = {
+				has_variable = homeland_repose_assets_selected
+			}
+			remove_variable = homeland_repose_assets_selected
+		}
+		scope:homeland_repose_assets_state = {
+			set_variable = homeland_repose_assets_selected
+			add_loyalists_in_state = {
+				value = 0.10
+			}
+			add_modifier = {
+				name = homeland_development_local_loyalists
+				months = 12
+				is_decaying = yes
+			}
+		}
 	}
 }
