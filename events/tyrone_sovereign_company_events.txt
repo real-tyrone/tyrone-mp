@@ -370,31 +370,31 @@ tyrone_sovereign_company.30 = {
 	option = {
 		name = tyrone_sovereign_company.30.a
 		default_option = yes
-		trigger = { exists = scope:sc_candidate_1 }
+		trigger = { exists = scope:sc_candidate_1 scope:sc_candidate_1 ?= { owner = ROOT } }
 		tyrone_sc_elect_company = { CANDIDATE = sc_candidate_1 }
 	}
 	option = {
 		name = tyrone_sovereign_company.30.b
 
-		trigger = { exists = scope:sc_candidate_2 }
+		trigger = { exists = scope:sc_candidate_2 scope:sc_candidate_2 ?= { owner = ROOT } }
 		tyrone_sc_elect_company = { CANDIDATE = sc_candidate_2 }
 	}
 	option = {
 		name = tyrone_sovereign_company.30.c
 
-		trigger = { exists = scope:sc_candidate_3 }
+		trigger = { exists = scope:sc_candidate_3 scope:sc_candidate_3 ?= { owner = ROOT } }
 		tyrone_sc_elect_company = { CANDIDATE = sc_candidate_3 }
 	}
 	option = {
-		name = tyrone_sovereign_company.30.d
+		name = tyrone_sovereign_company.30.option_4
 
-		trigger = { exists = scope:sc_candidate_4 }
+		trigger = { exists = scope:sc_candidate_4 scope:sc_candidate_4 ?= { owner = ROOT } }
 		tyrone_sc_elect_company = { CANDIDATE = sc_candidate_4 }
 	}
 	option = {
 		name = tyrone_sovereign_company.30.e
 
-		trigger = { NOT = { exists = scope:sc_candidate_1 } NOT = { exists = scope:sc_candidate_2 } NOT = { exists = scope:sc_candidate_3 } NOT = { exists = scope:sc_candidate_4 } }
+		trigger = { NOR = { AND = { exists = scope:sc_candidate_1 scope:sc_candidate_1 ?= { owner = ROOT } } AND = { exists = scope:sc_candidate_2 scope:sc_candidate_2 ?= { owner = ROOT } } AND = { exists = scope:sc_candidate_3 scope:sc_candidate_3 ?= { owner = ROOT } } AND = { exists = scope:sc_candidate_4 scope:sc_candidate_4 ?= { owner = ROOT } } } }
 		remove_variable = tyrone_sc_election_pending
 	}
 }
@@ -426,5 +426,10 @@ tyrone_sovereign_company.41 = {
 	type = country_event
 	hidden = yes
 	trigger = { has_variable = tyrone_sc_settlement_done }
-	immediate = { tyrone_sc_register_indian_eic = yes }
+	immediate = {
+		if = {
+			limit = { NOT = { has_variable = tyrone_sc_governing_company } }
+			tyrone_sc_register_indian_eic = yes
+		}
+	}
 }
