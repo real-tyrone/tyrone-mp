@@ -103,6 +103,7 @@ tyrone_sc_seed_company_building = {
 }
 # Country scope. Replace the foreign corporate registration with an Indian registration.
 tyrone_sc_domesticate_company = {
+	set_variable = tyrone_sc_registration_pending
 	save_scope_as = csr_india
 	owning_company ?= {
 		if = {
@@ -160,11 +161,18 @@ tyrone_sc_register_indian_eic = {
 			scope:csr_india = { set_variable = tyrone_sc_eic_opium_granted }
 		}
 	}
+	if = {
+		limit = { NOT = { is_country_type = company } }
+		set_country_type = company
+	}
 	company:company_east_india_company ?= {
 		set_company_state_region = scope:sc_company_capital_region
 		add_owned_country = scope:csr_india
 	}
-	set_country_type = company
+	if = {
+		limit = { has_company = company_type:company_east_india_company }
+		remove_variable = tyrone_sc_registration_pending
+	}
 }
 tyrone_sc_hold_election = {
 	if = {
@@ -177,11 +185,27 @@ tyrone_sc_hold_election = {
 	}
 }
 tyrone_sc_elect_company = {
-	owning_company ?= { remove_owned_country = scope:csr_india }
-	scope:$CANDIDATE$ = { add_owned_country = scope:csr_india }
-	set_country_type = company
-	remove_variable = tyrone_sc_election_pending
-	set_variable = { name = tyrone_sc_election_cooldown days = tyrone_sc_election_period }
+	# ROOT is the voting country. Never trust a scope inherited from another caller.
+	save_scope_as = csr_india
+	if = {
+		limit = {
+			exists = scope:$CANDIDATE$
+			scope:$CANDIDATE$ ?= { owner = ROOT }
+		}
+		if = {
+			limit = { NOT = { is_country_type = company } }
+			set_country_type = company
+		}
+		# Persist the selected object for later ownership-link validation.
+		hidden_effect = { set_variable = { name = tyrone_sc_governing_company value = scope:$CANDIDATE$ } }
+		owning_company ?= { remove_owned_country = scope:csr_india }
+		scope:$CANDIDATE$ ?= { add_owned_country = scope:csr_india }
+		hidden_effect = {
+			remove_variable = tyrone_sc_registration_pending
+			set_variable = { name = tyrone_sc_election_cooldown days = tyrone_sc_election_period }
+		}
+	}
+	hidden_effect = { remove_variable = tyrone_sc_election_pending }
 }
 tyrone_sc_finish = {
 	set_variable = tyrone_sc_main_done
@@ -218,6 +242,7 @@ tyrone_sc_leave_hierarchy = {
 
 # Only one active parent owns the monthly corporate maintenance loop.
 tyrone_sc_corporate_monthly = {
+	tyrone_sc_validate_governing_company = yes
 	tyrone_sc_apply_fleet_amendment = yes
 	if = {
 		limit = {
@@ -225,5 +250,30 @@ tyrone_sc_corporate_monthly = {
 			NOT = { has_variable = tyrone_sc_election_cooldown }
 		}
 		tyrone_sc_hold_election = yes
+	}
+}
+
+# Country scope India. Never reverse deliberate transitions away from company rule.
+tyrone_sc_validate_governing_company = {
+	if = {
+		limit = { is_country_type = company has_variable = tyrone_sc_capitalists_done }
+		save_scope_as = csr_india
+		if = {
+			limit = { exists = owning_company }
+			# Adopt the incumbent in existing saves and respect valid ownership transfers.
+			set_variable = { name = tyrone_sc_governing_company value = owning_company }
+		}
+		else_if = {
+			limit = {
+				exists = var:tyrone_sc_governing_company
+				var:tyrone_sc_governing_company ?= { owner = scope:csr_india }
+			}
+			var:tyrone_sc_governing_company ?= { add_owned_country = scope:csr_india }
+		}
+		else = {
+			# A dissolved or emigrated company cannot govern. Ask the player to replace it.
+			remove_variable = tyrone_sc_governing_company
+			tyrone_sc_hold_election = yes
+		}
 	}
 }
