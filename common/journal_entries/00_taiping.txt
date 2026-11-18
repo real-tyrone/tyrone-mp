@@ -1,4 +1,5 @@
-je_chinese_missions = {
+﻿je_chinese_missions = {
+	can_revolution_inherit = yes
 	icon = "gfx/interface/icons/religion_icons/protestant.dds"
 
 	group = je_group_qing
@@ -10,8 +11,8 @@ je_chinese_missions = {
 	scripted_button = CHI_deport_missionaries_button
 
 	is_shown_when_inactive = {
-		exists = c:CHI
-		c:CHI ?= THIS
+		is_china_tag_trigger = yes
+		NOT = { c:TPG ?= this }
 	}
 
 	possible = {
@@ -21,7 +22,7 @@ je_chinese_missions = {
 				has_law_or_variant = law_type:law_closed_borders
 			}
 		}
-		any_state = { chi_qing_story_state = yes any_neighbouring_state = {
+		any_neighbouring_state = {
 			is_treaty_port = yes
 			custom_tooltip = {
 				text = owner_is_christian_tt
@@ -31,7 +32,7 @@ je_chinese_missions = {
 					}
 				}
 			}
-		} }
+		}
 		OR = {
 			NOT = { has_law_or_variant = law_type:law_isolationism }
 			any_country = {
@@ -47,8 +48,8 @@ je_chinese_missions = {
 				id = heavenly.1
 			}
 		}
-		every_state = {
-			limit = { chi_qing_story_state = yes 
+		every_scope_state = {
+			limit = {
 				any_neighbouring_state = {
 					is_treaty_port = yes
 					owner = {
@@ -67,16 +68,14 @@ je_chinese_missions = {
 			if = {
 				limit = {
 					has_law_or_variant = law_type:law_no_migration_controls
-					any_state = {
- chi_qing_story_state = yes
-
+					any_scope_state = {
 						NOT = {
 							has_variable = open_to_missionaries_state
 						}
 					}
 				}
-				every_state = {
-					limit = { chi_qing_story_state = yes 
+				every_scope_state = {
+					limit = {
 						NOT = {
 							has_variable = open_to_missionaries_state
 						}
@@ -85,8 +84,8 @@ je_chinese_missions = {
 				}
 			}
 			else = {
-				every_state = {
-					limit = { chi_qing_story_state = yes 
+				every_scope_state = {
+					limit = {
 						any_neighbouring_state = {
 							is_treaty_port = yes
 							owner = {
@@ -141,6 +140,7 @@ je_chinese_missions = {
 }
 
 je_heavenly_kingdom_main = {
+	can_revolution_inherit = yes
 	context = country
 
 	icon = "gfx/interface/icons/event_icons/event_protest.dds"
@@ -169,15 +169,13 @@ je_heavenly_kingdom_main = {
 			}
 		}
 		is_subject = no
-		any_state = {
- chi_qing_story_state = yes
-
+		any_scope_state = {
 			is_incorporated = yes
 			religion_percent_state = {
 				target = rel:protestant
 				value >= 0.01
 			}
-			NOT = { owner = c:CHI is_capital = yes }
+			is_capital = no
 			state_region = {
 				OR = {
 					is_homeland = cu:han
@@ -189,14 +187,14 @@ je_heavenly_kingdom_main = {
 	}
 
 	immediate = {
-		random_state = {
-			limit = { chi_qing_story_state = yes 
+		random_scope_state = {
+			limit = {
 				is_incorporated = yes
 				religion_percent_state = {
 					target = rel:protestant
 					value >= 0.01
 				}
-				NOT = { owner = c:CHI is_capital = yes }
+				is_capital = no
 				state_region = {
 					OR = {
 						is_homeland = cu:han
@@ -229,9 +227,7 @@ je_heavenly_kingdom_main = {
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
 			NOT = {
-				any_state = {
- chi_qing_story_state = yes
-
+				any_scope_state = {
 					has_modifier = god_worshippers
 				}
 			}
@@ -246,9 +242,7 @@ je_heavenly_kingdom_main = {
 		effect_header = je_standard_on_failure_header
 		color = "blue_negative"
 		conclusion_desc = je_standard_failure_conclusion_desc
-		trigger = { custom_tooltip = { text = tyr_heavenly_eight_tt any_state = {
- chi_qing_story_state = yes
- has_modifier = god_worshippers count >= 8 } } }
+		trigger = { custom_tooltip = { text = tyr_heavenly_eight_tt any_scope_state = { has_modifier = god_worshippers count >= 8 } } }
 		effect = {
 			trigger_event = {
 				id = heavenly.4
@@ -262,6 +256,7 @@ je_heavenly_kingdom_main = {
 }
 
 je_taiping = {
+	can_revolution_inherit = yes
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
 	group = je_group_qing
@@ -284,6 +279,11 @@ je_taiping = {
 			}
 		}
 		effect = {
+			if = {
+				limit = { NOT = { has_variable = chi_mandate_taiping_victory_rewarded } }
+				hidden_effect = { set_variable = chi_mandate_taiping_victory_rewarded }
+				chi_mandate_gain_centralisation = { AMOUNT = 1 TOOLTIP = chi_mandate_centralisation_reward_1_tt }
+			}
 			trigger_event = { id = heavenly.5 days = 0 }
 			hidden_effect = {
 				remove_modifier = taiping_taiping_rebellion

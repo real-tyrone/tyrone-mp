@@ -1,0 +1,166 @@
+# Country scope. Convert exact vanilla laws assigned by regime changes.
+# The guard prevents nested on_law_activated calls during the conversion.
+chi_apply_national_law_variants = {
+	set_variable = chi_applying_national_law_variants
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_peasant_levies
+				has_law = law_type:law_chi_tuanlian
+				has_law = law_type:law_chi_mintuan
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					has_law_or_variant = law_type:law_monarchy
+					has_law_or_variant = law_type:law_theocracy
+				}
+				NOT = { has_law = law_type:law_chi_tuanlian }
+			}
+			activate_law = law_type:law_chi_tuanlian
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_law_or_variant = law_type:law_monarchy
+					has_law_or_variant = law_type:law_theocracy
+					has_law = law_type:law_chi_mintuan
+				}
+			}
+			activate_law = law_type:law_chi_mintuan
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				has_law = law_type:law_hereditary_bureaucrats
+				has_law = law_type:law_chi_yinpriv
+				has_law = law_type:law_chi_republic_corruption
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					has_law_or_variant = law_type:law_monarchy
+					has_law_or_variant = law_type:law_theocracy
+					has_law_or_variant = law_type:law_social_monarchy
+				}
+				NOT = { has_law = law_type:law_chi_yinpriv }
+			}
+			activate_law = law_type:law_chi_yinpriv
+		}
+		else_if = {
+			limit = {
+				NOR = {
+					has_law_or_variant = law_type:law_monarchy
+					has_law_or_variant = law_type:law_theocracy
+					has_law_or_variant = law_type:law_social_monarchy
+					has_law = law_type:law_chi_republic_corruption
+				}
+			}
+			activate_law = law_type:law_chi_republic_corruption
+		}
+	}
+	if = {
+		limit = { has_law = law_type:law_outlawed_dissent }
+		if = {
+			limit = { has_law_or_variant = law_type:law_monarchy }
+			activate_law = law_type:law_chi_palacememorials
+		}
+		else = { activate_law = law_type:law_chi_associations_assemble }
+	}
+	if = {
+		limit = { has_law = law_type:law_professional_army }
+		activate_law = law_type:law_chi_early_modernization
+	}
+	if = {
+		limit = { has_law = law_type:law_national_militia }
+		activate_law = law_type:law_chi_national_militia
+	}
+	if = {
+		limit = { has_law = law_type:law_mass_conscription }
+		activate_law = law_type:law_chi_mass_conscription
+	}
+	if = {
+		limit = { has_law = law_type:law_revolutionary_guard }
+		activate_law = law_type:law_chi_peoples_liberation_army
+	}
+	if = {
+		limit = { has_law = law_type:law_no_schools }
+		activate_law = law_type:law_chi_no_schools
+	}
+	if = {
+		limit = { has_law = law_type:law_religious_schools }
+		activate_law = law_type:law_chi_religious_focus
+	}
+	if = {
+		limit = { has_law = law_type:law_private_schools }
+		activate_law = law_type:law_chi_merchent_led
+	}
+	if = {
+		limit = { has_law = law_type:law_public_schools }
+		activate_law = law_type:law_chi_state_led
+	}
+	if = {
+		limit = { has_law = law_type:law_no_health_system }
+		activate_law = law_type:law_chi_apothecary
+	}
+	if = {
+		limit = { has_law = law_type:law_charitable_health_system }
+		activate_law = law_type:law_chi_religious_practices
+	}
+	if = {
+		limit = { has_law = law_type:law_private_health_insurance }
+		activate_law = law_type:law_chi_urban_healthcare
+	}
+	if = {
+		limit = { has_law = law_type:law_public_health_insurance }
+		activate_law = law_type:law_chi_national_healthcare
+	}
+	if = {
+		limit = { has_law = law_type:law_industry_banned }
+		activate_law = law_type:law_chi_industry_banned
+	}
+	if = {
+		limit = { has_law = law_type:law_agrarianism }
+		activate_law = law_type:law_chi_mixed_economic_policy
+	}
+	if = {
+		limit = { has_law = law_type:law_interventionism }
+		activate_law = law_type:law_chi_offical_supervision
+	}
+	if = {
+		limit = { has_law = law_type:law_command_economy }
+		activate_law = law_type:law_chi_national_resources_commission
+	}
+	if = {
+		limit = { has_law = law_type:law_cooperative_ownership }
+		activate_law = law_type:law_chi_cooperative_ownership
+	}
+	if = {
+		limit = { has_law = law_type:law_state_religion }
+		activate_law = law_type:law_chi_confucius
+	}
+	if = {
+		limit = { has_law = law_type:law_right_of_assembly }
+		activate_law = law_type:law_chi_associations_assemble
+	}
+	if = {
+		limit = { has_law = law_type:law_merchant_navy }
+		activate_law = law_type:law_chi_junk_fleet
+	}
+	if = {
+		limit = { has_law = law_type:law_jeune_ecole }
+		activate_law = law_type:law_chi_coastal_flotilla
+	}
+	if = {
+		limit = { has_law = law_type:law_professional_navy }
+		activate_law = law_type:law_chi_imperial_dockyards
+	}
+	if = {
+		limit = { has_law = law_type:law_diplomatic_navy }
+		activate_law = law_type:law_chi_coastal_defense_navy
+	}
+	remove_variable = chi_applying_national_law_variants
+}

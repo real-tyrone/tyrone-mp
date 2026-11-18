@@ -1,0 +1,84 @@
+on_revolution_start = {
+	on_actions = { chi_prepare_revolutionary_government }
+}
+
+on_civil_war_won = {
+	on_actions = { chi_reconcile_successor_government }
+}
+
+on_country_formed = {
+	on_actions = { chi_reconcile_successor_government }
+}
+
+on_law_activated = {
+	on_actions = { chi_reconcile_activated_law }
+}
+
+# ROOT is the parent country; the target is the revolutionary government.
+chi_prepare_revolutionary_government = {
+	trigger = { is_china_tag_trigger = yes }
+	effect = {
+		set_variable = chi_national_progression
+		if = {
+			limit = { has_modifier = chi_mandate_consolidated_authority }
+			set_variable = chi_mandate_completed
+		}
+		if = {
+			limit = { chi_army_modernization_unlocked = yes }
+			scope:target ?= { set_variable = chi_army_modernization_completed }
+		}
+		scope:target ?= {
+			set_variable = chi_national_progression
+			chi_apply_national_law_variants = yes
+		}
+	}
+}
+
+chi_reconcile_successor_government = {
+	trigger = { is_china_tag_trigger = yes }
+	effect = {
+		set_variable = chi_national_progression
+		if = {
+			limit = { has_journal_entry = je_boxer_rebellion }
+			set_global_variable = { name = chi_legation_central value = this }
+		}
+		if = {
+			limit = { has_journal_entry = je_mandate_of_heaven }
+			chi_mandate_update_centralisation_modifier = yes
+		}
+		else_if = {
+			limit = { has_variable = chi_mandate_completed }
+			if = {
+				limit = { NOT = { has_modifier = chi_mandate_consolidated_authority } }
+				add_modifier = chi_mandate_consolidated_authority
+			}
+			if = {
+				limit = { NOT = { has_modifier = chi_mandate_centralisation_max } }
+				add_modifier = chi_mandate_centralisation_max
+			}
+		}
+		if = {
+			limit = {
+				has_variable = tyr_ssm_succeeded
+				NOT = { has_modifier = tyr_ssm_enduring_movement }
+			}
+			add_modifier = tyr_ssm_enduring_movement
+		}
+		if = {
+			limit = { has_journal_entry = je_early_army_modernization }
+			chi_early_army_refresh_stage_modifier = yes
+		}
+		chi_apply_national_law_variants = yes
+	}
+}
+
+# ROOT is the activated law.
+chi_reconcile_activated_law = {
+	trigger = {
+		owner ?= {
+			is_china_tag_trigger = yes
+			NOT = { has_variable = chi_applying_national_law_variants }
+		}
+	}
+	effect = { owner = { chi_apply_national_law_variants = yes } }
+}

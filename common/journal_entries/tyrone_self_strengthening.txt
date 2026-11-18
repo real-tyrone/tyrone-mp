@@ -15,14 +15,16 @@ je_tyr_self_strengthening = {
 		ig:ig_intelligentsia = { ig_counts_as_marginal = no }
 	}
 	immediate = {
-		set_variable = tyr_ssm_started
-		custom_tooltip = tyr_self_strengthening_army_unlock_tt
-		set_variable = tyr_ssm_active
-		set_variable = tyr_ssm_naval_unlocked
-		set_variable = { name = tyr_ssm_industrial_rounds value = 0 }
-		set_variable = { name = tyr_ssm_industry_levels value = tyr_ssm_industry_levels }
-		set_variable = { name = tyr_ssm_industry_target value = tyr_ssm_industry_next_target }
-		create_political_movement = { type = movement_tyr_self_strengthening }
+		if = {
+			limit = { NOT = { has_variable = tyr_ssm_started } }
+			set_variable = tyr_ssm_started
+			set_variable = tyr_ssm_active
+			set_variable = tyr_ssm_naval_unlocked
+			set_variable = { name = tyr_ssm_industrial_rounds value = 0 }
+			set_variable = { name = tyr_ssm_industry_levels value = tyr_ssm_industry_levels }
+			set_variable = { name = tyr_ssm_industry_target value = tyr_ssm_industry_next_target }
+			create_political_movement = { type = movement_tyr_self_strengthening }
+		}
 	}
 	widget = {
 		gui = "gui/journal_entry_widgets/tyrone_self_strengthening.gui"
@@ -123,7 +125,10 @@ je_tyr_ssm_army = {
 				tyr_ssm_army_ready = yes
 			}
 		}
-		effect = { hidden_effect = { set_variable = tyr_ssm_army_done } }
+		effect = {
+			hidden_effect = { set_variable = tyr_ssm_army_done }
+			custom_tooltip = chi_early_army_modernization_tt
+		}
 	}
 	outcome = {
 		flags = { hidden invalid_outcome }
