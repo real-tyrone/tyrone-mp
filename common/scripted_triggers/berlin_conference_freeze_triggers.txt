@@ -12,10 +12,17 @@ tyr_berlin_completion_ready = {
 			custom_tooltip = {
 				text = 3GPaccept_berlin_conf_tt
 				has_variable = accepted_conf_var
-				OR = {
-					var:conference_gp_number = 3
-					var:conference_gp_number = 2
-					var:conference_gp_number = 1
+				# Only numbered participants can count toward the top-three consensus.
+				trigger_if = {
+					limit = { has_variable = conference_gp_number }
+					OR = {
+						var:conference_gp_number = 3
+						var:conference_gp_number = 2
+						var:conference_gp_number = 1
+					}
+				}
+				trigger_else = {
+					always = no
 				}
 			}
 			count >= 3
