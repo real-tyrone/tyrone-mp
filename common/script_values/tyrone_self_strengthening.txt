@@ -1,6 +1,6 @@
 ﻿tyr_ssm_duration = 7300
 
-tyr_ssm_industry_levels = {
+tyr_ssm_domestic_industry_levels = {
 	value = 0
 	every_scope_state = {
 		every_scope_building = {
@@ -10,6 +10,14 @@ tyr_ssm_industry_levels = {
 			add = level
 		}
 	}
+}
+
+tyr_ssm_industry_levels = {
+ value = tyr_ssm_domestic_industry_levels
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = tyr_ssm_domestic_industry_levels }
+ }
 }
 
 # Arms Industries must supply the portion of the 30 levels not covered by the other two types.
@@ -48,3 +56,67 @@ tyr_ssm_cached_industry_levels = {
 		value = var:tyr_ssm_industry_levels
 	}
 }
+
+tyr_ssm_program_army = {
+ value = army_size
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = army_size }
+ }
+}
+
+tyr_ssm_program_navy = {
+ value = navy_size
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = navy_size }
+ }
+}
+
+tyr_ssm_program_naval_power = {
+ value = naval_power_projection
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = naval_power_projection }
+ }
+}
+
+tyr_ssm_program_shipyards = {
+ value = "country_has_building_type_levels(bt:building_shipyard)"
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = "country_has_building_type_levels(bt:building_shipyard)" }
+ }
+}
+
+tyr_ssm_domestic_military_industry = {
+ value = "country_has_building_type_levels(bt:building_arms_industry)"
+ add = "country_has_building_type_levels(bt:building_munition_plant)"
+ add = "country_has_building_type_levels(bt:building_artillery_foundry)"
+}
+
+tyr_ssm_program_military_industry = {
+ value = tyr_ssm_domestic_military_industry
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = tyr_ssm_domestic_military_industry }
+ }
+}
+
+tyr_ssm_program_literate = {
+ value = { value = total_population multiply = literacy_rate }
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = { value = total_population multiply = literacy_rate } }
+ }
+}
+
+tyr_ssm_program_population = {
+ value = total_population
+ if = {
+  limit = { c:CHI ?= this }
+  every_subject_or_below = { limit = { tyr_ssm_qing_program_administration = yes } add = total_population }
+ }
+}
+
+tyr_ssm_program_literacy = { value = tyr_ssm_program_literate divide = { value = tyr_ssm_program_population min = 1 } }

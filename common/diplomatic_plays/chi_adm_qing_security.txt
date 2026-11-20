@@ -1,0 +1,23 @@
+dp_chi_adm_qing_security_throne = {
+ war_goal = chi_adm_qing_security_restore_court
+ texture = "gfx/interface/icons/war_goals/enforce_treaty_article.dds"
+ blocked_by_diplomatic_status = no
+ requires_interest_marker = no
+ selectable_in_lens = { always = no }
+ initiator_can_add_war_goals = no
+ target_can_add_war_goals = no
+ add_infamy_for_starting_initiator_wargoals = no
+ ai_acceptance_max = 0
+ possible = {
+  c:CHI ?= this
+  var:chi_adm_qing_security_phase = 5
+  scope:target_country ?= { has_variable = chi_adm_qing_security_pact chi_adm_qing_security_is_claimant = yes }
+ }
+ subject_join_initiator_trigger = {
+  has_variable = chi_adm_qing_security_called_loyalist
+  OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+ }
+ on_weekly_pulse = {}
+ on_war_begins = { chi_adm_qing_security_strip_unpledged = yes }
+ on_war_end = { initiator = { trigger_event = { id = chi_adm_qing_security.3 days = 1 } } }
+}

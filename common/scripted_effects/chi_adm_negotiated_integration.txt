@@ -1,0 +1,330 @@
+chi_adm_negotiated_integration_recount = {
+set_variable = { name = chi_adm_negotiated_integration_count value = 0 }
+every_subject_or_below = { limit = { chi_adm_negotiated_integration_valid = yes chi_adm_negotiated_integration_active = yes }
+c:CHI = { change_variable = { name = chi_adm_negotiated_integration_count add = 1 } } }
+}
+
+chi_adm_negotiated_integration_stop_payments = {
+save_scope_as = chi_adm_negotiated_integration_province c:CHI ?= { remove_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_subsidy } } c:CHI ?= { remove_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_subsidy_strong } } c:CHI ?= { remove_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_repayment } } c:CHI ?= { remove_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_repayment_half } }
+}
+
+chi_adm_negotiated_integration_apply_subsidy = {
+chi_adm_negotiated_integration_stop_payments = yes
+if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_paused } }
+if = { limit = { var:chi_adm_negotiated_integration_subsidy = 1 } c:CHI = { create_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_subsidy } } }
+else_if = { limit = { var:chi_adm_negotiated_integration_subsidy = 2 } c:CHI = { create_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_subsidy_strong } } }
+}
+}
+
+chi_adm_negotiated_integration_clear = {
+chi_adm_negotiated_integration_stop_payments = yes remove_variable = chi_adm_negotiated_integration_stage remove_variable = chi_adm_negotiated_integration_work remove_variable = chi_adm_negotiated_integration_paused remove_variable = chi_adm_negotiated_integration_elapsed remove_variable = chi_adm_negotiated_integration_response remove_variable = chi_adm_negotiated_integration_wait remove_variable = chi_adm_negotiated_integration_subsidy remove_variable = chi_adm_negotiated_integration_protection remove_variable = chi_adm_negotiated_integration_honors remove_variable = chi_adm_negotiated_integration_pressure remove_variable = chi_adm_negotiated_integration_final_offer remove_variable = chi_adm_negotiated_integration_final_consent remove_variable = chi_adm_negotiated_integration_final_sent remove_variable = chi_adm_negotiated_integration_suspend_request remove_variable = chi_adm_negotiated_integration_suspend_age remove_variable = chi_adm_negotiated_integration_suspend_refused remove_variable = chi_adm_negotiated_integration_breach remove_variable = chi_adm_negotiated_integration_fault remove_variable = chi_adm_negotiated_integration_paid_terms remove_variable = chi_adm_negotiated_integration_repayment_offer remove_variable = chi_adm_negotiated_integration_repayment_requested remove_variable = chi_adm_negotiated_integration_repayment_refused remove_variable = chi_adm_negotiated_integration_cancel_request remove_variable = chi_adm_negotiated_integration_requested_subsidy remove_variable = chi_adm_negotiated_integration_requested_protection remove_variable = chi_adm_negotiated_integration_requested_honors remove_variable = chi_adm_negotiated_integration_player_agreed if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } c:CHI ?= { chi_adm_negotiated_integration_recount = yes }
+}
+
+chi_adm_negotiated_integration_close = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_stage = 9 var:chi_adm_negotiated_integration_stage = 10 } } chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 } }
+}
+
+chi_adm_negotiated_integration_ensure = {
+if = { limit = { NOT = { has_journal_entry = chi_adm_negotiated_integration_province } } add_journal_entry = { type = chi_adm_negotiated_integration_province } }
+c:CHI = { if = { limit = { NOT = { has_journal_entry = je_qing_imperial_administrations } } add_journal_entry = { type = je_qing_imperial_administrations } } }
+}
+
+chi_adm_negotiated_integration_propose = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_provincial_development_development_eligible = yes chi_adm_negotiated_integration_valid = yes NOT = { has_variable = chi_adm_negotiated_integration_stage } NOT = { has_variable = chi_adm_negotiated_integration_retry }
+NOT = { has_variable = chi_adm_negotiated_integration_repayment_left } var:chi_adm_autonomy <= 25 is_at_war = no is_diplomatic_play_committed_participant = no
+c:CHI = { has_technology_researched = central_archives has_variable = chi_qing_centralisation_unlocked authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no } } chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_elapsed value = 0 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } set_variable = { name = chi_adm_negotiated_integration_subsidy value = 0 } set_variable = { name = chi_adm_negotiated_integration_protection value = 0 } set_variable = { name = chi_adm_negotiated_integration_honors value = 0 } chi_adm_negotiated_integration_ensure = yes save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } }
+}
+
+chi_adm_negotiated_integration_begin = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes chi_adm_negotiated_integration_resources = yes OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } } set_variable = { name = chi_adm_negotiated_integration_stage value = 3 } set_variable = { name = chi_adm_negotiated_integration_work value = yes } set_variable = { name = chi_adm_negotiated_integration_elapsed value = 0 } remove_variable = chi_adm_negotiated_integration_wait remove_variable = chi_adm_negotiated_integration_response if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 }
+if = { limit = { is_ai = no } set_variable = chi_adm_negotiated_integration_player_agreed }
+chi_adm_negotiated_integration_apply_subsidy = yes
+if = { limit = { var:chi_adm_negotiated_integration_subsidy > 0 } set_variable = chi_adm_negotiated_integration_paid_terms }
+if = { limit = { var:chi_adm_negotiated_integration_honors > 0 exists = ruler }
+ruler = { remove_modifier = chi_adm_negotiated_integration_honored add_modifier = { name = chi_adm_negotiated_integration_honored years = 10 } }
+ c:CHI = {
+  remove_modifier = chi_adm_negotiated_integration_honors_patronage
+  add_modifier = { name = chi_adm_negotiated_integration_honors_patronage years = 5 }
+ }
+chi_adm_adjust_loyalty = { AMOUNT = 3 } change_relations = { country = c:CHI value = 5 } }
+c:CHI = { chi_adm_negotiated_integration_recount = yes }  chi_adm_negotiated_integration_schedule_work = yes }
+}
+
+chi_adm_negotiated_integration_centralize = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 2 }  if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_request_subsidy = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 3 } set_variable = { name = chi_adm_negotiated_integration_requested_subsidy value = yes } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_request_protection = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 3 } set_variable = { name = chi_adm_negotiated_integration_requested_protection value = yes } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_request_honors = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 3 } set_variable = { name = chi_adm_negotiated_integration_requested_honors value = yes } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_refuse = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 4 }  if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_delay = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } set_variable = { name = chi_adm_negotiated_integration_stage value = 2 } set_variable = { name = chi_adm_negotiated_integration_response value = 5 }  if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_central_settlement = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_response = 2 } chi_adm_adjust_autonomy = { AMOUNT = -5 } if = { limit = { has_variable = chi_adm_negotiated_integration_pressure } chi_adm_adjust_loyalty = { AMOUNT = -3 } }
+else_if = { limit = { var:chi_adm_negotiated_integration_honors > 0 } chi_adm_adjust_loyalty = { AMOUNT = 3 } }
+if = { limit = { var:chi_adm_negotiated_integration_honors > 0 exists = ruler } ruler = { remove_modifier = chi_adm_negotiated_integration_honored add_modifier = { name = chi_adm_negotiated_integration_honored years = 10 } }
+ c:CHI = {
+  remove_modifier = chi_adm_negotiated_integration_honors_patronage
+  add_modifier = { name = chi_adm_negotiated_integration_honors_patronage years = 5 }
+ } }
+change_relations = { country = c:CHI value = 3 } chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 12 } }
+}
+
+chi_adm_negotiated_integration_renew = {
+if = { limit = { has_variable = chi_adm_negotiated_integration_pressure } set_variable = chi_adm_negotiated_integration_final_offer }
+set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes }
+}
+
+chi_adm_negotiated_integration_offer_subsidy = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_subsidy < 2 } change_variable = { name = chi_adm_negotiated_integration_subsidy add = 1 } remove_variable = chi_adm_negotiated_integration_requested_subsidy chi_adm_negotiated_integration_renew = yes }
+}
+
+chi_adm_negotiated_integration_offer_protection = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_protection < 2 } change_variable = { name = chi_adm_negotiated_integration_protection add = 1 } remove_variable = chi_adm_negotiated_integration_requested_protection chi_adm_negotiated_integration_renew = yes }
+}
+
+chi_adm_negotiated_integration_offer_honors = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_honors < 1 } change_variable = { name = chi_adm_negotiated_integration_honors add = 1 } remove_variable = chi_adm_negotiated_integration_requested_honors chi_adm_negotiated_integration_renew = yes }
+}
+
+chi_adm_negotiated_integration_pressure = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 2 NOT = { has_variable = chi_adm_negotiated_integration_pressure } } chi_adm_adjust_loyalty = { AMOUNT = -5 } change_relations = { country = c:CHI value = -10 } set_variable = { name = chi_adm_negotiated_integration_pressure value = yes } set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } }
+}
+
+chi_adm_negotiated_integration_grant_time = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_response = 5 } set_variable = { name = chi_adm_negotiated_integration_stage value = 10 } set_variable = { name = chi_adm_negotiated_integration_wait value = 3 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_reopen = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_negotiated_integration_valid = yes var:chi_adm_negotiated_integration_stage = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } }
+}
+
+chi_adm_negotiated_integration_ask_suspend = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } var:chi_adm_negotiated_integration_stage < 5 NOT = { has_variable = chi_adm_negotiated_integration_suspend_request } } set_variable = chi_adm_negotiated_integration_suspend_request set_variable = { name = chi_adm_negotiated_integration_suspend_age value = 0 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.4 popup = yes } }
+}
+
+chi_adm_negotiated_integration_suspend = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } set_variable = chi_adm_negotiated_integration_paused remove_variable = chi_adm_negotiated_integration_suspend_request chi_adm_negotiated_integration_stop_payments = yes if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } c:CHI = { chi_adm_negotiated_integration_recount = yes } }
+}
+
+chi_adm_negotiated_integration_refuse_suspend = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } remove_variable = chi_adm_negotiated_integration_suspend_request set_variable = chi_adm_negotiated_integration_suspend_refused if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_force_suspend = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } OR = { has_variable = chi_adm_negotiated_integration_suspend_refused AND = { has_variable = chi_adm_negotiated_integration_suspend_request var:chi_adm_negotiated_integration_suspend_age >= 6 } } } set_variable = chi_adm_negotiated_integration_paused set_variable = chi_adm_negotiated_integration_breach remove_variable = chi_adm_negotiated_integration_suspend_request remove_variable = chi_adm_negotiated_integration_suspend_refused
+chi_adm_negotiated_integration_stop_payments = yes c:CHI = { chi_adm_negotiated_integration_recount = yes } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.5 popup = yes } }
+}
+
+chi_adm_negotiated_integration_resume = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } c:CHI = { authority >= 0 relative_bureaucracy >= 0 } } remove_variable = chi_adm_negotiated_integration_paused chi_adm_negotiated_integration_apply_subsidy = yes c:CHI = { chi_adm_negotiated_integration_recount = yes } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 }  chi_adm_negotiated_integration_schedule_work = yes }
+}
+
+chi_adm_negotiated_integration_forgive_breach = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } remove_variable = chi_adm_negotiated_integration_breach if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_withdraw_breach = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } chi_adm_adjust_loyalty = { AMOUNT = -5 } change_relations = { country = c:CHI value = -10 } chi_adm_negotiated_integration_end = yes }
+}
+
+chi_adm_negotiated_integration_revoke_terms = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_breach } } set_variable = { name = chi_adm_negotiated_integration_subsidy value = 0 } set_variable = { name = chi_adm_negotiated_integration_protection value = 0 } set_variable = { name = chi_adm_negotiated_integration_honors value = 0 } if = { limit = { exists = ruler } ruler = { remove_modifier = chi_adm_negotiated_integration_honored } } set_variable = chi_adm_negotiated_integration_breach chi_adm_negotiated_integration_stop_payments = yes if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.5 popup = yes } }
+}
+
+chi_adm_negotiated_integration_ask_cancel = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_cancel_request } } set_variable = chi_adm_negotiated_integration_cancel_request if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.7 popup = yes } }
+}
+
+chi_adm_negotiated_integration_decline_cancel = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request } remove_variable = chi_adm_negotiated_integration_cancel_request if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_cancel_mutual = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request }  if = { limit = { has_variable = chi_adm_negotiated_integration_paid_terms }
+chi_adm_negotiated_integration_stop_payments = yes remove_variable = chi_adm_negotiated_integration_work remove_variable = chi_adm_negotiated_integration_paused
+set_variable = { name = chi_adm_negotiated_integration_stage value = 9 } set_variable = { name = chi_adm_negotiated_integration_fault value = 1 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } c:CHI = { chi_adm_negotiated_integration_recount = yes } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+else = { chi_adm_negotiated_integration_end = yes } }
+}
+
+chi_adm_negotiated_integration_cancel_provincial = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } chi_adm_adjust_loyalty = { AMOUNT = -5 } change_relations = { country = c:CHI value = -10 } if = { limit = { has_variable = chi_adm_negotiated_integration_paid_terms }
+chi_adm_negotiated_integration_stop_payments = yes remove_variable = chi_adm_negotiated_integration_work remove_variable = chi_adm_negotiated_integration_paused
+set_variable = { name = chi_adm_negotiated_integration_stage value = 9 } set_variable = { name = chi_adm_negotiated_integration_fault value = 2 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } c:CHI = { chi_adm_negotiated_integration_recount = yes } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+else = { chi_adm_negotiated_integration_end = yes } }
+}
+
+chi_adm_negotiated_integration_propose_repayment = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } set_variable = chi_adm_negotiated_integration_repayment_requested if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.6 popup = yes } }
+}
+
+chi_adm_negotiated_integration_repay_accept = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } if = { limit = { var:chi_adm_negotiated_integration_fault = 2 } set_variable = { name = chi_adm_negotiated_integration_repayment_left value = 12 } c:CHI = { create_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_repayment } } }
+else = { set_variable = { name = chi_adm_negotiated_integration_repayment_left value = 6 } c:CHI = { create_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_repayment_half } } }
+remove_variable = chi_adm_negotiated_integration_stage remove_variable = chi_adm_negotiated_integration_repayment_requested set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_repay_compromise = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } remove_variable = chi_adm_negotiated_integration_repayment_requested set_variable = chi_adm_negotiated_integration_repayment_offer if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_accept_repay_compromise = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } set_variable = { name = chi_adm_negotiated_integration_repayment_left value = 6 } c:CHI = { create_diplomatic_pact = { country = scope:chi_adm_negotiated_integration_province type = chi_adm_negotiated_integration_repayment_half } }
+remove_variable = chi_adm_negotiated_integration_stage remove_variable = chi_adm_negotiated_integration_repayment_offer set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_repay_refuse = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } remove_variable = chi_adm_negotiated_integration_repayment_requested set_variable = chi_adm_negotiated_integration_repayment_refused if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_final_yes = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required } set_variable = chi_adm_negotiated_integration_final_consent chi_adm_negotiated_integration_finish = yes }
+}
+
+chi_adm_negotiated_integration_final_no = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 } set_variable = { name = chi_adm_negotiated_integration_stage value = 6 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } } }
+}
+
+chi_adm_negotiated_integration_hold = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } set_variable = { name = chi_adm_negotiated_integration_stage value = 5 } remove_variable = chi_adm_negotiated_integration_final_sent if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+}
+
+chi_adm_negotiated_integration_apply_protection = {
+    save_scope_as = chi_adm_negotiated_integration_province
+    if = {
+        limit = { var:chi_adm_negotiated_integration_protection > 0 }
+        every_scope_state = {
+            set_variable = { name = chi_adm_negotiated_integration_tax_left value = 60 }
+            set_variable = { name = chi_adm_negotiated_integration_tax_total value = 60 }
+            if = {
+                limit = { scope:chi_adm_negotiated_integration_province = { var:chi_adm_negotiated_integration_protection = 2 } }
+                set_variable = { name = chi_adm_negotiated_integration_tax_strength value = 2 }
+            }
+            else = {
+                set_variable = { name = chi_adm_negotiated_integration_tax_strength value = 1 }
+            }
+            chi_adm_negotiated_integration_update_tax = yes
+            set_variable = { name = chi_adm_negotiated_integration_tax_new value = yes days = 1 }
+        }
+    }
+}
+
+chi_adm_negotiated_integration_update_tax = {
+remove_modifier = chi_adm_negotiated_integration_local_privileges
+if = { limit = { var:chi_adm_negotiated_integration_tax_left > 0 } add_modifier = { name = chi_adm_negotiated_integration_local_privileges multiplier = chi_adm_negotiated_integration_tax_scale } }
+else = { remove_variable = chi_adm_negotiated_integration_tax_left remove_variable = chi_adm_negotiated_integration_tax_total remove_variable = chi_adm_negotiated_integration_tax_strength remove_variable = chi_adm_negotiated_integration_tax_new }
+}
+
+chi_adm_negotiated_integration_finish = {
+if = { limit = { chi_adm_negotiated_integration_can_finish = yes }
+chi_adm_negotiated_integration_apply_protection = yes
+if = { limit = { exists = ruler } ruler = { save_scope_as = chi_adm_negotiated_integration_governor remove_character_role = ruler transfer_character = c:CHI } }
+if = {
+ limit = { OR = { c:MCH ?= this c:MGL ?= this c:XIN ?= this } }
+ every_scope_state = { set_variable = chi_adm_negotiated_integration_incorporate_after_annex }
+}
+every_scope_state = { chi_adm_provincial_development_remove_state_upgrades = yes }
+save_scope_as = chi_adm_negotiated_integration_annex_target chi_adm_negotiated_integration_clear = yes chi_adm_memorials_cleanup = yes chi_adm_imperial_law_clear = yes
+c:CHI = {
+ annex = scope:chi_adm_negotiated_integration_annex_target
+ every_scope_state = {
+  limit = { has_variable = chi_adm_negotiated_integration_incorporate_after_annex }
+  set_state_type = incorporated
+  remove_variable = chi_adm_negotiated_integration_incorporate_after_annex
+ }
+ chi_adm_negotiated_integration_recount = yes
+}
+}
+}
+
+chi_adm_negotiated_integration_coerce = {
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { NOT = { has_modifier = chi_adm_provincial_development_guarantee }  chi_adm_negotiated_integration_valid = yes is_at_war = no is_diplomatic_play_committed_participant = no
+OR = { AND = { var:chi_adm_negotiated_integration_stage = 2 OR = { var:chi_adm_negotiated_integration_response = 2 var:chi_adm_negotiated_integration_response = 4 } }
+AND = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_wait >= 6 } var:chi_adm_negotiated_integration_stage = 6 AND = { var:chi_adm_negotiated_integration_stage = 9 OR = { var:chi_adm_negotiated_integration_fault = 2 has_variable = chi_adm_negotiated_integration_repayment_refused } } }
+c:CHI = { is_at_war = no is_diplomatic_play_committed_participant = no NOT = { var:chi_adm_qing_security_phase = 5 } } } save_scope_as = chi_adm_negotiated_integration_target chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 }
+c:CHI = { every_subject_or_below = { limit = { chi_adm_eligible = yes NOT = { this = scope:chi_adm_negotiated_integration_target } }
+if = { limit = { OR = { var:chi_adm_autonomy >= 60 var:chi_adm_loyalty < 40 } } chi_adm_adjust_loyalty = { AMOUNT = -8 } change_relations = { country = c:CHI value = -15 } }
+else_if = { limit = { var:chi_adm_loyalty >= 80 var:chi_adm_autonomy < 30 } change_relations = { country = c:CHI value = -2 } }
+else = { chi_adm_adjust_loyalty = { AMOUNT = -3 } change_relations = { country = c:CHI value = -5 } }
+} create_diplomatic_play = { type = dp_chi_adm_negotiated_integration_integration target_country = scope:chi_adm_negotiated_integration_target } } }
+}
+
+chi_adm_negotiated_integration_province_tick = {
+if = { limit = { has_variable = chi_adm_negotiated_integration_stage }
+if = { limit = { NOT = { chi_adm_negotiated_integration_valid = yes } } chi_adm_negotiated_integration_clear = yes }
+else = { chi_adm_negotiated_integration_ensure = yes
+if = { limit = { var:chi_adm_negotiated_integration_stage = 1 } change_variable = { name = chi_adm_negotiated_integration_wait add = 1 } }
+if = { limit = { var:chi_adm_negotiated_integration_stage = 10 } change_variable = { name = chi_adm_negotiated_integration_wait subtract = 1 }
+if = { limit = { var:chi_adm_negotiated_integration_wait <= 0 } set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } } }
+if = { limit = { has_variable = chi_adm_negotiated_integration_suspend_request } change_variable = { name = chi_adm_negotiated_integration_suspend_age add = 1 } }
+ } }
+if = { limit = { has_variable = chi_adm_negotiated_integration_repayment_left }
+if = { limit = { NOT = { chi_adm_negotiated_integration_valid = yes } } chi_adm_negotiated_integration_stop_payments = yes remove_variable = chi_adm_negotiated_integration_repayment_left }
+else = { change_variable = { name = chi_adm_negotiated_integration_repayment_left subtract = 1 }
+if = { limit = { var:chi_adm_negotiated_integration_repayment_left <= 0 } chi_adm_negotiated_integration_stop_payments = yes remove_variable = chi_adm_negotiated_integration_repayment_left } }
+}
+}
+
+chi_adm_negotiated_integration_court_tick = {
+chi_adm_negotiated_integration_recount = yes
+if = { limit = { chi_adm_negotiated_integration_court = yes NOT = { has_journal_entry = je_qing_imperial_administrations } } add_journal_entry = { type = je_qing_imperial_administrations } }
+c:ZHI ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:AHU ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:HNA ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:YUE ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:FRS ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:XIB ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:YUN ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:SIH ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:SHN ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:SHA ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:QHN ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:MGL ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:MCH ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:XIN ?= { chi_adm_negotiated_integration_province_tick = yes }
+c:QXN ?= { chi_adm_negotiated_integration_province_tick = yes }
+chi_adm_negotiated_integration_recount = yes
+}
+
+chi_adm_negotiated_integration_end = {
+chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 }
+}
+
+chi_adm_negotiated_integration_orphan_cleanup = {
+chi_adm_negotiated_integration_clear = yes remove_variable = chi_adm_negotiated_integration_repayment_left
+}
+
+chi_adm_negotiated_integration_work_tick = {
+if = { limit = { chi_adm_negotiated_integration_active = yes NOT = { has_variable = chi_adm_negotiated_integration_breach } }
+change_variable = { name = chi_adm_negotiated_integration_elapsed add = 1 }
+if = { limit = { var:chi_adm_negotiated_integration_stage = 5 var:chi_adm_negotiated_integration_elapsed < chi_adm_negotiated_integration_required }
+set_variable = { name = chi_adm_negotiated_integration_stage value = 4 } remove_variable = chi_adm_negotiated_integration_final_sent if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } }
+if = { limit = { var:chi_adm_negotiated_integration_stage = 3 var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_census_end } set_variable = { name = chi_adm_negotiated_integration_stage value = 4 } }
+if = { limit = { var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required }
+if = { limit = { is_ai = yes NOT = { has_variable = chi_adm_negotiated_integration_player_agreed } } chi_adm_negotiated_integration_finish = yes }
+else_if = { limit = { NOT = { var:chi_adm_negotiated_integration_stage = 6 } NOT = { has_variable = chi_adm_negotiated_integration_final_sent } }
+set_variable = { name = chi_adm_negotiated_integration_stage value = 5 } set_variable = chi_adm_negotiated_integration_final_sent if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_revision } } set_variable = { name = chi_adm_negotiated_integration_revision value = 0 } } change_variable = { name = chi_adm_negotiated_integration_revision add = 1 } save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.3 popup = yes } }
+} }
+}
+
+chi_adm_negotiated_integration_schedule_work = {
+if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_clock } } set_variable = { name = chi_adm_negotiated_integration_clock value = 0 } }
+change_variable = { name = chi_adm_negotiated_integration_clock add = 1 }
+save_scope_value_as = { name = chi_adm_negotiated_integration_clock_revision value = var:chi_adm_negotiated_integration_clock }
+trigger_event = { id = chi_adm_negotiated_integration.8 months = 1 popup = no }
+}

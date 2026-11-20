@@ -1,0 +1,252 @@
+# Only the consenting claimant can issue the final order. CHI is the play's
+# technical initiator so its subjects can be filtered by the native join hook.
+chi_adm_qing_security_launch = {
+ if = {
+  limit = { chi_adm_qing_security_can_launch = yes }
+  save_temporary_scope_as = chi_adm_qing_security_war_claimant
+  c:CHI = {
+   save_temporary_scope_as = chi_adm_qing_security_war_court
+   set_variable = { name = chi_adm_qing_security_briefed_ratio value = chi_adm_qing_security_force_ratio }
+   clear_variable_list = chi_adm_qing_security_detached
+   every_subject_or_below = {
+    limit = { chi_adm_qing_security_armed = yes }
+    scope:chi_adm_qing_security_war_court = { add_to_variable_list = { name = chi_adm_qing_security_detached target = prev } }
+   }
+   every_subject_or_below = {
+    limit = { chi_adm_qing_security_loyalist = yes }
+    set_variable = chi_adm_qing_security_called_loyalist
+   }
+   set_variable = { name = chi_adm_qing_security_phase value = 5 }
+   every_in_list = {
+    variable = chi_adm_qing_security_detached
+    chi_adm_qing_security_detach_office = yes
+   }
+   if = {
+    limit = {
+     scope:chi_adm_qing_security_war_claimant ?= { is_subject = no has_variable = chi_adm_qing_security_pact }
+     any_in_list = {
+      variable = chi_adm_qing_security_detached
+      is_subject = no
+      has_variable = chi_adm_qing_security_pact
+      NOT = { this = scope:chi_adm_qing_security_war_claimant }
+     }
+    }
+    create_diplomatic_play = {
+     type = dp_chi_adm_qing_security_throne
+     target_country = scope:chi_adm_qing_security_war_claimant
+     add_war_goal = {
+      holder = scope:chi_adm_qing_security_war_claimant
+      type = chi_adm_qing_security_install_dynasty
+      target_country = c:CHI
+      primary_demand = yes
+     }
+    }
+   }
+  }
+ }
+}
+
+# Office scope. Only Han civil and viceroyalty offices can take the armed pledge.
+chi_adm_qing_security_detach_office = {
+ save_temporary_scope_as = chi_adm_qing_security_seceding_office
+ if = {
+  limit = { is_subject_type = subject_type_qing_viceroyalty_administration }
+  set_variable = { name = chi_adm_qing_security_pact value = 1 }
+  c:CHI = { remove_diplomatic_pact = { country = scope:chi_adm_qing_security_seceding_office type = qing_viceroyalty_administration } }
+ }
+ else_if = {
+  limit = { is_subject_type = subject_type_qing_civil_administration }
+  set_variable = { name = chi_adm_qing_security_pact value = 2 }
+  c:CHI = { remove_diplomatic_pact = { country = scope:chi_adm_qing_security_seceding_office type = qing_civil_administration } }
+ }
+}
+
+chi_adm_qing_security_restore_office = {
+ if = {
+  limit = {
+   chi_adm_qing_security_can_return = yes
+   OR = {
+    is_ai = yes
+    has_variable = chi_adm_qing_security_human_pledge
+    NOT = { chi_adm_court_valid = yes }
+    is_subject = yes
+    NOT = { has_variable = chi_adm_qing_security_service_result }
+   }
+  }
+  if = {
+   limit = {
+    is_subject = no
+    chi_adm_court_valid = yes
+    c:CHI ?= { is_subject = no }
+    OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+   }
+   save_temporary_scope_as = chi_adm_qing_security_returning_office
+   c:CHI = {
+    if = {
+     limit = { scope:chi_adm_qing_security_returning_office = { var:chi_adm_qing_security_pact = 1 } }
+     create_diplomatic_pact = { country = scope:chi_adm_qing_security_returning_office type = qing_viceroyalty_administration }
+    }
+    else = { create_diplomatic_pact = { country = scope:chi_adm_qing_security_returning_office type = qing_civil_administration } }
+   }
+  }
+  if = {
+   limit = { chi_adm_target_valid = yes }
+   if = {
+    limit = { var:chi_adm_qing_security_service_result = 1 }
+    chi_adm_adjust_loyalty = { AMOUNT = 20 }
+    chi_adm_adjust_autonomy = { AMOUNT = 10 }
+    change_relations = { country = c:CHI value = 30 }
+   }
+   else_if = {
+    limit = { var:chi_adm_qing_security_service_result = 2 }
+    set_variable = { name = chi_adm_qing_security_rebel_probation value = yes months = 12 }
+    chi_adm_adjust_autonomy = { AMOUNT = -5 }
+   }
+  }
+  remove_variable = chi_adm_qing_security_service_result
+  remove_variable = chi_adm_qing_security_pact
+  chi_adm_qing_security_clear_office = yes
+ }
+}
+
+# Diplomatic play scope, called once at creation, after the play has a valid root.
+chi_adm_qing_security_add_backers = {
+ save_temporary_scope_as = chi_adm_qing_security_play
+ initiator = {
+  set_variable = chi_adm_qing_security_native_started
+  every_in_list = {
+   variable = chi_adm_qing_security_detached
+   limit = {
+    has_variable = chi_adm_qing_security_pact is_subject = no
+    NOT = { this = scope:target }
+    OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+   }
+   scope:chi_adm_qing_security_play = { add_target_backers = { prev } }
+  }
+  every_subject_or_below = {
+   limit = {
+    has_variable = chi_adm_qing_security_called_loyalist
+    OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+   }
+   scope:chi_adm_qing_security_play = { add_initiator_backers = { prev } }
+  }
+ }
+ chi_adm_qing_security_strip_unpledged = yes
+}
+
+# Native Qing obligations normally call its subjects. For this play, the
+# pre-war pledge is the only commitment imperial security recognizes for its administrations.
+chi_adm_qing_security_strip_unpledged = {
+ save_temporary_scope_as = chi_adm_qing_security_play
+ initiator = {
+  every_subject_or_below = {
+   limit = { chi_qing_administration_tag = yes NOT = { has_variable = chi_adm_qing_security_called_loyalist } }
+   scope:chi_adm_qing_security_play = { remove_initiator_backers = { prev } }
+  }
+ }
+}
+
+# Court scope. Only on_enforced can set these outcomes. A native white peace
+# or failed play creation never awards either side the victory settlement.
+chi_adm_qing_security_record_victory = {
+ if = {
+  limit = {
+   chi_adm_qing_security_court = yes
+   var:chi_adm_qing_security_phase = 5
+   NOT = { has_variable = chi_adm_qing_security_pending_result }
+  }
+  set_variable = { name = chi_adm_qing_security_pending_result value = $RESULT$ }
+  trigger_event = { id = chi_adm_qing_security.3 days = 1 }
+ }
+}
+
+chi_adm_qing_security_resolve = {
+ if = {
+  limit = { var:chi_adm_qing_security_pending_result = 1 chi_adm_qing_security_court = yes }
+  chi_adm_qing_security_install_ruler = yes
+  chi_adm_qing_security_close = { RESULT = 1 }
+ }
+ else_if = {
+  limit = { var:chi_adm_qing_security_pending_result = 2 chi_adm_qing_security_court = yes }
+  set_variable = { name = chi_adm_qing_security_settlement value = yes months = 6 }
+  chi_adm_qing_security_close = { RESULT = 2 }
+ }
+ else_if = {
+  limit = { chi_adm_qing_security_court = yes has_variable = chi_adm_qing_security_native_started exists = var:chi_adm_qing_security_claimant }
+  chi_adm_qing_security_close = { RESULT = 6 }
+ }
+ else = { chi_adm_qing_security_close = { RESULT = 5 } }
+}
+
+# Native succession on the existing China tag. No territory, player, enacted
+# law, culture or technology transfer is needed for a change of dynasty.
+chi_adm_qing_security_install_ruler = {
+ set_variable = chi_adm_qing_security_new_dynasty
+ if = { limit = { has_gov_regency = yes } remove_regency_modifier = yes }
+ create_character = {
+  first_name = "chi_adm_qing_security_founder_name"
+  last_name = "chi_adm_qing_security_dynasty_name"
+  culture = cu:han
+  interest_group = ig_armed_forces
+  role = character_role_politician
+  age = 42
+  ruler = yes
+  on_created = { set_variable = { name = dynasty_var value = flag:chi_adm_qing_security_house_liu } }
+ }
+ create_character = {
+  first_name = "chi_adm_qing_security_heir_name"
+  last_name = "chi_adm_qing_security_dynasty_name"
+  culture = cu:han
+  interest_group = ig_armed_forces
+  role = character_role_politician
+  age = 19
+  save_scope_as = chi_adm_qing_security_son
+  on_created = { set_variable = { name = dynasty_var value = flag:chi_adm_qing_security_house_liu } }
+ }
+ set_heir = scope:chi_adm_qing_security_son
+ add_modifier = { name = chi_adm_qing_security_new_court years = 3 }
+ chi_adm_qing_security_change_mandate = { AMOUNT = -2 }
+ every_subject_or_below = {
+  limit = { chi_adm_target_valid = yes }
+  if = {
+   limit = { var:chi_adm_qing_security_faction = 2 }
+   chi_adm_adjust_loyalty = { AMOUNT = 12 }
+   chi_adm_adjust_autonomy = { AMOUNT = 5 }
+  }
+  else_if = {
+   limit = { var:chi_adm_qing_security_faction = 3 }
+   chi_adm_adjust_loyalty = { AMOUNT = -10 }
+  }
+ }
+}
+
+chi_adm_qing_security_change_mandate = {
+ if = {
+  limit = { has_journal_entry = je_mandate_of_heaven }
+  je:je_mandate_of_heaven = { add_progress = { name = chi_centralisation_progress_bar value = $AMOUNT$ } }
+  chi_mandate_update_centralisation_modifier = yes
+ }
+}
+
+chi_adm_qing_security_finalize_restoration = {
+ remove_variable = chi_adm_qing_security_settlement
+ if = {
+  limit = { always = $AMNESTY$ }
+  add_modifier = { name = chi_adm_qing_security_concession months = 12 }
+ }
+ else = { chi_adm_qing_security_change_mandate = { AMOUNT = 1 } }
+ every_subject_or_below = {
+  limit = { chi_adm_target_valid = yes has_variable = chi_adm_qing_security_rebel_probation }
+  remove_variable = chi_adm_qing_security_rebel_probation
+  if = {
+   limit = { always = $AMNESTY$ }
+   chi_adm_adjust_loyalty = { AMOUNT = 15 }
+   change_relations = { country = c:CHI value = 20 }
+  }
+  else = {
+   chi_adm_adjust_autonomy = { AMOUNT = -10 }
+   chi_adm_adjust_loyalty = { AMOUNT = -8 }
+   add_modifier = { name = chi_adm_provincial_development_supervision years = 2 }
+  }
+ }
+}

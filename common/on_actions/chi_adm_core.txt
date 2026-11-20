@@ -1,0 +1,26 @@
+# Existing reform pulse remains unchanged. No global monthly iterator.
+on_game_started_after_lobby = {
+ on_actions = { chi_adm_start }
+}
+chi_adm_start = {
+ effect = {
+  c:CHI ?= {
+   every_subject_or_below = {
+    limit = { chi_adm_eligible = yes }
+    chi_adm_initialize = yes
+   }
+  }
+ }
+}
+on_monthly_pulse_country = {
+ on_actions = { chi_adm_monthly }
+}
+chi_adm_monthly = {
+ trigger = {
+  OR = {
+   has_variable = chi_adm_initialized
+   chi_adm_eligible = yes
+  }
+ }
+ effect = { chi_adm_monthly_update = yes }
+}

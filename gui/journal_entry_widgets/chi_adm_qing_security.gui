@@ -1,0 +1,114 @@
+types chi_adm_qing_security_widgets {
+ type chi_adm_qing_security_summary = flowcontainer {
+  direction = vertical
+  spacing = 6
+  ignoreinvisible = yes
+  parentanchor = hcenter
+  datacontext = "[JournalEntry.GetTopScope.sCountry('chi_adm_qing_security_court_scope')]"
+  textbox = { size = { 440 0 } max_width = 440 autoresize = yes multiline = yes text = "chi_adm_qing_security_dossier_summary" }
+  progressbar = {
+   size = { 440 16 }
+   min = 0
+   max = 100
+   value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('chi_adm_qing_security_display_readiness'))]"
+   progresstexture = "gfx/interface/progressbar/progressbar_gold.dds"
+   noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+   direction = horizontal
+   tooltip = "chi_adm_qing_security_readiness_tooltip"
+  }
+  progressbar = {
+   size = { 440 12 }
+   min = 0
+   max = 100
+   value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('chi_adm_qing_security_display_evidence'))]"
+   progresstexture = "gfx/interface/progressbar/progressbar_bad.dds"
+   noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+   direction = horizontal
+   tooltip = "chi_adm_qing_security_evidence_tooltip"
+  }
+  flowcontainer = {
+   visible = "[GetScriptedGui('chi_adm_qing_security_has_claimant').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+   flowcontainer = {
+    datacontext = "[Country.MakeScope.Var('chi_adm_qing_security_claimant').GetCountry]"
+    direction = horizontal
+    spacing = 8
+    small_flag = {}
+    character_portrait_mini = { datacontext = "[Country.GetRuler]" visible = "[Character.IsValid]" size = { 36 36 } }
+    textbox = { size = { 340 0 } max_width = 340 autoresize = yes multiline = yes text = "chi_adm_qing_security_claimant_line" }
+   }
+  }
+ }
+
+ type chi_adm_qing_security_roster_body = flowcontainer {
+  parentanchor = hcenter
+  direction = vertical
+  spacing = 5
+  datacontext = "[JournalEntry.GetTopScope.sCountry('chi_adm_qing_security_court_scope')]"
+  ignoreinvisible = yes
+  textbox = { size = { 440 0 } max_width = 440 autoresize = yes text = "chi_adm_qing_security_roster_title" }
+  flowcontainer = {
+   direction = vertical
+   ignoreinvisible = yes
+   datamodel = "[Country.GetSubjects]"
+   item = {
+    chi_adm_qing_security_roster_row = {
+     visible = "[GetScriptedGui('chi_adm_qing_security_visible_faction').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+    }
+   }
+  }
+  flowcontainer = {
+   direction = vertical
+   datamodel = "[Country.MakeScope.GetList('chi_adm_qing_security_detached')]"
+   item = { chi_adm_qing_security_roster_row = { datacontext = "[Scope.GetCountry]" } }
+  }
+ }
+
+ type chi_adm_qing_security_roster_row = flowcontainer {
+  direction = horizontal
+  spacing = 8
+  small_flag = {}
+  textbox = { size = { 382 0 } max_width = 382 autoresize = yes multiline = yes text = "chi_adm_qing_security_roster_line" }
+ }
+}
+
+flowcontainer = {
+ name = "chi_adm_qing_security_dossier"
+ direction = vertical
+ parentanchor = hcenter
+ ignoreinvisible = yes
+ spacing = 6
+ datacontext = "[JournalEntry.GetCountry]"
+ textbox = { size = { 440 0 } max_width = 440 autoresize = yes multiline = yes text = "chi_adm_qing_security_local_status" }
+ textbox = {
+  visible = "[GetScriptedGui('chi_adm_qing_security_show_court_status').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+  size = { 440 0 }
+  max_width = 440
+  autoresize = yes
+  multiline = yes
+  text = "chi_adm_qing_security_local_court_status"
+ }
+ flowcontainer = {
+  visible = "[GetScriptedGui('chi_adm_qing_security_can_read_dossier').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+  chi_adm_qing_security_summary = {}
+ }
+}
+
+flowcontainer = {
+ name = "chi_adm_qing_security_roster"
+ datacontext = "[JournalEntry.GetCountry]"
+ ignoreinvisible = yes
+ flowcontainer = {
+  visible = "[GetScriptedGui('chi_adm_qing_security_can_read_dossier').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+  chi_adm_qing_security_roster_body = {}
+ }
+}
+
+flowcontainer = {
+ name = "chi_adm_qing_security_public_dossier"
+ chi_adm_qing_security_summary = {}
+}
+
+flowcontainer = {
+ name = "chi_adm_qing_security_roster_public"
+ chi_adm_qing_security_roster_body = {}
+}

@@ -1,0 +1,43 @@
+# Numeric law IDs are a persistent whitelist, not saved transient law scopes.
+chi_adm_imperial_law_response_months = 12
+chi_adm_imperial_law_exemption_months = 24
+chi_adm_imperial_law_support_months = 12
+chi_adm_imperial_law_repeat_days = 365
+chi_adm_imperial_law_loyalty_reward = 3
+chi_adm_imperial_law_autonomy_reward = -2
+chi_adm_imperial_law_delay_loss = -3
+chi_adm_imperial_law_refusal_loss = -15
+chi_adm_imperial_law_refusal_autonomy = 5
+chi_adm_imperial_law_immediate_loyalty = 80
+chi_adm_imperial_law_immediate_autonomy = 20
+chi_adm_imperial_law_immediate_corruption = 40
+chi_adm_imperial_law_ai_comply = {
+ value = 20
+ add = { value = var:chi_adm_loyalty multiply = 0.5 }
+ subtract = { value = var:chi_adm_autonomy multiply = 0.25 }
+ subtract = { value = var:chi_adm_corruption multiply = 0.2 }
+ if = { limit = { relative_bureaucracy < 0 } multiply = 0.5 }
+ if = { limit = { is_at_war = yes } multiply = 0.5 }
+ if = { limit = { chi_adm_imperial_law_government_support = yes } add = 25 }
+ if = { limit = { c:CHI.relations:ROOT >= 20 } add = 10 }
+ if = { limit = { c:CHI = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } } } add = 15 }
+ min = 1
+}
+chi_adm_imperial_law_ai_negotiate = {
+ value = 5
+ add = { value = var:chi_adm_autonomy multiply = 0.3 }
+ add = { value = var:chi_adm_corruption multiply = 0.2 }
+ if = { limit = { is_at_war = yes } add = 20 }
+ if = { limit = { relative_bureaucracy < 0 } add = 20 }
+ if = { limit = { var:chi_adm_loyalty >= 60 } add = 10 }
+}
+chi_adm_imperial_law_ai_refuse = {
+ value = 2
+ if = { limit = { var:chi_adm_loyalty < 40 } add = 30 }
+ if = { limit = { var:chi_adm_autonomy >= 60 } add = 15 }
+ if = { limit = { chi_adm_imperial_law_government_support = no } add = 10 }
+}
+
+chi_adm_imperial_law_ai_queue = 1000
+chi_adm_imperial_law_ai_immediate = { value = chi_adm_imperial_law_ai_comply multiply = 0.1 }
+chi_adm_imperial_law_ai_delay = { value = chi_adm_imperial_law_ai_negotiate multiply = 0.25 }

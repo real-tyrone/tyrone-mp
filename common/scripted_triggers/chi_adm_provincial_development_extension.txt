@@ -1,0 +1,59 @@
+# Country scope. Civil provinces and viceroyalties can undertake provincial development.
+chi_adm_provincial_development_development_eligible = {
+    chi_adm_target_valid = yes
+    OR = {
+        is_subject_type = subject_type_qing_viceroyalty_administration
+        is_subject_type = subject_type_qing_civil_administration
+    }
+}
+
+chi_adm_provincial_development_project_free = {
+chi_adm_provincial_development_development_eligible = yes NOT = { any_scope_state = { has_variable = chi_adm_provincial_development_project } }
+}
+
+chi_adm_provincial_development_conversion_ready = {
+chi_adm_target_valid = yes
+is_subject_type = subject_type_qing_frontier_administration
+NOT = { has_variable = chi_adm_provincial_development_conversion } NOT = { has_variable = chi_adm_provincial_development_conversion_retry }
+NOT = { has_modifier = chi_adm_provincial_development_guarantee }
+NOT = { has_variable = chi_adm_provincial_development_compact_case }
+is_at_war = no
+relative_bureaucracy >= 0.10
+var:chi_adm_loyalty >= 60
+var:chi_adm_autonomy <= 60
+c:CHI = { relative_bureaucracy >= 0.10 }
+NOT = { any_scope_state = { turmoil >= 0.25 } }
+}
+
+chi_adm_provincial_development_project_affordable = {
+fixed_income > 0 gold_reserves >= 0
+}
+
+chi_adm_provincial_development_region_1_held = { any_scope_state = { OR = { state_region = s:STATE_ULIASTAI state_region = s:STATE_URGA state_region = s:STATE_TUVA state_region = s:STATE_ALTAI } } }
+
+chi_adm_provincial_development_region_2_held = { any_scope_state = { OR = { state_region = s:STATE_ALXA state_region = s:STATE_HINGGAN } } }
+
+chi_adm_provincial_development_region_3_held = { any_scope_state = { OR = { state_region = s:STATE_DZUNGARIA state_region = s:STATE_TIANSHAN state_region = s:STATE_JETISY state_region = s:STATE_KIRGHIZIA } } }
+
+chi_adm_provincial_development_region_4_held = { any_scope_state = { OR = { state_region = s:STATE_QINGHAI } } }
+
+chi_adm_provincial_development_region_5_held = { any_scope_state = { OR = { state_region = s:STATE_SHENGJING state_region = s:STATE_SOUTHERN_MANCHURIA state_region = s:STATE_NORTHERN_MANCHURIA state_region = s:STATE_OUTER_MANCHURIA state_region = s:STATE_AMUR } } }
+
+chi_adm_provincial_development_compact_region_valid = { OR = {
+AND = { var:chi_adm_provincial_development_compact_case = 1 chi_adm_provincial_development_region_1_held = yes }
+AND = { var:chi_adm_provincial_development_compact_case = 2 chi_adm_provincial_development_region_2_held = yes }
+AND = { var:chi_adm_provincial_development_compact_case = 3 chi_adm_provincial_development_region_3_held = yes }
+AND = { var:chi_adm_provincial_development_compact_case = 4 chi_adm_provincial_development_region_4_held = yes }
+AND = { var:chi_adm_provincial_development_compact_case = 5 chi_adm_provincial_development_region_5_held = yes }
+} }
+
+# Keep frontier affairs available to civil subjects only while a negotiation remains open.
+chi_adm_provincial_development_frontier_entry_available = {
+    chi_adm_target_valid = yes
+    OR = {
+        is_subject_type = subject_type_qing_frontier_administration
+        AND = { c:XIB ?= this chi_adm_provincial_development_region_4_held = yes }
+        has_variable = chi_adm_provincial_development_compact_case
+        has_variable = chi_adm_provincial_development_conversion
+    }
+}

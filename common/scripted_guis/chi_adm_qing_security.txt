@@ -1,0 +1,30 @@
+chi_adm_qing_security_can_read_dossier = {
+ scope = country
+ is_valid = {
+  c:CHI ?= { has_variable = chi_adm_qing_security_phase }
+  OR = {
+   chi_adm_qing_security_exposed = yes
+   c:CHI ?= { var:chi_adm_qing_security_phase = 5 }
+   AND = { chi_adm_qing_security_office = yes var:chi_adm_qing_security_faction >= 1 var:chi_adm_qing_security_faction <= 2 }
+  }
+ }
+}
+
+chi_adm_qing_security_visible_faction = {
+ scope = country
+ is_valid = {
+  chi_adm_qing_security_office = yes
+  has_variable = chi_adm_qing_security_faction
+  NOT = { has_variable = chi_adm_qing_security_pact }
+ }
+}
+
+chi_adm_qing_security_has_claimant = {
+ scope = country
+ is_valid = { exists = var:chi_adm_qing_security_claimant }
+}
+
+chi_adm_qing_security_show_court_status = {
+ scope = country
+ is_valid = { c:CHI ?= this NOT = { chi_adm_qing_security_can_read_dossier = yes } }
+}

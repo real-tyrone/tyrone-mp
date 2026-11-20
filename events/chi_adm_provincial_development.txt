@@ -1,0 +1,76 @@
+﻿namespace = chi_adm_provincial_development
+
+chi_adm_provincial_development.1 = {
+    type = country_event
+    title = chi_adm_provincial_development_court_title
+    desc = chi_adm_provincial_development_court_desc
+    event_image = { video = "ep1_persian_court" }
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    duration = 30
+    option = {
+        name = chi_adm_provincial_development_approve
+        trigger = { scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 } }
+        scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_approve = yes }
+        ai_chance = { base = 60 }
+    }
+option = {
+        name = chi_adm_provincial_development_counter_1
+        trigger = { scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes } }
+        scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_counter_1 = yes }
+        ai_chance = { base = 10 }
+    }
+option = {
+        name = chi_adm_provincial_development_counter_2
+        trigger = { scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes } }
+        scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_counter_2 = yes }
+        ai_chance = { base = 10 }
+    }
+option = {
+        name = chi_adm_provincial_development_counter_3
+        trigger = { scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes } }
+        scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_counter_3 = yes }
+        ai_chance = { base = 10 }
+    }
+option = {
+        name = chi_adm_provincial_development_refuse
+        trigger = { scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 } }
+        scope:chi_adm_provincial_development_province = { chi_adm_provincial_development_refuse = yes }
+        ai_chance = { base = 10 }
+    }
+    option = { name = chi_adm_provincial_development_later default_option = yes ai_chance = { base = 0 } }
+}
+
+chi_adm_provincial_development.2 = {
+    type = country_event
+    title = chi_adm_provincial_development_province_title
+    desc = chi_adm_provincial_development_province_desc
+    event_image = { video = "ep1_persian_court" }
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    duration = 30
+    option = { name = chi_adm_provincial_development_accept_counter trigger = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 2 } chi_adm_provincial_development_accept_counter = yes ai_chance = { base = 50 } }
+option = { name = chi_adm_provincial_development_defy trigger = { chi_adm_provincial_development_case_valid = yes chi_adm_provincial_development_crisis = yes OR = { var:chi_adm_provincial_development_case = 2 var:chi_adm_provincial_development_case = 3 } } chi_adm_provincial_development_defy = yes ai_chance = { base = 10 } }
+option = { name = chi_adm_provincial_development_abandon trigger = { chi_adm_provincial_development_case_valid = yes OR = { var:chi_adm_provincial_development_case = 2 var:chi_adm_provincial_development_case = 3 } } chi_adm_provincial_development_abandon = yes ai_chance = { base = 10 } }
+option = { name = chi_adm_provincial_development_restore trigger = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 4 } chi_adm_provincial_development_restore = yes ai_chance = { base = 50 } }
+option = { name = chi_adm_provincial_development_resist_restoration trigger = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 4 } chi_adm_provincial_development_resist_restoration = yes ai_chance = { base = 10 } }
+    option = { name = chi_adm_provincial_development_later default_option = yes ai_chance = { base = 0 } }
+}
+
+chi_adm_provincial_development.3 = {
+ type = country_event
+ hidden = yes
+ trigger = {
+  chi_adm_target_valid = yes
+  has_variable = chi_adm_provincial_development_package
+  has_variable = chi_adm_provincial_development_grace
+  var:chi_adm_provincial_development_grace_revision = scope:chi_adm_provincial_development_grace_revision
+  NOT = { chi_adm_provincial_development_crisis = yes }
+  NOT = { has_variable = chi_adm_provincial_development_case }
+ }
+ immediate = {
+  chi_adm_provincial_development_remove_bonuses = yes
+  set_variable = { name = chi_adm_provincial_development_case value = 4 }
+  set_variable = { name = chi_adm_provincial_development_deadline value = 6 }
+  c:CHI = { save_scope_as = chi_adm_provincial_development_court }
+  trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
+ }
+}

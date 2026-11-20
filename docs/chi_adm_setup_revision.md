@@ -1,0 +1,7 @@
+# Starting administration revision
+
+provincial development interview paused; no provincial development mechanics implemented. Recorded interview choice: broad military vulnerability may qualify for emergency powers.
+
+New-campaign setup merges QXN into XIB, QIM into MGL, and QHN into AHU. Adds MCH with Shengjing and southern, northern and outer Manchuria, frontier pact and retained Manchu primary culture. MCH initializes at Loyalty 85, Autonomy 15, Corruption 25. XIB also accepts Mongol culture. Removed the obsolete military subject type and diplomatic action. Removed custom XIB coat of arms to inherit the vanilla flag. Restored subject-name priority for Shaan-Gan, Min-Zhe, Huguang, Liangjiang and Manchurian Military Governorate.
+
+Starting subject count is now 13 rather than 15, as explicitly requested by these merges. Existing saves are not territorially migrated. Old integration/region definitions for absent countries remain inert. Earlier protected setup checks and fixed-roster validators need their expected fixtures updated for this authorized setup revision; no full regression pass is claimed. Modified setup, country definitions, core initialization, roster predicates, negotiated integration monthly roster, pacts/types, names, coat of arms and English localization. Focused script parsing passes. Check new-campaign territory, names, XIB flag, Manchu/Mongol primary cultures, MCH accounts, frontier law protection and MCH journal participation in game.

@@ -1,0 +1,55 @@
+chi_adm_memorials_valid = {
+chi_adm_target_valid = yes
+}
+
+chi_adm_memorials_court = {
+c:CHI ?= this chi_adm_court_valid = yes
+}
+
+chi_adm_memorials_court_free = {
+c:CHI = { authority >= 25 NOT = { has_modifier = chi_adm_memorials_court_staff } }
+}
+
+chi_adm_memorials_memorial_free = {
+chi_adm_memorials_valid = yes authority >= 25 NOT = { has_variable = chi_adm_memorials_memorial } NOT = { has_variable = chi_adm_memorials_memorial_cooldown }
+}
+
+chi_adm_memorials_edict_room = {
+c:CHI = { NOT = { any_subject_or_below = { count >= 2 chi_adm_memorials_valid = yes OR = { has_variable = chi_adm_memorials_edict has_variable = chi_adm_memorials_audit } } } }
+}
+
+chi_adm_memorials_edict_free = {
+chi_adm_memorials_valid = yes chi_adm_memorials_court_free = yes chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } NOT = { has_variable = chi_adm_memorials_edict_cooldown } NOT = { has_variable = chi_adm_memorials_audit }
+}
+
+chi_adm_memorials_audit_free = {
+chi_adm_memorials_valid = yes chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } chi_adm_memorials_court_free = yes NOT = { has_variable = chi_adm_memorials_audit } NOT = { has_variable = chi_adm_memorials_audit_cooldown }
+}
+
+chi_adm_memorials_memorial_pending = {
+chi_adm_memorials_valid = yes has_variable = chi_adm_memorials_memorial var:chi_adm_memorials_memorial_stage = 1
+}
+
+chi_adm_memorials_edict_reply = {
+chi_adm_memorials_valid = yes has_variable = chi_adm_memorials_edict OR = { var:chi_adm_memorials_edict_stage = 1 var:chi_adm_memorials_edict_stage = 3 var:chi_adm_memorials_edict_stage = 4 }
+}
+
+chi_adm_memorials_audit_choice = {
+chi_adm_memorials_valid = yes var:chi_adm_memorials_audit = 1
+}
+
+chi_adm_memorials_centralised = {
+c:CHI = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } }
+}
+
+chi_adm_memorials_can_pay_full = {
+OR = { AND = { var:chi_adm_memorials_memorial = 1 c:CHI = { gold_reserves >= 20000 } } var:chi_adm_memorials_memorial = 2 AND = { var:chi_adm_memorials_memorial = 3 is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+}
+
+chi_adm_memorials_can_pay_reduced = {
+OR = { AND = { var:chi_adm_memorials_memorial = 1 c:CHI = { gold_reserves >= 10000 } } var:chi_adm_memorials_memorial = 2 AND = { var:chi_adm_memorials_memorial = 3 is_at_war = yes c:CHI = { gold_reserves >= 5000 } } }
+}
+
+chi_adm_memorials_edict_payable = {
+OR = { NOT = { var:chi_adm_memorials_edict = 3 } AND = { var:chi_adm_memorials_edict_stage = 4 is_at_war = yes c:CHI = { gold_reserves >= 5000 } } AND = { NOT = { var:chi_adm_memorials_edict_stage = 4 } is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+}

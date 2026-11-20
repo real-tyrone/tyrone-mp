@@ -1,0 +1,54 @@
+namespace = chi_adm_qing_security
+
+chi_adm_qing_security.1 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_qing_security.1.t
+ desc = chi_adm_qing_security.1.d
+ event_image = { video = "unspecific_world_fair" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ trigger = { chi_adm_qing_security_exposed = yes }
+ option = { name = chi_adm_qing_security.1.a default_option = yes }
+}
+
+chi_adm_qing_security.2 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_qing_security.2.t
+ desc = chi_adm_qing_security.2.d
+ event_image = { video = "unspecific_world_fair" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ trigger = { var:chi_adm_qing_security_phase = 4 }
+ option = { name = chi_adm_qing_security.2.a default_option = yes }
+}
+
+# The native war-end hook can run while goals are still being enforced.
+# This event only resolves a stopped play and the monthly hook is its fallback.
+chi_adm_qing_security.3 = {
+ type = country_event
+ hidden = yes
+ trigger = {
+  c:CHI ?= this
+  var:chi_adm_qing_security_phase = 5
+  NOR = {
+   any_diplomatic_play = { chi_adm_qing_security_live_play = yes }
+   var:chi_adm_qing_security_claimant ?= { has_war_with = c:CHI }
+  }
+ }
+ immediate = { chi_adm_qing_security_resolve = yes }
+}
+
+chi_adm_qing_security.4 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_qing_security.4.t
+ desc = {
+  first_valid = {
+   triggered_desc = { trigger = { c:CHI ?= { var:chi_adm_qing_security_result = 1 } } desc = chi_adm_qing_security.4.d_dynasty }
+   desc = chi_adm_qing_security.4.d_court
+  }
+ }
+ event_image = { video = "unspecific_world_fair" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ option = { name = chi_adm_qing_security.4.a default_option = yes }
+}

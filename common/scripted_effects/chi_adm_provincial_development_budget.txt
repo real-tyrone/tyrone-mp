@@ -1,0 +1,56 @@
+# Country scope. Install actual budget modifiers using the native scaled-expense pattern.
+chi_adm_provincial_development_sync_budget = {
+    chi_adm_provincial_development_sync_inspection_authority = yes
+    remove_modifier = chi_adm_provincial_development_project_expense
+    remove_modifier = chi_adm_provincial_development_sponsorship_credit
+    set_variable = { name = chi_adm_provincial_development_due_project_bill value = chi_adm_provincial_development_project_bill }
+    if = {
+        limit = { var:chi_adm_provincial_development_due_project_bill > 0 }
+        add_modifier = { name = chi_adm_provincial_development_project_expense multiplier = var:chi_adm_provincial_development_due_project_bill months = 1 }
+        set_variable = { name = chi_adm_provincial_development_due_sponsor_credit value = chi_adm_provincial_development_sponsored_bill }
+        if = {
+            limit = { var:chi_adm_provincial_development_due_sponsor_credit > 0 }
+            add_modifier = { name = chi_adm_provincial_development_sponsorship_credit multiplier = var:chi_adm_provincial_development_due_sponsor_credit months = 1 }
+        }
+        remove_variable = chi_adm_provincial_development_due_sponsor_credit
+    }
+    remove_variable = chi_adm_provincial_development_due_project_bill
+    if = {
+        limit = { c:CHI ?= this }
+        remove_modifier = chi_adm_provincial_development_sponsorship_cost
+        set_variable = { name = chi_adm_provincial_development_due_court_bill value = chi_adm_provincial_development_court_sponsorship_bill }
+        if = {
+            limit = { var:chi_adm_provincial_development_due_court_bill > 0 }
+            add_modifier = { name = chi_adm_provincial_development_sponsorship_cost multiplier = var:chi_adm_provincial_development_due_court_bill months = 1 }
+        }
+        remove_variable = chi_adm_provincial_development_due_court_bill
+    }
+}
+
+# Country scope. Rebuild Qing's aggregate bonus from current inspected subjects.
+chi_adm_provincial_development_sync_inspection_authority = {
+    c:CHI ?= {
+        remove_modifier = chi_adm_provincial_development_court_inspections
+        set_variable = { name = chi_adm_provincial_development_inspected_subjects value = 0 }
+        every_subject_or_below = {
+            limit = {
+                chi_adm_target_valid = yes
+                has_modifier = chi_adm_provincial_development_project_inspection
+                any_scope_state = {
+                    has_variable = chi_adm_provincial_development_project_sponsored
+                    has_variable = chi_adm_provincial_development_project
+                    var:chi_adm_provincial_development_project_owner ?= owner
+                }
+            }
+            c:CHI = { change_variable = { name = chi_adm_provincial_development_inspected_subjects add = 1 } }
+        }
+        if = {
+            limit = { var:chi_adm_provincial_development_inspected_subjects > 0 }
+            add_modifier = {
+                name = chi_adm_provincial_development_court_inspections
+                multiplier = var:chi_adm_provincial_development_inspected_subjects
+            }
+        }
+        remove_variable = chi_adm_provincial_development_inspected_subjects
+    }
+}

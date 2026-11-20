@@ -1,0 +1,69 @@
+on_monthly_pulse_country = { on_actions = { chi_adm_qing_security_court_pulse chi_adm_qing_security_office_pulse } }
+chi_adm_qing_security_court_pulse = {
+ trigger = { c:CHI ?= this OR = { has_variable = chi_adm_qing_security_phase has_variable = chi_adm_qing_security_settlement } }
+ effect = {
+  if = { limit = { has_variable = chi_adm_qing_security_phase } chi_adm_qing_security_court_review = yes }
+  if = {
+   limit = { chi_adm_qing_security_court = yes is_ai = yes has_variable = chi_adm_qing_security_settlement }
+   if = {
+    limit = { authority >= 50 NOT = { has_modifier = chi_adm_qing_security_concession } government_legitimacy < 70 }
+    chi_adm_qing_security_finalize_restoration = { AMNESTY = yes }
+   }
+   else = { chi_adm_qing_security_finalize_restoration = { AMNESTY = no } }
+  }
+ }
+}
+
+chi_adm_qing_security_office_pulse = {
+ trigger = {
+  OR = {
+   chi_qing_administration_tag = yes
+   has_variable = chi_adm_qing_security_pact
+   has_variable = chi_adm_qing_security_faction
+  }
+ }
+ effect = {
+  if = {
+   limit = {
+    has_variable = chi_adm_qing_security_pact
+    NOT = { c:CHI ?= { var:chi_adm_qing_security_phase = 5 } }
+   }
+   chi_adm_qing_security_restore_office = yes
+  }
+  if = {
+   limit = {
+    NOT = { has_variable = chi_adm_qing_security_pact }
+    has_variable = chi_adm_qing_security_faction
+    OR = {
+     NOT = { chi_adm_qing_security_office = yes }
+     NOT = { c:CHI ?= { has_variable = chi_adm_qing_security_phase } }
+    }
+   }
+   chi_adm_qing_security_clear_office = yes
+  }
+  if = {
+   limit = { chi_adm_qing_security_claimant_politics = yes }
+   if = {
+    limit = { NOT = { has_variable = chi_adm_qing_security_grievance } }
+    set_variable = { name = chi_adm_qing_security_grievance value = 0 }
+   }
+   if = { limit = { var:chi_adm_qing_security_grievance < 3 } change_variable = { name = chi_adm_qing_security_grievance add = 1 } }
+   if = {
+    limit = {
+     is_ai = yes
+     chi_adm_qing_security_can_found = yes
+     var:chi_adm_corruption < 65
+     OR = { var:chi_adm_autonomy >= 75 chi_adm_provincial_development_crisis = yes c:CHI ?= { government_legitimacy < 35 } }
+    }
+    chi_adm_qing_security_found = yes
+   }
+  }
+  else = { remove_variable = chi_adm_qing_security_grievance }
+ }
+}
+
+on_diplomatic_play_started = { on_actions = { chi_adm_qing_security_play_started } }
+chi_adm_qing_security_play_started = {
+ trigger = { chi_adm_qing_security_live_play = yes }
+ effect = { chi_adm_qing_security_add_backers = yes }
+}

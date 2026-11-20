@@ -1,4 +1,5 @@
 ﻿tyr_ssm_is_chinese_country = {
+	chi_qing_civil_law_eligible = yes
 	OR = {
 		is_china_tag_trigger = yes
 		c:HNA ?= this
@@ -12,52 +13,56 @@
 		c:XIB ?= this
 		c:YUN ?= this
 		c:YUE ?= this
-		c:XIN ?= this
 		c:MCH ?= this
-		c:MGL ?= this
 		c:TUV ?= this
 		c:ALI ?= this
 	}
 }
 
 tyr_ssm_literacy_ready = {
-	literacy_rate >= 0.30
+	tyr_ssm_program_literacy >= 0.30
 	NOT = { has_law_or_variant = law_type:law_no_schools }
 	institution_investment_level = { institution = institution_schools value >= 3 }
 }
 
 tyr_ssm_army_ready = {
-	has_technology_researched = breech_loading_artillery
-	army_size >= 500
-	custom_tooltip = {
-		text = tyr_ssm_military_industry_ready_tt
-		country_has_building_type_levels = {
-			target = bt:building_arms_industry
-			value >= tyr_ssm_arms_industry_levels_required
-		}
-	}
-	NOT = {
-		any_military_formation = {
-			is_army = yes
-			any_combat_unit = {
-				OR = {
-					has_unit_type = unit_type:combat_unit_type_irregular_infantry
-					has_unit_type = unit_type:combat_unit_type_line_infantry
-				}
-			}
-		}
-	}
+ has_technology_researched = breech_loading_artillery
+ tyr_ssm_program_army >= 500
+ custom_tooltip = {
+  text = tyr_ssm_military_industry_ready_tt
+  tyr_ssm_program_military_industry >= 30
+ }
+ NOT = { tyr_ssm_has_obsolete_infantry = yes }
+ trigger_if = {
+  limit = { c:CHI ?= this }
+  NOT = { any_subject_or_below = { tyr_ssm_qing_program_administration = yes tyr_ssm_has_obsolete_infantry = yes } }
+ }
+}
+
+tyr_ssm_has_obsolete_infantry = {
+ any_military_formation = {
+  is_army = yes
+  any_combat_unit = {
+   OR = {
+    has_unit_type = unit_type:combat_unit_type_irregular_infantry
+    has_unit_type = unit_type:combat_unit_type_line_infantry
+   }
+  }
+ }
+}
+
+tyr_ssm_qing_program_administration = {
+ chi_qing_administration_tag = yes
+ chi_qing_administrative_subject = yes
+ is_direct_subject_of = c:CHI
 }
 
 tyr_ssm_navy_ready = {
-	has_technology_researched = ironclad_tech
-	navy_size >= 150
-	country_has_building_type_levels = {
-		target = bt:building_shipyard
-		value >= 15
-	}
-	naval_power_projection >= 5000
-	NOT = { has_law_or_variant = law_type:law_merchant_navy }
+ has_technology_researched = ironclad_tech
+ tyr_ssm_program_navy >= 150
+ tyr_ssm_program_shipyards >= 15
+ tyr_ssm_program_naval_power >= 5000
+ NOT = { has_law_or_variant = law_type:law_merchant_navy }
 }
 
 tyr_ssm_all_reforms_ready = {

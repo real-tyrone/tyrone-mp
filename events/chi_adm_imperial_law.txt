@@ -1,0 +1,52 @@
+namespace = chi_adm_imperial_law_law
+chi_adm_imperial_law_law.1 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_imperial_law_notice_title
+ desc = chi_adm_imperial_law_notice_desc
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 3
+ trigger = { chi_adm_imperial_law_civil = yes has_variable = chi_adm_imperial_law_law_id }
+ option = { name = chi_adm_imperial_law_notice_ack default_option = yes }
+}
+chi_adm_imperial_law_law.2 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_imperial_law_court_notice_title
+ desc = chi_adm_imperial_law_court_notice_desc
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 3
+ cancellation_trigger = { NOT = { exists = scope:chi_adm_imperial_law_province } }
+ option = {
+  name = chi_adm_imperial_law_court_grant
+  trigger = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_case = yes } authority >= 25 NOT = { has_modifier = chi_adm_imperial_law_court_workload } }
+  show_as_unavailable = { always = yes }
+  custom_tooltip = chi_adm_imperial_law_court_grant_tooltip
+  hidden_effect = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_grant = yes } }
+  ai_chance = { base = 0 }
+ }
+ option = {
+  name = chi_adm_imperial_law_court_offer
+  trigger = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_case = yes } authority >= 25 NOT = { has_modifier = chi_adm_imperial_law_court_workload } }
+  show_as_unavailable = { always = yes }
+  custom_tooltip = chi_adm_imperial_law_court_offer_tooltip
+  hidden_effect = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_offer = yes } }
+  ai_chance = { base = 0 }
+ }
+ option = {
+  name = chi_adm_imperial_law_court_maintain
+  trigger = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_case = yes } }
+  custom_tooltip = chi_adm_imperial_law_court_maintain_tooltip
+  hidden_effect = { scope:chi_adm_imperial_law_province = { chi_adm_imperial_law_court_maintain = yes } }
+  ai_chance = { base = 0 }
+ }
+ option = { name = chi_adm_imperial_law_notice_ack default_option = yes }
+}
+chi_adm_imperial_law_law.90 = {
+ type = country_event
+ hidden = yes
+ trigger = { chi_adm_imperial_law_valid = yes var:chi_adm_imperial_law_status = 2 enacting_any_law = no }
+ immediate = { chi_adm_imperial_law_start = yes }
+}

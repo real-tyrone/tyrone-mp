@@ -1,0 +1,71 @@
+﻿chi_adm_provincial_development_project_bill = {
+    value = 0
+    every_scope_state = {
+        limit = { has_variable = chi_adm_provincial_development_project var:chi_adm_provincial_development_project_owner ?= owner }
+        add = chi_adm_provincial_development_state_project_weight
+    }
+    multiply = fixed_income
+    multiply = 0.20
+    min = 0
+    if = { limit = { OR = { NOT = { chi_adm_provincial_development_project_affordable = yes } is_subject_type = subject_type_qing_frontier_administration } } multiply = 0 }
+}
+
+chi_adm_provincial_development_state_project_weight = {
+    value = state_population
+    divide = { value = owner.total_population min = 1 }
+}
+
+chi_adm_provincial_development_sponsorship_offer_bill = {
+    value = chi_adm_provincial_development_project_bill
+    multiply = 0.5
+}
+
+chi_adm_provincial_development_sponsored_bill = {
+    value = 0
+    every_scope_state = {
+        limit = {
+            has_variable = chi_adm_provincial_development_project
+            has_variable = chi_adm_provincial_development_project_sponsored
+            var:chi_adm_provincial_development_project_owner ?= owner
+        }
+        add = chi_adm_provincial_development_state_project_weight
+    }
+    multiply = fixed_income
+    multiply = 0.10
+    min = 0
+    max = { value = chi_adm_provincial_development_project_bill multiply = 0.5 }
+    if = { limit = { c:CHI = { NOT = { has_journal_entry = chi_adm_provincial_development_court_extension } } } multiply = 0 }
+    if = {
+        limit = { OR = { NOT = { chi_adm_target_valid = yes } NOT = { chi_adm_provincial_development_project_affordable = yes } c:CHI = { gold_reserves < 0 } } }
+        multiply = 0
+    }
+}
+
+chi_adm_provincial_development_project_progress = {
+value = var:chi_adm_provincial_development_display_done divide = { value = var:chi_adm_provincial_development_display_total min = 1 } multiply = 100 min = 0 max = 100
+}
+
+chi_adm_provincial_development_conversion_progress = {
+value = 18
+if = { limit = { has_variable = chi_adm_provincial_development_conversion_total } value = var:chi_adm_provincial_development_conversion_total }
+subtract = var:chi_adm_provincial_development_conversion
+divide = { value = 18 if = { limit = { has_variable = chi_adm_provincial_development_conversion_total } value = var:chi_adm_provincial_development_conversion_total } }
+multiply = 100 min = 0 max = 100
+}
+
+chi_adm_provincial_development_court_sponsorship_bill = {
+    value = 0
+    every_subject_or_below = {
+        limit = { chi_adm_target_valid = yes }
+        add = chi_adm_provincial_development_sponsored_bill
+    }
+}
+
+chi_adm_provincial_development_sponsor_refund_3 = { value = var:chi_adm_provincial_development_project_autonomy_grant subtract = 2 min = 0 multiply = -1 }
+chi_adm_provincial_development_sponsor_refund_12 = {
+ value = var:chi_adm_provincial_development_project_autonomy_grant
+ if = { limit = { var:chi_adm_provincial_development_current_tier = 1 } subtract = 1 }
+ else = { subtract = 2 }
+ min = 0
+ multiply = -1
+}

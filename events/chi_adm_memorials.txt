@@ -1,0 +1,135 @@
+namespace = chi_adm_memorials
+chi_adm_memorials.1 = { type = country_event placement = ROOT title = chi_adm_memorials_court_notice desc = chi_adm_memorials_court_notice_desc event_image = { video = "ep1_persian_court" } icon = "gfx/interface/icons/event_icons/event_scales.dds" duration = 3 cancellation_trigger = { NOT = { exists = scope:chi_adm_memorials_province } } option = { name = chi_adm_memorials_ack default_option = yes } }
+chi_adm_memorials.2 = { type = country_event placement = ROOT title = chi_adm_memorials_province_notice desc = chi_adm_memorials_province_notice_desc event_image = { video = "ep1_persian_court" } icon = "gfx/interface/icons/event_icons/event_scales.dds" duration = 30 trigger = { chi_adm_memorials_valid = yes } option = { name = chi_adm_memorials_accept_counter trigger = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_memorial_stage = 2
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_memorial_stage = 2
+OR = { AND = { var:chi_adm_memorials_memorial = 1
+c:CHI = { gold_reserves >= 10000 } }
+var:chi_adm_memorials_memorial = 2
+AND = { var:chi_adm_memorials_memorial = 3
+is_at_war = yes
+c:CHI = { gold_reserves >= 5000 } } } }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_memorial_stage = 2 } custom_tooltip = chi_adm_memorials_accept_counter_event_tt hidden_effect = { chi_adm_memorials_accept_counter = yes } ai_chance = { base = 30 } }
+option = { name = chi_adm_memorials_decline_counter trigger = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_memorial_stage = 2
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_memorial_stage = 2 }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_memorial_stage = 2 } custom_tooltip = chi_adm_memorials_decline_counter_desc hidden_effect = { chi_adm_memorials_decline_counter = yes } ai_chance = { base = 5 } }
+option = { name = chi_adm_memorials_accept_edict trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+has_variable = chi_adm_memorials_edict
+OR = { var:chi_adm_memorials_edict_stage = 1
+var:chi_adm_memorials_edict_stage = 3
+var:chi_adm_memorials_edict_stage = 4 }
+OR = { NOT = { var:chi_adm_memorials_edict = 3 }
+AND = { var:chi_adm_memorials_edict_stage = 4
+is_at_war = yes
+c:CHI = { gold_reserves >= 5000 } }
+AND = { NOT = { var:chi_adm_memorials_edict_stage = 4 }
+is_at_war = yes
+c:CHI = { gold_reserves >= 10000 } } } }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes } custom_tooltip = chi_adm_memorials_accept_edict_event_tt hidden_effect = { chi_adm_memorials_accept_edict = yes } ai_chance = { base = 40
+modifier = { trigger = { var:chi_adm_loyalty >= 60 }
+factor = 3 }
+modifier = { trigger = { var:chi_adm_corruption >= 60 }
+factor = 0.5 } } }
+option = { name = chi_adm_memorials_appeal_edict trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+NOT = { has_variable = chi_adm_memorials_edict_appeal_used }
+has_variable = chi_adm_memorials_edict
+OR = { var:chi_adm_memorials_edict_stage = 1
+var:chi_adm_memorials_edict_stage = 3
+var:chi_adm_memorials_edict_stage = 4 } }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes } custom_tooltip = chi_adm_memorials_appeal_edict_desc hidden_effect = { chi_adm_memorials_appeal_edict = yes } ai_chance = { base = 15
+modifier = { trigger = { var:chi_adm_autonomy >= 60 }
+factor = 3 } } }
+option = { name = chi_adm_memorials_delay_edict trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+NOT = { has_variable = chi_adm_memorials_edict_delay_used }
+has_variable = chi_adm_memorials_edict
+OR = { var:chi_adm_memorials_edict_stage = 1
+var:chi_adm_memorials_edict_stage = 3
+var:chi_adm_memorials_edict_stage = 4 } }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes } custom_tooltip = chi_adm_memorials_delay_edict_desc hidden_effect = { chi_adm_memorials_delay_edict = yes } ai_chance = { base = 5 } }
+option = { name = chi_adm_memorials_defy_edict trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+has_variable = chi_adm_memorials_edict
+OR = { var:chi_adm_memorials_edict_stage = 1
+var:chi_adm_memorials_edict_stage = 3
+var:chi_adm_memorials_edict_stage = 4 } }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_edict_reply = yes } custom_tooltip = chi_adm_memorials_defy_edict_desc hidden_effect = { chi_adm_memorials_defy_edict = yes } ai_chance = { base = 5
+modifier = { trigger = { var:chi_adm_loyalty < 40 }
+factor = 4 } } }
+option = { name = chi_adm_memorials_audit_cooperate trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 1 }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes } custom_tooltip = chi_adm_memorials_audit_cooperate_desc hidden_effect = { chi_adm_memorials_audit_cooperate = yes } ai_chance = { base = 40
+modifier = { trigger = { var:chi_adm_loyalty >= 60 }
+factor = 3 }
+modifier = { trigger = { var:chi_adm_corruption >= 60 }
+factor = 0.5 } } }
+option = { name = chi_adm_memorials_audit_obstruct trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 1 }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes } custom_tooltip = chi_adm_memorials_audit_obstruct_desc hidden_effect = { chi_adm_memorials_audit_obstruct = yes } ai_chance = { base = 10
+modifier = { trigger = { var:chi_adm_autonomy >= 60 }
+factor = 3 } } }
+option = { name = chi_adm_memorials_audit_conceal trigger = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 1 }
+hidden_trigger = { chi_adm_target_valid = yes }
+hidden_trigger = { chi_adm_target_valid = yes }
+gold_reserves >= 5000
+custom_tooltip = { text = chi_adm_memorials_requirement_corruption_96
+var:chi_adm_corruption >= 40 } } show_as_unavailable = { chi_adm_memorials_valid = yes
+chi_adm_memorials_audit_choice = yes } custom_tooltip = chi_adm_memorials_audit_conceal_desc hidden_effect = { chi_adm_memorials_audit_conceal = yes } ai_chance = { base = 10
+modifier = { trigger = { var:chi_adm_corruption >= 60 }
+factor = 3 }
+modifier = { trigger = { var:chi_adm_loyalty >= 60 }
+factor = 0.5 } } }
+option = { name = chi_adm_memorials_pay_restitution trigger = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4
+var:chi_adm_memorials_audit_settlement = 1
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 4
+var:chi_adm_memorials_audit_settlement = 1 }
+hidden_trigger = { chi_adm_target_valid = yes }
+gold_reserves >= 10000 } show_as_unavailable = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4
+var:chi_adm_memorials_audit_settlement = 1 } custom_tooltip = chi_adm_memorials_pay_restitution_desc hidden_effect = { chi_adm_memorials_pay_restitution = yes } ai_chance = { base = 30 } }
+option = { name = chi_adm_memorials_accept_reform trigger = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 4 }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4 } custom_tooltip = chi_adm_memorials_accept_reform_event_tt hidden_effect = { chi_adm_memorials_accept_reform = yes } ai_chance = { base = 30 } }
+option = { name = chi_adm_memorials_resist_settlement trigger = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4
+custom_tooltip = { text = chi_adm_memorials_case_requirements
+var:chi_adm_memorials_audit = 4 }
+hidden_trigger = { chi_adm_target_valid = yes } } show_as_unavailable = { chi_adm_memorials_valid = yes
+var:chi_adm_memorials_audit = 4 } custom_tooltip = chi_adm_memorials_resist_settlement_desc hidden_effect = { chi_adm_memorials_resist_settlement = yes } ai_chance = { base = 5
+modifier = { trigger = { var:chi_adm_loyalty < 40 }
+factor = 4 } } } option = { name = chi_adm_memorials_ack default_option = yes custom_tooltip = chi_adm_memorials_ack_province_tt ai_chance = { base = 0 } } }

@@ -1,0 +1,78 @@
+# The next three values are evaluated only on the court, while recruiting.
+chi_adm_qing_security_armed_count = {
+ value = 0
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_armed = yes }
+  add = 1
+ }
+}
+
+chi_adm_qing_security_force_ratio = {
+ value = 0
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_armed = yes }
+  add = army_power_projection
+ }
+ divide = {
+  value = army_power_projection
+  every_subject_or_below = {
+   limit = { chi_adm_qing_security_loyalist = yes }
+   add = army_power_projection
+  }
+  min = 1
+ }
+ multiply = 100
+}
+
+chi_adm_qing_security_monthly_preparation = {
+ value = 4
+ var:chi_adm_qing_security_claimant ?= {
+  if = { limit = { var:chi_adm_loyalty <= 10 } add = 1 }
+  if = { limit = { var:chi_adm_autonomy >= 80 } add = 1 }
+  if = { limit = { var:chi_adm_corruption >= 60 } subtract = 2 }
+  if = { limit = { has_modifier = chi_adm_provincial_development_military_3 } add = 2 }
+  else_if = {
+   limit = { OR = { has_modifier = chi_adm_provincial_development_military_2 has_modifier = chi_adm_provincial_development_military_1 } }
+   add = 1
+  }
+  if = { limit = { has_modifier = chi_adm_provincial_development_compact_recruit } add = 1 }
+  if = {
+   limit = {
+    any_scope_state = {
+     OR = {
+      has_modifier = chi_adm_provincial_development_economic_2 has_modifier = chi_adm_provincial_development_economic_3
+      has_modifier = chi_adm_provincial_development_administrative_2 has_modifier = chi_adm_provincial_development_administrative_3
+      has_modifier = chi_adm_provincial_development_education_2 has_modifier = chi_adm_provincial_development_education_3
+     }
+    }
+   }
+   add = 1
+  }
+ }
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_office = yes }
+  if = { limit = { var:chi_adm_qing_security_faction = 2 } add = 1 }
+  if = { limit = { var:chi_adm_qing_security_faction = 3 } subtract = 1 }
+ }
+ if = { limit = { has_modifier = chi_adm_qing_security_foreign_claimant } add = 2 }
+ if = { limit = { has_modifier = chi_adm_qing_security_foreign_court } subtract = 1 }
+ if = { limit = { has_modifier = chi_adm_qing_security_loyalist_muster } subtract = 2 }
+ min = 0
+ max = 10
+}
+
+chi_adm_qing_security_monthly_evidence = {
+ value = 1
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_office = yes }
+  if = { limit = { var:chi_adm_qing_security_faction = 1 } add = 2 }
+  if = { limit = { var:chi_adm_qing_security_faction = 2 } add = 1 }
+  if = { limit = { var:chi_adm_corruption >= 70 var:chi_adm_qing_security_faction = 1 } add = 1 }
+ }
+}
+
+# Display values are safe before a plot exists and for detached participants.
+chi_adm_qing_security_display_readiness = { value = 0 c:CHI ?= { if = { limit = { has_variable = chi_adm_qing_security_readiness } add = var:chi_adm_qing_security_readiness } } }
+chi_adm_qing_security_display_evidence = { value = 0 c:CHI ?= { if = { limit = { has_variable = chi_adm_qing_security_evidence } add = var:chi_adm_qing_security_evidence } } }
+chi_adm_qing_security_display_months = { value = 0 c:CHI ?= { if = { limit = { has_variable = chi_adm_qing_security_months } add = var:chi_adm_qing_security_months } } }
+chi_adm_qing_security_display_ratio = { value = 0 c:CHI ?= { if = { limit = { has_variable = chi_adm_qing_security_briefed_ratio } add = var:chi_adm_qing_security_briefed_ratio } } }

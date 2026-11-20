@@ -1,5 +1,7 @@
 # Qing administrative start, 1836
 
+> Historical setup notes. See [the current Qing feature map](docs/CURRENT_STATUS.md) for the 13-office setup now used by this branch.
+
 Start a **new 1836 campaign**. This setup runs in global history after the existing population, building, character, and military histories; it does not migrate an existing save.
 
 The Qing imperial court (`CHI`) directly owns **Beijing and all five Manchurian state regions**: Shengjing, Southern Manchuria, Northern Manchuria, Amur, and Outer Manchuria. All other original Qing provinces are assigned to 15 subordinate administrations. Portugal's Macau province, Kokand's provinces, and all other foreign ownership remain unchanged. Portugal's country history schedules a delayed startup event to create the Macau treaty port after `YUE` is initialized. Tibet retains its existing separate Qing-dependent government.
