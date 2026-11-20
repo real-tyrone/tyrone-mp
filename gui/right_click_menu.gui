@@ -985,7 +985,7 @@
 						autoresize = yes
 
 						block "name_text" {
-						text = "[MilitaryFormation.GetNameNoIcon]"
+							text = "[MilitaryFormation.GetNameNoFormatting]"
 						}
 
 						block "name_max_width" {
@@ -2127,28 +2127,6 @@ right_click_menu = {
 				}
 			}
 
-			right_click_menu_item = {		# EDIT MISSION SEA REGIONS
-				visible = "[MilitaryFormation.IsFleet]"
-
-				blockoverride "properties" {
-					tooltip = "EDIT_NAVAL_MISSION_SEA_REGIONS_TOOLTIP"
-					onclick = "[MilitaryFormation.OnEditMissionSeaRegionsClicked]"
-					enabled = "[MilitaryFormation.CanEditMissionSeaRegions]"
-				}
-
-				blockoverride "texture" {
-					texture = "gfx/interface/icons/generic_icons/edit_sea_nodes.dds"
-				}
-
-				blockoverride = "text" {
-					text = "EDIT_NAVAL_MISSION_SEA_REGIONS_LABEL"
-				}
-
-				blockoverride "size" {
-					size = { 260 44 }
-				}
-			}
-
 			right_click_menu_item = {		# STATION
 
 				blockoverride "properties" {
@@ -2289,6 +2267,7 @@ right_click_menu = {
 
 				blockoverride "properties" {
 					tooltip = "MILITARY_FORMATION_TRANSFER_UNIT_TOOLTIP"
+					enabled = "[Not(MilitaryFormation.IsDefeated)]"
 					onclick = "[PopupManager.ShowTransferFormation( MilitaryFormation.AccessSelf )]"
 				}
 
@@ -2309,7 +2288,7 @@ right_click_menu = {
 			right_click_menu_item = {
 				blockoverride "properties" {
 					tooltip = "REHOME_MILITARY_FORMATION_TOOLTIP"
-					enabled = "[MilitaryFormation.GetCountry.IsLocalPlayer]"
+					enabled = "[And(MilitaryFormation.GetCountry.IsLocalPlayer, MilitaryFormation.CanRehome)]"
 					onclick = "[MilitaryFormation.OnRehomeClicked]"
 				}
 
@@ -2446,6 +2425,7 @@ right_click_menu = {
 
 									blockoverride "add_mission_button_properties" {
 								        enabled = "[IsValid(MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf))]"
+								        onclick = "[MilitaryFormation.Check]"
 								        onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf))]"
 								    }
 
@@ -2517,8 +2497,8 @@ right_click_menu = {
 
 									blockoverride "add_mission_button_properties" {
 								        enabled = "[IsValid(MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf))]"
+								        onclick = "[MilitaryFormation.Check]"
 								        onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf))]"
-										onclick = "[MilitaryFormation.OnEditMissionSeaRegionsClicked]"
 								    }
 
 								    blockoverride "remove_mission_button_properties" {
@@ -2674,6 +2654,7 @@ right_click_menu = {
 								}
 
 								blockoverride "onclick" {
+									enabled = "[Not(MilitaryFormation.IsDefeated)]"
 									onclick = "[TransferFormationPopup.SetSelectedLeftFormation( MilitaryFormation.AccessSelf )]"
 		                       		onclick = "[RightClickMenuManager.Close]"
 								}
@@ -3631,6 +3612,7 @@ right_click_menu = {
 								}
 
 								blockoverride "onclick" {
+									enabled = "[Not(MilitaryFormation.IsDefeated)]"
 									onclick = "[TransferFormationPopup.SetSelectedRightFormation( MilitaryFormation.AccessSelf )]"
 									onclick = "[GetVariableSystem.Clear( 'transfer_formation_new_formation' )]"
 									onclick = "[GetVariableSystem.Clear( Concatenate( StagedFormation.GetIDString, '_new_formation') )]"
@@ -4478,7 +4460,7 @@ right_click_menu = {
 							tooltipwidget = {
 								FancyTooltip_MilitaryFormation = {
 									blockoverride "text_before" {
-										visible = "[Not(IsValid(TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)))]"
+										visible = "[Not(TransportPlannerPopup.CanFleetTransport(MilitaryFormation.Self))]"
 										text = "[GetDesc(TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self))]"
 										margin_bottom = 15
 									}
@@ -4487,7 +4469,7 @@ right_click_menu = {
 						}
 
 						blockoverride "onclick" {
-							enabled = "[IsValid(TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self))]"
+							enabled = "[TransportPlannerPopup.CanFleetTransport(MilitaryFormation.Self)]"
 							onclick = "[TransportPlannerPopup.OnSelectedFleet(MilitaryFormation.AccessSelf)]"
 							onclick = "[RightClickMenuManager.Close]"
 						}
@@ -5163,35 +5145,6 @@ right_click_menu = {
 					max_width = 320
 					text = "NO_FLEET_HAS_NAVAL_MISSION"
 				}
-
-				button = {
-					parentanchor = hcenter
-					size = { 320 50 }
-					using = default_button_map_interaction
-					enabled = "[CanEditSeaRegionsForSelectedFleets]"
-					onclick = "[OnEditSelectedFleetsSeaRegionsClicked]"
-					tooltip = "EDIT_NAVAL_MISSION_SEA_REGIONS_TOOLTIP_MULTIPLE"
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						margin = { 15 5 }
-						spacing = 5
-
-						expand = {}
-
-						textbox = {
-							layoutpolicy_horizontal = expanding
-							size = { 0 20 }
-							align = hcenter|nobaseline
-							elide = right
-							fontsize_min = 12
-							min_width = 52
-							text = "CHANGE_REGION"
-						}
-
-						expand = {}
-					}
-				}
 			}
 		}
 	}
@@ -5246,6 +5199,7 @@ right_click_menu = {
 
 							blockoverride "add_mission_button_properties" {
 								enabled = "[IsValid(MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf))]"
+								onclick = "[MilitaryFormation.Check]"
 								onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf))]"
 							}
 
@@ -5309,8 +5263,8 @@ right_click_menu = {
 
 							blockoverride "add_mission_button_properties" {
 								enabled = "[IsValid(MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf))]"
+								onclick = "[MilitaryFormation.Check]"
 								onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf))]"
-								onclick = "[MilitaryFormation.OnEditMissionSeaRegionsClicked]"
 							}
 
 							blockoverride "remove_mission_button_properties" {
@@ -5427,35 +5381,6 @@ right_click_menu = {
 					multiline = yes
 					max_width = 320
 					text = "FLEET_HAS_NO_NAVAL_MISSION"
-				}
-
-				button = {
-					parentanchor = hcenter
-					size = { 320 50 }
-					using = default_button_map_interaction
-					enabled = "[MilitaryFormation.CanEditMissionSeaRegions]"
-					onclick = "[MilitaryFormation.OnEditMissionSeaRegionsClicked]"
-					tooltip = "EDIT_NAVAL_MISSION_SEA_REGIONS_TOOLTIP"
-
-					hbox = {
-						layoutpolicy_horizontal = expanding
-						margin = { 10 5 }
-						spacing = 5
-
-						expand = {}
-
-						textbox = {
-							layoutpolicy_horizontal = expanding
-							size = { 0 20 }
-							align = hcenter|nobaseline
-							elide = right
-							fontsize_min = 12
-							min_width = 52
-							text = "CHANGE_REGION"
-						}
-
-						expand = {}
-					}
 				}
 			}
 		}
@@ -13353,7 +13278,7 @@ right_click_menu = {
 				}
 
 				blockoverride "properties" {
-					enabled = "[MilitaryFormation.GetCountry.IsLocalPlayer]"
+					enabled = "[And(MilitaryFormation.GetCountry.IsLocalPlayer, MilitaryFormation.CanRehome)]"
 					onclick = "[MilitaryFormation.OnRehomeClicked]"
 				}
 
@@ -13363,6 +13288,12 @@ right_click_menu = {
 
 				blockoverride "text" {
 					text = "REHOME_MILITARY_FORMATION_LABEL"
+				}
+
+				action_selection_number = {
+					blockoverride "text" {
+						text = "[MilitaryFormation.GetNumRehomeSelections|+]"
+					}
 				}
 			}
 		}
@@ -13416,7 +13347,7 @@ right_click_menu = {
 
 			### Transport
 			right_click_menu_item = {
-				visible = "[And( MilitaryFormation.IsFleet, And( Not( MilitaryFormation.IsTransportingArmies ), Not( MilitaryFormation.HasInvasion ) ) )]"
+				visible = "[And( MilitaryFormation.IsFleet, And( Not( MilitaryFormation.HasTransportedArmyOnboard ), Not( MilitaryFormation.HasInvasion ) ) )]"
 				size = { 260 44 }
 				tooltip = "MILITARY_FORMATION_TRANSPORT_TOOLTIP"
 
@@ -13455,7 +13386,7 @@ right_click_menu = {
 				}
 
 				blockoverride "properties" {
-					enabled = "[MilitaryFormation.GetCountry.IsLocalPlayer]"
+					enabled = "[And(MilitaryFormation.GetCountry.IsLocalPlayer, MilitaryFormation.CanRehome)]"
 					onclick = "[MilitaryFormation.OnRehomeClicked]"
 				}
 
@@ -13465,6 +13396,12 @@ right_click_menu = {
 
 				blockoverride "text" {
 					text = "REHOME_MILITARY_FORMATION_LABEL"
+				}
+
+				action_selection_number = {
+					blockoverride "text" {
+						text = "[MilitaryFormation.GetNumRehomeSelections|+]"
+					}
 				}
 			}
 
@@ -13751,7 +13688,11 @@ right_click_menu = {
 
 							blockoverride "ship_type_tooltip" {
 								tooltipwidget = {
-									FancyTooltip_ShipTemplate = {}
+									FancyTooltip_ShipTemplate = {
+										blockoverride "tooltip_content_before_before" {
+											ship_type_obsolete_tooltip_line = {}
+										}
+									}
 								}
 							}
 
@@ -13762,7 +13703,10 @@ right_click_menu = {
 							}
 
 							blockoverride "queue_enabled_and_onclick" {
-								tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+								tooltipwidget = {
+									RegularTooltip_FleetShipTemplateConstruction = {}
+								}
+
 								enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 								onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 							}
@@ -13781,7 +13725,7 @@ right_click_menu = {
 							}
 
 							blockoverride "selected_ship_template_name" {
-								text = "[ShipType.GetNameNoFormatting]"
+								text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 							}
 
 							blockoverride "default_template_onclick" {
@@ -13806,7 +13750,11 @@ right_click_menu = {
 
 							blockoverride "ship_type_tooltip" {
 								tooltipwidget = {
-									FancyTooltip_ShipTemplate = {}
+									FancyTooltip_ShipTemplate = {
+										blockoverride "tooltip_content_before_before" {
+											ship_type_obsolete_tooltip_line = {}
+										}
+									}
 								}
 							}
 						}
@@ -13836,7 +13784,10 @@ right_click_menu = {
 							}
 
 							blockoverride "queue_enabled_and_onclick" {
-								tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+								tooltipwidget = {
+									RegularTooltip_FleetShipTemplateConstruction = {}
+								}
+
 								enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 								onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 							}
@@ -13855,7 +13806,7 @@ right_click_menu = {
 							}
 
 							blockoverride "selected_ship_template_name" {
-								text = "[ShipType.GetNameNoFormatting]"
+								text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 							}
 
 							blockoverride "default_template_onclick" {
@@ -13927,7 +13878,10 @@ right_click_menu = {
 								}
 
 								blockoverride "queue_enabled_and_onclick" {
-									tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+									tooltipwidget = {
+										RegularTooltip_FleetShipTemplateConstruction = {}
+									}
+
 									enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 									onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 								}
@@ -13946,7 +13900,7 @@ right_click_menu = {
 								}
 
 								blockoverride "selected_ship_template_name" {
-									text = "[ShipType.GetNameNoFormatting]"
+									text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 								}
 
 								blockoverride "default_template_onclick" {
@@ -14061,6 +14015,10 @@ right_click_menu = {
 						blockoverride "ship_type_tooltip" {
 							tooltipwidget = {
 								FancyTooltip_ShipTemplate = {
+									blockoverride "tooltip_content_before_before" {
+										ship_type_obsolete_tooltip_line = {}
+									}
+
 									blockoverride "tooltip_content_before" {
 										custom_tooltip_textbox = {
 											block "construction_command_desc" {
@@ -14084,7 +14042,10 @@ right_click_menu = {
 						}
 
 						blockoverride "queue_enabled_and_onclick" {
-							tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+							tooltipwidget = {
+								RegularTooltip_FleetShipTemplateConstruction = {}
+							}
+
 							enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 							onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 						}
@@ -14103,7 +14064,7 @@ right_click_menu = {
 						}
 
 						blockoverride "selected_ship_template_name" {
-							text = "[ShipType.GetNameNoFormatting]"
+							text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 						}
 
 						blockoverride "default_template_onclick" {
@@ -14153,6 +14114,10 @@ right_click_menu = {
 							blockoverride "ship_type_tooltip" {
 								tooltipwidget = {
 									FancyTooltip_ShipTemplate = {
+										blockoverride "tooltip_content_before_before" {
+											ship_type_obsolete_tooltip_line = {}
+										}
+
 										blockoverride "tooltip_content_before" {
 											custom_tooltip_textbox = {
 												block "construction_command_desc" {
@@ -14176,7 +14141,10 @@ right_click_menu = {
 							}
 
 							blockoverride "queue_enabled_and_onclick" {
-								tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+								tooltipwidget = {
+									RegularTooltip_FleetShipTemplateConstruction = {}
+								}
+
 								enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 								onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 							}
@@ -14195,7 +14163,7 @@ right_click_menu = {
 							}
 
 							blockoverride "selected_ship_template_name" {
-								text = "[ShipType.GetNameNoFormatting]"
+								text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 							}
 
 							blockoverride "default_template_onclick" {
@@ -14262,7 +14230,10 @@ right_click_menu = {
 							}
 
 							blockoverride "queue_enabled_and_onclick" {
-								tooltip = "FLEET_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+								tooltipwidget = {
+									RegularTooltip_FleetShipTemplateConstruction = {}
+								}
+
 								enabled = "[IsValid(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 								onclick = "[Execute(ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self))]"
 							}
@@ -14281,7 +14252,7 @@ right_click_menu = {
 							}
 
 							blockoverride "selected_ship_template_name" {
-								text = "[ShipType.GetNameNoFormatting]"
+								text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 							}
 
 							blockoverride "default_template_onclick" {
@@ -14475,6 +14446,10 @@ right_click_menu = {
 						blockoverride "template_tooltip" {
 							tooltipwidget = {
 								FancyTooltip_ShipTemplate = {
+									blockoverride "tooltip_content_before_before" {
+										ship_type_obsolete_tooltip_line = {}
+									}
+
 									blockoverride "tooltip_content_before" {
 										custom_tooltip_textbox = {
 											margin_bottom = 5
@@ -14567,7 +14542,11 @@ right_click_menu = {
 					onclick = "[RightClickMenuManager.Close]"
 
 					tooltipwidget = {
-						FancyTooltip_ShipType = {}
+						FancyTooltip_ShipType = {
+							blockoverride "tooltip_content_before_before" {
+								ship_type_obsolete_tooltip_line = {}
+							}
+						}
 					}
 
 					textbox = {
@@ -14643,7 +14622,11 @@ right_click_menu = {
 					onclick = "[RightClickMenuManager.Close]"
 
 					tooltipwidget = {
-						FancyTooltip_ShipTemplate = {}
+						FancyTooltip_ShipTemplate = {
+							blockoverride "tooltip_content_before_before" {
+								ship_type_obsolete_tooltip_line = {}
+							}
+						}
 					}
 
 					hbox = {
@@ -14793,11 +14776,12 @@ right_click_menu = {
 			item = {
 				widget = {
 					visible = "[Or(ShipDesignerModSlot.IsModificationSelectedInSlot(ShipModificationType.Self), Not(ShipDesignerModSlot.IsModificationSelectedInOtherSlot(ShipModificationType.Self)))]"
+					alpha = "[TransparentIfFalse(ShipModificationType.HasRequiredTech)]"
 					size = { 345 50 }
 
 					button = {
 						visible = "[Not(ShipDesignerModSlot.IsModificationSelectedInSlot(ShipModificationType.Self))]"
-						enabled = "[Not(ShipDesignerModSlot.IsModificationBlocked(ShipModificationType.Self))]"
+						enabled = "[And(ShipModificationType.HasRequiredTech, Not(ShipDesignerModSlot.IsModificationBlocked(ShipModificationType.Self)))]"
 						size = { 100% 100% }
 						using = default_button
 						using = ship_designer_modification_wildcard
@@ -14875,7 +14859,6 @@ types right_click_menu {
 				block "add_mission_button_properties" {
 			        enabled = "[IsValid(CreateNavalMissionsForSelectedFleets(NavalMissionType.AccessSelf))]"
 			        onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(CreateNavalMissionsForSelectedFleets(NavalMissionType.AccessSelf))]"
-					onclick = "[OnEditSelectedFleetsSeaRegionsClicked]"
 			    }
 
 		        onclick = "[RightClickMenuManager.Close]"
@@ -15068,6 +15051,10 @@ types right_click_menu {
 
 		tooltipwidget = {
 			FancyTooltip_ShipTemplate = {
+				blockoverride "tooltip_content_before_before" {
+					ship_type_obsolete_tooltip_line = {}
+				}
+
 				blockoverride "tooltip_content_before" {
 					custom_tooltip_textbox = {
 						margin_bottom = 5
@@ -15139,6 +15126,10 @@ types right_click_menu {
 		block "template_tooltip" {
 			tooltipwidget = {
 				FancyTooltip_ShipTemplate = {
+					blockoverride "tooltip_content_before_before" {
+						ship_type_obsolete_tooltip_line = {}
+					}
+
 					blockoverride "tooltip_content_before" {
 						custom_tooltip_textbox = {
 							margin_bottom = 5
@@ -15439,6 +15430,10 @@ types right_click_menu {
 		block "ship_type_tooltip" {
 			tooltipwidget = {
 				FancyTooltip_ShipType = {
+					blockoverride "tooltip_content_before_before" {
+						ship_type_obsolete_tooltip_line = {}
+					}
+
 					blockoverride "tooltip_content_before" {
 						custom_tooltip_textbox = {
 							block "construction_command_desc" {
@@ -15462,12 +15457,16 @@ types right_click_menu {
 			}
 
 			tooltipwidget = {
-				FancyTooltip_ShipType = {}
+				FancyTooltip_ShipType = {
+					blockoverride "tooltip_content_before_before" {
+						ship_type_obsolete_tooltip_line = {}
+					}
+				}
 			}
 
 			blockoverride "left_text" {
 				block "selected_ship_template_name" {
-					text = "[ShipType.GetNameNoFormatting]"
+					text = "SHIP_TYPE_NAME_WITH_OBSOLETE_WARNING"
 				}
 			}
 
@@ -15582,7 +15581,10 @@ types right_click_menu {
 						using = fleet_panel_construction_template_build
 
 						block "queue_enabled_and_onclick" {
-							tooltip = "QUEUE_SHIP_TEMPLATE_CONSTRUCTION_TOOLTIP"
+							tooltipwidget = {
+								RegularTooltip_ShipTemplateConstruction = {}
+							}
+
 							enabled = "[IsValid(ShipTemplate.QueueConstruction)]"
 							onclick = "[Execute(ShipTemplate.QueueConstruction)]"
 						}
@@ -15618,6 +15620,10 @@ types right_click_menu {
 
 							tooltipwidget = {
 								FancyTooltip_ShipTemplate = {
+									blockoverride "tooltip_content_before_before" {
+										ship_type_obsolete_tooltip_line = {}
+									}
+
 									blockoverride "tooltip_content_before" {
 										custom_tooltip_textbox_fixed_width = {
 											visible = "[PdxGuiWidget.HasContext('MilitaryFormation')]"
@@ -16150,11 +16156,11 @@ right_click_menu = {
 					textbox = {
 						parentanchor = vcenter
 						margin_left = 5
-					autoresize = yes
-					align = nobaseline
-					default_format = "#header"
-					text = "ASSIGN_COMMANDER_UNASSIGNED_HEADER"
-				}
+						autoresize = yes
+						align = nobaseline
+						default_format = "#header"
+						text = "ASSIGN_COMMANDER_UNASSIGNED_HEADER"
+					}
 
 					textbox = {
 						parentanchor = right|vcenter
@@ -16493,3 +16499,93 @@ template right_click_menu_title_margin_left {
 	margin_left = 3
 }
 
+
+right_click_menu = {
+	name = "treaty_draft_remove_ship_transfer_bundle_menu"
+	parentanchor = vcenter|right
+	widgetanchor = vcenter
+
+	blockoverride "title_text" {
+		text = "REMOVE_SHIP_TRANSFER_BUNDLE_MENU_TITLE"
+	}
+
+	blockoverride "items" {
+		right_click_menu_item = {
+			blockoverride "properties" {
+				enabled = "[TreatyDraft.CanRemoveShipTransferBundle(ArticleDraft.Self)]"
+				onclick = "[TreatyDraft.RemoveShipTransferBundle(ArticleDraft.Self)]"
+				onclick = "[RightClickMenuManager.Close]"
+				using = ui_item_remove
+			}
+
+			blockoverride "texture" {
+				texture = "gfx/interface/buttons/button_icons/close.dds"
+			}
+
+			blockoverride "text" {
+				text = "REMOVE_SHIP_TRANSFER_BUNDLE_CONFIRM"
+			}
+		}
+	}
+}
+
+right_click_menu = {
+	name = "sea_node_select_naval_mission_type_right_click_menu"
+
+	blockoverride "title_text" {
+		text = "SELECT_NAVAL_MISSION_TYPE_RIGHT_CLICK_MENU_TITLE"
+	}
+
+	blockoverride "items" {
+		dynamicgridbox = {
+			datamodel = "[GetSelectedFleetsPotentialAndPossibleMissions]"
+
+			item = {
+				right_click_menu_item = {
+					clicksound = "[NavalMissionType.GetClickSound]"
+
+					tooltipwidget = {
+						FancyTooltip_NavalMissionType = {
+							blockoverride "naval_mission_tooltip_desc" {
+								custom_tooltip_textbox = {
+									visible = "[Not(StringIsEmpty(GetDesc(Province.AssignSelectedFleetsToNewMissionInRegion(NavalMissionType.Self))))]"
+									text = "[GetDesc(Province.AssignSelectedFleetsToNewMissionInRegion(NavalMissionType.Self))]"
+								}
+
+								custom_tooltip_newline = {
+									visible = "[Not(StringIsEmpty(GetDesc(Province.AssignSelectedFleetsToNewMissionInRegion(NavalMissionType.Self))))]"
+								}
+							}
+						}
+					}
+
+					blockoverride "properties" {
+						enabled = "[IsValid(Province.AssignSelectedFleetsToNewMissionInRegion(NavalMissionType.Self))]"
+						onclick = "[PopupManager.ExecuteOrAskConfirmationIfNeeded(Province.AssignSelectedFleetsToNewMissionInRegion(NavalMissionType.Self))]"
+						onclick = "[RightClickMenuManager.Close]"
+					}
+
+					blockoverride "texture" {
+						texture = "[NavalMissionType.GetIcon]"
+					}
+
+					blockoverride "text" {
+						text = "[NavalMissionType.GetNameNoFormatting]"
+					}
+
+					blockoverride "size" {
+						size = { 360 44 }
+					}
+
+					blockoverride "text_layoutpolicies" {
+						autoresize = yes
+					}
+
+					blockoverride "right_text" {
+						expand = {}
+					}
+				}
+			}
+		}
+	}
+}
