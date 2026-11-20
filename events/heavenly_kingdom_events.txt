@@ -1,4 +1,4 @@
-﻿namespace = heavenly
+namespace = heavenly
 
 # Missionary activity in the south of China
 heavenly.1 = {
@@ -24,14 +24,8 @@ heavenly.1 = {
 	}
 	immediate = {
 		set_variable = { name = missionary_works_counter value = 1 }
-		random_scope_state = {
-			limit = {
-				is_incorporated = yes
-				any_scope_pop = {
-					NOT = {
-						religion = rel:protestant
-					}
-				}
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				any_neighbouring_state = {
 					is_treaty_port = yes
 					owner = {
@@ -127,8 +121,8 @@ heavenly.2 = {
 	}
 
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				has_modifier = god_worshippers
 			}
 			save_scope_as = cult_state
@@ -201,11 +195,15 @@ heavenly.3 = {
 	event_image = { video = "asia_union_leader" }
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 	duration = 3
-	trigger = { has_journal_entry = je_heavenly_kingdom_main NOT = { exists = c:TPG } any_scope_state = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
-			any_neighbouring_state = { owner = root has_modifier = god_worshippers } } }
+	trigger = {
+		c:CHI ?= this
+		has_journal_entry = je_heavenly_kingdom_main
+		NOT = { exists = c:TPG }
+		any_state = { tyr_heavenly_spread_state = yes }
+	}
 	immediate = {
-		random_scope_state = { limit = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
-				any_neighbouring_state = { owner = root has_modifier = god_worshippers } }
+		random_state = {
+			limit = { tyr_heavenly_spread_state = yes }
 			save_scope_as = cult_growth_state
 			add_modifier = { name = god_worshippers years = 5 }
 			set_variable = cult_center
@@ -234,9 +232,17 @@ heavenly.4 = {
 
 	duration = 3
 
-	trigger = { NOT = { exists = c:TPG } any_scope_state = { has_modifier = god_worshippers count >= 8 } }
+	trigger = { tyr_heavenly_uprising_ready = yes }
 	immediate = {
-		every_scope_state = { limit = { has_modifier = god_worshippers is_capital = no } set_variable = tyr_heavenly_transfer }
+		every_state = {
+			limit = { tyr_heavenly_revolt_state = yes has_modifier = god_worshippers }
+			set_variable = tyr_heavenly_transfer
+			set_variable = { name = tyr_heavenly_original_owner value = owner }
+			if = {
+				limit = { is_incorporated = yes }
+				set_variable = tyr_heavenly_originally_incorporated
+			}
+		}
 
 		hidden_effect = {
 			random_scope_character = {
@@ -252,27 +258,19 @@ heavenly.4 = {
 				kill_character = yes
 			}
 		}
-		every_scope_state = {
-			limit = {
+		every_state = {
+			limit = { chi_qing_story_state = yes
 				has_modifier = god_worshippers
 			}
 			remove_modifier = god_worshippers
 		}
-		c:CHI ?= {
-			every_scope_state = {
-				limit = {
-					is_incorporated = yes
-				}
-				set_variable = saved_incorporated_state
-			}
-		}
-		random_scope_state = {
-			limit = { has_variable = tyr_heavenly_transfer is_capital = no }
+		random_state = {
+			limit = { chi_qing_story_state = yes has_variable = tyr_heavenly_transfer }
 			save_scope_as = heavenly_kingdom_spawn
 		}
 		create_country = {
 			tag = TPG
-			origin = this
+			origin = scope:heavenly_kingdom_spawn.owner
 			state = scope:heavenly_kingdom_spawn
 			on_created = {
 				# Preserve the exact Qing law variants before Heavenly overrides.
@@ -436,8 +434,8 @@ heavenly.4 = {
 			}
 
 			c:CHI ?= {
-				every_scope_state = {
-					limit = {
+				every_state = {
+					limit = { chi_qing_story_state = yes
 						is_split_state = yes
 						state_region = {
 							any_scope_state = {
@@ -468,8 +466,8 @@ heavenly.4 = {
 		trigger = { is_player = yes }
 		ai_chance = { base = 0 }
 		c:TPG = { add_modifier = { name = tyr_heavenly_player_resolve years = 2 } }
-		play_as = c:TPG
 		tyr_heavenly_begin_war = yes
+		play_as = c:TPG
 	}
 
 	after = { je_heavenly_kingdom_main_cleanup = yes }
@@ -499,13 +497,7 @@ heavenly.5 = {
 	}
 
 	immediate = {
-		every_scope_state = {
-			limit = {
-				has_variable = saved_incorporated_state
-			}
-			set_state_type = incorporated
-			remove_variable = saved_incorporated_state
-		}
+		tyr_heavenly_restore_states = yes
 		root.religion = {
 			save_scope_as = state_religion_scope
 		}
@@ -519,8 +511,8 @@ heavenly.5 = {
 		default_option = yes
 		custom_tooltip = {
 			text = mass_reconversion_tt
-			every_scope_state = {
-				limit = {
+			every_state = {
+				limit = { chi_qing_story_state = yes
 					any_scope_pop = {
 						religion = rel:protestant
 					}
@@ -764,13 +756,15 @@ CHI_missionaries.1 = {
 	cooldown = { days = normal_modifier_time }
 
 	trigger = {
-		any_scope_state = {
+		any_state = {
+ chi_qing_story_state = yes
+
 			has_variable = open_to_missionaries_state
 		}
 	}
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				has_variable = open_to_missionaries_state
 			}
 			save_scope_as = evangelisation_state
@@ -836,9 +830,11 @@ CHI_missionaries.2 = {
 		NOT = {
 			has_law_or_variant = law_type:law_closed_borders
 		}
-		any_scope_state = {
+		any_state = {
+ chi_qing_story_state = yes
+
 			any_neighbouring_state = {
-				owner = ROOT
+				OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
 				has_variable = open_to_missionaries_state
 			}
 			NOT = {
@@ -854,10 +850,10 @@ CHI_missionaries.2 = {
 		}
 	}
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				any_neighbouring_state = {
-					owner = ROOT
+					OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
 					has_variable = open_to_missionaries_state
 				}
 				NOT = {
@@ -877,8 +873,8 @@ CHI_missionaries.2 = {
 			save_scope_as = missionary_country
 		}
 		change_variable = { name = missionary_works_counter add = 1 }
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				region = sr:region_central_asia
 			}
 			save_scope_as = deportation_state
@@ -901,7 +897,9 @@ CHI_missionaries.2 = {
 		name = CHI_missionaries.2.b
 		default_option = yes
 		trigger = {
-			any_scope_state = {
+			any_state = {
+ chi_qing_story_state = yes
+
 				region = sr:region_central_asia
 			}
 		}
@@ -956,7 +954,9 @@ CHI_missionaries.3 = {
 	cooldown = { days = normal_modifier_time }
 
 	trigger = {
-		any_scope_state = {
+		any_state = {
+ chi_qing_story_state = yes
+
 			has_variable = open_to_missionaries_state
 			NOT = {
 				has_modifier = modifier_chi_missionary_schools
@@ -964,8 +964,8 @@ CHI_missionaries.3 = {
 		}
 	}
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				has_variable = open_to_missionaries_state
 				NOT = {
 					has_modifier = modifier_chi_missionary_schools
@@ -1028,7 +1028,9 @@ CHI_missionaries.4 = {
 	cooldown = { days = normal_modifier_time }
 
 	trigger = {
-		any_scope_state = {
+		any_state = {
+ chi_qing_story_state = yes
+
 			has_variable = open_to_missionaries_state
 			NOT = {
 				has_modifier = modifier_chi_missionary_hospitals
@@ -1036,8 +1038,8 @@ CHI_missionaries.4 = {
 		}
 	}
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				has_variable = open_to_missionaries_state
 				NOT = {
 					has_modifier = modifier_chi_missionary_hospitals
@@ -1100,7 +1102,9 @@ CHI_missionaries.5 = {
 	cooldown = { days = normal_modifier_time }
 
 	trigger = {
-		any_scope_state = {
+		any_state = {
+ chi_qing_story_state = yes
+
 			has_variable = open_to_missionaries_state
 		}
 		any_country = {
@@ -1109,8 +1113,8 @@ CHI_missionaries.5 = {
 		}
 	}
 	immediate = {
-		random_scope_state = {
-			limit = {
+		random_state = {
+			limit = { chi_qing_story_state = yes
 				has_variable = open_to_missionaries_state
 			}
 			save_scope_as = missionary_strife_state

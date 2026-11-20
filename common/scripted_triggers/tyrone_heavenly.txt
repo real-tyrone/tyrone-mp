@@ -1,0 +1,40 @@
+# State scope within a Qing story state iterator.
+tyr_heavenly_revolt_state = {
+ chi_qing_story_state = yes
+ OR = {
+  is_capital = no
+  owner = {
+   NOT = { c:CHI ?= this }
+   is_player = no
+   # Leave each administration at least one state.
+   any_scope_state = { is_capital = no NOT = { has_modifier = god_worshippers } }
+  }
+ }
+}
+
+tyr_heavenly_uprising_ready = {
+ c:CHI ?= this
+ NOT = { exists = c:TPG }
+ any_state = {
+  tyr_heavenly_revolt_state = yes
+  has_modifier = god_worshippers
+  count >= 8
+ }
+}
+
+# State scope. Only an existing foothold inside the Qing realm spreads the Society.
+tyr_heavenly_spread_state = {
+ tyr_heavenly_revolt_state = yes
+ NOT = { has_modifier = god_worshippers }
+ turmoil >= 0.15
+ any_neighbouring_state = {
+  owner = { chi_qing_realm = yes }
+  has_modifier = god_worshippers
+ }
+}
+
+# Chinese successor governments can continue the missions in their own territory.
+tyr_heavenly_missions_country = {
+ is_china_tag_trigger = yes
+ NOR = { c:TPG ?= this chi_qing_administrative_subject = yes }
+}

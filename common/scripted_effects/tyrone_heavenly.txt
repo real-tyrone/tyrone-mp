@@ -195,18 +195,54 @@ tyr_heavenly_begin_war = {
 }
 tyr_heavenly_assign_states = {
  every_state = {
-  limit = { has_variable = tyr_heavenly_transfer NOT = { owner = c:CHI is_capital = yes } owner = { OR = { chi_qing_realm = yes c:TPG ?= this } } }
-		set_state_owner = c:TPG
-		set_state_type = incorporated
+  limit = { has_variable = tyr_heavenly_transfer owner = { OR = { chi_qing_realm = yes c:TPG ?= this } } }
 		remove_variable = tyr_heavenly_transfer
+		if = {
+			limit = { NOT = { owner = c:TPG } }
+			set_state_owner = c:TPG
+		}
+		set_state_type = incorporated
 	}
 	c:TPG = {
-		every_scope_state = { limit = { has_variable = tyr_heavenly_transfer } remove_variable = tyr_heavenly_transfer }
 		create_military_formation = {
 			type = army
 			hq_region = scope:heavenly_kingdom_spawn.region
 			combat_unit = { type = unit_type:combat_unit_type_irregular_infantry state_region = scope:heavenly_kingdom_spawn.state_region count = 10 }
 			combat_unit = { type = unit_type:combat_unit_type_cannon_artillery state_region = scope:heavenly_kingdom_spawn.state_region count = 5 }
+		}
+	}
+}
+
+# Annexation has returned occupied territory to Qing. Restore its provincial owner
+# and incorporation where possible without taking land away from third parties.
+tyr_heavenly_restore_states = {
+	every_scope_state = {
+		limit = { has_variable = tyr_heavenly_original_owner }
+		if = {
+			limit = { var:tyr_heavenly_original_owner ?= { chi_qing_realm = yes } }
+			var:tyr_heavenly_original_owner = { save_temporary_scope_as = tyr_heavenly_restored_owner }
+		}
+		else = { root = { save_temporary_scope_as = tyr_heavenly_restored_owner } }
+		if = {
+			limit = { NOT = { owner = scope:tyr_heavenly_restored_owner } }
+			set_state_owner = scope:tyr_heavenly_restored_owner
+		}
+		if = {
+			limit = { has_variable = tyr_heavenly_originally_incorporated }
+			set_state_type = incorporated
+		}
+		else = { set_state_type = unincorporated }
+	}
+	tyr_heavenly_clear_state_records = yes
+}
+
+tyr_heavenly_clear_state_records = {
+	every_state = {
+		limit = { has_variable = tyr_heavenly_original_owner }
+		remove_variable = tyr_heavenly_original_owner
+		if = {
+			limit = { has_variable = tyr_heavenly_originally_incorporated }
+			remove_variable = tyr_heavenly_originally_incorporated
 		}
 	}
 }
