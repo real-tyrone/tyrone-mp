@@ -5,9 +5,29 @@ on_game_started_after_lobby = {
 chi_adm_start = {
  effect = {
   c:CHI ?= {
+   chi_adm_start_guide_entries = yes
+   if = {
+    limit = { chi_adm_court_valid = yes }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_court }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_ledger }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_memorials_memorials }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_memorials_edicts }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_memorials_audits }
+    chi_adm_add_starting_entry = { ENTRY = chi_adm_qing_security_security }
+   }
    every_subject_or_below = {
     limit = { chi_adm_eligible = yes }
     chi_adm_initialize = yes
+    if = {
+     limit = { chi_adm_target_valid = yes has_journal_entry = chi_adm_governance }
+     chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_memorial_desk }
+     chi_adm_add_starting_entry = { ENTRY = chi_adm_regional_works_regional_dispatches }
+     if = {
+      limit = { chi_adm_qing_security_office = yes }
+      chi_adm_add_starting_entry = { ENTRY = chi_adm_qing_security_provincial }
+     }
+    }
+    chi_adm_start_guide_entries = yes
    }
   }
  }

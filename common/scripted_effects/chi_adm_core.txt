@@ -80,3 +80,23 @@ remove_modifier = chi_adm_corruption_tier_4 }
 if = { limit = { has_modifier = chi_adm_corruption_tier_5 }
 remove_modifier = chi_adm_corruption_tier_5 } }
 chi_adm_refresh_status = { chi_adm_remove_status = yes }
+
+# Country scope. The caller checks eligibility before adding an opening entry.
+chi_adm_add_starting_entry = {
+ if = {
+  limit = { NOT = { has_journal_entry = $ENTRY$ } }
+  add_journal_entry = { type = $ENTRY$ }
+ }
+}
+
+# Called after the lobby, when the game knows which countries are player-controlled.
+chi_adm_start_guide_entries = {
+ if = {
+  limit = { chi_adm_player_guide_available = yes }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_governance }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_development }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_security }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_taiping }
+ }
+}
