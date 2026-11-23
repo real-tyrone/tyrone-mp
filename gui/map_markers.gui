@@ -4542,6 +4542,35 @@ container = {
 	flowcontainer = {
 		visible = "[MapInteractions.HasAnyActiveMapInteraction]"
 
+		expand_building_button = {
+			name = "vqbs_map_build"
+			blockoverride "expand_button_visibility" {
+				visible = "[And(IsMapModeSelected('mm_construction_interaction'), And(Not(GameIsMultiplayer), And(Not(BuildingPotentialMarker.GetBuildingType.GeneratesCombatUnits), IsValid(Building.QueueConstruction))))]"
+			}
+		}
+widget = {
+name = "vqbs_potential_map_build"
+size = { 28 28 }
+visible = "[And(And(And(And(And(IsMapModeSelected('mm_construction_interaction'), Not(GameIsMultiplayer)), Not(BuildingPotentialMarker.GetBuildingType.GeneratesCombatUnits)), Or(State.GetOwner.IsLocalPlayer, GetPlayer.HasForeignInvestmentRights(State.GetOwner))), Not(IsValid(Building.QueueConstruction))), Or(Not(Building.IsValid), IsZero(Building.GetExpansionLevel)))]"
+onmousehierarchyenter = "[GetVariableSystem.Clear('vqbs_map_request')]"
+onmousehierarchyenter = "[GetVariableSystem.Clear('vqbs_map_available')]"
+onmousehierarchyenter = "[GetVariableSystem.Set('vqbs_map_state', BuildingPotentialMarker.AccessState.GetIDString)]"
+onmousehierarchyenter = "[GetVariableSystem.Set('vqbs_map_type', BuildingPotentialMarker.GetBuildingType.GetKey)]"
+onmousehierarchyenter = "[PdxGuiTriggerAllAnimations('vqbs_marker_probe')]"
+onmousehierarchyleave = "[GetVariableSystem.Clear('vqbs_map_available')]"
+onmousehierarchyleave = "[GetVariableSystem.Clear('vqbs_map_request')]"
+button_icon_plus_action = { size = { 100% 100% }
+enabled = "[And(And(GetVariableSystem.HasValue('vqbs_map_state', BuildingPotentialMarker.AccessState.GetIDString), GetVariableSystem.HasValue('vqbs_map_type', BuildingPotentialMarker.GetBuildingType.GetKey)), GetVariableSystem.HasValue('vqbs_map_available', 'yes'))]"
+pressed_modifiers = {
+onalt = "[GetVariableSystem.Set('vqbs_map_alt', 'yes')]"
+ondefault = "[GetVariableSystem.Clear('vqbs_map_alt')]"
+}
+onmousehierarchyleave = "[GetVariableSystem.Clear('vqbs_map_alt')]"
+onclick = "[GetVariableSystem.Set('vqbs_map_request', 'yes')]"
+onclick = "[PdxGuiTriggerAllAnimations('vqbs_marker_request')]"
+}
+}
+
 		background = {
 			using = text_edit_bg
 		}

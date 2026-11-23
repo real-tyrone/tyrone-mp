@@ -1,0 +1,16 @@
+# A queued building's first level and later levels use separate native hooks.
+# Adding children preserves all effects and other subscribers on the parent.
+on_building_built = { on_actions = { v3qt_observed_building_finished } }
+on_building_expanded = { on_actions = { v3qt_observed_building_finished } }
+
+v3qt_observed_building_finished = {
+    trigger = {
+        exists = global_var:v3qt_observer
+        global_var:v3qt_observer = {
+            is_target_in_variable_list = { name = v3qt_buildings target = root }
+        }
+    }
+    effect = {
+        global_var:v3qt_observer = { v3qt_clear_selection = yes }
+    }
+}
