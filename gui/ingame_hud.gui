@@ -1,0 +1,1054 @@
+template information_panels {
+	add_wargoal_panel = {}
+	battle_panel = {}
+	building_details_panel = {}
+	character_panel = {}
+	military_formation_panel = {}
+	ship_panel = {}
+	country_panel = {}
+	society_panel = {}
+	culture_info_panel = {}
+	decisions_panel = {}
+	diplomatic_overview_panel = {}
+	diplomatic_play_panel = {}
+	election_panel = {}
+	front_panel = {}
+	goods_state_panel = {}
+	goods_local_prices_panel = {}
+	goods_usage_panel = {}
+	goods_world_market_panel = {}
+	goods_panel = {}
+	interest_group_panel = {}
+	invasion_panel = {}
+	journal_entry_panel = {}
+	journal_panel = {}
+	market_panel = {}
+	naval_battle_panel = {}
+	panel_military = {}
+	party_panel = {}
+	pop_details_panel = {}
+	pops_overview_panel = {}
+	political_movement_panel = {}
+	power_bloc_panel = {}
+	power_bloc_formation_panel = {}
+	religion_info_panel = {}
+	sea_region_panel = {}
+	state_population_panel = {}
+	states_panel = {}
+	sway_country_panel = {}
+	war_panel = {}
+	budget_panel = {}
+	country_formation_panel = {}
+	companies_panel = {}
+	company_panel = {}
+	construction_panel = {}
+	political_lobby_panel = {}
+	compact_building_browser_panel = {}
+	countries_panel = {}
+	world_market_panel = {}
+	treaty_panel = {}
+	strait_panel = {}
+	strategic_region_panel = {}
+}
+
+template information_panels_fullscreens {
+	politics_panel = {}
+	politics_panel_change_law = {}
+	tech_tree_panel = {}
+	pop_browser_panel = {}
+	building_browser_panel = {}
+	treaty_draft_panel = {}
+}
+
+template map_list_panels {
+	empty_map_list_panel = {}
+	default_map_list_panel = {}
+	build_building_map_list_panel = {}
+	colony_map_list_panel = {}
+	cossack_host_map_list_panel = {}
+	diplo_action_map_list_panel = {}
+	diplo_action_rivalry_map_list_panel = {}
+	treaty_article_map_list_panel = {}
+	decree_map_list_panel = {}
+	markets_map_list_panel = {}
+	power_blocs_map_list_panel = {}
+	power_bloc_invitation_map_list_panel = {}
+	strategic_regions_map_list_panel = {}
+	harvest_condition_areas_map_list_panel = {}
+	interest_groups_map_list_panel = {}
+	countries_map_list_panel = {}
+	countries_ongoing_diplomatic_play_map_list_panel = {}
+	country_attitude_map_list_panel = {}
+	country_relations_map_list_panel = {}
+	country_infamy_map_list_panel = {}
+	country_mass_migration_pull_list_panel = {}
+	countries_military_map_list_panel = {}
+	state_map_list_panel = {}
+	state_population_map_list_panel = {}
+	state_production_map_list_panel = {}
+	state_gdp_map_list_panel = {}
+	state_gdp_nationally_map_list_panel = {}
+	state_gdp_ownership_ratio_map_list_panel = {}
+	state_standard_of_living_map_list_panel = {}
+	state_radicals_map_list_panel = {}
+	state_loyalists_map_list_panel = {}
+	state_migration_pull_list_panel = {}
+	state_mass_migration_pull_list_panel = {}
+	state_migration_list_panel = {}
+	state_literacy_map_list_panel = {}
+	state_pollution_map_list_panel = {}
+	state_obstinance_map_list_panel = {}
+	state_state_value_map_list_panel = {}
+	state_state_infamy_map_list_panel = {}
+	state_culture_map_list_panel = {}
+	state_religion_map_list_panel = {}
+	state_starvation_map_list_panel = {}
+	activate_conscription_center_map_list_panel = {}
+	military_formation_map_list_panel = {}
+	military_formation_set_strategic_objective_map_list_panel = {}
+	military_formation_deploy_map_list_panel = {}
+}
+
+widget = {
+	size = { 100% 100% }
+	name = "ingame_hud"
+	layer = "layer_ingame_hud"
+	ignore_in_debug_draw = yes
+
+	pause_border = {}
+
+	# fullscreens
+	using = information_panels_fullscreens
+
+	# vbox with things that should be reduced in size on Y-axis when opening the lens options
+	vbox = {
+		layoutpolicy_horizontal = expanding
+		layoutpolicy_vertical = expanding
+		margin_top = 85 #margin topbar
+
+		widget = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			ignore_in_debug_draw = yes
+
+			# lens toolbar
+			lens_toolbar = {
+				parentanchor = bottom|hcenter
+			}
+
+			hbox = {
+				layoutpolicy_horizontal = expanding
+				layoutpolicy_vertical = expanding
+				name = "message_feed_widget"
+
+				# sidepanels
+				using = information_panels
+				using = map_list_panels
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					ignore_in_debug_draw = yes
+				}
+
+				# ultra-wide notifications feed
+				vbox = {
+					using = half_and_fullscreen_hide
+					layoutpolicy_horizontal = preferred
+					layoutpolicy_vertical = expanding
+					margin_top = 70 #margin construction info
+
+					widget = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						ignore_in_debug_draw = yes
+					}
+
+					message_feed_widget = {
+						visible = "[And(And( And( Not( IsPauseMenuShown ), Not( IsGameOverScreenShown )), GetMetaPlayer.GetPlayedOrObservedCountry.IsValid), MessageFeedHandler.ShowNotificationFeedNextToOutliner)]"
+					}
+				}
+
+				# outliner / notifications
+				vbox = {
+					visible = "[And( And( Not( IsPauseMenuShown ), Not( IsGameOverScreenShown )), GetMetaPlayer.GetPlayedOrObservedCountry.IsValid)]"
+					layoutpolicy_horizontal = preferred
+					layoutpolicy_vertical = expanding
+					margin_top = 70 #margin construction info
+
+					vbox = {
+						layoutpolicy_horizontal = expanding
+						layoutpolicy_vertical = expanding
+						expand = {}
+
+						vbox = {
+							layoutpolicy_horizontal = expanding
+							layoutpolicy_vertical = expanding
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = preferred
+								expand = {}
+
+								outliner_wars = {
+									using = half_and_fullscreen_hide
+								}
+							}
+
+							hbox = {
+								layoutpolicy_horizontal = expanding
+								layoutpolicy_vertical = expanding
+								expand = {}
+
+								outliner = {
+									size = { 360 0 }
+									layoutpolicy_vertical = expanding
+								}
+							}
+						}
+					}
+					
+					message_feed_widget = {
+						visible = "[Not(MessageFeedHandler.ShowNotificationFeedNextToOutliner)]"
+					}
+				}
+
+			}
+		}
+
+		# lens tabs / actions
+		lens_option_menu = {
+			using = sidebar_margin
+		}
+	}
+
+	# topbar / alerts / timemanip
+	vbox = {
+		hbox = {
+			layoutpolicy_horizontal = preferred
+			layoutpolicy_vertical = preferred
+
+			vbox = {
+				layoutpolicy_horizontal = preferred
+				layoutpolicy_vertical = preferred
+
+				datacontext = "[AccessMetaPlayer.AccessPlayedOrObservedCountry]"
+
+				# Has navy
+				topbar = {
+					visible = "[Not(Country.IsLandlocked)]"
+				}
+
+				# Landlocked
+				topbar = {
+					visible = "[Country.IsLandlocked]"
+
+					blockoverride "supply_ships_info" {}
+
+					blockoverride "spacing" {
+						spacing = 37
+					}
+				}
+
+				widget = {
+					layoutpolicy_horizontal = expanding
+					layoutpolicy_vertical = expanding
+					ignore_in_debug_draw = yes
+				}
+			}
+			topfrontend = {}
+			timemanip = {}
+		}
+		widget = {
+			layoutpolicy_horizontal = expanding
+			layoutpolicy_vertical = expanding
+			ignore_in_debug_draw = yes
+		}
+	}
+
+	# Topbar rank icon
+	topbar_rank = {}
+
+	# left sidebar buttons
+	information_panel_bar = {}
+
+	widget = {
+        size = { 0 0 }
+        alwaystransparent = yes
+        hbox = {
+            size = { 0 0 }
+            datamodel = "[DataModelFirst(GetLegitimacyLevels, Select_int32(And(IsInGame, And(GetPlayer.IsValid, GetPlayer.IsLocalPlayer)), '(int32)1', '(int32)0'))]"
+            item = { widget = {
+name = "vqbs_priority_controller"
+size = { 0 0 }
+alwaystransparent = yes
+widget = { size = { 0 0 } alwaystransparent = yes
+state = {
+name = vqbs_settle_single
+trigger_when = "[And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1'))))]"
+duration = 0.45
+on_finish = "[GetVariableSystem.SetIf('vqbs_single_settled', 'yes', And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1')))))]"
+}
+}
+widget = { size = { 0 0 } alwaystransparent = yes
+state = {
+name = vqbs_settle_five
+trigger_when = "[And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)5'))))]"
+duration = 0.45
+on_finish = "[GetVariableSystem.SetIf('vqbs_five_settled', 'yes', And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)5')))))]"
+}
+}
+state = {
+name = vqbs_received_1
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1')))), GetVariableSystem.HasValue('vqbs_capacity', '1'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_2', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_3', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_4', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_5', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_6', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '1'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '1')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_2
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)2')))), GetVariableSystem.HasValue('vqbs_capacity', '2'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_3', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_4', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_5', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_6', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '2'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '2')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_3
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)3')))), GetVariableSystem.HasValue('vqbs_capacity', '3'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_4', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_5', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_6', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '3'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '3')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_4
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)4')))), GetVariableSystem.HasValue('vqbs_capacity', '4'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_5', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_6', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '4'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '4')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_5
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)5')))), Or(GetVariableSystem.HasValue('vqbs_capacity', '5'), GetVariableSystem.HasValue('vqbs_five_settled', 'yes')))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_6', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '5'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '5')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_6
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)6')))), GetVariableSystem.HasValue('vqbs_capacity', '6'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_6')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_7', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '6'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '6')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_7
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)7')))), GetVariableSystem.HasValue('vqbs_capacity', '7'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_6')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_7')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_8', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '7'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '7')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_8
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)8')))), GetVariableSystem.HasValue('vqbs_capacity', '8'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_6')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_7')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_8')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_9', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '8'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '8')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_9
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)9')))), GetVariableSystem.HasValue('vqbs_capacity', '9'))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_6')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_7')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_8')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_9')]"
+on_start = "[GetVariableSystem.Set('vqbs_matched_10', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '9'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '9')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+state = {
+name = vqbs_received_10
+trigger_when = "[And(GetVariableSystem.HasValue('vqbs_phase', 'wait'), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)10'))))]"
+on_start = "[GetVariableSystem.Clear('vqbs_base_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_boundary_ready')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_1')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_2')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_3')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_4')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_5')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_6')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_7')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_8')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_9')]"
+on_start = "[GetVariableSystem.Clear('vqbs_matched_10')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_0', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_1', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_2', 'no')]"
+on_start = "[GetVariableSystem.Set('vqbs_count_bit_3', 'yes')]"
+on_start = "[GetVariableSystem.Set('vqbs_capped', Select_CString(GetVariableSystem.HasValue('vqbs_capacity', '10'), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_batch', '10')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'verify')]"
+}
+hbox = {
+        datamodel = "[DataModelFirst(AccessPlayer.AccessGovernmentConstructionQueue, Min_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_capture_before
+on_start = "[GetVariableSystem.Set('vqbs_old_head', ConstructionQueueElement.GetBuilding.GetIDString)]"
+on_start = "[GetVariableSystem.Set('vqbs_old_head_active', Select_CString(ConstructionQueueElement.IsCurrentlyUnderConstruction, 'yes', 'no'))]"
+}
+state = {
+name = vqbs_capture_base
+trigger_when = "[And(And(And(And(And(GetVariableSystem.HasValue('vqbs_phase', 'verify'), And(GetVariableSystem.HasValue('vqbs_old_head', ConstructionQueueElement.GetBuilding.GetIDString), GetVariableSystem.HasValue('vqbs_old_head_active', Select_CString(ConstructionQueueElement.IsCurrentlyUnderConstruction, 'yes', 'no')))), EqualTo_int32(ConstructionQueueElement.GetQueueNumber, '(int32)1')), GreaterThanOrEqualTo_int32(ConstructionQueueElement.GetIndex, '(int32)0')), LessThan_int32(ConstructionQueueElement.GetIndex, '(int32)65536')), Not(GetVariableSystem.HasValue('vqbs_base_ready', 'yes')))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_0', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)1')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_1', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)2')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_2', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)4')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_3', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)8')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_4', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)16')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_5', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)32')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_6', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)64')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_7', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)128')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_8', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)256')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_9', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)512')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_10', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)1024')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_11', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)2048')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_12', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)4096')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_13', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)8192')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_14', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)16384')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_bit_15', Select_CString(IsOdd_int32(Divide_int32(ConstructionQueueElement.GetIndex, '(int32)32768')), 'yes', 'no'))]"
+on_start = "[GetVariableSystem.Set('vqbs_base_ready', 'yes')]"
+}
+state = {
+name = vqbs_changed_head
+trigger_when = "[And(GetVariableSystem.HasValue('vqbs_phase', 'verify'), Not(And(GetVariableSystem.HasValue('vqbs_old_head', ConstructionQueueElement.GetBuilding.GetIDString), GetVariableSystem.HasValue('vqbs_old_head_active', Select_CString(ConstructionQueueElement.IsCurrentlyUnderConstruction, 'yes', 'no')))))]"
+on_start = "[GetVariableSystem.Clear('vqbs_phase')]"
+on_start = "[GetVariableSystem.Clear('vqbs_batch')]"
+}
+        } }
+    }
+hbox = {
+        datamodel = "[DataModelLast(AccessPlayer.AccessGovernmentConstructionQueue, Min_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_capture_before
+on_start = "[GetVariableSystem.Set('vqbs_old_tail', ConstructionQueueElement.GetBuilding.GetIDString)]"
+}
+        } }
+    }
+hbox = {
+        datamodel = "[DataModelSubSpan(AccessPlayer.AccessGovernmentConstructionQueue, Max_int32('(int32)0', Subtract_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0')))), '(int32)1')), Select_int32(GetVariableSystem.HasValue('vqbs_phase', 'verify'), Min_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), '(int32)1'), '(int32)0'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_boundary
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'verify'), GetVariableSystem.HasValue('vqbs_old_tail', ConstructionQueueElement.GetBuilding.GetIDString)), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(ConstructionQueueElement.GetQueueNumber)))]"
+on_start = "[GetVariableSystem.Set('vqbs_boundary_ready', 'yes')]"
+}
+        } }
+    }
+state = {
+name = vqbs_all_verified
+trigger_when = "[And(And(And(GetVariableSystem.HasValue('vqbs_phase', 'verify'), GetVariableSystem.HasValue('vqbs_base_ready', 'yes')), GetVariableSystem.HasValue('vqbs_boundary_ready', 'yes')), And(And(And(And(And(And(And(And(And(GetVariableSystem.HasValue('vqbs_matched_1', 'yes'), GetVariableSystem.HasValue('vqbs_matched_2', 'yes')), GetVariableSystem.HasValue('vqbs_matched_3', 'yes')), GetVariableSystem.HasValue('vqbs_matched_4', 'yes')), GetVariableSystem.HasValue('vqbs_matched_5', 'yes')), GetVariableSystem.HasValue('vqbs_matched_6', 'yes')), GetVariableSystem.HasValue('vqbs_matched_7', 'yes')), GetVariableSystem.HasValue('vqbs_matched_8', 'yes')), GetVariableSystem.HasValue('vqbs_matched_9', 'yes')), GetVariableSystem.HasValue('vqbs_matched_10', 'yes')))]"
+on_start = "[GetVariableSystem.Set('vqbs_next', '1')]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'send')]"
+}
+hbox = {
+        datamodel = "[DataModelLast(AccessPlayer.AccessGovernmentConstructionQueue, Select_int32(GetVariableSystem.Exists('vqbs_batch'), Min_int32(Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))), GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue)), '(int32)0'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_mark_match
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'verify'), And(And(And(And(ConstructionQueueElement.GetInvestorCountry.IsLocalPlayer, And(GetVariableSystem.HasValue('vqbs_target_state', ConstructionQueueElement.AccessBuilding.AccessState.GetIDString), GetVariableSystem.HasValue('vqbs_target_type', ConstructionQueueElement.AccessBuilding.GetBuildingType.GetKey))), GetVariableSystem.HasValue('vqbs_old_levels', ToString_int32(Subtract_int32(ConstructionQueueElement.GetBuilding.GetExpansionLevelsInQueue, Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))), Or(Not(GetVariableSystem.HasValue('vqbs_capped', 'yes')), And(And(GetVariableSystem.HasValue('vqbs_old_max', ToString_int32(ConstructionQueueElement.AccessBuilding.GetState.GetMaxPotentialFor(ConstructionQueueElement.AccessBuilding.Self))), GetVariableSystem.HasValue('vqbs_old_built', ToString_int32(ConstructionQueueElement.AccessBuilding.GetExpansionLevel))), EqualTo_int32(Max_int32('(int32)0', Subtract_int32(ConstructionQueueElement.AccessBuilding.GetState.GetMaxPotentialFor(ConstructionQueueElement.AccessBuilding.Self), Add_int32(ConstructionQueueElement.AccessBuilding.GetExpansionLevel, ConstructionQueueElement.AccessBuilding.GetExpansionLevelsInQueue))), '(int32)0'))))), Not(GetVariableSystem.Exists(Concatenate('vqbs_matched_', ToString_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))))))]"
+on_start = "[GetVariableSystem.Set(Concatenate('vqbs_matched_', ToString_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))), 'yes')]"
+}
+state = {
+name = vqbs_send_one
+trigger_when = "[And(And(GetVariableSystem.HasValue('vqbs_phase', 'send'), GetVariableSystem.HasValue('vqbs_next', ToString_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0')))))))), And(And(And(And(ConstructionQueueElement.GetInvestorCountry.IsLocalPlayer, And(GetVariableSystem.HasValue('vqbs_target_state', ConstructionQueueElement.AccessBuilding.AccessState.GetIDString), GetVariableSystem.HasValue('vqbs_target_type', ConstructionQueueElement.AccessBuilding.GetBuildingType.GetKey))), GetVariableSystem.HasValue('vqbs_old_levels', ToString_int32(Subtract_int32(ConstructionQueueElement.GetBuilding.GetExpansionLevelsInQueue, Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))), GetVariableSystem.HasValue('vqbs_old_size', ToString_int32(Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))))), Or(Not(GetVariableSystem.HasValue('vqbs_capped', 'yes')), And(And(GetVariableSystem.HasValue('vqbs_old_max', ToString_int32(ConstructionQueueElement.AccessBuilding.GetState.GetMaxPotentialFor(ConstructionQueueElement.AccessBuilding.Self))), GetVariableSystem.HasValue('vqbs_old_built', ToString_int32(ConstructionQueueElement.AccessBuilding.GetExpansionLevel))), EqualTo_int32(Max_int32('(int32)0', Subtract_int32(ConstructionQueueElement.AccessBuilding.GetState.GetMaxPotentialFor(ConstructionQueueElement.AccessBuilding.Self), Add_int32(ConstructionQueueElement.AccessBuilding.GetExpansionLevel, ConstructionQueueElement.AccessBuilding.GetExpansionLevelsInQueue))), '(int32)0')))))]"
+on_start = "[PdxGuiWidget.TriggerAnimation(Select_CString(IsValid(ConstructionQueueElement.MoveToIndex(Add_int32(Add_int32(Add_int32(Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_3', 'yes'), '(int32)8', '(int32)0'))), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_4', 'yes'), '(int32)16', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_5', 'yes'), '(int32)32', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_6', 'yes'), '(int32)64', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_7', 'yes'), '(int32)128', '(int32)0')))), Add_int32(Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_8', 'yes'), '(int32)256', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_9', 'yes'), '(int32)512', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_10', 'yes'), '(int32)1024', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_11', 'yes'), '(int32)2048', '(int32)0'))), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_12', 'yes'), '(int32)4096', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_13', 'yes'), '(int32)8192', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_14', 'yes'), '(int32)16384', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_15', 'yes'), '(int32)32768', '(int32)0'))))), Subtract_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))), '(int32)1')))), 'vqbs_send_valid', 'vqbs_send_blocked'))]"
+}
+state = {
+name = vqbs_send_valid
+on_start = "[GetVariableSystem.Set('vqbs_phase', 'issuing')]"
+on_start = "[GetVariableSystem.Set('vqbs_after_send', Select_CString(EqualTo_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0')))), 'finished', 'send'))]"
+on_start = "[GetVariableSystem.Set('vqbs_next', ToString_int32(Add_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))), '(int32)1')))]"
+on_start = "[Execute(ConstructionQueueElement.MoveToIndex(Add_int32(Add_int32(Add_int32(Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_3', 'yes'), '(int32)8', '(int32)0'))), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_4', 'yes'), '(int32)16', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_5', 'yes'), '(int32)32', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_6', 'yes'), '(int32)64', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_7', 'yes'), '(int32)128', '(int32)0')))), Add_int32(Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_8', 'yes'), '(int32)256', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_9', 'yes'), '(int32)512', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_10', 'yes'), '(int32)1024', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_11', 'yes'), '(int32)2048', '(int32)0'))), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_12', 'yes'), '(int32)4096', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_13', 'yes'), '(int32)8192', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_bit_14', 'yes'), '(int32)16384', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_bit_15', 'yes'), '(int32)32768', '(int32)0'))))), Subtract_int32(Subtract_int32(ConstructionQueueElement.GetQueueNumber, Subtract_int32(GetDataModelSize(AccessPlayer.AccessGovernmentConstructionQueue), Add_int32(Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_0', 'yes'), '(int32)1', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_1', 'yes'), '(int32)2', '(int32)0')), Add_int32(Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_2', 'yes'), '(int32)4', '(int32)0'), Select_int32(GetVariableSystem.HasValue('vqbs_count_bit_3', 'yes'), '(int32)8', '(int32)0'))))), '(int32)1'))))]"
+on_start = "[GetVariableSystem.Set('vqbs_phase', GetVariableSystem.Get('vqbs_after_send'))]"
+}
+state = {
+name = vqbs_send_blocked
+on_start = "[GetVariableSystem.Clear('vqbs_phase')]"
+on_start = "[GetVariableSystem.Clear('vqbs_batch')]"
+}
+        } }
+    }
+state = {
+name = vqbs_finish
+trigger_when = "[GetVariableSystem.HasValue('vqbs_phase', 'finished')]"
+on_start = "[GetVariableSystem.Clear('vqbs_phase')]"
+on_start = "[GetVariableSystem.Clear('vqbs_batch')]"
+}
+hbox = {
+        datamodel = "[DataModelFirst(GetLegitimacyLevels, Select_int32(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'a')), '(int32)1', '(int32)0'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_watch_start_a
+trigger_when = "[And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'a'))]"
+on_start = "[GetVariableSystem.Set('vqbs_watch_progress_a', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))]"
+on_start = "[PdxGuiWidget.TriggerAnimation('vqbs_deadline_a')]"
+}
+state = {
+name = vqbs_deadline_a
+duration = 4
+on_finish = "[GetVariableSystem.Clear(Select_CString(And(And(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'a')), GetVariableSystem.HasValue('vqbs_watch_progress_a', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))), Not(GetVariableSystem.HasValue('vqbs_phase', 'finished'))), 'vqbs_batch', 'vqbs_inactive_watch'))]"
+on_finish = "[GetVariableSystem.Clear(Select_CString(And(And(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'a')), GetVariableSystem.HasValue('vqbs_watch_progress_a', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))), Not(GetVariableSystem.HasValue('vqbs_phase', 'finished'))), 'vqbs_phase', 'vqbs_inactive_watch'))]"
+on_finish = "[PdxGuiWidget.TriggerAnimation(Select_CString(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'a')), 'vqbs_watch_start_a', 'vqbs_watch_idle_a'))]"
+}
+state = { name = vqbs_watch_idle_a alpha = 1 }
+        } }
+    }
+hbox = {
+        datamodel = "[DataModelFirst(GetLegitimacyLevels, Select_int32(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'b')), '(int32)1', '(int32)0'))]"
+        item = { widget = {
+            size = { 0 0 }
+            alwaystransparent = yes
+            state = {
+name = vqbs_watch_start_b
+trigger_when = "[And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'b'))]"
+on_start = "[GetVariableSystem.Set('vqbs_watch_progress_b', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))]"
+on_start = "[PdxGuiWidget.TriggerAnimation('vqbs_deadline_b')]"
+}
+state = {
+name = vqbs_deadline_b
+duration = 4
+on_finish = "[GetVariableSystem.Clear(Select_CString(And(And(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'b')), GetVariableSystem.HasValue('vqbs_watch_progress_b', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))), Not(GetVariableSystem.HasValue('vqbs_phase', 'finished'))), 'vqbs_batch', 'vqbs_inactive_watch'))]"
+on_finish = "[GetVariableSystem.Clear(Select_CString(And(And(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'b')), GetVariableSystem.HasValue('vqbs_watch_progress_b', Concatenate(Concatenate(GetVariableSystem.Get('vqbs_phase'), ':'), GetVariableSystem.Get('vqbs_next')))), Not(GetVariableSystem.HasValue('vqbs_phase', 'finished'))), 'vqbs_phase', 'vqbs_inactive_watch'))]"
+on_finish = "[PdxGuiWidget.TriggerAnimation(Select_CString(And(GetVariableSystem.Exists('vqbs_phase'), GetVariableSystem.HasValue('vqbs_watch_slot', 'b')), 'vqbs_watch_start_b', 'vqbs_watch_idle_b'))]"
+}
+state = { name = vqbs_watch_idle_b alpha = 1 }
+        } }
+    }
+state = { name = _hide
+on_start = "[GetVariableSystem.Clear('vqbs_phase')]"
+on_start = "[GetVariableSystem.Clear('vqbs_batch')]"
+on_start = "[GetVariableSystem.Clear('vqbs_alt')]"
+}
+state = { name = _show
+on_start = "[GetVariableSystem.Clear('vqbs_phase')]"
+on_start = "[GetVariableSystem.Clear('vqbs_batch')]"
+on_start = "[GetVariableSystem.Clear('vqbs_alt')]"
+}
+} }
+        }
+    }
+
+	# misc
+	container = {
+		parentanchor = hcenter
+		position = { 0 130 }
+		using = hud_visibility
+		using = default_fade_in_out
+
+		### SAVING GAME TEXT
+		textbox = {
+			visible = "[IsSaving]"
+			parentanchor = hcenter
+			text = "SAVING_GAME"
+			align = right|nobaseline
+			autoresize = yes
+			using = fontsize_large
+			margin = { 16 8 }
+
+			background = {
+				using = paper_bg
+			}
+		}
+	}
+
+	# game start animation effect (should continue from the state that the animation from lobby ends in)
+	widget = {
+		size = { 100% 100% }
+		parentanchor = center
+		visible = "[IsInGame]"
+
+		state = {
+			trigger_on_create = yes
+			name = _show
+
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_clouds')]"
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_glow')]"
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_menu_logo_v_start')]"
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_logo')]"
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_country')]"
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_country_sound')]"
+
+			on_start = "[PdxGuiTriggerAllAnimations('game_start_animation_effect')]" #shine on golden HUD elements after clouds vanished
+
+			duration = 3
+			on_finish = "[PdxGuiWidget.Hide]"
+			on_finish = "[PdxGuiTriggerAllAnimations('game_start_menu_animation_reset')]"
+		}
+
+		state = {
+			name = game_start_animation_country_sound
+			start_sound = {
+				soundeffect = "event:/SFX/DLC/1.3_ip1/UI/new_country_start"
+			}
+		}
+
+		### CLOUDS
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/animation/cloud_backdrop.dds"
+			parentanchor = center
+
+			state = {
+				name = game_start_animation_clouds
+				next = game_start_animation_clouds2
+
+				scale = 1.1
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_clouds2
+
+				duration = 3
+
+				scale = 1.3
+				alpha = 0
+			}
+		}
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/animation/cloud_01.dds"
+			parentanchor = center
+
+			state = {
+				name = game_start_animation_clouds
+				next = game_start_animation_clouds2
+
+				scale = 1.2
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_clouds2
+
+				duration = 3
+
+				scale = 1.6
+				alpha = 0
+			}
+		}
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/animation/cloud_02.dds"
+			parentanchor = center
+
+			state = {
+				name = game_start_animation_clouds
+				next = game_start_animation_clouds2
+
+				scale = 1.3
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_clouds2
+
+				duration = 3
+
+				scale = 2
+				alpha = 0
+			}
+		}
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/animation/cloud_03.dds"
+			parentanchor = center
+
+			state = {
+				name = game_start_animation_clouds
+				next = game_start_animation_clouds2
+
+				scale = 1.4
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_clouds2
+
+				duration = 3
+
+				scale = 2.5
+				alpha = 0
+			}
+		}
+		icon = {
+			size = { 100% 100% }
+			texture = "gfx/interface/animation/cloud_04.dds"
+			parentanchor = center
+
+			state = {
+				name = game_start_animation_clouds
+				next = game_start_animation_clouds2
+
+				scale = 1.5
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_clouds2
+
+				duration = 3
+
+				scale = 3
+				alpha = 0
+			}
+		}
+
+		### GLOW EFFECT
+		icon = {
+			using = rotate_glow_animation_02
+			alpha = 0
+
+			state = {
+				name = game_start_animation_glow
+				next = game_start_animation_glow2
+
+				alpha = 0
+			}
+			state = {
+				name = game_start_animation_glow2
+				next = game_start_animation_glow3
+
+				duration = 1
+				using = Animation_Curve_Default
+
+				alpha = 1
+			}
+			state = {
+				name = game_start_animation_glow3
+				delay = 1
+
+				duration = 1
+				using = Animation_Curve_Default
+
+				alpha = 0
+			}
+		}
+
+		### LOGO
+		widget = {
+			size = { 800 180 }
+			parentanchor = center
+			position = { 0 -205 }
+
+			background = {
+				using = default_header_bg
+				alpha = 0.95
+
+				modify_texture = {
+					texture = "gfx/interface/masks/fade_horizontal_center.dds"
+					blend_mode = alphamultiply
+				}
+			}
+
+			state = {
+				name = game_start_animation_logo
+				next = game_start_animation_logo2
+
+				position_x = 1500
+			}
+			state = {
+				name = game_start_animation_logo2
+				next = game_start_animation_logo3
+
+				duration = 0.4
+				using = Animation_Curve_Default
+
+				position_x = -15
+			}
+			state = {
+				name = game_start_animation_logo3
+				next = game_start_animation_logo4
+
+				duration = 0.1
+				using = Animation_Curve_Default
+
+				position_x = 0
+			}
+			state = {
+				name = game_start_animation_logo4
+				delay = 2
+
+				duration = 0.5
+				using = Animation_Curve_Default
+
+				position_x = -1500
+			}
+
+			v3_logo_animation_game_start = {
+				parentanchor = center
+			}
+		}
+
+		### FLAG + COUNTRY NAME
+		flowcontainer = {
+			direction = vertical
+			datacontext = "[GetMetaPlayer.GetPlayedOrObservedCountry]"
+			parentanchor = center
+			spacing = 20
+			position = { -1500 70 }
+
+			margin = { 150 45 }
+			margin_bottom = 70
+
+			background = {
+				using = default_background
+				color = "[GetMetaPlayer.GetPlayedOrObservedCountry.GetMapColor]"
+				alpha = 0.85
+
+				modify_texture = {
+					using = fancy_pattern_2
+				}
+
+				modify_texture = {
+					texture = "gfx/interface/masks/fade_horizontal_center.dds"
+					blend_mode = alphamultiply
+					alpha = 0.3
+				}
+				modify_texture = {
+					texture = "gfx/interface/animation/start_game_effect_frame_mask.dds"
+					texture_density = 2
+					spriteType = Corneredstretched
+					spriteborder = { 510 0 }
+					spriteborder_bottom = 470
+					spriteborder_top = 230
+					blend_mode = alphamultiply
+				}
+			}
+
+			background = {
+				texture = "gfx/interface/animation/start_game_effect_frame.dds"
+				texture_density = 2
+				spriteType = Corneredstretched
+				spriteborder = { 510 0 }
+				spriteborder_bottom = 470
+				spriteborder_top = 230
+			}
+
+			state = {
+				name = game_start_animation_country
+				next = game_start_animation_country2
+
+				position_x = -1500
+			}
+			state = {
+				name = game_start_animation_country2
+				next = game_start_animation_country3
+
+				duration = 0.4
+				using = Animation_Curve_Default
+
+				position_x = 15
+			}
+			state = {
+				name = game_start_animation_country3
+				next = game_start_animation_country4
+
+				duration = 0.1
+				using = Animation_Curve_Default
+
+				position_x = 0
+			}
+			state = {
+				name = game_start_animation_country4
+				delay = 2
+
+				duration = 0.5
+				using = Animation_Curve_Default
+
+				position_x = 1500
+			}
+
+			widget = {
+				size = { 230 180 }
+				parentanchor = hcenter
+
+				background = {
+					using = blurry_dark_background
+					margin = { 130 80 }
+				}
+
+				flag_3d_animated = {
+					size = { 640 360 }
+					scale = 0.5
+				}
+
+				observer_mode_overlay = {}
+
+			}
+
+			textbox = {
+				visible = "[Country.IsValid]"
+				parentanchor = hcenter
+				raw_text = "#BOLD [Country.GetNameNoFormatting]#!"
+				autoresize = yes
+				align = nobaseline
+				fontsize = 80
+				elide = right
+				maximumsize = { 800 -1 }
+				using = header_font_fancy
+			}
+		}
+
+		### clickthrough blocker (you should not be able to click anything until the animation has finished (3 seconds))
+		widget = {
+			size = { 100% 100% }
+			using = clickthrough_blocker
+		}
+	}
+}
