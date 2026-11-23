@@ -1,4 +1,4 @@
-﻿### American Exceptionalism
+### American Exceptionalism
 
 je_american_exceptionalism_button = {
 	name = "je_american_exceptionalism_button"
@@ -553,3 +553,201 @@ je_ostend_spa_conclude_negotiations_button = {
 	}
 }
 
+
+tyr_monroe_withdraw = {
+ name = tyr_monroe_withdraw
+ desc = tyr_monroe_withdraw_desc
+ visible = { tyr_monroe_gbr = yes }
+ possible = {
+  game_date >= 1846.1.1
+  custom_tooltip = { text = tyr_monroe_not_withdrawn NOT = { has_global_variable = tyr_monroe_british_withdrawal } }
+  any_country = { tyr_monroe_usa = yes }
+ }
+ effect = {
+  custom_tooltip = tyr_monroe_withdraw_tt
+  hidden_effect = { set_global_variable = tyr_monroe_british_withdrawal }
+  add_modifier = { name = tyr_monroe_withdrawal_penalty years = 5 }
+  hidden_effect = { tyr_monroe_update = yes }
+ }
+ ai_chance = { base = 0 }
+}
+
+tyr_us_action_jingoist = {
+ name = tyr_us_action_jingoist
+ desc = tyr_us_action_jingoist_desc
+ visible = { tyr_monroe_usa = yes }
+ possible = {
+  ruler = { has_ideology = ideology:ideology_jingoist_leader }
+  custom_tooltip = { text = tyr_us_cd_jingoist_tt NOT = { has_variable = tyr_us_cd_jingoist } }
+  custom_tooltip = { text = tyr_us_bar_room_up_tt var:america_interventionism_points_var < 10 }
+ }
+ effect = {
+  custom_tooltip = tyr_us_gain_point_tt
+  hidden_effect = { change_variable = { name = america_interventionism_points_var add = 1 } set_variable = { name = tyr_us_cd_jingoist years = 10 } }
+  add_modifier = { name = tyr_us_cost_jingoist years = 5 }
+ }
+ ai_chance = { base = 10 }
+}
+
+tyr_us_action_market_liberal = {
+ name = tyr_us_action_market_liberal
+ desc = tyr_us_action_market_liberal_desc
+ visible = { tyr_monroe_usa = yes }
+ possible = {
+  ruler = { has_ideology = ideology:ideology_market_liberal }
+  custom_tooltip = { text = tyr_us_cd_market_liberal_tt NOT = { has_variable = tyr_us_cd_market_liberal } }
+  custom_tooltip = { text = tyr_us_bar_room_up_tt var:america_interventionism_points_var < 10 }
+ }
+ effect = {
+  custom_tooltip = tyr_us_gain_point_tt
+  hidden_effect = { change_variable = { name = america_interventionism_points_var add = 1 } set_variable = { name = tyr_us_cd_market_liberal years = 10 } }
+  add_modifier = { name = tyr_us_cost_market_liberal years = 5 }
+ }
+ ai_chance = { base = 10 }
+}
+
+tyr_us_action_pacifist = {
+ name = tyr_us_action_pacifist
+ desc = tyr_us_action_pacifist_desc
+ visible = { tyr_monroe_usa = yes }
+ possible = {
+  ruler = { has_ideology = ideology:ideology_pacifist }
+  custom_tooltip = { text = tyr_us_cd_pacifist_tt NOT = { has_variable = tyr_us_cd_pacifist } }
+  custom_tooltip = { text = tyr_us_bar_room_down_tt var:america_interventionism_points_var > 1 }
+ }
+ effect = {
+  custom_tooltip = tyr_us_lose_point_tt
+  hidden_effect = { change_variable = { name = america_interventionism_points_var add = -1 } set_variable = { name = tyr_us_cd_pacifist years = 10 } }
+  add_modifier = { name = tyr_us_cost_pacifist years = 5 }
+ }
+ ai_chance = { base = 0 }
+}
+
+tyr_us_action_protectionist = {
+ name = tyr_us_action_protectionist
+ desc = tyr_us_action_protectionist_desc
+ visible = { tyr_monroe_usa = yes }
+ possible = {
+  ruler = { has_ideology = ideology:ideology_protectionist }
+  custom_tooltip = { text = tyr_us_cd_protectionist_tt NOT = { has_variable = tyr_us_cd_protectionist } }
+  custom_tooltip = { text = tyr_us_bar_room_down_tt var:america_interventionism_points_var > 1 }
+ }
+ effect = {
+  custom_tooltip = tyr_us_lose_point_tt
+  hidden_effect = { change_variable = { name = america_interventionism_points_var add = -1 } set_variable = { name = tyr_us_cd_protectionist years = 10 } }
+  add_modifier = { name = tyr_us_cost_protectionist years = 5 }
+ }
+ ai_chance = { base = 0 }
+}
+
+tyr_us_open_japan = {
+ name = tyr_us_open_japan
+ desc = tyr_us_open_japan_desc
+ visible = { always = yes }
+ possible = {
+  exists = c:JAP
+  c:JAP = { has_law_or_variant = law_type:law_isolationism }
+  any_scope_ship = { tyr_us_ship_is_capital = yes count >= 25 }
+  naval_power_projection > c:JAP.naval_power_projection
+  has_strategic_region_interest_tier = { strategic_region = sr:region_northeast_asia value >= 3 }
+  is_at_war = no
+  NOT = { has_truce_with = c:JAP }
+  custom_tooltip = { text = tyr_us_japan_no_pending_tt NOT = { has_variable = tyr_us_japan_mission_pending } }
+ }
+ effect = {
+  hidden_effect = { set_variable = { name = tyr_us_japan_mission_pending days = 30 } save_scope_as = tyr_us_asian_sender }
+  c:JAP = { trigger_event = { id = tyr_us_asian_markets.1 days = 0 popup = yes } }
+ }
+ ai_chance = { base = 10 }
+}
+
+tyr_us_open_china = {
+ name = tyr_us_open_china
+ desc = tyr_us_open_china_desc
+ visible = { always = yes }
+ possible = {
+  exists = c:CHI
+  c:CHI = { has_law_or_variant = law_type:law_isolationism }
+  any_scope_ship = { tyr_us_ship_is_capital = yes count >= 50 }
+  naval_power_projection > c:CHI.naval_power_projection
+  has_strategic_region_interest_tier = { strategic_region = sr:region_north_china value >= 3 }
+  is_at_war = no
+  NOT = { has_truce_with = c:CHI }
+  custom_tooltip = { text = tyr_us_china_no_pending_tt NOT = { has_variable = tyr_us_china_mission_pending } }
+ }
+ effect = {
+  hidden_effect = { set_variable = { name = tyr_us_china_mission_pending days = 30 } save_scope_as = tyr_us_asian_sender }
+  c:CHI = { trigger_event = { id = tyr_us_asian_markets.2 days = 0 popup = yes } }
+ }
+ ai_chance = { base = 10 }
+}
+
+tyr_us_globalism_annex_mexico = {
+ name = tyr_us_globalism_annex_mexico
+ desc = tyr_us_globalism_annex_mexico_desc
+ visible = { always = yes }
+ possible = {
+  is_at_war = no
+  custom_tooltip = { text = tyr_us_globalism_mexico_annex_unused_tt NOT = { has_variable = tyr_us_globalism_mexico_annexed } }
+  exists = c:MEX
+  c:MEX = { is_subject_of = ROOT tyr_us_puppet_or_lower = yes }
+ }
+ effect = {
+  hidden_effect = { set_variable = tyr_us_globalism_mexico_annexed }
+  change_infamy = 25
+  annex = c:MEX
+ }
+ ai_chance = { base = 100 }
+}
+
+tyr_us_globalism_annex_canada = {
+ name = tyr_us_globalism_annex_canada
+ desc = tyr_us_globalism_annex_canada_desc
+ visible = { always = yes }
+ possible = {
+  is_at_war = no
+  custom_tooltip = { text = tyr_us_globalism_canada_annex_unused_tt NOT = { has_variable = tyr_us_globalism_canada_annexed } }
+  any_subject_or_below = { is_subject_of = ROOT tyr_us_puppet_or_lower = yes capital = { tyr_us_state_in_canada = yes } }
+ }
+ effect = {
+  hidden_effect = { set_variable = tyr_us_globalism_canada_annexed }
+  change_infamy = 25
+  every_subject_or_below = {
+   limit = { is_subject_of = ROOT tyr_us_puppet_or_lower = yes capital = { tyr_us_state_in_canada = yes } }
+   save_scope_as = tyr_us_globalism_annex_target
+   ROOT = { annex = scope:tyr_us_globalism_annex_target }
+  }
+ }
+ ai_chance = { base = 100 }
+}
+
+tyr_monroe_us_withdraw = {
+ name = tyr_monroe_us_withdraw
+ desc = tyr_monroe_us_withdraw_desc
+ visible = { tyr_monroe_usa = yes }
+ possible = { game_date >= 1871.1.1 }
+ effect = {
+  add_modifier = { name = tyr_monroe_withdrawal_penalty years = 5 multiplier = 2 }
+  hidden_effect = {
+   set_global_variable = tyr_monroe_ended
+   every_country = { limit = { has_modifier = tyr_monroe_trade } remove_modifier = tyr_monroe_trade }
+  }
+ }
+ ai_chance = { base = 0 }
+}
+
+tyr_dream_migration = {
+ name = tyr_dream_migration desc = tyr_dream_migration_desc
+ possible = {
+  custom_tooltip = { text = tyr_dream_requires_25_points_tt scope:journal_entry = { "scripted_bar_progress(tyr_dream_bar)" >= 25 } }
+  custom_tooltip = { text = tyr_dream_has_migration_target_tt any_country = { has_variable = tyr_dream_target } }
+  any_scope_state = { state_is_eligible_as_mass_migration_target = yes }
+  hidden_trigger = { NOT = { has_variable = tyr_dream_pending } }
+ }
+ effect = {
+  scope:journal_entry = { add_progress = { name = tyr_dream_bar value = -25 } }
+  hidden_effect = { set_variable = tyr_dream_pending }
+  trigger_event = { id = tyr_dream.1 days = 0 popup = yes }
+ }
+ ai_chance = { base = 100 }
+}

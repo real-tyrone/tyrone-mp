@@ -1,0 +1,152 @@
+# Country scope. Saved country objects survive tag changes.
+tyr_monroe_usa = { OR = { country_definition = cd:USA country_definition = cd:GAC has_variable = tyr_monroe_usa_identity } }
+tyr_monroe_gbr = { OR = { country_definition = cd:GBR has_variable = tyr_monroe_gbr_identity } }
+tyr_monroe_usa_sphere = { OR = { tyr_monroe_usa = yes top_overlord ?= { tyr_monroe_usa = yes } power_bloc ?= { power_bloc_leader ?= { tyr_monroe_usa = yes } } } }
+tyr_monroe_gbr_sphere = { OR = { tyr_monroe_gbr = yes top_overlord ?= { tyr_monroe_gbr = yes } power_bloc ?= { power_bloc_leader ?= { tyr_monroe_gbr = yes } } } }
+# State scope. Explicit mainland Central America avoids the Caribbean strategic region.
+tyr_monroe_area = {
+ OR = {
+  is_in_geographic_region = geographic_region_south_america
+  state_region = s:STATE_SAN_SALVADOR
+  state_region = s:STATE_GUATEMALA
+  state_region = s:STATE_HONDURAS
+  state_region = s:STATE_NICARAGUA
+  state_region = s:STATE_COSTA_RICA
+  state_region = s:STATE_PANAMA
+ }
+}
+# Country scope: regional sovereignty, including regional subjects, but not external blocs.
+tyr_monroe_local_control = {
+ capital ?= { OR = { is_in_geographic_region = geographic_region_south_america tyr_monroe_area = yes } }
+ OR = {
+  is_subject = no
+  top_overlord ?= { capital ?= { tyr_monroe_area = yes } }
+ }
+ OR = {
+  is_in_power_bloc = no
+  power_bloc ?= { power_bloc_leader ?= { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes } } }
+ }
+}
+# State scope; Brazilian expansion is assessed against the initial state-region snapshot.
+tyr_monroe_protected = {
+ OR = {
+  owner ?= { NOT = { country_definition = cd:BRZ } NOT = { top_overlord ?= { country_definition = cd:BRZ } } }
+  state_region = { tyr_monroe_brazil_initial_region = yes }
+ }
+ owner ?= {
+  OR = {
+   tyr_monroe_usa_sphere = yes
+   tyr_monroe_gbr_sphere = yes
+   AND = {
+    tyr_monroe_local_control = yes
+    OR = {
+     AND = { NOT = { country_definition = cd:BRZ } NOT = { top_overlord ?= { country_definition = cd:BRZ } } }
+     prev.state_region = { tyr_monroe_brazil_initial_region = yes }
+    }
+   }
+  }
+ }
+}
+tyr_monroe_visible = {
+ OR = {
+  tyr_monroe_usa = yes tyr_monroe_gbr = yes
+  capital ?= { is_in_geographic_region = geographic_region_americas }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_canada value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_atlantic_coast value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_pacific_coast value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_great_plains value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_central_america value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_brazil value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_la_plata value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_andes value >= 2 }
+  has_strategic_region_interest_tier = { strategic_region = sr:region_gran_colombia value >= 2 }
+ }
+}
+
+# State-region scope. Initial Cabanagem and Ragamuffin territories are Brazilian home territory.
+tyr_monroe_brazil_initial_region = {
+ OR = {
+  has_variable = tyr_monroe_brazil_initial
+  this = s:STATE_PARA
+  this = s:STATE_AMAZONAS
+  this = s:STATE_RIO_GRANDE_DO_SUL
+ }
+}
+
+tyr_us_ship_is_capital = {
+ OR = {
+  is_ship_type = ship_type:ship_type_ship_of_the_line
+  is_ship_type = ship_type:ship_type_monitor
+  is_ship_type = ship_type:ship_type_early_ironclad
+  is_ship_type = ship_type:ship_type_coastal_defense_ship
+  is_ship_type = ship_type:ship_type_modern_ironclad
+  is_ship_type = ship_type:ship_type_pre_dreadnought
+  is_ship_type = ship_type:ship_type_dreadnought
+  is_ship_type = ship_type:ship_type_super_dreadnought
+ }
+}
+
+tyr_us_puppet_or_lower = { OR = {
+ is_subject_type = subject_type_puppet
+ is_subject_type = subject_type_vassal
+ is_subject_type = subject_type_colony
+ is_subject_type = subject_type_crown_land
+} }
+
+tyr_us_state_in_mexico = { OR = {
+ state_region = s:STATE_BAJA_CALIFORNIA
+ state_region = s:STATE_SONORA
+ state_region = s:STATE_CHIHUAHUA
+ state_region = s:STATE_RIO_GRANDE
+ state_region = s:STATE_DURANGO
+ state_region = s:STATE_SINALOA
+ state_region = s:STATE_BAJIO
+ state_region = s:STATE_YUCATAN
+ state_region = s:STATE_MEXICO
+ state_region = s:STATE_VERACRUZ
+ state_region = s:STATE_GUERRERO
+ state_region = s:STATE_OAXACA
+ state_region = s:STATE_JALISCO
+ state_region = s:STATE_ZACATECAS
+ state_region = s:STATE_CHIAPAS
+} }
+
+tyr_us_state_in_canada = { OR = {
+ state_region = s:STATE_ONTARIO
+ state_region = s:STATE_NEW_BRUNSWICK
+ state_region = s:STATE_QUEBEC
+ state_region = s:STATE_NEWFOUNDLAND
+ state_region = s:STATE_ALBERTA
+ state_region = s:STATE_BRITISH_COLUMBIA
+ state_region = s:STATE_SASKATCHEWAN
+ state_region = s:STATE_MANITOBA
+ state_region = s:STATE_YUKON_TERRITORY
+ state_region = s:STATE_NORTHWEST_TERRITORIES
+ state_region = s:STATE_NUNAVUT
+} }
+
+tyr_ca_state = { OR = {
+ state_region = s:STATE_GUATEMALA
+ state_region = s:STATE_HONDURAS
+ state_region = s:STATE_SAN_SALVADOR
+ state_region = s:STATE_NICARAGUA
+ state_region = s:STATE_COSTA_RICA
+ state_region = s:STATE_PANAMA
+} }
+
+# Foreign-country scope; ROOT is the American country.
+tyr_dream_pro = { any_political_lobby = { is_political_lobby_type = lobby_pro_country target = { tyr_monroe_usa = yes } } }
+tyr_dream_anti = { any_political_lobby = { is_political_lobby_type = lobby_anti_country target = { tyr_monroe_usa = yes } } }
+tyr_dream_rights = {
+ save_temporary_scope_as = tyr_dream_investment_country
+ root = { has_treaty_foreign_investment_rights_with = { TARGET = scope:tyr_dream_investment_country } }
+}
+tyr_dream_european_power = { is_in_geographic_region = geographic_region_europe country_rank >= rank_value:major_power }
+
+# IG scope; ROOT is the American Dream country. Mirrors vanilla lobby membership eligibility.
+tyr_dream_lobby_founder_eligible = {
+ ig_counts_as_marginal = no
+ is_revolutionary = no
+ is_insurrectionary = no
+ NOT = { any_political_lobby = { target = ROOT } }
+}

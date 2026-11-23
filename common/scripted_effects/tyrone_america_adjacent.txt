@@ -1,0 +1,3202 @@
+# No scope. Called once on activation and then only monthly (or explicit withdrawal).
+tyr_monroe_update = {
+ every_country = {
+  limit = { has_modifier = tyr_monroe_trade }
+  remove_modifier = tyr_monroe_trade
+ }
+ every_country = {
+  limit = { tyr_monroe_usa = yes }
+  set_variable = tyr_monroe_usa_identity
+  save_scope_as = tyr_monroe_america
+ }
+ every_country = {
+  limit = { tyr_monroe_gbr = yes }
+  set_variable = tyr_monroe_gbr_identity
+  save_scope_as = tyr_monroe_britain
+ }
+ set_global_variable = { name = tyr_monroe_protected_count value = 0 }
+ set_global_variable = { name = tyr_monroe_invaded_count value = 0 }
+ every_country = {
+  every_scope_state = {
+   limit = { tyr_monroe_area = yes is_largest_state_in_region = yes }
+   if = {
+    limit = { tyr_monroe_protected = yes }
+    change_global_variable = { name = tyr_monroe_protected_count add = 1 }
+   }
+   else = { change_global_variable = { name = tyr_monroe_invaded_count add = 1 } }
+  }
+ }
+ set_global_variable = {
+  name = tyr_monroe_trade_points
+  value = { value = global_var:tyr_monroe_protected_count subtract = { value = global_var:tyr_monroe_invaded_count multiply = 2 } max = 50 }
+ }
+ if = {
+  limit = {
+   exists = scope:tyr_monroe_america
+   OR = {
+    has_global_variable = tyr_monroe_british_withdrawal
+    NOT = { exists = scope:tyr_monroe_britain }
+    scope:tyr_monroe_america = { has_variable = america_interventionism_points_var var:america_interventionism_points_var >= 5 }
+   }
+  }
+  set_global_variable = { name = tyr_monroe_american_guarantor value = 1 }
+  scope:tyr_monroe_america = { add_modifier = { name = tyr_monroe_trade multiplier = global_var:tyr_monroe_trade_points } }
+ }
+ else_if = {
+  limit = { exists = scope:tyr_monroe_britain NOT = { has_global_variable = tyr_monroe_british_withdrawal } }
+  set_global_variable = { name = tyr_monroe_american_guarantor value = 0 }
+  scope:tyr_monroe_britain = { add_modifier = { name = tyr_monroe_trade multiplier = global_var:tyr_monroe_trade_points } }
+ }
+}
+
+# No scope. Fired once by the JE failure outcome; native decay scales every effect.
+tyr_monroe_unsa_failure = {
+ if = {
+  limit = { c:UNSA ?= { power_bloc ?= { power_bloc_leader ?= { tyr_monroe_usa = yes } } } }
+  every_country = {
+   limit = { tyr_monroe_usa = yes }
+   add_modifier = { name = tyr_monroe_unsa_american_setback years = 5 multiplier = 0.5 is_decaying = yes }
+  }
+  c:UNSA ?= { add_modifier = { name = tyr_monroe_unsa_ascendant years = 5 multiplier = 0.5 is_decaying = yes } }
+  if = {
+   limit = { NOT = { exists = c:UNSA } }
+   show_as_tooltip = {
+    c:BRZ ?= { add_modifier = { name = tyr_monroe_unsa_ascendant years = 5 multiplier = 0.5 is_decaying = yes } }
+   }
+  }
+ }
+ else = {
+  every_country = {
+   limit = { tyr_monroe_usa = yes }
+   add_modifier = { name = tyr_monroe_unsa_american_setback years = 10 is_decaying = yes }
+  }
+  c:UNSA ?= { add_modifier = { name = tyr_monroe_unsa_ascendant years = 10 is_decaying = yes } }
+  if = {
+   limit = { NOT = { exists = c:UNSA } }
+   show_as_tooltip = {
+    c:BRZ ?= { add_modifier = { name = tyr_monroe_unsa_ascendant years = 10 is_decaying = yes } }
+   }
+  }
+ }
+ hidden_effect = {
+  set_global_variable = tyr_monroe_ended
+  every_country = { limit = { has_modifier = tyr_monroe_trade } remove_modifier = tyr_monroe_trade }
+ }
+}
+
+# No scope. Monthly minimum tier 3; never stacks once tier 3 or higher is present.
+tyr_monroe_monthly_involvement = {
+ every_country = {
+  limit = { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes } }
+  if = {
+   limit = { NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_central_america value >= 3 } } }
+   add_involvement = { strategic_region = sr:region_central_america value = 2500 }
+  }
+  if = {
+   limit = { NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_brazil value >= 3 } } }
+   add_involvement = { strategic_region = sr:region_brazil value = 2500 }
+  }
+  if = {
+   limit = { NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_andes value >= 3 } } }
+   add_involvement = { strategic_region = sr:region_andes value = 2500 }
+  }
+  if = {
+   limit = { NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_la_plata value >= 3 } } }
+   add_involvement = { strategic_region = sr:region_la_plata value = 2500 }
+  }
+  if = {
+   limit = { NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_gran_colombia value >= 3 } } }
+   add_involvement = { strategic_region = sr:region_gran_colombia value = 2500 }
+  }
+ }
+}
+
+# Country scope: bounded points; sources are consumed even at the limit.
+tyr_us_gain_point = {
+ set_variable = { name = america_interventionism_points_var value = { value = var:america_interventionism_points_var add = 1 max = 10 } }
+}
+tyr_us_sync_regime = {
+ if = { limit = { var:america_interventionism_points_var >= 9 } set_variable = { name = tyr_us_regime value = 3 } }
+ else_if = { limit = { var:america_interventionism_points_var >= 5 } set_variable = { name = tyr_us_regime value = 2 } }
+ else = { set_variable = { name = tyr_us_regime value = 1 } }
+ if = { limit = { var:tyr_us_regime = 1 NOT = { has_modifier = tyr_us_isolationism } } add_modifier = { name = tyr_us_isolationism } }
+ if = { limit = { NOT = { var:tyr_us_regime = 1 } has_modifier = tyr_us_isolationism } remove_modifier = tyr_us_isolationism }
+ if = { limit = { var:tyr_us_regime = 2 NOT = { has_modifier = tyr_us_interventionism } } add_modifier = { name = tyr_us_interventionism } }
+ if = { limit = { NOT = { var:tyr_us_regime = 2 } has_modifier = tyr_us_interventionism } remove_modifier = tyr_us_interventionism }
+ if = { limit = { var:tyr_us_regime = 3 NOT = { has_modifier = tyr_us_globalism } } add_modifier = { name = tyr_us_globalism } }
+ if = { limit = { NOT = { var:tyr_us_regime = 3 } has_modifier = tyr_us_globalism } remove_modifier = tyr_us_globalism }
+
+ if = { limit = { var:tyr_us_regime >= 2 } set_variable = tyr_us_africa_conference_access }
+ else = { remove_variable = tyr_us_africa_conference_access }
+ if = { limit = { has_variable = manifested_destiny has_modifier = tyr_us_colonial_restraint } remove_modifier = tyr_us_colonial_restraint }
+}
+tyr_us_policy_monthly = {
+ if = { limit = { has_variable = tyr_us_ostend_completed NOT = { has_variable = tyr_us_once_ostend } } set_variable = tyr_us_once_ostend tyr_us_gain_point = yes }
+ if = { limit = { has_variable = tyr_us_saw_completed NOT = { has_variable = tyr_us_once_saw } } set_variable = tyr_us_once_saw tyr_us_gain_point = yes }
+
+ if = { limit = { has_variable = tyr_us_manifest_complete NOT = { has_variable = tyr_us_once_manifest } } set_variable = tyr_us_once_manifest tyr_us_gain_point = yes }
+
+
+if = { limit = { NOT = { has_variable = tyr_us_once_militia } NOT = { has_law = law_type:law_national_militia } } set_variable = tyr_us_once_militia tyr_us_gain_point = yes }
+ if = { limit = { NOT = { has_variable = tyr_us_once_hawaii } owns_entire_state_region = STATE_HAWAII } set_variable = tyr_us_once_hawaii tyr_us_gain_point = yes }
+ if = { limit = { NOT = { has_variable = tyr_us_once_mexico } has_variable = je_manifest_destiny_mexico_complete } set_variable = tyr_us_once_mexico tyr_us_gain_point = yes }
+ if = { limit = { NOT = { has_variable = tyr_us_once_gp_war } any_scope_war = { is_warleader = root root = { any_enemy_in_war = { country_rank = rank_value:great_power } } } } set_variable = tyr_us_once_gp_war tyr_us_gain_point = yes }
+ if = { limit = { NOT = { has_variable = tyr_us_cd_president } ruler = { OR = { has_ideology = ideology:ideology_jingoist_leader has_ideology = ideology:ideology_fascist } } } set_variable = { name = tyr_us_cd_president years = 5 } tyr_us_gain_point = yes }
+ if = { limit = { NOT = { has_variable = tyr_us_cd_foreign_bloc } any_country = { capital ?= { is_in_geographic_region = geographic_region_south_america } power_bloc ?= { power_bloc_leader ?= { capital ?= { NOT = { is_in_geographic_region = geographic_region_americas } } } } } } set_variable = { name = tyr_us_cd_foreign_bloc years = 5 } tyr_us_gain_point = yes }
+ tyr_us_sync_regime = yes
+}
+
+# Country scope: settlement reward for states owned at Manifest Destiny completion.
+tyr_us_manifest_settlement_reward = {
+ every_scope_state = {
+  limit = { OR = { region = sr:region_great_plains region = sr:region_pacific_coast } }
+  add_modifier = { name = tyr_us_manifest_destiny_settlement years = 20 is_decaying = yes }
+ }
+}
+
+tyr_us_add_mexico_claims = {
+ s:STATE_BAJA_CALIFORNIA = { add_claim = ROOT }
+ s:STATE_SONORA = { add_claim = ROOT }
+ s:STATE_CHIHUAHUA = { add_claim = ROOT }
+ s:STATE_RIO_GRANDE = { add_claim = ROOT }
+ s:STATE_DURANGO = { add_claim = ROOT }
+ s:STATE_SINALOA = { add_claim = ROOT }
+ s:STATE_BAJIO = { add_claim = ROOT }
+ s:STATE_YUCATAN = { add_claim = ROOT }
+ s:STATE_MEXICO = { add_claim = ROOT }
+ s:STATE_VERACRUZ = { add_claim = ROOT }
+ s:STATE_GUERRERO = { add_claim = ROOT }
+ s:STATE_OAXACA = { add_claim = ROOT }
+ s:STATE_JALISCO = { add_claim = ROOT }
+ s:STATE_ZACATECAS = { add_claim = ROOT }
+ s:STATE_CHIAPAS = { add_claim = ROOT }
+}
+
+tyr_us_remove_mexico_claims = {
+ s:STATE_BAJA_CALIFORNIA = { remove_claim = ROOT }
+ s:STATE_SONORA = { remove_claim = ROOT }
+ s:STATE_CHIHUAHUA = { remove_claim = ROOT }
+ s:STATE_RIO_GRANDE = { remove_claim = ROOT }
+ s:STATE_DURANGO = { remove_claim = ROOT }
+ s:STATE_SINALOA = { remove_claim = ROOT }
+ s:STATE_BAJIO = { remove_claim = ROOT }
+ s:STATE_YUCATAN = { remove_claim = ROOT }
+ s:STATE_MEXICO = { remove_claim = ROOT }
+ s:STATE_VERACRUZ = { remove_claim = ROOT }
+ s:STATE_GUERRERO = { remove_claim = ROOT }
+ s:STATE_OAXACA = { remove_claim = ROOT }
+ s:STATE_JALISCO = { remove_claim = ROOT }
+ s:STATE_ZACATECAS = { remove_claim = ROOT }
+ s:STATE_CHIAPAS = { remove_claim = ROOT }
+}
+
+tyr_us_add_canada_claims = {
+ s:STATE_ONTARIO = { add_claim = ROOT }
+ s:STATE_NEW_BRUNSWICK = { add_claim = ROOT }
+ s:STATE_QUEBEC = { add_claim = ROOT }
+ s:STATE_NEWFOUNDLAND = { add_claim = ROOT }
+ s:STATE_ALBERTA = { add_claim = ROOT }
+ s:STATE_BRITISH_COLUMBIA = { add_claim = ROOT }
+ s:STATE_SASKATCHEWAN = { add_claim = ROOT }
+ s:STATE_MANITOBA = { add_claim = ROOT }
+ s:STATE_YUKON_TERRITORY = { add_claim = ROOT }
+ s:STATE_NORTHWEST_TERRITORIES = { add_claim = ROOT }
+ s:STATE_NUNAVUT = { add_claim = ROOT }
+}
+
+tyr_us_remove_canada_claims = {
+ s:STATE_ONTARIO = { remove_claim = ROOT }
+ s:STATE_NEW_BRUNSWICK = { remove_claim = ROOT }
+ s:STATE_QUEBEC = { remove_claim = ROOT }
+ s:STATE_NEWFOUNDLAND = { remove_claim = ROOT }
+ s:STATE_ALBERTA = { remove_claim = ROOT }
+ s:STATE_BRITISH_COLUMBIA = { remove_claim = ROOT }
+ s:STATE_SASKATCHEWAN = { remove_claim = ROOT }
+ s:STATE_MANITOBA = { remove_claim = ROOT }
+ s:STATE_YUKON_TERRITORY = { remove_claim = ROOT }
+ s:STATE_NORTHWEST_TERRITORIES = { remove_claim = ROOT }
+ s:STATE_NUNAVUT = { remove_claim = ROOT }
+}
+
+# Contextless JE scope; participation latches, all accounting is monthly.
+tyr_ca_refresh = {
+ if = { limit = { game_date >= 1850.1.1 }
+
+ set_global_variable = { name = tyr_ca_color_counter value = 0 }
+ every_country = {
+  limit = { any_scope_state = { tyr_ca_state = yes } }
+  change_global_variable = { name = tyr_ca_color_counter add = 1 }
+  set_variable = { name = tyr_ca_map_color value = global_var:tyr_ca_color_counter }
+ }
+
+ every_country = {
+  limit = { game_date < 1870.1.1 country_rank >= rank_value:great_power has_strategic_region_interest_tier = { strategic_region = sr:region_central_america value >= 2 } }
+  set_variable = tyr_ca_participant
+  if = { limit = { NOT = { is_involved_in_journal_entry = je_tyr_ca_contest } } scope:journal_entry = { add_involved_country = prev } }
+ }
+ set_global_variable = { name = tyr_ca_best value = 0 }
+ set_global_variable = { name = tyr_ca_ties value = 0 }
+ remove_global_variable = tyr_ca_winner
+ every_country = {
+  limit = { has_variable = tyr_ca_participant }
+  if = { limit = { has_modifier = tyr_ca_leading } remove_modifier = tyr_ca_leading }
+  set_variable = { name = tyr_ca_points value = 0 }
+ }
+ every_country = {
+  every_scope_state = {
+   limit = { tyr_ca_state = yes is_largest_state_in_region = yes }
+   if = { limit = { owner = { is_subject = no has_variable = tyr_ca_participant } } owner = { change_variable = { name = tyr_ca_points add = 1 } } }
+   else_if = { limit = { owner = { is_subject = yes top_overlord = { has_variable = tyr_ca_participant } } } owner.top_overlord = { change_variable = { name = tyr_ca_points add = 1 } } }
+  }
+ }
+ every_country = {
+  limit = { has_variable = tyr_ca_participant var:tyr_ca_points > 0 }
+  if = {
+   limit = { var:tyr_ca_points > global_var:tyr_ca_best }
+   set_global_variable = { name = tyr_ca_best value = var:tyr_ca_points }
+   set_global_variable = { name = tyr_ca_ties value = 1 }
+   set_global_variable = { name = tyr_ca_winner value = this }
+  }
+  else_if = {
+   limit = { var:tyr_ca_points = global_var:tyr_ca_best }
+   change_global_variable = { name = tyr_ca_ties add = 1 }
+   if = { limit = { gdp > global_var:tyr_ca_winner.gdp } set_global_variable = { name = tyr_ca_winner value = this } }
+  }
+ }
+ if = { limit = { global_var:tyr_ca_ties = 1 exists = global_var:tyr_ca_winner } global_var:tyr_ca_winner = { add_modifier = { name = tyr_ca_leading } } }
+
+ }
+}
+# Country scope, root is winner; consolidate regional state parts before release.
+tyr_ca_create_administration = {
+ save_scope_as = tyr_ca_colonizer
+ every_state = {
+  limit = { tyr_ca_state = yes owner = { OR = { this = root top_overlord ?= root } } NOT = { owner = root } }
+  set_state_owner = root
+ }
+ random_scope_state = { limit = { tyr_ca_state = yes } save_scope_as = tyr_ca_seed }
+ create_country = { tag = TCAA origin = root state = scope:tyr_ca_seed on_created = { save_scope_as = tyr_ca_colony copy_laws = scope:tyr_ca_colonizer } }
+ every_scope_state = { limit = { tyr_ca_state = yes } set_state_owner = c:TCAA }
+ create_diplomatic_pact = { country = c:TCAA type = protectorate }
+ c:TCAA = {
+  save_scope_as = tyr_ca_colony
+  save_scope_as = newly_formed_colonial_administration_scope
+  set_variable = newly_formed_colonial_nation_var
+ }
+ trigger_event = { id = colonial_administration_events.1 days = 0 popup = yes }
+ trigger_event = { id = tyr_ca.2 days = 4 popup = yes }
+}
+
+# Company scope, called only on assignment to the Central American Administration.
+tyr_ca_company_identity = {
+ if = { limit = { is_company_type = company_type:company_BellTelephone } c:TCAA = { set_variable = tyr_ca_name_company_BellTelephone } }
+ else_if = { limit = { is_company_type = company_type:company_DongIlbo } c:TCAA = { set_variable = tyr_ca_name_company_DongIlbo } }
+ else_if = { limit = { is_company_type = company_type:company_Doosan } c:TCAA = { set_variable = tyr_ca_name_company_Doosan } }
+ else_if = { limit = { is_company_type = company_type:company_Gyeongseong } c:TCAA = { set_variable = tyr_ca_name_company_Gyeongseong } }
+ else_if = { limit = { is_company_type = company_type:company_Hanguk } c:TCAA = { set_variable = tyr_ca_name_company_Hanguk } }
+ else_if = { limit = { is_company_type = company_type:company_Joseon_Enterprise } c:TCAA = { set_variable = tyr_ca_name_company_Joseon_Enterprise } }
+ else_if = { limit = { is_company_type = company_type:company_Joseon_Smelting } c:TCAA = { set_variable = tyr_ca_name_company_Joseon_Smelting } }
+ else_if = { limit = { is_company_type = company_type:company_KTC } c:TCAA = { set_variable = tyr_ca_name_company_KTC } }
+ else_if = { limit = { is_company_type = company_type:company_Solvay } c:TCAA = { set_variable = tyr_ca_name_company_Solvay } }
+ else_if = { limit = { is_company_type = company_type:company_Vanparys } c:TCAA = { set_variable = tyr_ca_name_company_Vanparys } }
+ else_if = { limit = { is_company_type = company_type:company_a_markwald_and_company } c:TCAA = { set_variable = tyr_ca_name_company_a_markwald_and_company } }
+ else_if = { limit = { is_company_type = company_type:company_aker_mek } c:TCAA = { set_variable = tyr_ca_name_company_aker_mek } }
+ else_if = { limit = { is_company_type = company_type:company_allatini_mills } c:TCAA = { set_variable = tyr_ca_name_company_allatini_mills } }
+ else_if = { limit = { is_company_type = company_type:company_altos_hornos_de_vizcaya } c:TCAA = { set_variable = tyr_ca_name_company_altos_hornos_de_vizcaya } }
+ else_if = { limit = { is_company_type = company_type:company_anglo_persian_oil } c:TCAA = { set_variable = tyr_ca_name_company_anglo_persian_oil } }
+ else_if = { limit = { is_company_type = company_type:company_anglo_sicilian_sulphur_company } c:TCAA = { set_variable = tyr_ca_name_company_anglo_sicilian_sulphur_company } }
+ else_if = { limit = { is_company_type = company_type:company_ansaldo } c:TCAA = { set_variable = tyr_ca_name_company_ansaldo } }
+ else_if = { limit = { is_company_type = company_type:company_ap_moller } c:TCAA = { set_variable = tyr_ca_name_company_ap_moller } }
+ else_if = { limit = { is_company_type = company_type:company_argentinian_wine } c:TCAA = { set_variable = tyr_ca_name_company_argentinian_wine } }
+ else_if = { limit = { is_company_type = company_type:company_armstrong_whitworth } c:TCAA = { set_variable = tyr_ca_name_company_armstrong_whitworth } }
+ else_if = { limit = { is_company_type = company_type:company_assam_company } c:TCAA = { set_variable = tyr_ca_name_company_assam_company } }
+ else_if = { limit = { is_company_type = company_type:company_b_grimm } c:TCAA = { set_variable = tyr_ca_name_company_b_grimm } }
+ else_if = { limit = { is_company_type = company_type:company_bacardi } c:TCAA = { set_variable = tyr_ca_name_company_bacardi } }
+ else_if = { limit = { is_company_type = company_type:company_basf } c:TCAA = { set_variable = tyr_ca_name_company_basf } }
+ else_if = { limit = { is_company_type = company_type:company_basic_agriculture_1 } c:TCAA = { set_variable = tyr_ca_name_company_basic_agriculture_1 } }
+ else_if = { limit = { is_company_type = company_type:company_basic_agriculture_2 } c:TCAA = { set_variable = tyr_ca_name_company_basic_agriculture_2 } }
+ else_if = { limit = { is_company_type = company_type:company_basic_chemicals } c:TCAA = { set_variable = tyr_ca_name_company_basic_chemicals } }
+ else_if = { limit = { is_company_type = company_type:company_basic_colonial_plantations_1 } c:TCAA = { set_variable = tyr_ca_name_company_basic_colonial_plantations_1 } }
+ else_if = { limit = { is_company_type = company_type:company_basic_colonial_plantations_2 } c:TCAA = { set_variable = tyr_ca_name_company_basic_colonial_plantations_2 } }
+ else_if = { limit = { is_company_type = company_type:company_basic_electrics } c:TCAA = { set_variable = tyr_ca_name_company_basic_electrics } }
+ else_if = { limit = { is_company_type = company_type:company_basic_fabrics } c:TCAA = { set_variable = tyr_ca_name_company_basic_fabrics } }
+ else_if = { limit = { is_company_type = company_type:company_basic_fishing } c:TCAA = { set_variable = tyr_ca_name_company_basic_fishing } }
+ else_if = { limit = { is_company_type = company_type:company_basic_food } c:TCAA = { set_variable = tyr_ca_name_company_basic_food } }
+ else_if = { limit = { is_company_type = company_type:company_basic_forestry } c:TCAA = { set_variable = tyr_ca_name_company_basic_forestry } }
+ else_if = { limit = { is_company_type = company_type:company_basic_gold_mining } c:TCAA = { set_variable = tyr_ca_name_company_basic_gold_mining } }
+ else_if = { limit = { is_company_type = company_type:company_basic_home_goods } c:TCAA = { set_variable = tyr_ca_name_company_basic_home_goods } }
+ else_if = { limit = { is_company_type = company_type:company_basic_metal_mining } c:TCAA = { set_variable = tyr_ca_name_company_basic_metal_mining } }
+ else_if = { limit = { is_company_type = company_type:company_basic_metalworks } c:TCAA = { set_variable = tyr_ca_name_company_basic_metalworks } }
+ else_if = { limit = { is_company_type = company_type:company_basic_mineral_mining } c:TCAA = { set_variable = tyr_ca_name_company_basic_mineral_mining } }
+ else_if = { limit = { is_company_type = company_type:company_basic_motors } c:TCAA = { set_variable = tyr_ca_name_company_basic_motors } }
+ else_if = { limit = { is_company_type = company_type:company_basic_munitions } c:TCAA = { set_variable = tyr_ca_name_company_basic_munitions } }
+ else_if = { limit = { is_company_type = company_type:company_basic_oil } c:TCAA = { set_variable = tyr_ca_name_company_basic_oil } }
+ else_if = { limit = { is_company_type = company_type:company_basic_paper } c:TCAA = { set_variable = tyr_ca_name_company_basic_paper } }
+ else_if = { limit = { is_company_type = company_type:company_basic_shipyards } c:TCAA = { set_variable = tyr_ca_name_company_basic_shipyards } }
+ else_if = { limit = { is_company_type = company_type:company_basic_silk_and_dye } c:TCAA = { set_variable = tyr_ca_name_company_basic_silk_and_dye } }
+ else_if = { limit = { is_company_type = company_type:company_basic_steel } c:TCAA = { set_variable = tyr_ca_name_company_basic_steel } }
+ else_if = { limit = { is_company_type = company_type:company_basic_textiles } c:TCAA = { set_variable = tyr_ca_name_company_basic_textiles } }
+ else_if = { limit = { is_company_type = company_type:company_basic_weapons } c:TCAA = { set_variable = tyr_ca_name_company_basic_weapons } }
+ else_if = { limit = { is_company_type = company_type:company_basic_wine_and_fruit } c:TCAA = { set_variable = tyr_ca_name_company_basic_wine_and_fruit } }
+ else_if = { limit = { is_company_type = company_type:company_basileiades } c:TCAA = { set_variable = tyr_ca_name_company_basileiades } }
+ else_if = { limit = { is_company_type = company_type:company_bengal_coal_company } c:TCAA = { set_variable = tyr_ca_name_company_bengal_coal_company } }
+ else_if = { limit = { is_company_type = company_type:company_bolckow_vaughan } c:TCAA = { set_variable = tyr_ca_name_company_bolckow_vaughan } }
+ else_if = { limit = { is_company_type = company_type:company_bombay_burmah_trading_corporation } c:TCAA = { set_variable = tyr_ca_name_company_bombay_burmah_trading_corporation } }
+ else_if = { limit = { is_company_type = company_type:company_bombay_dyeing_company } c:TCAA = { set_variable = tyr_ca_name_company_bombay_dyeing_company } }
+ else_if = { limit = { is_company_type = company_type:company_branobel } c:TCAA = { set_variable = tyr_ca_name_company_branobel } }
+ else_if = { limit = { is_company_type = company_type:company_broken_hill_proprietary_company } c:TCAA = { set_variable = tyr_ca_name_company_broken_hill_proprietary_company } }
+ else_if = { limit = { is_company_type = company_type:company_bunge_born } c:TCAA = { set_variable = tyr_ca_name_company_bunge_born } }
+ else_if = { limit = { is_company_type = company_type:company_calcutta_electric } c:TCAA = { set_variable = tyr_ca_name_company_calcutta_electric } }
+ else_if = { limit = { is_company_type = company_type:company_caribbean_petroleum } c:TCAA = { set_variable = tyr_ca_name_company_caribbean_petroleum } }
+ else_if = { limit = { is_company_type = company_type:company_ccci } c:TCAA = { set_variable = tyr_ca_name_company_ccci } }
+ else_if = { limit = { is_company_type = company_type:company_cfr } c:TCAA = { set_variable = tyr_ca_name_company_cfr } }
+ else_if = { limit = { is_company_type = company_type:company_cgv } c:TCAA = { set_variable = tyr_ca_name_company_cgv } }
+ else_if = { limit = { is_company_type = company_type:company_chr_hansens } c:TCAA = { set_variable = tyr_ca_name_company_chr_hansens } }
+ else_if = { limit = { is_company_type = company_type:company_colt_firearms } c:TCAA = { set_variable = tyr_ca_name_company_colt_firearms } }
+ else_if = { limit = { is_company_type = company_type:company_compania_sansinena_de_carnes_congeladas } c:TCAA = { set_variable = tyr_ca_name_company_compania_sansinena_de_carnes_congeladas } }
+ else_if = { limit = { is_company_type = company_type:company_construction_power_bloc } c:TCAA = { set_variable = tyr_ca_name_company_construction_power_bloc } }
+ else_if = { limit = { is_company_type = company_type:company_cordoba_railway } c:TCAA = { set_variable = tyr_ca_name_company_cordoba_railway } }
+ else_if = { limit = { is_company_type = company_type:company_csfa } c:TCAA = { set_variable = tyr_ca_name_company_csfa } }
+ else_if = { limit = { is_company_type = company_type:company_da_afghan_nassaji_sherkat } c:TCAA = { set_variable = tyr_ca_name_company_da_afghan_nassaji_sherkat } }
+ else_if = { limit = { is_company_type = company_type:company_david_sassoon } c:TCAA = { set_variable = tyr_ca_name_company_david_sassoon } }
+ else_if = { limit = { is_company_type = company_type:company_de_beers } c:TCAA = { set_variable = tyr_ca_name_company_de_beers } }
+ else_if = { limit = { is_company_type = company_type:company_dmc } c:TCAA = { set_variable = tyr_ca_name_company_dmc } }
+ else_if = { limit = { is_company_type = company_type:company_dobrush_paper } c:TCAA = { set_variable = tyr_ca_name_company_dobrush_paper } }
+ else_if = { limit = { is_company_type = company_type:company_douro_wine_company } c:TCAA = { set_variable = tyr_ca_name_company_douro_wine_company } }
+ else_if = { limit = { is_company_type = company_type:company_duro_y_compania } c:TCAA = { set_variable = tyr_ca_name_company_duro_y_compania } }
+ else_if = { limit = { is_company_type = company_type:company_east_india_company } c:TCAA = { set_variable = tyr_ca_name_company_east_india_company } }
+ else_if = { limit = { is_company_type = company_type:company_eea } c:TCAA = { set_variable = tyr_ca_name_company_eea } }
+ else_if = { limit = { is_company_type = company_type:company_egyptian_rail } c:TCAA = { set_variable = tyr_ca_name_company_egyptian_rail } }
+ else_if = { limit = { is_company_type = company_type:company_el_aguila } c:TCAA = { set_variable = tyr_ca_name_company_el_aguila } }
+ else_if = { limit = { is_company_type = company_type:company_electricidad_de_caracas } c:TCAA = { set_variable = tyr_ca_name_company_electricidad_de_caracas } }
+ else_if = { limit = { is_company_type = company_type:company_elso_budapesti_gozmalom } c:TCAA = { set_variable = tyr_ca_name_company_elso_budapesti_gozmalom } }
+ else_if = { limit = { is_company_type = company_type:company_ericsson } c:TCAA = { set_variable = tyr_ca_name_company_ericsson } }
+ else_if = { limit = { is_company_type = company_type:company_erste_brunner } c:TCAA = { set_variable = tyr_ca_name_company_erste_brunner } }
+ else_if = { limit = { is_company_type = company_type:company_espana_industrial } c:TCAA = { set_variable = tyr_ca_name_company_espana_industrial } }
+ else_if = { limit = { is_company_type = company_type:company_estaleiro_maua } c:TCAA = { set_variable = tyr_ca_name_company_estaleiro_maua } }
+ else_if = { limit = { is_company_type = company_type:company_estanifera_llallagua } c:TCAA = { set_variable = tyr_ca_name_company_estanifera_llallagua } }
+ else_if = { limit = { is_company_type = company_type:company_famae } c:TCAA = { set_variable = tyr_ca_name_company_famae } }
+ else_if = { limit = { is_company_type = company_type:company_fcm } c:TCAA = { set_variable = tyr_ca_name_company_fcm } }
+ else_if = { limit = { is_company_type = company_type:company_ferranti_ltd } c:TCAA = { set_variable = tyr_ca_name_company_ferranti_ltd } }
+ else_if = { limit = { is_company_type = company_type:company_fiat } c:TCAA = { set_variable = tyr_ca_name_company_fiat } }
+ else_if = { limit = { is_company_type = company_type:company_fiskars } c:TCAA = { set_variable = tyr_ca_name_company_fiskars } }
+ else_if = { limit = { is_company_type = company_type:company_fn_herstal } c:TCAA = { set_variable = tyr_ca_name_company_fn_herstal } }
+ else_if = { limit = { is_company_type = company_type:company_foochow_arsenal } c:TCAA = { set_variable = tyr_ca_name_company_foochow_arsenal } }
+ else_if = { limit = { is_company_type = company_type:company_ford_motor } c:TCAA = { set_variable = tyr_ca_name_company_ford_motor } }
+ else_if = { limit = { is_company_type = company_type:company_franco_belge } c:TCAA = { set_variable = tyr_ca_name_company_franco_belge } }
+ else_if = { limit = { is_company_type = company_type:company_fundicao_ipanema } c:TCAA = { set_variable = tyr_ca_name_company_fundicao_ipanema } }
+ else_if = { limit = { is_company_type = company_type:company_fundidora_monterrey } c:TCAA = { set_variable = tyr_ca_name_company_fundidora_monterrey } }
+ else_if = { limit = { is_company_type = company_type:company_galician_carpathian_oil } c:TCAA = { set_variable = tyr_ca_name_company_galician_carpathian_oil } }
+ else_if = { limit = { is_company_type = company_type:company_gebruder_thonet } c:TCAA = { set_variable = tyr_ca_name_company_gebruder_thonet } }
+ else_if = { limit = { is_company_type = company_type:company_general_electric } c:TCAA = { set_variable = tyr_ca_name_company_general_electric } }
+ else_if = { limit = { is_company_type = company_type:company_getzner_mutter } c:TCAA = { set_variable = tyr_ca_name_company_getzner_mutter } }
+ else_if = { limit = { is_company_type = company_type:company_gotaverken } c:TCAA = { set_variable = tyr_ca_name_company_gotaverken } }
+ else_if = { limit = { is_company_type = company_type:company_gran_azucarera } c:TCAA = { set_variable = tyr_ca_name_company_gran_azucarera } }
+ else_if = { limit = { is_company_type = company_type:company_grodno_tobacco } c:TCAA = { set_variable = tyr_ca_name_company_grodno_tobacco } }
+ else_if = { limit = { is_company_type = company_type:company_guinness } c:TCAA = { set_variable = tyr_ca_name_company_guinness } }
+ else_if = { limit = { is_company_type = company_type:company_guthrie } c:TCAA = { set_variable = tyr_ca_name_company_guthrie } }
+ else_if = { limit = { is_company_type = company_type:company_gwr } c:TCAA = { set_variable = tyr_ca_name_company_gwr } }
+ else_if = { limit = { is_company_type = company_type:company_hanseong_jeongi_hoesa } c:TCAA = { set_variable = tyr_ca_name_company_hanseong_jeongi_hoesa } }
+ else_if = { limit = { is_company_type = company_type:company_hanyang_arsenal } c:TCAA = { set_variable = tyr_ca_name_company_hanyang_arsenal } }
+ else_if = { limit = { is_company_type = company_type:company_hbc } c:TCAA = { set_variable = tyr_ca_name_company_hbc } }
+ else_if = { limit = { is_company_type = company_type:company_hispano_suiza } c:TCAA = { set_variable = tyr_ca_name_company_hispano_suiza } }
+ else_if = { limit = { is_company_type = company_type:company_ilva } c:TCAA = { set_variable = tyr_ca_name_company_ilva } }
+ else_if = { limit = { is_company_type = company_type:company_imperial_arsenal } c:TCAA = { set_variable = tyr_ca_name_company_imperial_arsenal } }
+ else_if = { limit = { is_company_type = company_type:company_imperial_ethiopian_railways } c:TCAA = { set_variable = tyr_ca_name_company_imperial_ethiopian_railways } }
+ else_if = { limit = { is_company_type = company_type:company_imperial_tobacco } c:TCAA = { set_variable = tyr_ca_name_company_imperial_tobacco } }
+ else_if = { limit = { is_company_type = company_type:company_ingolstadt_electrical_company } c:TCAA = { set_variable = tyr_ca_name_company_ingolstadt_electrical_company } }
+ else_if = { limit = { is_company_type = company_type:company_iranian_state_railway } c:TCAA = { set_variable = tyr_ca_name_company_iranian_state_railway } }
+ else_if = { limit = { is_company_type = company_type:company_izhevsk_arms_plant } c:TCAA = { set_variable = tyr_ca_name_company_izhevsk_arms_plant } }
+ else_if = { limit = { is_company_type = company_type:company_j_p_coats } c:TCAA = { set_variable = tyr_ca_name_company_j_p_coats } }
+ else_if = { limit = { is_company_type = company_type:company_jakub_klein } c:TCAA = { set_variable = tyr_ca_name_company_jakub_klein } }
+ else_if = { limit = { is_company_type = company_type:company_jiangnan_weaving_bureaus } c:TCAA = { set_variable = tyr_ca_name_company_jiangnan_weaving_bureaus } }
+ else_if = { limit = { is_company_type = company_type:company_jingdezhen } c:TCAA = { set_variable = tyr_ca_name_company_jingdezhen } }
+ else_if = { limit = { is_company_type = company_type:company_john_brown } c:TCAA = { set_variable = tyr_ca_name_company_john_brown } }
+ else_if = { limit = { is_company_type = company_type:company_john_cockerill } c:TCAA = { set_variable = tyr_ca_name_company_john_cockerill } }
+ else_if = { limit = { is_company_type = company_type:company_john_holt } c:TCAA = { set_variable = tyr_ca_name_company_john_holt } }
+ else_if = { limit = { is_company_type = company_type:company_john_hughes } c:TCAA = { set_variable = tyr_ca_name_company_john_hughes } }
+ else_if = { limit = { is_company_type = company_type:company_kablin } c:TCAA = { set_variable = tyr_ca_name_company_kablin } }
+ else_if = { limit = { is_company_type = company_type:company_kaiping_mining } c:TCAA = { set_variable = tyr_ca_name_company_kaiping_mining } }
+ else_if = { limit = { is_company_type = company_type:company_kharitonenko_and_son } c:TCAA = { set_variable = tyr_ca_name_company_kharitonenko_and_son } }
+ else_if = { limit = { is_company_type = company_type:company_kinkozan_sobei } c:TCAA = { set_variable = tyr_ca_name_company_kinkozan_sobei } }
+ else_if = { limit = { is_company_type = company_type:company_kirgizian_mining_company } c:TCAA = { set_variable = tyr_ca_name_company_kirgizian_mining_company } }
+ else_if = { limit = { is_company_type = company_type:company_klanicko_drustvo } c:TCAA = { set_variable = tyr_ca_name_company_klanicko_drustvo } }
+ else_if = { limit = { is_company_type = company_type:company_konigliche_porzellan_manufaktur_meissen } c:TCAA = { set_variable = tyr_ca_name_company_konigliche_porzellan_manufaktur_meissen } }
+ else_if = { limit = { is_company_type = company_type:company_kouppas } c:TCAA = { set_variable = tyr_ca_name_company_kouppas } }
+ else_if = { limit = { is_company_type = company_type:company_kreenholmi_manufaktuur } c:TCAA = { set_variable = tyr_ca_name_company_kreenholmi_manufaktuur } }
+ else_if = { limit = { is_company_type = company_type:company_krupp } c:TCAA = { set_variable = tyr_ca_name_company_krupp } }
+ else_if = { limit = { is_company_type = company_type:company_la_rosada } c:TCAA = { set_variable = tyr_ca_name_company_la_rosada } }
+ else_if = { limit = { is_company_type = company_type:company_lanfang_kongsi } c:TCAA = { set_variable = tyr_ca_name_company_lanfang_kongsi } }
+ else_if = { limit = { is_company_type = company_type:company_lee_wilson } c:TCAA = { set_variable = tyr_ca_name_company_lee_wilson } }
+ else_if = { limit = { is_company_type = company_type:company_lilpop } c:TCAA = { set_variable = tyr_ca_name_company_lilpop } }
+ else_if = { limit = { is_company_type = company_type:company_lkab } c:TCAA = { set_variable = tyr_ca_name_company_lkab } }
+ else_if = { limit = { is_company_type = company_type:company_ludwig_moser_and_sons } c:TCAA = { set_variable = tyr_ca_name_company_ludwig_moser_and_sons } }
+ else_if = { limit = { is_company_type = company_type:company_madura_mills } c:TCAA = { set_variable = tyr_ca_name_company_madura_mills } }
+ else_if = { limit = { is_company_type = company_type:company_maison_worth } c:TCAA = { set_variable = tyr_ca_name_company_maison_worth } }
+ else_if = { limit = { is_company_type = company_type:company_malaxa } c:TCAA = { set_variable = tyr_ca_name_company_malaxa } }
+ else_if = { limit = { is_company_type = company_type:company_manfred_weiss } c:TCAA = { set_variable = tyr_ca_name_company_manfred_weiss } }
+ else_if = { limit = { is_company_type = company_type:company_mantero_seta } c:TCAA = { set_variable = tyr_ca_name_company_mantero_seta } }
+ else_if = { limit = { is_company_type = company_type:company_mantetsu } c:TCAA = { set_variable = tyr_ca_name_company_mantetsu } }
+ else_if = { limit = { is_company_type = company_type:company_maple_and_co } c:TCAA = { set_variable = tyr_ca_name_company_maple_and_co } }
+ else_if = { limit = { is_company_type = company_type:company_maschinenfabrik_oerlikon } c:TCAA = { set_variable = tyr_ca_name_company_maschinenfabrik_oerlikon } }
+ else_if = { limit = { is_company_type = company_type:company_maslosoyuz } c:TCAA = { set_variable = tyr_ca_name_company_maslosoyuz } }
+ else_if = { limit = { is_company_type = company_type:company_massey_harris } c:TCAA = { set_variable = tyr_ca_name_company_massey_harris } }
+ else_if = { limit = { is_company_type = company_type:company_mate_gavrilovic } c:TCAA = { set_variable = tyr_ca_name_company_mate_gavrilovic } }
+ else_if = { limit = { is_company_type = company_type:company_mav } c:TCAA = { set_variable = tyr_ca_name_company_mav } }
+ else_if = { limit = { is_company_type = company_type:company_mines_anzin } c:TCAA = { set_variable = tyr_ca_name_company_mines_anzin } }
+ else_if = { limit = { is_company_type = company_type:company_misr } c:TCAA = { set_variable = tyr_ca_name_company_misr } }
+ else_if = { limit = { is_company_type = company_type:company_mitsubishi } c:TCAA = { set_variable = tyr_ca_name_company_mitsubishi } }
+ else_if = { limit = { is_company_type = company_type:company_mitsui } c:TCAA = { set_variable = tyr_ca_name_company_mitsui } }
+ else_if = { limit = { is_company_type = company_type:company_moscow_irrigation_company } c:TCAA = { set_variable = tyr_ca_name_company_moscow_irrigation_company } }
+ else_if = { limit = { is_company_type = company_type:company_mozambique_company } c:TCAA = { set_variable = tyr_ca_name_company_mozambique_company } }
+ else_if = { limit = { is_company_type = company_type:company_nam_dinh } c:TCAA = { set_variable = tyr_ca_name_company_nam_dinh } }
+ else_if = { limit = { is_company_type = company_type:company_national_iranian_oil } c:TCAA = { set_variable = tyr_ca_name_company_national_iranian_oil } }
+ else_if = { limit = { is_company_type = company_type:company_nederlandse_petroleum } c:TCAA = { set_variable = tyr_ca_name_company_nederlandse_petroleum } }
+ else_if = { limit = { is_company_type = company_type:company_nhm } c:TCAA = { set_variable = tyr_ca_name_company_nhm } }
+ else_if = { limit = { is_company_type = company_type:company_nicolas_portalis } c:TCAA = { set_variable = tyr_ca_name_company_nicolas_portalis } }
+ else_if = { limit = { is_company_type = company_type:company_noda_shoyu } c:TCAA = { set_variable = tyr_ca_name_company_noda_shoyu } }
+ else_if = { limit = { is_company_type = company_type:company_nokia } c:TCAA = { set_variable = tyr_ca_name_company_nokia } }
+ else_if = { limit = { is_company_type = company_type:company_norsk_hydro } c:TCAA = { set_variable = tyr_ca_name_company_norsk_hydro } }
+ else_if = { limit = { is_company_type = company_type:company_oesterreichisch_alpine_montangesellschaft } c:TCAA = { set_variable = tyr_ca_name_company_oesterreichisch_alpine_montangesellschaft } }
+ else_if = { limit = { is_company_type = company_type:company_oevg } c:TCAA = { set_variable = tyr_ca_name_company_oevg } }
+ else_if = { limit = { is_company_type = company_type:company_office_cherifien_des_phosphates } c:TCAA = { set_variable = tyr_ca_name_company_office_cherifien_des_phosphates } }
+ else_if = { limit = { is_company_type = company_type:company_ong_lung_sheng_tea_company } c:TCAA = { set_variable = tyr_ca_name_company_ong_lung_sheng_tea_company } }
+ else_if = { limit = { is_company_type = company_type:company_opium_export_monopoly } c:TCAA = { set_variable = tyr_ca_name_company_opium_export_monopoly } }
+ else_if = { limit = { is_company_type = company_type:company_orient_express } c:TCAA = { set_variable = tyr_ca_name_company_orient_express } }
+ else_if = { limit = { is_company_type = company_type:company_oriental_consolidated_mining } c:TCAA = { set_variable = tyr_ca_name_company_oriental_consolidated_mining } }
+ else_if = { limit = { is_company_type = company_type:company_oriental_development_company } c:TCAA = { set_variable = tyr_ca_name_company_oriental_development_company } }
+ else_if = { limit = { is_company_type = company_type:company_ottoman_tobacco_regie } c:TCAA = { set_variable = tyr_ca_name_company_ottoman_tobacco_regie } }
+ else_if = { limit = { is_company_type = company_type:company_panama_company } c:TCAA = { set_variable = tyr_ca_name_company_panama_company } }
+ else_if = { limit = { is_company_type = company_type:company_paradox } c:TCAA = { set_variable = tyr_ca_name_company_paradox } }
+ else_if = { limit = { is_company_type = company_type:company_pedro_domecq } c:TCAA = { set_variable = tyr_ca_name_company_pedro_domecq } }
+ else_if = { limit = { is_company_type = company_type:company_pernambuco_textiles } c:TCAA = { set_variable = tyr_ca_name_company_pernambuco_textiles } }
+ else_if = { limit = { is_company_type = company_type:company_perskhlopok } c:TCAA = { set_variable = tyr_ca_name_company_perskhlopok } }
+ else_if = { limit = { is_company_type = company_type:company_persshelk } c:TCAA = { set_variable = tyr_ca_name_company_persshelk } }
+ else_if = { limit = { is_company_type = company_type:company_peruvian_amazon } c:TCAA = { set_variable = tyr_ca_name_company_peruvian_amazon } }
+ else_if = { limit = { is_company_type = company_type:company_philips } c:TCAA = { set_variable = tyr_ca_name_company_philips } }
+ else_if = { limit = { is_company_type = company_type:company_poznanski_cotton_products } c:TCAA = { set_variable = tyr_ca_name_company_poznanski_cotton_products } }
+ else_if = { limit = { is_company_type = company_type:company_prussian_state_railways } c:TCAA = { set_variable = tyr_ca_name_company_prussian_state_railways } }
+ else_if = { limit = { is_company_type = company_type:company_putilov_company } c:TCAA = { set_variable = tyr_ca_name_company_putilov_company } }
+ else_if = { limit = { is_company_type = company_type:company_ralli_brothers } c:TCAA = { set_variable = tyr_ca_name_company_ralli_brothers } }
+ else_if = { limit = { is_company_type = company_type:company_ramirez } c:TCAA = { set_variable = tyr_ca_name_company_ramirez } }
+ else_if = { limit = { is_company_type = company_type:company_resita_works } c:TCAA = { set_variable = tyr_ca_name_company_resita_works } }
+ else_if = { limit = { is_company_type = company_type:company_rheinmetall } c:TCAA = { set_variable = tyr_ca_name_company_rheinmetall } }
+ else_if = { limit = { is_company_type = company_type:company_ricordi } c:TCAA = { set_variable = tyr_ca_name_company_ricordi } }
+ else_if = { limit = { is_company_type = company_type:company_rodriguez_arguelles_y_cia } c:TCAA = { set_variable = tyr_ca_name_company_rodriguez_arguelles_y_cia } }
+ else_if = { limit = { is_company_type = company_type:company_romanian_star } c:TCAA = { set_variable = tyr_ca_name_company_romanian_star } }
+ else_if = { limit = { is_company_type = company_type:company_rossi } c:TCAA = { set_variable = tyr_ca_name_company_rossi } }
+ else_if = { limit = { is_company_type = company_type:company_russian_american_company } c:TCAA = { set_variable = tyr_ca_name_company_russian_american_company } }
+ else_if = { limit = { is_company_type = company_type:company_saint_etienne } c:TCAA = { set_variable = tyr_ca_name_company_saint_etienne } }
+ else_if = { limit = { is_company_type = company_type:company_san_miguel } c:TCAA = { set_variable = tyr_ca_name_company_san_miguel } }
+ else_if = { limit = { is_company_type = company_type:company_sao_paulo_railway } c:TCAA = { set_variable = tyr_ca_name_company_sao_paulo_railway } }
+ else_if = { limit = { is_company_type = company_type:company_savva_morozov } c:TCAA = { set_variable = tyr_ca_name_company_savva_morozov } }
+ else_if = { limit = { is_company_type = company_type:company_schichau } c:TCAA = { set_variable = tyr_ca_name_company_schichau } }
+ else_if = { limit = { is_company_type = company_type:company_schneider_creusot } c:TCAA = { set_variable = tyr_ca_name_company_schneider_creusot } }
+ else_if = { limit = { is_company_type = company_type:company_secn } c:TCAA = { set_variable = tyr_ca_name_company_secn } }
+ else_if = { limit = { is_company_type = company_type:company_sherkat_shemali } c:TCAA = { set_variable = tyr_ca_name_company_sherkat_shemali } }
+ else_if = { limit = { is_company_type = company_type:company_sherkate_eslamiya } c:TCAA = { set_variable = tyr_ca_name_company_sherkate_eslamiya } }
+ else_if = { limit = { is_company_type = company_type:company_siam_electrical_company_limited } c:TCAA = { set_variable = tyr_ca_name_company_siam_electrical_company_limited } }
+ else_if = { limit = { is_company_type = company_type:company_siemens_and_halske } c:TCAA = { set_variable = tyr_ca_name_company_siemens_and_halske } }
+ else_if = { limit = { is_company_type = company_type:company_skoda } c:TCAA = { set_variable = tyr_ca_name_company_skoda } }
+ else_if = { limit = { is_company_type = company_type:company_societe_francaise_charbonnages_du_tonkin } c:TCAA = { set_variable = tyr_ca_name_company_societe_francaise_charbonnages_du_tonkin } }
+ else_if = { limit = { is_company_type = company_type:company_societe_mokta_el_hadid } c:TCAA = { set_variable = tyr_ca_name_company_societe_mokta_el_hadid } }
+ else_if = { limit = { is_company_type = company_type:company_stabilimento_tecnico_di_fiume } c:TCAA = { set_variable = tyr_ca_name_company_stabilimento_tecnico_di_fiume } }
+ else_if = { limit = { is_company_type = company_type:company_standard_oil } c:TCAA = { set_variable = tyr_ca_name_company_standard_oil } }
+ else_if = { limit = { is_company_type = company_type:company_steel_brothers } c:TCAA = { set_variable = tyr_ca_name_company_steel_brothers } }
+ else_if = { limit = { is_company_type = company_type:company_stt } c:TCAA = { set_variable = tyr_ca_name_company_stt } }
+ else_if = { limit = { is_company_type = company_type:company_sudamericana_de_vapores } c:TCAA = { set_variable = tyr_ca_name_company_sudamericana_de_vapores } }
+ else_if = { limit = { is_company_type = company_type:company_suez_company } c:TCAA = { set_variable = tyr_ca_name_company_suez_company } }
+ else_if = { limit = { is_company_type = company_type:company_sumitomo } c:TCAA = { set_variable = tyr_ca_name_company_sumitomo } }
+ else_if = { limit = { is_company_type = company_type:company_sunhwaguk } c:TCAA = { set_variable = tyr_ca_name_company_sunhwaguk } }
+ else_if = { limit = { is_company_type = company_type:company_synth_oil } c:TCAA = { set_variable = tyr_ca_name_company_synth_oil } }
+ else_if = { limit = { is_company_type = company_type:company_tashkent_railroad } c:TCAA = { set_variable = tyr_ca_name_company_tashkent_railroad } }
+ else_if = { limit = { is_company_type = company_type:company_tokyo_electric_light_company } c:TCAA = { set_variable = tyr_ca_name_company_tokyo_electric_light_company } }
+ else_if = { limit = { is_company_type = company_type:company_trubia } c:TCAA = { set_variable = tyr_ca_name_company_trubia } }
+ else_if = { limit = { is_company_type = company_type:company_turkish_petroleum } c:TCAA = { set_variable = tyr_ca_name_company_turkish_petroleum } }
+ else_if = { limit = { is_company_type = company_type:company_uniao_fabril } c:TCAA = { set_variable = tyr_ca_name_company_uniao_fabril } }
+ else_if = { limit = { is_company_type = company_type:company_united_fruit } c:TCAA = { set_variable = tyr_ca_name_company_united_fruit } }
+ else_if = { limit = { is_company_type = company_type:company_united_tobacco_factories } c:TCAA = { set_variable = tyr_ca_name_company_united_tobacco_factories } }
+ else_if = { limit = { is_company_type = company_type:company_ursus } c:TCAA = { set_variable = tyr_ca_name_company_ursus } }
+ else_if = { limit = { is_company_type = company_type:company_us_steel } c:TCAA = { set_variable = tyr_ca_name_company_us_steel } }
+ else_if = { limit = { is_company_type = company_type:company_van_vlissingen_en_dudok_van_heel } c:TCAA = { set_variable = tyr_ca_name_company_van_vlissingen_en_dudok_van_heel } }
+ else_if = { limit = { is_company_type = company_type:company_vodka_monopoly } c:TCAA = { set_variable = tyr_ca_name_company_vodka_monopoly } }
+ else_if = { limit = { is_company_type = company_type:company_wadia_shipbuilders } c:TCAA = { set_variable = tyr_ca_name_company_wadia_shipbuilders } }
+ else_if = { limit = { is_company_type = company_type:company_west_ural_petroleum } c:TCAA = { set_variable = tyr_ca_name_company_west_ural_petroleum } }
+ else_if = { limit = { is_company_type = company_type:company_white_star_line } c:TCAA = { set_variable = tyr_ca_name_company_white_star_line } }
+ else_if = { limit = { is_company_type = company_type:company_william_cramp } c:TCAA = { set_variable = tyr_ca_name_company_william_cramp } }
+ else_if = { limit = { is_company_type = company_type:company_william_sandford } c:TCAA = { set_variable = tyr_ca_name_company_william_sandford } }
+ else_if = { limit = { is_company_type = company_type:company_witkowitzer_bergbau_und_huttengewerkschaft } c:TCAA = { set_variable = tyr_ca_name_company_witkowitzer_bergbau_und_huttengewerkschaft } }
+ else_if = { limit = { is_company_type = company_type:company_yasuda } c:TCAA = { set_variable = tyr_ca_name_company_yasuda } }
+ else_if = { limit = { is_company_type = company_type:company_ynchausti_y_compania } c:TCAA = { set_variable = tyr_ca_name_company_ynchausti_y_compania } }
+ else_if = { limit = { is_company_type = company_type:company_zastava } c:TCAA = { set_variable = tyr_ca_name_company_zastava } }
+}
+
+# Country scope: monthly recalculation, never cumulative modifiers.
+tyr_dream_refresh = {
+ set_variable = { name = tyr_dream_positive value = 0 }
+ set_variable = { name = tyr_dream_negative value = 0 }
+ remove_variable = tyr_dream_partner
+ remove_global_variable = tyr_dream_status_country
+ every_country = {
+  remove_variable = tyr_dream_target
+  if = {
+   limit = { tyr_dream_european_power = yes }
+   if = {
+    limit = { tyr_dream_pro = yes }
+    root = { change_variable = { name = tyr_dream_positive add = 1 } }
+    if = {
+     limit = { tyr_dream_rights = yes root = { gdp_ownership_ratio = { target = scope:tyr_dream_investment_country value >= 0.10 } } }
+     root = { change_variable = { name = tyr_dream_positive add = 1 } }
+    }
+   }
+   if = {
+    limit = { tyr_dream_anti = yes }
+    root = { change_variable = { name = tyr_dream_negative add = 1 } }
+   }
+  }
+  if = {
+   limit = {
+    NOT = { this = ROOT }
+    tyr_dream_pro = yes
+    OR = {
+     tyr_dream_rights = yes
+     AND = { this = c:CHI any_scope_state = { any_neighbouring_state = { owner = ROOT is_treaty_port = yes } } }
+    }
+   }
+   set_variable = tyr_dream_target
+  }
+ }
+ ordered_country = {
+  limit = { NOT = { this = ROOT } tyr_dream_pro = yes relations:ROOT >= 30 }
+  order_by = gdp position = 0 check_range_bounds = no
+  set_global_variable = { name = tyr_dream_status_country value = this }
+  root = { set_variable = { name = tyr_dream_partner value = prev } }
+ }
+ remove_modifier = tyr_dream_attraction
+ remove_modifier = tyr_dream_repulsion
+ if = { limit = { trigger_if = { limit = { has_variable = tyr_dream_positive } var:tyr_dream_positive > 0 } trigger_else = { always = no } } add_modifier = { name = tyr_dream_attraction multiplier = var:tyr_dream_positive } }
+ if = { limit = { trigger_if = { limit = { has_variable = tyr_dream_negative } var:tyr_dream_negative > 0 } trigger_else = { always = no } } add_modifier = { name = tyr_dream_repulsion multiplier = var:tyr_dream_negative } }
+}
+
+# State scope. create_pop requires database culture keys, not saved scopes.
+tyr_dream_create_arrivals = {
+ if = {
+  limit = { scope:tyr_dream_culture = cu:abkhazian }
+  create_pop = {
+   culture = abkhazian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:aborigine }
+  create_pop = {
+   culture = aborigine
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afar }
+  create_pop = {
+   culture = afar
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afro_american }
+  create_pop = {
+   culture = afro_american
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afro_antillean }
+  create_pop = {
+   culture = afro_antillean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afro_brazilian }
+  create_pop = {
+   culture = afro_brazilian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afro_caribbean }
+  create_pop = {
+   culture = afro_caribbean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:afro_caribeno }
+  create_pop = {
+   culture = afro_caribeno
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:aimara }
+  create_pop = {
+   culture = aimara
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ainu }
+  create_pop = {
+   culture = ainu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:akan }
+  create_pop = {
+   culture = akan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:albanian }
+  create_pop = {
+   culture = albanian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:alemannic }
+  create_pop = {
+   culture = alemannic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:algonquian }
+  create_pop = {
+   culture = algonquian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:amazonian }
+  create_pop = {
+   culture = amazonian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:amazonic }
+  create_pop = {
+   culture = amazonic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:amhara }
+  create_pop = {
+   culture = amhara
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:anglo_canadian }
+  create_pop = {
+   culture = anglo_canadian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:apache }
+  create_pop = {
+   culture = apache
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:aragonese }
+  create_pop = {
+   culture = aragonese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:argentine }
+  create_pop = {
+   culture = argentine
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:armenian }
+  create_pop = {
+   culture = armenian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ashkenazi }
+  create_pop = {
+   culture = ashkenazi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:assamese }
+  create_pop = {
+   culture = assamese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:assyrian }
+  create_pop = {
+   culture = assyrian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:asturleonese }
+  create_pop = {
+   culture = asturleonese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:athabaskan }
+  create_pop = {
+   culture = athabaskan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:australian }
+  create_pop = {
+   culture = australian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:avadhi }
+  create_pop = {
+   culture = avadhi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:azande }
+  create_pop = {
+   culture = azande
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:azerbaijani }
+  create_pop = {
+   culture = azerbaijani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:baganda }
+  create_pop = {
+   culture = baganda
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bageli }
+  create_pop = {
+   culture = bageli
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:baguirmi }
+  create_pop = {
+   culture = baguirmi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bakongo }
+  create_pop = {
+   culture = bakongo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:balinese }
+  create_pop = {
+   culture = balinese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:baluchi }
+  create_pop = {
+   culture = baluchi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bambara }
+  create_pop = {
+   culture = bambara
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bashkir }
+  create_pop = {
+   culture = bashkir
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:basque }
+  create_pop = {
+   culture = basque
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bassa }
+  create_pop = {
+   culture = bassa
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:batak }
+  create_pop = {
+   culture = batak
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bedouin }
+  create_pop = {
+   culture = bedouin
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:beja }
+  create_pop = {
+   culture = beja
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bengali }
+  create_pop = {
+   culture = bengali
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:berber }
+  create_pop = {
+   culture = berber
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bidan }
+  create_pop = {
+   culture = bidan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bihari }
+  create_pop = {
+   culture = bihari
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:boer }
+  create_pop = {
+   culture = boer
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bolivian }
+  create_pop = {
+   culture = bolivian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bornean }
+  create_pop = {
+   culture = bornean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bosniak }
+  create_pop = {
+   culture = bosniak
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:brazilian }
+  create_pop = {
+   culture = brazilian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:breton }
+  create_pop = {
+   culture = breton
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:british }
+  create_pop = {
+   culture = british
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bulgarian }
+  create_pop = {
+   culture = bulgarian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:bundeli }
+  create_pop = {
+   culture = bundeli
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:burmese }
+  create_pop = {
+   culture = burmese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:buryat }
+  create_pop = {
+   culture = buryat
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:byelorussian }
+  create_pop = {
+   culture = byelorussian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:caddoan }
+  create_pop = {
+   culture = caddoan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:cajun }
+  create_pop = {
+   culture = cajun
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:cariban }
+  create_pop = {
+   culture = cariban
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:caribeno }
+  create_pop = {
+   culture = caribeno
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:catalan }
+  create_pop = {
+   culture = catalan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:caucasian_turk }
+  create_pop = {
+   culture = caucasian_turk
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:central_american }
+  create_pop = {
+   culture = central_american
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:champa }
+  create_pop = {
+   culture = champa
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chechen }
+  create_pop = {
+   culture = chechen
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:cherokee }
+  create_pop = {
+   culture = cherokee
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chewa }
+  create_pop = {
+   culture = chewa
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chhattisgarhi }
+  create_pop = {
+   culture = chhattisgarhi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chilean }
+  create_pop = {
+   culture = chilean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chukchi }
+  create_pop = {
+   culture = chukchi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:chuvash }
+  create_pop = {
+   culture = chuvash
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:circassian }
+  create_pop = {
+   culture = circassian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:colombian }
+  create_pop = {
+   culture = colombian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:comanche }
+  create_pop = {
+   culture = comanche
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:corsican }
+  create_pop = {
+   culture = corsican
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:cree }
+  create_pop = {
+   culture = cree
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:crimean_tatar }
+  create_pop = {
+   culture = crimean_tatar
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:croat }
+  create_pop = {
+   culture = croat
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:czech }
+  create_pop = {
+   culture = czech
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dagestani }
+  create_pop = {
+   culture = dagestani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dakota }
+  create_pop = {
+   culture = dakota
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:danish }
+  create_pop = {
+   culture = danish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dayak }
+  create_pop = {
+   culture = dayak
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:deccani }
+  create_pop = {
+   culture = deccani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dinka }
+  create_pop = {
+   culture = dinka
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dixie }
+  create_pop = {
+   culture = dixie
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dutch }
+  create_pop = {
+   culture = dutch
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:dyula }
+  create_pop = {
+   culture = dyula
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:east_german }
+  create_pop = {
+   culture = east_german
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ecuadorian }
+  create_pop = {
+   culture = ecuadorian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:edo }
+  create_pop = {
+   culture = edo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:equatorial_bantu }
+  create_pop = {
+   culture = equatorial_bantu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:estonian }
+  create_pop = {
+   culture = estonian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:evenki }
+  create_pop = {
+   culture = evenki
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ewe }
+  create_pop = {
+   culture = ewe
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:fang }
+  create_pop = {
+   culture = fang
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:filipino }
+  create_pop = {
+   culture = filipino
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:filipino_hispanophone }
+  create_pop = {
+   culture = filipino_hispanophone
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:filipino_mestizo }
+  create_pop = {
+   culture = filipino_mestizo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:finnish }
+  create_pop = {
+   culture = finnish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:flemish }
+  create_pop = {
+   culture = flemish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:fluvian_bantu }
+  create_pop = {
+   culture = fluvian_bantu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:fon }
+  create_pop = {
+   culture = fon
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:franco_canadian }
+  create_pop = {
+   culture = franco_canadian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:francoprovencal }
+  create_pop = {
+   culture = francoprovencal
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:french }
+  create_pop = {
+   culture = french
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:fulbe }
+  create_pop = {
+   culture = fulbe
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:fur }
+  create_pop = {
+   culture = fur
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:galician }
+  create_pop = {
+   culture = galician
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:georgian }
+  create_pop = {
+   culture = georgian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:gondi }
+  create_pop = {
+   culture = gondi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:greek }
+  create_pop = {
+   culture = greek
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:griqua }
+  create_pop = {
+   culture = griqua
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:guajiro }
+  create_pop = {
+   culture = guajiro
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:guarani }
+  create_pop = {
+   culture = guarani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:gujarati }
+  create_pop = {
+   culture = gujarati
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hakka }
+  create_pop = {
+   culture = hakka
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:han }
+  create_pop = {
+   culture = han
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:haratin }
+  create_pop = {
+   culture = haratin
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hausa }
+  create_pop = {
+   culture = hausa
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hawaiian }
+  create_pop = {
+   culture = hawaiian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hazara }
+  create_pop = {
+   culture = hazara
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:herero }
+  create_pop = {
+   culture = herero
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hindustani }
+  create_pop = {
+   culture = hindustani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hokan }
+  create_pop = {
+   culture = hokan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:hungarian }
+  create_pop = {
+   culture = hungarian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:iberian }
+  create_pop = {
+   culture = iberian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ibibio }
+  create_pop = {
+   culture = ibibio
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ibo }
+  create_pop = {
+   culture = ibo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:icelandic }
+  create_pop = {
+   culture = icelandic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ilocano }
+  create_pop = {
+   culture = ilocano
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:inuit }
+  create_pop = {
+   culture = inuit
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:irish }
+  create_pop = {
+   culture = irish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:iroquoian }
+  create_pop = {
+   culture = iroquoian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:japanese }
+  create_pop = {
+   culture = japanese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:javan }
+  create_pop = {
+   culture = javan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kachin }
+  create_pop = {
+   culture = kachin
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kalmyk }
+  create_pop = {
+   culture = kalmyk
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kannada }
+  create_pop = {
+   culture = kannada
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kanuri }
+  create_pop = {
+   culture = kanuri
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:karelian }
+  create_pop = {
+   culture = karelian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:karen }
+  create_pop = {
+   culture = karen
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kashmiri }
+  create_pop = {
+   culture = kashmiri
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kavango_bantu }
+  create_pop = {
+   culture = kavango_bantu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kazak }
+  create_pop = {
+   culture = kazak
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:khmer }
+  create_pop = {
+   culture = khmer
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:khmu }
+  create_pop = {
+   culture = khmu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kho }
+  create_pop = {
+   culture = kho
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:khoisan }
+  create_pop = {
+   culture = khoisan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kikuyu }
+  create_pop = {
+   culture = kikuyu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kirgiz }
+  create_pop = {
+   culture = kirgiz
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kissi }
+  create_pop = {
+   culture = kissi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:korean }
+  create_pop = {
+   culture = korean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kru }
+  create_pop = {
+   culture = kru
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:kurdish }
+  create_pop = {
+   culture = kurdish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lacustrine_bantu }
+  create_pop = {
+   culture = lacustrine_bantu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lao }
+  create_pop = {
+   culture = lao
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:latvian }
+  create_pop = {
+   culture = latvian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lithuanian }
+  create_pop = {
+   culture = lithuanian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lomwe }
+  create_pop = {
+   culture = lomwe
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:luba }
+  create_pop = {
+   culture = luba
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lumad }
+  create_pop = {
+   culture = lumad
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lunda }
+  create_pop = {
+   culture = lunda
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:luo }
+  create_pop = {
+   culture = luo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:luri }
+  create_pop = {
+   culture = luri
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:lushai }
+  create_pop = {
+   culture = lushai
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:maasai }
+  create_pop = {
+   culture = maasai
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:maghrebi }
+  create_pop = {
+   culture = maghrebi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:makua }
+  create_pop = {
+   culture = makua
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:malagasy }
+  create_pop = {
+   culture = malagasy
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:malay }
+  create_pop = {
+   culture = malay
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:malayalam }
+  create_pop = {
+   culture = malayalam
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:maltese }
+  create_pop = {
+   culture = maltese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:manchu }
+  create_pop = {
+   culture = manchu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mande }
+  create_pop = {
+   culture = mande
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:manipuri }
+  create_pop = {
+   culture = manipuri
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:maori }
+  create_pop = {
+   culture = maori
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:marathi }
+  create_pop = {
+   culture = marathi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mari }
+  create_pop = {
+   culture = mari
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mashriqi }
+  create_pop = {
+   culture = mashriqi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mayan }
+  create_pop = {
+   culture = mayan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mazanderani }
+  create_pop = {
+   culture = mazanderani
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:melanesian }
+  create_pop = {
+   culture = melanesian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:metis }
+  create_pop = {
+   culture = metis
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mexican }
+  create_pop = {
+   culture = mexican
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:miao }
+  create_pop = {
+   culture = miao
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:micronesian }
+  create_pop = {
+   culture = micronesian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:min }
+  create_pop = {
+   culture = min
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:miskito }
+  create_pop = {
+   culture = miskito
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:misri }
+  create_pop = {
+   culture = misri
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mixtec }
+  create_pop = {
+   culture = mixtec
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:moluccan }
+  create_pop = {
+   culture = moluccan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mon }
+  create_pop = {
+   culture = mon
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mongo }
+  create_pop = {
+   culture = mongo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mongol }
+  create_pop = {
+   culture = mongol
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mordvin }
+  create_pop = {
+   culture = mordvin
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:moro }
+  create_pop = {
+   culture = moro
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:mossi }
+  create_pop = {
+   culture = mossi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:muisca }
+  create_pop = {
+   culture = muisca
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:muskogean }
+  create_pop = {
+   culture = muskogean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:naga }
+  create_pop = {
+   culture = naga
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nahua }
+  create_pop = {
+   culture = nahua
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:navajo }
+  create_pop = {
+   culture = navajo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nepali }
+  create_pop = {
+   culture = nepali
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nez_perce }
+  create_pop = {
+   culture = nez_perce
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nguni }
+  create_pop = {
+   culture = nguni
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nilotic }
+  create_pop = {
+   culture = nilotic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nordestino }
+  create_pop = {
+   culture = nordestino
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:north_andean }
+  create_pop = {
+   culture = north_andean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:north_german }
+  create_pop = {
+   culture = north_german
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:north_italian }
+  create_pop = {
+   culture = north_italian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:norwegian }
+  create_pop = {
+   culture = norwegian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nuba }
+  create_pop = {
+   culture = nuba
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nuer }
+  create_pop = {
+   culture = nuer
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:nyamwezi }
+  create_pop = {
+   culture = nyamwezi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:occitan }
+  create_pop = {
+   culture = occitan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:oodham }
+  create_pop = {
+   culture = oodham
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:oriya }
+  create_pop = {
+   culture = oriya
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:oromo }
+  create_pop = {
+   culture = oromo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ossetian }
+  create_pop = {
+   culture = ossetian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ovimbundu }
+  create_pop = {
+   culture = ovimbundu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:pahari }
+  create_pop = {
+   culture = pahari
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:paiute }
+  create_pop = {
+   culture = paiute
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:panjabi }
+  create_pop = {
+   culture = panjabi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:paraguayan }
+  create_pop = {
+   culture = paraguayan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:pashtun }
+  create_pop = {
+   culture = pashtun
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:patagonian }
+  create_pop = {
+   culture = patagonian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:pathan }
+  create_pop = {
+   culture = pathan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:paulista }
+  create_pop = {
+   culture = paulista
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:persian }
+  create_pop = {
+   culture = persian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:peruvian }
+  create_pop = {
+   culture = peruvian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:platinean }
+  create_pop = {
+   culture = platinean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:polish }
+  create_pop = {
+   culture = polish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:polynesian }
+  create_pop = {
+   culture = polynesian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:portuguese }
+  create_pop = {
+   culture = portuguese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:promethean }
+  create_pop = {
+   culture = promethean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:pueblo }
+  create_pop = {
+   culture = pueblo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:quechua }
+  create_pop = {
+   culture = quechua
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:rajput }
+  create_pop = {
+   culture = rajput
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:romanian }
+  create_pop = {
+   culture = romanian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ruanda }
+  create_pop = {
+   culture = ruanda
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:rundi }
+  create_pop = {
+   culture = rundi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:russian }
+  create_pop = {
+   culture = russian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ryukyuan }
+  create_pop = {
+   culture = ryukyuan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:salish }
+  create_pop = {
+   culture = salish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sami }
+  create_pop = {
+   culture = sami
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sara }
+  create_pop = {
+   culture = sara
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:scottish }
+  create_pop = {
+   culture = scottish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:scottish_gaelic }
+  create_pop = {
+   culture = scottish_gaelic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sena }
+  create_pop = {
+   culture = sena
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:senufo }
+  create_pop = {
+   culture = senufo
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sephardic }
+  create_pop = {
+   culture = sephardic
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:serb }
+  create_pop = {
+   culture = serb
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:shan }
+  create_pop = {
+   culture = shan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:shona }
+  create_pop = {
+   culture = shona
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sidama }
+  create_pop = {
+   culture = sidama
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sindi }
+  create_pop = {
+   culture = sindi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sinhala }
+  create_pop = {
+   culture = sinhala
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:siouan }
+  create_pop = {
+   culture = siouan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:slovak }
+  create_pop = {
+   culture = slovak
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:slovene }
+  create_pop = {
+   culture = slovene
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:somali }
+  create_pop = {
+   culture = somali
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:songhai }
+  create_pop = {
+   culture = songhai
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sorb }
+  create_pop = {
+   culture = sorb
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sotho }
+  create_pop = {
+   culture = sotho
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:south_andean }
+  create_pop = {
+   culture = south_andean
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:south_german }
+  create_pop = {
+   culture = south_german
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:south_italian }
+  create_pop = {
+   culture = south_italian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:spanish }
+  create_pop = {
+   culture = spanish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sudanese }
+  create_pop = {
+   culture = sudanese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sukuma }
+  create_pop = {
+   culture = sukuma
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sulista }
+  create_pop = {
+   culture = sulista
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:sumatran }
+  create_pop = {
+   culture = sumatran
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:swahili }
+  create_pop = {
+   culture = swahili
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:swedish }
+  create_pop = {
+   culture = swedish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:szekely }
+  create_pop = {
+   culture = szekely
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tagalog }
+  create_pop = {
+   culture = tagalog
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tajik }
+  create_pop = {
+   culture = tajik
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tamil }
+  create_pop = {
+   culture = tamil
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tarascan }
+  create_pop = {
+   culture = tarascan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tatar }
+  create_pop = {
+   culture = tatar
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:teda }
+  create_pop = {
+   culture = teda
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:telegu }
+  create_pop = {
+   culture = telegu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:thai }
+  create_pop = {
+   culture = thai
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tibetan }
+  create_pop = {
+   culture = tibetan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tigray }
+  create_pop = {
+   culture = tigray
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tiv }
+  create_pop = {
+   culture = tiv
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tonga }
+  create_pop = {
+   culture = tonga
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tswana }
+  create_pop = {
+   culture = tswana
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tuareg }
+  create_pop = {
+   culture = tuareg
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tupinamba }
+  create_pop = {
+   culture = tupinamba
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:turkish }
+  create_pop = {
+   culture = turkish
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:turkmen }
+  create_pop = {
+   culture = turkmen
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:tuvan }
+  create_pop = {
+   culture = tuvan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:udmurt }
+  create_pop = {
+   culture = udmurt
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ugrian }
+  create_pop = {
+   culture = ugrian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:uighur }
+  create_pop = {
+   culture = uighur
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:ukrainian }
+  create_pop = {
+   culture = ukrainian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:uruguayan }
+  create_pop = {
+   culture = uruguayan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:uzbek }
+  create_pop = {
+   culture = uzbek
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:venezuelan }
+  create_pop = {
+   culture = venezuelan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:vietnamese }
+  create_pop = {
+   culture = vietnamese
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:visayan }
+  create_pop = {
+   culture = visayan
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:wallonian }
+  create_pop = {
+   culture = wallonian
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:welsh }
+  create_pop = {
+   culture = welsh
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:wolof }
+  create_pop = {
+   culture = wolof
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:xhosa }
+  create_pop = {
+   culture = xhosa
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yakut }
+  create_pop = {
+   culture = yakut
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yankee }
+  create_pop = {
+   culture = yankee
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yao }
+  create_pop = {
+   culture = yao
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yemenite }
+  create_pop = {
+   culture = yemenite
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yi }
+  create_pop = {
+   culture = yi
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yoruba }
+  create_pop = {
+   culture = yoruba
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yuanzhumin }
+  create_pop = {
+   culture = yuanzhumin
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:yue }
+  create_pop = {
+   culture = yue
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:zapotec }
+  create_pop = {
+   culture = zapotec
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:zhuang }
+  create_pop = {
+   culture = zhuang
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+ if = {
+  limit = { scope:tyr_dream_culture = cu:zulu }
+  create_pop = {
+   culture = zulu
+   pop_type = laborers
+   size = { value = "culture_percent_state(scope:tyr_dream_culture)" multiply = state_population divide = 10 min = 20000 max = 150000 }
+  }
+ }
+}
+
+# American country scope. Two independent monthly rolls per funded GP/Major worldwide.
+tyr_dream_funded_lobby_rolls = {
+ every_country = {
+  limit = {
+   NOT = { this = ROOT }
+   OR = { country_rank = rank_value:great_power country_rank = rank_value:major_power }
+   save_temporary_scope_as = tyr_dream_funded_country
+   root = { has_diplomatic_pact = { who = scope:tyr_dream_funded_country type = fund_lobbies } }
+  }
+  if = {
+   limit = { NOT = { tyr_dream_pro = yes } }
+   random = {
+    chance = 5
+    if = {
+     limit = {
+      any_interest_group = { is_interest_group_type = ig_industrialists tyr_dream_lobby_founder_eligible = yes }
+     }
+     random_interest_group = {
+      limit = { is_interest_group_type = ig_industrialists tyr_dream_lobby_founder_eligible = yes }
+      save_scope_as = tyr_dream_lobby_founder
+     }
+     create_political_lobby = { type = lobby_pro_country target = ROOT add_interest_group = scope:tyr_dream_lobby_founder lobby_formation_reason = diplomacy }
+    }
+    else_if = {
+     limit = { any_interest_group = { tyr_dream_lobby_founder_eligible = yes } }
+     random_interest_group = { limit = { tyr_dream_lobby_founder_eligible = yes } save_scope_as = tyr_dream_lobby_founder }
+     create_political_lobby = { type = lobby_pro_country target = ROOT add_interest_group = scope:tyr_dream_lobby_founder lobby_formation_reason = diplomacy }
+    }
+   }
+  }
+  if = {
+   limit = { relations:ROOT >= 10 tyr_dream_anti = yes }
+   random = {
+    chance = 3
+    every_political_lobby = {
+     limit = { is_political_lobby_type = lobby_anti_country target = ROOT }
+     disband_political_lobby = yes
+    }
+   }
+  }
+ }
+}
