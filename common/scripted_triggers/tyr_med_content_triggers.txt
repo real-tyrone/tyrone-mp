@@ -1,4 +1,4 @@
-# MED inherits national content only from the country that formed it.
+﻿# MED inherits national content only from the country that formed it.
 
 tyr_med_spanish_origin = {
 	exists = c:MED
@@ -42,13 +42,17 @@ tyr_italian_content_country = {
 
 # Resolves the national actor for trigger evaluation, including existing saves.
 tyr_resolve_spanish_content_trigger = {
-	trigger_if = {
-		limit = { exists = c:MED c:MED ?= { tyr_med_spanish_origin = yes } }
-		c:MED ?= { save_temporary_scope_as = tyr_spanish_content_scope }
-	}
-	trigger_else = {
-		c:SPA ?= { save_temporary_scope_as = tyr_spanish_content_scope }
-	}
+    # Ostend/Spanish-American events persist this actor. Do not shadow it with a temporary target.
+    trigger_if = {
+        limit = { NOT = { exists = scope:tyr_spanish_content_scope } }
+		trigger_if = {
+			limit = { exists = c:MED c:MED ?= { tyr_med_spanish_origin = yes } }
+			c:MED ?= { save_temporary_scope_as = tyr_spanish_content_scope }
+		}
+		trigger_else = {
+			c:SPA ?= { save_temporary_scope_as = tyr_spanish_content_scope }
+		}
+    }
 }
 
 tyr_spanish_content_exists = {

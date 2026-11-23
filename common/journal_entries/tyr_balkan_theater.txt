@@ -4767,3 +4767,664 @@ je_eastern_question_austria = {
 	}
 
 }
+
+
+je_tyr_balkan_theater_dummy = {
+	group = je_group_global_international_situations
+	context = country
+	icon = "gfx/interface/icons/generic_icons/secession_culture_ongoing.dds"
+
+	should_be_involved = {
+		custom_tooltip = {
+			text = tyr_bt_req_tyr_bt_participant
+			tyr_bt_participant = yes
+		}
+	}
+
+	should_show_when_not_involved = { always = yes }
+
+	highlight = yes
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						OR = {
+							AND = {
+								global_var:tyr_bt_aus_influence = global_var:tyr_bt_rus_influence
+								global_var:tyr_bt_aus_influence >= global_var:tyr_bt_tur_influence
+							}
+							AND = {
+								global_var:tyr_bt_aus_influence = global_var:tyr_bt_tur_influence
+								global_var:tyr_bt_aus_influence >= global_var:tyr_bt_rus_influence
+							}
+							AND = {
+								global_var:tyr_bt_rus_influence = global_var:tyr_bt_tur_influence
+								global_var:tyr_bt_rus_influence >= global_var:tyr_bt_aus_influence
+							}
+						}
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_tied
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_aus_influence > global_var:tyr_bt_rus_influence
+						global_var:tyr_bt_aus_influence > global_var:tyr_bt_tur_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_aus_ahead
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_rus_influence > global_var:tyr_bt_aus_influence
+						global_var:tyr_bt_rus_influence > global_var:tyr_bt_tur_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_rus_ahead
+			}
+			triggered_desc = {
+				trigger = {
+					trigger_if = {
+						limit = {
+							has_global_variable = tyr_bt_aus_influence
+							has_global_variable = tyr_bt_rus_influence
+							has_global_variable = tyr_bt_tur_influence
+						}
+						global_var:tyr_bt_tur_influence > global_var:tyr_bt_aus_influence
+						global_var:tyr_bt_tur_influence > global_var:tyr_bt_rus_influence
+					}
+					trigger_else = {
+						always = no
+					}
+				}
+				desc = tyr_bt_status_tur_ahead
+			}
+			desc = tyr_bt_status_waiting
+		}
+	}
+
+	scripted_button = je_eastern_question_russia_free_balkans_button
+
+	is_shown_when_inactive = {
+        NOT = { has_global_variable = tyr_bt_finished }
+        NOT = { tyr_bt_participant = yes }
+        NOT = { has_strategic_region_interest_tier = { strategic_region = sr:region_balkans value >= 1 } }
+    }
+
+	possible = {
+        hidden_trigger = { always = no }
+        has_strategic_region_interest_tier = { strategic_region = sr:region_balkans value >= 1 }
+    }
+    activation_description = {
+        has_strategic_region_interest_tier = { strategic_region = sr:region_balkans value >= 1 }
+    }
+
+
+
+	event_outcome_activated_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = tyr_bt_initialize_preview
+			}
+		}
+	}
+
+
+
+	timeout = 14610
+
+	map_color = {
+		if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_aus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_aus_direct"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_rus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_rus_direct"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_tur_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_tur_direct"
+		}
+		else_if = {
+			limit = {
+				tyr_bt_region = yes
+			}
+			if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_aus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+					value = "tyr_bt_aus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_aus_country
+							}
+						}
+					}
+					value = "tyr_bt_aus_subject"
+				}
+				else = {
+					value = "tyr_bt_aus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_rus = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+					value = "tyr_bt_rus_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_rus_country
+							}
+						}
+					}
+					value = "tyr_bt_rus_subject"
+				}
+				else = {
+					value = "tyr_bt_rus"
+				}
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						tyr_bt_faction_tur = yes
+					}
+				}
+				if = {
+					limit = {
+						owner ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+					value = "tyr_bt_tur_direct"
+				}
+				else_if = {
+					limit = {
+						owner ?= {
+							top_overlord ?= {
+								this = global_var:tyr_bt_tur_country
+							}
+						}
+					}
+					value = "tyr_bt_tur_subject"
+				}
+				else = {
+					value = "tyr_bt_tur"
+				}
+			}
+			else = {
+				value = "tyr_bt_neutral"
+			}
+		}
+	}
+
+	map_color_second = {
+		if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_aus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_aus"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_rus_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_rus"
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					tyr_bt_region = yes
+				}
+				owner ?= {
+					OR = {
+						this = global_var:tyr_bt_tur_country
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+			}
+			value = "tyr_bt_tur"
+		}
+	}
+
+	map_tooltip = {
+		owner ?= {
+			save_scope_as = tyr_bt_map_owner
+		}
+		if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_aus = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_aus_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_aus_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_aus_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_aus_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_aus_bloc_tt
+			}
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_rus = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_rus_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_rus_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_rus_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_rus_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_rus_bloc_tt
+			}
+		}
+		else_if = {
+			limit = {
+				owner ?= {
+					tyr_bt_faction_tur = yes
+				}
+			}
+			if = {
+				limit = {
+					owner ?= {
+						this = global_var:tyr_bt_tur_country
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_tur_direct_tt
+			}
+			else_if = {
+				limit = {
+					owner ?= {
+						top_overlord ?= {
+							this = global_var:tyr_bt_tur_country
+						}
+					}
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_tur_subject_tt
+			}
+			else = {
+				custom_tooltip_no_bullet = tyr_bt_map_tur_bloc_tt
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					exists = scope:tyr_bt_map_owner
+				}
+				custom_tooltip_no_bullet = tyr_bt_map_unaligned_tt
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_aus = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_aus = yes
+						}
+					}
+				}
+				global_var:tyr_bt_aus_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_aus_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_rus = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_rus = yes
+						}
+					}
+				}
+				global_var:tyr_bt_rus_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_rus_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_active_tur = yes
+				exists = scope:tyr_bt_map_owner
+			}
+			if = {
+				limit = {
+					scope:tyr_bt_map_owner = {
+						NOT = {
+							tyr_bt_faction_tur = yes
+						}
+					}
+				}
+				global_var:tyr_bt_tur_country ?= {
+					power_bloc ?= {
+						if = {
+							limit = {
+								leverage_advantage = {
+									target = scope:tyr_bt_map_owner
+									value > 0
+								}
+							}
+							custom_tooltip_no_bullet = tyr_bt_map_tur_leveraged_tt
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				tyr_bt_region = yes
+			}
+			custom_tooltip_no_bullet = tyr_bt_map_inside_tt
+		}
+		else = {
+			custom_tooltip_no_bullet = tyr_bt_map_outside_tt
+		}
+	}
+
+	widget = {
+		gui = "gui/journal_entry_widgets/tyr_balkan_theater.gui"
+		name = "widget_tyr_bt_children"
+		container = "custom_widget_container_3"
+	}
+
+	scripted_progress_bar = tyr_bt_aus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_aus_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_aus_hegemony
+					}
+					global_var:tyr_bt_aus_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_rus_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_rus_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_rus_hegemony
+					}
+					global_var:tyr_bt_rus_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	scripted_progress_bar = tyr_bt_tur_bar
+
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		conclusion_desc = tyr_bt_victory_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_tur_hegemony
+				trigger_if = {
+					limit = {
+						has_global_variable = tyr_bt_tur_hegemony
+					}
+					global_var:tyr_bt_tur_hegemony >= 60
+				}
+				trigger_else = {
+					always = no
+				}
+			}
+		}
+
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_main_end_preview
+				}
+			}
+		}
+	}
+
+	outcome = {
+		header = tyr_bt_stalemate
+		effect_header = je_standard_on_failure_header
+		conclusion_desc = tyr_bt_stalemate_desc
+		trigger = {
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_aus
+				tyr_bt_active_aus = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_rus
+				tyr_bt_active_rus = no
+			}
+			custom_tooltip = {
+				text = tyr_bt_req_tyr_bt_active_tur
+				tyr_bt_active_tur = no
+			}
+		}
+
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_stalemate_preview
+				}
+			}
+		}
+	}
+
+	outcome = {
+		flags = {
+			timeout
+		}
+		header = JOURNAL_ENTRY_TIMEOUT
+		effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+		conclusion_desc = tyr_bt_timeout_desc
+
+		event_outcome_desc = {
+			first_valid = {
+				triggered_desc = {
+					desc = tyr_bt_timeout_preview
+				}
+			}
+		}
+	}
+
+}

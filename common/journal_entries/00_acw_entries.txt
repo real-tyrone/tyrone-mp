@@ -23,6 +23,7 @@
 
 
 	on_monthly_pulse = {
+		events = { tyr_us_slavery.1 }
 		effect = {
 			if = {
 				limit = {
@@ -95,6 +96,14 @@
 		}
 	}
 		effect = {
+        hidden_effect = {
+            every_country = {
+                every_political_movement = {
+                    limit = { has_modifier = tyr_us_slavery_backlash }
+                    remove_modifier = tyr_us_slavery_backlash
+                }
+            }
+        }
 		if = {
 			limit = {
 				has_civil_war_from_movement_type = movement_type:movement_pro_slavery
@@ -107,6 +116,29 @@
 		}
 	}
 	}
+
+    map_color = {
+        if = {
+            limit = { owner ?= { tyr_monroe_usa = yes } }
+            if = { limit = { OR = { is_slave_state = yes is_in_revolt = yes } } value = "tyr_monroe_map_red" }
+            else = { value = "tyr_monroe_map_cyan" }
+        }
+    }
+    map_color_second = {
+        if = {
+            limit = { owner ?= { tyr_monroe_usa = yes } }
+            if = { limit = { OR = { is_slave_state = yes is_in_revolt = yes } } value = "tyr_us_acw_slave_gray" }
+            else = { value = { 38 43 43 } }
+        }
+    }
+    map_tooltip = {
+        if = {
+            limit = { owner ?= { tyr_monroe_usa = yes } }
+            if = { limit = { is_in_revolt = yes } custom_tooltip_no_bullet = tyr_us_acw_secessionist_state_tt }
+            else_if = { limit = { is_slave_state = yes } custom_tooltip_no_bullet = tyr_us_acw_slave_state_tt }
+            else = { custom_tooltip_no_bullet = tyr_us_acw_free_state_tt }
+        }
+    }
 }
 
 je_acw_war = {

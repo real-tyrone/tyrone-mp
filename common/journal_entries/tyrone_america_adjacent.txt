@@ -1,4 +1,4 @@
-﻿### American Exceptionalism
+### American Exceptionalism
 
 je_american_exceptionalism = {
 	activation_description = {
@@ -69,13 +69,15 @@ je_american_exceptionalism = {
 ### Spanish-American War
 
 je_spanish_american_war = {
+ context = none
+
 	activation_description = {
 		always = yes
 	}
 
-	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	icon = "gfx/interface/icons/invention_icons/ironclad_tech.dds"
 
-	group = je_group_global_international_situations
+	group = je_group_tyr_us_foreign_policy
 
 	is_shown_when_inactive = {
 		tyr_resolve_spanish_content_trigger = yes
@@ -102,6 +104,9 @@ je_spanish_american_war = {
 	}
 
 	possible = {
+		c:USA ?= {
+		 custom_tooltip = { text = tyr_us_intervention_threshold_tt var:america_interventionism_points_var >= 5 }
+		}
 		tyr_resolve_spanish_content_trigger = yes
 		exists = c:USA
 		exists = scope:tyr_spanish_content_scope
@@ -169,7 +174,7 @@ je_spanish_american_war = {
 
 
 
-	weight = 100
+	weight = 450
 	should_be_pinned_by_default_involved = yes
 
 	outcome = {
@@ -179,65 +184,68 @@ je_spanish_american_war = {
 		conclusion_desc = je_standard_completion_conclusion_desc
 		trigger = {
 		tyr_resolve_spanish_content_trigger = yes
-		OR = {
-			custom_tooltip = {
-				text = je_saw_american_victory_humiliation_tt
-				scope:tyr_spanish_content_scope = {
-					has_modifier = country_humiliated
-					has_truce_with = c:USA
+		scope:tyr_spanish_content_scope = { has_truce_with = c:USA }
+		custom_tooltip = {
+			text = je_saw_american_victory_subjects_tt
+			OR = {
+				c:USA = {
+					has_variable = saw_scripted_war_victory
 				}
-			}
-			custom_tooltip = {
-				text = je_saw_american_victory_subjects_tt
-				OR = {
-					c:USA = {
-						has_variable = saw_scripted_war_victory
-					}
-					NOT = {
-						scope:tyr_spanish_content_scope = {
-							any_subject_or_below = {
-								capital = {
-									OR = {
-										region = sr:region_central_america
-										region = sr:region_great_plains
-										region = sr:region_pacific_coast
-										region = sr:region_atlantic_coast
-										region = sr:region_canada
-										region = sr:region_brazil
-										region = sr:region_andes
-										region = sr:region_la_plata
-										region = sr:region_gran_colombia
-									}
-								}
-							}
-						}
-					}
-					NOT = {
-						scope:tyr_spanish_content_scope = {
-							any_subject_or_below = {
-								count >= scope:tyr_spanish_content_scope.var:saw_spain_americas_subjects_threshold
-								capital = {
-									OR = {
-										region = sr:region_central_america
-										region = sr:region_great_plains
-										region = sr:region_pacific_coast
-										region = sr:region_atlantic_coast
-										region = sr:region_canada
-										region = sr:region_brazil
-										region = sr:region_andes
-										region = sr:region_la_plata
-										region = sr:region_gran_colombia
-									}
+				NOT = {
+					scope:tyr_spanish_content_scope = {
+						any_subject_or_below = {
+							capital = {
+								OR = {
+									region = sr:region_central_america
+									region = sr:region_great_plains
+									region = sr:region_pacific_coast
+									region = sr:region_atlantic_coast
+									region = sr:region_canada
+									region = sr:region_brazil
+									region = sr:region_andes
+									region = sr:region_la_plata
+									region = sr:region_gran_colombia
 								}
 							}
 						}
 					}
 				}
+                trigger_if = {
+                    limit = {
+                        exists = scope:tyr_spanish_content_scope
+                        scope:tyr_spanish_content_scope ?= {
+                            has_variable = saw_spain_americas_subjects_threshold
+                        }
+                    }
+                    NOT = {
+                        scope:tyr_spanish_content_scope = {
+                            any_subject_or_below = {
+                                count >= scope:tyr_spanish_content_scope.var:saw_spain_americas_subjects_threshold
+                                capital = {
+                                    OR = {
+                                        region = sr:region_central_america
+                                        region = sr:region_great_plains
+                                        region = sr:region_pacific_coast
+                                        region = sr:region_atlantic_coast
+                                        region = sr:region_canada
+                                        region = sr:region_brazil
+                                        region = sr:region_andes
+                                        region = sr:region_la_plata
+                                        region = sr:region_gran_colombia
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                trigger_else = { always = no }
 			}
 		}
-
 	}
 		effect = {
+        custom_tooltip = tyr_us_gain_point_tt
+        hidden_effect = { c:USA ?= { set_variable = tyr_us_saw_completed } }
+
 		tyr_resolve_spanish_content_effect = yes
 		c:USA ?= {
 			add_modifier = { name = saw_american_victory years = 10 }
@@ -423,6 +431,9 @@ je_ostend_manifesto = {
 		}
 	}
 		effect = {
+        custom_tooltip = tyr_us_gain_point_tt
+        hidden_effect = { c:USA ?= { set_variable = tyr_us_ostend_completed } }
+
 		c:USA = {
 			add_loyalists = {
 				value = 0.10
@@ -543,3 +554,629 @@ je_ostend_manifesto = {
 
 
 
+
+je_tyr_monroe_doctrine = {
+ icon = "gfx/interface/icons/event_icons/event_military.dds"
+ group = je_group_global_international_situations
+ context = none
+ activation_description = {
+  custom_tooltip = {
+   text = tyr_monroe_activation_guarantor_tt
+   any_country = { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes } }
+  }
+  custom_tooltip = {
+   text = tyr_monroe_activation_not_ended_tt
+   NOT = { has_global_variable = tyr_monroe_ended }
+  }
+ }
+ is_shown_when_inactive = { NOT = { has_global_variable = tyr_monroe_ended } }
+ possible = {
+  custom_tooltip = {
+   text = tyr_monroe_activation_guarantor_tt
+   any_country = { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes } }
+  }
+  custom_tooltip = {
+   text = tyr_monroe_activation_not_ended_tt
+   NOT = { has_global_variable = tyr_monroe_ended }
+  }
+ }
+ should_be_involved = { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes capital ?= { is_in_geographic_region = geographic_region_americas } } }
+ should_show_when_not_involved = { tyr_monroe_visible = yes }
+ should_be_pinned_by_default_involved = yes
+ transferable = no
+ can_revolution_inherit = no
+ weight = 200
+ scripted_button = tyr_monroe_withdraw
+ scripted_button = tyr_monroe_us_withdraw
+ immediate = {
+  c:BRZ ?= { every_scope_state = { state_region = { set_variable = tyr_monroe_brazil_initial } } }
+  c:PRA ?= { every_scope_state = { state_region = { set_variable = tyr_monroe_brazil_initial } } }
+  c:PNI ?= { every_scope_state = { state_region = { set_variable = tyr_monroe_brazil_initial } } }
+  tyr_monroe_update = yes
+ }
+ on_monthly_pulse = {
+  effect = {
+   tyr_monroe_monthly_involvement = yes
+   tyr_monroe_update = yes
+   if = {
+    limit = { exists = c:UNSA }
+    set_global_variable = tyr_monroe_unsa_risen
+   }
+  }
+ }
+ status_desc = {
+  first_valid = {
+   triggered_desc = { trigger = { global_var:tyr_monroe_american_guarantor = 1 } desc = tyr_monroe_status_usa }
+   desc = tyr_monroe_status_gbr
+  }
+ }
+ map_color = {
+  if = { limit = { tyr_monroe_area = yes } value = "tyr_monroe_map_green" }
+  else_if = { limit = { owner ?= { tyr_monroe_usa = yes } } value = "tyr_monroe_map_cyan" }
+  else_if = { limit = { owner ?= { tyr_monroe_gbr = yes } } value = "tyr_monroe_map_red" }
+ }
+ map_color_second = {
+  if = {
+   limit = { tyr_monroe_area = yes }
+   if = { limit = { NOT = { tyr_monroe_protected = yes } } value = "tyr_monroe_map_orange" }
+   else_if = { limit = { owner ?= { tyr_monroe_usa_sphere = yes } } value = "tyr_monroe_map_cyan" }
+   else_if = { limit = { owner ?= { tyr_monroe_gbr_sphere = yes } } value = "tyr_monroe_map_red" }
+  }
+ }
+ map_tooltip = {
+  if = {
+   limit = { tyr_monroe_area = yes }
+   if = { limit = { tyr_monroe_protected = yes } custom_tooltip_no_bullet = tyr_monroe_map_protected }
+   else = { custom_tooltip_no_bullet = tyr_monroe_map_invaded }
+   if = { limit = { is_largest_state_in_region = yes } custom_tooltip_no_bullet = tyr_monroe_map_counted }
+   else = { custom_tooltip_no_bullet = tyr_monroe_map_not_counted }
+  }
+ }
+ outcome = {
+  header = tyr_monroe_unsa_failure_header
+  effect_header = je_standard_on_failure_header
+  conclusion_desc = tyr_monroe_unsa_conclusion
+  color = "blue_negative"
+  trigger = {
+   custom_tooltip = {
+    text = tyr_monroe_unsa_failure_condition_tt
+    has_global_variable = tyr_monroe_unsa_risen
+   }
+   OR = {
+    custom_tooltip = {
+     text = tyr_monroe_unsa_american_leadership_tt
+     global_var:tyr_monroe_american_guarantor = 1
+    }
+    custom_tooltip = {
+     text = tyr_monroe_unsa_date_tt
+     game_date >= 1860.1.1
+    }
+   }
+  }
+  effect = { tyr_monroe_unsa_failure = yes }
+  event_outcome_effect_desc = {
+   effect = {
+    if = {
+     limit = { c:UNSA ?= { power_bloc ?= { power_bloc_leader ?= { tyr_monroe_usa = yes } } } }
+     custom_tooltip = tyr_monroe_unsa_half_tt
+     every_country = {
+      limit = { tyr_monroe_usa = yes }
+      add_modifier = { name = tyr_monroe_unsa_american_setback years = 5 multiplier = 0.5 is_decaying = yes }
+     }
+     if = {
+      limit = { exists = c:UNSA }
+      c:UNSA = { add_modifier = { name = tyr_monroe_unsa_ascendant years = 5 multiplier = 0.5 is_decaying = yes } }
+     }
+     else = {
+      # Preview only: Brazil stands in for the future UNSA recipient.
+      c:BRZ ?= {
+       add_modifier = { name = tyr_monroe_unsa_ascendant years = 5 multiplier = 0.5 is_decaying = yes }
+      }
+     }
+    }
+    else = {
+     custom_tooltip = tyr_monroe_unsa_full_tt
+     every_country = {
+      limit = { tyr_monroe_usa = yes }
+      add_modifier = { name = tyr_monroe_unsa_american_setback years = 10 is_decaying = yes }
+     }
+     if = {
+      limit = { exists = c:UNSA }
+      c:UNSA = { add_modifier = { name = tyr_monroe_unsa_ascendant years = 10 is_decaying = yes } }
+     }
+     else = {
+      # Preview only: Brazil stands in for the future UNSA recipient.
+      c:BRZ ?= {
+       add_modifier = { name = tyr_monroe_unsa_ascendant years = 10 is_decaying = yes }
+      }
+     }
+    }
+   }
+  }
+ }
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = tyr_monroe_invalid
+  trigger = {
+   OR = {
+    hidden_trigger = { has_global_variable = tyr_monroe_ended }
+    custom_tooltip = {
+     text = tyr_monroe_invalid_no_guarantors_tt
+     NOT = { any_country = { OR = { tyr_monroe_usa = yes tyr_monroe_gbr = yes } } }
+    }
+    custom_tooltip = {
+     text = tyr_monroe_invalid_withdrawal_tt
+     has_global_variable = tyr_monroe_british_withdrawal
+     NOT = { any_country = { tyr_monroe_usa = yes } }
+    }
+   }
+  }
+  effect = {
+   set_global_variable = tyr_monroe_ended
+   every_country = { limit = { has_modifier = tyr_monroe_trade } remove_modifier = tyr_monroe_trade }
+  }
+ }
+}
+
+je_tyr_us_foreign_policy = {
+ widget = { gui = "gui/journal_entry_widgets/tyrone_america_adjacent.gui" name = "tyr_us_policy_children" container = "custom_widget_container_3" }
+
+ icon = "gfx/interface/icons/event_icons/usa_interventionism.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = { tyr_monroe_usa = yes }
+ can_revolution_inherit = yes
+ transferable = no
+ should_be_pinned_by_default_uninvolved_or_context = yes
+ weight = 1000
+ widget = { gui = "gui/journal_entry_widgets/tyrone_america_adjacent.gui" name = "tyr_us_policy_widget" container = "custom_widget_container_1" }
+ immediate = {
+  set_variable = tyr_monroe_usa_identity
+  if = { limit = { NOT = { has_variable = america_interventionism_points_var } } set_variable = { name = america_interventionism_points_var value = 1 } }
+  if = { limit = { NOT = { has_variable = manifested_destiny } } add_modifier = { name = tyr_us_colonial_restraint } }
+  tyr_us_sync_regime = yes
+ }
+ on_monthly_pulse = { effect = { tyr_us_policy_monthly = yes } }
+ scripted_button = tyr_us_action_jingoist
+ scripted_button = tyr_us_action_market_liberal
+ scripted_button = tyr_us_action_pacifist
+ scripted_button = tyr_us_action_protectionist
+
+ status_desc = { first_valid = {
+  triggered_desc = { trigger = { var:tyr_us_regime = 3 } desc = tyr_us_status_globalism }
+  triggered_desc = { trigger = { var:tyr_us_regime = 2 } desc = tyr_us_status_interventionism }
+  desc = tyr_us_status_isolationism
+ } }
+}
+
+je_tyr_us_manifest_destiny = {
+ weight = 460
+
+ icon = "gfx/interface/icons/invention_icons/colonization.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = { custom_tooltip = { text = tyr_us_american_successor_tt tyr_monroe_usa = yes } custom_tooltip = { text = tyr_us_manifest_declared_tt has_variable = manifested_destiny } }
+ can_revolution_inherit = yes
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_us_manifest_conclusion
+  color = "gold_positive"
+  trigger = {
+   custom_tooltip = {
+    text = tyr_us_manifest_oregon_complete_tt
+    OR = {
+     has_variable = tyr_us_oregon_border_dispute_complete
+     AND = {
+      owns_entire_state_region = STATE_WASHINGTON
+      owns_entire_state_region = STATE_IDAHO
+      owns_entire_state_region = STATE_OREGON
+     }
+    }
+   }
+   custom_tooltip = {
+    text = tyr_us_manifest_mexico_complete_tt
+    OR = {
+     has_variable = je_manifest_destiny_mexico_complete
+     AND = {
+      owns_entire_state_region = STATE_CALIFORNIA
+      owns_entire_state_region = STATE_NEVADA
+      owns_entire_state_region = STATE_UTAH
+      owns_entire_state_region = STATE_ARIZONA
+      owns_entire_state_region = STATE_NEW_MEXICO
+      owns_entire_state_region = STATE_TEXAS
+     }
+    }
+   }
+   custom_tooltip = {
+    text = tyr_us_manifest_frontier_complete_tt
+    OR = {
+     has_variable = je_manifest_destiny_frontier_wars_complete
+     AND = {
+      owns_entire_state_region = STATE_MONTANA
+      owns_entire_state_region = STATE_WYOMING
+      owns_entire_state_region = STATE_COLORADO
+      owns_entire_state_region = STATE_NORTH_DAKOTA
+      owns_entire_state_region = STATE_SOUTH_DAKOTA
+      owns_entire_state_region = STATE_NEBRASKA
+      owns_entire_state_region = STATE_KANSAS
+     }
+    }
+   }
+  }
+  effect = {
+   custom_tooltip = tyr_us_gain_point_tt
+   custom_tooltip = tyr_us_manifest_settlement_reward_tt
+   hidden_effect = { set_variable = tyr_us_manifest_complete tyr_us_manifest_settlement_reward = yes }
+  }
+ }
+}
+
+je_tyr_us_asian_markets = {
+ weight = 440
+
+ icon = "gfx/interface/icons/invention_icons/international_trade.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = {
+  hidden_trigger = { tyr_monroe_usa = yes }
+  OR = { has_modifier = tyr_us_interventionism has_modifier = tyr_us_globalism }
+  has_technology_researched = civilizing_mission
+ }
+ transferable = no
+ can_revolution_inherit = yes
+ scripted_button = tyr_us_open_japan
+ scripted_button = tyr_us_open_china
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_us_asian_markets_conclusion
+  color = "gold_positive"
+  trigger = {
+   exists = c:JAP
+   exists = c:CHI
+   c:JAP = { NOT = { has_law_or_variant = law_type:law_isolationism } }
+   c:CHI = { NOT = { has_law_or_variant = law_type:law_isolationism } }
+   has_strategic_region_interest_tier = { strategic_region = sr:region_northeast_asia value >= 3 }
+   has_strategic_region_interest_tier = { strategic_region = sr:region_north_china value >= 3 }
+  }
+  effect = { add_modifier = { name = tyr_us_asian_markets_opened } }
+ }
+}
+
+je_tyr_us_globalism_mexico = {
+ weight = 420
+
+ icon = "gfx/interface/icons/invention_icons/pan_nationalism.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = {
+  hidden_trigger = { tyr_monroe_usa = yes }
+  has_modifier = tyr_us_globalism
+  has_technology_researched = pan-nationalism
+ }
+ transferable = no
+ can_revolution_inherit = yes
+ timeout = 1825
+ scripted_button = tyr_us_globalism_annex_mexico
+ immediate = {
+  custom_tooltip = tyr_us_globalism_mexico_claims_tt
+  hidden_effect = { tyr_us_add_mexico_claims = yes }
+ }
+
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_us_globalism_mexico_conclusion
+  color = "gold_positive"
+  trigger = {
+   owns_entire_state_region = STATE_BAJA_CALIFORNIA
+   owns_entire_state_region = STATE_SONORA
+   owns_entire_state_region = STATE_CHIHUAHUA
+   owns_entire_state_region = STATE_RIO_GRANDE
+   owns_entire_state_region = STATE_DURANGO
+   owns_entire_state_region = STATE_SINALOA
+   owns_entire_state_region = STATE_BAJIO
+   owns_entire_state_region = STATE_YUCATAN
+   owns_entire_state_region = STATE_MEXICO
+   owns_entire_state_region = STATE_VERACRUZ
+   owns_entire_state_region = STATE_GUERRERO
+   owns_entire_state_region = STATE_OAXACA
+   owns_entire_state_region = STATE_JALISCO
+   owns_entire_state_region = STATE_ZACATECAS
+   owns_entire_state_region = STATE_CHIAPAS
+
+  }
+  effect = {
+   trigger_event = { id = tyr_us_globalism.1 days = 0 popup = yes }
+  }
+ }
+ outcome = {
+  flags = { timeout }
+  header = JOURNAL_ENTRY_TIMEOUT
+  effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+  conclusion_desc = tyr_us_globalism_mexico_timeout
+  effect = {
+   custom_tooltip = tyr_us_globalism_mexico_claims_lost_tt
+   hidden_effect = { tyr_us_remove_mexico_claims = yes }
+  }
+ }
+}
+
+je_tyr_us_globalism_canada = {
+ weight = 430
+
+ icon = "gfx/interface/icons/invention_icons/pan_nationalism.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = {
+  hidden_trigger = { tyr_monroe_usa = yes }
+  has_modifier = tyr_us_globalism
+  has_technology_researched = pan-nationalism
+ }
+ transferable = no
+ can_revolution_inherit = yes
+ timeout = 1825
+ scripted_button = tyr_us_globalism_annex_canada
+ immediate = {
+  custom_tooltip = tyr_us_globalism_canada_claims_tt
+  hidden_effect = { tyr_us_add_canada_claims = yes }
+ }
+
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_us_globalism_canada_conclusion
+  color = "gold_positive"
+  trigger = {
+   owns_entire_state_region = STATE_ONTARIO
+   owns_entire_state_region = STATE_NEW_BRUNSWICK
+   owns_entire_state_region = STATE_QUEBEC
+   owns_entire_state_region = STATE_NEWFOUNDLAND
+   owns_entire_state_region = STATE_ALBERTA
+   owns_entire_state_region = STATE_BRITISH_COLUMBIA
+   owns_entire_state_region = STATE_SASKATCHEWAN
+   owns_entire_state_region = STATE_MANITOBA
+   owns_entire_state_region = STATE_YUKON_TERRITORY
+   owns_entire_state_region = STATE_NORTHWEST_TERRITORIES
+   owns_entire_state_region = STATE_NUNAVUT
+
+  }
+  effect = {
+   every_scope_state = {
+    limit = { OR = { state_region = s:STATE_QUEBEC state_region = s:STATE_ONTARIO } }
+    add_modifier = { name = tyr_us_manifest_destiny_settlement multiplier = 0.5 years = 5 }
+   }
+  }
+ }
+ outcome = {
+  flags = { timeout }
+  header = JOURNAL_ENTRY_TIMEOUT
+  effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+  conclusion_desc = tyr_us_globalism_canada_timeout
+  effect = {
+   custom_tooltip = tyr_us_globalism_canada_claims_lost_tt
+   hidden_effect = { tyr_us_remove_canada_claims = yes }
+  }
+ }
+}
+
+je_tyr_us_great_techante = {
+ weight = 410
+
+ icon = "gfx/interface/icons/invention_icons/central_planning.dds"
+ group = je_group_tyr_us_foreign_policy
+ is_shown_when_inactive = {
+  hidden_trigger = { tyr_monroe_usa = yes }
+  has_modifier = tyr_us_globalism
+  has_law_or_variant = law_type:law_technocracy
+ }
+ possible = {
+  has_modifier = tyr_us_globalism
+  has_technology_researched = central_planning
+  has_technology_researched = pan-nationalism
+  has_law_or_variant = law_type:law_technocracy
+ }
+ transferable = no
+ can_revolution_inherit = yes
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_us_techante_conclusion
+  color = "gold_positive"
+  trigger = {
+   has_law_or_variant = law_type:law_technocracy
+   custom_tooltip = { text = tyr_us_technocracy_completed_tt has_variable = tyr_us_technocracy_completed }
+   custom_tooltip = {
+    text = tyr_us_techante_territories_tt
+    NOT = {
+     any_country = {
+      any_scope_state = {
+       filter = {
+        OR = {
+         region = sr:region_atlantic_coast
+         region = sr:region_great_plains
+         region = sr:region_pacific_coast
+         region = sr:region_central_america
+         region = sr:region_gran_colombia
+        }
+       }
+       NOT = { owner = ROOT }
+      }
+     }
+    }
+   }
+   OR = {
+    AND = { country_rank = rank_value:great_power global_country_ranking = 1 }
+    gdp_ranking = 1
+   }
+  }
+  effect = { trigger_event = { id = tyr_us_technate.1 days = 0 popup = yes } }
+ }
+}
+
+je_tyr_ca_contest = {
+ context = none
+ group = je_group_global_international_situations
+ icon = "gfx/interface/icons/invention_icons/international_trade.dds"
+ is_shown_when_inactive = { game_date < 1870.1.1 NOT = { has_global_variable = tyr_ca_ended } }
+ activation_description = { game_date >= 1850.1.1 }
+ possible = {
+  game_date >= 1850.1.1
+  custom_tooltip = {
+   text = tyr_ca_contest_not_ended_tt
+   NOT = { has_global_variable = tyr_ca_ended }
+  }
+ }
+ can_deactivate = yes
+ should_show_when_not_involved = { game_date < 1870.1.1 }
+ should_be_involved = { OR = { custom_tooltip = { text = tyr_ca_contest_participant_tt has_variable = tyr_ca_participant } AND = { country_rank >= rank_value:great_power has_strategic_region_interest_tier = { strategic_region = sr:region_central_america value >= 2 } } } }
+ immediate_all_involved = { set_variable = tyr_ca_participant }
+ immediate = { tyr_ca_refresh = yes }
+ on_monthly_pulse = { effect = { tyr_ca_refresh = yes } }
+ status_desc = { first_valid = {
+  triggered_desc = { trigger = { global_var:tyr_ca_best = 0 } desc = tyr_ca_status_empty }
+  triggered_desc = { trigger = { global_var:tyr_ca_ties > 1 } desc = tyr_ca_status_tied }
+  desc = tyr_ca_status_leader
+ } }
+ map_color = {
+  if = { limit = { tyr_ca_state = yes }
+   if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 1 } } value = "tyr_ca_owner_105_133_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 2 } } value = "tyr_ca_owner_161_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 3 } } value = "tyr_ca_owner_201_105_189" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 4 } } value = "tyr_ca_owner_105_201_185" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 5 } } value = "tyr_ca_owner_201_157_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 6 } } value = "tyr_ca_owner_129_105_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 7 } } value = "tyr_ca_owner_109_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 8 } } value = "tyr_ca_owner_201_105_137" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 9 } } value = "tyr_ca_owner_105_165_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 10 } } value = "tyr_ca_owner_194_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 11 } } value = "tyr_ca_owner_181_105_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 12 } } value = "tyr_ca_owner_105_201_153" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 13 } } value = "tyr_ca_owner_201_125_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 14 } } value = "tyr_ca_owner_105_113_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 15 } } value = "tyr_ca_owner_141_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 16 } } value = "tyr_ca_owner_201_105_169" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 17 } } value = "tyr_ca_owner_105_198_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 18 } } value = "tyr_ca_owner_201_177_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 19 } } value = "tyr_ca_owner_149_105_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 20 } } value = "tyr_ca_owner_105_201_121" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 21 } } value = "tyr_ca_owner_201_105_117" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 22 } } value = "tyr_ca_owner_105_145_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 23 } } value = "tyr_ca_owner_174_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 24 } } value = "tyr_ca_owner_201_105_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 25 } } value = "tyr_ca_owner_105_201_173" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 26 } } value = "tyr_ca_owner_201_145_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 27 } } value = "tyr_ca_owner_117_105_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 28 } } value = "tyr_ca_owner_121_201_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 29 } } value = "tyr_ca_owner_201_105_149" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 30 } } value = "tyr_ca_owner_105_178_201" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 31 } } value = "tyr_ca_owner_201_197_105" }
+   else_if = { limit = { owner ?= { has_variable = tyr_ca_map_color var:tyr_ca_map_color = 32 } } value = "tyr_ca_owner_169_105_201" }
+   else = { value = "tyr_ca_owner_120_120_105" }
+  }
+ }
+ map_tooltip = { if = { limit = { tyr_ca_state = yes } owner = { save_scope_as = tyr_ca_map_owner custom_tooltip_no_bullet = tyr_ca_map_owner_tt } } }
+
+ outcome = {
+  header = tyr_ca_end_header
+  effect_header = je_standard_on_completion_header
+  conclusion_desc = tyr_ca_conclusion
+  trigger = { game_date >= 1870.1.1 }
+  effect = {
+   hidden_effect = {
+    tyr_ca_refresh = yes
+    set_global_variable = tyr_ca_ended
+    every_country = { limit = { has_modifier = tyr_ca_leading } remove_modifier = tyr_ca_leading }
+   }
+   global_var:tyr_ca_winner ?= { trigger_event = { id = tyr_ca.1 days = 0 popup = yes } }
+  }
+  event_outcome_desc = { first_valid = { desc = tyr_ca_preview } }
+ }
+}
+
+je_tyr_us_panama = {
+ group = je_group_tyr_us_foreign_policy
+ icon = "gfx/interface/icons/event_icons/event_trade.dds"
+ possible = { hidden_trigger = { tyr_monroe_usa = yes } custom_tooltip = { text = panama_survey_complete_tooltip has_variable = panama_survey_complete } }
+ outcome = {
+  trigger = { any_scope_state = { any_scope_building = { is_building_type = building_panama_canal occupancy >= 0.9 } } }
+  effect = { custom_tooltip = tyr_us_gain_point_tt hidden_effect = { tyr_us_gain_point = yes } add_loyalists = { value = 0.02 } }
+ }
+}
+je_tyr_us_dollar_diplomacy = {
+ timeout = 3650
+ context = country
+ group = je_group_tyr_us_foreign_policy
+ icon = "gfx/interface/icons/event_icons/event_trade.dds"
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = { hidden_trigger = { tyr_monroe_usa = yes } OR = { has_modifier = tyr_us_interventionism has_modifier = tyr_us_globalism } is_power_bloc_leader = yes }
+ outcome = {
+  header = je_standard_completion_header
+  effect_header = je_standard_on_completion_header
+  color = "gold_positive"
+  conclusion_desc = je_standard_completion_conclusion_desc
+  trigger = {
+   is_power_bloc_leader = yes
+   any_country = {
+    filter = { capital ?= { is_in_geographic_region = geographic_region_south_america } NOT = { this = c:BRZ } NOT = { this = ROOT } }
+    percent = 1
+    is_in_same_power_bloc = ROOT
+    custom_tooltip = {
+     text = tyr_us_dollar_investment_rights_tt
+     save_temporary_scope_as = tyr_us_dollar_investment_country
+     root = { has_treaty_foreign_investment_rights_with = { TARGET = scope:tyr_us_dollar_investment_country } }
+    }
+    custom_tooltip = tyr_us_dollar_remaining_tt
+   }
+  }
+  effect = {
+   custom_tooltip = tyr_us_dollar_reward_tt
+   hidden_effect = {
+    root.power_bloc ?= {
+     add_modifier = { name = tyr_us_dollar_mandates years = 10 }
+     add_modifier = { name = tyr_us_dollar_customs }
+    }
+   }
+  }
+ }
+ outcome = {
+  flags = { timeout }
+  header = JOURNAL_ENTRY_TIMEOUT
+  effect_header = JOURNAL_ENTRY_ON_TIMEOUT
+  conclusion_desc = je_standard_failure_conclusion_desc
+  effect = { add_radicals = { value = 0.05 } }
+ }
+}
+
+je_tyr_us_american_dream = {
+ group = je_group_tyr_us_foreign_policy
+ icon = "gfx/interface/icons/invention_icons/mass_propaganda.dds"
+ is_shown_when_inactive = { tyr_monroe_usa = yes }
+ possible = {
+  hidden_trigger = { tyr_monroe_usa = yes }
+  has_modifier = tyr_us_globalism
+  any_country = { is_in_geographic_region = geographic_region_europe country_rank = rank_value:great_power tyr_dream_pro = yes relations:ROOT >= 30 count >= 2 }
+ }
+ can_revolution_inherit = yes
+ immediate = { hidden_effect = { tyr_dream_refresh = yes } }
+ on_monthly_pulse = {
+  effect = {
+   hidden_effect = {
+    tyr_dream_funded_lobby_rolls = yes
+    tyr_dream_refresh = yes
+   }
+  }
+ }
+ scripted_progress_bar = tyr_dream_bar
+ scripted_button = tyr_dream_migration
+ status_desc = { first_valid = {
+  triggered_desc = { trigger = { has_global_variable = tyr_dream_status_country } desc = tyr_dream_status_partner }
+  desc = tyr_dream_status_neutral
+ } }
+ map_color = {
+  if = { limit = { owner ?= { tyr_dream_pro = yes } } value = "tyr_monroe_map_cyan" }
+  else_if = { limit = { owner ?= { tyr_dream_anti = yes } } value = "tyr_monroe_map_red" }
+ }
+ map_color_second = { if = { limit = { owner ?= { tyr_dream_pro = yes tyr_dream_anti = yes } } value = "tyr_monroe_map_red" } }
+}
