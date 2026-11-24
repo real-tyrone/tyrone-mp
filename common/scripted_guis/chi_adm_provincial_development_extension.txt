@@ -353,8 +353,8 @@ chi_adm_provincial_development_propose_conversion = {
             else = { custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_compact_no }
             if = { limit = { is_at_war = no } custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_peace_yes }
             else = { custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_peace_no }
-            if = { limit = { relative_bureaucracy >= 0.10 } custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_bureaucracy_yes }
-            else = { custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_bureaucracy_no }
+            if = { limit = { chi_adm_provincial_development_conversion_qualification = yes } custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_qualification_yes }
+            else = { custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_qualification_no }
             if = { limit = { var:chi_adm_loyalty >= 60 } custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_loyalty_yes }
             else = { custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_loyalty_no }
             if = { limit = { var:chi_adm_autonomy <= 60 } custom_tooltip_no_bullet = chi_adm_provincial_development_conversion_req_autonomy_yes }
@@ -392,16 +392,34 @@ chi_adm_provincial_development_enforce = {
 scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_truce_with = c:CHI } has_variable = chi_adm_provincial_development_dispute NOT = { has_modifier = chi_adm_provincial_development_guarantee } is_at_war = no c:CHI = { is_at_war = no is_diplomatic_play_committed_participant = no NOT = { var:chi_adm_qing_security_phase = 5 } NOT = { has_variable = chi_adm_provincial_development_enforcement } } } effect = { custom_tooltip = chi_adm_provincial_development_enforce_desc hidden_effect = { chi_adm_provincial_development_enforce = yes } }
 }
 
-chi_adm_provincial_development_review_militia = {
-scope = country
-is_valid = { chi_adm_target_valid = yes var:chi_adm_provincial_development_case = 1 }
-effect = {
- custom_tooltip = chi_adm_provincial_development_review_militia_tt
- hidden_effect = {
- save_scope_as = chi_adm_provincial_development_province
- c:CHI = { save_scope_as = chi_adm_provincial_development_court trigger_event = { id = chi_adm_provincial_development.1 popup = yes } }
- }
+chi_adm_provincial_development_warrant_approve = {
+ scope = country
+ is_valid = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 }
+ effect = { chi_adm_provincial_development_approve = yes }
 }
+
+chi_adm_provincial_development_warrant_counter_1 = {
+ scope = country
+ is_valid = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes }
+ effect = { chi_adm_provincial_development_counter_1 = yes }
+}
+
+chi_adm_provincial_development_warrant_counter_2 = {
+ scope = country
+ is_valid = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes }
+ effect = { chi_adm_provincial_development_counter_2 = yes }
+}
+
+chi_adm_provincial_development_warrant_counter_3 = {
+ scope = country
+ is_valid = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 chi_adm_provincial_development_war_or_hostile_neighbor = yes }
+ effect = { chi_adm_provincial_development_counter_3 = yes }
+}
+
+chi_adm_provincial_development_warrant_refuse = {
+ scope = country
+ is_valid = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 }
+ effect = { chi_adm_provincial_development_refuse = yes }
 }
 
 chi_adm_provincial_development_project_visible = { scope = country is_valid = { any_scope_state = { has_variable = chi_adm_provincial_development_project } } }

@@ -121,13 +121,18 @@ heavenly.2 = {
 	}
 
 	immediate = {
-		random_state = {
-			limit = { chi_qing_story_state = yes
-				has_modifier = god_worshippers
-			}
-			save_scope_as = cult_state
-			set_variable = {
-				name = cult_center
+		s:STATE_NANJING = {
+			random_scope_state = {
+				save_scope_as = cult_state
+				add_modifier = {
+					name = god_worshippers
+					years = 5
+				}
+				set_variable = cult_center
+				convert_population = {
+					target = rel:protestant
+					value = 0.1
+				}
 			}
 		}
 	}
@@ -195,15 +200,16 @@ heavenly.3 = {
 	event_image = { video = "asia_union_leader" }
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 	duration = 3
-	trigger = {
-		c:CHI ?= this
-		has_journal_entry = je_heavenly_kingdom_main
-		NOT = { exists = c:TPG }
-		any_state = { tyr_heavenly_spread_state = yes }
+	trigger = { 
+		has_journal_entry = je_heavenly_kingdom_main NOT = { exists = c:TPG } 
+		any_scope_state = { NOT = { has_modifier = god_worshippers } 
+			turmoil >= 0.15
+			any_neighbouring_state = { owner = root has_modifier = god_worshippers } 
+		} 
 	}
 	immediate = {
-		random_state = {
-			limit = { tyr_heavenly_spread_state = yes }
+		random_scope_state = { limit = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
+				any_neighbouring_state = { owner = root has_modifier = god_worshippers } }
 			save_scope_as = cult_growth_state
 			add_modifier = { name = god_worshippers years = 5 }
 			set_variable = cult_center

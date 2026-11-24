@@ -77,13 +77,16 @@ tyr_holy_alliance_brothers_war = {
     possible = {
  NOT = { has_variable = tyr_ga_active }
 
-        is_ai = no
         is_involved_in_journal_entry = je_tyr_holy_alliance
         NOT = { exists = c:GER }
         has_technology_researched = nationalism
         is_unification_candidate = GER
         is_at_war = no
         is_diplomatic_play_committed_participant = no
+        trigger_if = {
+            limit = { is_ai = yes }
+            NOT = { scope:tyr_holy_austria ?= this }
+        }
         trigger_if = {
             limit = { scope:tyr_holy_prussia ?= this }
             tyr_holy_brothers_war_target_ready = { TARGET = scope:tyr_holy_austria }
@@ -111,19 +114,60 @@ tyr_holy_alliance_brothers_war = {
             withdraw = { country = ROOT apply_break_penalties = no }
         }
         create_diplomatic_play = {
-            type = dp_leadership_germany
+            type = dp_tyr_holy_brothers_war
             target_country = scope:tyr_holy_brothers_war_target
-            add_war_goal = {
-                type = unification_leadership
-                holder = ROOT
-                target_country = scope:tyr_holy_brothers_war_target
+        }
+        random_diplomatic_play = {
+            limit = {
+                is_diplomatic_play_type = dp_tyr_holy_brothers_war
+                initiator = ROOT
+                target = scope:tyr_holy_brothers_war_target
             }
-            add_war_goal = {
-                type = unification_leadership
-                holder = scope:tyr_holy_brothers_war_target
-                target_country = ROOT
+            save_scope_as = tyr_holy_brothers_war_play
+        }
+        every_country = {
+            limit = {
+                is_supporting_unification_candidate = { who = ROOT country_formation = GER }
+                NOT = { this = ROOT }
+            }
+            save_temporary_scope_as = tyr_holy_initiator_supporter
+            scope:tyr_holy_brothers_war_play ?= {
+                add_initiator_backers = { scope:tyr_holy_initiator_supporter }
+            }
+        }
+        every_country = {
+            limit = {
+                is_supporting_unification_candidate = {
+                    who = scope:tyr_holy_brothers_war_target
+                    country_formation = GER
+                }
+                NOT = { this = scope:tyr_holy_brothers_war_target }
+            }
+            save_temporary_scope_as = tyr_holy_target_supporter
+            scope:tyr_holy_brothers_war_play ?= {
+                add_target_backers = { scope:tyr_holy_target_supporter }
             }
         }
     }
-    ai_chance = { value = 0 }
+    ai_chance = {
+        value = 25
+        if = {
+            limit = { scope:tyr_holy_prussia ?= this }
+            if = {
+                limit = {
+                    scope:tyr_holy_prussia.army_power_projection <= scope:tyr_holy_austria.army_power_projection
+                }
+                add = -100
+            }
+        }
+        else_if = {
+            limit = { scope:tyr_holy_austria ?= this }
+            if = {
+                limit = {
+                    scope:tyr_holy_austria.army_power_projection <= scope:tyr_holy_prussia.army_power_projection
+                }
+                add = -100
+            }
+        }
+    }
 }

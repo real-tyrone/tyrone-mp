@@ -1,5 +1,89 @@
 chi_adm_memorials_court_cost = {
-c:CHI = { remove_modifier = chi_adm_memorials_court_staff add_modifier = { name = chi_adm_memorials_court_staff months = 6 } }
+c:CHI = {
+ if = {
+  limit = { NOT = { has_modifier = chi_adm_memorials_court_staff } }
+  remove_variable = chi_adm_memorials_court_staff_count
+  remove_variable = chi_adm_memorials_court_staff_month_1
+  remove_variable = chi_adm_memorials_court_staff_month_2
+  remove_variable = chi_adm_memorials_court_staff_month_3
+  remove_variable = chi_adm_memorials_court_staff_month_4
+  remove_variable = chi_adm_memorials_court_staff_month_5
+  remove_variable = chi_adm_memorials_court_staff_month_6
+ }
+ if = {
+  limit = { NOT = { has_variable = chi_adm_memorials_court_staff_count } }
+  set_variable = { name = chi_adm_memorials_court_staff_count value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_1 value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_2 value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_3 value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_4 value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_5 value = 0 }
+  set_variable = { name = chi_adm_memorials_court_staff_month_6 value = 0 }
+  if = {
+   limit = { has_modifier = chi_adm_memorials_court_staff }
+   set_variable = { name = chi_adm_memorials_court_staff_count value = 1 }
+   set_variable = { name = chi_adm_memorials_court_staff_month_6 value = 1 }
+  }
+ }
+ change_variable = { name = chi_adm_memorials_court_staff_count add = 1 }
+ change_variable = { name = chi_adm_memorials_court_staff_month_6 add = 1 }
+ remove_modifier = chi_adm_memorials_court_staff
+ add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 6 }
+}
+
+chi_adm_memorials_court_staff_monthly = {
+ change_variable = { name = chi_adm_memorials_court_staff_count subtract = var:chi_adm_memorials_court_staff_month_1 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_1 value = var:chi_adm_memorials_court_staff_month_2 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_2 value = var:chi_adm_memorials_court_staff_month_3 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_3 value = var:chi_adm_memorials_court_staff_month_4 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_4 value = var:chi_adm_memorials_court_staff_month_5 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_5 value = var:chi_adm_memorials_court_staff_month_6 }
+ set_variable = { name = chi_adm_memorials_court_staff_month_6 value = 0 }
+ if = {
+  limit = { var:chi_adm_memorials_court_staff_count > 0 }
+  remove_modifier = chi_adm_memorials_court_staff
+  if = {
+   limit = { var:chi_adm_memorials_court_staff_month_5 > 0 }
+   add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 5 }
+  }
+  else_if = {
+   limit = { var:chi_adm_memorials_court_staff_month_4 > 0 }
+   add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 4 }
+  }
+  else_if = {
+   limit = { var:chi_adm_memorials_court_staff_month_3 > 0 }
+   add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 3 }
+  }
+  else_if = {
+   limit = { var:chi_adm_memorials_court_staff_month_2 > 0 }
+   add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 2 }
+  }
+  else_if = {
+   limit = { var:chi_adm_memorials_court_staff_month_1 > 0 }
+   add_modifier = { name = chi_adm_memorials_court_staff multiplier = var:chi_adm_memorials_court_staff_count months = 1 }
+  }
+  else = {
+   remove_modifier = chi_adm_memorials_court_staff
+   remove_variable = chi_adm_memorials_court_staff_count
+   remove_variable = chi_adm_memorials_court_staff_month_1
+   remove_variable = chi_adm_memorials_court_staff_month_2
+   remove_variable = chi_adm_memorials_court_staff_month_3
+   remove_variable = chi_adm_memorials_court_staff_month_4
+   remove_variable = chi_adm_memorials_court_staff_month_5
+   remove_variable = chi_adm_memorials_court_staff_month_6
+  }
+ }
+ else = {
+  remove_modifier = chi_adm_memorials_court_staff
+  remove_variable = chi_adm_memorials_court_staff_count
+  remove_variable = chi_adm_memorials_court_staff_month_1
+  remove_variable = chi_adm_memorials_court_staff_month_2
+  remove_variable = chi_adm_memorials_court_staff_month_3
+  remove_variable = chi_adm_memorials_court_staff_month_4
+  remove_variable = chi_adm_memorials_court_staff_month_5
+  remove_variable = chi_adm_memorials_court_staff_month_6
+ }
+}
 }
 
 chi_adm_memorials_clear_memorial = {
@@ -55,15 +139,15 @@ if = { limit = { chi_adm_memorials_valid = yes var:chi_adm_memorials_memorial_st
 }
 
 chi_adm_memorials_send_supervision = {
-if = { limit = { chi_adm_memorials_edict_free = yes var:chi_adm_corruption >= 40 } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 1 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 730 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
+if = { limit = { chi_adm_memorials_edict_free = yes var:chi_adm_corruption >= 40 } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 1 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 365 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
 }
 
 chi_adm_memorials_send_honors = {
-if = { limit = { chi_adm_memorials_edict_free = yes var:chi_adm_loyalty >= 60 var:chi_adm_corruption < 60 } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 2 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 730 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
+if = { limit = { chi_adm_memorials_edict_free = yes var:chi_adm_loyalty >= 60 var:chi_adm_corruption < 60 } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 2 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 365 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
 }
 
 chi_adm_memorials_send_emergency = {
-if = { limit = { chi_adm_memorials_edict_free = yes is_at_war = yes c:CHI = { gold_reserves >= 10000 } } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 3 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 730 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
+if = { limit = { chi_adm_memorials_edict_free = yes is_at_war = yes c:CHI = { gold_reserves >= 10000 } } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_edict value = 3 } set_variable = { name = chi_adm_memorials_edict_stage value = 1 } set_variable = { name = chi_adm_memorials_edict_left value = 6 } set_variable = { name = chi_adm_memorials_edict_cooldown days = 365 } set_variable = { name = chi_adm_memorials_result value = 6 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
 }
 
 chi_adm_memorials_accept_edict = {
@@ -94,7 +178,7 @@ if = { limit = { chi_adm_memorials_valid = yes has_variable = chi_adm_memorials_
 }
 
 chi_adm_memorials_open_audit = {
-if = { limit = { chi_adm_memorials_audit_free = yes } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_audit value = 1 } set_variable = { name = chi_adm_memorials_audit_progress value = 0 } set_variable = { name = chi_adm_memorials_audit_left value = 3 } set_variable = { name = chi_adm_memorials_audit_cooldown days = 1095 } set_variable = { name = chi_adm_memorials_result value = 11 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
+if = { limit = { chi_adm_memorials_audit_free = yes } chi_adm_memorials_court_cost = yes set_variable = { name = chi_adm_memorials_audit value = 1 } set_variable = { name = chi_adm_memorials_audit_progress value = 0 } set_variable = { name = chi_adm_memorials_audit_left value = 3 } set_variable = { name = chi_adm_memorials_audit_cooldown days = 365 } set_variable = { name = chi_adm_memorials_result value = 11 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
 }
 
 chi_adm_memorials_audit_cooperate = {
@@ -126,7 +210,7 @@ if = { limit = { chi_adm_memorials_valid = yes var:chi_adm_memorials_audit = 3 }
 }
 
 chi_adm_memorials_tolerate = {
-if = { limit = { chi_adm_memorials_valid = yes var:chi_adm_memorials_audit = 3 chi_adm_memorials_court_free = yes } chi_adm_memorials_court_cost = yes chi_adm_adjust_corruption = { AMOUNT = 3 } chi_adm_adjust_loyalty = { AMOUNT = 2 } remove_modifier = chi_adm_memorials_suspicion add_modifier = { name = chi_adm_memorials_suspicion months = 48 } chi_adm_memorials_clear_audit = yes set_variable = { name = chi_adm_memorials_result value = 17 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
+if = { limit = { chi_adm_memorials_valid = yes var:chi_adm_memorials_audit = 3 c:CHI = { authority >= 25 } } chi_adm_memorials_court_cost = yes chi_adm_adjust_corruption = { AMOUNT = 3 } chi_adm_adjust_loyalty = { AMOUNT = 2 } remove_modifier = chi_adm_memorials_suspicion add_modifier = { name = chi_adm_memorials_suspicion months = 48 } chi_adm_memorials_clear_audit = yes set_variable = { name = chi_adm_memorials_result value = 17 } chi_adm_memorials_ensure_responses = yes trigger_event = { id = chi_adm_memorials.2 popup = yes } }
 }
 
 chi_adm_memorials_pay_restitution = {
@@ -206,7 +290,7 @@ else = {
 }
 
 chi_adm_memorials_ai_dispatch = {
-if = { limit = { chi_adm_memorials_valid = yes c:CHI = { is_ai = yes } chi_adm_memorials_court_free = yes }
+if = { limit = { chi_adm_memorials_valid = yes c:CHI = { is_ai = yes } }
  if = { limit = { chi_adm_memorials_audit_free = yes var:chi_adm_corruption >= 60 } chi_adm_memorials_open_audit = yes }
  else_if = { limit = { chi_adm_memorials_edict_free = yes is_at_war = yes c:CHI = { gold_reserves >= 10000 } } chi_adm_memorials_send_emergency = yes }
  else_if = { limit = { chi_adm_memorials_edict_free = yes chi_adm_memorials_centralised = yes var:chi_adm_corruption >= 40 } chi_adm_memorials_send_supervision = yes }

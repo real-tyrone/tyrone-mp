@@ -36,52 +36,6 @@
 	}
 }
 
-# After the Holy Alliance expires, AI Prussia leaves its defensive treaty with
-# Austria and adopts a dedicated strategy favoring a German leadership play.
-pru_ai_brothers_war_after_holy_alliance = {
-	is_shown = {
-		is_ai = yes
-		c:PRU ?= this
-		has_journal_entry = je_north_german_unification
-		NOT = { has_variable = pru_pursue_german_leadership }
-		exists = c:AUS
-		c:AUS = { is_unification_candidate = GER }
-		any_scope_treaty = {
-			binds = c:AUS
-			remaining_binding_period <= 0
-			any_scope_article = { has_type = defensive_pact }
-		}
-	}
-
-	possible = {
-		is_ai = yes
-		c:PRU ?= this
-		has_journal_entry = je_north_german_unification
-		is_unification_candidate = GER
-		NOT = { has_variable = pru_pursue_german_leadership }
-		c:AUS = { is_unification_candidate = GER }
-		any_scope_treaty = {
-			binds = c:AUS
-			remaining_binding_period <= 0
-			any_scope_article = { has_type = defensive_pact }
-		}
-	}
-
-	when_taken = {
-		every_scope_treaty = {
-			limit = {
-				binds = c:AUS
-				remaining_binding_period <= 0
-				any_scope_article = { has_type = defensive_pact }
-			}
-			withdraw = { country = ROOT }
-		}
-		set_variable = pru_pursue_german_leadership
-	}
-
-	ai_chance = { value = 100 }
-}
-
 net_integrate_indonesia_decision = {
 	is_shown = {
 		OR = {
@@ -1310,6 +1264,16 @@ divide_sakhalin_decision = {
 			text = sakhalin_colonized_tt
 			NOT = {
 				exists = c:SKH
+			}
+		}
+		custom_tooltip = {
+			text = sakhalin_china_owns_no_territory_tt
+			NOT = {
+				s:STATE_SAKHALIN = {
+					any_scope_state = {
+						owner = c:CHI
+					}
+				}
 			}
 		}
 		any_scope_state = {
@@ -3202,6 +3166,111 @@ ottoman_ai_return_darfur = {
 	}
 }
 
+ai_veiled_protectorate_egypt = {
+	is_shown = {
+		is_ai = yes
+		tyrone_ai_attack_country_allowed = yes
+		has_journal_entry = je_veiled_protectorate
+		exists = c:EGY
+		NOT = { c:TUR ?= this }
+		NOT = { c:EGY ?= this }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:EGY = {
+			tyrone_ai_attack_country_allowed = yes
+			NOT = { is_subject_of = ROOT }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			OR = {
+				is_subject = no
+				AND = {
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					top_overlord = {
+						NOT = { this = ROOT }
+						NOT = { has_truce_with = ROOT }
+						NOT = { has_war_with = ROOT }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		tyrone_ai_attack_country_allowed = yes
+		has_journal_entry = je_veiled_protectorate
+		exists = c:EGY
+		NOT = { c:TUR ?= this }
+		NOT = { c:EGY ?= this }
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_civil_war = {
+				civil_war_progress > 0
+			}
+		}
+		c:EGY = {
+			tyrone_ai_attack_country_allowed = yes
+			NOT = { is_subject_of = ROOT }
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			OR = {
+				AND = {
+					is_subject = no
+					NOT = { has_truce_with = ROOT }
+					NOT = { has_war_with = ROOT }
+					army_power_projection < ROOT.army_power_projection
+				}
+				AND = {
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					top_overlord = {
+						NOT = { this = ROOT }
+						NOT = { has_truce_with = ROOT }
+						NOT = { has_war_with = ROOT }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				c:EGY = {
+					is_subject = no
+					tyrone_ai_attack_country_allowed = yes
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_make_protectorate
+				target_country = c:EGY
+			}
+		}
+		else_if = {
+			limit = {
+				c:EGY = {
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					NOT = { is_subject_of = ROOT }
+					tyrone_ai_attack_country_allowed = yes
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_transfer_subject
+				target_country = c:EGY
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
 ottoman_reclaim_egyptian_claims = {
 	is_shown = {
 		tyrone_ai_attack_country_allowed = yes
@@ -4847,6 +4916,103 @@ bic_ai_return_claimed_border_states = {
 			}
 		}
 	}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
+
+gbr_ai_protectorate_maldives = {
+	is_shown = {
+		tyrone_ai_attack_country_allowed = yes
+		is_ai = yes
+		c:GBR ?= this
+		has_journal_entry = je_consolidate_british_india
+		exists = c:MLD
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		c:MLD = {
+			tyrone_ai_attack_country_allowed = yes
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			NOT = { is_subject_of = ROOT }
+			OR = {
+				is_subject = no
+				AND = {
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					top_overlord = {
+						NOT = { this = ROOT }
+						NOT = { has_truce_with = ROOT }
+						NOT = { has_war_with = ROOT }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		tyrone_ai_attack_country_allowed = yes
+		has_journal_entry = je_consolidate_british_india
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		c:MLD ?= {
+			tyrone_ai_attack_country_allowed = yes
+			is_at_war = no
+			is_diplomatic_play_committed_participant = no
+			NOT = { has_truce_with = ROOT }
+			NOT = { has_war_with = ROOT }
+			NOT = { is_subject_of = ROOT }
+			OR = {
+				is_subject = no
+				AND = {
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					top_overlord = {
+						NOT = { this = ROOT }
+						NOT = { has_truce_with = ROOT }
+						NOT = { has_war_with = ROOT }
+						army_power_projection < ROOT.army_power_projection
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:MLD = {
+					tyrone_ai_attack_country_allowed = yes
+					is_subject = no
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_make_protectorate
+				target_country = c:MLD
+			}
+		}
+		else_if = {
+			limit = {
+				tyrone_ai_attack_country_allowed = yes
+				c:MLD = {
+					tyrone_ai_attack_country_allowed = yes
+					is_subject = yes
+					is_subject_type = subject_type_protectorate
+					NOT = { is_subject_of = ROOT }
+				}
+			}
+			create_diplomatic_play = {
+				type = dp_transfer_subject
+				target_country = c:MLD
+			}
+		}
 	}
 
 	ai_chance = {
@@ -13663,6 +13829,87 @@ idn_ai_return_claimed_indonesian_states = {
     }
 
     ai_chance = { value = 100 }
+}
+
+jap_ai_imperial_marriage_break_netherlands_treaties = {
+	is_shown = {
+		is_ai = yes
+		c:JAP ?= this
+		has_journal_entry = je_meiji_imperial_marriage
+		enacting_any_law = no
+		OR = {
+			NOT = { has_law_or_variant = law_type:law_closed_borders }
+			AND = {
+				exists = c:NET
+				any_scope_treaty = {
+					binds = c:NET
+					any_scope_article = {
+						OR = {
+							has_type = trade_privilege
+							has_type = foreign_investment_rights
+							has_type = law_commitment
+						}
+					}
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_ai = yes
+		c:JAP ?= this
+		has_journal_entry = je_meiji_imperial_marriage
+		enacting_any_law = no
+		OR = {
+			AND = {
+				NOT = { has_law_or_variant = law_type:law_closed_borders }
+				has_technology_researched = identification_documents
+			}
+			AND = {
+				exists = c:NET
+				any_scope_treaty = {
+					binds = c:NET
+					any_scope_article = {
+						OR = {
+							has_type = trade_privilege
+							has_type = foreign_investment_rights
+							has_type = law_commitment
+						}
+					}
+				}
+			}
+		}
+	}
+
+	when_taken = {
+		if = {
+			limit = {
+				NOT = { has_law_or_variant = law_type:law_closed_borders }
+				has_technology_researched = identification_documents
+			}
+			activate_law = law_type:law_closed_borders
+		}
+		if = {
+			limit = { exists = c:NET }
+			every_scope_treaty = {
+				limit = {
+					binds = c:NET
+					any_scope_article = {
+						OR = {
+							has_type = trade_privilege
+							has_type = foreign_investment_rights
+							has_type = law_commitment
+						}
+					}
+				}
+				withdraw = { country = ROOT }
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
 }
 
 jap_ai_post_restoration_backward_law_reforms = {

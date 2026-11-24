@@ -1,8 +1,17 @@
 on_monthly_pulse_country = { on_actions = { chi_adm_qing_security_court_pulse chi_adm_qing_security_office_pulse } }
 chi_adm_qing_security_court_pulse = {
- trigger = { c:CHI ?= this OR = { has_variable = chi_adm_qing_security_phase has_variable = chi_adm_qing_security_settlement } }
+ trigger = { c:CHI ?= this }
  effect = {
   if = { limit = { has_variable = chi_adm_qing_security_phase } chi_adm_qing_security_court_review = yes }
+  if = {
+   limit = {
+    is_ai = yes
+    chi_adm_qing_security_can_investigate = yes
+    chi_adm_qing_security_public_warning = yes
+    NOT = { chi_adm_qing_security_court_threat = yes }
+   }
+   chi_adm_qing_security_investigate = yes
+  }
   if = {
    limit = { chi_adm_qing_security_court = yes is_ai = yes has_variable = chi_adm_qing_security_settlement }
    if = {

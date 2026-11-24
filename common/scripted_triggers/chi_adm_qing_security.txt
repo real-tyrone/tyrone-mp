@@ -43,30 +43,45 @@ chi_adm_qing_security_weak_court = {
 }
 
 chi_adm_qing_security_claimant_politics = {
- chi_adm_qing_security_office = yes
- chi_adm_qing_security_han_office = yes
- var:chi_adm_loyalty <= 20
- var:chi_adm_autonomy >= 65
- army_power_projection >= 10
- army_power_projection >= { value = c:CHI.army_power_projection multiply = 0.20 }
- c:CHI ?= { chi_adm_qing_security_weak_court = yes }
- OR = {
-  relations:c:CHI <= relations_threshold:poor
-  chi_adm_provincial_development_crisis = yes
-  c:CHI ?= { OR = { government_legitimacy < 50 chi_adm_provincial_development_crisis = yes } }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_office_req
+  chi_adm_qing_security_office = yes
+  chi_adm_qing_security_han_office = yes
+ }
+ custom_tooltip = { text = chi_adm_qing_security_claimant_loyalty_req var:chi_adm_loyalty <= 20 }
+ custom_tooltip = { text = chi_adm_qing_security_claimant_autonomy_req var:chi_adm_autonomy >= 65 }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_army_req
+  army_power_projection >= 10
+  army_power_projection >= { value = c:CHI.army_power_projection multiply = 0.20 }
+ }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_mandate_req
+  c:CHI ?= { chi_adm_qing_security_weak_court = yes }
+ }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_strain_req
+  OR = {
+   relations:c:CHI <= relations_threshold:poor
+   chi_adm_provincial_development_crisis = yes
+   c:CHI ?= { OR = { government_legitimacy < 50 chi_adm_provincial_development_crisis = yes } }
+  }
  }
 }
 
 chi_adm_qing_security_can_found = {
  chi_adm_qing_security_claimant_politics = yes
- chi_adm_qing_security_free_to_pledge = yes
- var:chi_adm_qing_security_grievance >= 3
+ custom_tooltip = { text = chi_adm_qing_security_found_free_req chi_adm_qing_security_free_to_pledge = yes }
+ custom_tooltip = { text = chi_adm_qing_security_found_reviews_req var:chi_adm_qing_security_grievance >= 3 }
  authority >= 25
- c:CHI ?= {
-  NOR = {
-   has_variable = chi_adm_qing_security_phase
-   has_variable = chi_adm_qing_security_moratorium
-   has_variable = chi_adm_provincial_development_enforcement
+ custom_tooltip = {
+  text = chi_adm_qing_security_found_court_req
+  c:CHI ?= {
+   NOR = {
+    has_variable = chi_adm_qing_security_phase
+    has_variable = chi_adm_qing_security_moratorium
+    has_variable = chi_adm_provincial_development_enforcement
+   }
   }
  }
 }
@@ -149,6 +164,42 @@ chi_adm_qing_security_can_accept = {
  chi_adm_qing_security_office = yes
  chi_adm_qing_security_exposed = yes
  c:CHI ?= { has_variable = chi_adm_qing_security_terms }
+}
+
+# Court scope. Use only conditions the court can observe on the provincial register.
+chi_adm_qing_security_public_warning = {
+ any_subject = {
+  chi_adm_target_valid = yes
+  OR = {
+   AND = { var:chi_adm_loyalty <= 45 var:chi_adm_autonomy >= 45 }
+   relations:c:CHI <= relations_threshold:poor
+   any_scope_state = { turmoil >= 0.40 }
+  }
+ }
+}
+
+chi_adm_qing_security_court_threat = {
+ OR = {
+  chi_adm_qing_security_exposed = yes
+  AND = { var:chi_adm_qing_security_phase = 5 var:chi_adm_qing_security_evidence >= 50 }
+  has_variable = chi_adm_qing_security_settlement
+ }
+}
+
+chi_adm_qing_security_show_inquiry = {
+ chi_adm_qing_security_court = yes
+ NOT = { var:chi_adm_qing_security_phase = 5 }
+ OR = { chi_adm_qing_security_exposed = yes chi_adm_qing_security_public_warning = yes }
+}
+
+# Provincial presentation follows information already available through the dossier or recruitment.
+chi_adm_qing_security_provincial_conspiracy = {
+ OR = {
+  chi_adm_qing_security_is_claimant = yes
+  chi_adm_qing_security_exposed = yes
+  has_variable = chi_adm_qing_security_pact
+  AND = { chi_adm_qing_security_office = yes chi_adm_qing_security_recruiting = yes }
+ }
 }
 
 chi_adm_qing_security_can_investigate = {

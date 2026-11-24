@@ -1,0 +1,37 @@
+tyr_opium_demand_hong_kong_button = {
+	name = tyr_opium_demand_hong_kong_button
+	desc = tyr_opium_demand_hong_kong_button_desc
+	visible = { c:GBR ?= this exists = c:CHI }
+	possible = {
+		custom_tooltip = {
+			text = tyr_opium_hong_kong_ban_tt
+			c:CHI ?= { is_banning_goods = opium }
+		}
+		is_at_war = no
+		NOT = { is_diplomatic_play_committed_participant = yes }
+		aggressive_diplomatic_plays_permitted = yes
+		custom_tooltip = {
+			text = tyr_opium_hong_kong_target_tt
+			c:CHI ?= { NOT = { has_truce_with = c:GBR } }
+			s:STATE_SHAOZHOU = { any_scope_state = { tyr_opium_hong_kong_target = yes } }
+		}
+	}
+	effect = {
+		hidden_effect = {
+			s:STATE_SHAOZHOU = {
+				random_scope_state = {
+					limit = { tyr_opium_hong_kong_target = yes }
+					save_scope_as = tyr_opium_hong_kong
+				}
+			}
+			if = {
+				limit = { exists = scope:tyr_opium_hong_kong }
+				create_diplomatic_play = {
+					type = dp_take_treaty_port
+					target_state = scope:tyr_opium_hong_kong
+				}
+			}
+		}
+	}
+	ai_chance = { value = 100 }
+}

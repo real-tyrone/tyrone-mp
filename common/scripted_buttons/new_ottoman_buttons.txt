@@ -9,9 +9,17 @@
 	}
 
 	possible = {
-		custom_tooltip = {
-			text = finish_tanzimats_button_possible_tt
-			var:sick_man_var >= 4
+		OR = {
+			custom_tooltip = {
+				text = finish_tanzimats_button_possible_tt
+				var:sick_man_var >= 4
+			}
+			AND = {
+				is_ai = yes
+				c:TUR ?= this
+				year >= 1860
+				NOT = { has_variable = finished_tanzimats_var }
+			}
 		}
 	}
 
@@ -27,6 +35,15 @@
 
 	ai_chance = {
 		value = 0
+		if = {
+			limit = {
+				is_ai = yes
+				c:TUR ?= this
+				year >= 1860
+				NOT = { has_variable = finished_tanzimats_var }
+			}
+			add = 100
+		}
 	}
 }
 
