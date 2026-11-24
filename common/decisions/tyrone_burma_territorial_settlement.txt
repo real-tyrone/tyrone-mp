@@ -1,0 +1,39 @@
+tyr_eic_grant_burma_territory = {
+	is_shown = {
+		c:BIC ?= THIS
+		NOT = { has_global_variable = tyr_burma_territorial_settlement_signed }
+		c:BUR ?= { is_subject_of = ROOT }
+	}
+
+	possible = {
+		any_scope_state = {
+			OR = {
+				state_region = s:STATE_MANDALAY
+				state_region = s:STATE_TENASSERIM
+			}
+		}
+	}
+
+	when_taken = {
+		set_global_variable = tyr_burma_territorial_settlement_signed
+		every_scope_state = {
+			limit = {
+				OR = {
+					state_region = s:STATE_MANDALAY
+					state_region = s:STATE_TENASSERIM
+				}
+			}
+			set_state_owner = c:BUR
+		}
+		c:BUR = {
+			add_modifier = {
+				name = tyr_burma_territorial_settlement
+				years = 10
+			}
+		}
+	}
+
+	ai_chance = {
+		value = 100
+	}
+}
