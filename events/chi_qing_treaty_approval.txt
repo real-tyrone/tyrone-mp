@@ -1,0 +1,146 @@
+namespace = chi_qing_treaty
+
+chi_qing_treaty.1 = {
+    type = country_event
+    title = chi_qing_treaty_1_title
+    desc = chi_qing_treaty_1_desc
+    event_image = { video = "asia_poor_people_moving" }
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    duration = 30
+    trigger = { exists = c:RUS var:chi_qing_treaty_pending = 1 }
+    immediate = {
+        c:RUS = { save_scope_as = treaty_russia }
+        s:STATE_OUTER_MANCHURIA = { save_scope_as = treaty_outer }
+    }
+    option = {
+        name = chi_qing_treaty_accept
+        s:STATE_OUTER_MANCHURIA = { every_scope_state = {
+        limit = { owner = { OR = { c:CHI ?= this is_subject_of = c:CHI } } }
+        set_state_owner = c:RUS
+    } }
+        c:RUS = { set_variable = rus_bought_outer_manchuria }
+        if = { limit = { owes_obligation_to = c:RUS } set_owes_obligation_to = { country = c:RUS setting = no } }
+        remove_variable = chi_qing_treaty_pending
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 100 }
+            modifier = { trigger = { owes_obligation_to = c:RUS } factor = 100 }
+            modifier = { trigger = { is_at_war = yes } factor = 3 }
+            modifier = { trigger = { c:RUS.army_power_projection >= chi_qing_treaty_realm_power } factor = 4 }
+            modifier = { trigger = { c:RUS.army_power_projection < { value = chi_qing_treaty_realm_power multiply = 0.5 } } factor = 0.25 }
+            modifier = { trigger = { relations:c:RUS < -50 } factor = 0.5 }
+        }
+    }
+    option = {
+        name = chi_qing_treaty_decline
+        trigger = { NOT = { owes_obligation_to = c:RUS } }
+        default_option = yes
+        change_relations = { country = c:RUS value = -10 }
+        remove_variable = chi_qing_treaty_pending
+        set_variable = { name = chi_qing_treaty_retry value = yes months = 12 }
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 0 }
+        }
+    }
+}
+
+chi_qing_treaty.2 = {
+    type = country_event
+    title = chi_qing_treaty_2_title
+    desc = chi_qing_treaty_2_desc
+    event_image = { video = "asia_poor_people_moving" }
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    duration = 30
+    trigger = { exists = c:RUS var:chi_qing_treaty_pending = 2 }
+    immediate = {
+        c:RUS = { save_scope_as = treaty_russia }
+        s:STATE_ALTAI = { save_scope_as = treaty_altai }
+        s:STATE_JETISY = { save_scope_as = treaty_jetisy }
+        s:STATE_KIRGHIZIA = { save_scope_as = treaty_kirghizia }
+    }
+    option = {
+        name = chi_qing_treaty_accept
+        s:STATE_ALTAI = { every_scope_state = {
+        limit = { owner = { OR = { c:CHI ?= this is_subject_of = c:CHI } } }
+        set_state_owner = c:RUS
+    } }
+s:STATE_JETISY = { every_scope_state = {
+        limit = { owner = { OR = { c:CHI ?= this is_subject_of = c:CHI } } }
+        set_state_owner = c:RUS
+    } }
+s:STATE_KIRGHIZIA = { every_scope_state = {
+        limit = { owner = { OR = { c:CHI ?= this is_subject_of = c:CHI } } }
+        set_state_owner = c:RUS
+    } }
+        c:RUS = { set_variable = rus_chuguchak_protocol }
+        if = { limit = { owes_obligation_to = c:RUS } set_owes_obligation_to = { country = c:RUS setting = no } }
+        remove_variable = chi_qing_treaty_pending
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 100 }
+            modifier = { trigger = { owes_obligation_to = c:RUS } factor = 100 }
+            modifier = { trigger = { is_at_war = yes } factor = 3 }
+            modifier = { trigger = { c:RUS.army_power_projection >= chi_qing_treaty_realm_power } factor = 4 }
+            modifier = { trigger = { c:RUS.army_power_projection < { value = chi_qing_treaty_realm_power multiply = 0.5 } } factor = 0.25 }
+            modifier = { trigger = { relations:c:RUS < -50 } factor = 0.5 }
+        }
+    }
+    option = {
+        name = chi_qing_treaty_decline
+        trigger = { NOT = { owes_obligation_to = c:RUS } }
+        default_option = yes
+        change_relations = { country = c:RUS value = -10 }
+        remove_variable = chi_qing_treaty_pending
+        set_variable = { name = chi_qing_treaty_retry value = yes months = 12 }
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 0 }
+        }
+    }
+}
+
+chi_qing_treaty.3 = {
+    type = country_event
+    title = chi_qing_treaty_3_title
+    desc = chi_qing_treaty_3_desc
+    event_image = { video = "asia_poor_people_moving" }
+    icon = "gfx/interface/icons/event_icons/event_scales.dds"
+    duration = 30
+    trigger = { exists = c:RUS var:chi_qing_treaty_pending = 3 }
+    immediate = {
+        c:RUS = { save_scope_as = treaty_russia }
+        s:STATE_AMUR = { save_scope_as = treaty_amur }
+    }
+    option = {
+        name = chi_qing_treaty_accept
+        s:STATE_AMUR = { every_scope_state = {
+        limit = { owner = { OR = { c:CHI ?= this is_subject_of = c:CHI } } }
+        set_state_owner = c:RUS
+    } }
+        c:RUS = { set_variable = rus_bought_amur }
+        if = { limit = { owes_obligation_to = c:RUS } set_owes_obligation_to = { country = c:RUS setting = no } }
+        remove_variable = chi_qing_treaty_pending
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 100 }
+            modifier = { trigger = { owes_obligation_to = c:RUS } factor = 100 }
+            modifier = { trigger = { is_at_war = yes } factor = 3 }
+            modifier = { trigger = { c:RUS.army_power_projection >= chi_qing_treaty_realm_power } factor = 4 }
+            modifier = { trigger = { c:RUS.army_power_projection < { value = chi_qing_treaty_realm_power multiply = 0.5 } } factor = 0.25 }
+            modifier = { trigger = { relations:c:RUS < -50 } factor = 0.5 }
+        }
+    }
+    option = {
+        name = chi_qing_treaty_decline
+        trigger = { NOT = { owes_obligation_to = c:RUS } }
+        default_option = yes
+        change_relations = { country = c:RUS value = -10 }
+        remove_variable = chi_qing_treaty_pending
+        set_variable = { name = chi_qing_treaty_retry value = yes months = 12 }
+        ai_chance = {
+            base = 50
+            modifier = { trigger = { relations:c:RUS >= -19 } factor = 0 }
+        }
+    }
+}

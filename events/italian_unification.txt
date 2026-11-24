@@ -199,29 +199,7 @@ italian_unification.4 = {
 	placement = ROOT
 	title = italian_unification.4.t
 
-	desc = {
-		first_valid = {
-			triggered_desc = {
-				desc = italian_unification.4.d_annex
-				trigger = {
-					OR = {
-						any_scope_state = {
-							count < 2
-						}
-						has_variable = owned_by_pan_nationalist_radicals
-					}
-				}
-			}
-			triggered_desc = {
-				desc = italian_unification.4.d_coup
-				trigger = {
-					any_scope_state = {
-						count >= 2
-					}
-				}
-			}
-		}
-	}
+	desc = italian_unification.4.d_coup
 
 	flavor = italian_unification.4.f
 
@@ -241,6 +219,12 @@ italian_unification.4 = {
 		ita_arc_national_takeover_allowed = yes
 		is_player = no
 		ita_risorgimento_capital_in_italy = yes
+		any_scope_state = {
+			count >= 2
+		}
+		NOT = {
+			has_variable = owned_by_pan_nationalist_radicals
+		}
 		NOT = {
 			has_variable = ita_arc_tricolore_cooldown
 		}
@@ -259,9 +243,6 @@ italian_unification.4 = {
 				}
 			}
 			AND = {
-				NOT = {
-					has_variable = italian_unification_5_happened_here
-				}
 				capital = {
 					radical_fraction = {
 						value >= 0.10
@@ -346,22 +327,6 @@ italian_unification.4 = {
 	}
 
 	option = {
-		name = italian_unification.4.a
-		default_option = yes
-		trigger = {
-			any_scope_state = {
-				count < 2
-			}
-		}
-		scope:italian_leader = {
-			trigger_event = {
-				id = italian_unification.5
-				popup = yes
-			}
-		}
-	}
-
-	option = {
 		name = italian_unification.4.b
 		trigger = {
 			any_scope_state = {
@@ -404,131 +369,10 @@ italian_unification.4 = {
 		}
 	}
 
-	option = {
-		name = italian_unification.4.c
-		trigger = {
-			any_scope_state = {
-				count >= 2
-			}
-			has_variable = owned_by_pan_nationalist_radicals
-		}
-		default_option = yes
-		scope:italian_leader = {
-			trigger_event = {
-				id = italian_unification.5
-				popup = yes
-			}
-		}
-	}
-
 	cancellation_trigger = {
 		OR = {
 			is_player = yes
 			NOT = { ita_arc_national_takeover_allowed = yes }
-		}
-	}
-
-}
-
-
-# Country gets taken over by pan-nationalists and wants to join us
-italian_unification.5 = {
-	type = country_event
-	placement = ROOT
-	title = italian_unification.5.t
-	desc = italian_unification.5.d
-	flavor = italian_unification.5.f
-
-	event_image = {
-		video = "unspecific_signed_contract"
-	}
-
-	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
-	icon = "gfx/interface/icons/event_icons/waving_flag.dds"
-	duration = 1
-
-	trigger = {
-		#Part of event chain
-	}
-
-	immediate = {
-	}
-
-	option = {
-		name = italian_unification.5.a
-		ai_chance = {
-			base = 100
-		}
-		default_option = yes
-		create_incident = {
-			country = scope:italian_pannational_country
-			value = 5
-		}
-		if = {
-			limit = {
-				scope:italian_pannational_country = {
-					is_player = yes
-				}
-			}
-			scope:italian_pannational_country = {
-				play_as = root
-			}
-		}
-		hidden_effect = {
-			# remove all Italian radicals in country that's being annexed pre-annexation, to prevent chain annexations
-			scope:italian_pannational_country = {
-				add_radicals = {
-					value = -1
-					culture = cu:north_italian
-				}
-				add_radicals = {
-					value = -1
-					culture = cu:south_italian
-				}
-			}
-		}
-		annex_with_incorporation = scope:italian_pannational_country
-		if = {
-			limit = {
-				NOT = {
-					exists = c:PAP
-				}
-			}
-			ita_arc_end_garrison = yes
-		}
-	}
-
-	option = {
-		name = italian_unification.5.b
-		ai_chance = {
-			base = 0
-		}
-		create_diplomatic_pact = {
-			country = scope:italian_pannational_country
-			type = puppet
-		}
-		scope:italian_pannational_country = {
-			set_variable = {
-				name = italian_unification_5_happened_here
-				days = normal_modifier_time
-			}
-		}
-	}
-
-	cancellation_trigger = {
-		OR = {
-			scope:italian_pannational_country ?= {
-				NOT = { ita_arc_national_takeover_allowed = yes }
-			}
-			NOT = {
-				exists = scope:italian_pannational_country
-			}
-			scope:italian_pannational_country ?= {
-				OR = {
-					is_player = yes
-					is_country_alive = no
-				}
-			}
 		}
 	}
 

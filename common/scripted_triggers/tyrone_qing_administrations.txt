@@ -1,0 +1,67 @@
+# Country scope. The marker survives independence; subject status does not.
+chi_qing_administration_tag = {
+ OR = {
+  c:ZHI ?= this
+  c:AHU ?= this
+  c:HNA ?= this
+  c:YUE ?= this
+  c:FRS ?= this
+  c:XIB ?= this
+  c:YUN ?= this
+  c:SIH ?= this
+  c:SHN ?= this
+  c:SHA ?= this
+  c:MGL ?= this
+  c:MCH ?= this
+  c:XIN ?= this
+ }
+}
+
+chi_qing_administrative_subject = {
+ OR = {
+  is_subject_type = subject_type_qing_viceroyalty_administration
+  is_subject_type = subject_type_qing_civil_administration
+  is_subject_type = subject_type_qing_frontier_administration
+ }
+}
+# Checks Qing's direct administrative subjects from any country scope.
+chi_qing_has_administrative_subjects = {
+ c:CHI ?= {
+  any_direct_subject = { chi_qing_administrative_subject = yes }
+ }
+}
+chi_qing_realm = {
+ OR = {
+  c:CHI ?= this
+  AND = { chi_qing_administrative_subject = yes is_subject_of = c:CHI }
+ }
+}
+
+# Country scope. Mongolia and Ili use Qing laws only as civilian provinces.
+chi_qing_civil_law_eligible = {
+ OR = {
+  NOR = { c:MGL ?= this c:XIN ?= this }
+  is_subject_type = subject_type_qing_civil_administration
+ }
+}
+
+chi_qing_reform_subject = {
+ chi_qing_administrative_subject = yes
+ chi_qing_civil_law_eligible = yes
+}
+# State scope, inside a global state iterator. PREV is the country whose story
+# is running; only the imperial court expands its state search into subjects.
+chi_qing_story_state = {
+ OR = {
+  owner = prev
+  AND = { prev = { c:CHI ?= this } owner = { chi_qing_realm = yes } }
+ }
+}
+
+# Country scope in diplomatic play possible blocks. Scripted Qing plays omit this check.
+tyr_qing_standard_play_allowed = {
+ NAND = {
+  c:CHI ?= this
+  scope:target_country ?= { is_subject_of = root }
+ }
+}

@@ -1,4 +1,4 @@
-﻿tyr_heavenly_enter_hierarchy = {
+tyr_heavenly_enter_hierarchy = {
 	if = { limit = { NOT = { has_social_hierarchy = tyr_heavenly_hierarchy } }
 		if = { limit = { has_social_hierarchy = british_indian_caste_system } set_variable = tyr_heavenly_previous_castes }
 		if = { limit = { has_social_hierarchy = edo_system } set_variable = tyr_heavenly_previous_edo }
@@ -186,22 +186,49 @@ tyr_heavenly_setup = {
 	}
 }
 tyr_heavenly_begin_war = {
+ tyr_heavenly_prepare_governors = yes
 	c:TPG = { create_diplomatic_play = { name = taiping_rebellion target_country = c:CHI type = dp_tyr_heavenly_civil_war } }
 	random_diplomatic_play = {
 		limit = { is_diplomatic_play_type = dp_tyr_heavenly_civil_war initiator_is = c:TPG target_is = c:CHI }
+  save_temporary_scope_as = tyr_heavenly_war
+  c:CHI = {
+   every_in_list = {
+    variable = tyr_heavenly_defectors
+    limit = { has_variable = tyr_heavenly_defected is_subject = no }
+    scope:tyr_heavenly_war = { remove_target_backers = { prev } add_initiator_backers = { prev } }
+   }
+   clear_variable_list = tyr_heavenly_defectors
+  }
 		add_diplomatic_play_war_support = { target = c:TPG value = 50 }
 		set_war = yes
+  initiator = { set_variable = tyr_heavenly_war_started }
+  c:CHI ?= { set_variable = tyr_heavenly_war_started }
 	}
+
+ if = {
+  limit = { NOT = { has_variable = tyr_heavenly_war_started } }
+  every_in_list = {
+   variable = tyr_heavenly_defectors
+   limit = { has_variable = tyr_heavenly_former_pact is_subject = no }
+   set_variable = tyr_heavenly_neutral
+  }
+  tyr_heavenly_settle_governors = yes
+  clear_variable_list = tyr_heavenly_defectors
+  set_variable = tyr_heavenly_interrupted
+  c:TPG ?= { set_variable = tyr_heavenly_interrupted }
+ }
 }
 tyr_heavenly_assign_states = {
-	every_scope_state = {
-		limit = { has_variable = tyr_heavenly_transfer is_capital = no }
-		set_state_owner = c:TPG
-		set_state_type = incorporated
+ every_state = {
+  limit = { has_variable = tyr_heavenly_transfer owner = { OR = { chi_qing_realm = yes c:TPG ?= this } } }
 		remove_variable = tyr_heavenly_transfer
+		if = {
+			limit = { NOT = { owner = c:TPG } }
+			set_state_owner = c:TPG
+		}
+		set_state_type = incorporated
 	}
 	c:TPG = {
-		every_scope_state = { limit = { has_variable = tyr_heavenly_transfer } remove_variable = tyr_heavenly_transfer }
 		create_military_formation = {
 			type = army
 			hq_region = scope:heavenly_kingdom_spawn.region
@@ -209,4 +236,388 @@ tyr_heavenly_assign_states = {
 			combat_unit = { type = unit_type:combat_unit_type_cannon_artillery state_region = scope:heavenly_kingdom_spawn.state_region count = 5 }
 		}
 	}
+}
+
+# Annexation has returned occupied territory to Qing. Restore its provincial owner
+# and incorporation where possible without taking land away from third parties.
+tyr_heavenly_restore_states = {
+	every_scope_state = {
+		limit = { has_variable = tyr_heavenly_original_owner }
+		if = {
+			limit = { var:tyr_heavenly_original_owner ?= { chi_qing_realm = yes } }
+			var:tyr_heavenly_original_owner = { save_temporary_scope_as = tyr_heavenly_restored_owner }
+		}
+		else = { root = { save_temporary_scope_as = tyr_heavenly_restored_owner } }
+		if = {
+			limit = { NOT = { owner = scope:tyr_heavenly_restored_owner } }
+			set_state_owner = scope:tyr_heavenly_restored_owner
+		}
+		if = {
+			limit = { has_variable = tyr_heavenly_originally_incorporated }
+			set_state_type = incorporated
+		}
+		else = { set_state_type = unincorporated }
+	}
+	tyr_heavenly_clear_state_records = yes
+}
+
+tyr_heavenly_clear_state_records = {
+	every_state = {
+		limit = { has_variable = tyr_heavenly_original_owner }
+		remove_variable = tyr_heavenly_original_owner
+		if = {
+			limit = { has_variable = tyr_heavenly_originally_incorporated }
+			remove_variable = tyr_heavenly_originally_incorporated
+		}
+	}
+}
+
+# Run from the existing Chinese Missions entry only.
+tyr_heavenly_update_mission_access = {
+ every_state = {
+  limit = { chi_qing_story_state = yes }
+  if = {
+   limit = {
+    tyr_heavenly_missions_access_allowed = yes
+    OR = {
+     root = { has_law_or_variant = law_type:law_no_migration_controls }
+     owner = { has_variable = chi_adm_religious_missions_permitted }
+     any_neighbouring_state = {
+      is_treaty_port = yes
+      owner = { religion = { has_discrimination_trait = heritage_christian } }
+     }
+    }
+   }
+   set_variable = open_to_missionaries_state
+  }
+  else = { remove_variable = open_to_missionaries_state }
+ }
+}
+
+chi_adm_religious_set_policy = {
+ remove_variable = chi_adm_religious_missions_permitted
+ remove_variable = chi_adm_religious_missions_restricted
+ remove_variable = chi_adm_religious_missions_regulated
+ set_variable = $POLICY$
+ remove_modifier = chi_adm_religious_supervision
+ if = {
+  limit = { has_variable = chi_adm_religious_missions_regulated }
+  add_modifier = { name = chi_adm_religious_supervision months = 12 }
+ }
+ set_variable = { name = chi_adm_religious_policy_cooldown months = 12 }
+ if = {
+  limit = { has_variable = chi_adm_religious_missions_restricted }
+  every_scope_state = { remove_variable = open_to_missionaries_state }
+  change_relations = { country = c:CHI value = 5 }
+ }
+}
+
+chi_adm_religious_suppress = {
+ add_modifier = { name = chi_adm_religious_inquiry months = 6 }
+ remove_variable = chi_adm_religious_aided
+ set_variable = { name = chi_adm_religious_society_cooldown months = 12 }
+ remove_variable = chi_adm_religious_covert
+ remove_variable = chi_adm_religious_taiping_pledge
+ remove_variable = chi_adm_religious_stand_aside
+ set_variable = chi_adm_religious_loyal
+ random_scope_state = {
+  limit = { has_modifier = god_worshippers }
+  add_radicals_in_state = { value = small_radicals religion = rel:protestant }
+  random_list = {
+   60 = {
+    remove_modifier = god_worshippers
+    remove_variable = cult_center
+    owner = { chi_adm_adjust_loyalty = { AMOUNT = 4 } }
+   }
+   40 = { owner = { chi_adm_adjust_loyalty = { AMOUNT = -2 } } }
+  }
+ }
+}
+
+# Qing scope. Snapshot the consenting governors before changing their subject pacts.
+tyr_heavenly_prepare_governors = {
+ clear_variable_list = tyr_heavenly_defectors
+ every_direct_subject = {
+  if = {
+   limit = { has_variable = chi_adm_religious_aided }
+   c:TPG ?= { add_treasury = 10000 }
+   remove_variable = chi_adm_religious_aided
+  }
+  if = {
+   limit = { OR = { tyr_heavenly_governor_can_defect = yes tyr_heavenly_governor_can_stand_aside = yes } }
+   root = { add_to_variable_list = { name = tyr_heavenly_defectors target = prev } }
+  }
+ }
+ every_in_list = {
+  variable = tyr_heavenly_defectors
+  tyr_heavenly_detach_governor = yes
+ }
+}
+
+tyr_heavenly_detach_governor = {
+ save_temporary_scope_as = tyr_heavenly_defecting_governor
+ if = {
+  limit = { is_subject_type = subject_type_qing_viceroyalty_administration }
+  set_variable = { name = tyr_heavenly_former_pact value = 1 }
+  c:CHI = { remove_diplomatic_pact = { country = scope:tyr_heavenly_defecting_governor type = qing_viceroyalty_administration } }
+ }
+ else_if = {
+  limit = { is_subject_type = subject_type_qing_civil_administration }
+  set_variable = { name = tyr_heavenly_former_pact value = 2 }
+  c:CHI = { remove_diplomatic_pact = { country = scope:tyr_heavenly_defecting_governor type = qing_civil_administration } }
+ }
+ else_if = {
+  limit = { is_subject_type = subject_type_qing_frontier_administration }
+  set_variable = { name = tyr_heavenly_former_pact value = 3 }
+  c:CHI = { remove_diplomatic_pact = { country = scope:tyr_heavenly_defecting_governor type = qing_frontier_administration } }
+ }
+
+ if = {
+  limit = { is_subject = no }
+  if = {
+   limit = { has_variable = chi_adm_religious_stand_aside }
+   set_variable = tyr_heavenly_neutral
+  }
+  else = {
+   set_variable = tyr_heavenly_defected
+  change_relations = { country = c:CHI value = -30 }
+  change_relations = { country = c:TPG value = 30 }
+  }
+ }
+ else = { remove_variable = tyr_heavenly_former_pact }
+}
+
+# One outstanding invitation at a time. The offer marker is saved on its recipient.
+tyr_heavenly_offer_governor_takeover = {
+ c:TPG ?= {
+  if = {
+   limit = {
+    has_variable = tyr_heavenly_invitation_open
+    NOT = { var:tyr_heavenly_invitation_open ?= { is_country_alive = yes is_player = yes } }
+   }
+   remove_variable = tyr_heavenly_invitation_open
+  }
+ }
+ if = {
+  limit = { c:TPG ?= { is_ai = yes has_war_with = c:CHI NOR = { has_variable = tyr_heavenly_takeover_claimed has_variable = tyr_heavenly_invitation_open } } }
+  if = {
+   limit = { c:ZHI ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:ZHI = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:AHU ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:AHU = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:HNA ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:HNA = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:YUE ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:YUE = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:FRS ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:FRS = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:XIB ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:XIB = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:YUN ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:YUN = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:SIH ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:SIH = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:SHN ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:SHN = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:SHA ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:SHA = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:MGL ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:MGL = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:MCH ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:MCH = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+  else_if = {
+   limit = { c:XIN ?= { tyr_heavenly_governor_takeover_eligible = yes } }
+   c:XIN = {
+    set_variable = tyr_heavenly_takeover_offered
+    c:TPG = { set_variable = { name = tyr_heavenly_invitation_open value = prev } }
+    trigger_event = { id = heavenly.20 popup = yes }
+   }
+  }
+ }
+}
+
+tyr_heavenly_grant_takeover = {
+ if = {
+  limit = { is_player = yes c:TPG ?= { is_ai = yes NOT = { has_variable = tyr_heavenly_takeover_claimed } } }
+  c:TPG = {
+   set_variable = tyr_heavenly_takeover_claimed
+   remove_variable = tyr_heavenly_invitation_open
+   add_modifier = { name = tyr_heavenly_player_resolve years = 2 }
+  }
+  play_as = c:TPG
+ }
+}
+
+# Use the same policy and investigation effects as the provincial buttons.
+chi_adm_religious_ai_review = {
+ if = {
+  limit = { NOT = { has_variable = chi_adm_religious_policy_cooldown } }
+  if = {
+   limit = {
+    authority >= 25
+    OR = {
+     has_law_or_variant = law_type:law_closed_borders
+     ig:ig_devout ?= { is_in_government = yes }
+    }
+    NOT = { has_variable = chi_adm_religious_missions_restricted }
+   }
+   chi_adm_religious_set_policy = { POLICY = chi_adm_religious_missions_restricted }
+  }
+  else_if = {
+   limit = {
+    relative_bureaucracy >= 0.05
+    NOT = { has_variable = chi_adm_religious_missions_regulated }
+    NOT = { has_variable = chi_adm_religious_missions_restricted }
+   }
+   chi_adm_religious_set_policy = { POLICY = chi_adm_religious_missions_regulated }
+  }
+ }
+ if = {
+  limit = {
+   chi_adm_religious_society_available = yes
+   NOT = { has_variable = chi_adm_religious_society_cooldown }
+  }
+  if = {
+   limit = { authority >= 25 var:chi_adm_loyalty >= 65 }
+   chi_adm_religious_suppress = yes
+  }
+  else_if = {
+   limit = {
+    var:chi_adm_loyalty <= 35 var:chi_adm_autonomy >= 55
+    any_scope_state = {
+     has_modifier = god_worshippers
+     turmoil >= 0.20
+     religion_percent_state = { target = rel:protestant value >= 0.10 }
+    }
+   }
+   set_variable = chi_adm_religious_covert
+   if = {
+    limit = { gold_reserves >= 10000 NOT = { has_variable = chi_adm_religious_aided } }
+    chi_adm_religious_aid_society = yes
+   }
+   if = {
+    limit = { is_at_war = no any_scope_general = { exists = this } NOT = { has_variable = chi_adm_religious_stand_aside } }
+    set_variable = chi_adm_religious_taiping_pledge
+   }
+   set_variable = { name = chi_adm_religious_society_cooldown months = 12 }
+  }
+ }
+}
+
+chi_adm_religious_aid_society = {
+ remove_variable = chi_adm_religious_loyal
+ set_variable = chi_adm_religious_covert
+ set_variable = chi_adm_religious_aided
+ add_treasury = -10000
+ random_scope_state = {
+  limit = { has_modifier = god_worshippers }
+  remove_modifier = god_worshippers
+  add_modifier = { name = god_worshippers years = 5 }
+ }
+}
+
+# A governor who chose temporary neutrality authorized restoration of the old pact.
+# A Taiping defector remains independent unless the ordinary game changes that status.
+tyr_heavenly_settle_governors = {
+ every_country = {
+  limit = {
+   OR = { has_variable = tyr_heavenly_neutral has_variable = tyr_heavenly_defected }
+  }
+  if = {
+   limit = {
+    has_variable = tyr_heavenly_neutral
+    is_subject = no
+    c:CHI ?= { is_subject = no NOT = { has_war_with = prev } }
+   }
+   save_temporary_scope_as = tyr_heavenly_returning_governor
+   if = {
+    limit = { var:tyr_heavenly_former_pact = 1 }
+    c:CHI = { create_diplomatic_pact = { country = scope:tyr_heavenly_returning_governor type = qing_viceroyalty_administration } }
+   }
+   else_if = {
+    limit = { var:tyr_heavenly_former_pact = 2 }
+    c:CHI = { create_diplomatic_pact = { country = scope:tyr_heavenly_returning_governor type = qing_civil_administration } }
+   }
+   else_if = {
+    limit = { var:tyr_heavenly_former_pact = 3 }
+    c:CHI = { create_diplomatic_pact = { country = scope:tyr_heavenly_returning_governor type = qing_frontier_administration } }
+   }
+  }
+  remove_variable = tyr_heavenly_neutral
+  remove_variable = tyr_heavenly_defected
+  remove_variable = tyr_heavenly_former_pact
+  remove_variable = chi_adm_religious_stand_aside
+  remove_variable = chi_adm_religious_taiping_pledge
+ }
 }

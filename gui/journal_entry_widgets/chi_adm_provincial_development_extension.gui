@@ -1,0 +1,225 @@
+flowcontainer = {
+name = "chi_adm_provincial_development_status"
+direction = vertical
+spacing = 8
+datacontext = "[JournalEntry.GetCountry]"
+textbox = { size = { 440 0 } max_width = 440 autoresize = yes multiline = yes text = "chi_adm_provincial_development_status" }
+progressbar = { visible = "[GetScriptedGui('chi_adm_provincial_development_project_visible').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]" progresstexture = "gfx/interface/progressbar/progressbar_gold.dds" noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" direction = horizontal size = { 440 16 } min = 0 max = 100 value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('chi_adm_provincial_development_project_progress'))]" }
+progressbar = { visible = "[GetScriptedGui('chi_adm_provincial_development_conversion_visible').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]" progresstexture = "gfx/interface/progressbar/progressbar_gold.dds" noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" direction = horizontal size = { 440 16 } min = 0 max = 100 value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('chi_adm_provincial_development_conversion_progress'))]" }
+}
+flowcontainer = {
+	name = "chi_adm_provincial_development_court_status"
+	direction = vertical
+	spacing = 6
+	parentanchor = hcenter
+	ignoreinvisible = yes
+	datamodel = "[AccessPlayer.GetSubjects]"
+	item = {
+		flowcontainer = {
+			direction = vertical
+			spacing = 6
+			ignoreinvisible = yes
+			visible = "[GetScriptedGui('chi_adm_negotiated_integration_row').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+			section_header_button = {
+				blockoverride "layout" { size = { 472 38 } }
+				blockoverride "left_text" { text = "[Country.GetNameNoFormatting]" }
+				blockoverride "onclick" { onclick = "[GetVariableSystem.Toggle(Concatenate('chi_adm_provincial_development_row_', Country.GetNameNoFormatting))]" }
+				blockoverride "onclick_showmore" { visible = "[Not(GetVariableSystem.Exists(Concatenate('chi_adm_provincial_development_row_', Country.GetNameNoFormatting)))]" }
+				blockoverride "onclick_showless" { visible = "[GetVariableSystem.Exists(Concatenate('chi_adm_provincial_development_row_', Country.GetNameNoFormatting))]" }
+			}
+			flowcontainer = {
+				direction = vertical
+				spacing = 8
+				margin = { 16 10 }
+				ignoreinvisible = yes
+				visible = "[GetVariableSystem.Exists(Concatenate('chi_adm_provincial_development_row_', Country.GetNameNoFormatting))]"
+				widget = {
+					size = { 440 66 }
+					background = { using = dark_area }
+					background = { using = frame_small }
+					widget = {
+						position = { 8 10 } size = { 136 46 }
+						tooltip = "chi_adm_memorials_compact_loyalty_tooltip"
+						textbox = { size = { 136 26 } align = center|nobaseline text = "chi_adm_memorials_compact_loyalty" }
+						progressbar = { position = { 0 32 } size = { 136 10 } min = 0 max = 100 value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_loyalty').GetValue)]" progresstexture = "gfx/interface/progressbar/progressbar_gold.dds" noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" direction = horizontal skip_initial_animation = yes }
+					}
+					widget = {
+						position = { 152 10 } size = { 136 46 }
+						tooltip = "chi_adm_memorials_compact_autonomy_tooltip"
+						textbox = { size = { 136 26 } align = center|nobaseline text = "chi_adm_memorials_compact_autonomy" }
+						progressbar = { position = { 0 32 } size = { 136 10 } min = 0 max = 100 value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_autonomy').GetValue)]" progresstexture = "gfx/interface/progressbar/progressbar_default.dds" noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" direction = horizontal skip_initial_animation = yes }
+					}
+					widget = {
+						position = { 296 10 } size = { 136 46 }
+						tooltip = "chi_adm_memorials_compact_corruption_tooltip"
+						textbox = { size = { 136 26 } align = center|nobaseline text = "chi_adm_memorials_compact_corruption" }
+						progressbar = { position = { 0 32 } size = { 136 10 } min = 0 max = 100 value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_corruption').GetValue)]" progresstexture = "gfx/interface/progressbar/progressbar_bad.dds" noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds" direction = horizontal skip_initial_animation = yes }
+					}
+				}
+				textbox = { size = { 440 0 } max_width = 440 autoresize = yes multiline = yes text = "chi_adm_provincial_development_court_row_status" }
+				progressbar = {
+					visible = "[GetScriptedGui('chi_adm_provincial_development_conversion_visible').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					size = { 440 16 }
+					min = 0
+					max = 100
+					value = "[FixedPointToFloat(Country.MakeScope.ScriptValue('chi_adm_provincial_development_conversion_progress'))]"
+					progresstexture = "gfx/interface/progressbar/progressbar_gold.dds"
+					noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+					direction = horizontal
+					skip_initial_animation = yes
+				}
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_compact_1').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_compact_1').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_compact_1').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_compact_1" } }
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_compact_2').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_compact_2').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_compact_2').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_compact_2" } }
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_compact_3').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_compact_3').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_compact_3').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_compact_3" } }
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_compact_4').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_compact_4').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_compact_4').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_compact_4" } }
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_compact_5').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_compact_5').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_compact_5').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_compact_5" } }
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_warrant_approve').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_warrant_approve').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_approve" }
+				}
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_1').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_1').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_counter_1" }
+				}
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_2').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_2').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_counter_2" }
+				}
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_3').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_warrant_counter_3').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_counter_3" }
+				}
+				button = { size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_warrant_refuse').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_warrant_refuse').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_refuse" }
+				}
+				
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_offer_sponsor').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]"
+					enabled = "[GetScriptedGui('chi_adm_provincial_development_offer_sponsor').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_offer_sponsor').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_offer_sponsor').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_offer_sponsor" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_court_decline_sponsor').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_court_decline_sponsor').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_court_decline_sponsor').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_decline_sponsor" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_offer_customs').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_offer_customs').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_offer_customs').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_offer_customs" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_offer_recruit').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_offer_recruit').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_offer_recruit').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_offer_recruit" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_offer_fiscal').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_offer_fiscal').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_offer_fiscal').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_offer_fiscal" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_offer_honor').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_offer_honor').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_offer_honor').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_offer_honor" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_court_refuse_compact').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_court_refuse_compact').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_court_refuse_compact').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_refuse_compact" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_propose_conversion').IsShown(GuiScope.SetRoot(Country.MakeScope).End)]"
+					enabled = "[GetScriptedGui('chi_adm_provincial_development_propose_conversion').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_propose_conversion').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_propose_conversion').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_propose_conversion" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_grant_discretion').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_grant_discretion').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_grant_discretion').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_grant_discretion" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_resist_demand').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_resist_demand').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_resist_demand').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_resist_demand" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_fund_alternative').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_fund_alternative').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_fund_alternative').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_fund_alternative" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_censure').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_censure').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_censure').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_censure" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_tolerate').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_tolerate').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_tolerate').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_tolerate" }
+				}
+				button = {
+					size = { 440 48 } using = default_button_action
+					visible = "[GetScriptedGui('chi_adm_provincial_development_enforce').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+					onclick = "[GetScriptedGui('chi_adm_provincial_development_enforce').Execute(GuiScope.SetRoot(Country.MakeScope).End)]"
+					tooltip = "[GetScriptedGui('chi_adm_provincial_development_enforce').ExecuteTooltip(GuiScope.SetRoot(Country.MakeScope).End)]"
+					textbox = { size = { 416 0 } max_width = 416 autoresize = yes multiline = yes parentanchor = center align = center|nobaseline alwaystransparent = yes text = "chi_adm_provincial_development_enforce" }
+				}
+			}
+		}
+	}
+}

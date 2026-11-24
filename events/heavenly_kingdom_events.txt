@@ -1,4 +1,4 @@
-﻿namespace = heavenly
+namespace = heavenly
 
 # Missionary activity in the south of China
 heavenly.1 = {
@@ -19,46 +19,8 @@ heavenly.1 = {
 
 	duration = 3
 
-	trigger = {
-		# Fired by journal entry
-	}
-	immediate = {
-		set_variable = { name = missionary_works_counter value = 1 }
-		random_scope_state = {
-			limit = {
-				is_incorporated = yes
-				any_scope_pop = {
-					NOT = {
-						religion = rel:protestant
-					}
-				}
-				any_neighbouring_state = {
-					is_treaty_port = yes
-					owner = {
-						religion = {
-							has_discrimination_trait = heritage_christian
-						}
-					}
-				}
-			}
-			save_scope_as = missionary_state
-			random_neighbouring_state = {
-				limit = {
-					is_treaty_port = yes
-					owner = {
-						religion = {
-							has_discrimination_trait = heritage_christian
-						}
-					}
-				}
-				save_scope_as = treaty_port_scope
-				owner = {
-					save_scope_as = treaty_port_owner
-				}
-			}
-		}
-	}
-
+ trigger = { scope:missionary_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:missionary_state ?= { owner = root } } }
 	option = {
 		name = heavenly.1.a
 		default_option = yes
@@ -126,30 +88,24 @@ heavenly.2 = {
 	trigger = {
 	}
 
-	immediate = {
-		random_scope_state = {
-			limit = {
-				has_modifier = god_worshippers
-			}
-			save_scope_as = cult_state
-			set_variable = {
-				name = cult_center
-			}
-		}
-	}
-	option = {
-		name = heavenly.2.a
-		scope:cult_state = {
-			show_as_tooltip = {
-				add_modifier = {
-					name = god_worshippers
-					years = 5
-				}
-			}
-			convert_population = {
-				target = rel:protestant value = 0.1
-			}
-		}
+ immediate = {
+  s:STATE_NANJING = {
+   random_scope_state = {
+    limit = { owner = { chi_qing_realm = yes } }
+    save_scope_as = cult_state
+    if = {
+     limit = { NOT = { has_modifier = god_worshippers } }
+     add_modifier = { name = god_worshippers years = 5 }
+    }
+    set_variable = cult_center
+    convert_population = { target = rel:protestant value = 0.1 }
+   }
+  }
+  if = { limit = { NOT = { exists = scope:cult_state } } scope:tyr_heavenly_first_foothold ?= { save_scope_as = cult_state } }
+ }
+ option = {
+  name = heavenly.2.a
+  default_option = yes
 		if = {
 			limit = {
 				empty_agitator_slots >= 1
@@ -201,11 +157,15 @@ heavenly.3 = {
 	event_image = { video = "asia_union_leader" }
 	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
 	duration = 3
-	trigger = { has_journal_entry = je_heavenly_kingdom_main NOT = { exists = c:TPG } any_scope_state = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
-			any_neighbouring_state = { owner = root has_modifier = god_worshippers } } }
-	immediate = {
-		random_scope_state = { limit = { NOT = { has_modifier = god_worshippers } turmoil >= 0.15
-				any_neighbouring_state = { owner = root has_modifier = god_worshippers } }
+ trigger = {
+  c:CHI ?= this
+  has_journal_entry = je_heavenly_kingdom_main
+  NOT = { exists = c:TPG }
+  any_state = { tyr_heavenly_spread_state = yes }
+ }
+ immediate = {
+  random_state = {
+   limit = { tyr_heavenly_spread_state = yes }
 			save_scope_as = cult_growth_state
 			add_modifier = { name = god_worshippers years = 5 }
 			set_variable = cult_center
@@ -234,9 +194,20 @@ heavenly.4 = {
 
 	duration = 3
 
-	trigger = { NOT = { exists = c:TPG } any_scope_state = { has_modifier = god_worshippers count >= 8 } }
+	trigger = { tyr_heavenly_uprising_ready = yes }
 	immediate = {
-		every_scope_state = { limit = { has_modifier = god_worshippers is_capital = no } set_variable = tyr_heavenly_transfer }
+		every_state = {
+			limit = { tyr_heavenly_revolt_state = yes has_modifier = god_worshippers }
+			set_variable = tyr_heavenly_transfer
+			set_variable = { name = tyr_heavenly_original_owner value = owner }
+   owner = {
+    if = { limit = { chi_qing_administrative_subject = yes } set_variable = tyr_heavenly_lost_land }
+   }
+			if = {
+				limit = { is_incorporated = yes }
+				set_variable = tyr_heavenly_originally_incorporated
+			}
+		}
 
 		hidden_effect = {
 			random_scope_character = {
@@ -252,27 +223,22 @@ heavenly.4 = {
 				kill_character = yes
 			}
 		}
-		every_scope_state = {
-			limit = {
+		every_state = {
+			limit = { chi_qing_story_state = yes
 				has_modifier = god_worshippers
 			}
+   owner = {
+    if = { limit = { chi_qing_administrative_subject = yes } set_variable = tyr_heavenly_had_foothold }
+   }
 			remove_modifier = god_worshippers
 		}
-		c:CHI ?= {
-			every_scope_state = {
-				limit = {
-					is_incorporated = yes
-				}
-				set_variable = saved_incorporated_state
-			}
-		}
-		random_scope_state = {
-			limit = { has_variable = tyr_heavenly_transfer is_capital = no }
+		random_state = {
+			limit = { chi_qing_story_state = yes has_variable = tyr_heavenly_transfer }
 			save_scope_as = heavenly_kingdom_spawn
 		}
 		create_country = {
 			tag = TPG
-			origin = this
+			origin = scope:heavenly_kingdom_spawn.owner
 			state = scope:heavenly_kingdom_spawn
 			on_created = {
 				# Preserve the exact Qing law variants before Heavenly overrides.
@@ -436,8 +402,8 @@ heavenly.4 = {
 			}
 
 			c:CHI ?= {
-				every_scope_state = {
-					limit = {
+				every_state = {
+					limit = { chi_qing_story_state = yes
 						is_split_state = yes
 						state_region = {
 							any_scope_state = {
@@ -462,14 +428,14 @@ heavenly.4 = {
 		ai_chance = { base = 100 }
 		if = { limit = { is_player = yes } add_modifier = { name = tyr_heavenly_player_resolve years = 2 } }
 		tyr_heavenly_begin_war = yes
+  tyr_heavenly_offer_governor_takeover = yes
 	}
 	option = {
 		name = heavenly.4.b
-		trigger = { is_player = yes }
+		trigger = { is_player = yes c:TPG ?= { is_ai = yes NOT = { has_variable = tyr_heavenly_takeover_claimed } } }
 		ai_chance = { base = 0 }
-		c:TPG = { add_modifier = { name = tyr_heavenly_player_resolve years = 2 } }
-		play_as = c:TPG
 		tyr_heavenly_begin_war = yes
+  if = { limit = { has_variable = tyr_heavenly_war_started } tyr_heavenly_grant_takeover = yes }
 	}
 
 	after = { je_heavenly_kingdom_main_cleanup = yes }
@@ -499,13 +465,8 @@ heavenly.5 = {
 	}
 
 	immediate = {
-		every_scope_state = {
-			limit = {
-				has_variable = saved_incorporated_state
-			}
-			set_state_type = incorporated
-			remove_variable = saved_incorporated_state
-		}
+		tyr_heavenly_settle_governors = yes
+  tyr_heavenly_restore_states = yes
 		root.religion = {
 			save_scope_as = state_religion_scope
 		}
@@ -519,8 +480,8 @@ heavenly.5 = {
 		default_option = yes
 		custom_tooltip = {
 			text = mass_reconversion_tt
-			every_scope_state = {
-				limit = {
+			every_state = {
+				limit = { chi_qing_story_state = yes
 					any_scope_pop = {
 						religion = rel:protestant
 					}
@@ -761,24 +722,12 @@ CHI_missionaries.1 = {
 
 	duration = 3
 
-	cooldown = { days = normal_modifier_time }
+ trigger = { scope:evangelisation_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:evangelisation_state ?= { owner = root } } }
 
-	trigger = {
-		any_scope_state = {
-			has_variable = open_to_missionaries_state
-		}
-	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				has_variable = open_to_missionaries_state
-			}
-			save_scope_as = evangelisation_state
-		}
-		change_variable = { name = missionary_works_counter add = 1 }
-	}
 	option = {
 		name = CHI_missionaries.1.a
+		trigger = { NOT = { has_variable = chi_adm_religious_missions_regulated } }
 		scope:evangelisation_state = {
 			add_modifier = {
 				name = modifier_china_state_evangelisation
@@ -830,60 +779,9 @@ CHI_missionaries.2 = {
 
 	duration = 3
 
-	cooldown = { days = normal_modifier_time }
+ trigger = { scope:forbidden_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:forbidden_state ?= { owner = root } } }
 
-	trigger = {
-		NOT = {
-			has_law_or_variant = law_type:law_closed_borders
-		}
-		any_scope_state = {
-			any_neighbouring_state = {
-				owner = ROOT
-				has_variable = open_to_missionaries_state
-			}
-			NOT = {
-				has_variable = open_to_missionaries_state
-			}
-			NOT = {
-				has_variable = missionary_fear
-			}
-		}
-		any_country = {
-			has_diplomatic_relevance = root
-			religion = rel:protestant
-		}
-	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				any_neighbouring_state = {
-					owner = ROOT
-					has_variable = open_to_missionaries_state
-				}
-				NOT = {
-					has_variable = open_to_missionaries_state
-				}
-				NOT = {
-					has_variable = missionary_fear
-				}
-			}
-			save_scope_as = forbidden_state
-		}
-		random_country = {
-			limit = {
-				has_diplomatic_relevance = root
-				religion = rel:protestant
-			}
-			save_scope_as = missionary_country
-		}
-		change_variable = { name = missionary_works_counter add = 1 }
-		random_scope_state = {
-			limit = {
-				region = sr:region_central_asia
-			}
-			save_scope_as = deportation_state
-		}
-	}
 	option = {
 		name = CHI_missionaries.2.a
 		scope:missionary_country = {
@@ -901,7 +799,9 @@ CHI_missionaries.2 = {
 		name = CHI_missionaries.2.b
 		default_option = yes
 		trigger = {
-			any_scope_state = {
+			any_state = {
+ chi_qing_story_state = yes
+
 				region = sr:region_central_asia
 			}
 		}
@@ -953,30 +853,12 @@ CHI_missionaries.3 = {
 
 	duration = 3
 
-	cooldown = { days = normal_modifier_time }
+ trigger = { scope:missionary_schools_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:missionary_schools_state ?= { owner = root } } }
 
-	trigger = {
-		any_scope_state = {
-			has_variable = open_to_missionaries_state
-			NOT = {
-				has_modifier = modifier_chi_missionary_schools
-			}
-		}
-	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				has_variable = open_to_missionaries_state
-				NOT = {
-					has_modifier = modifier_chi_missionary_schools
-				}
-			}
-			save_scope_as = missionary_schools_state
-		}
-		change_variable = { name = missionary_works_counter add = 1 }
-	}
 	option = {
 		name = CHI_missionaries.3.a
+		trigger = { NOT = { has_variable = chi_adm_religious_missions_regulated } }
 		ai_chance = {
 			base = 2
 		}
@@ -1025,30 +907,12 @@ CHI_missionaries.4 = {
 
 	duration = 3
 
-	cooldown = { days = normal_modifier_time }
+ trigger = { scope:missionary_hospitals_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:missionary_hospitals_state ?= { owner = root } } }
 
-	trigger = {
-		any_scope_state = {
-			has_variable = open_to_missionaries_state
-			NOT = {
-				has_modifier = modifier_chi_missionary_hospitals
-			}
-		}
-	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				has_variable = open_to_missionaries_state
-				NOT = {
-					has_modifier = modifier_chi_missionary_hospitals
-				}
-			}
-			save_scope_as = missionary_hospitals_state
-		}
-		change_variable = { name = missionary_works_counter add = 1 }
-	}
 	option = {
 		name = CHI_missionaries.4.a
+		trigger = { NOT = { has_variable = chi_adm_religious_missions_regulated } }
 		ai_chance = {
 			base = 2
 		}
@@ -1097,33 +961,9 @@ CHI_missionaries.5 = {
 
 	duration = 3
 
-	cooldown = { days = normal_modifier_time }
+ trigger = { scope:missionary_strife_state ?= { owner = root } }
+ cancellation_trigger = { NOT = { scope:missionary_strife_state ?= { owner = root } } }
 
-	trigger = {
-		any_scope_state = {
-			has_variable = open_to_missionaries_state
-		}
-		any_country = {
-			has_diplomatic_relevance = root
-			religion = rel:protestant
-		}
-	}
-	immediate = {
-		random_scope_state = {
-			limit = {
-				has_variable = open_to_missionaries_state
-			}
-			save_scope_as = missionary_strife_state
-		}
-		random_country = {
-			limit = {
-				has_diplomatic_relevance = root
-				religion = rel:protestant
-			}
-			save_scope_as = missionary_country
-		}
-		change_variable = { name = missionary_works_counter add = 1 }
-	}
 	option = {
 		name = CHI_missionaries.5.a
 		default_option = yes
@@ -1147,4 +987,281 @@ CHI_missionaries.5 = {
 			}
 		}
 	}
+}
+
+
+# The central Missions pulse chooses the state and advances the shared counter.
+CHI_missionaries.11 = {
+ type = country_event
+ hidden = yes
+ cooldown = { days = normal_modifier_time }
+
+	trigger = {
+		any_state = {
+ chi_qing_story_state = yes
+
+			has_variable = open_to_missionaries_state
+		}
+	}
+ immediate = {
+  random_state = {
+			limit = { chi_qing_story_state = yes
+				has_variable = open_to_missionaries_state
+			}
+			save_scope_as = evangelisation_state
+		}
+		change_variable = { name = missionary_works_counter add = 1 }
+  scope:evangelisation_state ?= {
+   owner = { trigger_event = { id = CHI_missionaries.1 popup = yes } }
+  }
+ }
+}
+
+# The central Missions pulse chooses the state and advances the shared counter.
+CHI_missionaries.12 = {
+ type = country_event
+ hidden = yes
+ cooldown = { days = normal_modifier_time }
+
+	trigger = {
+		NOT = {
+			has_law_or_variant = law_type:law_closed_borders
+		}
+		any_state = {
+ chi_qing_story_state = yes
+
+			any_neighbouring_state = {
+				OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
+				has_variable = open_to_missionaries_state
+			}
+			NOT = {
+				has_variable = open_to_missionaries_state
+			}
+			NOT = {
+				has_variable = missionary_fear
+			}
+		}
+		any_country = {
+			has_diplomatic_relevance = root
+			religion = rel:protestant
+		}
+	}
+ immediate = {
+  random_state = {
+			limit = { chi_qing_story_state = yes
+				any_neighbouring_state = {
+					OR = { owner = root AND = { root = { c:CHI ?= this } owner = { chi_qing_realm = yes } } }
+					has_variable = open_to_missionaries_state
+				}
+				NOT = {
+					has_variable = open_to_missionaries_state
+				}
+				NOT = {
+					has_variable = missionary_fear
+				}
+			}
+			save_scope_as = forbidden_state
+		}
+		random_country = {
+			limit = {
+				has_diplomatic_relevance = root
+				religion = rel:protestant
+			}
+			save_scope_as = missionary_country
+		}
+		change_variable = { name = missionary_works_counter add = 1 }
+		random_state = {
+			limit = { chi_qing_story_state = yes
+				region = sr:region_central_asia
+			}
+			save_scope_as = deportation_state
+		}
+  scope:forbidden_state ?= {
+   owner = { trigger_event = { id = CHI_missionaries.2 popup = yes } }
+  }
+ }
+}
+
+# The central Missions pulse chooses the state and advances the shared counter.
+CHI_missionaries.13 = {
+ type = country_event
+ hidden = yes
+ cooldown = { days = normal_modifier_time }
+
+	trigger = {
+		any_state = {
+ chi_qing_story_state = yes
+
+			has_variable = open_to_missionaries_state
+			NOT = {
+				has_modifier = modifier_chi_missionary_schools
+			}
+		}
+	}
+ immediate = {
+  random_state = {
+			limit = { chi_qing_story_state = yes
+				has_variable = open_to_missionaries_state
+				NOT = {
+					has_modifier = modifier_chi_missionary_schools
+				}
+			}
+			save_scope_as = missionary_schools_state
+		}
+		change_variable = { name = missionary_works_counter add = 1 }
+  scope:missionary_schools_state ?= {
+   owner = { trigger_event = { id = CHI_missionaries.3 popup = yes } }
+  }
+ }
+}
+
+# The central Missions pulse chooses the state and advances the shared counter.
+CHI_missionaries.14 = {
+ type = country_event
+ hidden = yes
+ cooldown = { days = normal_modifier_time }
+
+	trigger = {
+		any_state = {
+ chi_qing_story_state = yes
+
+			has_variable = open_to_missionaries_state
+			NOT = {
+				has_modifier = modifier_chi_missionary_hospitals
+			}
+		}
+	}
+ immediate = {
+  random_state = {
+			limit = { chi_qing_story_state = yes
+				has_variable = open_to_missionaries_state
+				NOT = {
+					has_modifier = modifier_chi_missionary_hospitals
+				}
+			}
+			save_scope_as = missionary_hospitals_state
+		}
+		change_variable = { name = missionary_works_counter add = 1 }
+  scope:missionary_hospitals_state ?= {
+   owner = { trigger_event = { id = CHI_missionaries.4 popup = yes } }
+  }
+ }
+}
+
+# The central Missions pulse chooses the state and advances the shared counter.
+CHI_missionaries.15 = {
+ type = country_event
+ hidden = yes
+ cooldown = { days = normal_modifier_time }
+
+	trigger = {
+		any_state = {
+ chi_qing_story_state = yes
+
+			has_variable = open_to_missionaries_state
+		}
+		any_country = {
+			has_diplomatic_relevance = root
+			religion = rel:protestant
+		}
+	}
+ immediate = {
+  random_state = {
+			limit = { chi_qing_story_state = yes
+				has_variable = open_to_missionaries_state
+			}
+			save_scope_as = missionary_strife_state
+		}
+		random_country = {
+			limit = {
+				has_diplomatic_relevance = root
+				religion = rel:protestant
+			}
+			save_scope_as = missionary_country
+		}
+		change_variable = { name = missionary_works_counter add = 1 }
+  scope:missionary_strife_state ?= {
+   owner = { trigger_event = { id = CHI_missionaries.5 popup = yes } }
+  }
+ }
+}
+
+# Only the invited human governor receives this event. Declining passes the offer on.
+heavenly.20 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_heavenly_takeover_title
+ desc = chi_adm_heavenly_takeover_desc
+ icon = "gfx/interface/icons/event_icons/event_fire.dds"
+ duration = 3
+ option = {
+  name = chi_adm_heavenly_takeover_remain
+  default_option = yes
+  ai_chance = { base = 100 }
+  c:TPG ?= {
+   if = { limit = { var:tyr_heavenly_invitation_open ?= { this = root } } remove_variable = tyr_heavenly_invitation_open }
+  }
+  tyr_heavenly_offer_governor_takeover = yes
+ }
+ option = {
+  name = chi_adm_heavenly_takeover_accept
+  trigger = { is_player = yes c:TPG ?= { is_ai = yes has_war_with = c:CHI var:tyr_heavenly_invitation_open ?= { this = root } NOT = { has_variable = tyr_heavenly_takeover_claimed } } }
+  ai_chance = { base = 0 }
+  tyr_heavenly_grant_takeover = yes
+ }
+}
+
+# Deferred so the terms are enforced before evaluating an interrupted war.
+heavenly.21 = {
+ type = country_event
+ hidden = yes
+ immediate = {
+  tyr_heavenly_settle_governors = yes
+  if = {
+   limit = {
+    OR = { has_journal_entry = je_taiping has_journal_entry = je_taiping_revolution }
+    NOT = { has_variable = tyr_heavenly_annexation_enforced }
+   }
+   set_variable = tyr_heavenly_interrupted
+  }
+ }
+}
+
+heavenly.22 = {
+ type = country_event
+ hidden = yes
+	immediate = {
+		set_variable = { name = missionary_works_counter value = 1 }
+		random_state = {
+			limit = { chi_qing_story_state = yes tyr_heavenly_missions_access_allowed = yes
+				any_neighbouring_state = {
+					is_treaty_port = yes
+					owner = {
+						religion = {
+							has_discrimination_trait = heritage_christian
+						}
+					}
+				}
+			}
+			save_scope_as = missionary_state
+			random_neighbouring_state = {
+				limit = {
+					is_treaty_port = yes
+					owner = {
+						religion = {
+							has_discrimination_trait = heritage_christian
+						}
+					}
+				}
+				save_scope_as = treaty_port_scope
+				owner = {
+					save_scope_as = treaty_port_owner
+				}
+			}
+		}
+	
+  scope:missionary_state ?= {
+   owner = { trigger_event = { id = heavenly.1 popup = yes } }
+  }
+ }
 }

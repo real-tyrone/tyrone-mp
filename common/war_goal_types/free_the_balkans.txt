@@ -1,10 +1,12 @@
 ﻿free_the_balkans_wargoal = {
 	icon = "gfx/interface/icons/war_goals/independence.dds"
 
-	kind = humiliation
+	kind = custom
 
 	settings = {
+		skip_build_list
 		require_target_be_part_of_war
+		assent_required
 		validate_conflicts_war_goals_all
 	}
 
@@ -15,10 +17,27 @@
 	target_type = country
 
 	possible = {
-		always = no
+		c:RUS ?= root
+		scope:target_country = {
+			c:TUR ?= this
+		}
+		OR = {
+			has_global_variable = crimean_war_russian_victory
+			has_global_variable = free_the_balkans_button_used
+			scope:target_country = {
+				OR = {
+					has_variable = failed_great_eastern_crisis
+					NOT = { has_journal_entry = je_great_eastern_crisis }
+				}
+			}
+		}
 	}
 
 	valid = {
+		c:RUS ?= root
+		scope:target_country = {
+			c:TUR ?= this
+		}
 	}
 
 	maneuvers = {

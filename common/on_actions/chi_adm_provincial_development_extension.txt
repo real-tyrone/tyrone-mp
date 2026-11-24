@@ -1,0 +1,68 @@
+on_monthly_pulse_country = { on_actions = { chi_adm_provincial_development_extension_monthly } }
+chi_adm_provincial_development_extension_monthly = {
+trigger = { OR = { c:CHI ?= this chi_qing_administration_tag = yes any_scope_state = { has_variable = chi_adm_provincial_development_project } } }
+effect = { chi_adm_provincial_development_ensure_entries = yes chi_adm_provincial_development_sync_budget = yes chi_adm_provincial_development_extension_monthly = yes chi_adm_provincial_development_ai_monthly = yes }
+}
+
+on_game_started_after_lobby = { on_actions = { chi_adm_provincial_development_start_entries } }
+chi_adm_provincial_development_start_entries = {
+effect = {
+ c:CHI ?= {
+  chi_adm_provincial_development_ensure_entries = yes
+  every_subject_or_below = { limit = { chi_adm_target_valid = yes } chi_adm_provincial_development_ensure_entries = yes }
+ }
+}
+}
+
+# Track the country that held completed upgrades, and remove them if it ceases to exist.
+on_monthly_pulse_country = { on_actions = { chi_adm_provincial_development_upgrade_ownership } }
+chi_adm_provincial_development_upgrade_ownership = {
+    trigger = {
+        OR = {
+            has_modifier = chi_adm_provincial_development_military_1
+            has_modifier = chi_adm_provincial_development_military_2
+            has_modifier = chi_adm_provincial_development_military_3
+            any_scope_state = {
+                OR = {
+                    has_variable = chi_adm_provincial_development_military
+                    has_variable = chi_adm_provincial_development_economic
+                    has_variable = chi_adm_provincial_development_administrative
+                    has_variable = chi_adm_provincial_development_education
+                }
+            }
+        }
+    }
+    effect = {
+        every_scope_state = {
+            limit = {
+                OR = {
+                    has_variable = chi_adm_provincial_development_military
+                    has_variable = chi_adm_provincial_development_economic
+                    has_variable = chi_adm_provincial_development_administrative
+                    has_variable = chi_adm_provincial_development_education
+                }
+            }
+            if = {
+                limit = { has_modifier = chi_adm_provincial_development_military_1 }
+                remove_modifier = chi_adm_provincial_development_military_1
+            }
+            if = {
+                limit = { has_modifier = chi_adm_provincial_development_military_2 }
+                remove_modifier = chi_adm_provincial_development_military_2
+            }
+            if = {
+                limit = { has_modifier = chi_adm_provincial_development_military_3 }
+                remove_modifier = chi_adm_provincial_development_military_3
+            }
+            if = {
+                limit = { NOT = { has_variable = chi_adm_provincial_development_upgrade_owner } }
+                set_variable = { name = chi_adm_provincial_development_upgrade_owner value = owner }
+            }
+            else_if = {
+                limit = { NOT = { exists = var:chi_adm_provincial_development_upgrade_owner } }
+                chi_adm_provincial_development_remove_state_upgrades = yes
+            }
+        }
+        chi_adm_provincial_development_sync_military_reward = yes
+    }
+}

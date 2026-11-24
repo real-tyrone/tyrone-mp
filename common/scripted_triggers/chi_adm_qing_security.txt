@@ -1,0 +1,269 @@
+# Country scope. Office identity is independent of a negotiated provincial development conversion.
+chi_adm_qing_security_han_office = {
+ country_has_primary_culture = cu:han
+ OR = {
+  c:ZHI ?= this c:AHU ?= this c:HNA ?= this c:YUE ?= this c:FRS ?= this
+  c:XIB ?= this c:YUN ?= this c:SIH ?= this c:SHN ?= this c:SHA ?= this
+ }
+ NOT = { chi_adm_frontier = yes }
+}
+
+chi_adm_qing_security_court = {
+ c:CHI ?= this
+ chi_adm_court_valid = yes
+ is_subject = no
+ NOT = { has_variable = chi_adm_qing_security_new_dynasty }
+}
+
+chi_adm_qing_security_office = {
+ chi_adm_target_valid = yes
+ c:CHI ?= { chi_adm_qing_security_court = yes }
+}
+
+chi_adm_qing_security_free_to_pledge = {
+ chi_adm_qing_security_office = yes
+ is_at_war = no
+ is_diplomatic_play_committed_participant = no
+ NOR = {
+  has_truce_with = c:CHI
+  has_variable = chi_adm_negotiated_integration_stage
+  has_variable = chi_adm_provincial_development_case
+  has_variable = chi_adm_provincial_development_autonomy_grant
+  has_variable = chi_adm_provincial_development_dispute
+  has_variable = chi_adm_provincial_development_enforcement_target
+  has_variable = chi_adm_provincial_development_conversion
+  has_modifier = chi_adm_provincial_development_guarantee
+ }
+}
+
+chi_adm_qing_security_weak_court = {
+ chi_adm_qing_security_court = yes
+ has_journal_entry = je_mandate_of_heaven
+ je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" <= 3 }
+}
+
+chi_adm_qing_security_claimant_politics = {
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_office_req
+  chi_adm_qing_security_office = yes
+  chi_adm_qing_security_han_office = yes
+ }
+ custom_tooltip = { text = chi_adm_qing_security_claimant_loyalty_req var:chi_adm_loyalty <= 20 }
+ custom_tooltip = { text = chi_adm_qing_security_claimant_autonomy_req var:chi_adm_autonomy >= 65 }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_army_req
+  army_power_projection >= 10
+  army_power_projection >= { value = c:CHI.army_power_projection multiply = 0.20 }
+ }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_mandate_req
+  c:CHI ?= { chi_adm_qing_security_weak_court = yes }
+ }
+ custom_tooltip = {
+  text = chi_adm_qing_security_claimant_strain_req
+  OR = {
+   relations:c:CHI <= relations_threshold:poor
+   chi_adm_provincial_development_crisis = yes
+   c:CHI ?= { OR = { government_legitimacy < 50 chi_adm_provincial_development_crisis = yes } }
+  }
+ }
+}
+
+chi_adm_qing_security_can_found = {
+ chi_adm_qing_security_claimant_politics = yes
+ custom_tooltip = { text = chi_adm_qing_security_found_free_req chi_adm_qing_security_free_to_pledge = yes }
+ custom_tooltip = { text = chi_adm_qing_security_found_reviews_req var:chi_adm_qing_security_grievance >= 3 }
+ authority >= 25
+ custom_tooltip = {
+  text = chi_adm_qing_security_found_court_req
+  c:CHI ?= {
+   NOR = {
+    has_variable = chi_adm_qing_security_phase
+    has_variable = chi_adm_qing_security_moratorium
+    has_variable = chi_adm_provincial_development_enforcement
+   }
+  }
+ }
+}
+
+chi_adm_qing_security_recruiting = {
+ c:CHI ?= { chi_adm_qing_security_court = yes var:chi_adm_qing_security_phase >= 2 var:chi_adm_qing_security_phase <= 4 }
+}
+
+chi_adm_qing_security_is_claimant = {
+ c:CHI ?= { var:chi_adm_qing_security_claimant ?= prev }
+}
+
+chi_adm_qing_security_can_arm = {
+ chi_adm_qing_security_recruiting = yes
+ chi_adm_qing_security_free_to_pledge = yes
+ chi_adm_qing_security_han_office = yes
+ NOT = { chi_adm_qing_security_is_claimant = yes }
+ var:chi_adm_loyalty <= 45
+ var:chi_adm_autonomy >= 45
+ army_power_projection >= 5
+ authority >= 25
+ c:CHI ?= { var:chi_adm_qing_security_claimant ?= { save_temporary_scope_as = chi_adm_qing_security_contact } }
+ exists = scope:chi_adm_qing_security_contact
+ NOT = { "relations(scope:chi_adm_qing_security_contact)" <= relations_threshold:hostile }
+}
+
+chi_adm_qing_security_can_aid = {
+ chi_adm_qing_security_recruiting = yes
+ chi_adm_qing_security_office = yes
+ NOT = { chi_adm_qing_security_is_claimant = yes }
+ var:chi_adm_loyalty <= 55
+ var:chi_adm_autonomy >= 35
+ authority >= 25
+}
+
+chi_adm_qing_security_exposed = {
+ c:CHI ?= { has_variable = chi_adm_qing_security_phase var:chi_adm_qing_security_phase < 5 var:chi_adm_qing_security_evidence >= 50 }
+}
+
+chi_adm_qing_security_can_escalate = {
+ chi_adm_qing_security_is_claimant = yes
+ chi_adm_qing_security_claimant_politics = yes
+ chi_adm_qing_security_free_to_pledge = yes
+ c:CHI ?= {
+  var:chi_adm_qing_security_months >= 12
+  var:chi_adm_qing_security_readiness >= 75
+  chi_adm_qing_security_armed_count >= 2
+  chi_adm_qing_security_force_ratio >= 65
+  NOR = { has_variable = chi_adm_provincial_development_enforcement any_civil_war = { civil_war_progress >= 0.75 } }
+  is_at_war = no
+  is_diplomatic_play_committed_participant = no
+ }
+}
+
+# An AI pledge never commits a country after a human takes the seat.
+chi_adm_qing_security_armed = {
+ var:chi_adm_qing_security_faction = 1
+ chi_adm_qing_security_free_to_pledge = yes
+ chi_adm_qing_security_han_office = yes
+ var:chi_adm_loyalty <= 45
+ var:chi_adm_autonomy >= 45
+ army_power_projection >= 5
+ OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+}
+
+chi_adm_qing_security_loyalist = {
+ var:chi_adm_qing_security_faction = 3
+ chi_adm_qing_security_free_to_pledge = yes
+ OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
+}
+
+chi_adm_qing_security_can_issue = { chi_adm_qing_security_can_escalate = yes c:CHI ?= { var:chi_adm_qing_security_phase = 3 } }
+chi_adm_qing_security_can_launch = {
+ chi_adm_qing_security_can_escalate = yes
+ chi_adm_qing_security_armed = yes
+ c:CHI ?= { var:chi_adm_qing_security_phase = 4 NOT = { has_variable = chi_adm_qing_security_ultimatum } }
+}
+chi_adm_qing_security_can_accept = {
+ chi_adm_qing_security_is_claimant = yes
+ chi_adm_qing_security_office = yes
+ chi_adm_qing_security_exposed = yes
+ c:CHI ?= { has_variable = chi_adm_qing_security_terms }
+}
+
+# Court scope. Use only conditions the court can observe on the provincial register.
+chi_adm_qing_security_public_warning = {
+ any_subject = {
+  chi_adm_target_valid = yes
+  OR = {
+   AND = { var:chi_adm_loyalty <= 45 var:chi_adm_autonomy >= 45 }
+   relations:c:CHI <= relations_threshold:poor
+   any_scope_state = { turmoil >= 0.40 }
+  }
+ }
+}
+
+chi_adm_qing_security_court_threat = {
+ OR = {
+  chi_adm_qing_security_exposed = yes
+  AND = { var:chi_adm_qing_security_phase = 5 var:chi_adm_qing_security_evidence >= 50 }
+  has_variable = chi_adm_qing_security_settlement
+ }
+}
+
+chi_adm_qing_security_show_inquiry = {
+ chi_adm_qing_security_court = yes
+ NOT = { var:chi_adm_qing_security_phase = 5 }
+ OR = { chi_adm_qing_security_exposed = yes chi_adm_qing_security_public_warning = yes }
+}
+
+# Provincial presentation follows information already available through the dossier or recruitment.
+chi_adm_qing_security_provincial_conspiracy = {
+ OR = {
+  chi_adm_qing_security_is_claimant = yes
+  chi_adm_qing_security_exposed = yes
+  has_variable = chi_adm_qing_security_pact
+  AND = { chi_adm_qing_security_office = yes chi_adm_qing_security_recruiting = yes }
+ }
+}
+
+chi_adm_qing_security_can_investigate = {
+ chi_adm_qing_security_court = yes
+ has_variable = chi_adm_qing_security_phase
+ var:chi_adm_qing_security_phase < 5
+ has_variable = chi_adm_qing_security_evidence
+ var:chi_adm_qing_security_evidence < 100
+ relative_bureaucracy >= 0.05
+ NOT = { has_modifier = chi_adm_qing_security_inquiry }
+}
+chi_adm_qing_security_can_offer = {
+ chi_adm_qing_security_court = yes chi_adm_qing_security_exposed = yes
+ NOT = { has_variable = chi_adm_qing_security_terms_offered }
+ authority >= 50
+}
+chi_adm_qing_security_can_muster = {
+ chi_adm_qing_security_court = yes chi_adm_qing_security_exposed = yes
+ NOT = { has_modifier = chi_adm_qing_security_loyalist_muster }
+ authority >= 50
+}
+chi_adm_qing_security_can_suppress = {
+ chi_adm_qing_security_court = yes chi_adm_qing_security_exposed = yes
+ var:chi_adm_qing_security_evidence >= 75
+ var:chi_adm_qing_security_readiness < 55
+ chi_adm_qing_security_force_ratio < 65
+ chi_adm_qing_security_claimant_valid = yes
+ NOT = { has_variable = chi_adm_provincial_development_enforcement }
+ authority >= 75
+ relative_bureaucracy >= 0.05
+}
+chi_adm_qing_security_claimant_valid = {
+ var:chi_adm_qing_security_claimant ?= { chi_adm_qing_security_office = yes chi_adm_qing_security_han_office = yes }
+}
+
+chi_adm_qing_security_foreign_interested = {
+ c:CHI ?= { has_variable = chi_adm_qing_security_phase var:chi_adm_qing_security_evidence >= 50 }
+ is_subject = no
+ NOT = { chi_qing_realm = yes }
+ NOT = { has_variable = chi_adm_qing_security_pact }
+ country_rank >= rank_value:unrecognized_major_power
+ c:CHI ?= { capital = { region = { save_temporary_scope_as = chi_adm_qing_security_theater } } }
+ has_interest_marker_in_region = scope:chi_adm_qing_security_theater
+}
+
+chi_adm_qing_security_can_sponsor = {
+ chi_adm_qing_security_foreign_interested = yes
+ influence >= 100
+ is_at_war = no
+ NOR = { has_modifier = chi_adm_qing_security_foreign_mission has_variable = chi_adm_qing_security_diplomatic_choice }
+ c:CHI ?= { chi_adm_qing_security_court = yes var:chi_adm_qing_security_phase < 5 }
+}
+
+chi_adm_qing_security_live_play = {
+ is_diplomatic_play_type = dp_chi_adm_qing_security_throne
+ initiator = { c:CHI ?= this var:chi_adm_qing_security_phase = 5 }
+}
+
+chi_adm_qing_security_can_return = {
+ has_variable = chi_adm_qing_security_pact
+ trigger_if = {
+  limit = { exists = c:CHI }
+  NOT = { c:CHI ?= { var:chi_adm_qing_security_phase = 5 } }
+  NOT = { has_war_with = c:CHI }
+  NOT = { is_diplomatic_play_enemy_of = c:CHI }
+ }
+}

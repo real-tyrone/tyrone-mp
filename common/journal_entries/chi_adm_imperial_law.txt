@@ -1,0 +1,81 @@
+chi_adm_imperial_law_directive = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_chi_adm_court_register_province
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ is_shown_when_inactive = {
+  chi_adm_imperial_law_civil = yes
+  has_variable = chi_adm_imperial_law_active
+ }
+ possible = {
+  chi_adm_imperial_law_civil = yes
+  has_variable = chi_adm_imperial_law_active
+ }
+ activation_description = {
+  custom_tooltip = {
+   text = chi_adm_imperial_law_req_province
+   chi_adm_imperial_law_civil = yes
+   has_variable = chi_adm_imperial_law_active
+  }
+ }
+ should_be_pinned_by_default_uninvolved_or_context = yes
+ weight = 880
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_imperial_law.gui"
+  name = "chi_adm_imperial_law_directive"
+  container = "custom_widget_container_1"
+ }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_imperial_law.gui" name = "chi_adm_imperial_law_responses" container = "custom_widget_container_buttons" }
+ scripted_button = chi_adm_imperial_law_queue_button
+ scripted_button = chi_adm_imperial_law_prioritize_button
+ scripted_button = chi_adm_imperial_law_immediate_button
+ scripted_button = chi_adm_imperial_law_gradual_button
+ scripted_button = chi_adm_imperial_law_petition_button
+ scripted_button = chi_adm_imperial_law_delay_button
+ scripted_button = chi_adm_imperial_law_refuse_button
+ outcome = {
+  flags = {
+   hidden
+   invalid_outcome
+  }
+  conclusion_desc = chi_adm_imperial_law_closed
+  trigger = {
+   NOT = {
+    chi_adm_imperial_law_civil = yes
+    has_variable = chi_adm_imperial_law_active
+   }
+  }
+  effect = {
+   if = {
+    limit = {
+     chi_adm_imperial_law_civil = no
+    }
+    chi_adm_imperial_law_clear = yes
+   }
+  }
+ }
+}
+chi_adm_imperial_law_court_register = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_chi_adm_court_register_court
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ is_shown_when_inactive = {
+  always = no
+ }
+ possible = {
+  always = no
+ }
+ outcome = {
+  flags = {
+   hidden
+   invalid_outcome
+  }
+  conclusion_desc = chi_adm_imperial_law_closed
+  trigger = {
+   always = yes
+  }
+ }
+}

@@ -1,0 +1,198 @@
+# One open choice at a time. Event options recheck eligibility on selection.
+chi_adm_regional_works_offer_case = {
+ if = { limit = { NOT = { has_variable = chi_adm_regional_works_offer_revision } } set_variable = { name = chi_adm_regional_works_offer_revision value = 0 } }
+ change_variable = { name = chi_adm_regional_works_offer_revision add = 1 }
+ save_scope_value_as = { name = chi_adm_regional_works_offer_revision value = var:chi_adm_regional_works_offer_revision }
+ set_variable = { name = chi_adm_regional_works_offer value = $KEY$ months = 3 }
+ trigger_event = { id = $EVENT$ popup = yes }
+}
+chi_adm_regional_works_defer_case = {
+ remove_variable = chi_adm_regional_works_offer
+ set_variable = { name = chi_adm_regional_works_deferred value = yes months = 18 }
+}
+chi_adm_regional_works_close_petition = {
+ remove_variable = chi_adm_regional_works_offer
+ set_variable = { name = chi_adm_regional_works_petition_done value = $OUTCOME$ }
+}
+chi_adm_regional_works_offer_petition = {
+ if = {
+  limit = { chi_adm_regional_works_zhili_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 1 EVENT = chi_adm_regional_works.1 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_liangjiang_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 2 EVENT = chi_adm_regional_works.2 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_huguang_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 3 EVENT = chi_adm_regional_works.3 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_liangguang_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 4 EVENT = chi_adm_regional_works.4 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_minzhe_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 5 EVENT = chi_adm_regional_works.5 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_shaangan_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 6 EVENT = chi_adm_regional_works.6 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_yungui_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 7 EVENT = chi_adm_regional_works.7 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_sichuan_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 8 EVENT = chi_adm_regional_works.8 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_shanxi_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 9 EVENT = chi_adm_regional_works.9 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_shandong_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 10 EVENT = chi_adm_regional_works.10 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_mongolia_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 11 EVENT = chi_adm_regional_works.11 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_ili_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 12 EVENT = chi_adm_regional_works.12 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_manchuria_petition = yes }
+  chi_adm_regional_works_offer_case = { KEY = 13 EVENT = chi_adm_regional_works.13 }
+ }
+}
+chi_adm_regional_works_offer_historical_work = {
+ if = {
+  limit = { chi_adm_regional_works_kaiping_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 101 EVENT = chi_adm_regional_works.101 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_hanyang_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 102 EVENT = chi_adm_regional_works.102 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_foochow_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 103 EVENT = chi_adm_regional_works.103 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_jingdezhen_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 104 EVENT = chi_adm_regional_works.104 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_jiangnan_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 105 EVENT = chi_adm_regional_works.105 }
+ }
+ else_if = {
+  limit = { chi_adm_regional_works_lanzhou_candidate = yes }
+  chi_adm_regional_works_offer_case = { KEY = 106 EVENT = chi_adm_regional_works.106 }
+ }
+}
+chi_adm_regional_works_endorse_charter = {
+ random_scope_state = {
+  limit = { chi_adm_regional_works_$PROJECT$_site = yes chi_adm_regional_works_track_available = { TRACK = $TRACK$ TYPE = $TYPE$ TIER = $TIER$ } }
+  save_temporary_scope_as = chi_adm_regional_works_registered_site
+ }
+ if = {
+  limit = { exists = scope:chi_adm_regional_works_registered_site }
+  set_variable = { name = chi_adm_regional_works_charter_site value = scope:chi_adm_regional_works_registered_site }
+  set_variable = { name = chi_adm_regional_works_charter_key value = $KEY$ months = 60 }
+  set_variable = { name = chi_adm_regional_works_charter_route value = $ROUTE$ }
+  remove_variable = chi_adm_regional_works_offer
+  if = { limit = { var:chi_adm_regional_works_charter_route = 1 } add_modifier = { name = chi_adm_regional_works_province_subscription years = 2 } }
+  else = { add_modifier = { name = chi_adm_regional_works_imperial_accounts months = 18 } }
+  chi_adm_regional_works_review_charter = { PROJECT = $PROJECT$ TRACK = $TRACK$ TYPE = $TYPE$ TIER = $TIER$ }
+ }
+}
+chi_adm_regional_works_clear_charter = {
+ remove_variable = chi_adm_regional_works_charter_site
+ remove_variable = chi_adm_regional_works_charter_key
+ remove_variable = chi_adm_regional_works_charter_route
+}
+chi_adm_regional_works_review_charter = {
+ if = {
+  limit = {
+   OR = {
+    NOT = { chi_adm_regional_works_$PROJECT$_identity = yes }
+    NOT = { var:chi_adm_regional_works_charter_site ?= { owner = prev chi_adm_regional_works_track_available = { TRACK = $TRACK$ TYPE = $TYPE$ TIER = $TIER$ } } }
+   }
+  }
+  chi_adm_regional_works_clear_charter = yes
+ }
+ else_if = {
+  limit = {
+   chi_adm_regional_works_development = yes
+   chi_adm_regional_works_$PROJECT$_industry = yes
+   var:chi_adm_regional_works_charter_site ?= { chi_adm_regional_works_$PROJECT$_site = yes var:chi_adm_provincial_development_$TRACK$ >= $TIER$ }
+  }
+  # Record first, then issue one temporary award at the owned project site.
+  c:CHI ?= { set_variable = chi_adm_regional_works_$PROJECT$_ratified }
+  var:chi_adm_regional_works_charter_site = { add_modifier = { name = chi_adm_regional_works_$PROJECT$_works years = 4 } }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_route = 1 }
+   chi_adm_adjust_autonomy = { AMOUNT = 4 }
+   chi_adm_adjust_loyalty = { AMOUNT = -2 }
+  }
+  else = {
+   chi_adm_adjust_autonomy = { AMOUNT = -3 }
+   chi_adm_adjust_loyalty = { AMOUNT = 6 }
+   chi_adm_adjust_corruption = { AMOUNT = -5 }
+  }
+  set_variable = { name = chi_adm_regional_works_last_charter value = var:chi_adm_regional_works_charter_key years = 4 }
+  chi_adm_regional_works_clear_charter = yes
+ }
+}
+chi_adm_regional_works_province_review = {
+ if = {
+  limit = {
+   has_variable = chi_adm_regional_works_charter_site
+   OR = {
+    NOT = { has_variable = chi_adm_regional_works_charter_key }
+    NOT = { var:chi_adm_regional_works_charter_site ?= { owner = prev } }
+    NOR = { chi_adm_target_valid = yes has_variable = chi_adm_qing_security_pact }
+   }
+  }
+  chi_adm_regional_works_clear_charter = yes
+ }
+ if = {
+  limit = { chi_adm_regional_works_development = yes has_variable = chi_adm_regional_works_charter_key }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 101 }
+   chi_adm_regional_works_review_charter = { PROJECT = kaiping TRACK = economic TYPE = 2 TIER = 3 }
+  }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 102 }
+   chi_adm_regional_works_review_charter = { PROJECT = hanyang TRACK = military TYPE = 1 TIER = 3 }
+  }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 103 }
+   chi_adm_regional_works_review_charter = { PROJECT = foochow TRACK = education TYPE = 4 TIER = 2 }
+  }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 104 }
+   chi_adm_regional_works_review_charter = { PROJECT = jingdezhen TRACK = economic TYPE = 2 TIER = 2 }
+  }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 105 }
+   chi_adm_regional_works_review_charter = { PROJECT = jiangnan TRACK = administrative TYPE = 3 TIER = 2 }
+  }
+  if = {
+   limit = { var:chi_adm_regional_works_charter_key = 106 }
+   chi_adm_regional_works_review_charter = { PROJECT = lanzhou TRACK = economic TYPE = 2 TIER = 2 }
+  }
+ }
+ if = {
+  limit = { is_ai = yes chi_adm_regional_works_development = yes chi_adm_regional_works_open_charter = yes OR = { chi_adm_regional_works_local_terms = yes chi_adm_regional_works_court_terms = yes } }
+  chi_adm_regional_works_offer_historical_work = yes
+ }
+ if = {
+  limit = { is_ai = yes chi_adm_regional_works_open_petition = yes OR = { authority >= 20 relative_bureaucracy >= 0.03 } }
+  chi_adm_regional_works_offer_petition = yes
+ }
+}

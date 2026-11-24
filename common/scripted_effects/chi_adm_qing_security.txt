@@ -1,0 +1,374 @@
+# CHI owns the single contest. Factions live on the offices that chose them.
+# Phases: 1 organization, 2 recruitment, 3 preparation, 4 ultimatum, 5 native play.
+chi_adm_qing_security_found = {
+ if = {
+  limit = { chi_adm_qing_security_can_found = yes }
+  set_variable = { name = chi_adm_qing_security_faction value = 1 }
+  if = { limit = { is_ai = no } set_variable = chi_adm_qing_security_human_pledge }
+  add_modifier = { name = chi_adm_qing_security_organization months = 6 }
+  c:CHI = {
+   set_variable = { name = chi_adm_qing_security_claimant value = prev }
+   set_variable = { name = chi_adm_qing_security_phase value = 1 }
+   set_variable = { name = chi_adm_qing_security_months value = 0 }
+   set_variable = { name = chi_adm_qing_security_readiness value = 10 }
+   set_variable = { name = chi_adm_qing_security_evidence value = 10 }
+   set_variable = { name = chi_adm_qing_security_briefed_ratio value = chi_adm_qing_security_force_ratio }
+  }
+ }
+}
+
+# Office scope. Shared by the player buttons and the bounded Qing AI review.
+chi_adm_qing_security_pledge = {
+ set_variable = { name = chi_adm_qing_security_faction value = $FACTION$ }
+ remove_variable = chi_adm_qing_security_human_pledge
+ if = { limit = { is_ai = no } set_variable = chi_adm_qing_security_human_pledge }
+ set_variable = { name = chi_adm_qing_security_stance_cooldown value = yes months = 3 }
+ if = {
+  limit = { OR = { var:chi_adm_qing_security_faction = 1 var:chi_adm_qing_security_faction = 2 } }
+  add_modifier = { name = chi_adm_qing_security_organization months = 6 }
+ }
+ if = {
+  limit = { is_ai = no }
+  c:CHI ?= { set_variable = { name = chi_adm_qing_security_briefed_ratio value = chi_adm_qing_security_force_ratio } }
+ }
+}
+
+chi_adm_qing_security_revise = {
+ if = {
+  limit = { var:chi_adm_qing_security_faction >= 1 var:chi_adm_qing_security_faction <= 2 }
+  c:CHI ?= { change_variable = { name = chi_adm_qing_security_readiness subtract = 8 } chi_adm_qing_security_clamp = yes }
+ }
+ chi_adm_qing_security_pledge = { FACTION = $FACTION$ }
+}
+
+chi_adm_qing_security_report = {
+ chi_adm_qing_security_revise = { FACTION = 3 }
+ set_variable = chi_adm_qing_security_informed
+ chi_adm_adjust_loyalty = { AMOUNT = 5 }
+ c:CHI ?= {
+  change_variable = { name = chi_adm_qing_security_evidence add = 30 }
+  change_variable = { name = chi_adm_qing_security_readiness subtract = 12 }
+  chi_adm_qing_security_clamp = yes
+  chi_adm_qing_security_brief = yes
+ }
+}
+
+chi_adm_qing_security_clamp = {
+ if = { limit = { var:chi_adm_qing_security_readiness < 0 } set_variable = { name = chi_adm_qing_security_readiness value = 0 } }
+ if = { limit = { var:chi_adm_qing_security_readiness > 100 } set_variable = { name = chi_adm_qing_security_readiness value = 100 } }
+ if = { limit = { var:chi_adm_qing_security_evidence > 100 } set_variable = { name = chi_adm_qing_security_evidence value = 100 } }
+}
+
+# Court scope. Send the discovery once even if the case is exposed by a button.
+chi_adm_qing_security_brief = {
+ if = {
+  limit = { var:chi_adm_qing_security_evidence >= 50 NOT = { has_variable = chi_adm_qing_security_briefed } }
+  set_variable = chi_adm_qing_security_briefed
+  trigger_event = { id = chi_adm_qing_security.1 popup = yes }
+ }
+}
+
+chi_adm_qing_security_investigate = {
+ if = {
+  limit = { chi_adm_qing_security_can_investigate = yes }
+  add_modifier = { name = chi_adm_qing_security_inquiry months = 4 }
+  change_variable = { name = chi_adm_qing_security_evidence add = 25 }
+  chi_adm_qing_security_clamp = yes
+  chi_adm_qing_security_brief = yes
+ }
+}
+
+chi_adm_qing_security_offer_terms = {
+ add_modifier = { name = chi_adm_qing_security_concession months = 12 }
+ set_variable = { name = chi_adm_qing_security_terms value = yes months = 4 }
+ set_variable = chi_adm_qing_security_terms_offered
+}
+
+chi_adm_qing_security_accept_terms = {
+ c:CHI ?= {
+  every_subject_or_below = {
+   limit = { chi_adm_qing_security_office = yes var:chi_adm_qing_security_faction >= 1 var:chi_adm_qing_security_faction <= 2 }
+   chi_adm_adjust_loyalty = { AMOUNT = 12 }
+   chi_adm_adjust_autonomy = { AMOUNT = 5 }
+   change_relations = { country = c:CHI value = 10 }
+  }
+  chi_adm_qing_security_close = { RESULT = 3 }
+ }
+}
+
+chi_adm_qing_security_pressure = {
+ add_modifier = { name = chi_adm_qing_security_repression months = 8 }
+ change_variable = { name = chi_adm_qing_security_evidence add = 15 }
+ change_variable = { name = chi_adm_qing_security_readiness subtract = 10 }
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_office = yes var:chi_adm_loyalty <= 55 }
+  chi_adm_adjust_loyalty = { AMOUNT = -5 }
+ }
+ chi_adm_qing_security_clamp = yes
+}
+
+chi_adm_qing_security_muster = {
+ add_modifier = { name = chi_adm_qing_security_loyalist_muster months = 12 }
+}
+
+chi_adm_qing_security_suppress = {
+ add_modifier = { name = chi_adm_qing_security_suppression months = 12 }
+ var:chi_adm_qing_security_claimant ?= {
+  chi_adm_adjust_loyalty = { AMOUNT = -10 }
+  chi_adm_adjust_autonomy = { AMOUNT = -10 }
+ }
+ every_subject_or_below = {
+  limit = { chi_adm_qing_security_office = yes var:chi_adm_loyalty <= 50 }
+  chi_adm_adjust_loyalty = { AMOUNT = -5 }
+ }
+ chi_adm_qing_security_close = { RESULT = 4 }
+}
+
+# Court scope. On every terminal path the result is written before phase is removed.
+# A restored administration has already consented to these terms at the pledge.
+chi_adm_qing_security_close = {
+ if = {
+  limit = { has_variable = chi_adm_qing_security_phase }
+  set_variable = { name = chi_adm_qing_security_result value = $RESULT$ months = 18 }
+  set_variable = { name = chi_adm_qing_security_moratorium value = yes years = 5 }
+  if = {
+   limit = { var:chi_adm_qing_security_result <= 2 }
+   if = { limit = { is_ai = no } trigger_event = { id = chi_adm_qing_security.4 popup = yes } }
+   every_in_list = {
+    variable = chi_adm_qing_security_detached
+    limit = { is_ai = no }
+    trigger_event = { id = chi_adm_qing_security.4 popup = yes }
+   }
+  }
+  remove_variable = chi_adm_qing_security_phase
+  every_in_list = {
+   variable = chi_adm_qing_security_detached
+   limit = { has_variable = chi_adm_qing_security_pact }
+   set_variable = { name = chi_adm_qing_security_service_result value = $RESULT$ months = 6 }
+   chi_adm_qing_security_restore_office = yes
+  }
+  every_subject_or_below = {
+   limit = { OR = { has_variable = chi_adm_qing_security_faction has_variable = chi_adm_qing_security_informed } }
+   chi_adm_qing_security_clear_office = yes
+  }
+  clear_variable_list = chi_adm_qing_security_detached
+  remove_variable = chi_adm_qing_security_claimant
+  remove_variable = chi_adm_qing_security_months
+  remove_variable = chi_adm_qing_security_readiness
+  remove_variable = chi_adm_qing_security_evidence
+  remove_variable = chi_adm_qing_security_briefed_ratio
+  remove_variable = chi_adm_qing_security_briefed
+  remove_variable = chi_adm_qing_security_terms
+  remove_variable = chi_adm_qing_security_terms_offered
+  remove_variable = chi_adm_qing_security_ultimatum
+  remove_variable = chi_adm_qing_security_failed_politics
+  remove_variable = chi_adm_qing_security_native_started
+  remove_variable = chi_adm_qing_security_pending_result
+  remove_variable = chi_adm_qing_security_foreign_envoy
+  remove_variable = chi_adm_qing_security_foreign_commission
+  remove_modifier = chi_adm_qing_security_foreign_court
+  remove_modifier = chi_adm_qing_security_foreign_claimant
+ }
+}
+
+chi_adm_qing_security_clear_office = {
+ remove_variable = chi_adm_qing_security_faction
+ remove_variable = chi_adm_qing_security_informed
+ remove_variable = chi_adm_qing_security_stance_cooldown
+ remove_variable = chi_adm_qing_security_human_pledge
+ remove_variable = chi_adm_qing_security_called_loyalist
+ remove_variable = chi_adm_qing_security_pardoned
+}
+
+# Root = CHI for the monthly review. All iterators are limited to its subjects.
+chi_adm_qing_security_court_review = {
+ if = {
+  limit = { var:chi_adm_qing_security_phase = 5 }
+  if = {
+   limit = {
+    OR = { NOT = { chi_adm_qing_security_court = yes } NOT = { exists = var:chi_adm_qing_security_claimant } }
+   }
+   every_diplomatic_play = {
+    limit = { chi_adm_qing_security_live_play = yes }
+    end_play = yes
+   }
+  }
+  if = {
+   limit = {
+    NOR = {
+     any_diplomatic_play = { chi_adm_qing_security_live_play = yes }
+     var:chi_adm_qing_security_claimant ?= { has_war_with = c:CHI }
+    }
+   }
+   chi_adm_qing_security_resolve = yes
+  }
+ }
+ else_if = {
+  limit = {
+   OR = {
+    NOT = { chi_adm_qing_security_court = yes }
+    NOT = { chi_adm_qing_security_claimant_valid = yes }
+    var:chi_adm_qing_security_months >= 30
+   }
+  }
+  chi_adm_qing_security_close = { RESULT = 5 }
+ }
+ else = {
+  change_variable = { name = chi_adm_qing_security_months add = 1 }
+  if = {
+   limit = { has_modifier = chi_adm_qing_security_foreign_claimant NOT = { exists = var:chi_adm_qing_security_foreign_envoy } }
+   remove_modifier = chi_adm_qing_security_foreign_claimant
+   remove_variable = chi_adm_qing_security_foreign_envoy
+  }
+  if = {
+   limit = { has_modifier = chi_adm_qing_security_foreign_court NOT = { exists = var:chi_adm_qing_security_foreign_commission } }
+   remove_modifier = chi_adm_qing_security_foreign_court
+   remove_variable = chi_adm_qing_security_foreign_commission
+  }
+  if = {
+   limit = { var:chi_adm_qing_security_claimant ?= { chi_adm_qing_security_claimant_politics = yes } }
+   remove_variable = chi_adm_qing_security_failed_politics
+   if = { limit = { var:chi_adm_qing_security_phase < 4 } change_variable = { name = chi_adm_qing_security_readiness add = chi_adm_qing_security_monthly_preparation } }
+  }
+  else = {
+   if = { limit = { NOT = { has_variable = chi_adm_qing_security_failed_politics } } set_variable = { name = chi_adm_qing_security_failed_politics value = 0 } }
+   change_variable = { name = chi_adm_qing_security_failed_politics add = 1 }
+   change_variable = { name = chi_adm_qing_security_readiness subtract = 8 }
+  }
+  change_variable = { name = chi_adm_qing_security_evidence add = chi_adm_qing_security_monthly_evidence }
+  if = {
+   limit = { var:chi_adm_qing_security_phase = 1 var:chi_adm_qing_security_months >= 4 }
+   set_variable = { name = chi_adm_qing_security_phase value = 2 }
+  }
+  else_if = {
+   limit = { var:chi_adm_qing_security_phase = 2 var:chi_adm_qing_security_months >= 6 chi_adm_qing_security_armed_count >= 2 }
+   set_variable = { name = chi_adm_qing_security_phase value = 3 }
+   if = { limit = { var:chi_adm_qing_security_evidence < 50 } set_variable = { name = chi_adm_qing_security_evidence value = 50 } }
+  }
+  set_variable = { name = chi_adm_qing_security_briefed_ratio value = chi_adm_qing_security_force_ratio }
+  chi_adm_qing_security_clamp = yes
+  chi_adm_qing_security_brief = yes
+  if = {
+   limit = { var:chi_adm_qing_security_failed_politics >= 3 }
+   chi_adm_qing_security_close = { RESULT = 5 }
+  }
+  else = { chi_adm_qing_security_ai_review = yes }
+ }
+}
+
+chi_adm_qing_security_ultimatum = {
+ c:CHI ?= {
+  set_variable = { name = chi_adm_qing_security_phase value = 4 }
+  set_variable = { name = chi_adm_qing_security_ultimatum value = yes months = 2 }
+  trigger_event = { id = chi_adm_qing_security.2 popup = yes }
+ }
+}
+
+# Root = CHI. AI pledges lapse when a human takes the seat before the play.
+chi_adm_qing_security_ai_review = {
+ if = {
+  limit = { var:chi_adm_qing_security_phase >= 2 }
+  every_subject_or_below = {
+   limit = {
+    is_ai = yes
+    chi_adm_qing_security_office = yes
+    NOT = { chi_adm_qing_security_is_claimant = yes }
+    NOT = { has_variable = chi_adm_qing_security_stance_cooldown }
+   }
+   if = {
+    limit = { var:chi_adm_qing_security_faction <= 2 has_variable = chi_adm_qing_security_faction var:chi_adm_loyalty >= 65 }
+    chi_adm_qing_security_revise = { FACTION = 4 }
+   }
+   else_if = {
+    limit = {
+     NOT = { has_variable = chi_adm_qing_security_faction }
+     chi_adm_qing_security_can_arm = yes
+     var:chi_adm_loyalty <= 30
+     var:chi_adm_corruption < 65
+     OR = { has_modifier = chi_adm_provincial_development_military_1 army_power_projection >= { value = c:CHI.army_power_projection multiply = 0.12 } }
+    }
+    chi_adm_qing_security_pledge = { FACTION = 1 }
+   }
+   else_if = {
+    limit = { NOT = { has_variable = chi_adm_qing_security_faction } chi_adm_qing_security_can_aid = yes var:chi_adm_loyalty <= 40 }
+    chi_adm_qing_security_pledge = { FACTION = 2 }
+   }
+   else_if = {
+    limit = {
+     NOT = { has_variable = chi_adm_qing_security_faction }
+     chi_adm_qing_security_free_to_pledge = yes
+     var:chi_adm_loyalty >= 70
+     OR = { relations:c:CHI >= relations_threshold:amicable chi_adm_frontier = yes }
+    }
+    chi_adm_qing_security_pledge = { FACTION = 3 }
+   }
+  }
+ }
+ if = {
+  limit = { is_ai = yes }
+  if = { limit = { chi_adm_qing_security_can_suppress = yes } chi_adm_qing_security_suppress = yes }
+  else_if = {
+   limit = { chi_adm_qing_security_can_offer = yes OR = { var:chi_adm_qing_security_phase = 4 var:chi_adm_qing_security_briefed_ratio >= 80 } }
+   chi_adm_qing_security_offer_terms = yes
+  }
+  else_if = { limit = { chi_adm_qing_security_can_muster = yes var:chi_adm_qing_security_readiness >= 40 } chi_adm_qing_security_muster = yes }
+ }
+ if = {
+  limit = { has_variable = chi_adm_qing_security_phase }
+  set_variable = { name = chi_adm_qing_security_briefed_ratio value = chi_adm_qing_security_force_ratio }
+  var:chi_adm_qing_security_claimant ?= {
+   if = {
+    limit = { is_ai = yes }
+    if = {
+     limit = {
+      chi_adm_qing_security_can_accept = yes
+      OR = { c:CHI ?= { chi_adm_qing_security_force_ratio < 85 } var:chi_adm_corruption >= 60 }
+     }
+     chi_adm_qing_security_accept_terms = yes
+    }
+    else_if = { limit = { chi_adm_qing_security_can_issue = yes c:CHI ?= { chi_adm_qing_security_force_ratio >= 80 } } chi_adm_qing_security_ultimatum = yes }
+    else_if = { limit = { chi_adm_qing_security_can_launch = yes c:CHI ?= { chi_adm_qing_security_force_ratio >= 80 } } chi_adm_qing_security_launch = yes }
+   }
+  }
+ }
+}
+
+chi_adm_qing_security_sponsor = {
+ save_temporary_scope_as = chi_adm_qing_security_patron
+ add_modifier = { name = chi_adm_qing_security_foreign_mission months = 12 }
+ set_variable = { name = chi_adm_qing_security_diplomatic_choice value = yes months = 31 }
+ c:CHI ?= {
+  add_modifier = { name = chi_adm_qing_security_foreign_$SIDE$ months = 12 }
+  set_variable = { name = chi_adm_qing_security_foreign_$SLOT$ value = scope:chi_adm_qing_security_patron }
+  if = {
+   limit = { var:chi_adm_qing_security_phase = 4 }
+   change_variable = { name = chi_adm_qing_security_readiness add = $ULTIMATUM$ }
+   chi_adm_qing_security_clamp = yes
+  }
+ }
+ if = {
+  limit = { always = $FRIENDLY$ }
+  change_relations = { country = c:CHI value = 15 }
+ }
+ else = { change_relations = { country = c:CHI value = -15 } }
+}
+
+chi_adm_qing_security_foreign_ai = {
+ if = {
+  limit = { is_ai = yes chi_adm_qing_security_can_sponsor = yes }
+  if = {
+   limit = {
+    relations:c:CHI <= relations_threshold:poor
+    c:CHI ?= { var:chi_adm_qing_security_briefed_ratio >= 65 NOT = { has_variable = chi_adm_qing_security_foreign_envoy } }
+   }
+   chi_adm_qing_security_sponsor = { SIDE = claimant SLOT = envoy FRIENDLY = no ULTIMATUM = 5 }
+  }
+  else_if = {
+   limit = {
+    relations:c:CHI >= relations_threshold:amicable
+    c:CHI ?= { NOT = { has_variable = chi_adm_qing_security_foreign_commission } }
+   }
+   chi_adm_qing_security_sponsor = { SIDE = court SLOT = commission FRIENDLY = yes ULTIMATUM = -5 }
+  }
+ }
+}

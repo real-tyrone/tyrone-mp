@@ -1,0 +1,100 @@
+chi_adm_qing_security_security = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_chi_adm_court_register_court
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ can_deactivate = yes
+ is_shown_when_inactive = { chi_adm_qing_security_court = yes chi_adm_qing_security_court_threat = yes }
+ possible = { chi_adm_qing_security_court = yes chi_adm_qing_security_court_threat = yes }
+ immediate = { save_scope_as = chi_adm_qing_security_court_scope }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_dossier" container = "custom_widget_container_1" }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_roster" container = "custom_widget_container_2" }
+ scripted_button = chi_adm_qing_security_offer_button
+ scripted_button = chi_adm_qing_security_pressure_button
+ scripted_button = chi_adm_qing_security_muster_button
+ scripted_button = chi_adm_qing_security_suppress_button
+ scripted_button = chi_adm_qing_security_amnesty_button
+ scripted_button = chi_adm_qing_security_centralize_button
+}
+
+chi_adm_qing_security_provincial = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_chi_adm_court_register_province
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ can_deactivate = yes
+ is_shown_when_inactive = { OR = { chi_adm_qing_security_office = yes has_variable = chi_adm_qing_security_pact } }
+ possible = { OR = { AND = { chi_adm_qing_security_office = yes has_journal_entry = chi_adm_governance } has_variable = chi_adm_qing_security_pact } }
+ immediate = { c:CHI ?= { save_scope_as = chi_adm_qing_security_court_scope } }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_dossier" container = "custom_widget_container_1" }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_roster" container = "custom_widget_container_2" }
+ scripted_button = chi_adm_qing_security_found_button
+ scripted_button = chi_adm_qing_security_confirm_button
+ scripted_button = chi_adm_qing_security_arm_button
+ scripted_button = chi_adm_qing_security_aid_button
+ scripted_button = chi_adm_qing_security_loyal_button
+ scripted_button = chi_adm_qing_security_report_button
+ scripted_button = chi_adm_qing_security_neutral_button
+ scripted_button = chi_adm_qing_security_issue_button
+ scripted_button = chi_adm_qing_security_launch_button
+ scripted_button = chi_adm_qing_security_dissolve_button
+ scripted_button = chi_adm_qing_security_accept_button
+ scripted_button = chi_adm_qing_security_pardon_button
+ scripted_button = chi_adm_qing_security_return_button
+ scripted_button = chi_adm_qing_security_decline_return_button
+}
+
+# The diplomatic dossier gives way to the wartime entry on launch.
+chi_adm_qing_security_international = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_global_international_situations
+ context = none
+ can_deactivate = yes
+ is_shown_when_inactive = { chi_adm_qing_security_exposed = yes }
+ possible = { chi_adm_qing_security_exposed = yes }
+ should_be_involved = {
+  OR = { c:CHI ?= this chi_adm_qing_security_office = yes has_variable = chi_adm_qing_security_pact chi_adm_qing_security_foreign_interested = yes }
+ }
+ should_show_when_not_involved = {
+  OR = { c:CHI ?= this chi_adm_qing_security_office = yes has_variable = chi_adm_qing_security_pact chi_adm_qing_security_foreign_interested = yes }
+ }
+ immediate = { c:CHI ?= { save_scope_as = chi_adm_qing_security_court_scope } }
+ immediate_all_involved = { chi_adm_qing_security_foreign_ai = yes }
+ on_become_involved_after_activation = { chi_adm_qing_security_foreign_ai = yes }
+ should_be_pinned_by_default_involved = yes
+ scripted_button = chi_adm_qing_security_foreign_claimant_button
+ scripted_button = chi_adm_qing_security_foreign_court_button
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_public_dossier" container = "custom_widget_container_1" }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_roster_public" container = "custom_widget_container_2" }
+}
+
+chi_adm_qing_security_international_war = {
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ group = je_group_global_international_situations
+ context = none
+ can_deactivate = yes
+ is_shown_when_inactive = { c:CHI ?= { var:chi_adm_qing_security_phase = 5 has_variable = chi_adm_qing_security_native_started } }
+ possible = { c:CHI ?= { var:chi_adm_qing_security_phase = 5 has_variable = chi_adm_qing_security_native_started } }
+ should_be_involved = {
+  OR = { c:CHI ?= this chi_adm_qing_security_office = yes has_variable = chi_adm_qing_security_pact chi_adm_qing_security_foreign_interested = yes }
+ }
+ should_show_when_not_involved = {
+  OR = { c:CHI ?= this chi_adm_qing_security_office = yes has_variable = chi_adm_qing_security_pact chi_adm_qing_security_foreign_interested = yes }
+ }
+ immediate = { c:CHI ?= { save_scope_as = chi_adm_qing_security_court_scope } }
+ should_be_pinned_by_default_involved = yes
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_public_dossier" container = "custom_widget_container_1" }
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_qing_security.gui" name = "chi_adm_qing_security_roster_public" container = "custom_widget_container_2" }
+ map_color = {
+  if = { limit = { owner ?= { var:chi_adm_qing_security_faction = 1 } } value = { 155 45 41 } }
+  else_if = { limit = { owner ?= { OR = { c:CHI ?= this var:chi_adm_qing_security_faction = 3 } } } value = { 179 129 51 } }
+  else_if = { limit = { owner ?= { var:chi_adm_qing_security_faction = 2 } } value = { 134 82 100 } }
+ }
+ map_tooltip = {
+  if = { limit = { owner ?= { var:chi_adm_qing_security_faction = 1 } } custom_tooltip_no_bullet = chi_adm_qing_security_faction_armed }
+  else_if = { limit = { owner ?= { OR = { c:CHI ?= this var:chi_adm_qing_security_faction = 3 } } } custom_tooltip_no_bullet = chi_adm_qing_security_faction_loyal }
+  else_if = { limit = { owner ?= { var:chi_adm_qing_security_faction = 2 } } custom_tooltip_no_bullet = chi_adm_qing_security_faction_covert }
+ }
+}

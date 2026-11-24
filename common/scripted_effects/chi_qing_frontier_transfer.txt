@@ -1,0 +1,18 @@
+# Subject-country scope; only a frontier administration leaving Chinese service.
+chi_qing_normalize_transferred_frontier = {
+	if = {
+		limit = {
+			is_subject_type = subject_type_qing_frontier_administration
+			is_subject = yes
+			NOT = { is_subject_of = c:CHI }
+		}
+		if = {
+			limit = { overlord = { is_country_type = recognized } }
+			change_subject_type = subject_type_puppet
+		}
+		else_if = {
+			limit = { overlord = { is_country_type = unrecognized } }
+			change_subject_type = subject_type_vassal
+		}
+	}
+}

@@ -1,0 +1,296 @@
+types chi_adm_court_register_types {
+ type chi_adm_court_register_character_card = widget {
+  size = { 488 206 }
+  background = { using = dark_area }
+  background = { using = frame_small }
+  textbox = { position = { 182 10 } size = { 292 22 } text = "chi_adm_court_register_office_display" default_format = "#gold" }
+  widget = {
+   datacontext = "[Country.GetRuler]"
+   visible = "[Character.IsValid]"
+   size = { 488 206 }
+   # Both outer widget and inner portrait need nonzero geometry.
+   # Native torso template supplies the supported camera, mask and live texture.
+   character_portrait_base_torso = {
+    position = { 8 8 }
+    size = { 160 188 }
+    blockoverride "portrait_size" { size = { 160 188 } }
+    blockoverride "portrait_icons" {}
+   }
+   textbox = { position = { 182 38 } size = { 292 44 } multiline = yes text = "[Character.GetFullNameNoFormatting]" fontsize = 21 }
+   textbox = { position = { 182 88 } size = { 292 24 } elide = right visible = "[Character.GetInterestGroup.IsValid]" text = "chi_adm_court_register_affiliation" }
+   textbox = { position = { 182 88 } size = { 292 24 } visible = "[Not(Character.GetInterestGroup.IsValid)]" text = "chi_adm_court_register_affiliation_none" }
+   flowcontainer = {
+    position = { 182 120 }
+    direction = horizontal spacing = 5
+    datamodel = "[Character.AccessTraits]"
+    item = {
+     icon = { size = { 28 32 } texture = "[CharacterTrait.GetTexture]" tooltipwidget = { FancyTooltip_CharacterTrait = {} } }
+    }
+   }
+   textbox = { position = { 182 162 } size = { 292 34 } multiline = yes text = "chi_adm_court_register_character_hint" fontsize = 13 }
+  }
+  textbox = { position = { 20 64 } size = { 448 52 } multiline = yes visible = "[Not(Country.GetRuler.IsValid)]" text = "chi_adm_court_register_ruler_unavailable" }
+ }
+type chi_adm_court_register_country_accounts = widget {
+ size = { 488 406 }
+ parentanchor = hcenter
+ background = { using = dark_area }
+ background = { using = frame_small }
+ icon = {
+  position = { 18 14 }
+  size = { 42 42 }
+  texture = "gfx/interface/icons/event_icons/qing_patriot_icon.dds"
+ }
+ textbox = {
+  position = { 70 14 }
+  size = { 394 28 }
+  text = "chi_adm_court_register_dossier_title"
+  default_format = "#gold"
+  using = fontsize_medium
+  align = left|nobaseline
+ }
+ textbox = {
+  position = { 70 43 }
+  size = { 394 24 }
+  text = "chi_adm_court_register_dossier_province"
+  align = left|nobaseline
+  elide = right
+ }
+ divider_decorative = { position = { 24 76 } size = { 440 8 } }
+ widget = {
+  position = { 24 94 }
+  size = { 440 68 }
+  tooltip = "chi_adm_court_register_loyalty_tooltip"
+  textbox = {
+   size = { 220 26 }
+   text = "chi_adm_court_register_loyalty_display"
+   align = left|nobaseline
+  }
+  textbox = {
+   position = { 220 0 }
+   size = { 220 26 }
+   text = "chi_adm_court_register_loyalty_tier_display"
+   align = right|nobaseline
+   default_format = "#gold"
+   elide = right
+  }
+  progressbar = {
+   position = { 0 32 }
+   size = { 440 20 }
+   min = 0
+   max = 100
+   value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_loyalty').GetValue)]"
+   progresstexture = "gfx/interface/progressbar/progressbar_gold.dds"
+   noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+   direction = horizontal
+   skip_initial_animation = yes
+  }
+  widget = {
+   position = { 0 32 }
+   size = { 440 20 }
+   background = {
+    texture = "gfx/interface/progressbar/progressbar_frame.dds"
+    spriteType = Corneredstretched
+    spriteborder = { 6 6 }
+    texture_density = 2
+   }
+  }
+ }
+ widget = {
+  position = { 24 174 }
+  size = { 440 68 }
+  tooltip = "chi_adm_court_register_autonomy_tooltip"
+  textbox = {
+   size = { 220 26 }
+   text = "chi_adm_court_register_autonomy_display"
+   align = left|nobaseline
+  }
+  textbox = {
+   position = { 220 0 }
+   size = { 220 26 }
+   text = "chi_adm_court_register_autonomy_tier_display"
+   align = right|nobaseline
+   default_format = "#gold"
+   elide = right
+  }
+  progressbar = {
+   position = { 0 32 }
+   size = { 440 20 }
+   min = 0
+   max = 100
+   value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_autonomy').GetValue)]"
+   progresstexture = "gfx/interface/progressbar/progressbar_default.dds"
+   noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+   direction = horizontal
+   skip_initial_animation = yes
+  }
+  widget = {
+   position = { 0 32 }
+   size = { 440 20 }
+   background = {
+    texture = "gfx/interface/progressbar/progressbar_frame.dds"
+    spriteType = Corneredstretched
+    spriteborder = { 6 6 }
+    texture_density = 2
+   }
+  }
+ }
+ widget = {
+  position = { 24 254 }
+  size = { 440 68 }
+  tooltip = "chi_adm_court_register_corruption_tooltip"
+  textbox = {
+   size = { 220 26 }
+   text = "chi_adm_court_register_corruption_display"
+   align = left|nobaseline
+  }
+  textbox = {
+   position = { 220 0 }
+   size = { 220 26 }
+   text = "chi_adm_court_register_corruption_tier_display"
+   align = right|nobaseline
+   default_format = "#gold"
+   elide = right
+  }
+  progressbar = {
+   position = { 0 32 }
+   size = { 440 20 }
+   min = 0
+   max = 100
+   value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_corruption').GetValue)]"
+   progresstexture = "gfx/interface/progressbar/progressbar_bad.dds"
+   noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+   direction = horizontal
+   skip_initial_animation = yes
+  }
+  widget = {
+   position = { 0 32 }
+   size = { 440 20 }
+   background = {
+    texture = "gfx/interface/progressbar/progressbar_frame.dds"
+    spriteType = Corneredstretched
+    spriteborder = { 6 6 }
+    texture_density = 2
+   }
+  }
+ }
+ divider_decorative = { position = { 24 330 } size = { 440 8 } alpha = 0.65 }
+ textbox = {
+  position = { 24 344 }
+  size = { 440 22 }
+  text = "chi_adm_court_register_bureaucracy_display"
+  tooltip = "chi_adm_court_register_bureaucracy_tooltip"
+  align = left|nobaseline
+ }
+ textbox = {
+  position = { 24 372 }
+  size = { 440 22 }
+  text = "chi_adm_court_register_inspection_status_display"
+  tooltip = "chi_adm_court_register_inspection_duration_tooltip"
+  align = left|nobaseline
+ }
+}
+
+}
+# Unified live subject model; no per-tag JEs, portraits only on selected dossier.
+flowcontainer = {
+ name = "chi_adm_court_register_ledger"
+ direction = vertical
+ parentanchor = hcenter
+ spacing = 6
+ ignoreinvisible = yes
+ textbox = { size = { 488 44 } multiline = yes text = "chi_adm_court_register_select_hint" }
+ section_header_button = {
+  blockoverride "layout" { size = { 488 38 } parentanchor = hcenter }
+  blockoverride "left_text" { text = "chi_adm_court_register_register_heading" }
+  blockoverride "onclick" { onclick = "[GetVariableSystem.Toggle('chi_adm_court_register_register_closed')]" }
+  blockoverride "onclick_showmore" { visible = "[GetVariableSystem.Exists('chi_adm_court_register_register_closed')]" }
+  blockoverride "onclick_showless" { visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_register_closed'))]" }
+ }
+ scrollarea = {
+  size = { 488 300 }
+  visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_register_closed'))]"
+  scrollbarpolicy_horizontal = always_off
+  scrollwidget = {
+   flowcontainer = {
+    direction = vertical
+    spacing = 4
+    ignoreinvisible = yes
+    datamodel = "[AccessPlayer.GetSubjects]"
+    item = {
+     button = {
+      size = { 462 76 }
+      using = default_button
+      visible = "[GetScriptedGui('chi_adm_court_register_subject_visible').IsValid(GuiScope.SetRoot(Country.MakeScope).End)]"
+      tooltip = "chi_adm_court_register_row_tooltip"
+      onclick = "[GetVariableSystem.Set('chi_adm_court_register_selected', Country.GetNameNoFormatting)]"
+      textbox = { position = { 10 3 } size = { 218 22 } elide = right text = "[Country.GetNameNoFormatting]" default_format = "#gold" alwaystransparent = yes }
+      textbox = { position = { 10 27 } size = { 218 18 } elide = right text = "chi_adm_court_register_row_type" fontsize = 13 alwaystransparent = yes }
+      textbox = { position = { 10 49 } size = { 218 20 } elide = right text = "chi_adm_court_register_row_ruler" fontsize = 13 alwaystransparent = yes }
+      textbox = { position = { 238 8 } size = { 64 24 } text = "chi_adm_court_register_loyalty_compact" align = center|nobaseline alwaystransparent = yes }
+      progressbar = {
+       position = { 238 38 } size = { 62 12 } min = 0 max = 100
+       value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_loyalty').GetValue)]"
+       progresstexture = "gfx/interface/progressbar/progressbar_gold.dds"
+       noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+       direction = horizontal skip_initial_animation = yes
+       tooltip = "chi_adm_court_register_loyalty_tooltip"
+      }
+      textbox = { position = { 310 8 } size = { 64 24 } text = "chi_adm_court_register_autonomy_compact" align = center|nobaseline alwaystransparent = yes }
+      progressbar = {
+       position = { 310 38 } size = { 62 12 } min = 0 max = 100
+       value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_autonomy').GetValue)]"
+       progresstexture = "gfx/interface/progressbar/progressbar_default.dds"
+       noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+       direction = horizontal skip_initial_animation = yes
+       tooltip = "chi_adm_court_register_autonomy_tooltip"
+      }
+      textbox = { position = { 382 8 } size = { 64 24 } text = "chi_adm_court_register_corruption_compact" align = center|nobaseline alwaystransparent = yes }
+      progressbar = {
+       position = { 382 38 } size = { 62 12 } min = 0 max = 100
+       value = "[FixedPointToFloat(Country.MakeScope.Var('chi_adm_corruption').GetValue)]"
+       progresstexture = "gfx/interface/progressbar/progressbar_bad.dds"
+       noprogresstexture = "gfx/interface/progressbar/progressbar_empty.dds"
+       direction = horizontal skip_initial_animation = yes
+       tooltip = "chi_adm_court_register_corruption_tooltip"
+      }
+      textbox = { position = { 238 55 } size = { 206 18 } text = "chi_adm_court_register_row_status" fontsize = 12 elide = right alwaystransparent = yes }
+     }
+    }
+   }
+  }
+  scrollbar_vertical = { using = vertical_scrollbar }
+ }
+ section_header_button = {
+  blockoverride "layout" { size = { 488 38 } parentanchor = hcenter }
+  blockoverride "left_text" { text = "chi_adm_court_register_dossier_heading" }
+  blockoverride "onclick" { onclick = "[GetVariableSystem.Toggle('chi_adm_court_register_dossier_closed')]" }
+  blockoverride "onclick_showmore" { visible = "[GetVariableSystem.Exists('chi_adm_court_register_dossier_closed')]" }
+  blockoverride "onclick_showless" { visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_dossier_closed'))]" }
+ }
+ flowcontainer = {
+  direction = vertical
+  spacing = 6
+  ignoreinvisible = yes
+  visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_dossier_closed'))]"
+  datamodel = "[AccessPlayer.GetSubjects]"
+  item = {
+   flowcontainer = {
+    direction = vertical
+    spacing = 6
+    ignoreinvisible = yes
+    visible = "[And(GetScriptedGui('chi_adm_court_register_subject_visible').IsValid(GuiScope.SetRoot(Country.MakeScope).End), GetVariableSystem.HasValue('chi_adm_court_register_selected', Country.GetNameNoFormatting))]"
+    chi_adm_court_register_character_card = {}
+    chi_adm_court_register_country_accounts = {}
+    textbox = { size = { 488 44 } multiline = yes text = "chi_adm_court_register_commitments_display" tooltip = "chi_adm_court_register_commitments_tooltip" }
+    textbox = { size = { 488 0 } max_width = 488 autoresize = yes multiline = yes text = "chi_adm_negotiated_integration_ledger_display" }
+   }
+  }
+ }
+}
+
+# Provincial owner reuses the same live character card without replacing provincial accounts bars.
+chi_adm_court_register_character_card = {
+ name = "chi_adm_court_register_provincial_ruler"
+ datacontext = "[JournalEntry.GetCountry]"
+}

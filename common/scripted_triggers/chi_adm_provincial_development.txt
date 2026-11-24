@@ -1,0 +1,67 @@
+﻿chi_adm_provincial_development_direct_danger = {
+    OR = {
+        chi_adm_provincial_development_war_or_hostile_neighbor = yes
+        any_civil_war = { civil_war_progress >= 0.75 }
+        any_scope_state = { turmoil >= 0.40 }
+    }
+}
+chi_adm_provincial_development_war_or_hostile_neighbor = {
+    OR = {
+        is_at_war = yes
+        custom_tooltip = {
+            text = chi_adm_provincial_development_warrant_hostile_neighbor_tt
+            any_country = {
+                NOT = { chi_qing_realm = yes }
+                is_adjacent_to_country = root
+                relations:root <= relations_threshold:hostile
+                army_power_projection >= { value = chi_adm_provincial_development_imperial_power multiply = 2 }
+            }
+        }
+    }
+}
+chi_adm_provincial_development_broad_danger = { chi_adm_provincial_development_direct_danger = yes }
+chi_adm_provincial_development_crisis = {
+    has_variable = chi_adm_provincial_development_warning
+    var:chi_adm_provincial_development_warning >= 3
+}
+chi_adm_provincial_development_can_request = {
+    hidden_trigger = { chi_adm_target_valid = yes }
+    custom_tooltip = {
+        text = chi_adm_provincial_development_warrant_crisis_tt
+        chi_adm_provincial_development_crisis = yes
+    }
+    trigger_if = {
+        limit = { always = $MILITARY$ }
+        chi_adm_provincial_development_war_or_hostile_neighbor = yes
+    }
+    trigger_else = {
+        custom_tooltip = {
+            text = chi_adm_provincial_development_warrant_turmoil_tt
+            any_scope_state = { turmoil > 0.40 }
+        }
+    }
+    custom_tooltip = {
+        text = chi_adm_provincial_development_warrant_open_case_tt
+        NOR = { has_variable = chi_adm_provincial_development_case has_variable = chi_adm_provincial_development_dispute }
+    }
+    custom_tooltip = {
+        text = chi_adm_provincial_development_warrant_different_tt
+        NOT = { var:chi_adm_provincial_development_package = $PACKAGE$ }
+    }
+    custom_tooltip = {
+        text = chi_adm_provincial_development_warrant_cooldown_tt
+        NOT = { has_variable = chi_adm_provincial_development_retry }
+    }
+    trigger_if = {
+        limit = { has_variable = chi_adm_provincial_development_package_$PACKAGE$_cooldown }
+        custom_tooltip = {
+            text = chi_adm_provincial_development_tax_concession_cooldown_tt
+            NOT = { has_variable = chi_adm_provincial_development_package_$PACKAGE$_cooldown }
+        }
+    }
+}
+chi_adm_provincial_development_case_valid = {
+    chi_adm_target_valid = yes
+    has_variable = chi_adm_provincial_development_case
+}
+

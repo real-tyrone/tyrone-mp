@@ -279,6 +279,23 @@ berlin_conference.3 = {
 		set_global_variable = berlin_conference_ended
 		if = {
 			limit = {
+				exists = c:SAF
+				OR = {
+					NOT = { exists = c:GBR }
+					c:GBR ?= {
+						NOT = { has_variable = claimed_namibia_var }
+					}
+				}
+			}
+			s:STATE_HEREROLAND = {
+				remove_claim = c:SAF
+			}
+			s:STATE_NAMAQUALAND = {
+				remove_claim = c:SAF
+			}
+		}
+		if = {
+			limit = {
 				has_game_rule = historical_africa_berlin_enabled
 				exists = c:SPA
 			}
@@ -1318,7 +1335,13 @@ berlin_conference.49 = {
 			# Italy: Ethiopia
 			if = {
 				limit = {
-					tyr_italian_content_country = yes
+					OR = {
+						tyr_italian_content_country = yes
+						AND = {
+							c:SAR ?= this
+							NOT = { exists = c:ITA }
+						}
+					}
 					NOT = { any_country = { has_variable = claimed_ethiopia_var } }
 				}
 				set_variable = claimed_ethiopia_var

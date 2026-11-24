@@ -412,6 +412,15 @@
 
 	power_bloc = {
 		0 = template_power_bloc_1
+		
+		special_selection = {
+			trigger = {
+				ROOT.power_bloc_leader ?= {
+					has_variable = ztr_eu_founder
+				}
+			}
+			90000 = eu_power_bloc_1
+		}
 
 ### USA ###
 
@@ -424,10 +433,10 @@
 				c:USA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -445,12 +454,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -465,14 +474,29 @@
 				ROOT.power_bloc_leader = c:USA
 				c:USA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -493,7 +517,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -513,7 +537,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -538,6 +562,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -604,10 +632,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -645,10 +674,10 @@
 				c:FRA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 					has_variable = legitimist_restoration_var
@@ -666,10 +695,10 @@
 				c:FRA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 					has_variable = bonapartist_restoration_var
@@ -687,10 +716,10 @@
 				c:FRA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 					NOT = {
@@ -712,12 +741,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					NOT = { has_variable = legitimist_restoration_var }
 					has_variable = bonapartist_restoration_var
@@ -736,11 +765,11 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					has_variable = legitimist_restoration_var 
 					NOT = { has_variable = bonapartist_restoration_var }
@@ -759,12 +788,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					NOT = {
 						has_variable = legitimist_restoration_var
@@ -783,14 +812,29 @@
 				ROOT.power_bloc_leader = c:FRA
 				c:FRA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 					has_variable = bonapartist_restoration_var
 					
@@ -808,14 +852,29 @@
 				ROOT.power_bloc_leader = c:FRA
 				c:FRA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 					has_variable = legitimist_restoration_var
 					NOT = { has_variable = bonapartist_restoration_var }
@@ -832,14 +891,29 @@
 				ROOT.power_bloc_leader = c:FRA
 				c:FRA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 					NOT = {
 						has_variable = legitimist_restoration_var
@@ -864,7 +938,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					NOT = {
 						has_variable = legitimist_restoration_var
@@ -888,7 +962,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 					NOT = { has_variable = bonapartist_restoration_var }
@@ -910,7 +984,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 					has_variable = bonapartist_restoration_var
@@ -936,6 +1010,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -1002,10 +1080,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -1043,10 +1122,10 @@
 				c:NET = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1064,12 +1143,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1084,14 +1163,29 @@
 				ROOT.power_bloc_leader = c:NET
 				c:NET = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -1112,7 +1206,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1132,7 +1226,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1157,6 +1251,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -1223,10 +1321,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -1264,10 +1363,10 @@
 				c:BRZ = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1285,12 +1384,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1305,14 +1404,29 @@
 				ROOT.power_bloc_leader = c:BRZ
 				c:BRZ = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -1333,7 +1447,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1353,7 +1467,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1378,6 +1492,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -1444,10 +1562,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -1485,10 +1604,10 @@
 				c:ITA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1506,12 +1625,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1526,14 +1645,29 @@
 				ROOT.power_bloc_leader = c:ITA
 				c:ITA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -1554,7 +1688,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1574,7 +1708,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1599,6 +1733,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -1665,10 +1803,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -1706,10 +1845,10 @@
 				c:SPA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1727,12 +1866,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1747,14 +1886,29 @@
 				ROOT.power_bloc_leader = c:SPA
 				c:SPA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -1775,7 +1929,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1795,7 +1949,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1820,6 +1974,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -1886,10 +2044,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -1927,10 +2086,10 @@
 				c:IBE = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -1948,12 +2107,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -1968,14 +2127,29 @@
 				ROOT.power_bloc_leader = c:IBE
 				c:IBE = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -1996,7 +2170,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -2016,7 +2190,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -2041,6 +2215,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -2107,10 +2285,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -2148,10 +2327,12 @@
 				c:JAP = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
+						has_law = law_type:law_neo_absolutism
+						has_law = law_type:law_bakufu
 						has_law = law_type:law_single_party_state
 					}
 					NOT = { has_variable = meiji_var }
@@ -2167,11 +2348,13 @@
 				c:JAP = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
+						has_law = law_type:law_neo_absolutism
+						has_law = law_type:law_bakufu
 					}
 					has_variable = meiji_var
 				}
@@ -2189,12 +2372,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					NOT = { has_variable = meiji_var }
 				}
@@ -2210,12 +2393,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					has_variable = meiji_var
 				}
@@ -2231,14 +2414,29 @@
 				ROOT.power_bloc_leader = c:JAP
 				c:JAP = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 					NOT = { has_variable = meiji_var }
 				}
@@ -2252,14 +2450,29 @@
 				ROOT.power_bloc_leader = c:JAP
 				c:JAP = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 					has_variable = meiji_var
 				}
@@ -2281,7 +2494,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					NOT = { has_variable = meiji_var }
 				}
@@ -2301,7 +2514,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 					has_variable = meiji_var
 				}
@@ -2322,8 +2535,10 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
+						has_law = law_type:law_neo_absolutism
+						has_law = law_type:law_bakufu
 					}
 					NOT = { has_variable = meiji_var }
 				}
@@ -2342,8 +2557,10 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
+						has_law = law_type:law_neo_absolutism
+						has_law = law_type:law_bakufu
 					}
 					has_variable = meiji_var
 				}
@@ -2368,6 +2585,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -2434,10 +2655,13 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
-						has_law = law_type:law_single_party_state						
+						has_law_or_variant = law_type:law_autocracy
+						has_law = law_type:law_single_party_state
+						has_law = law_type:law_labour_suffrage
+						has_law = law_type:law_neo_absolutism
+						has_law = law_type:law_bakufu						
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -2473,15 +2697,15 @@
 				c:GBR = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
 			}
-			90000 = gbr_power_bloc_absolute_monarchy
+			190000 = gbr_power_bloc_absolute_monarchy
 		}
 
 		special_selection = {
@@ -2495,12 +2719,12 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
 			}
-			90000 = gbr_power_bloc_dictatorship
+			190000 = gbr_power_bloc_dictatorship
 		}
 		
 		special_selection = {
@@ -2510,17 +2734,16 @@
 				c:GBR = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
-						has_law = law_type:law_technocracy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
-			90000 = gbr_power_bloc_mon_oligarchy
+			190000 = gbr_power_bloc_mon_oligarchy
 		}
 		
 		special_selection = {
@@ -2534,12 +2757,11 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
-						has_law = law_type:law_technocracy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
-			90000 = gbr_power_bloc_non_mon_oligarchy
+			190000 = gbr_power_bloc_non_mon_oligarchy
 		}
 		
 		special_selection = {
@@ -2548,18 +2770,33 @@
 				ROOT.power_bloc_leader = c:GBR
 				c:GBR = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
-			90000 = gbr_power_bloc_constitutional_monarchy
+			190000 = gbr_power_bloc_constitutional_monarchy
 		}
 		
 		special_selection = {
@@ -2577,10 +2814,14 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
-			90000 = gbr_power_bloc_republic
+			190000 = gbr_power_bloc_republic
 		}
 		
 		special_selection = {
@@ -2591,7 +2832,7 @@
 					has_law = law_type:law_theocracy
 				}
 			}
-			90000 = gbr_power_bloc_theocracy
+			190000 = gbr_power_bloc_theocracy
 		}
 		
 		special_selection = {
@@ -2602,7 +2843,7 @@
 					has_law = law_type:law_council_republic
 				}
 			}
-			90000 = gbr_power_bloc_communism
+			190000 = gbr_power_bloc_communism
 		}
 		
 		special_selection = {
@@ -2613,10 +2854,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -2627,7 +2869,38 @@
 					}
 				}
 			}
-			90000 = gbr_power_bloc_fascist
+			190000 = gbr_power_bloc_fascist
+		}
+		
+## Technokratie ##
+
+		special_selection = {
+			trigger = {
+				exists = c:GBR
+				ROOT.power_bloc_leader = c:GBR
+				c:GBR = {
+					has_law = law_type:law_technocracy
+					NOT = {
+						has_law = law_type:law_corporate_state
+						has_law = law_type:law_council_republic
+						has_law = law_type:law_theocracy
+					}
+				}
+			}
+			190000 = gbr_power_bloc_technocracy
+		}
+
+## Anarchie ##
+
+		special_selection = {
+			trigger = {
+				exists = c:GBR
+				ROOT.power_bloc_leader = c:GBR
+				c:GBR = {
+					has_law_or_variant = law_type:law_anarchy
+				}
+			}
+			190000 = gbr_power_bloc_anarchy
 		}
 		
 ###### Deutschland ######
@@ -2641,10 +2914,10 @@
 				c:GER = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -2662,12 +2935,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -2682,14 +2955,29 @@
 				ROOT.power_bloc_leader = c:GER
 				c:GER = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -2710,7 +2998,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -2730,7 +3018,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -2755,6 +3043,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -2821,10 +3113,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -2862,10 +3155,10 @@
 				c:NGF = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -2883,12 +3176,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -2903,14 +3196,29 @@
 				ROOT.power_bloc_leader = c:NGF
 				c:NGF = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -2931,7 +3239,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -2951,7 +3259,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -2976,6 +3284,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -3042,10 +3354,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -3083,10 +3396,10 @@
 				c:SWE = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3104,12 +3417,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3124,14 +3437,29 @@
 				ROOT.power_bloc_leader = c:SWE
 				c:SWE = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -3152,7 +3480,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3172,7 +3500,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3197,6 +3525,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -3263,10 +3595,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -3304,10 +3637,10 @@
 				c:SCA = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3325,12 +3658,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3345,14 +3678,29 @@
 				ROOT.power_bloc_leader = c:SCA
 				c:SCA = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -3373,7 +3721,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3393,7 +3741,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3418,6 +3766,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -3484,10 +3836,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -3525,10 +3878,10 @@
 				c:POR = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3546,12 +3899,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3566,14 +3919,29 @@
 				ROOT.power_bloc_leader = c:POR
 				c:POR = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -3594,7 +3962,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3614,7 +3982,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3639,6 +4007,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -3705,10 +4077,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -3746,10 +4119,10 @@
 				c:CHI = {
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3767,12 +4140,12 @@
 					NOT = { has_law = law_type:law_corporate_state }
 					OR = {
 						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
+						has_law_or_variant = law_type:law_monarchy
 					}
 					
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3787,14 +4160,29 @@
 				ROOT.power_bloc_leader = c:CHI
 				c:CHI = {
 					OR = {
-						has_law = law_type:law_chiefdom
-						has_law = law_type:law_monarchy
-					}
-					OR = {
-						has_law = law_type:law_landed_voting
-						has_law = law_type:law_wealth_voting
-						has_law = law_type:law_census_voting
-						has_law = law_type:law_universal_suffrage
+						AND = {
+							OR = {
+								has_law = law_type:law_chiefdom
+								has_law_or_variant = law_type:law_monarchy
+							}
+							OR = {
+								has_law = law_type:law_landed_voting
+								has_law = law_type:law_wealth_voting
+								has_law = law_type:law_census_voting
+								has_law = law_type:law_universal_suffrage
+								AND = {
+									has_law = law_type:law_labour_suffrage
+									NOT = { has_law = law_type:law_corporate_state }
+								}
+							}
+						}
+						AND = {
+							has_law = law_type:law_social_monarchy
+							NOT = {
+								has_law = law_type:law_technocracy
+								has_law_or_variant = law_type:law_anarchy
+							}
+						}
 					}
 				}
 			}
@@ -3815,7 +4203,7 @@
 					}
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 					}
 				}
 			}
@@ -3835,7 +4223,7 @@
 					}
 				
 					OR = {
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state
 					}
 				}
@@ -3860,6 +4248,10 @@
 						has_law = law_type:law_wealth_voting
 						has_law = law_type:law_census_voting
 						has_law = law_type:law_universal_suffrage
+						AND = {
+							has_law = law_type:law_labour_suffrage
+							NOT = { has_law = law_type:law_corporate_state }
+						}
 					}
 				}
 			}
@@ -3926,10 +4318,11 @@
 					has_law = law_type:law_corporate_state
 					OR = {
 						has_law = law_type:law_elder_council
-						has_law = law_type:law_oligarchy
+						has_law_or_variant = law_type:law_oligarchy
 						has_law = law_type:law_technocracy
-						has_law = law_type:law_autocracy
+						has_law_or_variant = law_type:law_autocracy
 						has_law = law_type:law_single_party_state						
+						has_law = law_type:law_labour_suffrage
 						ruler ?= {
 							OR = {
 								has_ideology = ideology:ideology_fascist
@@ -3970,14 +4363,6 @@
 		
 		special_selection = {
 			trigger = {
-				exists = c:KUK
-				ROOT.power_bloc_leader = c:KUK
-			}
-			90000 = aus_power_bloc_1
-		}
-
-		special_selection = {
-			trigger = {
 				exists = c:PRU
 				ROOT.power_bloc_leader = c:PRU
 			}
@@ -4008,5 +4393,15 @@
 		3000 = template_chartered_company_1
 		500 = template_chartered_company_2
 	}
-}
 
+	russian_warlord = {
+		3000 = template_russian_1
+		3000 = template_russian_2
+		3000 = template_russian_3
+		3000 = template_russian_4
+		3000 = template_russian_5
+		3000 = template_russian_6
+		3000 = template_russian_7
+		3000 = template_russian_8
+	}
+}

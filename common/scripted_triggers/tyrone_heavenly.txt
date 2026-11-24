@@ -1,0 +1,97 @@
+# State scope within a Qing story state iterator.
+tyr_heavenly_revolt_state = {
+ chi_qing_story_state = yes
+ OR = {
+  is_capital = no
+  owner = {
+   NOT = { c:CHI ?= this }
+   is_player = no
+   # Leave each administration at least one state.
+   any_scope_state = { is_capital = no NOT = { has_modifier = god_worshippers } }
+  }
+ }
+}
+
+tyr_heavenly_uprising_ready = {
+ c:CHI ?= this
+ NOT = { exists = c:TPG }
+ any_state = {
+  tyr_heavenly_revolt_state = yes
+  has_modifier = god_worshippers
+  count >= 8
+ }
+}
+
+# State scope. Only an existing foothold inside the Qing realm spreads the Society.
+tyr_heavenly_spread_state = {
+ tyr_heavenly_revolt_state = yes
+ NOT = { has_modifier = god_worshippers }
+ turmoil >= 0.15
+ any_neighbouring_state = {
+  owner = { chi_qing_realm = yes }
+  has_modifier = god_worshippers
+ }
+}
+
+# Chinese successor governments can continue the missions in their own territory.
+tyr_heavenly_missions_country = {
+ is_china_tag_trigger = yes
+ NOR = { c:TPG ?= this chi_qing_administrative_subject = yes }
+}
+
+# State scope. The empire sets the outer limit; governors may restrict access locally.
+tyr_heavenly_missions_access_allowed = {
+ NOT = { has_variable = missionary_fear }
+ owner = {
+  NOR = {
+   has_variable = chi_adm_religious_missions_restricted
+   has_law_or_variant = law_type:law_closed_borders
+   has_law_or_variant = law_type:law_state_atheism
+  }
+ }
+ root = { NOT = { has_variable = CHI_deported_missionaries } }
+}
+
+chi_adm_religious_society_available = {
+ chi_adm_target_valid = yes
+ c:CHI ?= { has_journal_entry = je_heavenly_kingdom_main }
+ NOT = { exists = c:TPG }
+ any_scope_state = { has_modifier = god_worshippers }
+}
+
+tyr_heavenly_governor_takeover_eligible = {
+ is_player = yes
+ chi_qing_administration_tag = yes
+ NOT = { has_variable = tyr_heavenly_takeover_offered }
+ OR = {
+  has_variable = tyr_heavenly_lost_land
+  has_variable = tyr_heavenly_had_foothold
+  has_variable = chi_adm_religious_covert
+  has_variable = chi_adm_religious_taiping_pledge
+ }
+ OR = { is_direct_subject_of = c:CHI has_variable = tyr_heavenly_defected has_variable = tyr_heavenly_neutral }
+}
+
+tyr_heavenly_governor_can_defect = {
+ chi_qing_administrative_subject = yes
+ is_direct_subject_of = c:CHI
+ is_at_war = no
+ is_diplomatic_play_committed_participant = no
+ has_variable = chi_adm_religious_taiping_pledge
+}
+
+tyr_heavenly_governor_can_stand_aside = {
+ chi_qing_administrative_subject = yes
+ is_direct_subject_of = c:CHI
+ is_at_war = no
+ is_diplomatic_play_committed_participant = no
+ has_variable = chi_adm_religious_stand_aside
+}
+
+tyr_heavenly_founding_state = {
+ tyr_heavenly_revolt_state = yes
+ is_incorporated = yes
+ religion_percent_state = { target = rel:protestant value >= 0.01 }
+ state_region = { OR = { is_homeland = cu:han is_homeland = cu:hakka } }
+ turmoil > 0.15
+}

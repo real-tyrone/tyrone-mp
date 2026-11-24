@@ -1,0 +1,102 @@
+chi_adm_initialize = { if = { limit = { chi_adm_eligible = yes }
+if = { limit = { NOT = { has_variable = chi_adm_initialized } }
+if = { limit = { chi_adm_frontier = yes }
+set_variable = { name = chi_adm_loyalty
+value = chi_adm_frontier_loyalty_start }
+set_variable = { name = chi_adm_autonomy
+value = chi_adm_frontier_autonomy_start }
+set_variable = { name = chi_adm_corruption
+value = chi_adm_frontier_corruption_start } }
+else = { set_variable = { name = chi_adm_loyalty
+value = chi_adm_civil_loyalty_start }
+set_variable = { name = chi_adm_autonomy
+value = chi_adm_civil_autonomy_start }
+set_variable = { name = chi_adm_corruption
+value = chi_adm_civil_corruption_start } }
+if = {
+ limit = { c:MCH ?= this }
+ set_variable = { name = chi_adm_loyalty value = 85 }
+ set_variable = { name = chi_adm_autonomy value = 15 }
+ set_variable = { name = chi_adm_corruption value = 25 }
+}
+if = {
+ limit = { c:MCH ?= this }
+ set_variable = { name = chi_adm_loyalty value = 85 }
+ set_variable = { name = chi_adm_autonomy value = 15 }
+ set_variable = { name = chi_adm_corruption value = 25 }
+}
+set_variable = chi_adm_initialized }
+set_variable = chi_adm_active
+chi_adm_clamp = yes
+chi_adm_refresh_status = yes
+if = { limit = { NOT = { has_journal_entry = chi_adm_governance } }
+add_journal_entry = { type = chi_adm_governance } } } }
+chi_adm_cleanup = { chi_adm_remove_status = yes
+remove_variable = chi_adm_active }
+chi_adm_monthly_update = { if = { limit = { chi_adm_eligible = yes }
+chi_adm_initialize = yes }
+else = { chi_adm_cleanup = yes } }
+chi_adm_clamp = { if = { limit = { var:chi_adm_loyalty < chi_adm_value_min }
+set_variable = { name = chi_adm_loyalty
+value = chi_adm_value_min } }
+if = { limit = { var:chi_adm_loyalty > chi_adm_value_max }
+set_variable = { name = chi_adm_loyalty
+value = chi_adm_value_max } }
+if = { limit = { var:chi_adm_autonomy < chi_adm_value_min }
+set_variable = { name = chi_adm_autonomy
+value = chi_adm_value_min } }
+if = { limit = { var:chi_adm_autonomy > chi_adm_value_max }
+set_variable = { name = chi_adm_autonomy
+value = chi_adm_value_max } }
+if = { limit = { var:chi_adm_corruption < chi_adm_value_min }
+set_variable = { name = chi_adm_corruption
+value = chi_adm_value_min } }
+if = { limit = { var:chi_adm_corruption > chi_adm_value_max }
+set_variable = { name = chi_adm_corruption
+value = chi_adm_value_max } } }
+chi_adm_adjust_loyalty = { if = { limit = { chi_adm_target_valid = yes }
+change_variable = { name = chi_adm_loyalty
+add = $AMOUNT$ }
+chi_adm_clamp = yes
+chi_adm_refresh_status = yes } }
+chi_adm_adjust_autonomy = { if = { limit = { chi_adm_target_valid = yes }
+change_variable = { name = chi_adm_autonomy
+add = $AMOUNT$ }
+chi_adm_clamp = yes
+chi_adm_refresh_status = yes } }
+chi_adm_adjust_corruption = { if = { limit = { chi_adm_target_valid = yes }
+change_variable = { name = chi_adm_corruption
+add = $AMOUNT$ }
+chi_adm_clamp = yes
+chi_adm_refresh_status = yes } }
+chi_adm_remove_status = { if = { limit = { has_modifier = chi_adm_corruption_tier_1 }
+remove_modifier = chi_adm_corruption_tier_1 }
+if = { limit = { has_modifier = chi_adm_corruption_tier_2 }
+remove_modifier = chi_adm_corruption_tier_2 }
+if = { limit = { has_modifier = chi_adm_corruption_tier_3 }
+remove_modifier = chi_adm_corruption_tier_3 }
+if = { limit = { has_modifier = chi_adm_corruption_tier_4 }
+remove_modifier = chi_adm_corruption_tier_4 }
+if = { limit = { has_modifier = chi_adm_corruption_tier_5 }
+remove_modifier = chi_adm_corruption_tier_5 } }
+chi_adm_refresh_status = { chi_adm_remove_status = yes }
+
+# Country scope. The caller checks eligibility before adding an opening entry.
+chi_adm_add_starting_entry = {
+ if = {
+  limit = { NOT = { has_journal_entry = $ENTRY$ } }
+  add_journal_entry = { type = $ENTRY$ }
+ }
+}
+
+# Called after the lobby, when the game knows which countries are player-controlled.
+chi_adm_start_guide_entries = {
+ if = {
+  limit = { chi_adm_player_guide_available = yes }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_governance }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_development }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_security }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_player_guide_taiping }
+ }
+}

@@ -1,0 +1,74 @@
+# Country scope. Exact original tags only; Tibet/Korea/Lanfang are excluded.
+chi_adm_court_valid = {
+ exists = c:CHI
+ c:CHI = {
+  has_variable = chi_qing_1836_setup
+  has_law_or_variant = law_type:law_monarchy
+  NOT = { has_variable = tyr_chi_fragmented }
+ }
+}
+chi_adm_eligible = {
+ chi_adm_court_valid = yes
+ chi_qing_administration_tag = yes
+ chi_qing_administrative_subject = yes
+ is_direct_subject_of = c:CHI
+}
+chi_adm_frontier = {
+ is_subject_type = subject_type_qing_frontier_administration
+}
+# A selected country must still belong to the working imperial system.
+chi_adm_target_valid = {
+ chi_adm_eligible = yes
+ has_variable = chi_adm_initialized
+}
+
+# Override the native treaty-partner predicate; preserve all other native gates.
+REPLACE:country_is_valid_qing_treaty_partner = {
+	OR = {
+		country_has_primary_culture = cu:manchu
+		country_has_primary_culture = cu:han
+		country_has_primary_culture = cu:uighur
+	}
+	is_country_type = unrecognized
+	hidden_trigger = {
+		is_player = no
+	}
+	OR = {
+		trigger_if = {
+			limit = {
+				has_journal_entry = je_warlord_china
+			}
+			custom_tooltip = {
+				text = china_explosion_point_2_tt
+				var:china_warlord_explosion <= 4
+			}
+		}
+		country_rank < rank_value:unrecognized_major_power
+	}
+	OR = {
+		is_subject = no
+		is_subject_of = c:CHI
+		is_subject_of = ROOT
+	}
+	trigger_if = {
+		limit = {
+			country_rank >= rank_value:unrecognized_major_power
+		}
+		OR = {
+			custom_tooltip = {
+				text = war_with_china_not_russia_tt
+				any_enemy_in_war = {
+					NOT = { c:RUS ?= this }
+				}
+			}
+			custom_tooltip = {
+				text = owes_russia_obligation_tt
+				c:RUS ?= { is_owed_obligation_by = PREV }
+			}
+			army_power_projection <= {
+				value = c:RUS.army_power_projection
+				multiply = 0.5
+			}
+		}
+	}
+}

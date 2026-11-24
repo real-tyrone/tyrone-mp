@@ -1,0 +1,8 @@
+on_game_started_after_lobby = { on_actions = { chi_adm_negotiated_integration_start } }
+chi_adm_negotiated_integration_start = { effect = { c:CHI ?= { chi_adm_negotiated_integration_recount = yes } } }
+on_monthly_pulse_country = { on_actions = { chi_adm_negotiated_integration_monthly chi_adm_negotiated_integration_orphan chi_adm_negotiated_integration_tax_monthly } }
+chi_adm_negotiated_integration_monthly = { trigger = { c:CHI ?= this } effect = { chi_adm_negotiated_integration_court_tick = yes } }
+chi_adm_negotiated_integration_orphan = { trigger = { chi_qing_administration_tag = yes OR = { has_variable = chi_adm_negotiated_integration_stage has_variable = chi_adm_negotiated_integration_repayment_left } NOT = { chi_adm_negotiated_integration_valid = yes } } effect = { chi_adm_negotiated_integration_orphan_cleanup = yes } }
+chi_adm_negotiated_integration_tax_monthly = { trigger = { any_scope_state = { has_variable = chi_adm_negotiated_integration_tax_left } } effect = {
+every_scope_state = { limit = { has_variable = chi_adm_negotiated_integration_tax_left NOT = { has_variable = chi_adm_negotiated_integration_tax_new } } change_variable = { name = chi_adm_negotiated_integration_tax_left subtract = 1 } chi_adm_negotiated_integration_update_tax = yes }
+} }

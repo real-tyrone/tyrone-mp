@@ -1,0 +1,44 @@
+on_weekly_pulse_country = {
+ on_actions = { chi_adm_reform_defeat_week chi_adm_reform_expiry_week }
+}
+
+chi_adm_reform_defeat_week = {
+ trigger = { c:CHI ?= this has_global_variable = chi_adm_reform_defeat_window }
+ effect = { change_global_variable = { name = chi_adm_reform_defeat_elapsed add = 7 } }
+}
+
+chi_adm_reform_expiry_week = {
+ trigger = {
+  has_variable = chi_adm_reform_v1
+  OR = { has_modifier = chi_adm_reform_defeat has_variable = chi_adm_reform_recovery_months }
+  chi_adm_reform_defeat_active = no
+ }
+ effect = { chi_adm_reform_expire_defeat = yes }
+}
+
+on_country_released_as_independent = {
+ on_actions = { chi_adm_reform_restore_released }
+}
+on_country_released_as_own_subject = {
+ on_actions = { chi_adm_reform_restore_released }
+}
+on_country_released_as_overlord_subject = {
+ on_actions = { chi_adm_reform_restore_released }
+}
+chi_adm_reform_restore_released = {
+ trigger = {
+  scope:target ?= {
+   chi_qing_administration_tag = yes
+   NOT = { has_variable = chi_adm_reform_v1 }
+  }
+ }
+ effect = {
+  scope:target = {
+   chi_adm_reform_restore_archive = yes
+   if = {
+    limit = { has_variable = chi_adm_reform_v1 }
+    chi_adm_reform_apply_local_penalties = yes
+   }
+  }
+ }
+}

@@ -1,0 +1,27 @@
+flowcontainer = {
+ name = "chi_adm_court_register_memorial_desk"
+ direction = vertical
+ parentanchor = hcenter
+ spacing = 6
+ ignoreinvisible = yes
+ datacontext = "[JournalEntry.GetCountry]"
+ section_header_button = {
+  blockoverride "layout" { size = { 488 38 } parentanchor = hcenter }
+  blockoverride "left_text" { text = "chi_adm_court_register_desk_heading" }
+  blockoverride "onclick" { onclick = "[GetVariableSystem.Toggle('chi_adm_court_register_desk_closed')]" }
+  blockoverride "onclick_showmore" { visible = "[GetVariableSystem.Exists('chi_adm_court_register_desk_closed')]" }
+  blockoverride "onclick_showless" { visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_desk_closed'))]" }
+ }
+ flowcontainer = {
+  direction = vertical spacing = 6
+  visible = "[Not(GetVariableSystem.Exists('chi_adm_court_register_desk_closed'))]"
+  flowcontainer = {
+   direction = horizontal spacing = 12
+   tooltip = "[Country.GetRelationsTooltip(Country.GetOverlord.Self)]"
+   icon = { size = { 40 40 } texture = "[Country.GetRelationsIconTexture(Country.GetOverlord.Self)]" }
+   textbox = { size = { 420 50 } multiline = yes text = "chi_adm_court_register_court_relationship" }
+  }
+  textbox = { size = { 488 48 } multiline = yes text = "chi_adm_court_register_commitments_display" tooltip = "chi_adm_court_register_commitments_tooltip" }
+  textbox = { size = { 488 46 } multiline = yes text = "chi_adm_court_register_desk_instructions" }
+ }
+}

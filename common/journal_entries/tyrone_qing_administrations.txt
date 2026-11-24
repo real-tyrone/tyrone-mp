@@ -1,0 +1,36 @@
+je_qing_imperial_administrations = {
+ icon = "gfx/interface/icons/event_icons/Mandate_Heaven.dds"
+ group = je_group_chi_adm_court_register_court
+ scripted_button = chi_qing_sakhalin_commission_button
+ widget = { gui = "gui/journal_entry_widgets/chi_adm_negotiated_integration.gui" name = "chi_adm_negotiated_integration_court" container = "custom_widget_container_1" }
+ scaling_modifiers_while_active = { modifier = chi_adm_negotiated_integration_commitment value = chi_adm_negotiated_integration_cost_scale }
+ context = country
+ transferable = no
+ can_revolution_inherit = no
+ can_deactivate = yes
+ should_be_pinned_by_default_uninvolved_or_context = yes
+ weight = 900
+ is_shown_when_inactive = { c:CHI ?= this chi_qing_has_administrative_subjects = yes }
+ possible = { c:CHI ?= this chi_qing_has_administrative_subjects = yes }
+ activation_description = { chi_qing_has_administrative_subjects = yes }
+
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } }
+    set_variable = chi_qing_centralisation_unlocked
+   }
+   else_if = {
+    limit = { has_modifier = chi_mandate_consolidated_authority }
+    set_variable = chi_qing_centralisation_unlocked
+   }
+   else = { remove_variable = chi_qing_centralisation_unlocked }
+  }
+ }
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = je_standard_completion_conclusion_desc
+  trigger = { chi_qing_has_administrative_subjects = no }
+  effect = { remove_variable = chi_qing_centralisation_unlocked }
+ }
+}

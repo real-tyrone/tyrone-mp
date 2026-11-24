@@ -1,0 +1,94 @@
+chi_adm_memorials_valid = {
+chi_adm_target_valid = yes
+}
+
+chi_adm_memorials_court = {
+c:CHI ?= this chi_adm_court_valid = yes
+}
+
+chi_adm_memorials_memorial_free = {
+chi_adm_memorials_valid = yes authority >= 25 NOT = { has_variable = chi_adm_memorials_memorial } NOT = { has_variable = chi_adm_memorials_memorial_cooldown }
+}
+
+chi_adm_memorials_edict_room = {
+c:CHI = { NOT = { any_subject_or_below = { count >= 2 chi_adm_memorials_valid = yes OR = { has_variable = chi_adm_memorials_edict has_variable = chi_adm_memorials_audit } } } }
+}
+
+chi_adm_memorials_edict_free = {
+chi_adm_memorials_valid = yes c:CHI = { authority >= 25 } chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } NOT = { has_variable = chi_adm_memorials_edict_cooldown } NOT = { has_variable = chi_adm_memorials_audit }
+}
+
+chi_adm_memorials_audit_free = {
+chi_adm_memorials_valid = yes chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } c:CHI = { authority >= 25 } NOT = { has_variable = chi_adm_memorials_audit } NOT = { has_variable = chi_adm_memorials_audit_cooldown }
+}
+
+chi_adm_memorials_memorial_pending = {
+chi_adm_memorials_valid = yes has_variable = chi_adm_memorials_memorial var:chi_adm_memorials_memorial_stage = 1
+}
+
+chi_adm_memorials_edict_reply = {
+chi_adm_memorials_valid = yes has_variable = chi_adm_memorials_edict OR = { var:chi_adm_memorials_edict_stage = 1 var:chi_adm_memorials_edict_stage = 3 var:chi_adm_memorials_edict_stage = 4 }
+}
+
+chi_adm_memorials_audit_choice = {
+chi_adm_memorials_valid = yes var:chi_adm_memorials_audit = 1
+}
+
+chi_adm_memorials_centralised = {
+c:CHI = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } }
+}
+
+chi_adm_memorials_can_pay_full = {
+OR = { AND = { var:chi_adm_memorials_memorial = 1 c:CHI = { gold_reserves >= 20000 } } var:chi_adm_memorials_memorial = 2 AND = { var:chi_adm_memorials_memorial = 3 is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+}
+
+chi_adm_memorials_can_pay_reduced = {
+OR = { AND = { var:chi_adm_memorials_memorial = 1 c:CHI = { gold_reserves >= 10000 } } var:chi_adm_memorials_memorial = 2 AND = { var:chi_adm_memorials_memorial = 3 is_at_war = yes c:CHI = { gold_reserves >= 5000 } } }
+}
+
+chi_adm_memorials_edict_payable = {
+OR = { NOT = { var:chi_adm_memorials_edict = 3 } AND = { var:chi_adm_memorials_edict_stage = 4 is_at_war = yes c:CHI = { gold_reserves >= 5000 } } AND = { NOT = { var:chi_adm_memorials_edict_stage = 4 } is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+}
+
+# Country scope: the province whose request is before the court.
+chi_adm_memorials_petition_warrant = {
+ chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1
+}
+
+chi_adm_memorials_petition_sponsor = {
+ chi_adm_target_valid = yes has_variable = chi_adm_provincial_development_sponsor_case var:chi_adm_provincial_development_sponsor_case = 1
+}
+
+chi_adm_memorials_petition_compact = {
+ chi_adm_target_valid = yes has_variable = chi_adm_provincial_development_compact_case NOT = { has_variable = chi_adm_provincial_development_compact_offer }
+}
+
+chi_adm_memorials_petition_law = {
+ chi_adm_imperial_law_court_case = yes
+}
+
+chi_adm_memorials_petition_integration = {
+ chi_adm_negotiated_integration_valid = yes
+ OR = {
+  AND = {
+   chi_adm_negotiated_integration_court_reply = yes
+   OR = {
+    var:chi_adm_negotiated_integration_response = 3
+    var:chi_adm_negotiated_integration_response = 5
+   }
+  }
+  has_variable = chi_adm_negotiated_integration_suspend_request
+  has_variable = chi_adm_negotiated_integration_cancel_request
+ }
+}
+
+chi_adm_memorials_petition_pending = {
+ OR = {
+  chi_adm_memorials_memorial_pending = yes
+  chi_adm_memorials_petition_warrant = yes
+  chi_adm_memorials_petition_sponsor = yes
+  chi_adm_memorials_petition_compact = yes
+  chi_adm_memorials_petition_law = yes
+  chi_adm_memorials_petition_integration = yes
+ }
+}
