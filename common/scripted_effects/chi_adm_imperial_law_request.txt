@@ -1,0 +1,49 @@
+# Province scope. The catalog passes a fixed directive ID and the matching law type.
+chi_adm_imperial_law_request_submit = {
+ if = {
+  limit = { chi_adm_imperial_law_request_law = { ID = $ID$ LAW = $LAW$ } }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_imperial_law_request_revision } }
+   set_variable = { name = chi_adm_imperial_law_request_revision value = 0 }
+  }
+  change_variable = { name = chi_adm_imperial_law_request_revision add = 1 }
+  remove_variable = chi_adm_imperial_law_request_picker
+  set_variable = { name = chi_adm_imperial_law_request_pending_id value = $ID$ days = 180 }
+  save_scope_as = chi_adm_imperial_law_requested_by
+  save_scope_value_as = { name = chi_adm_imperial_law_request_serial value = var:chi_adm_imperial_law_request_revision }
+  c:CHI = {
+   every_active_law = {
+    limit = { type = law_type:$LAW$ }
+    save_scope_as = chi_adm_imperial_law_request_law
+   }
+   trigger_event = { id = chi_adm_imperial_request.1 popup = yes }
+  }
+ }
+}
+
+# Court scope. Use the current directive's normal dispatcher and preserve any
+# unrelated selection made in the court's existing law picker.
+chi_adm_imperial_law_request_approve = {
+ if = {
+  limit = { chi_adm_imperial_law_request_can_approve = yes }
+  scope:chi_adm_imperial_law_requested_by = {
+   if = {
+    limit = { has_variable = chi_adm_imperial_law_selected_id }
+    save_temporary_scope_value_as = { name = chi_adm_imperial_request_previous_selection value = var:chi_adm_imperial_law_selected_id }
+   }
+   set_variable = { name = chi_adm_imperial_law_selected_id value = var:chi_adm_imperial_law_request_pending_id }
+   remove_variable = chi_adm_imperial_law_request_pending_id
+   if = {
+    limit = { chi_adm_imperial_law_selected_sendable = yes }
+    chi_adm_imperial_law_send_selected = yes
+    trigger_event = { id = chi_adm_imperial_request.2 popup = yes }
+   }
+   else = { trigger_event = { id = chi_adm_imperial_request.4 popup = yes } }
+   if = {
+    limit = { exists = scope:chi_adm_imperial_request_previous_selection }
+    set_variable = { name = chi_adm_imperial_law_selected_id value = scope:chi_adm_imperial_request_previous_selection }
+   }
+   else = { remove_variable = chi_adm_imperial_law_selected_id }
+  }
+ }
+}

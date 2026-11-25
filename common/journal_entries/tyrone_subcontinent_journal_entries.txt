@@ -568,17 +568,44 @@ je_tyrone_conquer_afghanistan = {
 			}
 		}
 		effect = {
+			custom_tooltip = tyrone_subcontinent_afghanistan_rewards_tt
+			scope:tyrone_subcontinent_india = {
+				add_modifier = { name = tyrone_subcontinent_afghan_frontier years = 5 }
+			}
 			hidden_effect = {
-						if = {
-							limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
-							set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
-						}
-						set_global_variable = {
-							name = tyrone_subcontinent_presidency_bonus
-							value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
-						}
+				scope:tyrone_subcontinent_india = {
+					if = {
+						limit = { owns_entire_state_region = STATE_KABUL }
+						s:STATE_KABUL = { add_claim = scope:tyrone_subcontinent_india }
+						s:STATE_KANDAHAR = { add_claim = scope:tyrone_subcontinent_india }
+						s:STATE_NORTHERN_BALUCHISTAN = { add_claim = scope:tyrone_subcontinent_india }
+						s:STATE_CENTRAL_HIGHLANDS = { add_claim = scope:tyrone_subcontinent_india }
+						s:STATE_HERAT = { add_claim = scope:tyrone_subcontinent_india }
+						s:STATE_BALKH = { add_claim = scope:tyrone_subcontinent_india }
 					}
-			 remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+					every_direct_subject = {
+						limit = { country_has_primary_culture = cu:pashtun }
+						if = {
+							limit = {
+								is_subject_type = subject_type_protectorate
+								owns_entire_state_region = STATE_KABUL
+							}
+							change_subject_type = subject_type_puppet
+						}
+						add_modifier = { name = tyrone_subcontinent_kabul_remittances years = 5 }
+					}
+				}
+
+				if = {
+					limit = { NOT = { has_global_variable = tyrone_subcontinent_presidency_bonus } }
+					set_global_variable = { name = tyrone_subcontinent_presidency_bonus value = 0 }
+				}
+				set_global_variable = {
+					name = tyrone_subcontinent_presidency_bonus
+					value = { value = global_var:tyrone_subcontinent_presidency_bonus add = 0.1 max = 0.5 }
+				}
+				remove_global_variable = tyrone_subcontinent_afghanistan_active_var
+			}
 		}
 		effect_all_involved = {
 			trigger_event = { id = tyrone_subcontinent.6 days = 0 popup = yes }

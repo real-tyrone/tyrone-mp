@@ -1,4 +1,4 @@
-chi_adm_religious_affairs = {
+﻿chi_adm_religious_affairs = {
  icon = "gfx/interface/icons/religion_icons/protestant.dds"
  group = je_group_chi_adm_court_register_province
  context = country
@@ -7,7 +7,32 @@ chi_adm_religious_affairs = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_target_valid = yes has_journal_entry = chi_adm_governance }
  possible = { chi_adm_target_valid = yes has_journal_entry = chi_adm_governance }
- on_monthly_pulse = { effect = { if = { limit = { is_ai = yes chi_adm_target_valid = yes } chi_adm_religious_ai_review = yes } } }
+ activation_description = { custom_tooltip = { text = chi_adm_governance_active_tt chi_adm_target_valid = yes has_journal_entry = chi_adm_governance } }
+ # Reconcile older saves and withdraw an invalid restriction.
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { has_variable = chi_adm_religious_missions_restricted }
+    if = {
+     limit = { NOT = { chi_adm_religious_restriction_allowed = yes } }
+     remove_variable = chi_adm_religious_missions_restricted
+     remove_modifier = chi_adm_religious_restriction
+    }
+    else_if = {
+     limit = { NOT = { has_modifier = chi_adm_religious_restriction } }
+     add_modifier = chi_adm_religious_restriction
+    }
+   }
+   if = {
+    limit = { has_variable = chi_adm_religious_missions_regulated NOT = { has_modifier = chi_adm_religious_supervision } }
+    add_modifier = chi_adm_religious_supervision
+   }
+   if = {
+    limit = { is_ai = yes chi_adm_target_valid = yes }
+    chi_adm_religious_ai_review = yes
+   }
+  }
+ }
  should_be_pinned_by_default_uninvolved_or_context = no
  status_desc = {
   first_valid = {
@@ -16,6 +41,11 @@ chi_adm_religious_affairs = {
    triggered_desc = { trigger = { has_variable = chi_adm_religious_missions_regulated } desc = chi_adm_religious_status_regulated }
    desc = chi_adm_religious_affairs_status
   }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_religious_affairs.gui"
+  name = "chi_adm_religious_affairs_overview"
+  container = "custom_widget_container_buttons"
  }
  scripted_button = chi_adm_religious_permit
  scripted_button = chi_adm_religious_regulate
@@ -27,4 +57,38 @@ chi_adm_religious_affairs = {
  scripted_button = chi_adm_religious_stand_aside
  scripted_button = chi_adm_religious_neutral
  scripted_button = chi_adm_religious_relief
+ map_color = {
+  if = {
+   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } has_variable = open_to_missionaries_state }
+   value = { 47 139 172 }
+  }
+  else_if = {
+   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } religion_percent_state = { target = rel:protestant value >= 0.01 } }
+   value = { 68 157 97 }
+  }
+  else_if = {
+   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } }
+   value = { 86 89 94 }
+  }
+ }
+ map_color_second = {
+  if = {
+   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } has_modifier = god_worshippers }
+   value = { 161 77 184 }
+  }
+  else_if = {
+   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } turmoil >= 0.15 }
+   value = { 214 131 50 }
+  }
+ }
+ map_tooltip = {
+  if = {
+   limit = { owner ?= { has_journal_entry = chi_adm_religious_affairs } }
+   custom_tooltip_no_bullet = chi_adm_religious_map_heading
+   if = { limit = { has_variable = open_to_missionaries_state } custom_tooltip = chi_adm_religious_map_open_tt }
+   if = { limit = { has_modifier = god_worshippers } custom_tooltip = chi_adm_religious_map_society_tt }
+   if = { limit = { religion_percent_state = { target = rel:protestant value >= 0.01 } } custom_tooltip = chi_adm_religious_map_protestant_tt }
+   if = { limit = { turmoil >= 0.15 } custom_tooltip = chi_adm_religious_map_turmoil_tt }
+  }
+ }
 }

@@ -1,0 +1,77 @@
+# Court scope. AHU owns the negotiation state so it can clean up if Qing disappears.
+chi_adm_henan_open = {
+ if = {
+  limit = { chi_adm_henan_can_request = yes }
+  add_modifier = { name = chi_adm_henan_workload months = 6 }
+  c:AHU = {
+   if = {
+    limit = { NOT = { has_variable = chi_adm_henan_revision } }
+    set_variable = { name = chi_adm_henan_revision value = 0 }
+   }
+   change_variable = { name = chi_adm_henan_revision add = 1 }
+   set_variable = { name = chi_adm_henan_stage value = 1 }
+   set_variable = { name = chi_adm_henan_months value = 6 }
+   chi_adm_henan_show_proposal = yes
+  }
+ }
+}
+
+# Province scope. Both dispatchers save the current revision on the popup.
+chi_adm_henan_show_proposal = {
+ save_scope_value_as = { name = chi_adm_henan_offer_revision value = var:chi_adm_henan_revision }
+ trigger_event = { id = chi_adm_henan.1 popup = yes }
+}
+
+chi_adm_henan_show_counter = {
+ save_scope_value_as = { name = chi_adm_henan_offer_revision value = var:chi_adm_henan_revision }
+ c:CHI ?= { trigger_event = { id = chi_adm_henan.2 popup = yes } }
+}
+
+chi_adm_henan_close = {
+ remove_variable = chi_adm_henan_stage
+ remove_variable = chi_adm_henan_months
+ remove_variable = chi_adm_henan_delayed
+ c:CHI ?= { remove_modifier = chi_adm_henan_workload }
+}
+
+chi_adm_henan_end_without_transfer = {
+ chi_adm_henan_close = yes
+ set_variable = { name = chi_adm_henan_retry value = yes months = $COOLDOWN$ }
+}
+
+# Province scope. Commit the territorial transfer and consideration together.
+chi_adm_henan_finalize = {
+ if = {
+  limit = {
+   c:AHU ?= this
+   chi_adm_henan_settlement_valid = yes
+   exists = scope:chi_adm_henan_offer_revision
+   var:chi_adm_henan_stage ?= $STAGE$
+   var:chi_adm_henan_revision ?= scope:chi_adm_henan_offer_revision
+   trigger_if = {
+    limit = { always = $ENHANCED$ }
+    c:CHI = { gold_reserves >= 100000 }
+   }
+  }
+  s:STATE_HENAN.region_state:AHU = {
+   if = {
+    limit = { is_incorporated = yes }
+    set_state_owner = c:CHI
+    set_state_type = incorporated
+   }
+   else = { set_state_owner = c:CHI }
+  }
+  set_global_variable = chi_adm_henan_restored
+  if = {
+   limit = { always = $ENHANCED$ }
+   c:CHI = { add_treasury = -100000 }
+   add_treasury = 100000
+  }
+  add_modifier = { name = chi_adm_henan_compensation }
+  chi_adm_adjust_loyalty = { AMOUNT = 3 }
+  change_relations = { country = c:CHI value = 5 }
+  chi_adm_henan_close = yes
+  c:CHI = { trigger_event = { id = chi_adm_henan.3 popup = yes } }
+  trigger_event = { id = chi_adm_henan.3 popup = yes }
+ }
+}

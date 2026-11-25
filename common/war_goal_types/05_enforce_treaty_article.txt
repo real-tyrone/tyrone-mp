@@ -1,0 +1,63 @@
+enforce_treaty_article = {
+	icon = "gfx/interface/icons/war_goals/enforce_treaty_article.dds"
+
+	kind = enforce_treaty_article
+
+	settings = {
+		require_target_be_part_of_war
+
+		# Validation
+		validate_conflicts_war_goals_all
+	}
+
+	target_type = treaty_article
+
+	possible = {
+		trigger_if = {
+			limit = {
+				scope:article_options ?= {
+					OR = { has_type = treaty_port has_type = state_transfer }
+				}
+			}
+			chi_qing_territorial_war_goal_allowed = yes
+		}
+		# trigger to determine if a goal with its target data is listed when selecting a war goal in the diplo play panel
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+	}
+
+	valid = {
+		trigger_if = {
+			limit = {
+				scope:article_options ?= {
+					OR = { has_type = treaty_port has_type = state_transfer }
+				}
+			}
+			chi_qing_territorial_war_goal_allowed = yes
+		}
+		# trigger in addition to some basic validation code-side
+		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
+	}
+
+	maneuvers = {
+		# script value
+		value = 0
+	}
+
+	infamy = {
+		# script value
+		value = 0
+	}
+
+	on_enforced = {
+		# script effect on top of the predefined code effect
+	}
+
+	mirrored_wargoal = {
+		method = swap
+		type = break_enforced_treaties
+	}
+
+	ai = {
+		is_significant_demand = no
+	}
+}

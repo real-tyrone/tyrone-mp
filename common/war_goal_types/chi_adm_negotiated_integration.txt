@@ -5,7 +5,6 @@ chi_adm_negotiated_integration_annexation = {
 
 	settings = {
 		require_target_be_part_of_war
-		can_add_for_other_country
 		annexes_entire_country
 		skip_build_list
 
@@ -27,6 +26,15 @@ chi_adm_negotiated_integration_annexation = {
 	}
 
 	valid = {
+		c:CHI ?= this
+		OR = {
+			scope:target_country ?= { has_variable = chi_adm_negotiated_integration_force_launch }
+			scope:diplomatic_play ?= {
+				is_diplomatic_play_type = dp_chi_adm_negotiated_integration_integration
+				initiator = c:CHI
+				target = scope:target_country
+			}
+		}
 		# trigger in addition to some basic validation code-side
 		# scopes: root = holder, creator_country, diplomatic_play, target_country, target_state, stakeholder, target_region, article_options
 	}

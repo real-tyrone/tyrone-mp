@@ -1,0 +1,104 @@
+types chi_adm_imperial_request_types {
+ type chi_adm_imperial_law_request_panel = container {
+  name = "chi_adm_imperial_law_request_window"
+  parentanchor = hcenter|vcenter
+  size = { 520 452 }
+  filter_mouse = all
+  visible = "[Or(And(GetVariableSystem.Exists('chi_adm_imperial_request_open'), GetScriptedGui('chi_adm_imperial_law_request_picker_eligible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)), GetScriptedGui('chi_adm_imperial_law_request_picker_visible').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+  background = { using = paper_bg_dark }
+  background = { using = frame_small }
+
+  widget = {
+   size = { 520 60 }
+   parentanchor = top|hcenter
+   using = sidepanel_top_header
+   textbox = {
+    size = { 390 34 }
+    parentanchor = hcenter|vcenter
+    align = center|nobaseline
+    using = fontsize_large
+    text = "da_chi_adm_imperial_law_request"
+   }
+   close_button = {
+    size = { 40 40 }
+    parentanchor = right|vcenter
+    position = { -24 0 }
+    onclick = "[GetScriptedGui('chi_adm_imperial_law_request_picker_close').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+    onclick = "[GetVariableSystem.Clear('chi_adm_imperial_request_open')]"
+    shortcut = "close_window"
+   }
+  }
+
+  textbox = {
+   position = { 24 73 }
+   size = { 472 45 }
+   maximumsize = { 472 45 }
+   multiline = yes
+   align = left|nobaseline
+   using = fontsize_medium
+   text = "chi_adm_imperial_request_choose"
+  }
+
+  container = {
+   position = { 24 122 }
+   size = { 472 281 }
+   background = { using = dark_area }
+   background = { using = frame_small }
+   scrollarea = {
+    position = { 8 8 }
+    size = { 456 265 }
+    scrollbarpolicy_horizontal = always_off
+    scrollbar_vertical = { using = vertical_scrollbar }
+    scrollwidget = {
+     flowcontainer = {
+      direction = vertical
+      spacing = 5
+      ignoreinvisible = yes
+      datamodel = "[DataModelRepeatedItem('(int32)264')]"
+      item = {
+       button = {
+        datacontext = "[GetScriptedGui(Concatenate('chi_adm_imperial_request_law_', ToString_int32(Add_int32(PdxGuiWidget.GetIndexInDataModel, '(int32)1'))))]"
+        visible = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        enabled = "[ScriptedGui.IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        size = { 438 39 }
+        using = default_button
+        onclick = "[ScriptedGui.Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        onclick = "[GetVariableSystem.Clear('chi_adm_imperial_request_open')]"
+        tooltip = "chi_adm_imperial_request_send"
+
+        textbox = {
+         text = "[Localize(Concatenate('chi_adm_imperial_law_requested_name_', ToString_int32(Add_int32(PdxGuiWidget.AccessParent.GetIndexInDataModel, '(int32)1'))))]"
+         position = { 13 0 }
+         size = { 330 32 }
+         parentanchor = left|vcenter
+         align = left|nobaseline
+         using = fontsize_medium
+         elide = right
+         alwaystransparent = yes
+        }
+        textbox = {
+         position = { -14 0 }
+         size = { 72 30 }
+         parentanchor = right|vcenter
+         align = right|nobaseline
+         using = fontsize_medium
+         default_format = "#gold"
+         text = "chi_adm_imperial_request_row_action"
+         alwaystransparent = yes
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+
+  textbox = {
+   position = { 24 413 }
+   size = { 472 24 }
+   using = fontsize_medium
+   align = left|nobaseline
+   text = "chi_adm_imperial_request_footer"
+  }
+ }
+}

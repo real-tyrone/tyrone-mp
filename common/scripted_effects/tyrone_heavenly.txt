@@ -300,15 +300,16 @@ chi_adm_religious_set_policy = {
  remove_variable = chi_adm_religious_missions_regulated
  set_variable = $POLICY$
  remove_modifier = chi_adm_religious_supervision
+ remove_modifier = chi_adm_religious_restriction
  if = {
   limit = { has_variable = chi_adm_religious_missions_regulated }
-  add_modifier = { name = chi_adm_religious_supervision months = 12 }
+  add_modifier = chi_adm_religious_supervision
  }
  set_variable = { name = chi_adm_religious_policy_cooldown months = 12 }
  if = {
   limit = { has_variable = chi_adm_religious_missions_restricted }
+  add_modifier = chi_adm_religious_restriction
   every_scope_state = { remove_variable = open_to_missionaries_state }
-  change_relations = { country = c:CHI value = 5 }
  }
 }
 
@@ -525,11 +526,8 @@ chi_adm_religious_ai_review = {
   limit = { NOT = { has_variable = chi_adm_religious_policy_cooldown } }
   if = {
    limit = {
-    authority >= 25
-    OR = {
-     has_law_or_variant = law_type:law_closed_borders
-     ig:ig_devout ?= { is_in_government = yes }
-    }
+    authority >= 200
+    chi_adm_religious_restriction_allowed = yes
     NOT = { has_variable = chi_adm_religious_missions_restricted }
    }
    chi_adm_religious_set_policy = { POLICY = chi_adm_religious_missions_restricted }

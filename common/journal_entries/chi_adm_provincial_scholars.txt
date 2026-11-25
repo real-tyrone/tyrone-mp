@@ -1,0 +1,127 @@
+chi_adm_provincial_scholars = {
+	can_revolution_inherit = no
+	transferable = no
+	can_deactivate = no
+	is_shown_when_inactive = { chi_adm_provincial_scholars_eligible = yes }
+	possible = { chi_adm_provincial_scholars_eligible = yes }
+	activation_description = { custom_tooltip = { text = chi_adm_provincial_scholars_eligible_tt chi_adm_provincial_scholars_eligible = yes } }
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	group = je_group_chi_adm_court_register_province
+	context = country
+	scripted_button = chi_adm_provincial_scholars_button
+	immediate = {
+		if = {
+			limit = { NOT = { has_variable = chi_confucian_scholars_progress } }
+			set_variable = { name = chi_confucian_scholars_progress value = 0 }
+		}
+	}
+	on_monthly_pulse = {
+		random_events = {
+			10 = 0
+			1 = chi_confucian_scholars.3
+			1 = chi_confucian_scholars.4
+		}
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_variable = chi_confucian_scholars_end_isolation
+						has_variable = chi_confucian_scholars_evict_scholars
+					}
+					var:chi_confucian_scholars_progress >= 56
+					NOT = { has_variable = chi_confucian_manchu_customs_event_fired }
+				}
+				set_variable = chi_confucian_manchu_customs_event_fired
+				trigger_event = {
+					id = chi_confucian_scholars.8
+					popup = yes
+				}
+			}
+
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_evict_scholars
+					var:chi_confucian_scholars_progress > 30
+					has_journal_entry = chi_adm_provincial_scholars
+					NOT = { has_variable = chi_confucian_western_practices_event_fired }
+				}
+				set_variable = chi_confucian_western_practices_event_fired
+				trigger_event = {
+					id = chi_confucian_scholars.7
+					popup = yes
+				}
+			}
+
+			if = {
+				limit = {
+					OR = {
+						has_variable = chi_confucian_scholars_end_isolation
+						has_variable = chi_confucian_scholars_evict_scholars
+					}
+					var:chi_confucian_scholars_progress < 72
+				}
+				change_variable = {
+					name = chi_confucian_scholars_progress
+					add = 1
+				}
+			}
+		}
+	}
+	current_value = {
+		value = var:chi_confucian_scholars_progress
+	}
+	goal_add_value = {
+		value = 72
+		subtract = var:chi_confucian_scholars_progress
+	}
+	progressbar = yes
+	weight = 25
+	outcome = {
+		flags = { hidden invalid_outcome }
+		conclusion_desc = chi_adm_provincial_scholars_closed
+		trigger = { chi_adm_provincial_scholars_eligible = no }
+		effect = { chi_adm_provincial_scholars_cleanup = yes }
+	}
+	outcome = {
+		header = je_standard_completion_header
+		effect_header = je_standard_on_completion_header
+		color = "gold_positive"
+		conclusion_desc = je_standard_completion_conclusion_desc
+		trigger = {
+			scope:journal_entry = { is_goal_complete = yes }
+			hidden_trigger = { chi_adm_provincial_scholars_laws_ready = yes }
+		}
+		effect = {
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_end_isolation
+				}
+				activate_law = law_type:law_chi_religious_focus
+				ig:ig_devout ?= {
+					remove_ideology = ideology_chi_devout_traditionalist
+					add_ideology = ideology_chi_devout_scholar
+				}
+			}
+			if = {
+				limit = {
+					has_variable = chi_confucian_scholars_evict_scholars
+				}
+				activate_law = law_type:law_freedom_of_conscience
+				activate_law = law_type:law_chi_merchent_led
+			}
+			add_modifier = { name = chi_adm_provincial_scholars_settlement years = 5 }
+			chi_adm_adjust_corruption = { AMOUNT = -3 }
+			set_variable = chi_adm_provincial_scholars_completed
+			chi_adm_provincial_scholars_cleanup = yes
+		}
+		event_outcome_effect_desc = {
+			effect = {
+				custom_tooltip = chi_adm_provincial_scholars_isolation_outcome_tt
+				custom_tooltip = chi_adm_provincial_scholars_eviction_outcome_tt
+				custom_tooltip = chi_adm_provincial_scholars_release_cost_tt
+				add_modifier = { name = chi_adm_provincial_scholars_settlement years = 5 }
+			}
+		}
+	}
+	should_be_pinned_by_default_uninvolved_or_context = yes
+}

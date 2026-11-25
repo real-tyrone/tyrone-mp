@@ -1,27 +1,33 @@
 # Country scope. The marker survives independence; subject status does not.
 chi_qing_administration_tag = {
- OR = {
-  c:ZHI ?= this
-  c:AHU ?= this
-  c:HNA ?= this
-  c:YUE ?= this
-  c:FRS ?= this
-  c:XIB ?= this
-  c:YUN ?= this
-  c:SIH ?= this
-  c:SHN ?= this
-  c:SHA ?= this
-  c:MGL ?= this
-  c:MCH ?= this
-  c:XIN ?= this
+ custom_tooltip = {
+  text = chi_adm_appointed_province_tt
+  OR = {
+   c:ZHI ?= this
+   c:AHU ?= this
+   c:HNA ?= this
+   c:YUE ?= this
+   c:FRS ?= this
+   c:XIB ?= this
+   c:YUN ?= this
+   c:SIH ?= this
+   c:SHN ?= this
+   c:SHA ?= this
+   c:MGL ?= this
+   c:MCH ?= this
+   c:XIN ?= this
+  }
  }
 }
 
 chi_qing_administrative_subject = {
- OR = {
-  is_subject_type = subject_type_qing_viceroyalty_administration
-  is_subject_type = subject_type_qing_civil_administration
-  is_subject_type = subject_type_qing_frontier_administration
+ custom_tooltip = {
+  text = chi_adm_administrative_subject_tt
+  OR = {
+   is_subject_type = subject_type_qing_viceroyalty_administration
+   is_subject_type = subject_type_qing_civil_administration
+   is_subject_type = subject_type_qing_frontier_administration
+  }
  }
 }
 # Checks Qing's direct administrative subjects from any country scope.
@@ -46,8 +52,11 @@ chi_qing_civil_law_eligible = {
 }
 
 chi_qing_reform_subject = {
- chi_qing_administrative_subject = yes
- chi_qing_civil_law_eligible = yes
+ custom_tooltip = {
+  text = chi_adm_reform_subject_tt
+  chi_qing_administrative_subject = yes
+  chi_qing_civil_law_eligible = yes
+ }
 }
 # State scope, inside a global state iterator. PREV is the country whose story
 # is running; only the imperial court expands its state search into subjects.
@@ -63,5 +72,22 @@ tyr_qing_standard_play_allowed = {
  NAND = {
   c:CHI ?= this
   scope:target_country ?= { is_subject_of = root }
+ }
+}
+
+# Country scope. Target must be a direct Qing subject under a custom administration pact.
+chi_qing_protected_administrative_subject = {
+ chi_qing_administrative_subject = yes
+ is_direct_subject_of = c:CHI
+}
+
+# Root is the war goal beneficiary. The creator may add a demand for another country.
+chi_qing_territorial_war_goal_allowed = {
+ NOT = {
+  OR = {
+   c:CHI ?= this
+   scope:creator_country ?= { c:CHI ?= this }
+  }
+  scope:target_country ?= { chi_qing_protected_administrative_subject = yes }
  }
 }

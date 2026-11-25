@@ -1,0 +1,63 @@
+# Province scope. The same eligibility is used on submission and at the court.
+chi_adm_imperial_law_request_province = {
+ chi_adm_imperial_law_civil = yes
+ OR = {
+  is_subject_type = subject_type_qing_civil_administration
+  is_subject_type = subject_type_qing_viceroyalty_administration
+ }
+ NOT = { is_diplomatic_play_enemy_of = c:CHI }
+ NOT = { has_war_with = c:CHI }
+}
+
+chi_adm_imperial_law_request_can_submit = {
+ chi_adm_imperial_law_request_province = yes
+ NOR = {
+  has_variable = chi_adm_imperial_law_request_pending_id
+  exists = imposed_law
+  has_journal_entry = je_law_imposition
+ }
+}
+
+chi_adm_imperial_law_request_law = {
+ chi_adm_imperial_law_request_can_submit = yes
+ c:CHI = { has_law = law_type:$LAW$ }
+ NOR = {
+  has_law = law_type:$LAW$
+  has_variable = chi_adm_imperial_law_repeat_$ID$
+  AND = {
+   has_variable = chi_adm_imperial_law_active
+   var:chi_adm_imperial_law_law_id ?= $ID$
+  }
+  var:chi_adm_imperial_law_backlog_id ?= $ID$
+ }
+}
+
+# Court scope. Reopened or queued event windows cannot answer a later petition.
+chi_adm_imperial_law_request_current = {
+ c:CHI ?= this
+ exists = scope:chi_adm_imperial_law_requested_by
+ exists = scope:chi_adm_imperial_law_request_serial
+ exists = scope:chi_adm_imperial_law_request_law
+ scope:chi_adm_imperial_law_requested_by = {
+  chi_adm_imperial_law_request_province = yes
+  has_variable = chi_adm_imperial_law_request_pending_id
+  var:chi_adm_imperial_law_request_revision ?= scope:chi_adm_imperial_law_request_serial
+ }
+}
+
+chi_adm_imperial_law_request_can_approve = {
+ chi_adm_imperial_law_request_current = yes
+ any_active_law = { this.type = scope:chi_adm_imperial_law_request_law.type }
+ scope:chi_adm_imperial_law_requested_by = {
+  NOR = {
+   exists = imposed_law
+   has_journal_entry = je_law_imposition
+   any_active_law = { this.type = scope:chi_adm_imperial_law_request_law.type }
+   AND = {
+    has_variable = chi_adm_imperial_law_active
+    var:chi_adm_imperial_law_law_id ?= var:chi_adm_imperial_law_request_pending_id
+   }
+   var:chi_adm_imperial_law_backlog_id ?= var:chi_adm_imperial_law_request_pending_id
+  }
+ }
+}

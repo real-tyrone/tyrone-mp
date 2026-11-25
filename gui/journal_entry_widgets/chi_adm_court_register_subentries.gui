@@ -57,3 +57,33 @@ flowcontainer = {
   }
  }
 }
+
+flowcontainer = {
+ name = "chi_adm_provincial_reform_subentries"
+ ignoreinvisible = yes
+ flowcontainer = {
+  direction = vertical
+  parentanchor = hcenter
+  spacing = 4
+  datamodel = "[AccessPlayer.GetGroupsForActiveJournalEntries]"
+  item = {
+   flowcontainer = {
+    visible = "[ObjectsEqual(JournalEntryGroup.Self, GetJournalEntryGroup('je_group_chi_adm_court_register_province').Self)]"
+    direction = vertical
+    spacing = 4
+    flowcontainer = {
+     direction = vertical
+     spacing = 4
+     ignoreinvisible = yes
+     datamodel = "[JournalEntryGroup.GetActiveJournalEntryTypes(GetPlayer.Self)]"
+     item = {
+      journal_entry = {
+       visible = "[Or6(EqualTo_string(JournalEntryType.GetName, Localize('je_chi_adm_reform_army')), EqualTo_string(JournalEntryType.GetName, Localize('je_chi_adm_reform_arms')), EqualTo_string(JournalEntryType.GetName, Localize('je_chi_adm_reform_admin')), EqualTo_string(JournalEntryType.GetName, Localize('je_chi_adm_reform_opium')), EqualTo_string(JournalEntryType.GetName, Localize('je_chi_adm_reform_recovery')), EqualTo_string(JournalEntryType.GetName, Localize('chi_adm_provincial_scholars')))]"
+       datacontext = "[AccessPlayer.GetJournalEntry(JournalEntryType.Self)]"
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -6347,6 +6347,8 @@ chi_adm_imperial_law_stop_support = {
  remove_variable = chi_adm_imperial_law_support_left
  remove_modifier = chi_adm_imperial_law_implementation_lock
  remove_variable = chi_adm_imperial_law_implementation_wait
+ remove_variable = chi_adm_imperial_law_implementation_paused
+ remove_variable = chi_adm_imperial_law_resumed_clock
 }
 chi_adm_imperial_law_clear = {
  chi_adm_imperial_law_stop_support = yes
@@ -6614,12 +6616,14 @@ chi_adm_imperial_law_petition = {
 chi_adm_imperial_law_refuse = {
  if = {
   limit = {
-   chi_adm_imperial_law_can_answer = yes
-   NOT = {
-    has_variable = chi_adm_imperial_law_refusal_used
+   OR = {
+    chi_adm_imperial_law_can_manage_implementation = yes
+    AND = {
+     chi_adm_imperial_law_can_answer = yes
+     NOT = { has_variable = chi_adm_imperial_law_refusal_used }
+    }
    }
   }
-  set_variable = chi_adm_imperial_law_refusal_used
   remove_variable = chi_adm_imperial_law_court_answered
   set_variable = {
    name = chi_adm_imperial_law_status
@@ -6630,19 +6634,51 @@ chi_adm_imperial_law_refuse = {
    value = chi_adm_imperial_law_response_months
   }
   chi_adm_imperial_law_stop_support = yes
-  chi_adm_adjust_loyalty = {
-   AMOUNT = chi_adm_imperial_law_refusal_loss
-  }
-  chi_adm_adjust_autonomy = {
-   AMOUNT = chi_adm_imperial_law_refusal_autonomy
-  }
-  change_relations = {
-   country = c:CHI
-   value = -10
+  if = {
+   limit = { NOT = { has_variable = chi_adm_imperial_law_refusal_used } }
+   set_variable = chi_adm_imperial_law_refusal_used
+   chi_adm_adjust_loyalty = {
+    AMOUNT = chi_adm_imperial_law_refusal_loss
+   }
+   chi_adm_adjust_autonomy = {
+    AMOUNT = chi_adm_imperial_law_refusal_autonomy
+   }
+   change_relations = {
+    country = c:CHI
+    value = -10
+   }
   }
   chi_adm_imperial_law_report = yes
  }
 }
+# Pausing keeps the review counter. After resumption the monthly clock is authoritative,
+# so a completion event queued before the pause cannot enact the law early.
+chi_adm_imperial_law_pause_implementation = {
+ if = {
+  limit = {
+   chi_adm_imperial_law_can_manage_implementation = yes
+   NOT = { has_variable = chi_adm_imperial_law_implementation_paused }
+  }
+  set_variable = chi_adm_imperial_law_implementation_paused
+  set_variable = chi_adm_imperial_law_resumed_clock
+  remove_variable = chi_adm_imperial_law_implementation_wait
+  remove_modifier = chi_adm_imperial_law_implementation_lock
+ }
+}
+
+chi_adm_imperial_law_resume_implementation = {
+ if = {
+  limit = {
+   chi_adm_imperial_law_can_manage_implementation = yes
+   has_variable = chi_adm_imperial_law_implementation_paused
+   enacting_any_law = no
+   chi_adm_imperial_law_available = yes
+  }
+  remove_variable = chi_adm_imperial_law_implementation_paused
+  add_modifier = { name = chi_adm_imperial_law_implementation_lock }
+ }
+}
+
 chi_adm_imperial_law_monthly = {
  if = {
   limit = {
@@ -6682,6 +6718,7 @@ chi_adm_imperial_law_monthly = {
   if = {
    limit = {
     var:chi_adm_imperial_law_status = 3
+    NOT = { has_variable = chi_adm_imperial_law_implementation_paused }
     NOT = {
      has_modifier = chi_adm_imperial_law_implementation_lock
     }
@@ -6706,6 +6743,7 @@ chi_adm_imperial_law_monthly = {
   if = {
    limit = {
     var:chi_adm_imperial_law_status = 3
+    NOT = { has_variable = chi_adm_imperial_law_implementation_paused }
     has_variable = chi_adm_imperial_law_months_left
    }
    if = {
@@ -24898,8 +24936,13 @@ chi_adm_imperial_law_finish_implementation = {
   limit = {
    chi_adm_imperial_law_valid = yes
    var:chi_adm_imperial_law_status = 3
-   NOT = {
+   NOR = {
     has_variable = chi_adm_imperial_law_implementation_wait
+    has_variable = chi_adm_imperial_law_implementation_paused
+   }
+   trigger_if = {
+    limit = { has_variable = chi_adm_imperial_law_resumed_clock }
+    var:chi_adm_imperial_law_months_left <= 0
    }
   }
   remove_modifier = chi_adm_imperial_law_implementation_lock

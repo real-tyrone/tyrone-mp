@@ -15,9 +15,20 @@ has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_ad
 }
 
 chi_adm_negotiated_integration_can_propose = {
-chi_adm_negotiated_integration_valid = yes NOT = { has_variable = chi_adm_negotiated_integration_stage } NOT = { has_variable = chi_adm_negotiated_integration_retry }
-NOT = { has_variable = chi_adm_negotiated_integration_repayment_left } var:chi_adm_autonomy <= 25 is_at_war = no is_diplomatic_play_committed_participant = no
-c:CHI = { has_technology_researched = central_archives has_variable = chi_qing_centralisation_unlocked authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no }
+chi_adm_negotiated_integration_valid = yes custom_tooltip = { text = chi_adm_integration_no_open_case_tt NOT = { has_variable = chi_adm_negotiated_integration_stage } NOT = { has_variable = chi_adm_negotiated_integration_retry }
+NOT = { has_variable = chi_adm_negotiated_integration_repayment_left } NOT = { has_variable = chi_adm_henan_stage } } custom_tooltip = { text = chi_adm_integration_autonomy_tt var:chi_adm_autonomy <= 25 } is_at_war = no is_diplomatic_play_committed_participant = no
+trigger_if = {
+ limit = { chi_adm_integration_bureaucrats_province = yes }
+ custom_tooltip = {
+  text = chi_adm_integration_either_route_tt
+  chi_adm_integration_either_route = yes
+ }
+}
+trigger_else = { c:CHI = { has_technology_researched = central_archives } }
+c:CHI = {
+ custom_tooltip = { text = chi_adm_integration_mandate_tt chi_adm_integration_mandate_ready = yes }
+}
+c:CHI = { authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no }
 }
 
 chi_adm_negotiated_integration_can_begin = {
@@ -42,10 +53,60 @@ var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_req
 OR = { AND = { is_ai = yes NOT = { has_variable = chi_adm_negotiated_integration_player_agreed } } has_variable = chi_adm_negotiated_integration_final_consent }
 }
 
+
+# Country scope: the province being considered for integration.
+chi_adm_integration_bureaucrats_province = {
+ OR = { c:ZHI ?= this c:SHA ?= this c:SHN ?= this }
+}
+
+# The caller first checks that the province qualifies for the law route.
+chi_adm_integration_either_route = {
+ c:CHI = {
+  OR = {
+   has_technology_researched = central_archives
+   has_law_or_variant = law_type:law_appointed_bureaucrats
+  }
+ }
+}
+
+# Country scope: Qing. Consolidated authority represents a completed Mandate bar.
+chi_adm_integration_mandate_ready = {
+ OR = {
+  AND = {
+   has_journal_entry = je_mandate_of_heaven
+   je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 }
+  }
+  has_modifier = chi_mandate_consolidated_authority
+ }
+}
+
+# Country scope: the target of the court's escalation event.
 chi_adm_negotiated_integration_coercible = {
-NOT = { has_modifier = chi_adm_provincial_development_guarantee }
-chi_adm_negotiated_integration_valid = yes is_at_war = no is_diplomatic_play_committed_participant = no
-OR = { AND = { var:chi_adm_negotiated_integration_stage = 2 OR = { var:chi_adm_negotiated_integration_response = 2 var:chi_adm_negotiated_integration_response = 4 } }
-AND = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_wait >= 6 } var:chi_adm_negotiated_integration_stage = 6 AND = { var:chi_adm_negotiated_integration_stage = 9 OR = { var:chi_adm_negotiated_integration_fault = 2 has_variable = chi_adm_negotiated_integration_repayment_refused } } }
-c:CHI = { is_at_war = no is_diplomatic_play_committed_participant = no }
+ chi_adm_negotiated_integration_valid = yes
+ is_at_war = no
+ is_diplomatic_play_committed_participant = no
+ NOR = {
+  has_modifier = chi_adm_provincial_development_guarantee
+  has_variable = chi_adm_henan_stage
+ }
+ OR = {
+  AND = {
+   var:chi_adm_negotiated_integration_stage ?= 2
+   OR = { var:chi_adm_negotiated_integration_response ?= 2 var:chi_adm_negotiated_integration_response ?= 4 }
+  }
+  AND = {
+   var:chi_adm_negotiated_integration_stage ?= 1
+   var:chi_adm_negotiated_integration_wait >= 6
+  }
+  var:chi_adm_negotiated_integration_stage ?= 6
+  AND = {
+   var:chi_adm_negotiated_integration_stage ?= 9
+   OR = { var:chi_adm_negotiated_integration_fault ?= 2 has_variable = chi_adm_negotiated_integration_repayment_refused }
+  }
+ }
+ c:CHI ?= {
+  is_at_war = no
+  is_diplomatic_play_committed_participant = no
+  NOT = { var:chi_adm_qing_security_phase ?= 5 }
+ }
 }

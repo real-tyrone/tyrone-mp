@@ -42,10 +42,15 @@ chi_adm_reform_army_4_start = {
 chi_adm_reform_army_tick = {
  if = {
   limit = { has_variable = chi_adm_reform_army_months }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_reform_army_review_total } }
+   set_variable = { name = chi_adm_reform_army_review_total value = var:chi_adm_reform_army_months }
+  }
   change_variable = { name = chi_adm_reform_army_months subtract = 1 }
   if = {
    limit = { var:chi_adm_reform_army_months <= 0 }
    remove_variable = chi_adm_reform_army_months
+   remove_variable = chi_adm_reform_army_review_total
    change_variable = { name = chi_adm_reform_army_done add = 1 }
    chi_adm_reform_army_apply = yes
    chi_adm_reform_staff = yes
@@ -92,10 +97,15 @@ chi_adm_reform_arms_4_start = {
 chi_adm_reform_arms_tick = {
  if = {
   limit = { has_variable = chi_adm_reform_arms_months }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_reform_arms_review_total } }
+   set_variable = { name = chi_adm_reform_arms_review_total value = var:chi_adm_reform_arms_months }
+  }
   change_variable = { name = chi_adm_reform_arms_months subtract = 1 }
   if = {
    limit = { var:chi_adm_reform_arms_months <= 0 }
    remove_variable = chi_adm_reform_arms_months
+   remove_variable = chi_adm_reform_arms_review_total
    change_variable = { name = chi_adm_reform_arms_done add = 1 }
    chi_adm_reform_arms_apply = yes
    chi_adm_reform_staff = yes
@@ -142,10 +152,15 @@ chi_adm_reform_admin_4_start = {
 chi_adm_reform_admin_tick = {
  if = {
   limit = { has_variable = chi_adm_reform_admin_months }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_reform_admin_review_total } }
+   set_variable = { name = chi_adm_reform_admin_review_total value = var:chi_adm_reform_admin_months }
+  }
   change_variable = { name = chi_adm_reform_admin_months subtract = 1 }
   if = {
    limit = { var:chi_adm_reform_admin_months <= 0 }
    remove_variable = chi_adm_reform_admin_months
+   remove_variable = chi_adm_reform_admin_review_total
    change_variable = { name = chi_adm_reform_admin_done add = 1 }
    chi_adm_reform_admin_apply = yes
    chi_adm_adjust_corruption = { AMOUNT = -5 }
@@ -203,10 +218,15 @@ chi_adm_reform_opium_4_start = {
 chi_adm_reform_opium_tick = {
  if = {
   limit = { has_variable = chi_adm_reform_opium_months }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_reform_opium_review_total } }
+   set_variable = { name = chi_adm_reform_opium_review_total value = var:chi_adm_reform_opium_months }
+  }
   change_variable = { name = chi_adm_reform_opium_months subtract = 1 }
   if = {
    limit = { var:chi_adm_reform_opium_months <= 0 }
    remove_variable = chi_adm_reform_opium_months
+   remove_variable = chi_adm_reform_opium_review_total
    change_variable = { name = chi_adm_reform_opium_done add = 1 }
    chi_adm_reform_opium_apply = yes
    chi_adm_reform_staff = yes
@@ -244,10 +264,15 @@ chi_adm_reform_recovery_3_start = {
 chi_adm_reform_recovery_tick = {
  if = {
   limit = { has_variable = chi_adm_reform_recovery_months }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_reform_recovery_review_total } }
+   set_variable = { name = chi_adm_reform_recovery_review_total value = var:chi_adm_reform_recovery_months }
+  }
   change_variable = { name = chi_adm_reform_recovery_months subtract = 1 }
   if = {
    limit = { var:chi_adm_reform_recovery_months <= 0 }
    remove_variable = chi_adm_reform_recovery_months
+   remove_variable = chi_adm_reform_recovery_review_total
    change_variable = { name = chi_adm_reform_recovery_done add = 1 }
    if = { limit = { var:chi_adm_reform_recovery_done >= 3 } remove_modifier = chi_adm_reform_defeat }
    chi_adm_reform_staff = yes
@@ -288,6 +313,7 @@ chi_adm_reform_reconcile_defeat = {
   remove_modifier = chi_adm_reform_defeat
   remove_variable = chi_adm_reform_defeat_legacy
   remove_variable = chi_adm_reform_recovery_months
+  remove_variable = chi_adm_reform_recovery_review_total
   set_variable = { name = chi_adm_reform_recovery_done value = 0 }
   set_variable = { name = chi_adm_reform_defeat_seen value = global_var:chi_adm_reform_defeat_serial }
   chi_adm_reform_apply_defeat = yes
@@ -308,6 +334,7 @@ chi_adm_reform_expire_defeat = {
   if = {
    limit = { has_variable = chi_adm_reform_recovery_months }
    remove_variable = chi_adm_reform_recovery_months
+   remove_variable = chi_adm_reform_recovery_review_total
    chi_adm_reform_staff = yes
    chi_adm_reform_archive = yes
   }
@@ -344,6 +371,7 @@ chi_adm_reform_reconcile_opium = {
    set_variable = chi_adm_reform_opium_affected
    set_variable = { name = chi_adm_reform_opium_done value = 0 }
    remove_variable = chi_adm_reform_opium_months
+   remove_variable = chi_adm_reform_opium_review_total
    remove_variable = chi_adm_reform_opium_1_used
    remove_variable = chi_adm_reform_opium_2_used
    remove_variable = chi_adm_reform_opium_3_used
@@ -454,15 +482,6 @@ chi_adm_reform_month = {
   chi_adm_reform_reconcile_defeat = yes
   chi_adm_reform_expire_defeat = yes
   if = { limit = { chi_adm_reform_slots > 0 NOT = { has_modifier = chi_adm_reform_work } } chi_adm_reform_staff = yes }
-  if = {
-   limit = { chi_adm_reform_slots > 0 }
-   chi_adm_reform_army_tick = yes
-   chi_adm_reform_arms_tick = yes
-   chi_adm_reform_admin_tick = yes
-   chi_adm_reform_opium_tick = yes
-   chi_adm_reform_recovery_tick = yes
-   chi_adm_reform_archive = yes
-  }
   if = {
    limit = { is_ai = yes chi_adm_reform_slots = 0 bureaucracy >= 30 }
    chi_adm_reform_ai = yes
@@ -898,14 +917,39 @@ chi_adm_reform_write_archive = {
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_recovery_done } remove_global_variable = chi_adm_reform_archive_$TAG$_recovery_done }
  if = { limit = { has_variable = chi_adm_reform_army_months } set_global_variable = { name = chi_adm_reform_archive_$TAG$_army_months value = var:chi_adm_reform_army_months } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_army_months } remove_global_variable = chi_adm_reform_archive_$TAG$_army_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_army_months has_variable = chi_adm_reform_army_review_total }
+  set_global_variable = { name = chi_adm_reform_archive_$TAG$_army_review_total value = var:chi_adm_reform_army_review_total }
+ }
+ else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_army_review_total } remove_global_variable = chi_adm_reform_archive_$TAG$_army_review_total }
  if = { limit = { has_variable = chi_adm_reform_arms_months } set_global_variable = { name = chi_adm_reform_archive_$TAG$_arms_months value = var:chi_adm_reform_arms_months } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_arms_months } remove_global_variable = chi_adm_reform_archive_$TAG$_arms_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_arms_months has_variable = chi_adm_reform_arms_review_total }
+  set_global_variable = { name = chi_adm_reform_archive_$TAG$_arms_review_total value = var:chi_adm_reform_arms_review_total }
+ }
+ else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_arms_review_total } remove_global_variable = chi_adm_reform_archive_$TAG$_arms_review_total }
  if = { limit = { has_variable = chi_adm_reform_admin_months } set_global_variable = { name = chi_adm_reform_archive_$TAG$_admin_months value = var:chi_adm_reform_admin_months } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_admin_months } remove_global_variable = chi_adm_reform_archive_$TAG$_admin_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_admin_months has_variable = chi_adm_reform_admin_review_total }
+  set_global_variable = { name = chi_adm_reform_archive_$TAG$_admin_review_total value = var:chi_adm_reform_admin_review_total }
+ }
+ else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_admin_review_total } remove_global_variable = chi_adm_reform_archive_$TAG$_admin_review_total }
  if = { limit = { has_variable = chi_adm_reform_opium_months } set_global_variable = { name = chi_adm_reform_archive_$TAG$_opium_months value = var:chi_adm_reform_opium_months } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_months } remove_global_variable = chi_adm_reform_archive_$TAG$_opium_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_opium_months has_variable = chi_adm_reform_opium_review_total }
+  set_global_variable = { name = chi_adm_reform_archive_$TAG$_opium_review_total value = var:chi_adm_reform_opium_review_total }
+ }
+ else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_review_total } remove_global_variable = chi_adm_reform_archive_$TAG$_opium_review_total }
  if = { limit = { has_variable = chi_adm_reform_recovery_months } set_global_variable = { name = chi_adm_reform_archive_$TAG$_recovery_months value = var:chi_adm_reform_recovery_months } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_recovery_months } remove_global_variable = chi_adm_reform_archive_$TAG$_recovery_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_recovery_months has_variable = chi_adm_reform_recovery_review_total }
+  set_global_variable = { name = chi_adm_reform_archive_$TAG$_recovery_review_total value = var:chi_adm_reform_recovery_review_total }
+ }
+ else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_recovery_review_total } remove_global_variable = chi_adm_reform_archive_$TAG$_recovery_review_total }
  if = { limit = { has_variable = chi_adm_reform_opium_affected } set_global_variable = { name = chi_adm_reform_archive_$TAG$_opium_affected value = var:chi_adm_reform_opium_affected } }
  else_if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_affected } remove_global_variable = chi_adm_reform_archive_$TAG$_opium_affected }
  if = { limit = { has_variable = chi_adm_reform_opium_seen } set_global_variable = { name = chi_adm_reform_archive_$TAG$_opium_seen value = var:chi_adm_reform_opium_seen } }
@@ -946,14 +990,39 @@ chi_adm_reform_read_archive = {
  else = { remove_variable = chi_adm_reform_recovery_done }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_army_months } set_variable = { name = chi_adm_reform_army_months value = global_var:chi_adm_reform_archive_$TAG$_army_months } }
  else = { remove_variable = chi_adm_reform_army_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_army_months has_global_variable = chi_adm_reform_archive_$TAG$_army_review_total }
+  set_variable = { name = chi_adm_reform_army_review_total value = global_var:chi_adm_reform_archive_$TAG$_army_review_total }
+ }
+ else = { remove_variable = chi_adm_reform_army_review_total }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_arms_months } set_variable = { name = chi_adm_reform_arms_months value = global_var:chi_adm_reform_archive_$TAG$_arms_months } }
  else = { remove_variable = chi_adm_reform_arms_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_arms_months has_global_variable = chi_adm_reform_archive_$TAG$_arms_review_total }
+  set_variable = { name = chi_adm_reform_arms_review_total value = global_var:chi_adm_reform_archive_$TAG$_arms_review_total }
+ }
+ else = { remove_variable = chi_adm_reform_arms_review_total }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_admin_months } set_variable = { name = chi_adm_reform_admin_months value = global_var:chi_adm_reform_archive_$TAG$_admin_months } }
  else = { remove_variable = chi_adm_reform_admin_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_admin_months has_global_variable = chi_adm_reform_archive_$TAG$_admin_review_total }
+  set_variable = { name = chi_adm_reform_admin_review_total value = global_var:chi_adm_reform_archive_$TAG$_admin_review_total }
+ }
+ else = { remove_variable = chi_adm_reform_admin_review_total }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_months } set_variable = { name = chi_adm_reform_opium_months value = global_var:chi_adm_reform_archive_$TAG$_opium_months } }
  else = { remove_variable = chi_adm_reform_opium_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_opium_months has_global_variable = chi_adm_reform_archive_$TAG$_opium_review_total }
+  set_variable = { name = chi_adm_reform_opium_review_total value = global_var:chi_adm_reform_archive_$TAG$_opium_review_total }
+ }
+ else = { remove_variable = chi_adm_reform_opium_review_total }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_recovery_months } set_variable = { name = chi_adm_reform_recovery_months value = global_var:chi_adm_reform_archive_$TAG$_recovery_months } }
  else = { remove_variable = chi_adm_reform_recovery_months }
+ if = {
+  limit = { has_variable = chi_adm_reform_recovery_months has_global_variable = chi_adm_reform_archive_$TAG$_recovery_review_total }
+  set_variable = { name = chi_adm_reform_recovery_review_total value = global_var:chi_adm_reform_archive_$TAG$_recovery_review_total }
+ }
+ else = { remove_variable = chi_adm_reform_recovery_review_total }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_affected } set_variable = { name = chi_adm_reform_opium_affected value = global_var:chi_adm_reform_archive_$TAG$_opium_affected } }
  else = { remove_variable = chi_adm_reform_opium_affected }
  if = { limit = { has_global_variable = chi_adm_reform_archive_$TAG$_opium_seen } set_variable = { name = chi_adm_reform_opium_seen value = global_var:chi_adm_reform_archive_$TAG$_opium_seen } }
@@ -1009,5 +1078,6 @@ chi_adm_reform_fund = {
   change_variable = { name = chi_adm_reform_$TRACK$_months subtract = 2 }
   remove_variable = chi_adm_reform_court_relief
  }
+ set_variable = { name = chi_adm_reform_$TRACK$_review_total value = var:chi_adm_reform_$TRACK$_months }
  chi_adm_reform_staff = yes
 }

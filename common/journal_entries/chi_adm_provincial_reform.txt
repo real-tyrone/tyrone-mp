@@ -5,11 +5,32 @@ je_chi_adm_reform_portfolio = {
  can_revolution_inherit = yes
  highlight = yes
  can_deactivate = yes
- is_shown_when_inactive = { chi_adm_reform_any_open = yes }
- possible = { chi_adm_reform_any_open = yes }
+ is_shown_when_inactive = { OR = { chi_adm_reform_any_open = yes chi_adm_provincial_scholars_eligible = yes } }
+ possible = { OR = { chi_adm_reform_any_open = yes chi_adm_provincial_scholars_eligible = yes } }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_any_open_tt OR = { chi_adm_reform_any_open = yes chi_adm_provincial_scholars_eligible = yes } } }
+ scripted_button = chi_adm_provincial_scholars_button
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_court_register_subentries.gui"
+  name = "chi_adm_provincial_reform_subentries"
+  container = "custom_widget_container_3"
+ }
 }
 
 je_chi_adm_reform_army = {
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { chi_adm_reform_eligible = yes has_variable = chi_adm_reform_army_months }
+    chi_adm_reform_army_tick = yes
+    chi_adm_reform_archive = yes
+   }
+  }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_provincial_reviews.gui"
+  name = "chi_adm_reform_army_reviews"
+  container = "custom_widget_container_3"
+ }
  group = je_group_chi_adm_court_register_province
  icon = "gfx/interface/icons/event_icons/event_military.dds"
  transferable = no
@@ -17,12 +38,16 @@ je_chi_adm_reform_army = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_reform_eligible = yes chi_adm_reform_army_open = yes }
  possible = { chi_adm_reform_eligible = yes }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_army_activation_tt chi_adm_reform_eligible = yes chi_adm_reform_army_open = yes } }
  current_value = { value = var:chi_adm_reform_army_done }
  goal_add_value = { value = 4 subtract = var:chi_adm_reform_army_done }
  progressbar = yes
  status_desc = {
   first_valid = {
-   triggered_desc = { desc = je_chi_adm_reform_army_working trigger = { has_variable = chi_adm_reform_army_months } }
+   triggered_desc = { desc = je_chi_adm_reform_army_working_0 trigger = { has_variable = chi_adm_reform_army_months var:chi_adm_reform_army_done = 0 } }
+   triggered_desc = { desc = je_chi_adm_reform_army_working_1 trigger = { has_variable = chi_adm_reform_army_months var:chi_adm_reform_army_done = 1 } }
+   triggered_desc = { desc = je_chi_adm_reform_army_working_2 trigger = { has_variable = chi_adm_reform_army_months var:chi_adm_reform_army_done = 2 } }
+   triggered_desc = { desc = je_chi_adm_reform_army_working_3 trigger = { has_variable = chi_adm_reform_army_months var:chi_adm_reform_army_done = 3 } }
    triggered_desc = { desc = je_chi_adm_reform_army_stage_0 trigger = { var:chi_adm_reform_army_done = 0 } }
    triggered_desc = { desc = je_chi_adm_reform_army_stage_1 trigger = { var:chi_adm_reform_army_done = 1 } }
    triggered_desc = { desc = je_chi_adm_reform_army_stage_2 trigger = { var:chi_adm_reform_army_done = 2 } }
@@ -37,12 +62,26 @@ je_chi_adm_reform_army = {
   header = je_standard_completion_header
   effect_header = je_standard_on_completion_header
   conclusion_desc = chi_adm_reform_finished
-  trigger = { var:chi_adm_reform_army_done >= 4 }
-  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_finished } }
+  trigger = { custom_tooltip = { text = chi_adm_reform_army_completion_tt var:chi_adm_reform_army_done >= 4 } }
+  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_army_outcome_tt } }
  }
 }
 
 je_chi_adm_reform_arms = {
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { chi_adm_reform_eligible = yes has_variable = chi_adm_reform_arms_months }
+    chi_adm_reform_arms_tick = yes
+    chi_adm_reform_archive = yes
+   }
+  }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_provincial_reviews.gui"
+  name = "chi_adm_reform_arms_reviews"
+  container = "custom_widget_container_3"
+ }
  group = je_group_chi_adm_court_register_province
  icon = "gfx/interface/icons/event_icons/event_industry.dds"
  transferable = no
@@ -50,12 +89,16 @@ je_chi_adm_reform_arms = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_reform_eligible = yes chi_adm_reform_arms_open = yes }
  possible = { chi_adm_reform_eligible = yes }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_arms_activation_tt chi_adm_reform_eligible = yes chi_adm_reform_arms_open = yes } }
  current_value = { value = var:chi_adm_reform_arms_done }
  goal_add_value = { value = 4 subtract = var:chi_adm_reform_arms_done }
  progressbar = yes
  status_desc = {
   first_valid = {
-   triggered_desc = { desc = je_chi_adm_reform_arms_working trigger = { has_variable = chi_adm_reform_arms_months } }
+   triggered_desc = { desc = je_chi_adm_reform_arms_working_0 trigger = { has_variable = chi_adm_reform_arms_months var:chi_adm_reform_arms_done = 0 } }
+   triggered_desc = { desc = je_chi_adm_reform_arms_working_1 trigger = { has_variable = chi_adm_reform_arms_months var:chi_adm_reform_arms_done = 1 } }
+   triggered_desc = { desc = je_chi_adm_reform_arms_working_2 trigger = { has_variable = chi_adm_reform_arms_months var:chi_adm_reform_arms_done = 2 } }
+   triggered_desc = { desc = je_chi_adm_reform_arms_working_3 trigger = { has_variable = chi_adm_reform_arms_months var:chi_adm_reform_arms_done = 3 } }
    triggered_desc = { desc = je_chi_adm_reform_arms_stage_0 trigger = { var:chi_adm_reform_arms_done = 0 } }
    triggered_desc = { desc = je_chi_adm_reform_arms_stage_1 trigger = { var:chi_adm_reform_arms_done = 1 } }
    triggered_desc = { desc = je_chi_adm_reform_arms_stage_2 trigger = { var:chi_adm_reform_arms_done = 2 } }
@@ -70,12 +113,26 @@ je_chi_adm_reform_arms = {
   header = je_standard_completion_header
   effect_header = je_standard_on_completion_header
   conclusion_desc = chi_adm_reform_finished
-  trigger = { var:chi_adm_reform_arms_done >= 4 }
-  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_finished } }
+  trigger = { custom_tooltip = { text = chi_adm_reform_arms_completion_tt var:chi_adm_reform_arms_done >= 4 } }
+  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_arms_outcome_tt } }
  }
 }
 
 je_chi_adm_reform_admin = {
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { chi_adm_reform_eligible = yes has_variable = chi_adm_reform_admin_months }
+    chi_adm_reform_admin_tick = yes
+    chi_adm_reform_archive = yes
+   }
+  }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_provincial_reviews.gui"
+  name = "chi_adm_reform_admin_reviews"
+  container = "custom_widget_container_3"
+ }
  group = je_group_chi_adm_court_register_province
  icon = "gfx/interface/icons/event_icons/event_scales.dds"
  transferable = no
@@ -83,12 +140,16 @@ je_chi_adm_reform_admin = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_reform_eligible = yes chi_adm_reform_admin_open = yes }
  possible = { chi_adm_reform_eligible = yes }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_admin_activation_tt chi_adm_reform_eligible = yes chi_adm_reform_admin_open = yes } }
  current_value = { value = var:chi_adm_reform_admin_done }
  goal_add_value = { value = 4 subtract = var:chi_adm_reform_admin_done }
  progressbar = yes
  status_desc = {
   first_valid = {
-   triggered_desc = { desc = je_chi_adm_reform_admin_working trigger = { has_variable = chi_adm_reform_admin_months } }
+   triggered_desc = { desc = je_chi_adm_reform_admin_working_0 trigger = { has_variable = chi_adm_reform_admin_months var:chi_adm_reform_admin_done = 0 } }
+   triggered_desc = { desc = je_chi_adm_reform_admin_working_1 trigger = { has_variable = chi_adm_reform_admin_months var:chi_adm_reform_admin_done = 1 } }
+   triggered_desc = { desc = je_chi_adm_reform_admin_working_2 trigger = { has_variable = chi_adm_reform_admin_months var:chi_adm_reform_admin_done = 2 } }
+   triggered_desc = { desc = je_chi_adm_reform_admin_working_3 trigger = { has_variable = chi_adm_reform_admin_months var:chi_adm_reform_admin_done = 3 } }
    triggered_desc = { desc = je_chi_adm_reform_admin_stage_0 trigger = { var:chi_adm_reform_admin_done = 0 } }
    triggered_desc = { desc = je_chi_adm_reform_admin_stage_1 trigger = { var:chi_adm_reform_admin_done = 1 } }
    triggered_desc = { desc = je_chi_adm_reform_admin_stage_2 trigger = { var:chi_adm_reform_admin_done = 2 } }
@@ -103,12 +164,26 @@ je_chi_adm_reform_admin = {
   header = je_standard_completion_header
   effect_header = je_standard_on_completion_header
   conclusion_desc = chi_adm_reform_finished
-  trigger = { var:chi_adm_reform_admin_done >= 4 }
-  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_finished } }
+  trigger = { custom_tooltip = { text = chi_adm_reform_admin_completion_tt var:chi_adm_reform_admin_done >= 4 } }
+  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_admin_outcome_tt } }
  }
 }
 
 je_chi_adm_reform_opium = {
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { chi_adm_reform_eligible = yes has_variable = chi_adm_reform_opium_months has_variable = chi_adm_reform_opium_affected }
+    chi_adm_reform_opium_tick = yes
+    chi_adm_reform_archive = yes
+   }
+  }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_provincial_reviews.gui"
+  name = "chi_adm_reform_opium_reviews"
+  container = "custom_widget_container_3"
+ }
  group = je_group_chi_adm_court_register_province
  icon = "gfx/interface/icons/event_icons/event_scales.dds"
  transferable = no
@@ -116,12 +191,15 @@ je_chi_adm_reform_opium = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_reform_eligible = yes chi_adm_reform_opium_open = yes }
  possible = { chi_adm_reform_eligible = yes }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_opium_activation_tt chi_adm_reform_eligible = yes chi_adm_reform_opium_open = yes } }
  current_value = { value = var:chi_adm_reform_opium_done }
  goal_add_value = { value = 3 subtract = var:chi_adm_reform_opium_done }
  progressbar = yes
  status_desc = {
   first_valid = {
-   triggered_desc = { desc = je_chi_adm_reform_opium_working trigger = { has_variable = chi_adm_reform_opium_months } }
+   triggered_desc = { desc = je_chi_adm_reform_opium_working_0 trigger = { has_variable = chi_adm_reform_opium_months var:chi_adm_reform_opium_done = 0 } }
+   triggered_desc = { desc = je_chi_adm_reform_opium_working_1 trigger = { has_variable = chi_adm_reform_opium_months var:chi_adm_reform_opium_done = 1 } }
+   triggered_desc = { desc = je_chi_adm_reform_opium_working_2 trigger = { has_variable = chi_adm_reform_opium_months var:chi_adm_reform_opium_done = 2 } }
    triggered_desc = { desc = je_chi_adm_reform_opium_stage_0 trigger = { var:chi_adm_reform_opium_done = 0 } }
    triggered_desc = { desc = je_chi_adm_reform_opium_stage_1 trigger = { var:chi_adm_reform_opium_done = 1 } }
    triggered_desc = { desc = je_chi_adm_reform_opium_stage_2 trigger = { var:chi_adm_reform_opium_done = 2 } }
@@ -135,12 +213,26 @@ je_chi_adm_reform_opium = {
   header = je_standard_completion_header
   effect_header = je_standard_on_completion_header
   conclusion_desc = chi_adm_reform_finished
-  trigger = { var:chi_adm_reform_opium_done >= 3 }
-  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_finished } }
+  trigger = { custom_tooltip = { text = chi_adm_reform_opium_completion_tt var:chi_adm_reform_opium_done >= 3 } }
+  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_opium_outcome_tt } }
  }
 }
 
 je_chi_adm_reform_recovery = {
+ on_monthly_pulse = {
+  effect = {
+   if = {
+    limit = { chi_adm_reform_eligible = yes has_variable = chi_adm_reform_recovery_months chi_adm_reform_defeat_active = yes }
+    chi_adm_reform_recovery_tick = yes
+    chi_adm_reform_archive = yes
+   }
+  }
+ }
+ widget = {
+  gui = "gui/journal_entry_widgets/chi_adm_provincial_reviews.gui"
+  name = "chi_adm_reform_recovery_reviews"
+  container = "custom_widget_container_3"
+ }
  group = je_group_chi_adm_court_register_province
  icon = "gfx/interface/icons/event_icons/event_scales.dds"
  transferable = no
@@ -148,12 +240,15 @@ je_chi_adm_reform_recovery = {
  can_deactivate = yes
  is_shown_when_inactive = { chi_adm_reform_eligible = yes chi_adm_reform_recovery_open = yes }
  possible = { chi_adm_reform_eligible = yes }
+ activation_description = { custom_tooltip = { text = chi_adm_reform_recovery_activation_tt chi_adm_reform_eligible = yes chi_adm_reform_recovery_open = yes } }
  current_value = { value = var:chi_adm_reform_recovery_done }
  goal_add_value = { value = 3 subtract = var:chi_adm_reform_recovery_done }
  progressbar = yes
  status_desc = {
   first_valid = {
-   triggered_desc = { desc = je_chi_adm_reform_recovery_working trigger = { has_variable = chi_adm_reform_recovery_months } }
+   triggered_desc = { desc = je_chi_adm_reform_recovery_working_0 trigger = { has_variable = chi_adm_reform_recovery_months var:chi_adm_reform_recovery_done = 0 } }
+   triggered_desc = { desc = je_chi_adm_reform_recovery_working_1 trigger = { has_variable = chi_adm_reform_recovery_months var:chi_adm_reform_recovery_done = 1 } }
+   triggered_desc = { desc = je_chi_adm_reform_recovery_working_2 trigger = { has_variable = chi_adm_reform_recovery_months var:chi_adm_reform_recovery_done = 2 } }
    triggered_desc = { desc = je_chi_adm_reform_recovery_stage_0 trigger = { var:chi_adm_reform_recovery_done = 0 } }
    triggered_desc = { desc = je_chi_adm_reform_recovery_stage_1 trigger = { var:chi_adm_reform_recovery_done = 1 } }
    triggered_desc = { desc = je_chi_adm_reform_recovery_stage_2 trigger = { var:chi_adm_reform_recovery_done = 2 } }
@@ -166,8 +261,8 @@ je_chi_adm_reform_recovery = {
   header = je_standard_completion_header
   effect_header = je_standard_on_completion_header
   conclusion_desc = chi_adm_reform_finished
-  trigger = { var:chi_adm_reform_recovery_done >= 3 }
-  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_finished } }
+  trigger = { custom_tooltip = { text = chi_adm_reform_recovery_completion_tt var:chi_adm_reform_recovery_done >= 3 } }
+  event_outcome_effect_desc = { effect = { custom_tooltip = chi_adm_reform_recovery_outcome_tt } }
  }
  outcome = {
   flags = { hidden invalid_outcome }

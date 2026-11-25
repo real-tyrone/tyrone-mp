@@ -29,9 +29,7 @@ if = { limit = { NOT = { has_journal_entry = chi_adm_negotiated_integration_prov
 }
 
 chi_adm_negotiated_integration_propose = {
-save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_provincial_development_development_eligible = yes chi_adm_negotiated_integration_valid = yes NOT = { has_variable = chi_adm_negotiated_integration_stage } NOT = { has_variable = chi_adm_negotiated_integration_retry }
-NOT = { has_variable = chi_adm_negotiated_integration_repayment_left } var:chi_adm_autonomy <= 25 is_at_war = no is_diplomatic_play_committed_participant = no
-c:CHI = { has_technology_researched = central_archives has_variable = chi_qing_centralisation_unlocked authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no } } chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_elapsed value = 0 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } set_variable = { name = chi_adm_negotiated_integration_subsidy value = 0 } set_variable = { name = chi_adm_negotiated_integration_protection value = 0 } set_variable = { name = chi_adm_negotiated_integration_honors value = 0 } chi_adm_negotiated_integration_ensure = yes save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } }
+save_scope_as = chi_adm_negotiated_integration_province if = { limit = { chi_adm_provincial_development_development_eligible = yes chi_adm_negotiated_integration_can_propose = yes } chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_stage value = 1 } set_variable = { name = chi_adm_negotiated_integration_elapsed value = 0 } set_variable = { name = chi_adm_negotiated_integration_wait value = 0 } set_variable = { name = chi_adm_negotiated_integration_subsidy value = 0 } set_variable = { name = chi_adm_negotiated_integration_protection value = 0 } set_variable = { name = chi_adm_negotiated_integration_honors value = 0 } chi_adm_negotiated_integration_ensure = yes save_scope_as = chi_adm_negotiated_integration_target save_scope_value_as = { name = chi_adm_negotiated_integration_revision value = var:chi_adm_negotiated_integration_revision } trigger_event = { id = chi_adm_negotiated_integration.1 popup = yes } }
 }
 
 chi_adm_negotiated_integration_begin = {
@@ -251,16 +249,51 @@ c:CHI = {
 }
 }
 
+# Country scope: the province. The one-call marker authorizes the opening demand.
 chi_adm_negotiated_integration_coerce = {
-save_scope_as = chi_adm_negotiated_integration_province if = { limit = { NOT = { has_modifier = chi_adm_provincial_development_guarantee }  chi_adm_negotiated_integration_valid = yes is_at_war = no is_diplomatic_play_committed_participant = no
-OR = { AND = { var:chi_adm_negotiated_integration_stage = 2 OR = { var:chi_adm_negotiated_integration_response = 2 var:chi_adm_negotiated_integration_response = 4 } }
-AND = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_wait >= 6 } var:chi_adm_negotiated_integration_stage = 6 AND = { var:chi_adm_negotiated_integration_stage = 9 OR = { var:chi_adm_negotiated_integration_fault = 2 has_variable = chi_adm_negotiated_integration_repayment_refused } } }
-c:CHI = { is_at_war = no is_diplomatic_play_committed_participant = no NOT = { var:chi_adm_qing_security_phase = 5 } } } save_scope_as = chi_adm_negotiated_integration_target chi_adm_negotiated_integration_clear = yes set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 }
-c:CHI = { every_subject_or_below = { limit = { chi_adm_eligible = yes NOT = { this = scope:chi_adm_negotiated_integration_target } }
-if = { limit = { OR = { var:chi_adm_autonomy >= 60 var:chi_adm_loyalty < 40 } } chi_adm_adjust_loyalty = { AMOUNT = -8 } change_relations = { country = c:CHI value = -15 } }
-else_if = { limit = { var:chi_adm_loyalty >= 80 var:chi_adm_autonomy < 30 } change_relations = { country = c:CHI value = -2 } }
-else = { chi_adm_adjust_loyalty = { AMOUNT = -3 } change_relations = { country = c:CHI value = -5 } }
-} create_diplomatic_play = { type = dp_chi_adm_negotiated_integration_integration target_country = scope:chi_adm_negotiated_integration_target } } }
+ if = {
+  limit = { chi_adm_negotiated_integration_coercible = yes }
+  save_temporary_scope_as = chi_adm_negotiated_integration_forced_target
+  set_variable = chi_adm_negotiated_integration_force_launch
+  c:CHI = {
+   create_diplomatic_play = {
+    type = dp_chi_adm_negotiated_integration_integration
+    target_country = scope:chi_adm_negotiated_integration_forced_target
+   }
+  }
+  remove_variable = chi_adm_negotiated_integration_force_launch
+  if = {
+   limit = {
+    c:CHI = {
+     any_diplomatic_play = {
+      is_diplomatic_play_type = dp_chi_adm_negotiated_integration_integration
+      initiator = c:CHI
+      target = scope:chi_adm_negotiated_integration_forced_target
+     }
+    }
+   }
+   chi_adm_negotiated_integration_clear = yes
+   set_variable = { name = chi_adm_negotiated_integration_retry value = yes months = 6 }
+   c:CHI = {
+    every_subject_or_below = {
+     limit = { chi_adm_eligible = yes NOT = { this = scope:chi_adm_negotiated_integration_forced_target } }
+     if = {
+      limit = { OR = { var:chi_adm_autonomy >= 60 var:chi_adm_loyalty < 40 } }
+      chi_adm_adjust_loyalty = { AMOUNT = -8 }
+      change_relations = { country = c:CHI value = -15 }
+     }
+     else_if = {
+      limit = { var:chi_adm_loyalty >= 80 var:chi_adm_autonomy < 30 }
+      change_relations = { country = c:CHI value = -2 }
+     }
+     else = {
+      chi_adm_adjust_loyalty = { AMOUNT = -3 }
+      change_relations = { country = c:CHI value = -5 }
+     }
+    }
+   }
+  }
+ }
 }
 
 chi_adm_negotiated_integration_province_tick = {

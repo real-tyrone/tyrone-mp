@@ -1,0 +1,93 @@
+# These checks use explicit country and state scopes on every entry point.
+chi_adm_henan_viceroyalty = {
+ c:AHU ?= {
+  chi_adm_target_valid = yes
+  is_subject_type = subject_type_qing_viceroyalty_administration
+ }
+}
+
+chi_adm_henan_ownership = {
+ c:AHU ?= {
+  owns_entire_state_region = STATE_HENAN
+  any_scope_state = { NOT = { state_region = s:STATE_HENAN } is_treaty_port = no }
+ }
+ s:STATE_HENAN.region_state:AHU ?= { is_treaty_port = no }
+}
+
+# The native country trigger uses directly owned land. No province touching
+# inland Henan has a coast, so treaty ports cannot supply this border.
+chi_adm_henan_border = {
+ c:CHI ?= { is_land_adjacent_to_state = s:STATE_HENAN.region_state:AHU }
+}
+
+chi_adm_henan_peace = {
+ c:CHI ?= { is_at_war = no is_diplomatic_play_committed_participant = no }
+ c:AHU ?= { is_at_war = no is_diplomatic_play_committed_participant = no }
+}
+
+chi_adm_henan_clear_cases = {
+ c:AHU ?= {
+  NOR = {
+   has_variable = chi_adm_negotiated_integration_stage
+   has_variable = chi_adm_provincial_development_conversion
+   has_variable = chi_adm_provincial_development_compact_case
+   has_variable = chi_adm_provincial_development_enforcement_target
+  }
+ }
+}
+
+chi_adm_henan_settlement_valid = {
+ chi_adm_henan_viceroyalty = yes
+ chi_adm_henan_ownership = yes
+ chi_adm_henan_border = yes
+ chi_adm_henan_peace = yes
+ chi_adm_henan_clear_cases = yes
+ NOT = { has_global_variable = chi_adm_henan_restored }
+}
+
+# Court scope. These labels also serve as the blocked-requirements tooltip.
+chi_adm_henan_can_request = {
+ hidden_trigger = { c:CHI ?= this }
+ custom_tooltip = { text = chi_adm_henan_req_subject chi_adm_henan_viceroyalty = yes }
+ custom_tooltip = { text = chi_adm_henan_req_owner chi_adm_henan_ownership = yes }
+ custom_tooltip = { text = chi_adm_henan_req_border chi_adm_henan_border = yes }
+ custom_tooltip = { text = chi_adm_henan_req_peace chi_adm_henan_peace = yes }
+ custom_tooltip = { text = chi_adm_henan_req_cases chi_adm_henan_clear_cases = yes }
+ custom_tooltip = {
+  text = chi_adm_henan_req_reform
+  OR = {
+   has_technology_researched = central_archives
+   has_law_or_variant = law_type:law_appointed_bureaucrats
+  }
+ }
+ custom_tooltip = {
+  text = chi_adm_henan_req_available
+  c:AHU ?= { NOT = { has_variable = chi_adm_henan_stage } }
+ }
+ custom_tooltip = {
+  text = chi_adm_henan_req_cooldown
+  c:AHU ?= { NOT = { has_variable = chi_adm_henan_retry } }
+ }
+ custom_tooltip = { text = chi_adm_henan_req_unused NOT = { has_global_variable = chi_adm_henan_restored } }
+ authority >= 25
+ relative_bureaucracy >= 0
+}
+
+# Event scopes. A saved revision identifies the specific offer being answered.
+chi_adm_henan_proposal_current = {
+ c:AHU ?= this
+ exists = scope:chi_adm_henan_offer_revision
+ var:chi_adm_henan_stage ?= 1
+ var:chi_adm_henan_revision ?= scope:chi_adm_henan_offer_revision
+ chi_adm_henan_settlement_valid = yes
+}
+
+chi_adm_henan_counter_current = {
+ c:CHI ?= this
+ exists = scope:chi_adm_henan_offer_revision
+ c:AHU ?= {
+  var:chi_adm_henan_stage ?= 3
+  var:chi_adm_henan_revision ?= scope:chi_adm_henan_offer_revision
+ }
+ chi_adm_henan_settlement_valid = yes
+}

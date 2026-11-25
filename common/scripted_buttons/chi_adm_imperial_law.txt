@@ -20,6 +20,8 @@ chi_adm_imperial_law_queue_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_queue_result
+		custom_tooltip = chi_adm_imperial_law_implementation_lock_tt
+		custom_tooltip = chi_adm_imperial_law_adoption_rewards_tt
 		hidden_effect = {
 			chi_adm_imperial_law_queue = yes
 		}
@@ -52,6 +54,9 @@ chi_adm_imperial_law_prioritize_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_prioritize_result
+		custom_tooltip = chi_adm_imperial_law_gradual_result
+		custom_tooltip = chi_adm_imperial_law_implementation_lock_tt
+		custom_tooltip = chi_adm_imperial_law_adoption_rewards_tt
 		hidden_effect = {
 			chi_adm_imperial_law_prioritize = yes
 		}
@@ -83,6 +88,8 @@ chi_adm_imperial_law_immediate_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_immediate_result
+		custom_tooltip = chi_adm_imperial_law_adoption_rewards_tt
+		custom_tooltip = chi_adm_imperial_law_transition_cost_tt
 		hidden_effect = {
 			chi_adm_imperial_law_immediate = yes
 		}
@@ -114,6 +121,8 @@ chi_adm_imperial_law_gradual_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_gradual_result
+		custom_tooltip = chi_adm_imperial_law_implementation_lock_tt
+		custom_tooltip = chi_adm_imperial_law_adoption_rewards_tt
 		hidden_effect = {
 			chi_adm_imperial_law_start = yes
 		}
@@ -145,6 +154,7 @@ chi_adm_imperial_law_petition_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_petition_result
+		custom_tooltip = chi_adm_imperial_law_petition_notice_tt
 		hidden_effect = {
 			chi_adm_imperial_law_petition = yes
 		}
@@ -178,6 +188,7 @@ chi_adm_imperial_law_delay_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_delay_result
+		custom_tooltip = chi_adm_imperial_law_delay_loyalty_tt
 		hidden_effect = {
 			chi_adm_imperial_law_delay = yes
 		}
@@ -209,6 +220,7 @@ chi_adm_imperial_law_refuse_button = {
 	}
 	effect = {
 		custom_tooltip = chi_adm_imperial_law_refuse_result
+		custom_tooltip = chi_adm_imperial_law_cancellation_politics_tt
 		hidden_effect = {
 			chi_adm_imperial_law_refuse = yes
 		}
@@ -216,4 +228,47 @@ chi_adm_imperial_law_refuse_button = {
 	ai_chance = {
 		value = chi_adm_imperial_law_ai_refuse
 	}
+}
+
+chi_adm_imperial_law_pause_implementation_button = {
+ tags = { chi_adm_imperial_law_implementation_control }
+ name = chi_adm_imperial_law_pause_implementation_button
+ desc = chi_adm_imperial_law_pause_implementation_desc
+ visible = { chi_adm_imperial_law_can_manage_implementation = yes NOT = { has_variable = chi_adm_imperial_law_implementation_paused } }
+ possible = { hidden_trigger = { chi_adm_imperial_law_can_manage_implementation = yes } }
+ effect = {
+  custom_tooltip = chi_adm_imperial_law_pause_implementation_tt
+  custom_tooltip = chi_adm_imperial_law_release_lock_tt
+  hidden_effect = { chi_adm_imperial_law_pause_implementation = yes }
+ }
+ ai_chance = { value = 0 }
+}
+
+chi_adm_imperial_law_resume_implementation_button = {
+ tags = { chi_adm_imperial_law_implementation_control }
+ name = chi_adm_imperial_law_resume_implementation_button
+ desc = chi_adm_imperial_law_resume_implementation_desc
+ visible = { chi_adm_imperial_law_can_manage_implementation = yes has_variable = chi_adm_imperial_law_implementation_paused }
+ possible = { hidden_trigger = { chi_adm_imperial_law_can_manage_implementation = yes } enacting_any_law = no custom_tooltip = { text = chi_adm_imperial_law_req_resume chi_adm_imperial_law_available = yes } }
+ effect = {
+  custom_tooltip = chi_adm_imperial_law_resume_implementation_tt
+  custom_tooltip = chi_adm_imperial_law_implementation_lock_tt
+  hidden_effect = { chi_adm_imperial_law_resume_implementation = yes }
+ }
+ ai_chance = { value = 0 }
+}
+
+chi_adm_imperial_law_cancel_implementation_button = {
+ tags = { chi_adm_imperial_law_implementation_control }
+ name = chi_adm_imperial_law_cancel_implementation_button
+ desc = chi_adm_imperial_law_cancel_implementation_desc
+ visible = { chi_adm_imperial_law_can_manage_implementation = yes  }
+ possible = { hidden_trigger = { chi_adm_imperial_law_can_manage_implementation = yes } }
+ effect = {
+  custom_tooltip = chi_adm_imperial_law_cancel_implementation_effect
+  custom_tooltip = chi_adm_imperial_law_release_lock_tt
+  custom_tooltip = chi_adm_imperial_law_cancel_implementation_penalty
+  hidden_effect = { chi_adm_imperial_law_refuse = yes }
+ }
+ ai_chance = { value = 0 }
 }

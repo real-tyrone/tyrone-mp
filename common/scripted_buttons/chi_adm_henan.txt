@@ -1,0 +1,69 @@
+chi_adm_henan_request = {
+ name = chi_adm_henan_request
+ desc = chi_adm_henan_request_desc
+ visible = { c:CHI ?= this NOT = { has_global_variable = chi_adm_henan_restored } }
+ possible = { chi_adm_henan_can_request = yes }
+ effect = {
+  custom_tooltip = chi_adm_henan_send_tt
+  hidden_effect = { chi_adm_henan_open = yes }
+ }
+ ai_chance = {
+  base = 0
+  modifier = {
+   trigger = { authority >= 75 relative_bureaucracy >= 0.10 gold_reserves >= 100000 }
+   add = 60
+  }
+ }
+}
+
+chi_adm_henan_withdraw = {
+ name = chi_adm_henan_withdraw
+ desc = chi_adm_henan_withdraw_desc
+ visible = { c:CHI ?= this c:AHU ?= { has_variable = chi_adm_henan_stage } }
+ possible = { always = yes }
+ effect = {
+  show_as_tooltip = {
+   c:AHU = {
+    if = { limit = { var:chi_adm_henan_stage = 1 } custom_tooltip = chi_adm_henan_status_awaiting }
+    else_if = { limit = { var:chi_adm_henan_stage = 2 } custom_tooltip = chi_adm_henan_status_delayed }
+    else = { custom_tooltip = chi_adm_henan_status_counter }
+   }
+  }
+  hidden_effect = {
+   c:AHU = {
+    chi_adm_henan_end_without_transfer = { COOLDOWN = 6 }
+    trigger_event = { id = chi_adm_henan.5 popup = yes }
+   }
+  }
+ }
+ ai_chance = { base = 0 }
+}
+
+chi_adm_henan_review_counter = {
+ name = chi_adm_henan_review_counter
+ desc = chi_adm_henan_review_counter_desc
+ visible = { c:CHI ?= this c:AHU ?= { var:chi_adm_henan_stage ?= 3 } }
+ possible = { custom_tooltip = { text = chi_adm_henan_req_current chi_adm_henan_settlement_valid = yes } }
+ effect = { hidden_effect = { c:AHU = { chi_adm_henan_show_counter = yes } } }
+ ai_chance = { base = 0 }
+}
+
+chi_adm_henan_review_proposal = {
+ name = chi_adm_henan_review_proposal
+ desc = chi_adm_henan_review_proposal_desc
+ visible = { c:AHU ?= this has_variable = chi_adm_henan_stage }
+ possible = {
+  custom_tooltip = { text = chi_adm_henan_req_current chi_adm_henan_settlement_valid = yes }
+  trigger_if = {
+   limit = { var:chi_adm_henan_stage ?= 2 }
+   custom_tooltip = { text = chi_adm_henan_status_delayed always = no }
+  }
+  trigger_else_if = {
+   limit = { var:chi_adm_henan_stage ?= 3 }
+   custom_tooltip = { text = chi_adm_henan_status_counter always = no }
+  }
+  trigger_else = { hidden_trigger = { var:chi_adm_henan_stage ?= 1 } }
+ }
+ effect = { hidden_effect = { chi_adm_henan_show_proposal = yes } }
+ ai_chance = { base = 0 }
+}

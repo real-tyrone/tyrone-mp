@@ -536,10 +536,19 @@ option = { name = chi_adm_negotiated_integration_hold trigger = { chi_adm_negoti
 option = { name = chi_adm_negotiated_integration_cancel_provincial trigger = { chi_adm_negotiated_integration_event_current = yes scope:chi_adm_negotiated_integration_target = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } } custom_tooltip = chi_adm_negotiated_integration_cancel_provincial_desc hidden_effect = { scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_cancel_provincial = yes } } ai_chance = { base = 10 } }
 option = { name = chi_adm_negotiated_integration_propose_repayment trigger = { chi_adm_negotiated_integration_event_current = yes scope:chi_adm_negotiated_integration_target = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } } custom_tooltip = chi_adm_negotiated_integration_propose_repayment_desc hidden_effect = { scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_propose_repayment = yes } } ai_chance = { base = 10 } }
 option = { name = chi_adm_negotiated_integration_accept_repay_compromise trigger = { chi_adm_negotiated_integration_event_current = yes scope:chi_adm_negotiated_integration_target = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } } custom_tooltip = chi_adm_negotiated_integration_accept_repay_compromise_desc hidden_effect = { scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_accept_repay_compromise = yes } } ai_chance = { base = 10 } }
-option = { name = chi_adm_negotiated_integration_coerce trigger = { chi_adm_negotiated_integration_event_current = yes scope:chi_adm_negotiated_integration_target = { NOT = { has_modifier = chi_adm_provincial_development_guarantee }  chi_adm_negotiated_integration_valid = yes is_at_war = no is_diplomatic_play_committed_participant = no
-OR = { AND = { var:chi_adm_negotiated_integration_stage = 2 OR = { var:chi_adm_negotiated_integration_response = 2 var:chi_adm_negotiated_integration_response = 4 } }
-AND = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_wait >= 6 } var:chi_adm_negotiated_integration_stage = 6 AND = { var:chi_adm_negotiated_integration_stage = 9 OR = { var:chi_adm_negotiated_integration_fault = 2 has_variable = chi_adm_negotiated_integration_repayment_refused } } }
-c:CHI = { is_at_war = no is_diplomatic_play_committed_participant = no } } } custom_tooltip = chi_adm_negotiated_integration_coerce_desc hidden_effect = { scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_coerce = yes } } ai_chance = { base = 2 } }
+option = {
+ name = chi_adm_negotiated_integration_coerce
+ trigger = {
+  c:CHI ?= this
+  chi_adm_negotiated_integration_event_current = yes
+  scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_coercible = yes }
+ }
+ custom_tooltip = chi_adm_negotiated_integration_coerce_desc
+ hidden_effect = {
+  scope:chi_adm_negotiated_integration_target = { chi_adm_negotiated_integration_coerce = yes }
+ }
+ ai_chance = { base = 2 }
+}
 option = { name = chi_adm_negotiated_integration_read_later default_option = yes ai_chance = { base = 0 } } }
 
 chi_adm_negotiated_integration.3 = { type = country_event placement = ROOT title = chi_adm_negotiated_integration_event_3_t desc = chi_adm_negotiated_integration_event_3_d flavor = chi_adm_negotiated_integration_event_3_f

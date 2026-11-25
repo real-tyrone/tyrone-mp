@@ -1,0 +1,146 @@
+namespace = chi_adm_henan
+
+chi_adm_henan.1 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.1.t
+ desc = chi_adm_henan.1.d
+ flavor = chi_adm_henan.1.f
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 30
+ trigger = { chi_adm_henan_proposal_current = yes }
+ cancellation_trigger = { NOT = { chi_adm_henan_proposal_current = yes } }
+
+ option = {
+  name = chi_adm_henan.1.a
+  trigger = { chi_adm_henan_proposal_current = yes }
+  custom_tooltip = chi_adm_henan_standard_tt
+  hidden_effect = { chi_adm_henan_finalize = { STAGE = 1 ENHANCED = no } }
+  ai_chance = {
+   base = 20
+   modifier = { trigger = { var:chi_adm_loyalty >= 65 relations:c:CHI >= relations_threshold:cordial } add = 30 }
+   modifier = { trigger = { chi_adm_henan_gdp_share < 0.20 var:chi_adm_autonomy <= 35 } add = 20 }
+   modifier = { trigger = { gold_reserves < 100000 } multiply = 0.5 }
+  }
+ }
+ option = {
+  name = chi_adm_henan.1.b
+  trigger = { chi_adm_henan_proposal_current = yes }
+  custom_tooltip = chi_adm_henan_counter_tt
+  hidden_effect = {
+   set_variable = { name = chi_adm_henan_stage value = 3 }
+   chi_adm_henan_show_counter = yes
+  }
+  ai_chance = {
+   base = 25
+   modifier = { trigger = { OR = { chi_adm_henan_gdp_share >= 0.20 gold_reserves < 100000 } } add = 35 }
+   modifier = { trigger = { c:CHI = { gold_reserves < 100000 } } multiply = 0.25 }
+  }
+ }
+ option = {
+  name = chi_adm_henan.1.c
+  trigger = { chi_adm_henan_proposal_current = yes NOT = { has_variable = chi_adm_henan_delayed } }
+  custom_tooltip = chi_adm_henan_delay_tt
+  hidden_effect = {
+   set_variable = chi_adm_henan_delayed
+   set_variable = { name = chi_adm_henan_stage value = 2 }
+   set_variable = { name = chi_adm_henan_months value = 12 }
+   change_variable = { name = chi_adm_henan_revision add = 1 }
+  }
+  ai_chance = { base = 5 }
+ }
+ option = {
+  name = chi_adm_henan.1.e
+  trigger = { chi_adm_henan_proposal_current = yes }
+  custom_tooltip = chi_adm_henan_refusal_tt
+  chi_adm_adjust_loyalty = { AMOUNT = -2 }
+  change_relations = { country = c:CHI value = -5 }
+  hidden_effect = {
+   chi_adm_henan_end_without_transfer = { COOLDOWN = 24 }
+   c:CHI = { trigger_event = { id = chi_adm_henan.4 popup = yes } }
+  }
+  ai_chance = {
+   base = 15
+   modifier = { trigger = { OR = { var:chi_adm_autonomy >= 50 var:chi_adm_loyalty < 40 } } add = 45 }
+   modifier = { trigger = { chi_adm_henan_gdp_share >= 0.30 } add = 40 }
+  }
+ }
+ option = { name = chi_adm_henan_read_later default_option = yes ai_chance = { base = 0 } }
+}
+
+chi_adm_henan.2 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.2.t
+ desc = chi_adm_henan.2.d
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 30
+ trigger = { chi_adm_henan_counter_current = yes }
+ cancellation_trigger = { NOT = { chi_adm_henan_counter_current = yes } }
+
+ option = {
+  name = chi_adm_henan.2.a
+  trigger = { chi_adm_henan_counter_current = yes gold_reserves >= 100000 }
+  custom_tooltip = chi_adm_henan_enhanced_tt
+  hidden_effect = { c:AHU = { chi_adm_henan_finalize = { STAGE = 3 ENHANCED = yes } } }
+  ai_chance = {
+   base = 10
+   modifier = { trigger = { gold_reserves >= 250000 } add = 55 }
+  }
+ }
+ option = {
+  name = chi_adm_henan.2.b
+  trigger = { chi_adm_henan_counter_current = yes }
+  custom_tooltip = chi_adm_henan_reject_tt
+  hidden_effect = {
+   c:AHU = {
+    chi_adm_henan_end_without_transfer = { COOLDOWN = 6 }
+    trigger_event = { id = chi_adm_henan.6 popup = yes }
+   }
+  }
+  ai_chance = { base = 30 }
+ }
+ option = { name = chi_adm_henan_read_later default_option = yes ai_chance = { base = 0 } }
+}
+
+chi_adm_henan.3 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.3.t
+ desc = chi_adm_henan.3.d
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ option = { name = chi_adm_henan_acknowledge default_option = yes }
+}
+
+chi_adm_henan.4 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.4.t
+ desc = chi_adm_henan.4.d
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ option = { name = chi_adm_henan_acknowledge default_option = yes }
+}
+
+chi_adm_henan.5 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.5.t
+ desc = chi_adm_henan.5.d
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ option = { name = chi_adm_henan_acknowledge default_option = yes }
+}
+
+chi_adm_henan.6 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_henan.6.t
+ desc = chi_adm_henan.6.d
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ option = { name = chi_adm_henan_acknowledge default_option = yes }
+}
