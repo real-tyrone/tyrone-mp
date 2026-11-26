@@ -1,4 +1,4 @@
-﻿# All predicates below have country scope unless explicitly noted.
+# All predicates below have country scope unless explicitly noted.
 tyr_sj_is_japan = { global_var:tyr_sj_japan ?= THIS }
 tyr_sj_is_china = { global_var:tyr_sj_china ?= THIS }
 tyr_sj_is_russia = { global_var:tyr_sj_russia ?= THIS }
@@ -12,9 +12,13 @@ tyr_sj_russia_humiliates_japan = {
 tyr_sj_china_humiliates_japan = {
  global_var:tyr_sj_china ?= { has_diplomatic_pact = { who = global_var:tyr_sj_japan type = humiliation is_initiator = yes } }
 }
+# Victory humiliation is separate from the Japan-Russia claims contest.
+tyr_sj_japan_humiliates_china = {
+ global_var:tyr_sj_japan ?= { has_diplomatic_pact = { who = global_var:tyr_sj_china type = humiliation is_initiator = yes } }
+}
 # These two predicates do not depend on ROOT; used by a contextless JE.
 tyr_sj_japan_winning = {
- tyr_sj_japan_humiliates_russia = yes
+ tyr_sj_japan_humiliates_china = yes
  global_var:tyr_sj_japan ?= {
  owns_entire_state_region = STATE_YANGHO
  owns_entire_state_region = STATE_BUSAN
@@ -38,5 +42,33 @@ tyr_sj_china_winning = {
  owns_entire_state_region = STATE_SHENGJING
  owns_entire_state_region = STATE_SOUTHERN_MANCHURIA
  owns_entire_state_region = STATE_NORTHERN_MANCHURIA
+ }
+}
+
+# Contextless-safe: retain an established clock through disputed territorial losses.
+tyr_sj_japan_clock_continues = {
+ OR = {
+  tyr_sj_japan_winning = yes
+  AND = {
+   tyr_sj_japan_humiliates_china = yes
+   global_var:tyr_sj_japan ?= {
+    has_variable = tyr_sj_clock_running
+    OR = { is_active_in_diplomatic_play = yes is_at_war = yes }
+   }
+  }
+ }
+}
+
+# Contextless-safe: retain an established clock through disputed territorial losses.
+tyr_sj_china_clock_continues = {
+ OR = {
+  tyr_sj_china_winning = yes
+  AND = {
+   tyr_sj_china_humiliates_japan = yes
+   global_var:tyr_sj_china ?= {
+    has_variable = tyr_sj_clock_running
+    OR = { is_active_in_diplomatic_play = yes is_at_war = yes }
+   }
+  }
  }
 }
