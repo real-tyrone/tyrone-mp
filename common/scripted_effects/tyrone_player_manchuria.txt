@@ -1,0 +1,63 @@
+# Country scope: the human Qing player. The switch is executed from this scope LAST.
+tyr_qing_release_player_manchuria_effect = {
+ if = {
+  limit = {
+   c:CHI ?= this
+   is_player = yes
+   NOT = { has_variable = tyr_qing_player_manchuria_released }
+   NOT = { exists = c:MCH }
+   any_scope_state = { state_region = s:STATE_SOUTHERN_MANCHURIA is_treaty_port = no }
+  }
+  save_scope_as = tyr_manchuria_founder
+  random_scope_state = {
+   limit = { state_region = s:STATE_SOUTHERN_MANCHURIA is_treaty_port = no }
+   save_scope_as = tyr_manchuria_seed
+  }
+  create_country = {
+   tag = MCH
+   origin = scope:tyr_manchuria_founder
+   state = scope:tyr_manchuria_seed
+   on_created = {
+    copy_laws = scope:tyr_manchuria_founder
+    set_state_religion = rel:confucian
+    if = { limit = { NOT = { country_has_primary_culture = cu:manchu } } add_primary_culture = cu:manchu }
+    effect_starting_technology_tier_4_tech = yes
+    set_variable = chi_qing_appointed_administration
+   }
+  }
+  every_scope_state = {
+   limit = {
+    OR = {
+     state_region = s:STATE_AMUR
+     state_region = s:STATE_SHENGJING
+     state_region = s:STATE_SOUTHERN_MANCHURIA
+     state_region = s:STATE_NORTHERN_MANCHURIA
+     state_region = s:STATE_OUTER_MANCHURIA
+    }
+   }
+   set_state_owner = c:MCH
+  }
+  create_diplomatic_pact = { country = c:MCH type = qing_frontier_administration }
+  # An intentional release must never be undone by the old-save migration.
+  set_variable = chi_qing_direct_manchuria_v1
+  set_variable = tyr_qing_player_manchuria_released
+  # Reopening provincial administration does not make unification usable twice.
+  if = {
+   limit = { has_variable = tyr_china_unified_applied }
+   set_variable = tyr_china_unification_consumed
+   remove_variable = tyr_china_unified_applied
+  }
+  c:MCH = {
+   set_capital = STATE_SOUTHERN_MANCHURIA
+   activate_law = law_type:law_chi_yinpriv
+   activate_law = law_type:law_chi_tuanlian
+   set_state_religion = rel:confucian
+   every_scope_state = { set_state_type = incorporated }
+   add_liberty_desire = -100
+   change_relations = { country = scope:tyr_manchuria_founder value = 80 }
+   remove_variable = chi_adm_initialized
+   chi_adm_initialize = yes
+  }
+  play_as = c:MCH
+ }
+}

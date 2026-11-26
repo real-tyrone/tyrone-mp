@@ -43,19 +43,25 @@ tyr_opium_grant_british_concessions = {
 			}
 		}
 		if = {
-			limit = { exists = scope:tyr_opium_concession_state }
+			limit = {
+                exists = scope:tyr_opium_concession_state
+                scope:tyr_opium_concession_state.state_region = { save_temporary_scope_as = chi_legation_check_region }
+                NOT = { any_country = { NOT = { this = c:GBR } chi_legation_holds_checked_region = yes } }
+            }
+            scope:tyr_opium_concession_state = { owner = { save_scope_as = chi_legation_event_local_owner } }
+            create_treaty = {
+                first_country = scope:chi_legation_event_local_owner
+                second_country = c:GBR
+                is_draft = no
+                binding_period = { days = 0 }
+                articles_to_create = { { article = chi_legation_local_territorial_concession source_country = scope:chi_legation_event_local_owner target_country = c:GBR inputs = { { state = scope:tyr_opium_concession_state } } } }
+            }
 			create_treaty = {
 				first_country = c:CHI
 				second_country = c:GBR
 				is_draft = no
 				binding_period = { days = 0 }
 				articles_to_create = {
-					{
-						article = regional_investment_rights
-						source_country = c:CHI
-						target_country = c:GBR
-						inputs = { { state = scope:tyr_opium_concession_state } }
-					}
 					{
 						article = building_investment_rights
 						source_country = c:CHI

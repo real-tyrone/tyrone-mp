@@ -132,9 +132,8 @@ chi_legation_building_allowed = {
                     chi_legation_has_port = yes
                     is_target_in_variable_list = { name = chi_legation_industries target = $BUILDING_TYPE$ }
                 }
-                scope:investor_country = {
-                    is_target_in_variable_list = { name = chi_legation_regions target = scope:chi_legation_build_region }
-                }
+                scope:investor_country = { save_temporary_scope_as = chi_legation_access_investor }
+                chi_legation_investor_has_local_state_access = yes
             }
         }
     }
@@ -143,19 +142,26 @@ chi_legation_building_allowed = {
 # Country scope. Optional comparison is essential before the global JE initializes.
 # Same global-country comparison form used by vanilla's Chinese central government.
 chi_legation_is_central = {
-    OR = {
-        AND = {
-            exists = global_var:chi_legation_central
-            global_var:chi_legation_central ?= this
-        }
-        AND = {
-            exists = global_var:chi_legation_central
-            top_overlord ?= { global_var:chi_legation_central ?= this }
-			any_neighbouring_state = {
-				is_treaty_port = yes
-			}
-        }
-    }
+ global_var:chi_legation_central ?= this
+}
+# Country scope: only the current realm may supply NEW concessions.
+chi_legation_in_central_realm = {
+ OR = { chi_legation_is_central = yes top_overlord ?= { chi_legation_is_central = yes } }
+}
+# Country scope. Live articles, not monthly caches, determine exclusivity.
+# Caller saves chi_legation_check_region (state region).
+chi_legation_holds_checked_region = {
+ save_temporary_scope_as = chi_legation_check_power
+ any_scope_treaty = {
+  any_scope_article = {
+   OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
+   target_country = scope:chi_legation_check_power
+   save_temporary_scope_as = chi_legation_checked_article
+   target_country = { NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_checked_article.treaty } } }
+   exists = input_state
+   input_state = { state_region = { this = scope:chi_legation_check_region } }
+  }
+ }
 }
 
 # Foreign country scope; current owner determines whether a port blocks completion.
@@ -168,4 +174,37 @@ chi_boxer_port_holder = {
 chi_boxer_can_complete = {
     is_at_war = no
     NOT = { any_country = { chi_boxer_port_holder = yes } }
+}
+
+# Chinese country scope; the foreign negotiating party is other_country.
+# A port is local when this government retains territory in its region.
+chi_legation_has_requester_port = {
+    any_scope_state = {
+        state_region = {
+            chi_legation_region = yes
+            any_scope_state = { is_treaty_port = yes owner = scope:other_country }
+        }
+    }
+}
+# State scope; caller supplies chi_legation_access_investor.
+chi_legation_investor_has_local_state_access = {
+    owner = { save_temporary_scope_as = chi_legation_access_owner }
+    state_region = { save_temporary_scope_as = chi_legation_access_region }
+    scope:chi_legation_access_investor = {
+        any_scope_treaty = {
+            any_scope_article = {
+                OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession has_type = treaty_port }
+                target_country = scope:chi_legation_access_investor
+                exists = input_state
+                input_state = { state_region = { this = scope:chi_legation_access_region } }
+                save_temporary_scope_as = chi_legation_access_article
+                target_country = { NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_access_article.treaty } } }
+                OR = {
+                    # Historical central grants retain their original regional coverage.
+                    has_type = regional_investment_rights
+                    source_country = scope:chi_legation_access_owner
+                }
+            }
+        }
+    }
 }

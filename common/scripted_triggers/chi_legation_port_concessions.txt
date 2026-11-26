@@ -1,0 +1,21 @@
+# State-region scope. The caller is a port-owning country.
+chi_legation_port_region_available = {
+ chi_legation_region = yes
+ save_temporary_scope_as = chi_legation_check_region
+ any_scope_state = { owner = { chi_legation_chinese_government = yes } }
+ # One treaty scan per owned port region; never nest a global country scan.
+ NOT = {
+  any_treaty = {
+   any_scope_article = {
+    OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
+    NOT = { target_country = root }
+    exists = input_state
+    input_state = { state_region = { this = scope:chi_legation_check_region } }
+    save_temporary_scope_as = chi_legation_checked_article
+    target_country = {
+     NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_checked_article.treaty } }
+    }
+   }
+  }
+ }
+}

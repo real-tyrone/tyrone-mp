@@ -46,14 +46,16 @@ chi_legation_refresh_rights = {
             # Filter by directed article type before following source/target links.
             limit = {
                 OR = {
-                    has_type = regional_investment_rights
+                    OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
                     has_type = building_investment_rights
                 }
             }
             if = {
                 limit = {
-                    has_type = regional_investment_rights
+                    OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
+                    save_temporary_scope_as = chi_legation_checked_article
                     target_country = scope:chi_legation_investor
+                    target_country = { NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_checked_article.treaty } } }
                     exists = input_state
                 }
                 input_state.state_region = { save_scope_as = chi_legation_article_region }
@@ -71,9 +73,44 @@ chi_legation_refresh_rights = {
         }
     }
 }
+# Investor country scope; rights are signed centrally, native access follows local owners.
+chi_legation_delegate_access = {
+ save_scope_as = chi_legation_delegate_investor
+ every_country = {
+  limit = {
+   chi_legation_chinese_government = yes
+   NOT = { this = scope:chi_legation_delegate_investor }
+   scope:chi_legation_delegate_investor = { save_temporary_scope_as = chi_legation_access_investor }
+   any_scope_state = { chi_legation_investor_has_local_state_access = yes }
+   NOT = { any_scope_treaty = {
+    binds = scope:chi_legation_delegate_investor
+    any_scope_article = { has_type = chi_legation_delegated_access }
+   } }
+  }
+  save_scope_as = chi_legation_delegate_owner
+  create_treaty = {
+   first_country = scope:chi_legation_delegate_owner
+   second_country = scope:chi_legation_delegate_investor
+   is_draft = no
+   binding_period = { days = 0 }
+   articles_to_create = {
+    { article = chi_legation_delegated_access source_country = scope:chi_legation_delegate_owner target_country = scope:chi_legation_delegate_investor }
+   }
+  }
+ }
+}
 # No scope. Runs once per global JE month; only relevant countries receive work.
 chi_legation_monthly_update = {
     chi_legation_select_central_government = yes
+    every_country = {
+        limit = {
+            NOT = { has_variable = chi_legation_map_id }
+            any_scope_treaty = { any_scope_article = { OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession } } }
+        }
+        if = { limit = { NOT = { has_global_variable = chi_legation_next_map_id } } set_global_variable = { name = chi_legation_next_map_id value = 0 } }
+        change_global_variable = { name = chi_legation_next_map_id add = 1 }
+        set_variable = { name = chi_legation_map_id value = global_var:chi_legation_next_map_id }
+    }
     every_country = {
         if = {
             limit = { chi_legation_chinese_government = yes }
@@ -89,6 +126,7 @@ chi_legation_monthly_update = {
                 scope:journal_entry = { add_involved_country = prev }
             }
             chi_legation_refresh_rights = yes
+            chi_legation_delegate_access = yes
         }
         else_if = {
             limit = { is_involved_in_journal_entry = je_chi_legation_system }

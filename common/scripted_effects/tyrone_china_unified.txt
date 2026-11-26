@@ -1,0 +1,43 @@
+# Country scope: Qing. The decision checks that Qing and the eligible Chinese subjects are at peace.
+tyr_china_unify_administration_effect = {
+ save_scope_as = tyr_china_unifier
+ set_variable = tyr_china_unified_applied
+ set_variable = tyr_china_unification_consumed
+ clear_variable_list = tyr_china_unified_regions
+ every_subject_or_below = {
+  limit = { tyr_china_unification_target = yes }
+  every_scope_state = {
+   state_region = { save_temporary_scope_as = tyr_china_unified_region }
+   scope:tyr_china_unifier = {
+    add_to_variable_list = { name = tyr_china_unified_regions target = scope:tyr_china_unified_region }
+   }
+  }
+ }
+ # Vanilla's crown-land integration pattern preserves human players before annexation.
+ every_subject_or_below = {
+  limit = { tyr_china_unification_target = yes }
+  if = { limit = { chi_qing_administrative_subject = yes } chi_adm_cleanup = yes }
+  if = { limit = { is_player = yes } play_as = scope:tyr_china_unifier }
+  scope:tyr_china_unifier = { annex = prev }
+ }
+ # Region identities survive state merging during annexation.
+ every_scope_state = {
+  limit = {
+   state_region = { save_temporary_scope_as = tyr_china_unified_region }
+   scope:tyr_china_unifier = { is_target_in_variable_list = { name = tyr_china_unified_regions target = scope:tyr_china_unified_region } }
+  }
+  set_state_type = incorporated
+ }
+ clear_variable_list = tyr_china_unified_regions
+ # Retire court-side work and prevent its monthly handlers from advancing old disputes.
+ chi_adm_memorials_cleanup = yes
+ chi_adm_qing_security_clear_office = yes
+ remove_variable = chi_adm_qing_security_phase
+ remove_variable = chi_adm_qing_security_claimant
+ remove_variable = chi_adm_qing_security_evidence
+ remove_variable = chi_adm_qing_security_readiness
+ remove_variable = chi_adm_provincial_development_enforcement
+ remove_variable = chi_adm_provincial_development_enforcement_target
+ remove_variable = chi_adm_memorials_court_staff_count
+ remove_modifier = chi_adm_memorials_court_staff
+}

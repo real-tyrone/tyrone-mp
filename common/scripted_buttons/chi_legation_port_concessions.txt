@@ -1,0 +1,65 @@
+chi_legation_port_concessions = {
+ name = chi_legation_port_concessions
+ desc = chi_legation_port_concessions_desc
+ visible = {
+  has_global_variable = chi_legation_active
+  is_involved_in_journal_entry = je_chi_legation_system
+  NOT = { chi_legation_chinese_government = yes }
+  chi_legation_has_port = yes
+ }
+ possible = {
+  # Avoid generating a tooltip tree of every treaty and every country.
+  hidden_trigger = {
+   has_global_variable = chi_legation_active
+   NOT = { has_variable = chi_legation_expelled }
+   any_scope_state = {
+    is_treaty_port = yes
+    state_region = { chi_legation_port_region_available = yes }
+   }
+  }
+ }
+ ai_chance = { value = 0 }
+ effect = {
+  hidden_effect = {
+   save_scope_as = chi_legation_port_claimant
+   if = {
+    limit = { has_global_variable = chi_legation_active NOT = { has_variable = chi_legation_expelled } }
+    every_scope_state = {
+     limit = { is_treaty_port = yes }
+     state_region = {
+      if = {
+       limit = { chi_legation_port_region_available = yes }
+       every_scope_state = {
+        limit = {
+         owner = { chi_legation_chinese_government = yes }
+         save_temporary_scope_as = chi_legation_port_candidate
+         scope:chi_legation_port_claimant = {
+          NOT = { any_scope_treaty = { any_scope_article = {
+           OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
+           target_country = scope:chi_legation_port_claimant
+           input_state = scope:chi_legation_port_candidate
+          } } }
+         }
+        }
+        save_scope_as = chi_legation_port_concession_state
+        owner = { save_scope_as = chi_legation_port_concession_owner }
+        scope:chi_legation_port_claimant = {
+         create_treaty = {
+          first_country = scope:chi_legation_port_concession_owner
+          second_country = scope:chi_legation_port_claimant
+          is_draft = no
+          binding_period = { days = 0 }
+          articles_to_create = {
+           { article = chi_legation_local_territorial_concession source_country = scope:chi_legation_port_concession_owner target_country = scope:chi_legation_port_claimant inputs = { { state = scope:chi_legation_port_concession_state } } }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    chi_legation_refresh_rights = yes
+   }
+  }
+ }
+}

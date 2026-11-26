@@ -1,4 +1,4 @@
-﻿# China-only concession articles. Source is the central Chinese negotiator.
+# China-only concession articles. Source is the central Chinese negotiator.
 # Do not put port ownership in requirement_to_maintain: that destroys articles.
 # Concession caches are rebuilt monthly; treaty callbacks never dispatch events.
 
@@ -11,19 +11,32 @@ regional_investment_rights = {
     usage_limit = once_per_side_with_same_inputs
     required_inputs = { state }
     visible = {
-        chi_legation_is_central = yes
-        has_global_variable = chi_legation_active
-        scope:other_country = { is_involved_in_journal_entry = je_chi_legation_system }
+        always = no
     }
     possible = {
-        chi_legation_is_central = yes
-        has_global_variable = chi_legation_active
-        scope:other_country = { chi_legation_eligible = yes }
+        always = no
     }
     can_ratify = {
+        # Draft validation can run before a state has been selected.
+        scope:article.input_state ?= {
+            state_region = { save_temporary_scope_as = chi_legation_check_region }
+            NOT = { any_country = { NOT = { this = scope:target_country } chi_legation_holds_checked_region = yes } }
+        }
+
         scope:source_country = { chi_legation_is_central = yes }
         scope:target_country = { is_involved_in_journal_entry = je_chi_legation_system }
         has_global_variable = chi_legation_active
+    }
+    can_propose = {
+        scope:target_country = { NOT = { has_variable = chi_legation_expelled } }
+        scope:article.input_state = {
+            owner = { OR = { this = scope:source_country is_subject_of = scope:source_country } }
+            state_region = { save_temporary_scope_as = chi_legation_check_region }
+        }
+        NOT = { any_country = { NOT = { this = scope:target_country } chi_legation_holds_checked_region = yes } }
+    }
+    requirement_to_maintain = {
+        trigger = { scope:target_country = { NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:article.treaty } } } }
     }
     can_withdraw = {
         custom_tooltip = {
@@ -35,13 +48,25 @@ regional_investment_rights = {
         }
     }
     state_valid_trigger = {
+        # ROOT is the source party (Qing), not the foreign beneficiary.
         scope:input = {
-            state_region = { chi_legation_region = yes }
-            owner = { chi_legation_chinese_government = yes }
-            any_neighbouring_state = {
-                state_region = { save_temporary_scope_as = chi_legation_neighbour_region }
-                scope:other_country = {
-                    is_target_in_variable_list = { name = chi_legation_regions target = scope:chi_legation_neighbour_region }
+            state_region = { chi_legation_region = yes save_temporary_scope_as = chi_legation_check_region }
+            owner = {
+                OR = { this = root is_subject_of = root }
+            }
+        }
+        # Enumerate active treaties once, without a country-by-country scan.
+        NOT = {
+            any_treaty = {
+                any_scope_article = {
+                    has_type = regional_investment_rights
+                    NOT = { target_country = scope:other_country }
+                    exists = input_state
+                    input_state = { state_region = { this = scope:chi_legation_check_region } }
+                    save_temporary_scope_as = chi_legation_checked_article
+                    target_country = {
+                        NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_checked_article.treaty } }
+                    }
                 }
             }
         }
@@ -50,7 +75,130 @@ regional_investment_rights = {
         treaty_categories = { economy }
         article_ai_usage = { will_request }
         evaluation_chance = { value = 10 }
-        inherent_accept_score = { value = -20 }
+        inherent_accept_score = {
+            value = -20
+            if = { limit = { scope:source_country = { has_modifier = opium_wars_lost } } add = 120 }
+        }
+        contextual_accept_score = {
+            value = 0
+            every_state_region = {
+                limit = {
+                    chi_legation_region = yes
+                    save_temporary_scope_as = chi_legation_check_region
+                    scope:target_country = { chi_legation_holds_checked_region = yes }
+                }
+                subtract = 75
+            }
+        }
+        wargoal_score_multiplier = { value = 1 }
+    }
+    wargoal = {
+        execution_priority = 21
+        maneuvers = { value = 10 }
+        infamy = { value = 2 }
+        contestion_type = control_target_country_capital
+    }
+}
+
+chi_legation_local_territorial_concession = {
+    kind = directed
+    cost = 10
+    icon = "gfx/interface/icons/diplomatic_treaties_articles_icons/foreign_investment_agreement_treaties.dds"
+    flags = { is_investment_rights can_be_enforced can_be_renegotiated }
+    maintenance_paid_by = target_country
+    usage_limit = once_per_side_with_same_inputs
+    required_inputs = { state }
+    visible = {
+        chi_legation_chinese_government = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { is_involved_in_journal_entry = je_chi_legation_system }
+    }
+    possible = {
+        chi_legation_chinese_government = yes
+        has_global_variable = chi_legation_active
+        scope:other_country = { chi_legation_eligible = yes }
+        chi_legation_has_requester_port = yes
+    }
+    can_ratify = {
+        # Draft validation can run before a state has been selected.
+        scope:article.input_state ?= {
+            state_region = { save_temporary_scope_as = chi_legation_check_region }
+            NOT = { any_country = { NOT = { this = scope:target_country } chi_legation_holds_checked_region = yes } }
+        }
+
+        scope:source_country = { chi_legation_chinese_government = yes }
+        scope:target_country = { is_involved_in_journal_entry = je_chi_legation_system }
+        has_global_variable = chi_legation_active
+    }
+    can_propose = {
+        scope:target_country = { NOT = { has_variable = chi_legation_expelled } }
+        scope:article.input_state = {
+            owner = scope:source_country
+            state_region = { save_temporary_scope_as = chi_legation_check_region }
+        }
+        NOT = { any_country = { NOT = { this = scope:target_country } chi_legation_holds_checked_region = yes } }
+    }
+    requirement_to_maintain = {
+        trigger = { scope:target_country = { NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:article.treaty } } } }
+    }
+    can_withdraw = {
+        custom_tooltip = {
+            text = chi_legation_concession_withdraw_tt
+            OR = {
+                NOT = { has_global_variable = chi_legation_active }
+                NOT = { scope:withdrawing_country = scope:source_country }
+            }
+        }
+    }
+    state_valid_trigger = {
+        # ROOT is the local Chinese signatory, not the foreign beneficiary.
+        scope:input = {
+            state_region = { chi_legation_region = yes save_temporary_scope_as = chi_legation_check_region }
+            owner = root
+        }
+        # Enumerate active treaties once, without a country-by-country scan.
+        NOT = {
+            any_treaty = {
+                any_scope_article = {
+                    OR = { has_type = regional_investment_rights has_type = chi_legation_local_territorial_concession }
+                    NOT = { target_country = scope:other_country }
+                    exists = input_state
+                    input_state = { state_region = { this = scope:chi_legation_check_region } }
+                    save_temporary_scope_as = chi_legation_checked_article
+                    target_country = {
+                        NOT = { is_target_in_variable_list = { name = chi_legation_revoked_treaties target = scope:chi_legation_checked_article.treaty } }
+                    }
+                }
+            }
+        }
+    }
+    ai = {
+        treaty_categories = { economy }
+        article_ai_usage = { will_request }
+        evaluation_chance = { value = 10 }
+        inherent_accept_score = {
+            value = -20
+            if = {
+                limit = {
+                    scope:source_country = { exists = overlord }
+                    scope:target_country = {
+                        has_diplomatic_pact = { who = scope:source_country.overlord type = humiliation is_initiator = yes }
+                    }
+                }
+                add = 50
+            }
+        }
+        contextual_accept_score = {
+            value = 0
+            every_state_region = {
+                limit = {
+                    chi_legation_region = yes
+                    save_temporary_scope_as = chi_legation_check_region
+                    scope:target_country = { chi_legation_holds_checked_region = yes }
+                }
+                subtract = 75
+            }
+        }
         wargoal_score_multiplier = { value = 1 }
     }
     wargoal = {
@@ -151,7 +299,10 @@ building_investment_rights = {
         treaty_categories = { economy }
         article_ai_usage = { will_request }
         evaluation_chance = { value = 10 }
-        inherent_accept_score = { value = -20 }
+        inherent_accept_score = {
+            value = -20
+            if = { limit = { scope:source_country = { has_modifier = opium_wars_lost } } add = 120 }
+        }
         wargoal_score_multiplier = { value = 1 }
     }
     wargoal = {

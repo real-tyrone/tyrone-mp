@@ -1,0 +1,19 @@
+# New games are initialized in history. Existing saves migrate once at peace.
+on_game_started_after_lobby = {
+ on_actions = { chi_qing_direct_rule_start }
+}
+chi_qing_direct_rule_start = {
+ effect = { c:CHI ?= { chi_qing_restore_direct_manchuria = yes } }
+}
+on_monthly_pulse_country = {
+ on_actions = { chi_qing_direct_rule_migration }
+}
+chi_qing_direct_rule_migration = {
+ trigger = {
+  c:CHI ?= this
+  has_variable = chi_qing_1836_setup
+  NOT = { has_variable = chi_qing_direct_manchuria_v1 }
+  NOT = { has_variable = tyr_chi_fragmented }
+ }
+ effect = { chi_qing_restore_direct_manchuria = yes }
+}

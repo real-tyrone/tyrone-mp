@@ -87,7 +87,7 @@ chi_adm_qing_security_can_found = {
 }
 
 chi_adm_qing_security_recruiting = {
- c:CHI ?= { chi_adm_qing_security_court = yes var:chi_adm_qing_security_phase >= 2 var:chi_adm_qing_security_phase <= 4 }
+ c:CHI ?= { chi_adm_qing_security_court = yes trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase >= 2 } trigger_else = { always = no } trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase <= 4 } trigger_else = { always = yes } }
 }
 
 chi_adm_qing_security_is_claimant = {
@@ -118,7 +118,7 @@ chi_adm_qing_security_can_aid = {
 }
 
 chi_adm_qing_security_exposed = {
- c:CHI ?= { has_variable = chi_adm_qing_security_phase var:chi_adm_qing_security_phase < 5 var:chi_adm_qing_security_evidence >= 50 }
+ c:CHI ?= { has_variable = chi_adm_qing_security_phase trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase < 5 } trigger_else = { always = yes } var:chi_adm_qing_security_evidence >= 50 }
 }
 
 chi_adm_qing_security_can_escalate = {
@@ -153,11 +153,11 @@ chi_adm_qing_security_loyalist = {
  OR = { is_ai = yes has_variable = chi_adm_qing_security_human_pledge }
 }
 
-chi_adm_qing_security_can_issue = { chi_adm_qing_security_can_escalate = yes c:CHI ?= { var:chi_adm_qing_security_phase = 3 } }
+chi_adm_qing_security_can_issue = { chi_adm_qing_security_can_escalate = yes c:CHI ?= { trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 3 } trigger_else = { always = no } } }
 chi_adm_qing_security_can_launch = {
  chi_adm_qing_security_can_escalate = yes
  chi_adm_qing_security_armed = yes
- c:CHI ?= { var:chi_adm_qing_security_phase = 4 NOT = { has_variable = chi_adm_qing_security_ultimatum } }
+ c:CHI ?= { trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 4 } trigger_else = { always = no } NOT = { has_variable = chi_adm_qing_security_ultimatum } }
 }
 chi_adm_qing_security_can_accept = {
  chi_adm_qing_security_is_claimant = yes
@@ -181,14 +181,14 @@ chi_adm_qing_security_public_warning = {
 chi_adm_qing_security_court_threat = {
  OR = {
   chi_adm_qing_security_exposed = yes
-  AND = { var:chi_adm_qing_security_phase = 5 var:chi_adm_qing_security_evidence >= 50 }
+  AND = { trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 5 } trigger_else = { always = no } var:chi_adm_qing_security_evidence >= 50 }
   has_variable = chi_adm_qing_security_settlement
  }
 }
 
 chi_adm_qing_security_show_inquiry = {
  chi_adm_qing_security_court = yes
- NOT = { var:chi_adm_qing_security_phase = 5 }
+ NOT = { trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 5 } trigger_else = { always = no } }
  OR = { chi_adm_qing_security_exposed = yes chi_adm_qing_security_public_warning = yes }
 }
 
@@ -205,7 +205,7 @@ chi_adm_qing_security_provincial_conspiracy = {
 chi_adm_qing_security_can_investigate = {
  chi_adm_qing_security_court = yes
  has_variable = chi_adm_qing_security_phase
- var:chi_adm_qing_security_phase < 5
+ trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase < 5 } trigger_else = { always = yes }
  has_variable = chi_adm_qing_security_evidence
  var:chi_adm_qing_security_evidence < 100
  relative_bureaucracy >= 0.05
@@ -250,19 +250,19 @@ chi_adm_qing_security_can_sponsor = {
  influence >= 100
  is_at_war = no
  NOR = { has_modifier = chi_adm_qing_security_foreign_mission has_variable = chi_adm_qing_security_diplomatic_choice }
- c:CHI ?= { chi_adm_qing_security_court = yes var:chi_adm_qing_security_phase < 5 }
+ c:CHI ?= { chi_adm_qing_security_court = yes trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase < 5 } trigger_else = { always = yes } }
 }
 
 chi_adm_qing_security_live_play = {
  is_diplomatic_play_type = dp_chi_adm_qing_security_throne
- initiator = { c:CHI ?= this var:chi_adm_qing_security_phase = 5 }
+ initiator = { c:CHI ?= this trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 5 } trigger_else = { always = no } }
 }
 
 chi_adm_qing_security_can_return = {
  has_variable = chi_adm_qing_security_pact
  trigger_if = {
   limit = { exists = c:CHI }
-  NOT = { c:CHI ?= { var:chi_adm_qing_security_phase = 5 } }
+  NOT = { c:CHI ?= { trigger_if = { limit = { has_variable = chi_adm_qing_security_phase } var:chi_adm_qing_security_phase = 5 } trigger_else = { always = no } } }
   NOT = { has_war_with = c:CHI }
   NOT = { is_diplomatic_play_enemy_of = c:CHI }
  }

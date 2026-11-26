@@ -1,0 +1,30 @@
+tyr_seize_investment_pool = {
+ is_shown = {
+  OR = {
+   has_law_or_variant = law_type:law_state_capitalism
+   has_law_or_variant = law_type:law_cooperative_ownership
+   has_law_or_variant = law_type:law_command_economy
+   has_law_or_variant = law_type:law_laissez_faire_plus
+  }
+ }
+ possible = {
+  pop_type_percent_country = { target = pop_type:peasants value < 0.05 }
+  OR = {
+   AND = { has_law_or_variant = law_type:law_state_capitalism has_technology_researched = central_planning }
+   AND = { has_law_or_variant = law_type:law_cooperative_ownership has_technology_researched = political_agitation }
+   AND = { has_law_or_variant = law_type:law_command_economy has_technology_researched = central_planning }
+   AND = { has_law_or_variant = law_type:law_laissez_faire_plus has_technology_researched = corporate_management }
+  }
+  NOT = { has_modifier = tyr_investment_pool_seizure_distrust }
+ }
+ when_taken = {
+  add_radicals = { value = 0.05 }
+  seize_investment_pool = yes
+  add_modifier = {
+   name = tyr_investment_pool_seizure_distrust
+   years = 5
+   is_decaying = yes
+  }
+ }
+ ai_chance = { value = 0 }
+}
