@@ -1,13 +1,20 @@
-# Country scope. Exact original tags only; Tibet/Korea/Lanfang are excluded.
+﻿# Country scope. Exact original tags only; Tibet/Korea/Lanfang are excluded.
 chi_adm_court_valid = {
  custom_tooltip = {
   text = chi_adm_court_register_req_court
-  exists = c:CHI
-  c:CHI = {
-   has_variable = chi_qing_1836_setup
-  NOT = { has_variable = tyr_china_unified_applied }
-   has_law_or_variant = law_type:law_monarchy
-   NOT = { has_variable = tyr_chi_fragmented }
+  exists = var:chi_adm_imperial_court
+  var:chi_adm_imperial_court ?= {
+   chi_adm_is_imperial_court = yes
+   OR = {
+    AND = {
+     c:CHI ?= this
+     has_variable = chi_qing_1836_setup
+     NOT = { has_variable = tyr_china_unified_applied }
+     has_law_or_variant = law_type:law_monarchy
+     NOT = { has_variable = tyr_chi_fragmented }
+    }
+    AND = { c:TPG ?= this is_subject = no }
+   }
   }
  }
 }
@@ -17,8 +24,11 @@ chi_adm_eligible = {
   chi_adm_court_valid = yes
   chi_qing_administration_tag = yes
   chi_qing_administrative_subject = yes
-  is_direct_subject_of = c:CHI
+  is_direct_subject_of = var:chi_adm_imperial_court
  }
+}
+chi_adm_is_imperial_court = {
+ OR = { c:CHI ?= this c:TPG ?= this }
 }
 chi_adm_frontier = {
  is_subject_type = subject_type_qing_frontier_administration

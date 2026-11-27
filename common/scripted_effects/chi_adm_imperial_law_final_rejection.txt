@@ -1,0 +1,21 @@
+﻿# Governor scope. An explicit final rejection ends the response workflow.
+chi_adm_imperial_law_final_rejection = {
+ if = {
+  limit = { has_variable = chi_adm_imperial_law_active }
+  if = {
+   limit = { NOT = { has_variable = chi_adm_imperial_law_refusal_used } }
+   chi_adm_adjust_loyalty = { AMOUNT = chi_adm_imperial_law_refusal_loss }
+   chi_adm_adjust_autonomy = { AMOUNT = chi_adm_imperial_law_refusal_autonomy }
+   change_relations = { country = var:chi_adm_imperial_court value = -10 }
+  }
+  set_variable = chi_adm_imperial_law_refusal_used
+  set_variable = chi_adm_imperial_law_rejection_final
+  set_variable = chi_adm_imperial_law_court_answered
+  set_variable = { name = chi_adm_imperial_law_last_rejected_id value = var:chi_adm_imperial_law_law_id }
+  set_variable = { name = chi_adm_imperial_law_status value = 7 }
+  chi_adm_imperial_law_stop_support = yes
+  remove_variable = chi_adm_imperial_law_delay_decision
+  remove_variable = chi_adm_imperial_law_months_left
+  remove_variable = chi_adm_imperial_law_active
+ }
+}

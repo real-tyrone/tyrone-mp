@@ -1,4 +1,4 @@
-chi_adm_reform_staff = {
+﻿chi_adm_reform_staff = {
  remove_modifier = chi_adm_reform_work
  if = { limit = { chi_adm_reform_slots > 0 } add_modifier = { name = chi_adm_reform_work multiplier = chi_adm_reform_slots } }
 }
@@ -367,7 +367,7 @@ chi_adm_reform_reconcile_opium = {
   }
   set_variable = { name = chi_adm_reform_opium_seen value = global_var:chi_adm_reform_opium_serial }
   if = {
-   limit = { c:CHI ?= { has_modifier = opium_wars_addiction_modifier } }
+   limit = { var:chi_adm_imperial_court ?= { has_modifier = opium_wars_addiction_modifier } }
    set_variable = chi_adm_reform_opium_affected
    set_variable = { name = chi_adm_reform_opium_done value = 0 }
    remove_variable = chi_adm_reform_opium_months
@@ -409,8 +409,8 @@ chi_adm_reform_initialize = {
     set_variable = { name = chi_adm_reform_army_done value = { value = 4 subtract = var:chi_early_army_stages min = 0 max = 4 } }
    }
    else_if = {
-    limit = { c:CHI ?= { has_variable = chi_early_army_stages } }
-    set_variable = { name = chi_adm_reform_army_done value = { value = 4 subtract = c:CHI.var:chi_early_army_stages min = 0 max = 4 } }
+    limit = { var:chi_adm_imperial_court ?= { has_variable = chi_early_army_stages } }
+    set_variable = { name = chi_adm_reform_army_done value = { value = 4 subtract = var:chi_adm_imperial_court.var:chi_early_army_stages min = 0 max = 4 } }
    }
    else_if = { limit = { game_date >= 1836.1.2 } set_variable = { name = chi_adm_reform_army_done value = 4 } }
   }
@@ -419,7 +419,7 @@ chi_adm_reform_initialize = {
    limit = {
     NOR = {
      has_modifier = chi_early_army_line_artillery_penalty
-     AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } c:CHI ?= { has_modifier = chi_early_army_line_artillery_penalty } }
+     AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } var:chi_adm_imperial_court ?= { has_modifier = chi_early_army_line_artillery_penalty } }
      AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } game_date < 1836.1.2 }
     }
    }
@@ -429,22 +429,22 @@ chi_adm_reform_initialize = {
    limit = {
     NOR = {
      has_modifier = chi_mandate_centralisation_low
-     AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } c:CHI ?= { has_modifier = chi_mandate_centralisation_low } }
+     AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } var:chi_adm_imperial_court ?= { has_modifier = chi_mandate_centralisation_low } }
      AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } game_date < 1836.1.2 }
     }
    }
    if = {
-    limit = { OR = { has_modifier = chi_mandate_centralisation_mid AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } c:CHI ?= { has_modifier = chi_mandate_centralisation_mid } } } }
+    limit = { OR = { has_modifier = chi_mandate_centralisation_mid AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } var:chi_adm_imperial_court ?= { has_modifier = chi_mandate_centralisation_mid } } } }
     set_variable = { name = chi_adm_reform_admin_done value = 1 }
    }
    else_if = {
-    limit = { OR = { has_modifier = chi_mandate_centralisation_high AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } c:CHI ?= { has_modifier = chi_mandate_centralisation_high } } } }
+    limit = { OR = { has_modifier = chi_mandate_centralisation_high AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } var:chi_adm_imperial_court ?= { has_modifier = chi_mandate_centralisation_high } } } }
     set_variable = { name = chi_adm_reform_admin_done value = 3 }
    }
    else = { set_variable = { name = chi_adm_reform_admin_done value = 4 } }
   }
   if = {
-   limit = { OR = { has_modifier = opium_wars_addiction_modifier AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } c:CHI ?= { has_modifier = opium_wars_addiction_modifier } } } }
+   limit = { OR = { has_modifier = opium_wars_addiction_modifier AND = { NOT = { has_variable = chi_qing_modifier_cleanup_v3 } var:chi_adm_imperial_court ?= { has_modifier = opium_wars_addiction_modifier } } } }
    set_variable = chi_adm_reform_opium_affected
   }
   if = { limit = { has_global_variable = chi_adm_reform_opium_serial } set_variable = { name = chi_adm_reform_opium_seen value = global_var:chi_adm_reform_opium_serial } }

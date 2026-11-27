@@ -1,12 +1,12 @@
-# Province scope. The same eligibility is used on submission and at the court.
+﻿# Province scope. The same eligibility is used on submission and at the court.
 chi_adm_imperial_law_request_province = {
  chi_adm_imperial_law_civil = yes
  OR = {
   is_subject_type = subject_type_qing_civil_administration
   is_subject_type = subject_type_qing_viceroyalty_administration
  }
- NOT = { is_diplomatic_play_enemy_of = c:CHI }
- NOT = { has_war_with = c:CHI }
+ NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court }
+ NOT = { has_war_with = var:chi_adm_imperial_court }
 }
 
 chi_adm_imperial_law_request_can_submit = {
@@ -20,7 +20,7 @@ chi_adm_imperial_law_request_can_submit = {
 
 chi_adm_imperial_law_request_law = {
  chi_adm_imperial_law_request_can_submit = yes
- c:CHI = { has_law = law_type:$LAW$ }
+ var:chi_adm_imperial_court = { has_law = law_type:$LAW$ }
  NOR = {
   has_law = law_type:$LAW$
   has_variable = chi_adm_imperial_law_repeat_$ID$
@@ -34,7 +34,7 @@ chi_adm_imperial_law_request_law = {
 
 # Court scope. Reopened or queued event windows cannot answer a later petition.
 chi_adm_imperial_law_request_current = {
- c:CHI ?= this
+ chi_adm_is_imperial_court = yes
  exists = scope:chi_adm_imperial_law_requested_by
  exists = scope:chi_adm_imperial_law_request_serial
  exists = scope:chi_adm_imperial_law_request_law

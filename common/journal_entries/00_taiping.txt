@@ -9,6 +9,29 @@ je_chinese_missions = {
 	}
 
 	scripted_button = CHI_deport_missionaries_button
+	scripted_button = tyr_qing_request_missionary_access
+ widget = { gui = "gui/journal_entry_widgets/chi_chinese_missions_map.gui" name = "chi_chinese_missions_map_legend" container = "custom_widget_container_1" }
+ map_color = {
+  if = { limit = { owner ?= { chi_qing_realm = yes } religion_percent_state = { target = rel:protestant value >= 0.01 } } value = "chi_adm_protestant_green" }
+  else_if = { limit = { owner ?= { chi_qing_realm = yes } has_variable = open_to_missionaries_state } value = "chi_adm_missions_blue" }
+  else_if = { limit = { owner ?= { chi_qing_realm = yes } } value = "chi_adm_religious_gray" }
+ }
+ map_color_second = {
+  if = { limit = { owner ?= { chi_qing_realm = yes } has_modifier = god_worshippers } value = "chi_adm_society_purple" }
+  else_if = { limit = { owner ?= { chi_qing_realm = yes } has_modifier = tyr_society_provincial_patronage } value = "chi_adm_patronage_gold" }
+  else_if = { limit = { owner ?= { chi_qing_realm = yes } turmoil >= 0.15 } value = "chi_adm_turmoil_orange" }
+ }
+ map_tooltip = {
+  if = {
+   limit = { owner ?= { chi_qing_realm = yes } }
+   custom_tooltip_no_bullet = chi_adm_religious_map_heading
+   if = { limit = { has_modifier = tyr_society_provincial_patronage } custom_tooltip = tyr_society_patronage_map_tt }
+   if = { limit = { has_variable = open_to_missionaries_state } custom_tooltip = chi_adm_religious_map_open_tt }
+   if = { limit = { has_modifier = god_worshippers } custom_tooltip = chi_adm_religious_map_society_tt }
+   if = { limit = { religion_percent_state = { target = rel:protestant value >= 0.01 } } custom_tooltip = chi_adm_religious_map_protestant_tt }
+   if = { limit = { turmoil >= 0.15 } custom_tooltip = chi_adm_religious_map_turmoil_tt }
+  }
+ }
 
 	is_shown_when_inactive = { tyr_heavenly_missions_country = yes }
 
@@ -25,9 +48,12 @@ je_chinese_missions = {
 			text = tyr_heavenly_missions_port_tt
 			any_state = {
 				chi_qing_story_state = yes
-				any_neighbouring_state = {
-					is_treaty_port = yes
-					owner = { religion = { has_discrimination_trait = heritage_christian } }
+				OR = {
+					tyr_heavenly_state_has_christian_treaty_port = yes
+					any_neighbouring_state = {
+						is_treaty_port = yes
+						owner = { religion = { has_discrimination_trait = heritage_christian } }
+					}
 				}
 			}
 		}
@@ -36,6 +62,7 @@ je_chinese_missions = {
 			OR = {
 				NOT = { has_law_or_variant = law_type:law_isolationism }
 				any_country = { has_treaty_port_in_market = root.market }
+				any_state = { chi_qing_story_state = yes tyr_heavenly_state_has_christian_treaty_port = yes }
 			}
 		}
 	}
@@ -101,7 +128,7 @@ je_heavenly_kingdom_main = {
 	group = je_group_qing
 
 	activation_description = {
-		always = yes
+		tyr_heavenly_main_activation_ready = yes
 	}
 
 	is_shown_when_inactive = {
@@ -109,23 +136,7 @@ je_heavenly_kingdom_main = {
 		c:CHI ?= THIS
 	}
 
-	possible = {
-		c:CHI ?= this
-		NOT = { exists = c:TPG }
-		custom_tooltip = {
-			text = missionaries_enough_time_tt
-			OR = {
-				AND = {
-					has_variable = missionary_works_counter
-					var:missionary_works_counter >= 5
-					game_date >= 1846
-				}
-				game_date >= 1856
-			}
-		}
-		is_subject = no
-  any_state = { tyr_heavenly_founding_state = yes }
- }
+	possible = { tyr_heavenly_main_activation_ready = yes }
 
  immediate = {
   random_state = {
@@ -279,6 +290,7 @@ je_taiping = {
 }
 
 je_taiping_revolution = {
+ scripted_button = tyr_heavenly_open_trade_button
 	icon = "gfx/interface/icons/event_icons/event_military.dds"
 
 	group = je_group_historical_content

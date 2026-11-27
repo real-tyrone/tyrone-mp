@@ -1,0 +1,40 @@
+﻿# ROOT is Scandinavia. Check only foreign homelands with a Return State claim.
+tyr_scandinavian_return_state_target = {
+    is_homeland_of_country_cultures = root
+    has_claim_by = root
+    is_treaty_port = no
+    owner = {
+        NOT = { this = root }
+        tyrone_ai_attack_country_allowed = yes
+    }
+}
+
+tyr_scandinavian_return_state_available = {
+    c:SCA ?= this
+    is_ai = yes
+    is_subject = no
+    any_state = { tyr_scandinavian_return_state_target = yes }
+}
+
+# State scope. ROOT is Scandinavia taking the homeland recovery decision.
+tyr_scandinavia_reclaim_homelands_target = {
+    tyr_scandinavian_return_state_target = yes
+    owner = {
+        NOT = { is_country_type = decentralized }
+        relations:root < relations_threshold:cordial
+        is_at_war = no
+        is_diplomatic_play_committed_participant = no
+        NOR = {
+            is_subject_of = root
+            top_overlord ?= root
+            has_truce_with = root
+        }
+        trigger_if = {
+            limit = { is_subject = yes }
+            overlord ?= {
+                relations:root < relations_threshold:cordial
+                NOT = { has_truce_with = root }
+            }
+        }
+    }
+}

@@ -1,0 +1,62 @@
+# Country scope.
+tyr_lj_is_liangjiang = {
+	c:AHU ?= THIS
+	NOT = { tyr_china_unified_active = yes }
+}
+
+tyr_lj_has_nanjing = {
+	any_scope_state = { state_region = s:STATE_NANJING }
+}
+
+tyr_lj_has_shanghai_access = {
+	NOT = { has_law_or_variant = law_type:law_isolationism }
+	any_scope_state = {
+		state_region = s:STATE_SUZHOU
+		market_access >= 0.75
+		any_scope_building = {
+			is_building_type = building_port
+			level >= 3
+		}
+	}
+}
+
+tyr_lj_arsenal_stage_1_ready = {
+	tyr_lj_is_liangjiang = yes
+	tyr_lj_has_nanjing = yes
+	NOT = { has_variable = tyr_lj_arsenal_stage_1 }
+	has_technology_researched = lathe
+	has_building_levels_in_state_region = {
+		region = STATE_NANJING
+		building = building_tooling_workshop
+		levels >= 5
+		is_incorporated = yes
+	}
+	gold_reserves >= 30000
+}
+
+tyr_lj_arsenal_stage_2_ready = {
+	has_variable = tyr_lj_arsenal_stage_1
+	NOT = { has_variable = tyr_lj_arsenal_stage_2 }
+	has_technology_researched = breech_loading_artillery
+	has_building_levels_in_state_region = {
+		region = STATE_NANJING
+		building = building_arms_industry
+		levels >= 5
+		is_incorporated = yes
+	}
+	gold_reserves >= 50000
+}
+
+tyr_lj_arsenal_stage_3_ready = {
+	has_variable = tyr_lj_arsenal_stage_2
+	NOT = { has_variable = tyr_lj_arsenal_stage_3 }
+	has_technology_researched = empiricism
+	has_technology_researched = academia
+	has_building_levels_in_state_region = {
+		region = STATE_NANJING
+		building = building_university
+		levels >= 3
+		is_incorporated = yes
+	}
+	gold_reserves >= 40000
+}

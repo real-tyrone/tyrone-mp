@@ -1,0 +1,31 @@
+tyr_society_establish_foothold_button = {
+ name = tyr_society_establish_foothold_button
+ desc = tyr_society_establish_foothold_button_desc
+ visible = { chi_adm_target_valid = yes NOT = { exists = c:TPG } }
+ possible = {
+  game_date >= 1850.1.1
+  custom_tooltip = { text = tyr_society_patronage_permission_tt has_variable = chi_adm_religious_missions_permitted }
+  custom_tooltip = { text = tyr_society_upgrade_state_tt any_scope_state = { tyr_society_patronage_upgrade_state = yes } }
+  custom_tooltip = { text = tyr_society_upgrade_ready_tt NOT = { has_variable = tyr_society_upgrade_cooldown } }
+  gold_reserves >= 10000
+ }
+ effect = {
+  custom_tooltip = tyr_society_upgrade_effect_tt
+  if = {
+   limit = {
+    NOT = { has_variable = tyr_society_upgrade_cooldown }
+    any_scope_state = { tyr_society_patronage_upgrade_state = yes }
+   }
+   add_treasury = -10000
+   hidden_effect = {
+    set_variable = { name = tyr_society_upgrade_cooldown months = 12 }
+    random_scope_state = {
+     limit = { tyr_society_patronage_upgrade_state = yes }
+     remove_modifier = tyr_society_provincial_patronage
+     add_modifier = { name = god_worshippers years = 5 }
+    }
+   }
+  }
+ }
+ ai_chance = { value = 0 }
+}

@@ -1,0 +1,34 @@
+﻿namespace = tyr_qing_missionary_request
+
+tyr_qing_missionary_request.1 = {
+ type = country_event
+ placement = ROOT
+ title = tyr_qing_request_missionary_access_title
+ desc = tyr_qing_request_missionary_access_event_desc
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 3
+
+ trigger = { tyr_qing_request_missionary_access_eligible = yes }
+ cancellation_trigger = { tyr_qing_request_missionary_access_eligible = no }
+
+ option = {
+  name = tyr_qing_request_missionary_access_accept
+  trigger = { tyr_qing_request_missionary_access_eligible = yes }
+  custom_tooltip = tyr_qing_request_missionary_access_accept_tt
+  hidden_effect = { chi_adm_religious_set_policy = { POLICY = chi_adm_religious_missions_permitted } }
+  ai_chance = {
+   base = 50
+   modifier = { trigger = { var:chi_adm_loyalty >= 70 } factor = 2 }
+   modifier = { trigger = { var:chi_adm_loyalty < 40 } factor = 0.5 }
+   modifier = { trigger = { var:chi_adm_autonomy < 30 } factor = 1.5 }
+   modifier = { trigger = { var:chi_adm_autonomy >= 60 } factor = 0.5 }
+   modifier = { trigger = { has_variable = chi_adm_religious_missions_restricted } factor = 0.5 }
+  }
+ }
+ option = {
+  name = tyr_qing_request_missionary_access_decline
+  default_option = yes
+  ai_chance = { base = 50 }
+ }
+}

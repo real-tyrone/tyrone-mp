@@ -1,13 +1,13 @@
 ﻿chi_adm_negotiated_integration_valid = {
-chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI }
+chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court }
 }
 
 chi_adm_negotiated_integration_court = {
-c:CHI ?= this chi_adm_court_valid = yes
+chi_adm_is_imperial_court = yes chi_adm_court_valid = yes
 }
 
 chi_adm_negotiated_integration_resources = {
-c:CHI = { authority >= 0 relative_bureaucracy >= 0 }
+var:chi_adm_imperial_court = { authority >= 0 relative_bureaucracy >= 0 }
 }
 
 chi_adm_negotiated_integration_active = {
@@ -24,11 +24,11 @@ trigger_if = {
   chi_adm_integration_either_route = yes
  }
 }
-trigger_else = { c:CHI = { has_technology_researched = central_archives } }
-c:CHI = {
+trigger_else = { var:chi_adm_imperial_court = { has_technology_researched = central_archives } }
+var:chi_adm_imperial_court = {
  custom_tooltip = { text = chi_adm_integration_mandate_tt chi_adm_integration_mandate_ready = yes }
 }
-c:CHI = { authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no }
+var:chi_adm_imperial_court = { authority >= 0 relative_bureaucracy >= 0 is_at_war = no is_diplomatic_play_committed_participant = no }
 }
 
 chi_adm_negotiated_integration_can_begin = {
@@ -61,7 +61,7 @@ chi_adm_integration_bureaucrats_province = {
 
 # The caller first checks that the province qualifies for the law route.
 chi_adm_integration_either_route = {
- c:CHI = {
+ var:chi_adm_imperial_court = {
   OR = {
    has_technology_researched = central_archives
    has_law_or_variant = law_type:law_appointed_bureaucrats
@@ -73,6 +73,12 @@ chi_adm_integration_either_route = {
 chi_adm_integration_mandate_ready = {
  OR = {
   AND = {
+   c:TPG ?= this
+   NOT = { exists = c:CHI }
+   has_technology_researched = central_archives
+   has_technology_researched = nationalism
+  }
+  AND = {
    has_journal_entry = je_mandate_of_heaven
    je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 }
   }
@@ -81,7 +87,8 @@ chi_adm_integration_mandate_ready = {
 }
 
 # Country scope: the target of the court's escalation event.
-chi_adm_negotiated_integration_coercible = {
+# Province scope. Common restrictions for a forced integration play.
+chi_adm_negotiated_integration_can_start_forced_play = {
  chi_adm_negotiated_integration_valid = yes
  is_at_war = no
  is_diplomatic_play_committed_participant = no
@@ -89,6 +96,15 @@ chi_adm_negotiated_integration_coercible = {
   has_modifier = chi_adm_provincial_development_guarantee
   has_variable = chi_adm_henan_stage
  }
+ var:chi_adm_imperial_court ?= {
+  is_at_war = no
+  is_diplomatic_play_committed_participant = no
+  NOT = { var:chi_adm_qing_security_phase ?= 5 }
+ }
+}
+
+chi_adm_negotiated_integration_coercible = {
+ chi_adm_negotiated_integration_can_start_forced_play = yes
  OR = {
   AND = {
    var:chi_adm_negotiated_integration_stage ?= 2
@@ -104,9 +120,14 @@ chi_adm_negotiated_integration_coercible = {
    OR = { var:chi_adm_negotiated_integration_fault ?= 2 has_variable = chi_adm_negotiated_integration_repayment_refused }
   }
  }
- c:CHI ?= {
-  is_at_war = no
-  is_diplomatic_play_committed_participant = no
-  NOT = { var:chi_adm_qing_security_phase ?= 5 }
+}
+
+chi_adm_negotiated_integration_national_unification_available = {
+ chi_adm_negotiated_integration_can_start_forced_play = yes
+ custom_tooltip = {
+  text = chi_adm_negotiated_integration_national_unification_unlock_tt
+  var:chi_adm_imperial_court ?= {
+   OR = { c:TPG ?= this has_technology_researched = pan-nationalism }
+  }
  }
 }

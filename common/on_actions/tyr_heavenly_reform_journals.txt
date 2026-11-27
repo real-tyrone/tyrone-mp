@@ -1,0 +1,31 @@
+﻿on_game_started_after_lobby = { on_actions = { tyr_heavenly_reforms_load } }
+tyr_heavenly_reforms_load = { effect = { c:TPG ?= { tyr_heavenly_initialize_reform_journals = yes } } }
+on_monthly_pulse_country = { on_actions = { tyr_heavenly_reforms_monthly } }
+tyr_heavenly_reforms_monthly = {
+ trigger = { c:TPG ?= THIS NOT = { has_variable = tyr_heavenly_reform_journals_initialized } }
+ effect = { tyr_heavenly_initialize_reform_journals = yes }
+}
+
+on_game_started_after_lobby = { on_actions = { tyr_heavenly_embassies_repair_load } }
+tyr_heavenly_embassies_repair_load = {
+ effect = {
+  c:TPG ?= {
+   if = {
+    limit = {
+     has_modifier = modifier_relations_with_west
+     NOT = { has_variable = tyr_heavenly_western_embassies_granted_v2 }
+    }
+    tyr_heavenly_repair_western_embassies = yes
+   }
+  }
+ }
+}
+on_monthly_pulse_country = { on_actions = { tyr_heavenly_embassies_repair_monthly } }
+tyr_heavenly_embassies_repair_monthly = {
+ trigger = {
+  c:TPG ?= this
+  has_modifier = modifier_relations_with_west
+  NOT = { has_variable = tyr_heavenly_western_embassies_granted_v2 }
+ }
+ effect = { tyr_heavenly_repair_western_embassies = yes }
+}

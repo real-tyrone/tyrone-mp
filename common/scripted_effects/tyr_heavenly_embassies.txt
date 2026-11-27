@@ -1,0 +1,36 @@
+﻿# Country scope: a Christian Great Power receiving the heavenly.6.e overture.
+tyr_heavenly_establish_western_embassy = {
+ save_temporary_scope_as = tyr_heavenly_embassy_power
+ if = {
+  limit = {
+   NOT = { c:TPG ?= THIS }
+   is_country_type = recognized
+   NOT = {
+    any_scope_treaty = {
+     binds = c:TPG
+     any_scope_article = { has_type = offer_embassy target_country = c:TPG source_country = scope:tyr_heavenly_embassy_power }
+    }
+   }
+  }
+  create_treaty = {
+   first_country = scope:tyr_heavenly_embassy_power
+   second_country = c:TPG
+   is_draft = no
+   binding_period = { days = 0 }
+   articles_to_create = { { article = offer_embassy source_country = scope:tyr_heavenly_embassy_power target_country = c:TPG } }
+  }
+ }
+}
+
+# TPG country scope. Repair the old reward once, without repeating relations or modifiers.
+tyr_heavenly_repair_western_embassies = {
+ every_country = {
+  limit = {
+   country_rank >= rank_value:great_power
+   is_country_type = recognized
+   religion = { has_discrimination_trait = heritage_christian }
+  }
+  tyr_heavenly_establish_western_embassy = yes
+ }
+ set_variable = tyr_heavenly_western_embassies_granted_v2
+}

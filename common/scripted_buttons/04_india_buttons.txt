@@ -691,96 +691,30 @@ je_federation_of_india_invite_princely_states = {
 		is_at_war = no
 		any_princely_state = {
 			is_subject_of = ROOT
-			OR = {
-			relations:ROOT >= relations_threshold:amicable
-			liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD				
-			}
+			liberty_desire < 25
 		}
 	}
 
 	effect = {
-		custom_tooltip = {
-			text = all_princely_states_get_invitation_tt
+		custom_tooltip = tyr_india_guaranteed_princely_accession_tt
+		custom_tooltip = tyr_india_guaranteed_princely_accession_purse_tt
+		hidden_effect = {
+			save_scope_as = india_scope
 			every_princely_state = {
 				limit = {
 					is_subject_of = ROOT
-					relations:ROOT >= relations_threshold:amicable
-					liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
+					liberty_desire < 25
 				}
-				trigger_event = { id = federation_of_india.1 }
-			}
-		}
-		if = {
-			limit = {
-				any_princely_state = {
-					is_subject_of = ROOT
-					relations:ROOT >= relations_threshold:amicable
-					liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-				}
-			}
-			custom_tooltip = warning_may_cause_massive_debt_tt
-			show_as_tooltip = {
-				custom_tooltip = eligible_states_include_tt
-				ordered_princely_state = {
-					limit = {
-						is_subject_of = ROOT
-						relations:ROOT >= relations_threshold:amicable
-						liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-					}
-					order_by = country_rank
-					position = 0
-					check_range_bounds = no
-					custom_tooltip = eligible_country_entry_tt
-				}
+				save_scope_as = princely_state_scope
 				if = {
-					limit = {
-						any_princely_state = {
-							is_subject_of = ROOT
-							relations:ROOT >= relations_threshold:amicable
-							liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-							count > 1
-						}
-					}
-					ordered_princely_state = {
-						limit = {
-							is_subject_of = ROOT
-							relations:ROOT >= relations_threshold:amicable
-							liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-						}
-						order_by = country_rank
-						position = 1
-						check_range_bounds = no
-						custom_tooltip = eligible_country_entry_tt
-					}
+					limit = { is_player = yes }
+					play_as = scope:india_scope
 				}
-				if = {
-					limit = {
-						any_princely_state = {
-							is_subject_of = ROOT
-							relations:ROOT >= relations_threshold:amicable
-							liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-							count > 2
-						}
-					}
-					ordered_princely_state = {
-						limit = {
-							is_subject_of = ROOT
-							relations:ROOT >= relations_threshold:amicable
-							liberty_desire < define:NDiplomacy|WAR_GOAL_INFAMY_LOW_LIBERTY_DESIRE_THRESHOLD
-						}
-						order_by = country_rank
-						position = 2
-						check_range_bounds = no
-						if = {
-							limit = {
-								ROOT.num_princely_state_subjects_eligible_for_federation_minus_three > 0
-							}
-							custom_tooltip = eligible_country_entry_last_tt
-						}
-						else = {
-							custom_tooltip = eligible_country_entry_tt
-						}
-					}
+				ROOT = {
+					post_notification = joins_union_of_india
+					change_variable = { name = indian_states_annexed add = 1 }
+					set_variable = update_privy_purse
+					annex = scope:princely_state_scope
 				}
 			}
 		}

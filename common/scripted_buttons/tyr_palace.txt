@@ -1,0 +1,42 @@
+tyr_palace_ceremony_button = {
+ name = tyr_palace_ceremony_button
+ desc = tyr_palace_ceremony_button_desc
+ visible = { c:CHI ?= THIS }
+ possible = { custom_tooltip = { text = tyr_palace_required_tt tyr_palace_available = yes } custom_tooltip = { text = tyr_palace_ceremony_ready_tt NOT = { has_variable = tyr_palace_ceremony_cooldown } } gold_reserves >= 20000 is_at_war = no }
+ effect = {
+  if = { limit = { NOT = { has_variable = tyr_palace_ceremony_cooldown } }
+   hidden_effect = { set_variable = { name = tyr_palace_ceremony_cooldown months = 24 } }
+   add_treasury = -20000
+   add_modifier = { name = tyr_palace_ceremony months = 12 }
+  }
+ }
+ ai_chance = { value = 20 }
+}
+tyr_palace_exams_button = {
+ name = tyr_palace_exams_button
+ desc = tyr_palace_exams_button_desc
+ visible = { c:CHI ?= THIS }
+ possible = { custom_tooltip = { text = tyr_palace_required_tt tyr_palace_available = yes } custom_tooltip = { text = tyr_palace_exams_ready_tt NOT = { has_variable = tyr_palace_exams_cooldown } } gold_reserves >= 15000 bureaucracy >= 100 }
+ effect = {
+  if = { limit = { NOT = { has_variable = tyr_palace_exams_cooldown } }
+   hidden_effect = { set_variable = { name = tyr_palace_exams_cooldown months = 36 } }
+   add_treasury = -15000
+   add_modifier = { name = tyr_palace_exam_cost months = 12 } every_scope_state = { limit = { state_region = s:STATE_BEIJING } add_modifier = { name = tyr_palace_exam years = 3 } }
+  }
+ }
+ ai_chance = { value = 20 }
+}
+tyr_palace_restoration_button = {
+ name = tyr_palace_restoration_button
+ desc = tyr_palace_restoration_button_desc
+ visible = { c:CHI ?= THIS }
+ possible = { custom_tooltip = { text = tyr_palace_required_tt tyr_palace_available = yes } custom_tooltip = { text = tyr_palace_restoration_ready_tt NOT = { has_variable = tyr_palace_restoration_cooldown } } gold_reserves >= 30000 has_modifier = tyr_palace_neglect }
+ effect = {
+  if = { limit = { NOT = { has_variable = tyr_palace_restoration_cooldown } }
+   hidden_effect = { set_variable = { name = tyr_palace_restoration_cooldown months = 60 } }
+   add_treasury = -30000
+   remove_modifier = tyr_palace_neglect every_scope_state = { limit = { state_region = s:STATE_BEIJING } add_modifier = { name = tyr_palace_restored years = 5 } }
+  }
+ }
+ ai_chance = { value = 20 }
+}

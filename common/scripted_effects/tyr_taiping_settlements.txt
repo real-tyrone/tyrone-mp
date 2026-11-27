@@ -1,0 +1,80 @@
+# Governor scope.
+tyr_taiping_settlement_begin = {
+	save_temporary_scope_as = tyr_taiping_proposing_governor
+	set_variable = { name = tyr_taiping_settlement_path value = $PATH$ }
+	set_variable = tyr_taiping_settlement_pending
+	set_variable = { name = tyr_taiping_settlement_cooldown months = 12 }
+	c:TPG = {
+		set_variable = { name = tyr_taiping_settlement_governor value = scope:tyr_taiping_proposing_governor }
+		trigger_event = { id = tyr_taiping_settlement.1 popup = yes }
+	}
+}
+
+# Governor scope.
+tyr_taiping_settlement_clear_pending = {
+	remove_variable = tyr_taiping_settlement_pending
+	remove_variable = tyr_taiping_settlement_path
+	remove_variable = tyr_taiping_settlement_terms
+}
+
+# TPG scope.
+tyr_taiping_settlement_release_lock = {
+	if = {
+		limit = { has_variable = tyr_taiping_settlement_governor }
+		var:tyr_taiping_settlement_governor ?= { tyr_taiping_settlement_clear_pending = yes }
+	}
+	remove_variable = tyr_taiping_settlement_governor
+}
+
+# Governor scope. The path is revalidated immediately before execution.
+tyr_taiping_settlement_execute = {
+	if = {
+		limit = { tyr_taiping_settlement_current = yes var:tyr_taiping_settlement_path = 1 gold_reserves >= 30000 }
+		if = {
+			limit = { var:tyr_taiping_settlement_terms = 2 gold_reserves >= 50000 }
+			add_treasury = -50000
+			c:TPG = { add_treasury = 50000 }
+		}
+		else = {
+			add_treasury = -30000
+			c:TPG = { add_treasury = 30000 }
+		}
+		change_relations = { country = c:TPG value = 50 }
+		add_modifier = { name = tyr_taiping_independence_obligations years = 5 }
+		set_variable = tyr_taiping_settlement_independent
+	}
+	else_if = {
+		limit = { tyr_taiping_settlement_current = yes var:tyr_taiping_settlement_path = 2 is_subject = no }
+		save_temporary_scope_as = tyr_taiping_subject_governor
+		tyr_heavenly_create_administrative_pact = yes
+		if = {
+			limit = { var:tyr_taiping_settlement_terms = 2 }
+			add_modifier = tyr_taiping_subject_compact_strict
+		}
+		else = { add_modifier = tyr_taiping_subject_compact }
+		set_variable = tyr_taiping_settlement_subject
+	}
+	else_if = {
+		limit = { tyr_taiping_settlement_current = yes var:tyr_taiping_settlement_path = 3 exists = c:TPG }
+		set_variable = tyr_taiping_settlement_incorporated
+		remove_variable = tyr_taiping_settlement_pending
+		remove_variable = tyr_taiping_settlement_path
+		remove_variable = tyr_taiping_settlement_terms
+		c:TPG = { remove_variable = tyr_taiping_settlement_governor }
+		if = {
+			limit = { is_player = yes c:TPG = { is_ai = yes } }
+			play_as = c:TPG
+		}
+		c:TPG = { annex = ROOT }
+	}
+	c:TPG ?= { tyr_taiping_settlement_release_lock = yes }
+}
+
+# Provincial monthly pulse. Fires once per administration during the conflict.
+tyr_taiping_regional_flavor_tick = {
+	if = {
+		limit = { tyr_taiping_regional_flavor_available = yes }
+		set_variable = tyr_taiping_regional_flavor_done
+		trigger_event = { id = tyr_taiping_settlement.6 days = 0 popup = yes }
+	}
+}

@@ -50,11 +50,15 @@ chi_adm_provincial_development_request = {
         set_variable = { name = chi_adm_provincial_development_case value = 1 }
         set_variable = { name = chi_adm_provincial_development_deadline value = 6 }
         chi_adm_provincial_development_start_warrant_cooldown = yes
-        save_scope_as = chi_adm_provincial_development_province
-        c:CHI = {
-            save_scope_as = chi_adm_provincial_development_court
-            if = { limit = { is_ai = yes } trigger_event = { id = chi_adm_provincial_development.1 popup = yes } }
-            else = { chi_adm_provincial_development_notify_court = yes }
+        chi_adm_provincial_development_auto_warrant_response = yes
+        if = {
+            limit = { var:chi_adm_provincial_development_case ?= 1 }
+            save_scope_as = chi_adm_provincial_development_province
+            var:chi_adm_imperial_court = {
+                save_scope_as = chi_adm_provincial_development_court
+                if = { limit = { is_ai = yes } trigger_event = { id = chi_adm_provincial_development.1 popup = yes } }
+                else = { chi_adm_provincial_development_notify_court = yes }
+            }
         }
     }
 }
@@ -80,7 +84,7 @@ if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_pro
         set_variable = { name = chi_adm_provincial_development_offer value = 1 }
         set_variable = { name = chi_adm_provincial_development_case value = 2 }
         set_variable = { name = chi_adm_provincial_development_deadline value = 6 }
-        c:CHI = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
+        var:chi_adm_imperial_court = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
     }
 }
 
@@ -89,7 +93,7 @@ if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_pro
         set_variable = { name = chi_adm_provincial_development_offer value = 2 }
         set_variable = { name = chi_adm_provincial_development_case value = 2 }
         set_variable = { name = chi_adm_provincial_development_deadline value = 6 }
-        c:CHI = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
+        var:chi_adm_imperial_court = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
     }
 }
 
@@ -98,14 +102,14 @@ if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_pro
         set_variable = { name = chi_adm_provincial_development_offer value = 3 }
         set_variable = { name = chi_adm_provincial_development_case value = 2 }
         set_variable = { name = chi_adm_provincial_development_deadline value = 6 }
-        c:CHI = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
+        var:chi_adm_imperial_court = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
     }
 }
 
 chi_adm_provincial_development_refuse = {
 if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 1 }
     set_variable = { name = chi_adm_provincial_development_case value = 3 }
-    set_variable = { name = chi_adm_provincial_development_deadline value = 6 } c:CHI = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
+    set_variable = { name = chi_adm_provincial_development_deadline value = 6 } var:chi_adm_imperial_court = { save_scope_as = chi_adm_provincial_development_court } trigger_event = { id = chi_adm_provincial_development.2 popup = yes }
 }
 }
 
@@ -120,7 +124,7 @@ chi_adm_provincial_development_defy = {
 if = { limit = { chi_adm_provincial_development_case_valid = yes chi_adm_provincial_development_crisis = yes OR = { var:chi_adm_provincial_development_case = 2 var:chi_adm_provincial_development_case = 3 } }
     chi_adm_provincial_development_grant_autonomy = { AMOUNT = 10 }
     chi_adm_adjust_loyalty = { AMOUNT = -5 }
-    change_relations = { country = c:CHI value = -10 }
+    change_relations = { country = var:chi_adm_imperial_court value = -10 }
     chi_adm_provincial_development_grant = yes
 }
 }
@@ -143,12 +147,12 @@ if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_pro
 
 chi_adm_provincial_development_resist_restoration = {
 if = { limit = { chi_adm_provincial_development_case_valid = yes var:chi_adm_provincial_development_case = 4 }
-    chi_adm_adjust_loyalty = { AMOUNT = -3 } change_relations = { country = c:CHI value = -5 }
+    chi_adm_adjust_loyalty = { AMOUNT = -3 } change_relations = { country = var:chi_adm_imperial_court value = -5 }
     add_modifier = { name = chi_adm_provincial_development_unrestored }
     chi_adm_provincial_development_clear_case = yes
     set_variable = { name = chi_adm_provincial_development_dispute value = yes }
 save_scope_as = chi_adm_provincial_development_province
-c:CHI = { trigger_event = { id = chi_adm_provincial_development_ext.7 popup = yes } }
+var:chi_adm_imperial_court = { trigger_event = { id = chi_adm_provincial_development_ext.7 popup = yes } }
 }
 }
 
@@ -190,7 +194,14 @@ if = { limit = { chi_adm_target_valid = yes }
 }
     if = { limit = { has_variable = chi_adm_provincial_development_deadline }
         change_variable = { name = chi_adm_provincial_development_deadline subtract = 1 }
-        if = { limit = { var:chi_adm_provincial_development_deadline <= 0 }
+        chi_adm_provincial_development_auto_warrant_response = yes
+        if = { limit = {
+            trigger_if = {
+                limit = { has_variable = chi_adm_provincial_development_deadline }
+                var:chi_adm_provincial_development_deadline <= 0
+            }
+            trigger_else = { always = no }
+        }
             if = { limit = { var:chi_adm_provincial_development_case = 1 } chi_adm_provincial_development_refuse = yes }
             else_if = { limit = { var:chi_adm_provincial_development_case = 4 } chi_adm_provincial_development_resist_restoration = yes }
             else = { chi_adm_provincial_development_abandon = yes }
@@ -205,4 +216,28 @@ if = { limit = { chi_adm_target_valid = yes }
         else = { chi_adm_provincial_development_request = { PACKAGE = 4 MILITARY = no } }
     }
 } else = { chi_adm_provincial_development_cleanup = yes }
+}
+
+# Province scope. Apply only the human court's preference for initial warrants.
+chi_adm_provincial_development_auto_warrant_response = {
+    if = {
+        limit = {
+            chi_adm_provincial_development_case_valid = yes
+            var:chi_adm_provincial_development_case = 1
+            var:chi_adm_imperial_court ?= {
+                is_ai = no
+                chi_adm_memorials_court = yes
+                NOT = { tyr_china_unified_active = yes }
+                has_variable = chi_adm_memorials_auto_emergency
+            }
+        }
+        if = {
+            limit = { var:chi_adm_imperial_court = { var:chi_adm_memorials_auto_emergency = 1 } }
+            chi_adm_provincial_development_approve = yes
+        }
+        else_if = {
+            limit = { var:chi_adm_imperial_court = { var:chi_adm_memorials_auto_emergency = 2 } }
+            chi_adm_provincial_development_refuse = yes
+        }
+    }
 }

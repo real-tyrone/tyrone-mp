@@ -1,10 +1,11 @@
-# Existing reform pulse remains unchanged. No global monthly iterator.
+﻿# Existing reform pulse remains unchanged. No global monthly iterator.
 on_game_started_after_lobby = {
  on_actions = { chi_adm_start }
 }
 chi_adm_start = {
  effect = {
   c:CHI ?= {
+   chi_adm_initialize_imperial_court = yes
    chi_adm_start_guide_entries = yes
    if = {
     limit = { chi_adm_court_valid = yes chi_qing_has_administrative_subjects = yes }
@@ -28,6 +29,7 @@ chi_adm_start = {
     chi_adm_start_guide_entries = yes
    }
   }
+  c:TPG ?= { chi_adm_initialize_imperial_court = yes }
  }
 }
 on_monthly_pulse_country = {
@@ -36,10 +38,17 @@ on_monthly_pulse_country = {
 chi_adm_monthly = {
  trigger = {
   OR = {
+   chi_adm_is_imperial_court = yes
+   chi_qing_administration_tag = yes
    has_variable = chi_adm_initialized
    has_variable = chi_adm_reform_v1
    chi_adm_eligible = yes
   }
  }
- effect = { chi_adm_monthly_update = yes chi_adm_reform_month = yes }
+ effect = {
+  chi_adm_bind_imperial_court = yes
+  if = { limit = { chi_adm_is_imperial_court = yes } chi_adm_initialize_imperial_court = yes }
+  chi_adm_monthly_update = yes
+  chi_adm_reform_month = yes
+ }
 }

@@ -1,0 +1,84 @@
+﻿# State scope. ROOT is Austria or Austria-Hungary.
+tyr_austria_recover_croatia_state = {
+    OR = {
+        state_region = s:STATE_CROATIA
+        state_region = s:STATE_SLAVONIA
+    }
+    root = { tyr_austria_holds_central_hungary = yes }
+}
+
+tyr_austria_recover_german_state = {
+    root = { has_variable = je_german_confederate_unifier }
+    has_claim_by = root
+    state_region = {
+        OR = { is_homeland = cu:north_german is_homeland = cu:south_german }
+    }
+}
+
+tyr_austria_territorial_recovery_state = {
+    OR = {
+        tyr_austria_recover_croatia_state = yes
+        tyr_austria_recover_german_state = yes
+    }
+    is_treaty_port = no
+    owner = {
+        NOR = {
+            this = root
+            is_subject_of = root
+            top_overlord ?= root
+        }
+        tyrone_ai_attack_country_allowed = yes
+    }
+}
+
+# Country scope. Hungary may be held directly or administered by a direct subject.
+tyr_austria_holds_central_hungary = {
+    OR = {
+        owns_entire_state_region = STATE_CENTRAL_HUNGARY
+        any_direct_subject = { owns_entire_state_region = STATE_CENTRAL_HUNGARY }
+    }
+}
+
+# State scope. ROOT is Austria or Austria-Hungary taking the decision.
+tyr_austria_croatia_decision_target = {
+    tyr_austria_recover_croatia_state = yes
+    is_treaty_port = no
+    owner = {
+        is_subject = no
+        is_at_war = no
+        is_diplomatic_play_committed_participant = no
+        relations:root < relations_threshold:cordial
+        NOR = {
+            this = root
+            is_country_type = decentralized
+            has_truce_with = root
+            root = { is_subject_of = prev }
+        }
+        tyrone_ai_attack_country_allowed = yes
+    }
+}
+
+# State scope. ROOT is the rival initiating the Return State play.
+tyr_german_rivals_press_claims_target = {
+    has_claim_by = root
+    is_treaty_port = no
+    owner = {
+        OR = {
+            AND = {
+                c:NGF ?= this
+                root = { OR = { c:AUS ?= this c:KUK ?= this } has_variable = je_german_confederate_unifier }
+            }
+            AND = {
+                OR = { c:AUS ?= this c:KUK ?= this } has_variable = je_german_confederate_unifier
+                root = { c:NGF ?= this }
+            }
+        }
+        is_subject = no
+        is_at_war = no
+        is_diplomatic_play_committed_participant = no
+        NOT = { has_truce_with = root }
+        relations:root < relations_threshold:cordial
+        army_power_projection < root.army_power_projection
+        tyrone_ai_attack_country_allowed = yes
+    }
+}

@@ -1,0 +1,31 @@
+﻿# State scope; ROOT is the AI country evaluating a diplomatic target.
+tyr_avenge_brothers_war_required_state = {
+ OR = {
+  state_region = s:STATE_RHINELAND
+  state_region = s:STATE_BADEN
+  state_region = s:STATE_WURTTEMBERG
+  state_region = s:STATE_FRANCONIA
+  state_region = s:STATE_BAVARIA
+ }
+}
+tyr_avenge_brothers_war_recovery_state = {
+ OR = {
+  state_region = { is_homeland = cu:north_german }
+  tyr_avenge_brothers_war_required_state = yes
+ }
+ owner = {
+  NOT = { this = root }
+  NOT = { is_subject_of = root }
+ }
+}
+# Country scope: an owner (or overlord) holding territory still needed by ROOT.
+tyr_avenge_brothers_war_recovery_country = {
+ NOT = { this = root }
+ NOT = { is_subject_of = root }
+ OR = {
+  any_scope_state = { tyr_avenge_brothers_war_recovery_state = yes }
+  any_subject_or_below = {
+   any_scope_state = { tyr_avenge_brothers_war_recovery_state = yes }
+  }
+ }
+}

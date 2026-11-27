@@ -3,12 +3,27 @@ namespace = tyr_regional_colonies
 tyr_regional_colonies.1 = {
     type = country_event
     placement = scope:tyr_regional_colony
-    title = tyr_regional_arabia_charter_title
+    title = colonial_administration_events.1.t
     desc = tyr_gcol_founding_desc
     flavor = tyr_gcol_founding_flavor
     event_image = { video = "votp_french_algeria" }
     icon = "gfx/interface/icons/event_icons/event_map.dds"
     duration = 3
+    trigger = {
+        scope:tyr_regional_colony ?= {
+            is_subject_of = root
+            # Refuse a duplicate offer if a founding event already granted a charter.
+            tyr_colonial_administration_needs_charter = yes
+        }
+    }
+    cancellation_trigger = {
+        NOT = {
+            scope:tyr_regional_colony ?= {
+                is_subject_of = root
+                tyr_colonial_administration_needs_charter = yes
+            }
+        }
+    }
     option = {
         name = tyr_gcol_charter_extraction
         default_option = yes

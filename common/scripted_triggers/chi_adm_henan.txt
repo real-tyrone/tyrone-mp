@@ -1,7 +1,8 @@
-# These checks use explicit country and state scopes on every entry point.
+﻿# These checks use explicit country and state scopes on every entry point.
 chi_adm_henan_viceroyalty = {
  c:AHU ?= {
   chi_adm_target_valid = yes
+  is_direct_subject_of = root.var:chi_adm_imperial_court
   is_subject_type = subject_type_qing_viceroyalty_administration
  }
 }
@@ -17,11 +18,11 @@ chi_adm_henan_ownership = {
 # The native country trigger uses directly owned land. No province touching
 # inland Henan has a coast, so treaty ports cannot supply this border.
 chi_adm_henan_border = {
- c:CHI ?= { is_land_adjacent_to_state = s:STATE_HENAN.region_state:AHU }
+ var:chi_adm_imperial_court ?= { is_land_adjacent_to_state = s:STATE_HENAN.region_state:AHU }
 }
 
 chi_adm_henan_peace = {
- c:CHI ?= { is_at_war = no is_diplomatic_play_committed_participant = no }
+ var:chi_adm_imperial_court ?= { is_at_war = no is_diplomatic_play_committed_participant = no }
  c:AHU ?= { is_at_war = no is_diplomatic_play_committed_participant = no }
 }
 
@@ -47,7 +48,7 @@ chi_adm_henan_settlement_valid = {
 
 # Court scope. These labels also serve as the blocked-requirements tooltip.
 chi_adm_henan_can_request = {
- hidden_trigger = { c:CHI ?= this }
+ hidden_trigger = { chi_adm_is_imperial_court = yes }
  custom_tooltip = { text = chi_adm_henan_req_subject chi_adm_henan_viceroyalty = yes }
  custom_tooltip = { text = chi_adm_henan_req_owner chi_adm_henan_ownership = yes }
  custom_tooltip = { text = chi_adm_henan_req_border chi_adm_henan_border = yes }
@@ -83,7 +84,7 @@ chi_adm_henan_proposal_current = {
 }
 
 chi_adm_henan_counter_current = {
- c:CHI ?= this
+ chi_adm_is_imperial_court = yes
  exists = scope:chi_adm_henan_offer_revision
  c:AHU ?= {
   var:chi_adm_henan_stage ?= 3

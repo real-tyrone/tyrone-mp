@@ -128,70 +128,6 @@ berlin_conf_claim_equatorial_africa = {
 		}
 	}
 }
-berlin_conf_claim_liberia = {
-	scope = country
-	is_shown = { is_involved_in_journal_entry = je_berlin_conference NOT = { custom_tooltip = { text = berlin_conference_ended_tt has_global_variable = berlin_conference_ended } } }
-	is_valid = {
-		custom_tooltip = {
-			text = tyr_berlin_ai_claims_allowed_tt
-			tyr_berlin_country_can_claim = yes
-		}
-		tyr_berlin_negotiation_open = yes
-		custom_tooltip = {
-			text = berlin_conf_is_involved_tt
-			is_involved_in_journal_entry = je_berlin_conference
-		}
-		custom_tooltip = {
-			text = berlin_conf_not_ended_tt
-			NOT = { custom_tooltip = { text = berlin_conference_ended_tt has_global_variable = berlin_conference_ended } }
-		}
-		custom_tooltip = {
-			text = berlin_conf_not_approving_tt
-			NOT = { has_variable = accepted_conf_var }
-		}
-		hidden_trigger = { can_claim_liberia_africa = yes }
-		custom_tooltip = {
-			text = berlin_conf_area_locked_tt
-			OR = {
-				NOT = { has_global_variable = locked_liberia }
-				var:conference_gp_number <= 3
-			}
-		}
-		custom_tooltip = {
-			text = berlin_conf_has_claims_tt
-			OR = {
-				has_variable = claimed_liberia_var
-				var:remaining_claims_var >= 1
-			}
-		}
-		custom_tooltip = {
-			text = berlin_conf_max_claims_tt
-			OR = {
-				has_variable = claimed_liberia_var
-				trigger_if = {
-					limit = { has_global_variable_list = liberia_claimed_countries_list }
-					NOT = { global_variable_list_size = { name = liberia_claimed_countries_list value >= 3 } }
-				}
-				trigger_else = { always = yes }
-			}
-		}
-	}
-	ai_is_valid = { always = no }
-	effect = {
-		custom_tooltip = berlin_claim_liberia_states_tt
-		if = {
-			limit = { has_variable = claimed_liberia_var }
-			remove_variable = claimed_liberia_var
-			remove_list_global_variable = { name = liberia_claimed_countries_list target = this }
-			change_variable = { name = remaining_claims_var add = 1 }
-		}
-		else = {
-			set_variable = claimed_liberia_var
-			add_to_global_variable_list = { name = liberia_claimed_countries_list target = this }
-			change_variable = { name = remaining_claims_var subtract = 1 }
-		}
-	}
-}
 
 # Nigeria
 berlin_conf_claim_togo = {
@@ -1329,40 +1265,6 @@ berlin_conf_lock_equatorial_africa = {
 		}
 	}
 }
-berlin_conf_lock_liberia = {
-	scope = country
-	is_shown = {
-		is_involved_in_journal_entry = je_berlin_conference
-		NOT = { custom_tooltip = { text = berlin_conference_ended_tt has_global_variable = berlin_conference_ended } }
-		NOT = { has_global_variable = locked_liberia }
-	}
-	is_valid = {
-		tyr_berlin_negotiation_open = yes
-		custom_tooltip = {
-			text = berlin_conf_not_gp_lock_tt
-			var:conference_gp_number <= 3
-		}
-		custom_tooltip = {
-			text = berlin_conf_lock_no_locks_tt
-			var:africa_lock_left_var >= 1
-		}
-	}
-	effect = {
-		set_variable = locked_liberia_var
-		set_global_variable = locked_liberia
-		change_variable = { name = africa_lock_left_var subtract = 1 }
-		every_country = {
-			limit = {
-				is_involved_in_journal_entry = je_berlin_conference
-				has_variable = claimed_liberia_var
-				var:conference_gp_number > 3
-			}
-			remove_variable = claimed_liberia_var
-			remove_list_global_variable = { name = liberia_claimed_countries_list target = this }
-			change_variable = { name = remaining_claims_var add = 1 }
-		}
-	}
-}
 berlin_conf_lock_togo = {
 	scope = country
 	is_shown = {
@@ -1945,25 +1847,6 @@ berlin_conf_unlock_equatorial_africa = {
 	effect = {
 		remove_variable = locked_equatorial_africa_var
 		remove_global_variable = locked_equatorial_africa
-	}
-}
-berlin_conf_unlock_liberia = {
-	scope = country
-	is_shown = {
-		is_involved_in_journal_entry = je_berlin_conference
-		NOT = { custom_tooltip = { text = berlin_conference_ended_tt has_global_variable = berlin_conference_ended } }
-		has_global_variable = locked_liberia
-	}
-	is_valid = {
-		tyr_berlin_negotiation_open = yes
-		custom_tooltip = {
-			text = berlin_conf_unlock_not_locker_tt
-			has_variable = locked_liberia_var
-		}
-	}
-	effect = {
-		remove_variable = locked_liberia_var
-		remove_global_variable = locked_liberia
 	}
 }
 berlin_conf_unlock_togo = {

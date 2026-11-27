@@ -1,4 +1,4 @@
-# Country scope. Custom GUI controls are not automatically evaluated by the AI.
+﻿# Country scope. Custom GUI controls are not automatically evaluated by the AI.
 # Use the same proposal effect and eligibility as the player's journal controls.
 on_monthly_pulse_country = {
 	on_actions = { chi_adm_negotiated_integration_ai_court }
@@ -12,8 +12,8 @@ chi_adm_negotiated_integration_ai_court = {
 	}
 	effect = {
 		# Revisit an unanswered court decision, including cases left open in old saves.
-		random_country = {
-			limit = {
+		random_subject_or_below = {
+			limit = { is_direct_subject_of = root
 				chi_adm_negotiated_integration_valid = yes
 				var:chi_adm_negotiated_integration_stage = 2
 			}
@@ -22,27 +22,27 @@ chi_adm_negotiated_integration_ai_court = {
 				name = chi_adm_negotiated_integration_revision
 				value = var:chi_adm_negotiated_integration_revision
 			}
-			c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } }
+			var:chi_adm_imperial_court = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } }
 		}
 		# Prefer a contiguous expansion of direct imperial territory.
 		if = {
 			limit = {
-				any_country = {
-					chi_adm_negotiated_integration_can_propose = yes
-					is_adjacent_to_country = c:CHI
+				any_direct_subject = {
+					chi_adm_negotiated_integration_can_propose = yes is_direct_subject_of = root
+					is_adjacent_to_country = var:chi_adm_imperial_court
 				}
 			}
-			random_country = {
+			random_subject_or_below = {
 				limit = {
-					chi_adm_negotiated_integration_can_propose = yes
-					is_adjacent_to_country = c:CHI
+					chi_adm_negotiated_integration_can_propose = yes is_direct_subject_of = root
+					is_adjacent_to_country = var:chi_adm_imperial_court
 				}
 				chi_adm_negotiated_integration_propose = yes
 			}
 		}
 		else = {
-			random_country = {
-				limit = { chi_adm_negotiated_integration_can_propose = yes }
+			random_subject_or_below = {
+				limit = { chi_adm_negotiated_integration_can_propose = yes is_direct_subject_of = root }
 				chi_adm_negotiated_integration_propose = yes
 			}
 		}

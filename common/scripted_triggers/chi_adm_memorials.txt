@@ -1,9 +1,9 @@
-chi_adm_memorials_valid = {
+﻿chi_adm_memorials_valid = {
 chi_adm_target_valid = yes
 }
 
 chi_adm_memorials_court = {
-c:CHI ?= this chi_adm_court_valid = yes
+chi_adm_is_imperial_court = yes chi_adm_court_valid = yes
 }
 
 chi_adm_memorials_memorial_free = {
@@ -14,15 +14,15 @@ chi_adm_memorials_memorial_free = {
 }
 
 chi_adm_memorials_edict_room = {
-c:CHI = { NOT = { any_subject_or_below = { count >= 2 chi_adm_memorials_valid = yes OR = { has_variable = chi_adm_memorials_edict has_variable = chi_adm_memorials_audit } } } }
+var:chi_adm_imperial_court = { NOT = { any_subject_or_below = { count >= 2 chi_adm_memorials_valid = yes OR = { has_variable = chi_adm_memorials_edict has_variable = chi_adm_memorials_audit } } } }
 }
 
 chi_adm_memorials_edict_free = {
-chi_adm_memorials_valid = yes c:CHI = { authority >= 25 } chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } NOT = { has_variable = chi_adm_memorials_edict_cooldown } NOT = { has_variable = chi_adm_memorials_audit }
+chi_adm_memorials_valid = yes var:chi_adm_imperial_court = { authority >= 25 } chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } NOT = { has_variable = chi_adm_memorials_edict_cooldown } NOT = { has_variable = chi_adm_memorials_audit }
 }
 
 chi_adm_memorials_audit_free = {
-chi_adm_memorials_valid = yes chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } c:CHI = { authority >= 25 } NOT = { has_variable = chi_adm_memorials_audit } NOT = { has_variable = chi_adm_memorials_audit_cooldown }
+chi_adm_memorials_valid = yes chi_adm_memorials_edict_room = yes NOT = { has_variable = chi_adm_memorials_edict } var:chi_adm_imperial_court = { authority >= 25 } NOT = { has_variable = chi_adm_memorials_audit } NOT = { has_variable = chi_adm_memorials_audit_cooldown }
 }
 
 chi_adm_memorials_memorial_pending = {
@@ -38,19 +38,19 @@ chi_adm_memorials_valid = yes trigger_if = { limit = { has_variable = chi_adm_me
 }
 
 chi_adm_memorials_centralised = {
-c:CHI = { has_journal_entry = je_mandate_of_heaven je:je_mandate_of_heaven = { "scripted_bar_progress(chi_centralisation_progress_bar)" >= 6 } }
+var:chi_adm_imperial_court = { chi_adm_integration_mandate_ready = yes }
 }
 
 chi_adm_memorials_can_pay_full = {
-OR = { AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 1 } trigger_else = { always = no } c:CHI = { gold_reserves >= 20000 } } trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 2 } trigger_else = { always = no } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 3 } trigger_else = { always = no } is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+OR = { AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 1 } trigger_else = { always = no } var:chi_adm_imperial_court = { gold_reserves >= 20000 } } trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 2 } trigger_else = { always = no } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 3 } trigger_else = { always = no } is_at_war = yes var:chi_adm_imperial_court = { gold_reserves >= 10000 } } }
 }
 
 chi_adm_memorials_can_pay_reduced = {
-OR = { AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 1 } trigger_else = { always = no } c:CHI = { gold_reserves >= 10000 } } trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 2 } trigger_else = { always = no } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 3 } trigger_else = { always = no } is_at_war = yes c:CHI = { gold_reserves >= 5000 } } }
+OR = { AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 1 } trigger_else = { always = no } var:chi_adm_imperial_court = { gold_reserves >= 10000 } } trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 2 } trigger_else = { always = no } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_memorial } var:chi_adm_memorials_memorial = 3 } trigger_else = { always = no } is_at_war = yes var:chi_adm_imperial_court = { gold_reserves >= 5000 } } }
 }
 
 chi_adm_memorials_edict_payable = {
-OR = { NOT = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict } var:chi_adm_memorials_edict = 3 } trigger_else = { always = no } } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict_stage } var:chi_adm_memorials_edict_stage = 4 } trigger_else = { always = no } is_at_war = yes c:CHI = { gold_reserves >= 5000 } } AND = { NOT = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict_stage } var:chi_adm_memorials_edict_stage = 4 } trigger_else = { always = no } } is_at_war = yes c:CHI = { gold_reserves >= 10000 } } }
+OR = { NOT = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict } var:chi_adm_memorials_edict = 3 } trigger_else = { always = no } } AND = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict_stage } var:chi_adm_memorials_edict_stage = 4 } trigger_else = { always = no } is_at_war = yes var:chi_adm_imperial_court = { gold_reserves >= 5000 } } AND = { NOT = { trigger_if = { limit = { has_variable = chi_adm_memorials_edict_stage } var:chi_adm_memorials_edict_stage = 4 } trigger_else = { always = no } } is_at_war = yes var:chi_adm_imperial_court = { gold_reserves >= 10000 } } }
 }
 
 # Country scope: the province whose request is before the court.
@@ -93,5 +93,31 @@ chi_adm_memorials_petition_pending = {
   chi_adm_memorials_petition_compact = yes
   chi_adm_memorials_petition_law = yes
   chi_adm_memorials_petition_integration = yes
+ }
+}
+
+# Province scope. A preference belongs to the court that set it.
+chi_adm_memorials_province_auto_response_is_set = {
+ has_variable = chi_adm_memorials_province_auto_response
+ var:chi_adm_memorials_province_auto_response_court ?= var:chi_adm_imperial_court
+}
+
+chi_adm_memorials_auto_response_matches = {
+ trigger_if = {
+  limit = { chi_adm_memorials_province_auto_response_is_set = yes }
+  var:chi_adm_memorials_province_auto_response ?= $MODE$
+ }
+ trigger_else = {
+  var:chi_adm_imperial_court ?= { var:chi_adm_memorials_auto_response ?= $MODE$ }
+ }
+}
+
+chi_adm_memorials_province_auto_response_can_manage = {
+ chi_adm_memorials_valid = yes
+ var:chi_adm_imperial_court ?= scope:memorial_preference_court
+ scope:memorial_preference_court ?= {
+  is_ai = no
+  chi_adm_memorials_court = yes
+  NOT = { tyr_china_unified_active = yes }
  }
 }

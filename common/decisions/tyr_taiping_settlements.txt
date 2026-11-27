@@ -1,0 +1,77 @@
+tyr_taiping_propose_independence = {
+	is_shown = {
+		chi_qing_administration_tag = yes
+		has_variable = tyr_heavenly_defected
+		exists = c:TPG
+		NOT = { has_variable = tyr_taiping_settlement_independent }
+	}
+	possible = {
+		custom_tooltip = { text = tyr_taiping_settlement_ready_tt tyr_taiping_settlement_eligible = yes }
+		gold_reserves >= 30000
+	}
+	when_taken = {
+		custom_tooltip = tyr_taiping_independence_proposal_tt
+		hidden_effect = { tyr_taiping_settlement_begin = { PATH = 1 } }
+	}
+	ai_chance = { value = 35 }
+}
+
+tyr_taiping_propose_subjecthood = {
+	is_shown = {
+		chi_qing_administration_tag = yes
+		has_variable = tyr_heavenly_defected
+		exists = c:TPG
+		NOT = { has_variable = tyr_taiping_settlement_subject }
+	}
+	possible = { custom_tooltip = { text = tyr_taiping_settlement_ready_tt tyr_taiping_settlement_eligible = yes } }
+	when_taken = {
+		custom_tooltip = tyr_taiping_subjecthood_proposal_tt
+		hidden_effect = { tyr_taiping_settlement_begin = { PATH = 2 } }
+	}
+	ai_chance = { value = 45 }
+}
+
+tyr_taiping_propose_incorporation = {
+	is_shown = {
+		chi_qing_administration_tag = yes
+		has_variable = tyr_heavenly_defected
+		exists = c:TPG
+		NOT = { has_variable = tyr_taiping_settlement_incorporated }
+	}
+	possible = { custom_tooltip = { text = tyr_taiping_settlement_ready_tt tyr_taiping_settlement_eligible = yes } }
+	when_taken = {
+		custom_tooltip = tyr_taiping_incorporation_proposal_tt
+		hidden_effect = { tyr_taiping_settlement_begin = { PATH = 3 } }
+	}
+	ai_chance = { value = 20 }
+}
+
+tyr_lj_nanjing_wartime_decision = {
+	is_shown = {
+		c:AHU ?= THIS
+		exists = c:TPG
+		any_scope_state = { state_region = s:STATE_NANJING }
+		NOT = { has_variable = tyr_lj_nanjing_wartime_done }
+		OR = { has_variable = tyr_heavenly_defected has_variable = tyr_heavenly_neutral }
+	}
+	possible = {
+		OR = { has_war_with = c:CHI has_war_with = c:TPG has_variable = tyr_heavenly_defected has_variable = tyr_heavenly_neutral }
+	}
+	when_taken = { trigger_event = { id = tyr_liangjiang.7 popup = yes } }
+	ai_chance = { value = 40 }
+}
+
+tyr_lj_reconstruct_jiangnan = {
+	is_shown = {
+		c:AHU ?= THIS
+		has_variable = tyr_lj_nanjing_wartime_done
+		NOT = { has_variable = tyr_lj_jiangnan_reconstructed }
+		any_scope_state = { OR = { state_region = s:STATE_NANJING state_region = s:STATE_SUZHOU } }
+	}
+	possible = {
+		is_at_war = no
+		gold_reserves >= 30000
+	}
+	when_taken = { trigger_event = { id = tyr_liangjiang.8 popup = yes } }
+	ai_chance = { value = 50 }
+}

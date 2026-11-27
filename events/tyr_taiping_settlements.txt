@@ -1,0 +1,166 @@
+namespace = tyr_taiping_settlement
+
+# TPG reviews a governor's initial proposal.
+tyr_taiping_settlement.1 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_taiping_settlement.1.t
+	desc = tyr_taiping_settlement.1.d
+	flavor = tyr_taiping_settlement.1.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 7
+	trigger = { c:TPG ?= THIS var:tyr_taiping_settlement_governor ?= { tyr_taiping_settlement_current = yes } }
+	cancellation_trigger = { NOT = { var:tyr_taiping_settlement_governor ?= { tyr_taiping_settlement_current = yes } } }
+	option = {
+		name = tyr_taiping_settlement.1.a
+		ai_chance = { base = 45 }
+		var:tyr_taiping_settlement_governor = { trigger_event = { id = tyr_taiping_settlement.2 popup = yes } }
+	}
+	option = {
+		name = tyr_taiping_settlement.1.b
+		ai_chance = { base = 35 }
+		var:tyr_taiping_settlement_governor = {
+			set_variable = { name = tyr_taiping_settlement_terms value = 2 }
+			trigger_event = { id = tyr_taiping_settlement.3 popup = yes }
+		}
+	}
+	option = {
+		name = tyr_taiping_settlement.1.c
+		default_option = yes
+		ai_chance = { base = 20 }
+		tyr_taiping_settlement_release_lock = yes
+	}
+}
+
+# Governor ratifies terms already accepted by TPG.
+tyr_taiping_settlement.2 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_taiping_settlement.2.t
+	desc = tyr_taiping_settlement.2.d
+	flavor = tyr_taiping_settlement.2.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 7
+	trigger = { tyr_taiping_settlement_current = yes }
+	cancellation_trigger = { NOT = { tyr_taiping_settlement_current = yes } }
+	option = {
+		name = tyr_taiping_settlement.2.a
+		trigger = {
+			OR = {
+				NOT = { var:tyr_taiping_settlement_path = 1 }
+				gold_reserves >= 30000
+			}
+		}
+		ai_chance = { base = 80 }
+		tyr_taiping_settlement_execute = yes
+	}
+	option = {
+		name = tyr_taiping_settlement.withdraw
+		default_option = yes
+		ai_chance = { base = 20 }
+		c:TPG ?= { tyr_taiping_settlement_release_lock = yes }
+	}
+}
+
+# Governor answers stricter TPG terms.
+tyr_taiping_settlement.3 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_taiping_settlement.3.t
+	desc = tyr_taiping_settlement.3.d
+	flavor = tyr_taiping_settlement.3.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 7
+	trigger = { tyr_taiping_settlement_current = yes var:tyr_taiping_settlement_terms = 2 }
+	cancellation_trigger = { NOT = { tyr_taiping_settlement_current = yes } }
+	option = {
+		name = tyr_taiping_settlement.3.a
+		trigger = { OR = { NOT = { var:tyr_taiping_settlement_path = 1 } gold_reserves >= 50000 } }
+		ai_chance = { base = 60 }
+		tyr_taiping_settlement_execute = yes
+	}
+	option = {
+		name = tyr_taiping_settlement.3.b
+		ai_chance = { base = 25 }
+		c:TPG = { trigger_event = { id = tyr_taiping_settlement.4 popup = yes } }
+	}
+	option = {
+		name = tyr_taiping_settlement.withdraw
+		default_option = yes
+		ai_chance = { base = 15 }
+		c:TPG ?= { tyr_taiping_settlement_release_lock = yes }
+	}
+}
+
+# TPG decides whether to accept the governor's counterproposal.
+tyr_taiping_settlement.4 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_taiping_settlement.4.t
+	desc = tyr_taiping_settlement.4.d
+	flavor = tyr_taiping_settlement.4.f
+	event_image = { video = "asia_union_leader" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+	duration = 7
+	trigger = { c:TPG ?= THIS var:tyr_taiping_settlement_governor ?= { tyr_taiping_settlement_current = yes } }
+	cancellation_trigger = { NOT = { var:tyr_taiping_settlement_governor ?= { tyr_taiping_settlement_current = yes } } }
+	option = {
+		name = tyr_taiping_settlement.4.a
+		ai_chance = { base = 60 }
+		var:tyr_taiping_settlement_governor = {
+			set_variable = { name = tyr_taiping_settlement_terms value = 1 }
+			trigger_event = { id = tyr_taiping_settlement.2 popup = yes }
+		}
+	}
+	option = {
+		name = tyr_taiping_settlement.4.b
+		default_option = yes
+		ai_chance = { base = 40 }
+		tyr_taiping_settlement_release_lock = yes
+	}
+}
+
+# Regional wartime pressures. The description changes by administration.
+tyr_taiping_settlement.6 = {
+	type = country_event
+	placement = ROOT
+	title = tyr_taiping_settlement.6.t
+	desc = {
+		first_valid = {
+			triggered_desc = { trigger = { c:HNA ?= THIS } desc = tyr_taiping_settlement.6.d_huguang }
+			triggered_desc = { trigger = { c:FRS ?= THIS } desc = tyr_taiping_settlement.6.d_minzhe }
+			triggered_desc = { trigger = { c:YUE ?= THIS } desc = tyr_taiping_settlement.6.d_liangguang }
+			triggered_desc = { trigger = { c:ZHI ?= THIS } desc = tyr_taiping_settlement.6.d_zhili }
+			triggered_desc = { trigger = { OR = { c:SHN ?= THIS c:SHA ?= THIS } } desc = tyr_taiping_settlement.6.d_north }
+			desc = tyr_taiping_settlement.6.d_other
+		}
+	}
+	flavor = tyr_taiping_settlement.6.f
+	event_image = { video = "middleeast_battlefield_trenches" }
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+	option = {
+		name = tyr_taiping_settlement.6.a
+		default_option = yes
+		add_treasury = -15000
+		add_modifier = { name = tyr_taiping_regional_logistics years = 3 }
+	}
+	option = {
+		name = tyr_taiping_settlement.6.b
+		add_treasury = -10000
+		add_loyalists = { value = small_radicals }
+	}
+	option = {
+		name = tyr_taiping_settlement.6.c
+		trigger = { c:CHI ?= { exists = this } }
+		chi_adm_adjust_loyalty = { AMOUNT = 3 }
+		chi_adm_adjust_autonomy = { AMOUNT = -2 }
+	}
+}

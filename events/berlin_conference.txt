@@ -351,24 +351,6 @@ berlin_conference.3 = {
 				}
 			}
 		}
-		every_state = {
-			limit = {
-				OR = {
-					state_region = s:STATE_LIBERIA
-				}
-				tyr_berlin_state_can_transfer_automatically = yes
-			}
-			set_state_owner = c:LIB
-		}
-		every_state = {
-			limit = {
-				OR = {
-					state_region = s:STATE_SIERRA_LEONE
-				}
-				tyr_berlin_state_can_transfer_automatically = yes
-			}
-			set_state_owner = c:SIL
-		}
 		if = {
 			limit = { root = { has_variable = claimed_west_africa_var } }
 			custom_tooltip = claim_west_africa_TT
@@ -458,42 +440,6 @@ berlin_conference.3 = {
 							state_region = s:STATE_CHAD
 							state_region = s:STATE_WADDAI
 							state_region = s:STATE_UBANGI_SHARI
-						}
-						tyr_berlin_state_can_transfer_automatically = yes
-					}
-					set_state_owner = ROOT
-				}
-			}
-		}
-		if = {
-			limit = { root = { has_variable = claimed_liberia_var } }
-			custom_tooltip = claim_liberia_TT
-			every_state = {
-				limit = {
-					OR = {
-						state_region = s:STATE_LIBERIA
-						state_region = s:STATE_SIERRA_LEONE
-					}
-				}
-				state_region = {
-						add_claim = ROOT
-					}
-			}
-			if = {
-				limit = {
-					has_game_rule = berlin_conf_territory_grant_enabled
-					NOT = {
-						any_country = {
-							NOT = { this = ROOT }
-							has_variable = claimed_liberia_var
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						OR = {
-							state_region = s:STATE_LIBERIA
-							state_region = s:STATE_SIERRA_LEONE
 						}
 						tyr_berlin_state_can_transfer_automatically = yes
 					}
@@ -1196,7 +1142,7 @@ berlin_conference.49 = {
 				has_game_rule = historical_africa_berlin_enabled
 			}
 
-			# France: West Africa, Liberia, Equatorial Africa, Gabon, Madagascar
+			# France: West Africa, Equatorial Africa, Gabon, Madagascar
 			if = {
 				limit = {
 					c:FRA ?= this
@@ -1559,13 +1505,6 @@ berlin_conference.50 = {
 				change_variable = { name = remaining_claims_var subtract = 1 }
 				change_variable = { name = berlin_claimed_count add = 1 }
 			}
-			# --- Liberia ---
-			8 = {
-				set_variable = claimed_liberia_var
-				add_to_global_variable_list = { name = liberia_claimed_countries_list target = this }
-				change_variable = { name = remaining_claims_var subtract = 1 }
-				change_variable = { name = berlin_claimed_count add = 1 }
-			}
 			# --- Togo ---
 			8 = {
 				set_variable = claimed_togo_var
@@ -1794,16 +1733,6 @@ berlin_conference.52 = {
 				limit = { is_ai = yes  is_involved_in_journal_entry = je_berlin_conference  var:remaining_claims_var >= 1 }
 				set_variable = claimed_equatorial_africa_var
 				add_to_global_variable_list = { name = equatorial_africa_claimed_countries_list target = this }
-				change_variable = { name = remaining_claims_var subtract = 1 }
-				change_variable = { name = berlin_claimed_count add = 1 }
-			}
-		}
-		if = {
-			limit = { NOT = { any_country = { has_variable = claimed_liberia_var } } }
-			random_country = {
-				limit = { is_ai = yes  is_involved_in_journal_entry = je_berlin_conference  var:remaining_claims_var >= 1 }
-				set_variable = claimed_liberia_var
-				add_to_global_variable_list = { name = liberia_claimed_countries_list target = this }
 				change_variable = { name = remaining_claims_var subtract = 1 }
 				change_variable = { name = berlin_claimed_count add = 1 }
 			}

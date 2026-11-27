@@ -18,6 +18,7 @@ chi_adm_religious_affairs = {
  # Reconcile older saves and withdraw an invalid restriction.
  on_monthly_pulse = {
   effect = {
+   tyr_heavenly_update_mission_access = yes
    if = {
     limit = { has_variable = chi_adm_religious_missions_restricted }
     if = {
@@ -38,6 +39,7 @@ chi_adm_religious_affairs = {
     limit = { is_ai = yes chi_adm_target_valid = yes }
     chi_adm_religious_ai_review = yes
    }
+   tyr_taiping_regional_flavor_tick = yes
   }
  }
  should_be_pinned_by_default_uninvolved_or_context = no
@@ -60,38 +62,48 @@ chi_adm_religious_affairs = {
  scripted_button = chi_adm_religious_suppress
  scripted_button = chi_adm_religious_tolerate
  scripted_button = chi_adm_religious_support
+ scripted_button = tyr_society_provincial_patronage_button
+ scripted_button = tyr_society_establish_foothold_button
+ scripted_button = tyr_missionary_schools_button
+ scripted_button = tyr_missionary_hospitals_button
  scripted_button = chi_adm_religious_pledge
  scripted_button = chi_adm_religious_stand_aside
  scripted_button = chi_adm_religious_neutral
  scripted_button = chi_adm_religious_relief
+ scripted_button = tyr_lj_nanjing_wartime_button
  map_color = {
   if = {
-   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } has_variable = open_to_missionaries_state }
-   value = { 47 139 172 }
+   limit = { owner ?= { chi_qing_realm = yes } religion_percent_state = { target = rel:protestant value >= 0.01 } }
+   value = "chi_adm_protestant_green"
   }
   else_if = {
-   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } religion_percent_state = { target = rel:protestant value >= 0.01 } }
-   value = { 68 157 97 }
+   limit = { owner ?= { chi_qing_realm = yes } has_variable = open_to_missionaries_state }
+   value = "chi_adm_missions_blue"
   }
   else_if = {
-   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } }
-   value = { 86 89 94 }
+   limit = { owner ?= { chi_qing_realm = yes } }
+   value = "chi_adm_religious_gray"
   }
  }
  map_color_second = {
   if = {
-   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } has_modifier = god_worshippers }
-   value = { 161 77 184 }
+   limit = { owner ?= { chi_qing_realm = yes } has_modifier = god_worshippers }
+   value = "chi_adm_society_purple"
   }
   else_if = {
-   limit = { owner = { has_journal_entry = chi_adm_religious_affairs } turmoil >= 0.15 }
-   value = { 214 131 50 }
+   limit = { owner ?= { chi_qing_realm = yes } has_modifier = tyr_society_provincial_patronage }
+   value = "chi_adm_patronage_gold"
+  }
+  else_if = {
+   limit = { owner ?= { chi_qing_realm = yes } turmoil >= 0.15 }
+   value = "chi_adm_turmoil_orange"
   }
  }
  map_tooltip = {
   if = {
-   limit = { owner ?= { has_journal_entry = chi_adm_religious_affairs } }
+   limit = { owner ?= { chi_qing_realm = yes } }
    custom_tooltip_no_bullet = chi_adm_religious_map_heading
+   if = { limit = { has_modifier = tyr_society_provincial_patronage } custom_tooltip = tyr_society_patronage_map_tt }
    if = { limit = { has_variable = open_to_missionaries_state } custom_tooltip = chi_adm_religious_map_open_tt }
    if = { limit = { has_modifier = god_worshippers } custom_tooltip = chi_adm_religious_map_society_tt }
    if = { limit = { religion_percent_state = { target = rel:protestant value >= 0.01 } } custom_tooltip = chi_adm_religious_map_protestant_tt }

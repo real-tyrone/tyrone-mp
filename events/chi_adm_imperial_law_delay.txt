@@ -1,0 +1,41 @@
+namespace = chi_adm_imperial_law_law
+chi_adm_imperial_law_law.91 = {
+ type = country_event
+ placement = ROOT
+ title = chi_adm_law_delay_expired_title
+ desc = chi_adm_law_delay_expired_desc
+ event_image = { video = "ep1_persian_court" }
+ icon = "gfx/interface/icons/event_icons/event_scales.dds"
+ duration = 30
+ trigger = { chi_adm_imperial_law_valid = yes has_variable = chi_adm_imperial_law_delay_decision var:chi_adm_imperial_law_status = 9 }
+ cancellation_trigger = { NOT = { chi_adm_imperial_law_valid = yes has_variable = chi_adm_imperial_law_delay_decision var:chi_adm_imperial_law_status = 9 } }
+ option = {
+  name = chi_adm_law_delay_begin
+  trigger = { chi_adm_imperial_law_available = yes enacting_any_law = no }
+  show_as_unavailable = { always = yes }
+  custom_tooltip = chi_adm_imperial_law_gradual_result
+  hidden_effect = { remove_variable = chi_adm_imperial_law_delay_decision chi_adm_imperial_law_start = yes }
+  ai_chance = { base = 70 }
+ }
+ option = {
+  name = chi_adm_law_delay_again
+  trigger = { NOT = { has_variable = chi_adm_imperial_law_extra_delay_used } }
+  custom_tooltip = chi_adm_law_delay_again_tt
+  hidden_effect = {
+   remove_variable = chi_adm_imperial_law_delay_decision
+   set_variable = chi_adm_imperial_law_extra_delay_used
+   set_variable = { name = chi_adm_imperial_law_status value = 5 }
+   set_variable = { name = chi_adm_imperial_law_months_left value = 12 }
+   chi_adm_adjust_loyalty = { AMOUNT = -3 }
+  }
+  ai_chance = { base = 20 }
+ }
+ option = {
+  name = chi_adm_law_delay_reject
+  default_option = yes
+  custom_tooltip = chi_adm_imperial_law_refuse_result
+  custom_tooltip = chi_adm_law_delay_reject_cost_tt
+  hidden_effect = { chi_adm_imperial_law_final_rejection = yes }
+  ai_chance = { base = 10 }
+ }
+}

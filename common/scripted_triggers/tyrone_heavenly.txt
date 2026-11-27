@@ -18,7 +18,7 @@ tyr_heavenly_uprising_ready = {
  any_state = {
   tyr_heavenly_revolt_state = yes
   has_modifier = god_worshippers
-  count >= 8
+  count >= 4
  }
 }
 
@@ -26,7 +26,7 @@ tyr_heavenly_uprising_ready = {
 tyr_heavenly_spread_state = {
  tyr_heavenly_revolt_state = yes
  NOT = { has_modifier = god_worshippers }
- turmoil >= 0.15
+ OR = { turmoil >= 0.15 has_modifier = tyr_society_provincial_patronage }
  any_neighbouring_state = {
   owner = { chi_qing_realm = yes }
   has_modifier = god_worshippers
@@ -49,12 +49,7 @@ chi_adm_religious_restriction_allowed = {
   text = chi_adm_religious_no_port_tt
   NOT = {
    any_scope_state = {
-    state_region = {
-     any_scope_state = {
-      is_treaty_port = yes
-      owner = { religion = { has_discrimination_trait = heritage_christian } }
-     }
-    }
+    tyr_heavenly_state_has_christian_treaty_port = yes
    }
   }
  }
@@ -65,9 +60,20 @@ chi_adm_religious_restriction_allowed = {
 }
 
 # State scope. Provincial permission can override local migration controls.
+tyr_heavenly_state_has_christian_treaty_port = {
+ state_region = {
+  any_scope_state = {
+   OR = { is_treaty_port = yes state_region = { is_homeland = cu:han } }
+   owner = { NOT = { chi_qing_realm = yes } religion = { has_discrimination_trait = heritage_christian } }
+  }
+ }
+}
+
 tyr_heavenly_missions_access_allowed = {
  NOT = { has_variable = missionary_fear }
- owner = {
+ OR = {
+  tyr_heavenly_state_has_christian_treaty_port = yes
+  owner = {
   NOR = {
    has_variable = chi_adm_religious_missions_restricted
    has_law_or_variant = law_type:law_state_atheism
@@ -75,6 +81,7 @@ tyr_heavenly_missions_access_allowed = {
   OR = {
    NOT = { has_law_or_variant = law_type:law_closed_borders }
    has_variable = chi_adm_religious_missions_permitted
+  }
   }
  }
  root = { NOT = { has_variable = CHI_deported_missionaries } }
@@ -124,5 +131,5 @@ tyr_heavenly_founding_state = {
  is_incorporated = yes
  religion_percent_state = { target = rel:protestant value >= 0.01 }
  state_region = { OR = { is_homeland = cu:han is_homeland = cu:hakka } }
- turmoil > 0.15
+ OR = { turmoil > 0.15 has_modifier = tyr_society_provincial_patronage }
 }

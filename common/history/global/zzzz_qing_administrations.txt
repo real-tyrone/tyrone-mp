@@ -354,8 +354,12 @@
     change_relations = { country = c:CHI value = 80 }
    }
    every_scope_state = { limit = { OR = { state_region = s:STATE_QINGHAI } } set_state_owner = c:XIB }
-   # Manchuria remains under direct Qing rule; do not create an 1836 MCH subject.
-   chi_qing_retain_eastern_hinggan = yes
+   random_scope_state = { limit = { state_region = s:STATE_SOUTHERN_MANCHURIA } save_temporary_scope_as = chi_mch_seed }
+   create_country = { tag = MCH origin = this state = scope:chi_mch_seed on_created = { copy_laws = c:CHI set_state_religion = rel:confucian add_primary_culture = cu:manchu effect_starting_technology_tier_4_tech = yes set_variable = chi_qing_appointed_administration } }
+   every_scope_state = { limit = { OR = { state_region = s:STATE_AMUR state_region = s:STATE_SHENGJING state_region = s:STATE_SOUTHERN_MANCHURIA state_region = s:STATE_NORTHERN_MANCHURIA state_region = s:STATE_OUTER_MANCHURIA } } set_state_owner = c:MCH }
+   create_diplomatic_pact = { country = c:MCH type = qing_frontier_administration }
+   c:MCH = { set_capital = STATE_SOUTHERN_MANCHURIA add_liberty_desire = -100 change_relations = { country = c:CHI value = 80 } }
+   # All of Hinggan and Alxa belong to the Mongolian administration.
    set_variable = chi_qing_direct_manchuria_v1
    c:XIB = { if = { limit = { NOT = { country_has_primary_culture = cu:mongol } } add_primary_culture = cu:mongol } }
    # Finalize laws, faith, cultures, and incorporation after all transfers.

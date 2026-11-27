@@ -1,0 +1,20 @@
+﻿# TPG country scope. Initialize national reforms once, including older saves.
+tyr_heavenly_initialize_reform_journals = {
+ chi_adm_initialize_imperial_court = yes
+ if = {
+  limit = { c:TPG ?= THIS NOT = { has_variable = tyr_heavenly_reform_journals_initialized } }
+  set_variable = tyr_heavenly_reform_journals_initialized
+  if = {
+   limit = { NOT = { has_journal_entry = je_economic_direction } NOT = { has_variable = chi_adm_economic_direction_completed } }
+   add_journal_entry = { type = je_economic_direction }
+  }
+  if = {
+   limit = { NOT = { has_journal_entry = je_early_army_modernization } NOT = { has_variable = chi_army_modernization_completed } }
+   add_journal_entry = { type = je_early_army_modernization }
+  }
+  if = {
+   limit = { has_law_or_variant = law_type:law_no_schools NOT = { has_journal_entry = je_confront_confucian_scholars } NOT = { has_variable = tyr_national_scholars_completed } }
+   add_journal_entry = { type = je_confront_confucian_scholars }
+  }
+ }
+}

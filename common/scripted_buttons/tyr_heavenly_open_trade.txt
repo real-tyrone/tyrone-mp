@@ -1,0 +1,28 @@
+tyr_heavenly_open_trade_button = {
+ name = tyr_heavenly_open_trade_button
+ desc = tyr_heavenly_open_trade_button_desc
+ visible = { c:TPG ?= THIS }
+ possible = {
+  custom_tooltip = { text = tyr_heavenly_trade_once_tt NOT = { has_variable = tyr_heavenly_opened_trade } }
+  has_law_or_variant = law_type:law_isolationism
+  has_technology_researched = international_trade
+  custom_tooltip = {
+   text = tyr_heavenly_trade_port_tt
+   any_scope_building = { is_building_type = building_port level >= 1 }
+  }
+ }
+ effect = {
+  if = {
+   limit = {
+    c:TPG ?= THIS
+    NOT = { has_variable = tyr_heavenly_opened_trade }
+    has_law_or_variant = law_type:law_isolationism
+    has_technology_researched = international_trade
+    any_scope_building = { is_building_type = building_port level >= 1 }
+   }
+   activate_law = law_type:law_mercantilism
+   hidden_effect = { set_variable = tyr_heavenly_opened_trade }
+  }
+ }
+ ai_chance = { value = 100 }
+}

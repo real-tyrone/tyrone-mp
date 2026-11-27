@@ -1,0 +1,30 @@
+tyr_forbidden_city_refresh = {
+ remove_variable = tyr_forbidden_city_building
+ every_scope_state = {
+  limit = { state_region = s:STATE_BEIJING }
+  save_temporary_scope_as = tyr_palace_state
+  owner = { set_variable = { name = tyr_forbidden_city_state value = scope:tyr_palace_state } }
+  every_scope_building = {
+   limit = { is_building_type = building_forbidden_city }
+   save_temporary_scope_as = tyr_palace_building
+   root = { set_variable = { name = tyr_forbidden_city_building value = scope:tyr_palace_building } }
+  }
+ }
+ set_variable = { name = tyr_forbidden_city_subjects value = 0 }
+ every_direct_subject = {
+  limit = { chi_qing_administrative_subject = yes }
+  overlord = { change_variable = { name = tyr_forbidden_city_subjects add = 1 } }
+ }
+ set_variable = { name = tyr_forbidden_city_infrastructure value = var:tyr_forbidden_city_subjects }
+ change_variable = { name = tyr_forbidden_city_infrastructure multiply = 10 }
+ set_variable = { name = tyr_forbidden_city_construction value = var:tyr_forbidden_city_subjects }
+ change_variable = { name = tyr_forbidden_city_construction multiply = 2 }
+ every_scope_state = {
+  limit = { state_region = s:STATE_BEIJING }
+  remove_modifier = tyr_forbidden_city_administrations
+  if = {
+   limit = { owner = { var:tyr_forbidden_city_subjects > 0 } }
+   add_modifier = { name = tyr_forbidden_city_administrations multiplier = owner.var:tyr_forbidden_city_subjects months = 2 }
+  }
+ }
+}

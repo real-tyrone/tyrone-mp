@@ -1,0 +1,60 @@
+﻿ai_strategy_tyr_austrian_territorial_recovery = {
+    icon = "gfx/interface/icons/ai_strategy_icons/unification.dds"
+    type = diplomatic
+
+    possible = {
+        is_ai = yes
+        is_subject = no
+        OR = { c:AUS ?= this c:KUK ?= this }
+        any_state = { tyr_austria_territorial_recovery_state = yes }
+    }
+    weight = { value = 5000 }
+
+    state_value = {
+        if = {
+            limit = {
+                scope:target_state ?= { tyr_austria_territorial_recovery_state = yes }
+                can_reach_target_state_to_conquer = { TARGET_STATE = scope:target_state }
+            }
+            add = { value = 150 desc = "STATE_VALUE_TERRITORIAL_EXPANSION_HOMELAND" }
+        }
+    }
+
+    wargoal_scores = {
+        return_state = {
+            if = {
+                limit = {
+                    scope:target_state ?= {
+                        tyr_austria_territorial_recovery_state = yes
+                        has_claim_by = root
+                    }
+                }
+                add = 150
+            }
+        }
+        conquer_state = {
+            if = {
+                limit = {
+                    scope:target_state ?= {
+                        tyr_austria_territorial_recovery_state = yes
+                        tyr_austria_recover_croatia_state = yes
+                        NOT = { has_claim_by = root }
+                    }
+                }
+                add = 150
+            }
+        }
+    }
+
+    secret_goal_scores = {
+        conquer = {
+            trigger = {
+                scope:target_country ?= {
+                    any_scope_state = { tyr_austria_territorial_recovery_state = yes }
+                }
+                can_reach_target_country_to_conquer = { TARGET_COUNTRY = scope:target_country }
+            }
+            score = { value = 300 }
+        }
+    }
+}

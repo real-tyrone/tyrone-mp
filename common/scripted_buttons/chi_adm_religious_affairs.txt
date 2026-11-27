@@ -90,8 +90,8 @@ chi_adm_religious_tolerate = {
  name = chi_adm_religious_tolerate
  desc = chi_adm_religious_tolerate_desc
  visible = { chi_adm_religious_society_available = yes }
- possible = { chi_adm_religious_society_available = yes custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
- effect = { custom_tooltip = chi_adm_religious_tolerate_desc hidden_effect = { remove_variable = chi_adm_religious_loyal remove_variable = chi_adm_religious_taiping_pledge set_variable = chi_adm_religious_covert set_variable = { name = chi_adm_religious_society_cooldown months = 6 } } }
+ possible = { custom_tooltip = { text = tyr_religious_not_already_covert_tt NOT = { has_variable = chi_adm_religious_covert } } chi_adm_religious_society_available = yes custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
+ effect = { custom_tooltip = chi_adm_religious_tolerate_desc hidden_effect = { remove_variable = chi_adm_religious_loyal remove_variable = chi_adm_religious_taiping_pledge remove_variable = chi_adm_religious_stand_aside set_variable = chi_adm_religious_covert set_variable = { name = chi_adm_religious_society_cooldown months = 6 } } }
  ai_chance = { value = 0 }
 }
 
@@ -108,7 +108,7 @@ chi_adm_religious_pledge = {
  name = chi_adm_religious_pledge
  desc = chi_adm_religious_pledge_desc
  visible = { chi_adm_religious_society_available = yes }
- possible = { chi_adm_religious_society_available = yes is_at_war = no custom_tooltip = { text = chi_adm_religious_covert_support_tt has_variable = chi_adm_religious_covert } custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
+ possible = { custom_tooltip = { text = tyr_religious_not_already_pledged_tt NOT = { has_variable = chi_adm_religious_taiping_pledge } } chi_adm_religious_society_available = yes is_at_war = no custom_tooltip = { text = chi_adm_religious_covert_support_tt has_variable = chi_adm_religious_covert } custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
  effect = { custom_tooltip = chi_adm_religious_pledge_desc hidden_effect = { remove_variable = chi_adm_religious_loyal set_variable = chi_adm_religious_taiping_pledge remove_variable = chi_adm_religious_stand_aside set_variable = { name = chi_adm_religious_society_cooldown months = 6 } } }
  ai_chance = { value = 0 }
 }
@@ -117,7 +117,7 @@ chi_adm_religious_neutral = {
  name = chi_adm_religious_neutral
  desc = chi_adm_religious_neutral_desc
  visible = { chi_adm_religious_society_available = yes }
- possible = { chi_adm_religious_society_available = yes custom_tooltip = { text = chi_adm_religious_stance_active_tt OR = { has_variable = chi_adm_religious_covert has_variable = chi_adm_religious_loyal has_variable = chi_adm_religious_stand_aside } } custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
+ possible = { chi_adm_religious_society_available = yes custom_tooltip = { text = chi_adm_religious_stance_active_tt OR = { has_variable = chi_adm_religious_covert has_variable = chi_adm_religious_taiping_pledge has_variable = chi_adm_religious_stand_aside } } custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
  effect = { custom_tooltip = chi_adm_religious_neutral_desc hidden_effect = { remove_variable = chi_adm_religious_covert remove_variable = chi_adm_religious_taiping_pledge remove_variable = chi_adm_religious_loyal remove_variable = chi_adm_religious_stand_aside set_variable = { name = chi_adm_religious_society_cooldown months = 6 } } }
  ai_chance = { value = 0 }
 }
@@ -127,7 +127,11 @@ chi_adm_religious_relief = {
  desc = chi_adm_religious_relief_desc
  visible = { chi_adm_religious_society_available = yes }
  possible = { chi_adm_religious_society_available = yes chi_adm_memorials_memorial_free = yes }
- effect = { custom_tooltip = chi_adm_religious_relief_desc hidden_effect = { chi_adm_memorials_file_relief = yes } }
+ effect = {
+  custom_tooltip = chi_adm_religious_relief_result_tt
+  show_as_tooltip = { add_modifier = { name = chi_adm_memorials_clerks months = 6 } }
+  hidden_effect = { chi_adm_memorials_file_relief = yes }
+ }
  ai_chance = { value = 0 }
 }
 
@@ -135,7 +139,7 @@ chi_adm_religious_stand_aside = {
  name = chi_adm_religious_stand_aside
  desc = chi_adm_religious_stand_aside_desc
  visible = { chi_adm_religious_society_available = yes }
- possible = { chi_adm_religious_society_available = yes is_at_war = no custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
+ possible = { custom_tooltip = { text = tyr_religious_not_already_neutral_tt NOT = { has_variable = chi_adm_religious_stand_aside } } chi_adm_religious_society_available = yes is_at_war = no custom_tooltip = { text = chi_adm_religious_society_ready_tt NOT = { has_variable = chi_adm_religious_society_cooldown } } }
  effect = {
   custom_tooltip = chi_adm_religious_stand_aside_desc
   hidden_effect = {
@@ -143,6 +147,38 @@ chi_adm_religious_stand_aside = {
    remove_variable = chi_adm_religious_loyal
    set_variable = chi_adm_religious_stand_aside
    set_variable = { name = chi_adm_religious_society_cooldown months = 6 }
+  }
+ }
+ ai_chance = { value = 0 }
+}
+
+tyr_qing_request_missionary_access = {
+ name = tyr_qing_request_missionary_access
+ desc = tyr_qing_request_missionary_access_desc
+ visible = { c:CHI ?= this }
+ cooldown = { months = 12 }
+ possible = {
+  c:CHI ?= this
+  custom_tooltip = {
+   text = tyr_qing_request_missionary_access_eligible_tt
+   OR = {
+    NOT = { has_variable = chi_adm_religious_missions_permitted }
+    any_direct_subject = { tyr_qing_request_missionary_access_eligible = yes }
+   }
+  }
+ }
+ effect = {
+  custom_tooltip = tyr_qing_request_missionary_access_effects_tt
+  hidden_effect = {
+   if = {
+    limit = { NOT = { has_variable = chi_adm_religious_missions_permitted } }
+    chi_adm_religious_set_policy = { POLICY = chi_adm_religious_missions_permitted }
+   }
+   tyr_heavenly_update_mission_access = yes
+   every_subject_or_below = {
+    limit = { tyr_qing_request_missionary_access_eligible = yes }
+    trigger_event = { id = tyr_qing_missionary_request.1 popup = yes }
+   }
   }
  }
  ai_chance = { value = 0 }

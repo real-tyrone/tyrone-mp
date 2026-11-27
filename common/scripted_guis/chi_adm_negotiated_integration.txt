@@ -12,7 +12,7 @@
 				name = chi_adm_negotiated_integration_revision
 				value = var:chi_adm_negotiated_integration_revision
 			}
-			c:CHI = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } }
+			var:chi_adm_imperial_court = { trigger_event = { id = chi_adm_negotiated_integration.2 popup = yes } }
 		}
 	}
 }
@@ -26,7 +26,7 @@ chi_adm_negotiated_integration_terms_preview = {
 				ruler ?= {
 					add_modifier = { name = chi_adm_negotiated_integration_honored years = 10 }
 				}
-				c:CHI = {
+				var:chi_adm_imperial_court = {
 					add_modifier = { name = chi_adm_negotiated_integration_honors_patronage years = 5 }
 				}
 			}
@@ -65,19 +65,19 @@ chi_adm_negotiated_integration_propose = {
 				if = { limit = { chi_adm_integration_either_route = yes } custom_tooltip_no_bullet = chi_adm_integration_either_route_yes }
 				else = { custom_tooltip_no_bullet = chi_adm_integration_either_route_no }
 			}
-			else_if = { limit = { c:CHI = { has_technology_researched = central_archives } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_archives_yes }
+			else_if = { limit = { var:chi_adm_imperial_court = { has_technology_researched = central_archives } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_archives_yes }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_archives_no }
-			if = { limit = { c:CHI = { authority >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_authority_yes }
+			if = { limit = { var:chi_adm_imperial_court = { authority >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_authority_yes }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_authority_no }
-			if = { limit = { c:CHI = { relative_bureaucracy >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_bureaucracy_yes }
+			if = { limit = { var:chi_adm_imperial_court = { relative_bureaucracy >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_bureaucracy_yes }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_bureaucracy_no }
-			if = { limit = { is_at_war = no c:CHI = { is_at_war = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_peace_yes }
+			if = { limit = { is_at_war = no var:chi_adm_imperial_court = { is_at_war = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_peace_yes }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_peace_no }
-			if = { limit = { is_diplomatic_play_committed_participant = no c:CHI = { is_diplomatic_play_committed_participant = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_plays_yes }
+			if = { limit = { is_diplomatic_play_committed_participant = no var:chi_adm_imperial_court = { is_diplomatic_play_committed_participant = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_plays_yes }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_plays_no }
 			if = { limit = { chi_adm_negotiated_integration_valid = yes } custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_admin }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_admin_no }
-			if = { limit = { c:CHI = { chi_adm_integration_mandate_ready = yes } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_central }
+			if = { limit = { var:chi_adm_imperial_court = { chi_adm_integration_mandate_ready = yes } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_central }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_central_no }
 			if = { limit = { NOT = { has_variable = chi_adm_negotiated_integration_stage } NOT = { has_variable = chi_adm_negotiated_integration_retry } NOT = { has_variable = chi_adm_negotiated_integration_repayment_left } NOT = { has_variable = chi_adm_henan_stage } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_case }
 			else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_req_case_no }
@@ -94,7 +94,7 @@ chi_adm_negotiated_integration_propose = {
 chi_adm_negotiated_integration_begin = {
 scope = country is_valid = { chi_adm_negotiated_integration_valid = yes chi_adm_negotiated_integration_resources = yes OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } } effect = { custom_tooltip = chi_adm_negotiated_integration_begin_desc
 show_as_tooltip = { if = { limit = { chi_adm_negotiated_integration_valid = yes chi_adm_negotiated_integration_resources = yes OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_begin_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_begin_blocked } }
-show_as_tooltip = { c:CHI = { add_modifier = { name = chi_adm_negotiated_integration_commitment } } } hidden_effect = { chi_adm_negotiated_integration_begin = yes } }
+show_as_tooltip = { var:chi_adm_imperial_court = { add_modifier = { name = chi_adm_negotiated_integration_commitment } } } hidden_effect = { chi_adm_negotiated_integration_begin = yes } }
 }
 
 chi_adm_negotiated_integration_centralize = {
@@ -140,8 +140,8 @@ hidden_effect = { chi_adm_negotiated_integration_central_settlement = yes } }
 }
 
 chi_adm_negotiated_integration_offer_subsidy = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_subsidy < 2 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_subsidy_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_subsidy < 2 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_subsidy_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_subsidy_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_subsidy < 2 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_subsidy_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_subsidy < 2 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_subsidy_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_subsidy_blocked } }
 
 		show_as_tooltip = {
 			custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_effects
@@ -156,8 +156,8 @@ show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_
 }
 
 chi_adm_negotiated_integration_offer_protection = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_protection < 2 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_protection_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_protection < 2 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_protection_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_protection_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_protection < 2 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_protection_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_protection < 2 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_protection_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_protection_blocked } }
 
 		show_as_tooltip = {
 			custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_effects
@@ -183,14 +183,14 @@ show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_
 }
 
 chi_adm_negotiated_integration_offer_honors = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_honors < 1 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_honors_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_honors < 1 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_honors_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_honors_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_honors < 1 } effect = { custom_tooltip = chi_adm_negotiated_integration_offer_honors_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 } var:chi_adm_negotiated_integration_honors < 1 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_honors_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_honors_blocked } }
 show_as_tooltip = { ruler ?= { add_modifier = { name = chi_adm_negotiated_integration_honored years = 10 } } } 
 		show_as_tooltip = {
 			custom_tooltip_no_bullet = chi_adm_negotiated_integration_offer_effects
 			custom_tooltip_no_bullet = chi_adm_negotiated_integration_honors_effects
 		}
-		show_as_tooltip = { c:CHI = { add_modifier = { name = chi_adm_negotiated_integration_honors_patronage years = 5 } } }
+		show_as_tooltip = { var:chi_adm_imperial_court = { add_modifier = { name = chi_adm_negotiated_integration_honors_patronage years = 5 } } }
  hidden_effect = { chi_adm_negotiated_integration_offer_honors = yes } }
 }
 
@@ -207,128 +207,128 @@ hidden_effect = { chi_adm_negotiated_integration_grant_time = yes } }
 }
 
 chi_adm_negotiated_integration_close = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_stage = 9 var:chi_adm_negotiated_integration_stage = 10 } } effect = { custom_tooltip = chi_adm_negotiated_integration_close_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_stage = 9 var:chi_adm_negotiated_integration_stage = 10 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_close_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_close_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_stage = 9 var:chi_adm_negotiated_integration_stage = 10 } } effect = { custom_tooltip = chi_adm_negotiated_integration_close_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } OR = { var:chi_adm_negotiated_integration_stage = 1 var:chi_adm_negotiated_integration_stage = 2 var:chi_adm_negotiated_integration_stage = 9 var:chi_adm_negotiated_integration_stage = 10 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_close_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_close_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_close = yes } }
 }
 
 chi_adm_negotiated_integration_ask_suspend = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } var:chi_adm_negotiated_integration_stage < 5 NOT = { has_variable = chi_adm_negotiated_integration_suspend_request } } effect = { custom_tooltip = chi_adm_negotiated_integration_ask_suspend_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } var:chi_adm_negotiated_integration_stage < 5 NOT = { has_variable = chi_adm_negotiated_integration_suspend_request } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_suspend_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } var:chi_adm_negotiated_integration_stage < 5 NOT = { has_variable = chi_adm_negotiated_integration_suspend_request } } effect = { custom_tooltip = chi_adm_negotiated_integration_ask_suspend_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } var:chi_adm_negotiated_integration_stage < 5 NOT = { has_variable = chi_adm_negotiated_integration_suspend_request } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_suspend_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_ask_suspend = yes } }
 }
 
 chi_adm_negotiated_integration_suspend = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } effect = { custom_tooltip = chi_adm_negotiated_integration_suspend_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_suspend_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_suspend_request } effect = { custom_tooltip = chi_adm_negotiated_integration_suspend_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_suspend_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_suspend_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_suspend = yes } }
 }
 
 chi_adm_negotiated_integration_refuse_suspend = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } effect = { custom_tooltip = chi_adm_negotiated_integration_refuse_suspend_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_suspend_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_refuse_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_refuse_suspend_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_suspend_request } effect = { custom_tooltip = chi_adm_negotiated_integration_refuse_suspend_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_suspend_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_refuse_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_refuse_suspend_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_refuse_suspend = yes } }
 }
 
 chi_adm_negotiated_integration_force_suspend = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } OR = { has_variable = chi_adm_negotiated_integration_suspend_refused AND = { has_variable = chi_adm_negotiated_integration_suspend_request var:chi_adm_negotiated_integration_suspend_age >= 6 } } } effect = { custom_tooltip = chi_adm_negotiated_integration_force_suspend_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } OR = { has_variable = chi_adm_negotiated_integration_suspend_refused AND = { has_variable = chi_adm_negotiated_integration_suspend_request var:chi_adm_negotiated_integration_suspend_age >= 6 } } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_force_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_force_suspend_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } OR = { has_variable = chi_adm_negotiated_integration_suspend_refused AND = { has_variable = chi_adm_negotiated_integration_suspend_request var:chi_adm_negotiated_integration_suspend_age >= 6 } } } effect = { custom_tooltip = chi_adm_negotiated_integration_force_suspend_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } OR = { has_variable = chi_adm_negotiated_integration_suspend_refused AND = { has_variable = chi_adm_negotiated_integration_suspend_request var:chi_adm_negotiated_integration_suspend_age >= 6 } } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_force_suspend_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_force_suspend_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_force_suspend = yes } }
 }
 
 chi_adm_negotiated_integration_resume = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } c:CHI = { authority >= 0 relative_bureaucracy >= 0 } } effect = { custom_tooltip = chi_adm_negotiated_integration_resume_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } c:CHI = { authority >= 0 relative_bureaucracy >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_resume_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_resume_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_imperial_court = { authority >= 0 relative_bureaucracy >= 0 } } effect = { custom_tooltip = chi_adm_negotiated_integration_resume_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_imperial_court = { authority >= 0 relative_bureaucracy >= 0 } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_resume_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_resume_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_resume = yes } }
 }
 
 chi_adm_negotiated_integration_revoke_terms = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_breach } } effect = { custom_tooltip = chi_adm_negotiated_integration_revoke_terms_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_breach } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_revoke_terms_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_revoke_terms_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_breach } } effect = { custom_tooltip = chi_adm_negotiated_integration_revoke_terms_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_breach } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_revoke_terms_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_revoke_terms_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_revoke_terms = yes } }
 }
 
 chi_adm_negotiated_integration_forgive_breach = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } effect = { custom_tooltip = chi_adm_negotiated_integration_forgive_breach_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } custom_tooltip_no_bullet = chi_adm_negotiated_integration_forgive_breach_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_forgive_breach_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_breach } effect = { custom_tooltip = chi_adm_negotiated_integration_forgive_breach_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_breach } custom_tooltip_no_bullet = chi_adm_negotiated_integration_forgive_breach_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_forgive_breach_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_forgive_breach = yes } }
 }
 
 chi_adm_negotiated_integration_withdraw_breach = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } effect = { custom_tooltip = chi_adm_negotiated_integration_withdraw_breach_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_breach } custom_tooltip_no_bullet = chi_adm_negotiated_integration_withdraw_breach_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_withdraw_breach_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_breach } effect = { custom_tooltip = chi_adm_negotiated_integration_withdraw_breach_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_breach } custom_tooltip_no_bullet = chi_adm_negotiated_integration_withdraw_breach_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_withdraw_breach_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_withdraw_breach = yes } }
 }
 
 chi_adm_negotiated_integration_ask_cancel = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_cancel_request } } effect = { custom_tooltip = chi_adm_negotiated_integration_ask_cancel_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_cancel_request } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_cancel_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_cancel_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_cancel_request } } effect = { custom_tooltip = chi_adm_negotiated_integration_ask_cancel_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_cancel_request } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_cancel_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_ask_cancel_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_ask_cancel = yes } }
 }
 
 chi_adm_negotiated_integration_cancel_mutual = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request } effect = { custom_tooltip = chi_adm_negotiated_integration_cancel_mutual_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_mutual_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_mutual_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_cancel_request } effect = { custom_tooltip = chi_adm_negotiated_integration_cancel_mutual_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_cancel_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_mutual_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_mutual_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_cancel_mutual = yes } }
 }
 
 chi_adm_negotiated_integration_decline_cancel = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request } effect = { custom_tooltip = chi_adm_negotiated_integration_decline_cancel_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } has_variable = chi_adm_negotiated_integration_cancel_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_decline_cancel_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_decline_cancel_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_cancel_request } effect = { custom_tooltip = chi_adm_negotiated_integration_decline_cancel_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } has_variable = chi_adm_negotiated_integration_cancel_request } custom_tooltip_no_bullet = chi_adm_negotiated_integration_decline_cancel_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_decline_cancel_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_decline_cancel = yes } }
 }
 
 chi_adm_negotiated_integration_final_yes = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required } effect = { custom_tooltip = chi_adm_negotiated_integration_final_yes_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required } custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_yes_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_yes_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 5 has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required } effect = { custom_tooltip = chi_adm_negotiated_integration_final_yes_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 5 has_variable = chi_adm_negotiated_integration_work NOT = { has_variable = chi_adm_negotiated_integration_paused } NOT = { has_variable = chi_adm_negotiated_integration_breach } var:chi_adm_negotiated_integration_elapsed >= chi_adm_negotiated_integration_required } custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_yes_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_yes_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_final_yes = yes } }
 }
 
 chi_adm_negotiated_integration_final_no = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 } effect = { custom_tooltip = chi_adm_negotiated_integration_final_no_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 5 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_no_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_no_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 5 } effect = { custom_tooltip = chi_adm_negotiated_integration_final_no_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 5 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_no_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_final_no_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_final_no = yes } }
 }
 
 chi_adm_negotiated_integration_hold = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } effect = { custom_tooltip = chi_adm_negotiated_integration_hold_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_hold_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_hold_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 6 } effect = { custom_tooltip = chi_adm_negotiated_integration_hold_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 6 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_hold_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_hold_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_hold = yes } }
 }
 
 chi_adm_negotiated_integration_cancel_provincial = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } effect = { custom_tooltip = chi_adm_negotiated_integration_cancel_provincial_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 6 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_provincial_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_provincial_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 6 } effect = { custom_tooltip = chi_adm_negotiated_integration_cancel_provincial_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 6 } custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_provincial_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_cancel_provincial_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_cancel_provincial = yes } }
 }
 
 chi_adm_negotiated_integration_propose_repayment = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } effect = { custom_tooltip = chi_adm_negotiated_integration_propose_repayment_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_propose_repayment_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_propose_repayment_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } effect = { custom_tooltip = chi_adm_negotiated_integration_propose_repayment_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 NOT = { has_variable = chi_adm_negotiated_integration_repayment_requested } NOT = { has_variable = chi_adm_negotiated_integration_repayment_offer } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_propose_repayment_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_propose_repayment_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_propose_repayment = yes } }
 }
 
 chi_adm_negotiated_integration_repay_accept = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_accept_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_accept_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_accept_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_accept_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_accept_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_accept_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_repay_accept = yes } }
 }
 
 chi_adm_negotiated_integration_repay_compromise = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_compromise_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_compromise_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_compromise_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_compromise_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_compromise_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_compromise_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_repay_compromise = yes } }
 }
 
 chi_adm_negotiated_integration_repay_refuse = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_refuse_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_refuse_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_refuse_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } effect = { custom_tooltip = chi_adm_negotiated_integration_repay_refuse_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_requested } custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_refuse_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_repay_refuse_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_repay_refuse = yes } }
 }
 
 chi_adm_negotiated_integration_accept_repay_compromise = {
-scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } effect = { custom_tooltip = chi_adm_negotiated_integration_accept_repay_compromise_desc
-show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = c:CHI } NOT = { is_diplomatic_play_enemy_of = c:CHI } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } custom_tooltip_no_bullet = chi_adm_negotiated_integration_accept_repay_compromise_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_accept_repay_compromise_blocked } }
+scope = country is_valid = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } effect = { custom_tooltip = chi_adm_negotiated_integration_accept_repay_compromise_desc
+show_as_tooltip = { if = { limit = { chi_adm_target_valid = yes NOT = { has_war_with = var:chi_adm_imperial_court } NOT = { is_diplomatic_play_enemy_of = var:chi_adm_imperial_court } var:chi_adm_negotiated_integration_stage = 9 has_variable = chi_adm_negotiated_integration_repayment_offer } custom_tooltip_no_bullet = chi_adm_negotiated_integration_accept_repay_compromise_ready } else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_accept_repay_compromise_blocked } }
 hidden_effect = { chi_adm_negotiated_integration_accept_repay_compromise = yes } }
 }
 
@@ -352,4 +352,40 @@ scope = country is_valid = { chi_adm_negotiated_integration_reply = yes }
 
 chi_adm_negotiated_integration_show_resume = {
 scope = country is_valid = { chi_adm_negotiated_integration_valid = yes has_variable = chi_adm_negotiated_integration_paused NOT = { has_variable = chi_adm_negotiated_integration_breach } }
+}
+
+chi_adm_negotiated_integration_national_unification = {
+ scope = country
+ is_valid = { chi_adm_negotiated_integration_national_unification_available = yes }
+ effect = {
+  custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_title_tt
+  custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_desc
+  show_as_tooltip = {
+   custom_tooltip_no_bullet = chi_adm_negotiated_integration_propose_requirements_heading
+   if = { limit = { chi_adm_negotiated_integration_valid = yes } custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_administration_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_administration_no }
+   if = { limit = { var:chi_adm_imperial_court ?= { OR = { c:TPG ?= this has_technology_researched = pan-nationalism } } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_unlock_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_unlock_no }
+   if = { limit = { is_at_war = no var:chi_adm_imperial_court ?= { is_at_war = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_peace_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_peace_no }
+   if = { limit = { is_diplomatic_play_committed_participant = no var:chi_adm_imperial_court ?= { is_diplomatic_play_committed_participant = no } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_plays_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_proposal_plays_no }
+   if = { limit = { NOT = { has_modifier = chi_adm_provincial_development_guarantee } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_guarantee_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_guarantee_no }
+   if = { limit = { NOT = { has_variable = chi_adm_henan_stage } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_henan_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_henan_no }
+   if = { limit = { var:chi_adm_imperial_court ?= { NOT = { var:chi_adm_qing_security_phase ?= 5 } } } custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_security_yes }
+   else = { custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_security_no }
+  }
+  custom_tooltip_no_bullet = chi_adm_negotiated_integration_national_unification_effects_heading
+  custom_tooltip = chi_adm_negotiated_integration_national_unification_play_tt
+  custom_tooltip = chi_adm_negotiated_integration_national_unification_annex_tt
+  custom_tooltip = chi_adm_negotiated_integration_national_unification_reaction_tt
+  hidden_effect = {
+   if = {
+    limit = { chi_adm_negotiated_integration_national_unification_available = yes }
+    chi_adm_negotiated_integration_launch_forced_play = yes
+   }
+  }
+ }
 }

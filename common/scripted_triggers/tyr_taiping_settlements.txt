@@ -1,0 +1,42 @@
+# Country scope. Defection opens negotiation but is not itself a settlement.
+tyr_taiping_settlement_eligible = {
+	chi_qing_administration_tag = yes
+	has_variable = tyr_heavenly_defected
+	is_subject = no
+	exists = c:TPG
+	c:TPG = {
+		exists = this
+		NOT = { has_variable = tyr_taiping_settlement_governor }
+	}
+	NOT = { has_variable = tyr_taiping_settlement_pending }
+	NOT = { has_variable = tyr_taiping_settlement_cooldown }
+	NOT = {
+		OR = {
+			has_variable = tyr_taiping_settlement_independent
+			has_variable = tyr_taiping_settlement_subject
+			has_variable = tyr_taiping_settlement_incorporated
+		}
+	}
+}
+
+tyr_taiping_settlement_current = {
+	has_variable = tyr_taiping_settlement_pending
+	var:tyr_taiping_settlement_pending = yes
+	c:TPG ?= {
+		var:tyr_taiping_settlement_governor ?= { this = prev }
+	}
+}
+
+tyr_taiping_regional_flavor_available = {
+	chi_qing_administration_tag = yes
+	exists = c:TPG
+	NOT = { has_variable = tyr_taiping_regional_flavor_done }
+	OR = {
+		has_war_with = c:TPG
+		has_war_with = c:CHI
+		has_variable = tyr_heavenly_defected
+		has_variable = tyr_heavenly_neutral
+		has_variable = chi_adm_religious_taiping_pledge
+		has_variable = chi_adm_religious_stand_aside
+	}
+}

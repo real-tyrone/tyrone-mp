@@ -36,6 +36,27 @@
 	}
 }
 
+tyr_net_integrate_indonesian_protectorates = {
+ is_shown = {
+  c:NET ?= THIS
+  has_variable = tyr_net_east_indies_consolidated
+  c:DEI ?= { is_subject_of = ROOT }
+ }
+ possible = {
+  is_at_war = no
+  is_diplomatic_play_committed_participant = no
+  c:DEI = { is_at_war = no is_diplomatic_play_committed_participant = no }
+  any_subject_or_below = { tyr_net_indonesian_protectorate_target = yes }
+ }
+ when_taken = {
+  every_subject_or_below = {
+   limit = { tyr_net_indonesian_protectorate_target = yes }
+   c:DEI = { annex = prev }
+  }
+ }
+ ai_chance = { value = 100 }
+}
+
 net_integrate_indonesia_decision = {
 	is_shown = {
 		OR = {
@@ -1026,66 +1047,53 @@ REPLACE:aus_organise_trialism = {
 
 aus_return_independent_croatian_states = {
 	is_shown = {
-		tyrone_ai_attack_country_allowed = yes
-		c:CRO ?= { tyrone_ai_attack_country_allowed = yes }
-		c:AUS ?= this
-		exists = c:CRO
-		c:CRO ?= {
-			tyrone_ai_attack_country_allowed = yes
-			is_subject = no
-			any_scope_state = {
-				has_claim_by = ROOT
-			}
-		}
+		OR = { c:AUS ?= this c:KUK ?= this }
 	}
 
 	possible = {
-		tyrone_ai_attack_country_allowed = yes
-		c:CRO ?= { tyrone_ai_attack_country_allowed = yes }
-		c:AUS ?= this
-		NOT = { is_country_type = decentralized }
 		aggressive_diplomatic_plays_permitted = yes
 		is_at_war = no
 		is_diplomatic_play_committed_participant = no
-		c:CRO ?= {
-			tyrone_ai_attack_country_allowed = yes
-			NOT = { is_country_type = decentralized }
-			is_subject = no
-			is_at_war = no
-			is_diplomatic_play_committed_participant = no
-			NOT = { has_truce_with = ROOT }
-			NOT = { has_war_with = ROOT }
-			any_scope_state = {
-				has_claim_by = ROOT
-			}
+		tyr_austria_holds_central_hungary = yes
+		custom_tooltip = {
+			text = aus_return_independent_croatian_states_target_tt
+			any_state = { tyr_austria_croatia_decision_target = yes }
 		}
 	}
 
 	when_taken = {
-		c:CRO = {
-			random_scope_state = {
-				limit = {
-					has_claim_by = ROOT
+		custom_tooltip = aus_return_independent_croatian_states_effects_tt
+		hidden_effect = {
+			random_state = {
+				limit = { tyr_austria_croatia_decision_target = yes has_claim_by = root }
+				save_temporary_scope_as = tyr_austria_croatia_claimed_state
+			}
+			if = {
+				limit = { exists = scope:tyr_austria_croatia_claimed_state }
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = scope:tyr_austria_croatia_claimed_state.owner
+					target_state = scope:tyr_austria_croatia_claimed_state
 				}
-				save_scope_as = aus_croatia_return_state_scope
 			}
-		}
-		if = {
-			limit = {
-				tyrone_ai_attack_country_allowed = yes
-				c:CRO = { tyrone_ai_attack_country_allowed = yes }
-			}
-			create_diplomatic_play = {
-				type = dp_return_state
-				target_country = c:CRO
-				target_state = scope:aus_croatia_return_state_scope
+			else = {
+				random_state = {
+					limit = { tyr_austria_croatia_decision_target = yes NOT = { has_claim_by = root } }
+					save_temporary_scope_as = tyr_austria_croatia_unclaimed_state
+				}
+				if = {
+					limit = { exists = scope:tyr_austria_croatia_unclaimed_state }
+					create_diplomatic_play = {
+						type = dp_conquer_state
+						target_country = scope:tyr_austria_croatia_unclaimed_state.owner
+						target_state = scope:tyr_austria_croatia_unclaimed_state
+					}
+				}
 			}
 		}
 	}
 
-	ai_chance = {
-		value = 1000
-	}
+	ai_chance = { value = 1000 }
 }
 
 REPLACE:aus_integrate_crown_lands_decision = {
@@ -2881,6 +2889,112 @@ west_ukraine_reform_galicia_lodomeria = {
 	ai_chance = {
 		value = 100
 	}
+}
+
+tyr_egypt_nile_basin_expansion = {
+	is_shown = { c:EGY ?= this }
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		custom_tooltip = {
+			text = tyr_egypt_nile_basin_expansion_target_tt
+			any_state = { tyr_egypt_nile_basin_target = yes }
+		}
+	}
+
+	when_taken = {
+		custom_tooltip = tyr_egypt_nile_basin_expansion_effects_tt
+		hidden_effect = {
+			random_state = {
+				limit = {
+					tyr_egypt_nile_basin_target = yes
+					has_claim_by = c:EGY
+				}
+				save_temporary_scope_as = tyr_egypt_nile_claimed_state
+			}
+			if = {
+				limit = { exists = scope:tyr_egypt_nile_claimed_state }
+				create_diplomatic_play = {
+					type = dp_tyr_egypt_nile_return_state
+					target_country = scope:tyr_egypt_nile_claimed_state.owner
+					target_state = scope:tyr_egypt_nile_claimed_state
+				}
+			}
+			else = {
+				random_state = {
+					limit = {
+						tyr_egypt_nile_basin_target = yes
+						NOT = { has_claim_by = c:EGY }
+					}
+					save_temporary_scope_as = tyr_egypt_nile_unclaimed_state
+				}
+				if = {
+					limit = { exists = scope:tyr_egypt_nile_unclaimed_state }
+					create_diplomatic_play = {
+						type = dp_tyr_egypt_nile_conquer_state
+						target_country = scope:tyr_egypt_nile_unclaimed_state.owner
+						target_state = scope:tyr_egypt_nile_unclaimed_state
+					}
+				}
+			}
+		}
+	}
+
+	ai_chance = { value = 1000 }
+}
+
+tyr_india_reclaim_strategic_regions = {
+	is_shown = { c:BHT ?= this }
+
+	possible = {
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		custom_tooltip = {
+			text = tyr_india_reclaim_strategic_regions_target_tt
+			any_state = { tyr_india_strategic_regions_target = yes }
+		}
+	}
+
+	when_taken = {
+		custom_tooltip = tyr_india_reclaim_strategic_regions_effects_tt
+		hidden_effect = {
+			random_state = {
+				limit = {
+					tyr_india_strategic_regions_target = yes
+					has_claim_by = c:BHT
+				}
+				save_temporary_scope_as = tyr_india_strategic_claimed_state
+			}
+			if = {
+				limit = { exists = scope:tyr_india_strategic_claimed_state }
+				create_diplomatic_play = {
+					type = dp_tyr_india_strategic_return_state
+					target_country = scope:tyr_india_strategic_claimed_state.owner
+					target_state = scope:tyr_india_strategic_claimed_state
+				}
+			}
+			else = {
+				random_state = {
+					limit = {
+						tyr_india_strategic_regions_target = yes
+						NOT = { has_claim_by = c:BHT }
+					}
+					save_temporary_scope_as = tyr_india_strategic_unclaimed_state
+				}
+				if = {
+					limit = { exists = scope:tyr_india_strategic_unclaimed_state }
+					create_diplomatic_play = {
+						type = dp_tyr_india_strategic_conquer_state
+						target_country = scope:tyr_india_strategic_unclaimed_state.owner
+						target_state = scope:tyr_india_strategic_unclaimed_state
+					}
+				}
+			}
+		}
+	}
+
+	ai_chance = { value = 1000 }
 }
 
 egypt_ai_return_darfur = {
@@ -13461,6 +13575,7 @@ gbr_organize_saf_colonial_administration = {
 			save_scope_as = existing_british_colonial_subject
 			capital = { save_scope_as = newly_formed_colonial_nation_capital_scope }
 			set_variable = british_colonial_administration_organized
+			add_technology_researched = civilizing_mission
 		}
 		set_variable = { name = british_colonial_administration_event_cooldown months = 3 }
 		trigger_event = { id = colonial_administration_events.1 popup = yes }
@@ -13502,6 +13617,7 @@ gbr_organize_sil_colonial_administration = {
 			save_scope_as = existing_british_colonial_subject
 			capital = { save_scope_as = newly_formed_colonial_nation_capital_scope }
 			set_variable = british_colonial_administration_organized
+			add_technology_researched = civilizing_mission
 		}
 		set_variable = { name = british_colonial_administration_event_cooldown months = 3 }
 		trigger_event = { id = colonial_administration_events.1 popup = yes }
@@ -13964,4 +14080,151 @@ rhodesia_consolidate_split_states = {
 	ai_chance = {
 		value = 100
 	}
+}
+
+tyr_india_restore_native_governance = {
+    is_shown = {
+        c:BHT ?= this
+        is_subject = no
+    }
+
+    possible = {
+        is_subject = no
+		country_has_primary_culture = cu:british
+        country_has_state_religion = rel:hindu
+        custom_tooltip = {
+            text = tyr_india_restore_native_governance_no_princely_subjects_tt
+            NOT = { any_princely_state = { is_subject_of = root } }
+        }
+    }
+
+    when_taken = {
+        custom_tooltip = {
+            text = tyr_india_restore_native_governance_cultures_tt
+            hidden_effect = {
+                every_scope_culture = {
+                    limit = {
+                        has_discrimination_trait_group = heritage_group_south_asian
+                        save_temporary_scope_as = tyr_india_native_culture
+                        root = {
+                            any_scope_state = {
+                                state_region = { is_homeland = scope:tyr_india_native_culture }
+                            }
+                        }
+                    }
+                    root = { add_primary_culture = prev }
+                }
+                if = {
+                    limit = {
+                        NOT = { any_primary_culture = { NOT = { cu:english ?= this } } }
+                    }
+                    add_primary_culture = cu:hindustani
+                }
+            }
+        }
+        if = {
+            limit = { country_has_primary_culture = cu:british }
+            remove_primary_culture = cu:british
+        }
+        if = {
+            limit = { ruler ?= { cu:british ?= culture } }
+            custom_tooltip = {
+                text = tyr_india_restore_native_governance_ruler_tt
+                hidden_effect = {
+                    create_character = {
+                        culture = hindustani
+                        on_created = { set_character_as_ruler = yes }
+                    }
+                }
+            }
+        }
+        recalculate_pop_ig_support = yes
+    }
+
+    ai_chance = { value = 100 }
+}
+
+tyr_scandinavia_reclaim_homelands = {
+    is_shown = {
+        c:SCA ?= this
+        is_ai = yes
+    }
+    possible = {
+        is_subject = no
+        is_at_war = no
+        is_diplomatic_play_committed_participant = no
+        aggressive_diplomatic_plays_permitted = yes
+        NOT = { has_variable = tyr_scandinavia_reclaim_homelands_retry }
+        custom_tooltip = {
+            text = tyr_scandinavia_reclaim_homelands_target_tt
+            any_state = { tyr_scandinavia_reclaim_homelands_target = yes }
+        }
+    }
+    when_taken = {
+        custom_tooltip = tyr_scandinavia_reclaim_homelands_effects_tt
+        hidden_effect = {
+            random_state = {
+                limit = { tyr_scandinavia_reclaim_homelands_target = yes }
+                save_temporary_scope_as = tyr_scandinavia_homeland_target
+            }
+            if = {
+                limit = { exists = scope:tyr_scandinavia_homeland_target }
+                set_variable = { name = tyr_scandinavia_reclaim_homelands_retry months = 3 }
+                create_diplomatic_play = {
+                    type = dp_return_state
+                    target_country = scope:tyr_scandinavia_homeland_target.owner
+                    target_state = scope:tyr_scandinavia_homeland_target
+                }
+            }
+        }
+    }
+    ai_chance = { value = 100 }
+}
+
+tyr_german_rivals_press_claims = {
+	is_shown = {
+		OR = {
+			AND = { OR = { c:AUS ?= this c:KUK ?= this } has_variable = je_german_confederate_unifier exists = c:NGF }
+			AND = {
+				c:NGF ?= this
+				OR = {
+					c:AUS ?= { has_variable = je_german_confederate_unifier }
+					c:KUK ?= { has_variable = je_german_confederate_unifier }
+				}
+			}
+		}
+	}
+
+	possible = {
+		is_subject = no
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		aggressive_diplomatic_plays_permitted = yes
+		NOT = { has_variable = tyr_german_rivals_press_claims_retry }
+		custom_tooltip = {
+			text = tyr_german_rivals_press_claims_target_tt
+			any_state = { tyr_german_rivals_press_claims_target = yes }
+		}
+	}
+
+	when_taken = {
+		custom_tooltip = tyr_german_rivals_press_claims_effects_tt
+		hidden_effect = {
+			random_state = {
+				limit = { tyr_german_rivals_press_claims_target = yes }
+				save_temporary_scope_as = tyr_german_rival_claimed_state
+			}
+			if = {
+				limit = { exists = scope:tyr_german_rival_claimed_state }
+				set_variable = { name = tyr_german_rivals_press_claims_retry months = 3 }
+				create_diplomatic_play = {
+					type = dp_return_state
+					target_country = scope:tyr_german_rival_claimed_state.owner
+					target_state = scope:tyr_german_rival_claimed_state
+				}
+			}
+		}
+	}
+
+	ai_chance = { value = 1000 }
 }

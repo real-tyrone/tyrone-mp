@@ -1,4 +1,4 @@
-# Country scope. Install actual budget modifiers using the native scaled-expense pattern.
+﻿# Country scope. Install actual budget modifiers using the native scaled-expense pattern.
 chi_adm_provincial_development_sync_budget = {
     chi_adm_provincial_development_sync_inspection_authority = yes
     remove_modifier = chi_adm_provincial_development_project_expense
@@ -16,7 +16,7 @@ chi_adm_provincial_development_sync_budget = {
     }
     remove_variable = chi_adm_provincial_development_due_project_bill
     if = {
-        limit = { c:CHI ?= this }
+        limit = { chi_adm_is_imperial_court = yes }
         remove_modifier = chi_adm_provincial_development_sponsorship_cost
         set_variable = { name = chi_adm_provincial_development_due_court_bill value = chi_adm_provincial_development_court_sponsorship_bill }
         if = {
@@ -29,7 +29,7 @@ chi_adm_provincial_development_sync_budget = {
 
 # Country scope. Rebuild Qing's aggregate bonus from current inspected subjects.
 chi_adm_provincial_development_sync_inspection_authority = {
-    c:CHI ?= {
+    var:chi_adm_imperial_court ?= {
         remove_modifier = chi_adm_provincial_development_court_inspections
         set_variable = { name = chi_adm_provincial_development_inspected_subjects value = 0 }
         every_subject_or_below = {
@@ -42,7 +42,7 @@ chi_adm_provincial_development_sync_inspection_authority = {
                     var:chi_adm_provincial_development_project_owner ?= owner
                 }
             }
-            c:CHI = { change_variable = { name = chi_adm_provincial_development_inspected_subjects add = 1 } }
+            var:chi_adm_imperial_court = { change_variable = { name = chi_adm_provincial_development_inspected_subjects add = 1 } }
         }
         if = {
             limit = { var:chi_adm_provincial_development_inspected_subjects > 0 }

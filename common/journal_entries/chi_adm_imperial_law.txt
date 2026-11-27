@@ -1,4 +1,20 @@
 chi_adm_imperial_law_directive = {
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = chi_adm_imperial_law_closed
+  trigger = { has_variable = chi_adm_imperial_law_rejection_final }
+ }
+ # A completed refusal closes the provincial response card; retain the court record.
+ outcome = {
+  flags = { hidden invalid_outcome }
+  conclusion_desc = chi_adm_imperial_law_closed
+  trigger = {
+   has_variable = chi_adm_imperial_law_refusal_used
+   has_variable = chi_adm_imperial_law_court_answered
+   OR = { var:chi_adm_imperial_law_status = 7 var:chi_adm_imperial_law_status = 1 }
+  }
+  effect = { set_variable = { name = chi_adm_imperial_law_status value = 7 } remove_variable = chi_adm_imperial_law_months_left }
+ }
  # China Unified closes the administration arc without completion rewards.
  outcome = {
   flags = { hidden invalid_outcome }
@@ -12,10 +28,12 @@ chi_adm_imperial_law_directive = {
  transferable = no
  can_revolution_inherit = no
  is_shown_when_inactive = { NOT = { tyr_china_unified_active = yes }
+  NOT = { has_variable = chi_adm_imperial_law_refusal_used has_variable = chi_adm_imperial_law_court_answered OR = { var:chi_adm_imperial_law_status = 7 var:chi_adm_imperial_law_status = 1 } }
   chi_adm_imperial_law_civil = yes
   has_variable = chi_adm_imperial_law_active
  }
  possible = { NOT = { tyr_china_unified_active = yes }
+  NOT = { has_variable = chi_adm_imperial_law_rejection_final }
   chi_adm_imperial_law_civil = yes
   has_variable = chi_adm_imperial_law_active
  }

@@ -1,0 +1,64 @@
+namespace = tyr_holy_alliance
+
+tyr_holy_alliance.1 = {
+    type = country_event
+    placement = ROOT
+
+    title = tyr_holy_alliance.1.t
+    desc = tyr_holy_alliance.1.d
+    event_image = { video = "unspecific_signed_contract" }
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+    icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+    immediate = {
+        c:LMV ?= { save_scope_as = tyr_holy_italian_offer_lmv }
+    }
+
+    option = {
+        name = tyr_holy_alliance.1.a
+        trigger = {
+            tyr_holy_italian_offer_available = yes
+            scope:tyr_holy_brothers_war_play ?= {
+                is_war = no
+                initiator = scope:tyr_holy_italian_offer_prussia
+                target = scope:tyr_holy_brothers_war_target
+            }
+            c:LMV ?= { is_subject_of = scope:tyr_holy_brothers_war_target }
+        }
+        if = {
+            limit = {
+                NOT = {
+                    any_scope_treaty = {
+                        binds = scope:tyr_holy_italian_offer_prussia
+                        any_scope_article = { has_type = alliance }
+                    }
+                }
+            }
+            create_treaty = {
+                first_country = ROOT
+                second_country = scope:tyr_holy_italian_offer_prussia
+                is_draft = no
+                binding_period = { years = 5 }
+                articles_to_create = { { article = alliance } }
+            }
+        }
+        custom_tooltip = tyr_holy_alliance.1.accept_tt
+        hidden_effect = {
+            scope:tyr_holy_brothers_war_play = {
+                add_initiator_backers = { ROOT }
+                add_war_goal = {
+                    holder = ROOT
+                    target_country = c:LMV
+                    type = transfer_subject
+                }
+            }
+        }
+        ai_chance = { base = 90 }
+    }
+
+    option = {
+        name = tyr_holy_alliance.1.b
+        default_option = yes
+        ai_chance = { base = 10 }
+    }
+}

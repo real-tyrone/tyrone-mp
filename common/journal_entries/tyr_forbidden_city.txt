@@ -1,0 +1,24 @@
+tyr_forbidden_city = {
+ context = country
+ group = je_group_qing
+ icon = "gfx/interface/icons/building_icons/forbidden_city.dds"
+ widget = { gui = "gui/journal_entry_widgets/tyr_forbidden_city.gui" name = "tyr_forbidden_city_palace" container = "custom_widget_container_1" }
+ transferable = no
+ can_revolution_inherit = no
+ can_deactivate = yes
+ is_shown_when_inactive = { c:CHI ?= THIS any_scope_state = { state_region = s:STATE_BEIJING } }
+ should_be_pinned_by_default_uninvolved_or_context = yes
+ possible = { c:CHI ?= THIS any_scope_state = { state_region = s:STATE_BEIJING } }
+ immediate = { tyr_forbidden_city_refresh = yes if = { limit = { NOT = { has_variable = tyr_palace_maintenance_review } } set_variable = { name = tyr_palace_maintenance_review years = 10 } } }
+ scripted_button = tyr_palace_ceremony_button
+ scripted_button = tyr_palace_exams_button
+ scripted_button = tyr_palace_restoration_button
+ on_monthly_pulse = {
+  random_events = { 94 = 0 3 = tyr_palace.1 3 = tyr_palace.2 }
+  effect = {
+   tyr_forbidden_city_refresh = yes
+   if = { limit = { tyr_palace_available = yes NOT = { has_variable = tyr_palace_maintenance_review } } set_variable = { name = tyr_palace_maintenance_review years = 10 } add_modifier = { name = tyr_palace_neglect years = 10 } }
+  }
+ }
+ status_desc = tyr_forbidden_city_status
+}

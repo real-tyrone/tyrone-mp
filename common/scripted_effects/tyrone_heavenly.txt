@@ -22,6 +22,7 @@ tyr_heavenly_setup = {
 	activate_law = law_type:law_tyr_heavenly_covenant
 	activate_law = law_type:law_tyr_heavenly_religion
 	activate_law = law_type:law_tyr_heavenly_censorship
+ tyr_heavenly_initialize_reform_journals = yes
 	ig:ig_devout = {
 		if = { limit = { has_ideology = ideology:ideology_absolutist_movement } remove_ideology = ideology_absolutist_movement }
 		if = { limit = { has_ideology = ideology:ideology_agrarian } remove_ideology = ideology_agrarian }
@@ -191,6 +192,7 @@ tyr_heavenly_begin_war = {
 	random_diplomatic_play = {
 		limit = { is_diplomatic_play_type = dp_tyr_heavenly_civil_war initiator_is = c:TPG target_is = c:CHI }
   save_temporary_scope_as = tyr_heavenly_war
+  add_war_goal = { holder = c:CHI target_country = c:TPG type = annex_country }
   c:CHI = {
    every_in_list = {
     variable = tyr_heavenly_defectors
@@ -280,6 +282,7 @@ tyr_heavenly_update_mission_access = {
    limit = {
     tyr_heavenly_missions_access_allowed = yes
     OR = {
+     tyr_heavenly_state_has_christian_treaty_port = yes
      root = { has_law_or_variant = law_type:law_no_migration_controls }
      owner = { has_variable = chi_adm_religious_missions_permitted }
      any_neighbouring_state = {
@@ -339,6 +342,7 @@ chi_adm_religious_suppress = {
 tyr_heavenly_prepare_governors = {
  clear_variable_list = tyr_heavenly_defectors
  every_direct_subject = {
+  tyr_taiping_regional_flavor_tick = yes
   if = {
    limit = { has_variable = chi_adm_religious_aided }
    c:TPG ?= { add_treasury = 10000 }
@@ -511,12 +515,28 @@ tyr_heavenly_offer_governor_takeover = {
 tyr_heavenly_grant_takeover = {
  if = {
   limit = { is_player = yes c:TPG ?= { is_ai = yes NOT = { has_variable = tyr_heavenly_takeover_claimed } } }
+  if = {
+   limit = { chi_qing_administration_tag = yes }
+   save_scope_as = tyr_heavenly_governor_donor
+   c:TPG = {
+    tyr_heavenly_inherit_governor_technology = yes
+    copy_laws = scope:tyr_heavenly_governor_donor
+    # Heavenly institutions take precedence over the governor's inherited laws.
+    activate_law = law_type:law_tyr_heavenly_covenant
+    activate_law = law_type:law_tyr_heavenly_religion
+    activate_law = law_type:law_tyr_heavenly_censorship
+   }
+  }
   c:TPG = {
    set_variable = tyr_heavenly_takeover_claimed
    remove_variable = tyr_heavenly_invitation_open
    add_modifier = { name = tyr_heavenly_player_resolve years = 2 }
   }
   play_as = c:TPG
+  if = {
+   limit = { chi_qing_administration_tag = yes }
+   c:TPG = { annex_with_incorporation = scope:tyr_heavenly_governor_donor }
+  }
  }
 }
 
@@ -590,7 +610,7 @@ chi_adm_religious_aid_society = {
 tyr_heavenly_settle_governors = {
  every_country = {
   limit = {
-   OR = { has_variable = tyr_heavenly_neutral has_variable = tyr_heavenly_defected }
+   OR = { has_variable = tyr_heavenly_neutral has_variable = tyr_heavenly_defected has_variable = tyr_taiping_settlement_subject }
   }
   if = {
    limit = {
@@ -617,5 +637,13 @@ tyr_heavenly_settle_governors = {
   remove_variable = tyr_heavenly_former_pact
   remove_variable = chi_adm_religious_stand_aside
   remove_variable = chi_adm_religious_taiping_pledge
+  if = {
+   limit = { has_variable = tyr_taiping_settlement_subject NOT = { exists = c:TPG } }
+   remove_modifier = tyr_taiping_subject_compact
+   remove_modifier = tyr_taiping_subject_compact_strict
+   remove_variable = tyr_taiping_settlement_subject
+  }
+  tyr_taiping_settlement_clear_pending = yes
  }
+ c:TPG ?= { remove_variable = tyr_taiping_settlement_governor }
 }

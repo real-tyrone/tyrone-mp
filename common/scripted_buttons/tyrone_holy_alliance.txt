@@ -85,7 +85,8 @@ tyr_holy_alliance_brothers_war = {
         is_diplomatic_play_committed_participant = no
         trigger_if = {
             limit = { is_ai = yes }
-            NOT = { scope:tyr_holy_austria ?= this }
+            scope:tyr_holy_prussia ?= this
+            army_power_projection > scope:tyr_holy_austria.tyr_holy_realm_army_power
         }
         trigger_if = {
             limit = { scope:tyr_holy_prussia ?= this }
@@ -148,26 +149,22 @@ tyr_holy_alliance_brothers_war = {
                 add_target_backers = { scope:tyr_holy_target_supporter }
             }
         }
-    }
-    ai_chance = {
-        value = 25
         if = {
-            limit = { scope:tyr_holy_prussia ?= this }
-            if = {
-                limit = {
-                    scope:tyr_holy_prussia.army_power_projection <= scope:tyr_holy_austria.army_power_projection
-                }
-                add = -100
+            limit = {
+                scope:tyr_holy_prussia ?= this
+                exists = scope:tyr_holy_brothers_war_play
+                c:LMV ?= { is_subject_of = scope:tyr_holy_brothers_war_target }
             }
-        }
-        else_if = {
-            limit = { scope:tyr_holy_austria ?= this }
+            save_scope_as = tyr_holy_italian_offer_prussia
             if = {
-                limit = {
-                    scope:tyr_holy_austria.army_power_projection <= scope:tyr_holy_prussia.army_power_projection
-                }
-                add = -100
+                limit = { c:ITA ?= { tyr_holy_italian_offer_available = yes } }
+                c:ITA = { trigger_event = { id = tyr_holy_alliance.1 popup = yes } }
+            }
+            else_if = {
+                limit = { c:SAR ?= { tyr_holy_italian_offer_available = yes } }
+                c:SAR = { trigger_event = { id = tyr_holy_alliance.1 popup = yes } }
             }
         }
     }
+    ai_chance = { value = 25 }
 }

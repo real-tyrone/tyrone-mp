@@ -1,4 +1,4 @@
-namespace = heavenly
+﻿namespace = heavenly
 
 # Missionary activity in the south of China
 heavenly.1 = {
@@ -685,6 +685,7 @@ heavenly.6 = {
 	}
 	option = {
 		name = heavenly.6.e
+		custom_tooltip = tyr_heavenly_western_embassies_tt
 		every_country = {
 			limit = {
 				country_rank >= rank_value:great_power
@@ -696,7 +697,9 @@ heavenly.6 = {
 				country = c:TPG
 				value = 10
 			}
+			tyr_heavenly_establish_western_embassy = yes
 		}
+		hidden_effect = { set_variable = tyr_heavenly_western_embassies_granted_v2 }
 		add_modifier = {
 			name = modifier_relations_with_west
 			days = long_modifier_time
@@ -986,11 +989,11 @@ CHI_missionaries.5 = {
 
 	duration = 3
 
- trigger = { scope:missionary_strife_state ?= { owner = root } }
+ trigger = { scope:missionary_strife_state ?= { owner = root any_scope_pop = { religion = { has_discrimination_trait = heritage_christian } } } }
  cancellation_trigger = {
   OR = {
    has_variable = chi_adm_religious_missions_restricted
-   NOT = { scope:missionary_strife_state ?= { owner = root } }
+   NOT = { scope:missionary_strife_state ?= { owner = root any_scope_pop = { religion = { has_discrimination_trait = heritage_christian } } } }
   }
  }
 
@@ -1191,6 +1194,7 @@ CHI_missionaries.15 = {
  chi_qing_story_state = yes
 
 			has_variable = open_to_missionaries_state
+			any_scope_pop = { religion = { has_discrimination_trait = heritage_christian } }
 		}
 		any_country = {
 			has_diplomatic_relevance = root
@@ -1201,6 +1205,7 @@ CHI_missionaries.15 = {
   random_state = {
 			limit = { chi_qing_story_state = yes
 				has_variable = open_to_missionaries_state
+				any_scope_pop = { religion = { has_discrimination_trait = heritage_christian } }
 			}
 			save_scope_as = missionary_strife_state
 		}
@@ -1220,6 +1225,7 @@ CHI_missionaries.15 = {
 
 # Only the invited human governor receives this event. Declining passes the offer on.
 heavenly.20 = {
+ event_image = { video = "asia_union_leader" }
  type = country_event
  placement = ROOT
  title = chi_adm_heavenly_takeover_title
@@ -1239,6 +1245,7 @@ heavenly.20 = {
   name = chi_adm_heavenly_takeover_accept
   trigger = { is_player = yes c:TPG ?= { is_ai = yes has_war_with = c:CHI var:tyr_heavenly_invitation_open ?= { this = root } NOT = { has_variable = tyr_heavenly_takeover_claimed } } }
   ai_chance = { base = 0 }
+  custom_tooltip = tyr_heavenly_takeover_inherit_tt
   tyr_heavenly_grant_takeover = yes
  }
 }

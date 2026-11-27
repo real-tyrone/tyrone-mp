@@ -1,0 +1,249 @@
+tyr_lj_huizhou_domestic_button = {
+	name = tyr_lj_huizhou_domestic_button
+	desc = tyr_lj_huizhou_domestic_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_huizhou_domestic_done } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_huizhou_domestic_clicked } }
+		has_law_or_variant = law_type:law_isolationism
+		gold_reserves >= 20000
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_huizhou_domestic_clicked } }
+			hidden_effect = { set_variable = tyr_lj_huizhou_domestic_clicked }
+			trigger_event = { id = tyr_liangjiang.1 popup = yes }
+		}
+	}
+	ai_chance = { value = 25 }
+}
+
+tyr_lj_salt_accounts_button = {
+	name = tyr_lj_salt_accounts_button
+	desc = tyr_lj_salt_accounts_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_salt_accounts_done } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_salt_accounts_clicked } }
+		gold_reserves >= 15000
+		relative_bureaucracy >= 0.05
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_salt_accounts_clicked } }
+			hidden_effect = { set_variable = tyr_lj_salt_accounts_clicked }
+			trigger_event = { id = tyr_liangjiang.9 popup = yes }
+		}
+	}
+	ai_chance = { value = 30 }
+}
+
+tyr_lj_huizhou_expansion_button = {
+	name = tyr_lj_huizhou_expansion_button
+	desc = tyr_lj_huizhou_expansion_button_desc
+	visible = { tyr_lj_is_liangjiang = yes has_variable = tyr_lj_huizhou_domestic_done NOT = { has_variable = tyr_lj_huizhou_expansion_done } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_huizhou_expansion_clicked } }
+		custom_tooltip = { text = tyr_lj_foreign_commerce_required_tt tyr_lj_has_shanghai_access = yes }
+		gold_reserves >= 40000
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_huizhou_expansion_clicked } }
+			hidden_effect = { set_variable = tyr_lj_huizhou_expansion_clicked }
+			trigger_event = { id = tyr_liangjiang.2 popup = yes }
+		}
+	}
+	ai_chance = { value = 30 }
+}
+
+tyr_lj_examination_hall_button = {
+	name = tyr_lj_examination_hall_button
+	desc = tyr_lj_examination_hall_button_desc
+	visible = { tyr_lj_is_liangjiang = yes tyr_lj_has_nanjing = yes NOT = { has_variable = tyr_lj_examination_hall_done } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_examination_hall_clicked } } gold_reserves >= 15000 }
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_examination_hall_clicked } }
+			hidden_effect = { set_variable = tyr_lj_examination_hall_clicked }
+			trigger_event = { id = tyr_liangjiang.3 popup = yes }
+		}
+	}
+	ai_chance = { value = 30 }
+}
+
+tyr_lj_arsenal_stage_1_button = {
+	name = tyr_lj_arsenal_stage_1_button
+	desc = tyr_lj_arsenal_stage_1_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_arsenal_stage_1 } }
+	possible = { custom_tooltip = { text = tyr_lj_arsenal_stage_1_requirements tyr_lj_arsenal_stage_1_ready = yes } }
+	effect = {
+		show_as_tooltip = {
+			add_treasury = -30000
+			add_modifier = { name = tyr_lj_machine_workshops years = 5 }
+		}
+		hidden_effect = {
+			add_treasury = -30000
+			set_variable = tyr_lj_arsenal_stage_1
+			add_modifier = { name = tyr_lj_machine_workshops years = 5 }
+		}
+	}
+	ai_chance = { value = 35 }
+}
+
+tyr_lj_arsenal_stage_2_button = {
+	name = tyr_lj_arsenal_stage_2_button
+	desc = tyr_lj_arsenal_stage_2_button_desc
+	visible = { tyr_lj_is_liangjiang = yes has_variable = tyr_lj_arsenal_stage_1 NOT = { has_variable = tyr_lj_arsenal_stage_2 } }
+	possible = { custom_tooltip = { text = tyr_lj_arsenal_stage_2_requirements tyr_lj_arsenal_stage_2_ready = yes } }
+	effect = {
+		show_as_tooltip = {
+			add_treasury = -50000
+			add_modifier = { name = tyr_lj_modern_armaments years = 8 }
+		}
+		hidden_effect = {
+			add_treasury = -50000
+			set_variable = tyr_lj_arsenal_stage_2
+			add_modifier = { name = tyr_lj_modern_armaments years = 8 }
+			if = {
+				limit = { NOT = { any_company = { is_company_type = company_type:company_Jiangnan_Arsenal } } }
+				add_company = company_type:company_Jiangnan_Arsenal
+			}
+		}
+	}
+	ai_chance = { value = 40 }
+}
+
+tyr_lj_arsenal_stage_3_button = {
+	name = tyr_lj_arsenal_stage_3_button
+	desc = tyr_lj_arsenal_stage_3_button_desc
+	visible = { tyr_lj_is_liangjiang = yes has_variable = tyr_lj_arsenal_stage_2 NOT = { has_variable = tyr_lj_arsenal_stage_3 } }
+	possible = { custom_tooltip = { text = tyr_lj_arsenal_stage_3_requirements tyr_lj_arsenal_stage_3_ready = yes } }
+	effect = {
+		show_as_tooltip = {
+			add_treasury = -40000
+			add_modifier = { name = tyr_lj_translation_bureau years = 10 }
+		}
+		hidden_effect = {
+			add_treasury = -40000
+			set_variable = tyr_lj_arsenal_stage_3
+			add_modifier = { name = tyr_lj_translation_bureau years = 10 }
+		}
+	}
+	ai_chance = { value = 45 }
+}
+
+tyr_lj_huai_army_button = {
+	name = tyr_lj_huai_army_button
+	desc = tyr_lj_huai_army_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_huai_army_formed } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_huai_army_clicked } }
+		OR = { is_at_war = yes any_scope_state = { turmoil >= 0.25 } }
+		any_scope_building = { is_building_type = building_barracks level >= 10 }
+		gold_reserves >= 30000
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_huai_army_clicked } }
+			hidden_effect = { set_variable = tyr_lj_huai_army_clicked }
+			trigger_event = { id = tyr_liangjiang.4 popup = yes }
+		}
+	}
+	ai_chance = { value = 35 }
+}
+
+tyr_lj_shanghai_customs_button = {
+	name = tyr_lj_shanghai_customs_button
+	desc = tyr_lj_shanghai_customs_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_shanghai_customs_done } }
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_shanghai_customs_clicked } }
+		custom_tooltip = { text = tyr_lj_foreign_commerce_required_tt tyr_lj_has_shanghai_access = yes }
+		has_technology_researched = central_archives
+		gold_reserves >= 25000
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_shanghai_customs_clicked } }
+			hidden_effect = { set_variable = tyr_lj_shanghai_customs_clicked }
+			trigger_event = { id = tyr_liangjiang.5 popup = yes }
+		}
+	}
+	ai_chance = { value = 35 }
+}
+
+tyr_lj_steam_navigation_button = {
+	name = tyr_lj_steam_navigation_button
+	desc = tyr_lj_steam_navigation_button_desc
+	visible = { tyr_lj_is_liangjiang = yes NOT = { has_variable = tyr_lj_steam_navigation_done } }
+	possible = {
+		custom_tooltip = { text = tyr_lj_foreign_commerce_required_tt tyr_lj_has_shanghai_access = yes }
+		has_technology_researched = railways
+		has_technology_researched = gantry_cranes
+		has_building_levels_in_state_region = { region = STATE_SUZHOU building = building_shipyard levels >= 5 }
+		gold_reserves >= 50000
+	}
+	effect = {
+		show_as_tooltip = {
+			add_treasury = -50000
+			add_modifier = { name = tyr_lj_steam_navigation years = 10 }
+		}
+		hidden_effect = {
+			add_treasury = -50000
+			set_variable = tyr_lj_steam_navigation_done
+			add_modifier = { name = tyr_lj_steam_navigation years = 10 }
+			if = {
+				limit = { NOT = { any_company = { is_company_type = company_type:company_CMSNC } } }
+				add_company = company_type:company_CMSNC
+			}
+		}
+	}
+	ai_chance = { value = 45 }
+}
+
+tyr_lj_yellow_river_button = {
+	name = tyr_lj_yellow_river_button
+	desc = tyr_lj_yellow_river_button_desc
+	visible = {
+		tyr_lj_is_liangjiang = yes
+		any_scope_state = { state_region = s:STATE_HENAN }
+		NOT = { has_variable = tyr_lj_yellow_river_done }
+	}
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_yellow_river_clicked } }
+		any_scope_state = {
+			state_region = s:STATE_HENAN
+			OR = { turmoil >= 0.10 infrastructure < 25 }
+		}
+		gold_reserves >= 25000
+	}
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_yellow_river_clicked } }
+			hidden_effect = { set_variable = tyr_lj_yellow_river_clicked }
+			trigger_event = { id = tyr_liangjiang.6 popup = yes }
+		}
+	}
+	ai_chance = { value = 40 }
+}
+
+tyr_lj_nanjing_wartime_button = {
+	name = tyr_lj_nanjing_wartime_button
+	desc = tyr_lj_nanjing_wartime_button_desc
+	visible = {
+		tyr_lj_is_liangjiang = yes
+		tyr_lj_has_nanjing = yes
+		exists = c:TPG
+		NOT = { has_variable = tyr_lj_nanjing_wartime_done }
+	}
+	possible = {
+		hidden_trigger = { NOT = { has_variable = tyr_lj_nanjing_wartime_clicked } } OR = { has_war_with = c:CHI has_war_with = c:TPG has_variable = tyr_heavenly_defected has_variable = tyr_heavenly_neutral } }
+	effect = {
+		if = {
+			limit = { NOT = { has_variable = tyr_lj_nanjing_wartime_clicked } }
+			hidden_effect = { set_variable = tyr_lj_nanjing_wartime_clicked }
+			trigger_event = { id = tyr_liangjiang.7 popup = yes }
+		}
+	}
+	ai_chance = { value = 40 }
+}

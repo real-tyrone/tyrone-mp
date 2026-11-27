@@ -1,0 +1,42 @@
+﻿# Country scope. Persistent scope references keep the two imperial courts separate.
+chi_adm_bind_imperial_court = {
+ if = {
+  limit = { OR = { c:CHI ?= this c:TPG ?= this } }
+  set_variable = { name = chi_adm_imperial_court value = this }
+ }
+ else_if = {
+  limit = {
+   chi_qing_administrative_subject = yes
+   overlord = { OR = { c:CHI ?= this c:TPG ?= this } }
+  }
+  set_variable = { name = chi_adm_imperial_court value = overlord }
+ }
+ else = { remove_variable = chi_adm_imperial_court }
+}
+
+# Country scope. Safe to repeat: existing administrative progress is retained.
+chi_adm_initialize_imperial_court = {
+ chi_adm_bind_imperial_court = yes
+ if = { limit = { c:TPG ?= this } chi_qing_share_army_reforms = yes }
+ every_direct_subject = {
+  limit = { chi_qing_administrative_subject = yes }
+  chi_adm_bind_imperial_court = yes
+  if = {
+   limit = { chi_adm_eligible = yes }
+   chi_adm_initialize = yes
+   chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_memorial_desk }
+   chi_adm_add_starting_entry = { ENTRY = chi_adm_regional_works_regional_dispatches }
+   chi_adm_provincial_development_ensure_entries = yes
+  }
+ }
+ if = {
+  limit = { chi_adm_court_valid = yes chi_qing_has_administrative_subjects = yes }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_court }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_court_register_ledger }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_memorials_edicts }
+  chi_adm_add_starting_entry = { ENTRY = chi_adm_memorials_audits }
+  chi_adm_add_starting_entry = { ENTRY = je_qing_imperial_administrations }
+  chi_adm_provincial_development_ensure_entries = yes
+  chi_adm_negotiated_integration_recount = yes
+ }
+}
